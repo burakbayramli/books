@@ -1,0 +1,86 @@
+% 2009-04-07-ftrclass.diary
+% Actually try classifying on some real speech data
+% dpwe@ee.columbia.edu  http://www.ee.columbia.edu/~dpwe/e6820/
+
+% Read in the phoneset definition
+K = labreadkey('timit61.phset');
+% Define 6 broad classes covering the 61 phones in the set
+brdclass=[ones(1,13)*1,ones(1,10)*2,ones(1,7)*3,ones(1,5)*4,[2 2],ones(1,20)*5,[6 6 6 6]];
+% 1=stops 2=fricatives 3=nasals 4=liquids 5=vowels 6=silence/gaps
+
+% Look at the labeling for one TIMIT file:
+% load waveform
+[d,sr] = wavread('mdpk0/sa1.wav');
+% load hand-label definitions (t defines times and l defines labels, 
+% indexed into K)
+[t,l] = labreadlab('mdpk0/sa1.phn',K);
+subplot(211)
+specgram(d,128,sr);
+% Replace the time axis with the phone label boundaries
+labplotlabs(t,l,K)
+
+% Calculate cepstral coefficients for this example using Malcolm Slaney's 
+% routine
+cp = mfcc(d,16000,100);
+
+% Set up a vector of the times corresponding to each column of cp
+% (100 Hz frame rate, but 256 pt window, so first window is at 0.008 s)
+tt=0.008:.01:(length(d)/sr-0.018);
+% Now figure out the labels that go with each feature vector
+% by 'sampling' the label ranges read from file
+ll=labsamplabs(tt,t,l);
+
+% Using the label values in ll to index into brdclass gives us the 
+% broad class indices (1-6) above
+subplot(212)
+plot(brdclass(ll))
+axis([0 length(ll) 0 7])
+% Lines up with segments in spectrogram.
+
+% Use utility functions to build up training and test sets of 
+% features and labels, as above
+% Define a train data set 
+tdat=[];
+tlab=[];
+[tdat,tlab]=appenddata('mdpk0/sx153',tdat,tlab,K);
+[tdat,tlab]=appenddata('mdpk0/sx243',tdat,tlab,K);
+[tdat,tlab]=appenddata('mdpk0/sx333',tdat,tlab,K);
+[tdat,tlab]=appenddata('mdpk0/sx423',tdat,tlab,K);
+[tdat,tlab]=appenddata('mdpk0/sx63',tdat,tlab,K);
+% And a test set
+edat=[];
+elab=[];
+[edat,elab]=appenddata('mdpk0/sa1',edat,elab,K);
+[edat,elab]=appenddata('mdpk0/sa2',edat,elab,K);
+[edat,elab]=appenddata('mdpk0/si1053',edat,elab,K);
+[edat,elab]=appenddata('mdpk0/si1683',edat,elab,K);
+size(edat)
+ans =
+        1131          13
+size(tdat)
+ans =
+        1453          13
+
+% Try a classification based on the first 8 cepstra
+[H,O,R]=doclassif(tdat(:,1:8),brdclass(tlab),edat(:,1:8),brdclass(elab));
+Ep 1 lr=0.4 frame accuracy on trn = 78.6648% test = 72.5022%
+Ep 2 lr=0.2 frame accuracy on trn = 77.7013% test = 66.7551%
+Ep 3 lr=0.1 frame accuracy on trn = 79.3531% test = 71.176%
+% Do it again
+[H,O,R]=doclassif(tdat(:,1:8),brdclass(tlab),edat(:,1:8),brdclass(elab));
+Ep 1 lr=0.4 frame accuracy on trn = 80.3166% test = 71.9717%
+Ep 2 lr=0.2 frame accuracy on trn = 80.4542% test = 72.1485%
+Ep 3 lr=0.1 frame accuracy on trn = 81.1425% test = 70.4686%
+% Several percent variation in successive runs is not unusual
+
+% Check confusion matrix
+confus(brdclass(elab),R)
+ans =
+    58     5     7     0    13    31
+    17   112     1     1    24     2
+     5     1    46     0     8     0
+    15     1     9    17    49     0
+     8     3     6    21   367     2
+    52    43     0     1     9   197
+% Vowels and fricatives are distinct; silence and stops confused
+

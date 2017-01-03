@@ -1,0 +1,9 @@
+model{
+for(i in 2:N){
+y[i] ~ dnorm(mu[i],tau)
+mu[i] <- y[i-1]*phi
+}
+phi ~ dnorm(0,.00001)
+tau ~ dgamma(0.1,0.0001)
+sigma <- 1/sqrt(tau)
+}

@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Samplers</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        Module&nbsp;Samplers
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Samplers-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="gPy.Samplers-module.html">Module gPy.Samplers</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-docstring">"""Samplers</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">@var _version: Version of this module</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring">@type _version: String</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package gPy=gPy-module.html"><a title="gPy" class="py-name" href="#" onclick="return doclink('link-0', 'gPy', 'link-0');">gPy</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Module gPy.Models=gPy.Models-module.html"><a title="gPy.Models" class="py-name" href="#" onclick="return doclink('link-1', 'Models', 'link-1');">Models</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Class gPy.Models.BN=gPy.Models.BN-class.html"><a title="gPy.Models.BN" class="py-name" href="#" onclick="return doclink('link-2', 'BN', 'link-2');">BN</a></tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">random</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt id="link-3" class="py-name" targets="Variable gPy.Demos._version=gPy.Demos-module.html#_version,Variable gPy.Examples._version=gPy.Examples-module.html#_version,Variable gPy.Graphs._version=gPy.Graphs-module.html#_version,Variable gPy.Hypergraphs._version=gPy.Hypergraphs-module.html#_version,Variable gPy.IO._version=gPy.IO-module.html#_version,Variable gPy.Models._version=gPy.Models-module.html#_version,Variable gPy.Parameters._version=gPy.Parameters-module.html#_version,Variable gPy.RandomGraphs._version=gPy.RandomGraphs-module.html#_version,Variable gPy.Samplers._version=gPy.Samplers-module.html#_version,Variable gPy.Utils._version=gPy.Utils-module.html#_version,Variable gPy.Variables._version=gPy.Variables-module.html#_version"><a title="gPy.Demos._version
+gPy.Examples._version
+gPy.Graphs._version
+gPy.Hypergraphs._version
+gPy.IO._version
+gPy.Models._version
+gPy.Parameters._version
+gPy.RandomGraphs._version
+gPy.Samplers._version
+gPy.Utils._version
+gPy.Variables._version" class="py-name" href="#" onclick="return doclink('link-3', '_version', 'link-3');">_version</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'$Id: Samplers.py,v 1.4 2008/08/12 08:10:28 jc Exp $'</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"> </tt>
+<a name="MultinomialSampler"></a><div id="MultinomialSampler-def"><a name="L12"></a><tt class="py-lineno"> 12</tt> <a class="py-toggle" href="#" id="MultinomialSampler-toggle" onclick="return toggle('MultinomialSampler');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Samplers.MultinomialSampler-class.html">MultinomialSampler</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MultinomialSampler-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="MultinomialSampler-expanded"><a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-docstring">    For sampling from multinomial distributions </tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _cumprobs: Discrete cumulative probability distribution</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring">    @type _cumprobs: Tuple</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _values: Values of the discrete probability distribution</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-docstring">    @type _values: Tuple</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="MultinomialSampler.__init__"></a><div id="MultinomialSampler.__init__-def"><a name="L21"></a><tt class="py-lineno"> 21</tt> <a class="py-toggle" href="#" id="MultinomialSampler.__init__-toggle" onclick="return toggle('MultinomialSampler.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MultinomialSampler-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">distribution</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MultinomialSampler.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MultinomialSampler.__init__-expanded"><a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">        <tt class="py-docstring">"""Construct a sampler for a multinomial distribution</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-docstring">        @param distribution: Discrete probability distribution </tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-docstring">        @type distribution: Dictionary</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">        <tt id="link-4" class="py-name" targets="Function gPy.Utils.pairs()=gPy.Utils-module.html#pairs"><a title="gPy.Utils.pairs" class="py-name" href="#" onclick="return doclink('link-4', 'pairs', 'link-4');">pairs</a></tt> <tt class="py-op">=</tt> <tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-name">distribution</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method gPy.Variables.Domain.values()=gPy.Variables.Domain-class.html#values"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-5', 'values', 'link-5');">values</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-name">distribution</tt><tt class="py-op">.</tt><tt class="py-name">keys</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">        <tt id="link-6" class="py-name"><a title="gPy.Utils.pairs" class="py-name" href="#" onclick="return doclink('link-6', 'pairs', 'link-4');">pairs</a></tt><tt class="py-op">.</tt><tt class="py-name">sort</tt><tt class="py-op">(</tt><tt class="py-name">reverse</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">        <tt class="py-name">probs</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt id="link-7" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-7', 'values', 'link-5');">values</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-name">running</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">prob</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt> <tt class="py-keyword">in</tt> <tt id="link-8" class="py-name"><a title="gPy.Utils.pairs" class="py-name" href="#" onclick="return doclink('link-8', 'pairs', 'link-4');">pairs</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">            <tt class="py-name">running</tt> <tt class="py-op">+=</tt> <tt class="py-name">prob</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">            <tt class="py-name">probs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">running</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">            <tt id="link-9" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-9', 'values', 'link-5');">values</a></tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">            <tt class="py-comment">#to deal with numerical problems</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-keyword">if</tt> <tt class="py-name">running</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0.999999</tt><tt class="py-op">:</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">                <tt class="py-keyword">break</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_cumprobs</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">probs</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt id="link-10" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-10', 'values', 'link-5');">values</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"> </tt>
+<a name="MultinomialSampler.sample"></a><div id="MultinomialSampler.sample-def"><a name="L43"></a><tt class="py-lineno"> 43</tt> <a class="py-toggle" href="#" id="MultinomialSampler.sample-toggle" onclick="return toggle('MultinomialSampler.sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MultinomialSampler-class.html#sample">sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MultinomialSampler.sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MultinomialSampler.sample-expanded"><a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-docstring">"""Draw a single sample from a multinomial distribution</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-docstring">        @return: A sample value from a multinomial distribution</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: Immutable</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt class="py-name">x</tt> <tt class="py-op">=</tt> <tt class="py-name">random</tt><tt class="py-op">.</tt><tt class="py-name">random</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">cumprob</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_cumprobs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">x</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">cumprob</tt><tt class="py-op">:</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-comment"># for numerical reasons ...</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> </tt>
+</div></div><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"> </tt>
+<a name="BNSampler"></a><div id="BNSampler-def"><a name="L57"></a><tt class="py-lineno"> 57</tt> <a class="py-toggle" href="#" id="BNSampler-toggle" onclick="return toggle('BNSampler');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html">BNSampler</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="BNSampler-expanded"><a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">    <tt class="py-docstring">"""For sampling from Bayesian networks</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _cpts: For each variable, its CPT (in topological order)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line"><tt class="py-docstring">    @type _cpts: Tuple</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _condition_index: Instantiated variables have their values, others have None</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line"><tt class="py-docstring">    @type _condition_index: List</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _dists: For each variable, a dictionary mapping parent</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line"><tt class="py-docstring">    instantiations to a MultinomialSampler object</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"><tt class="py-docstring">    @type _dists: Tuple</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _indices: For each variable, a tuple of the indices corresponding to</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line"><tt class="py-docstring">    its parents</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"><tt class="py-docstring">    @type _indices: Tuple</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _instskel: A list of Nones of the right length</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"><tt class="py-docstring">    to hold a full joint instantiation.</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-docstring">    @type _instskel: List</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _indextuple: The tuple (0,1, ...n) where n is the number of variables</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-docstring">    @type _indextuple: Tuple</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _variables: The topological ordering of the BN's variables used</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line"><tt class="py-docstring">    for forward sampling</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line"><tt class="py-docstring">    @type _variables: Tuple</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"><tt class="py-docstring">    @ivar _var2index: Maps a variable to its index in top. order</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line"><tt class="py-docstring">    @type _var2index: Dictionary</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="BNSampler.__init__"></a><div id="BNSampler.__init__-def"><a name="L81"></a><tt class="py-lineno"> 81</tt> <a class="py-toggle" href="#" id="BNSampler.__init__-toggle" onclick="return toggle('BNSampler.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">bnm</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.__init__-expanded"><a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt id="link-11" class="py-name" targets="Method gPy.FKMCMC.FamilyScoreCache.variables()=gPy.FKMCMC.FamilyScoreCache-class.html#variables,Method gPy.PC.CI.variables()=gPy.PC.CI-class.html#variables,Method gPy.PC.GraphSeparator.variables()=gPy.PC.GraphSeparator-class.html#variables,Method gPy.PC.HypotheticalSeparator.variables()=gPy.PC.HypotheticalSeparator-class.html#variables,Method gPy.Samplers.BNSampler.variables()=gPy.Samplers.BNSampler-class.html#variables,Method gPy.Variables.SubDomain.variables()=gPy.Variables.SubDomain-class.html#variables"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-11', 'variables', 'link-11');">variables</a></tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">bnm</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Method gPy.Graphs.DiGraph.topological_order()=gPy.Graphs.DiGraph-class.html#topological_order,Method gPy.Models.BN.topological_order()=gPy.Models.BN-class.html#topological_order"><a title="gPy.Graphs.DiGraph.topological_order
+gPy.Models.BN.topological_order" class="py-name" href="#" onclick="return doclink('link-12', 'topological_order', 'link-12');">topological_order</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt> <tt class="py-op">=</tt> <tt id="link-13" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-13', 'variables', 'link-11');">variables</a></tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_indextuple</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-14" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-14', 'variables', 'link-11');">variables</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">None</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt id="link-15" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-15', 'variables', 'link-11');">variables</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-name">var2index</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt class="py-name">indices</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-name">dists</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-name">cpts</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">variable</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt id="link-16" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-16', 'variables', 'link-11');">variables</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">            <tt class="py-name">var2index</tt><tt class="py-op">[</tt><tt class="py-name">variable</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">i</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt id="link-17" class="py-name" targets="Method gPy.Models._AbsM.cpt()=gPy.Models._AbsM-class.html#cpt"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-17', 'cpt', 'link-17');">cpt</a></tt> <tt class="py-op">=</tt> <tt class="py-name">bnm</tt><tt class="py-op">[</tt><tt class="py-name">variable</tt><tt class="py-op">]</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">            <tt class="py-name">indices</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">var2index</tt><tt class="py-op">[</tt><tt class="py-name">v</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">v</tt> <tt class="py-keyword">in</tt> <tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt id="link-18" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-18', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">.</tt><tt id="link-19" class="py-name" targets="Method gPy.Graphs._AbsGraph.parents()=gPy.Graphs._AbsGraph-class.html#parents,Method gPy.Models.BN.parents()=gPy.Models.BN-class.html#parents,Method gPy.Parameters.CPT.parents()=gPy.Parameters.CPT-class.html#parents"><a title="gPy.Graphs._AbsGraph.parents
+gPy.Models.BN.parents
+gPy.Parameters.CPT.parents" class="py-name" href="#" onclick="return doclink('link-19', 'parents', 'link-19');">parents</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">            <tt class="py-name">dist</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">            <tt class="py-name">cpt_dkt</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">            <tt class="py-name">itr</tt> <tt class="py-op">=</tt> <tt id="link-20" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-20', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">.</tt><tt id="link-21" class="py-name" targets="Method gPy.Parameters.CPT.parent_insts_data()=gPy.Parameters.CPT-class.html#parent_insts_data"><a title="gPy.Parameters.CPT.parent_insts_data" class="py-name" href="#" onclick="return doclink('link-21', 'parent_insts_data', 'link-21');">parent_insts_data</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">            <tt id="link-22" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-22', 'values', 'link-5');">values</a></tt> <tt class="py-op">=</tt> <tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt id="link-23" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-23', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-24', 'values', 'link-5');">values</a></tt><tt class="py-op">(</tt><tt class="py-name">variable</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">parent_inst</tt> <tt class="py-keyword">in</tt> <tt id="link-25" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-25', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">.</tt><tt id="link-26" class="py-name" targets="Method gPy.Parameters.CPT.parent_insts()=gPy.Parameters.CPT-class.html#parent_insts"><a title="gPy.Parameters.CPT.parent_insts" class="py-name" href="#" onclick="return doclink('link-26', 'parent_insts', 'link-26');">parent_insts</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">                <tt class="py-name">probs</tt> <tt class="py-op">=</tt> <tt class="py-name">itr</tt><tt class="py-op">.</tt><tt class="py-name">next</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">                <tt class="py-name">dist</tt><tt class="py-op">[</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">parent_inst</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt id="link-27" class="py-name" targets="Class gPy.Samplers.MultinomialSampler=gPy.Samplers.MultinomialSampler-class.html"><a title="gPy.Samplers.MultinomialSampler" class="py-name" href="#" onclick="return doclink('link-27', 'MultinomialSampler', 'link-27');">MultinomialSampler</a></tt><tt class="py-op">(</tt><tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt id="link-28" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-28', 'values', 'link-5');">values</a></tt><tt class="py-op">,</tt><tt class="py-name">probs</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">                <tt class="py-name">cpt_dkt</tt><tt class="py-op">[</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">parent_inst</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt id="link-29" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-29', 'values', 'link-5');">values</a></tt><tt class="py-op">,</tt><tt class="py-name">probs</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">            <tt class="py-name">dists</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">dist</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">            <tt class="py-name">cpts</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">cpt_dkt</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_cpts</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">cpts</tt><tt class="py-op">)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_indices</tt> <tt class="py-op">=</tt> <tt class="py-name">indices</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_dists</tt> <tt class="py-op">=</tt> <tt class="py-name">dists</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_var2index</tt> <tt class="py-op">=</tt> <tt class="py-name">var2index</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_condition_index</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"> </tt>
+<a name="BNSampler.condition"></a><div id="BNSampler.condition-def"><a name="L110"></a><tt class="py-lineno">110</tt> <a class="py-toggle" href="#" id="BNSampler.condition-toggle" onclick="return toggle('BNSampler.condition');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#condition">condition</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">condition</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.condition-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.condition-expanded"><a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-docstring">"""Make a sampler conditional on some evidence</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"><tt class="py-docstring">        @param condition: Mapping from variables to their values</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line"><tt class="py-docstring">        @type condition: Dictionary</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_condition_index</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">variable</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt> <tt class="py-keyword">in</tt> <tt id="link-30" class="py-name" targets="Method gPy.Models.BN.condition()=gPy.Models.BN-class.html#condition,Method gPy.Models.JFR.condition()=gPy.Models.JFR-class.html#condition,Method gPy.Models._AbsM.condition()=gPy.Models._AbsM-class.html#condition,Method gPy.RandomGraphs.RandomADG.condition()=gPy.RandomGraphs.RandomADG-class.html#condition,Method gPy.Samplers.BNSampler.condition()=gPy.Samplers.BNSampler-class.html#condition"><a title="gPy.Models.BN.condition
+gPy.Models.JFR.condition
+gPy.Models._AbsM.condition
+gPy.RandomGraphs.RandomADG.condition
+gPy.Samplers.BNSampler.condition" class="py-name" href="#" onclick="return doclink('link-30', 'condition', 'link-30');">condition</a></tt><tt class="py-op">.</tt><tt id="link-31" class="py-name" targets="Method gPy.Models.SFR.items()=gPy.Models.SFR-class.html#items,Method gPy.Models._AbsM.items()=gPy.Models._AbsM-class.html#items"><a title="gPy.Models.SFR.items
+gPy.Models._AbsM.items" class="py-name" href="#" onclick="return doclink('link-31', 'items', 'link-31');">items</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_condition_index</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_var2index</tt><tt class="py-op">[</tt><tt class="py-name">variable</tt><tt class="py-op">]</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">value</tt> </tt>
+</div><a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">         </tt>
+<a name="BNSampler.forward_sample"></a><div id="BNSampler.forward_sample-def"><a name="L120"></a><tt class="py-lineno">120</tt> <a class="py-toggle" href="#" id="BNSampler.forward_sample-toggle" onclick="return toggle('BNSampler.forward_sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#forward_sample">forward_sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.forward_sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.forward_sample-expanded"><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-docstring">"""Forward sample from an (unconditional) BN</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line"><tt class="py-docstring">        @return: A joint instantiation</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: List</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line"><tt class="py-docstring">        @raise KeyError: If BN has evidence</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-name">inst</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_indextuple</tt><tt class="py-op">:</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">            <tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_dists</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">[</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">                <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">j</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">j</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_indices</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name" targets="Method gPy.FKMCMC.OrderEnsemble.sample()=gPy.FKMCMC.OrderEnsemble-class.html#sample,Method gPy.Models.BN.sample()=gPy.Models.BN-class.html#sample,Method gPy.Samplers.GibbsSampler.sample()=gPy.Samplers.GibbsSampler-class.html#sample,Method gPy.Samplers.MetropolisSampler.sample()=gPy.Samplers.MetropolisSampler-class.html#sample,Method gPy.Samplers.MultinomialSampler.sample()=gPy.Samplers.MultinomialSampler-class.html#sample"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-32', 'sample', 'link-32');">sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">inst</tt> </tt>
+</div><a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"> </tt>
+<a name="BNSampler.importance_sample"></a><div id="BNSampler.importance_sample-def"><a name="L133"></a><tt class="py-lineno">133</tt> <a class="py-toggle" href="#" id="BNSampler.importance_sample-toggle" onclick="return toggle('BNSampler.importance_sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#importance_sample">importance_sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.importance_sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.importance_sample-expanded"><a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">        <tt class="py-docstring">"""Importance sample from a  BN</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-docstring">        @return: A joint instantiation and a weight</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: Tuple</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">        <tt class="py-name">inst</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">        <tt class="py-name">weight</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt id="link-33" class="py-name" targets="Function gPy.Examples.cond()=gPy.Examples-module.html#cond"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-33', 'cond', 'link-33');">cond</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_condition_index</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">            <tt class="py-name">parent_inst</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">j</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">j</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_indices</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">]</tt><tt class="py-op">)</tt>  </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt id="link-34" class="py-name"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-34', 'cond', 'link-33');">cond</a></tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">                <tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_dists</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">parent_inst</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-35', 'sample', 'link-32');">sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">                <tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt id="link-36" class="py-name"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-36', 'cond', 'link-33');">cond</a></tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">                <tt class="py-name">weight</tt> <tt class="py-op">*=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_cpts</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">parent_inst</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt id="link-37" class="py-name"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-37', 'cond', 'link-33');">cond</a></tt><tt class="py-op">]</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">inst</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt> </tt>
+</div><a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">         </tt>
+<a name="BNSampler.rejection_sample"></a><div id="BNSampler.rejection_sample-def"><a name="L151"></a><tt class="py-lineno">151</tt> <a class="py-toggle" href="#" id="BNSampler.rejection_sample-toggle" onclick="return toggle('BNSampler.rejection_sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#rejection_sample">rejection_sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.rejection_sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.rejection_sample-expanded"><a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">        <tt class="py-docstring">"""Rejection sample from a  BN</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line"><tt class="py-docstring">        @return: A joint instantiation. If a rejection has occurred</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line"><tt class="py-docstring">        then the joint instantiation will contain None values</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: List</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">        <tt class="py-name">inst</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt id="link-38" class="py-name"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-38', 'cond', 'link-33');">cond</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_condition_index</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">            <tt class="py-name">i_value</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_dists</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">[</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">                <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">j</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">j</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_indices</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-39" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-39', 'sample', 'link-32');">sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt id="link-40" class="py-name"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-40', 'cond', 'link-33');">cond</a></tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt> <tt class="py-keyword">and</tt> <tt id="link-41" class="py-name"><a title="gPy.Examples.cond" class="py-name" href="#" onclick="return doclink('link-41', 'cond', 'link-33');">cond</a></tt> <tt class="py-op">!=</tt> <tt class="py-name">i_value</tt><tt class="py-op">:</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">                <tt class="py-keyword">break</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">            <tt class="py-name">inst</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">i_value</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">inst</tt> </tt>
+</div><a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line"> </tt>
+<a name="BNSampler.uncondition"></a><div id="BNSampler.uncondition-def"><a name="L167"></a><tt class="py-lineno">167</tt> <a class="py-toggle" href="#" id="BNSampler.uncondition-toggle" onclick="return toggle('BNSampler.uncondition');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#uncondition">uncondition</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.uncondition-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.uncondition-expanded"><a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">        <tt class="py-docstring">"""Remove all evidence </tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_condition_index</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_instskel</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">         </tt>
+<a name="BNSampler.variable_index"></a><div id="BNSampler.variable_index-def"><a name="L172"></a><tt class="py-lineno">172</tt> <a class="py-toggle" href="#" id="BNSampler.variable_index-toggle" onclick="return toggle('BNSampler.variable_index');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#variable_index">variable_index</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">variable</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.variable_index-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.variable_index-expanded"><a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">        <tt class="py-docstring">"""Return the index for a variable in joint instantiations</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line"><tt class="py-docstring">        @return: The index for a variable in joint instantiations</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: Integer</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_var2index</tt><tt class="py-op">[</tt><tt class="py-name">variable</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line"> </tt>
+<a name="BNSampler.variables"></a><div id="BNSampler.variables-def"><a name="L180"></a><tt class="py-lineno">180</tt> <a class="py-toggle" href="#" id="BNSampler.variables-toggle" onclick="return toggle('BNSampler.variables');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.BNSampler-class.html#variables">variables</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BNSampler.variables-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="BNSampler.variables-expanded"><a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">        <tt class="py-docstring">"""Return the topological ordering of variables in joint instantiations</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line"><tt class="py-docstring">        @return: The ordering of variables in joint instantiations</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: Tuple</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt> </tt>
+</div></div><a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line"> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line"> </tt>
+<a name="GibbsSampler"></a><div id="GibbsSampler-def"><a name="L189"></a><tt class="py-lineno">189</tt> <a class="py-toggle" href="#" id="GibbsSampler-toggle" onclick="return toggle('GibbsSampler');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Samplers.GibbsSampler-class.html">GibbsSampler</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="GibbsSampler-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="GibbsSampler-expanded"><a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">    <tt class="py-docstring">"""A Gibbs sampler for Bayesian networks.  Variables are instantiated in a</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line"><tt class="py-docstring">    topological order. Hence when no variables are instantiated, this is just</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line"><tt class="py-docstring">    forward sampling (no burn in is necessary).</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line"><tt class="py-docstring">    When conditioning occurs, topological ordering is still used but conditioned</tt> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line"><tt class="py-docstring">    variables are not updated.</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="GibbsSampler.__init__"></a><div id="GibbsSampler.__init__-def"><a name="L197"></a><tt class="py-lineno">197</tt> <a class="py-toggle" href="#" id="GibbsSampler.__init__-toggle" onclick="return toggle('GibbsSampler.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.GibbsSampler-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">bn</tt><tt class="py-op">,</tt> <tt class="py-param">burnin</tt><tt class="py-op">=</tt><tt class="py-number">1000</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="GibbsSampler.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="GibbsSampler.__init__-expanded"><a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">bn</tt><tt class="py-op">,</tt> <tt id="link-42" class="py-name"><a title="gPy.Models.BN" class="py-name" href="#" onclick="return doclink('link-42', 'BN', 'link-2');">BN</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt class="py-name">ValueError</tt><tt class="py-op">,</tt><tt class="py-string">'only works with Bayesian network'</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_samplers</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_parents</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt> <tt class="py-op">=</tt> <tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">bn</tt><tt class="py-op">.</tt><tt id="link-43" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-43', 'variables', 'link-11');">variables</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt id="link-44" class="py-name" targets="Method gPy.Graphs._AbsGraph.child()=gPy.Graphs._AbsGraph-class.html#child,Method gPy.Parameters.CPT.child()=gPy.Parameters.CPT-class.html#child"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-44', 'child', 'link-44');">child</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt><tt class="py-op">:</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt id="link-45" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-45', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">bn</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-46', 'values', 'link-5');">values</a></tt><tt class="py-op">(</tt><tt id="link-47" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-47', 'child', 'link-44');">child</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">            <tt class="py-name">ids</tt> <tt class="py-op">=</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt id="link-48" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-48', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">ids</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt id="link-49" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-49', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">bn</tt><tt class="py-op">.</tt><tt id="link-50" class="py-name"><a title="gPy.Variables.Domain.values" class="py-name" href="#" onclick="return doclink('link-50', 'values', 'link-5');">values</a></tt><tt class="py-op">(</tt><tt id="link-51" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-51', 'child', 'link-44');">child</a></tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt><tt class="py-op">[</tt><tt id="link-52" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-52', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">ids</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">                <tt class="py-keyword">continue</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line">            <tt id="link-53" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-53', 'cpt', 'link-17');">cpt</a></tt> <tt class="py-op">=</tt> <tt class="py-name">bn</tt><tt class="py-op">[</tt><tt id="link-54" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-54', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_samplers</tt><tt class="py-op">[</tt><tt id="link-55" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-55', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_parents</tt><tt class="py-op">[</tt><tt id="link-56" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-56', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt id="link-57" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-57', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">.</tt><tt id="link-58" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-58', 'variables', 'link-11');">variables</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">-</tt> <tt class="py-name">frozenset</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt id="link-59" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-59', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">inst</tt> <tt class="py-keyword">in</tt> <tt id="link-60" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-60', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">.</tt><tt id="link-61" class="py-name" targets="Method gPy.Variables.SubDomain.insts()=gPy.Variables.SubDomain-class.html#insts"><a title="gPy.Variables.SubDomain.insts" class="py-name" href="#" onclick="return doclink('link-61', 'insts', 'link-61');">insts</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_parents</tt><tt class="py-op">[</tt><tt id="link-62" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-62', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">                <tt class="py-name">dist</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">                <tt class="py-name">var_inst</tt> <tt class="py-op">=</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_parents</tt><tt class="py-op">[</tt><tt id="link-63" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-63', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">inst</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">id</tt><tt class="py-op">,</tt> <tt class="py-name">val</tt> <tt class="py-keyword">in</tt> <tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-name">ids</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt id="link-64" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-64', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">                    <tt class="py-name">var_inst</tt><tt class="py-op">[</tt><tt id="link-65" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-65', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">val</tt> </tt>
+<a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line">                    <tt class="py-name">dist</tt><tt class="py-op">[</tt><tt class="py-name">id</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt id="link-66" class="py-name"><a title="gPy.Models._AbsM.cpt" class="py-name" href="#" onclick="return doclink('link-66', 'cpt', 'link-17');">cpt</a></tt><tt class="py-op">[</tt><tt class="py-name">var_inst</tt><tt class="py-op">]</tt> </tt>
+<a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_samplers</tt><tt class="py-op">[</tt><tt id="link-67" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-67', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">inst</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt id="link-68" class="py-name"><a title="gPy.Samplers.MultinomialSampler" class="py-name" href="#" onclick="return doclink('link-68', 'MultinomialSampler', 'link-27');">MultinomialSampler</a></tt><tt class="py-op">(</tt><tt class="py-name">dist</tt><tt class="py-op">)</tt> </tt>
+<a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt><tt class="py-op">[</tt><tt id="link-69" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-69', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">random</tt><tt class="py-op">.</tt><tt class="py-name">choice</tt><tt class="py-op">(</tt><tt class="py-name">ids</tt><tt class="py-op">)</tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line"> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_toporder</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">bn</tt><tt class="py-op">.</tt><tt id="link-70" class="py-name"><a title="gPy.Graphs.DiGraph.topological_order
+gPy.Models.BN.topological_order" class="py-name" href="#" onclick="return doclink('link-70', 'topological_order', 'link-12');">topological_order</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">burnin</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-71" class="py-name" targets="Method gPy.Samplers.GibbsSampler._next_sample()=gPy.Samplers.GibbsSampler-class.html#_next_sample,Method gPy.Samplers.MetropolisSampler._next_sample()=gPy.Samplers.MetropolisSampler-class.html#_next_sample"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-71', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line"> </tt>
+<a name="GibbsSampler.sample"></a><div id="GibbsSampler.sample-def"><a name="L228"></a><tt class="py-lineno">228</tt> <a class="py-toggle" href="#" id="GibbsSampler.sample-toggle" onclick="return toggle('GibbsSampler.sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.GibbsSampler-class.html#sample">sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="GibbsSampler.sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="GibbsSampler.sample-expanded"><a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-72" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-72', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt id="link-73" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-73', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt><tt class="py-op">[</tt><tt id="link-74" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-74', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt id="link-75" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-75', 'child', 'link-44');">child</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line"> </tt>
+<a name="GibbsSampler._next_sample"></a><div id="GibbsSampler._next_sample-def"><a name="L232"></a><tt class="py-lineno">232</tt> <a class="py-toggle" href="#" id="GibbsSampler._next_sample-toggle" onclick="return toggle('GibbsSampler._next_sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.GibbsSampler-class.html#_next_sample">_next_sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="GibbsSampler._next_sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="GibbsSampler._next_sample-expanded"><a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line">        <tt class="py-comment">#for child in self._samplers.keys():</tt> </tt>
+<a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-keyword">for</tt> <tt id="link-76" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-76', 'child', 'link-44');">child</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_toporder</tt><tt class="py-op">:</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt id="link-77" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-77', 'child', 'link-44');">child</a></tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_samplers</tt><tt class="py-op">:</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">                <tt class="py-keyword">continue</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">            <tt class="py-name">subinst</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">[</tt><tt class="py-name">var</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt><tt class="py-op">[</tt><tt class="py-name">var</tt><tt class="py-op">]</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">var</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_parents</tt><tt class="py-op">[</tt><tt id="link-78" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-78', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt><tt class="py-op">[</tt><tt id="link-79" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-79', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt>  <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_samplers</tt><tt class="py-op">[</tt><tt id="link-80" class="py-name"><a title="gPy.Graphs._AbsGraph.child
+gPy.Parameters.CPT.child" class="py-name" href="#" onclick="return doclink('link-80', 'child', 'link-44');">child</a></tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">subinst</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt id="link-81" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-81', 'sample', 'link-32');">sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line"> </tt>
+<a name="GibbsSampler.samples"></a><div id="GibbsSampler.samples-def"><a name="L240"></a><tt class="py-lineno">240</tt> <a class="py-toggle" href="#" id="GibbsSampler.samples-toggle" onclick="return toggle('GibbsSampler.samples');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.GibbsSampler-class.html#samples">samples</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">num</tt><tt class="py-op">,</tt> <tt class="py-param">skip</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="GibbsSampler.samples-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="GibbsSampler.samples-expanded"><a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line">        <tt class="py-name">records</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">num</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">j</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">skip</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-82" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-82', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-83" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-83', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">            <tt class="py-name">records</tt> <tt class="py-op">+=</tt> <tt class="py-op">[</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_inst</tt><tt class="py-op">[</tt><tt class="py-name">var</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">var</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
+<a name="L247"></a><tt class="py-lineno">247</tt>  <tt class="py-line"> </tt>
+<a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">        <tt class="py-name">contig</tt> <tt class="py-op">=</tt> <tt id="link-84" class="py-name" targets="Function gPy.Samplers._histogram()=gPy.Samplers-module.html#_histogram"><a title="gPy.Samplers._histogram" class="py-name" href="#" onclick="return doclink('link-84', '_histogram', 'link-84');">_histogram</a></tt><tt class="py-op">(</tt><tt class="py-name">records</tt><tt class="py-op">)</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line">        <tt class="py-name">records</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">record</tt> <tt class="py-op">+</tt> <tt class="py-op">(</tt><tt class="py-name">contig</tt><tt class="py-op">[</tt><tt class="py-name">record</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">record</tt> <tt class="py-keyword">in</tt> <tt class="py-name">contig</tt><tt class="py-op">.</tt><tt class="py-name">keys</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_variables</tt><tt class="py-op">,</tt> <tt class="py-name">records</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line"> </tt>
+<a name="_histogram"></a><div id="_histogram-def"><a name="L252"></a><tt class="py-lineno">252</tt> <a class="py-toggle" href="#" id="_histogram-toggle" onclick="return toggle('_histogram');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers-module.html#_histogram">_histogram</a><tt class="py-op">(</tt><tt class="py-param">samples</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_histogram-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_histogram-expanded"><a name="L253"></a><tt class="py-lineno">253</tt>  <tt class="py-line">    <tt class="py-name">hist</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L254"></a><tt class="py-lineno">254</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt id="link-85" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-85', 'sample', 'link-32');">sample</a></tt> <tt class="py-keyword">in</tt> <tt id="link-86" class="py-name" targets="Method gPy.Samplers.GibbsSampler.samples()=gPy.Samplers.GibbsSampler-class.html#samples,Method gPy.Samplers.MetropolisSampler.samples()=gPy.Samplers.MetropolisSampler-class.html#samples"><a title="gPy.Samplers.GibbsSampler.samples
+gPy.Samplers.MetropolisSampler.samples" class="py-name" href="#" onclick="return doclink('link-86', 'samples', 'link-86');">samples</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L255"></a><tt class="py-lineno">255</tt>  <tt class="py-line">        <tt id="link-87" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-87', 'sample', 'link-32');">sample</a></tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt id="link-88" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-88', 'sample', 'link-32');">sample</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L256"></a><tt class="py-lineno">256</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt id="link-89" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-89', 'sample', 'link-32');">sample</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">hist</tt><tt class="py-op">:</tt> </tt>
+<a name="L257"></a><tt class="py-lineno">257</tt>  <tt class="py-line">            <tt class="py-name">hist</tt><tt class="py-op">[</tt><tt id="link-90" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-90', 'sample', 'link-32');">sample</a></tt><tt class="py-op">]</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L258"></a><tt class="py-lineno">258</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L259"></a><tt class="py-lineno">259</tt>  <tt class="py-line">            <tt class="py-name">hist</tt><tt class="py-op">[</tt><tt id="link-91" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-91', 'sample', 'link-32');">sample</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L260"></a><tt class="py-lineno">260</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">hist</tt> </tt>
+</div><a name="L261"></a><tt class="py-lineno">261</tt>  <tt class="py-line"> </tt>
+<a name="ForwardSampler"></a><div id="ForwardSampler-def"><a name="L262"></a><tt class="py-lineno">262</tt> <a class="py-toggle" href="#" id="ForwardSampler-toggle" onclick="return toggle('ForwardSampler');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Samplers.ForwardSampler-class.html">ForwardSampler</a><tt class="py-op">(</tt><tt class="py-base-class">GibbsSampler</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ForwardSampler-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="ForwardSampler-expanded"><a name="L263"></a><tt class="py-lineno">263</tt>  <tt class="py-line">    <tt class="py-docstring">"""A forward sampler for an unconditional Bayesian networks."""</tt> </tt>
+<a name="ForwardSampler.__init__"></a><div id="ForwardSampler.__init__-def"><a name="L264"></a><tt class="py-lineno">264</tt> <a class="py-toggle" href="#" id="ForwardSampler.__init__-toggle" onclick="return toggle('ForwardSampler.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.ForwardSampler-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">bn</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ForwardSampler.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="ForwardSampler.__init__-expanded"><a name="L265"></a><tt class="py-lineno">265</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-92" class="py-name" targets="Class gPy.Samplers.ForwardSampler=gPy.Samplers.ForwardSampler-class.html"><a title="gPy.Samplers.ForwardSampler" class="py-name" href="#" onclick="return doclink('link-92', 'ForwardSampler', 'link-92');">ForwardSampler</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-93" class="py-name" targets="Method gPy.FKMCMC.FamilyScoreCache.__init__()=gPy.FKMCMC.FamilyScoreCache-class.html#__init__,Method gPy.FKMCMC.Order.__init__()=gPy.FKMCMC.Order-class.html#__init__,Method gPy.FKMCMC.OrderEnsemble.__init__()=gPy.FKMCMC.OrderEnsemble-class.html#__init__,Method gPy.FKMCMC.OrderSampler.__init__()=gPy.FKMCMC.OrderSampler-class.html#__init__,Method gPy.Graphs.ADG.__init__()=gPy.Graphs.ADG-class.html#__init__,Method gPy.Graphs.DiGraph.__init__()=gPy.Graphs.DiGraph-class.html#__init__,Method gPy.Graphs.EssentialGraph.__init__()=gPy.Graphs.EssentialGraph-class.html#__init__,Method gPy.Graphs.MutilatedADG.__init__()=gPy.Graphs.MutilatedADG-class.html#__init__,Method gPy.Graphs.UForest.__init__()=gPy.Graphs.UForest-class.html#__init__,Method gPy.Graphs.UGraph.__init__()=gPy.Graphs.UGraph-class.html#__init__,Method gPy.Graphs._AbsGraph.__init__()=gPy.Graphs._AbsGraph-class.html#__init__,Method gPy.Hypergraphs.DecomposableHypergraph.__init__()=gPy.Hypergraphs.DecomposableHypergraph-class.html#__init__,Method gPy.Hypergraphs.GraphicalHypergraph.__init__()=gPy.Hypergraphs.GraphicalHypergraph-class.html#__init__,Method gPy.Hypergraphs.Hypergraph.__init__()=gPy.Hypergraphs.Hypergraph-class.html#__init__,Method gPy.Hypergraphs.JoinForest.__init__()=gPy.Hypergraphs.JoinForest-class.html#__init__,Method gPy.Hypergraphs.ReducedGraphicalHypergraph.__init__()=gPy.Hypergraphs.ReducedGraphicalHypergraph-class.html#__init__,Method gPy.Hypergraphs.ReducedHypergraph.__init__()=gPy.Hypergraphs.ReducedHypergraph-class.html#__init__,Method gPy.Hypergraphs.SimpleHypergraph.__init__()=gPy.Hypergraphs.SimpleHypergraph-class.html#__init__,Method gPy.IO.GraphCanvas.__init__()=gPy.IO.GraphCanvas-class.html#__init__,Method gPy.K2.K2.__init__()=gPy.K2.K2-class.html#__init__,Method gPy.LearningUtils.CausalWorld.__init__()=gPy.LearningUtils.CausalWorld-class.html#__init__,Method gPy.Models.BN.__init__()=gPy.Models.BN-class.html#__init__,Method gPy.Models.CBN.__init__()=gPy.Models.CBN-class.html#__init__,Method gPy.Models.JFR.__init__()=gPy.Models.JFR-class.html#__init__,Method gPy.Models.RFR.__init__()=gPy.Models.RFR-class.html#__init__,Method gPy.Models.SFR.__init__()=gPy.Models.SFR-class.html#__init__,Method gPy.Models._AbsM.__init__()=gPy.Models._AbsM-class.html#__init__,Method gPy.PC.BFSeparator.__init__()=gPy.PC.BFSeparator-class.html#__init__,Method gPy.PC.CBFSeparator.__init__()=gPy.PC.CBFSeparator-class.html#__init__,Method gPy.PC.CI.__init__()=gPy.PC.CI-class.html#__init__,Method gPy.PC.Chi2Separator.__init__()=gPy.PC.Chi2Separator-class.html#__init__,Method gPy.PC.FullBFSearch.__init__()=gPy.PC.FullBFSearch-class.html#__init__,Method gPy.PC.GraphCI.__init__()=gPy.PC.GraphCI-class.html#__init__,Method gPy.PC.GraphSeparator.__init__()=gPy.PC.GraphSeparator-class.html#__init__,Method gPy.PC.HypotheticalSeparator.__init__()=gPy.PC.HypotheticalSeparator-class.html#__init__,Method gPy.PC.ICPattern.__init__()=gPy.PC.ICPattern-class.html#__init__,Method gPy.PC.IndepSearch.__init__()=gPy.PC.IndepSearch-class.html#__init__,Method gPy.PC.InterventionalICPattern.__init__()=gPy.PC.InterventionalICPattern-class.html#__init__,Method gPy.PC.PCCI.__init__()=gPy.PC.PCCI-class.html#__init__,Method gPy.Parameters.CPT.__init__()=gPy.Parameters.CPT-class.html#__init__,Method gPy.Parameters.CompactFactor.__init__()=gPy.Parameters.CompactFactor-class.html#__init__,Method gPy.Parameters.Factor.__init__()=gPy.Parameters.Factor-class.html#__init__,Method gPy.Parameters.IncrementalCompactFactor.__init__()=gPy.Parameters.IncrementalCompactFactor-class.html#__init__,Method gPy.Parameters.SqliteFactor.__init__()=gPy.Parameters.SqliteFactor-class.html#__init__,Method gPy.Parameters.Sumlgammadiffs.__init__()=gPy.Parameters.Sumlgammadiffs-class.html#__init__,Method gPy.Parameters._ADTree.__init__()=gPy.Parameters._ADTree-class.html#__init__,Method gPy.Parameters._IncrementalADTree.__init__()=gPy.Parameters._IncrementalADTree-class.html#__init__,Method gPy.RandomGraphs.EstRandomADG.__init__()=gPy.RandomGraphs.EstRandomADG-class.html#__init__,Method gPy.RandomGraphs.RandomADG.__init__()=gPy.RandomGraphs.RandomADG-class.html#__init__,Method gPy.Samplers.BNSampler.__init__()=gPy.Samplers.BNSampler-class.html#__init__,Method gPy.Samplers.ForwardSampler.__init__()=gPy.Samplers.ForwardSampler-class.html#__init__,Method gPy.Samplers.GibbsSampler.__init__()=gPy.Samplers.GibbsSampler-class.html#__init__,Method gPy.Samplers.MetropolisSampler.__init__()=gPy.Samplers.MetropolisSampler-class.html#__init__,Method gPy.Samplers.MultinomialSampler.__init__()=gPy.Samplers.MultinomialSampler-class.html#__init__,Method gPy.Utils.Timeout.__init__()=gPy.Utils.Timeout-class.html#__init__,Method gPy.Utils._ScrolledCanvas.__init__()=gPy.Utils._ScrolledCanvas-class.html#__init__,Method gPy.Variables.Domain.__init__()=gPy.Variables.Domain-class.html#__init__,Method gPy.Variables.SubDomain.__init__()=gPy.Variables.SubDomain-class.html#__init__"><a title="gPy.FKMCMC.FamilyScoreCache.__init__
+gPy.FKMCMC.Order.__init__
+gPy.FKMCMC.OrderEnsemble.__init__
+gPy.FKMCMC.OrderSampler.__init__
+gPy.Graphs.ADG.__init__
+gPy.Graphs.DiGraph.__init__
+gPy.Graphs.EssentialGraph.__init__
+gPy.Graphs.MutilatedADG.__init__
+gPy.Graphs.UForest.__init__
+gPy.Graphs.UGraph.__init__
+gPy.Graphs._AbsGraph.__init__
+gPy.Hypergraphs.DecomposableHypergraph.__init__
+gPy.Hypergraphs.GraphicalHypergraph.__init__
+gPy.Hypergraphs.Hypergraph.__init__
+gPy.Hypergraphs.JoinForest.__init__
+gPy.Hypergraphs.ReducedGraphicalHypergraph.__init__
+gPy.Hypergraphs.ReducedHypergraph.__init__
+gPy.Hypergraphs.SimpleHypergraph.__init__
+gPy.IO.GraphCanvas.__init__
+gPy.K2.K2.__init__
+gPy.LearningUtils.CausalWorld.__init__
+gPy.Models.BN.__init__
+gPy.Models.CBN.__init__
+gPy.Models.JFR.__init__
+gPy.Models.RFR.__init__
+gPy.Models.SFR.__init__
+gPy.Models._AbsM.__init__
+gPy.PC.BFSeparator.__init__
+gPy.PC.CBFSeparator.__init__
+gPy.PC.CI.__init__
+gPy.PC.Chi2Separator.__init__
+gPy.PC.FullBFSearch.__init__
+gPy.PC.GraphCI.__init__
+gPy.PC.GraphSeparator.__init__
+gPy.PC.HypotheticalSeparator.__init__
+gPy.PC.ICPattern.__init__
+gPy.PC.IndepSearch.__init__
+gPy.PC.InterventionalICPattern.__init__
+gPy.PC.PCCI.__init__
+gPy.Parameters.CPT.__init__
+gPy.Parameters.CompactFactor.__init__
+gPy.Parameters.Factor.__init__
+gPy.Parameters.IncrementalCompactFactor.__init__
+gPy.Parameters.SqliteFactor.__init__
+gPy.Parameters.Sumlgammadiffs.__init__
+gPy.Parameters._ADTree.__init__
+gPy.Parameters._IncrementalADTree.__init__
+gPy.RandomGraphs.EstRandomADG.__init__
+gPy.RandomGraphs.RandomADG.__init__
+gPy.Samplers.BNSampler.__init__
+gPy.Samplers.ForwardSampler.__init__
+gPy.Samplers.GibbsSampler.__init__
+gPy.Samplers.MetropolisSampler.__init__
+gPy.Samplers.MultinomialSampler.__init__
+gPy.Utils.Timeout.__init__
+gPy.Utils._ScrolledCanvas.__init__
+gPy.Variables.Domain.__init__
+gPy.Variables.SubDomain.__init__" class="py-name" href="#" onclick="return doclink('link-93', '__init__', 'link-93');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">bn</tt><tt class="py-op">,</tt> <tt class="py-name">burnin</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L266"></a><tt class="py-lineno">266</tt>  <tt class="py-line"> </tt>
+<a name="MetropolisSampler"></a><div id="MetropolisSampler-def"><a name="L267"></a><tt class="py-lineno">267</tt> <a class="py-toggle" href="#" id="MetropolisSampler-toggle" onclick="return toggle('MetropolisSampler');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html">MetropolisSampler</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="MetropolisSampler-expanded"><a name="L268"></a><tt class="py-lineno">268</tt>  <tt class="py-line">    <tt class="py-docstring">"""An abstract Metropolis-Hastings sampler. L{_mutate} and L{_accept} must be</tt> </tt>
+<a name="L269"></a><tt class="py-lineno">269</tt>  <tt class="py-line"><tt class="py-docstring">       overridden."""</tt> </tt>
+<a name="MetropolisSampler.__init__"></a><div id="MetropolisSampler.__init__-def"><a name="L270"></a><tt class="py-lineno">270</tt> <a class="py-toggle" href="#" id="MetropolisSampler.__init__-toggle" onclick="return toggle('MetropolisSampler.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">seed</tt><tt class="py-op">,</tt> <tt class="py-param">burnin</tt><tt class="py-op">=</tt><tt class="py-number">1000</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MetropolisSampler.__init__-expanded"><a name="L271"></a><tt class="py-lineno">271</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-94" class="py-name" targets="Class gPy.Samplers.MetropolisSampler=gPy.Samplers.MetropolisSampler-class.html"><a title="gPy.Samplers.MetropolisSampler" class="py-name" href="#" onclick="return doclink('link-94', 'MetropolisSampler', 'link-94');">MetropolisSampler</a></tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-95" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.__init__
+gPy.FKMCMC.Order.__init__
+gPy.FKMCMC.OrderEnsemble.__init__
+gPy.FKMCMC.OrderSampler.__init__
+gPy.Graphs.ADG.__init__
+gPy.Graphs.DiGraph.__init__
+gPy.Graphs.EssentialGraph.__init__
+gPy.Graphs.MutilatedADG.__init__
+gPy.Graphs.UForest.__init__
+gPy.Graphs.UGraph.__init__
+gPy.Graphs._AbsGraph.__init__
+gPy.Hypergraphs.DecomposableHypergraph.__init__
+gPy.Hypergraphs.GraphicalHypergraph.__init__
+gPy.Hypergraphs.Hypergraph.__init__
+gPy.Hypergraphs.JoinForest.__init__
+gPy.Hypergraphs.ReducedGraphicalHypergraph.__init__
+gPy.Hypergraphs.ReducedHypergraph.__init__
+gPy.Hypergraphs.SimpleHypergraph.__init__
+gPy.IO.GraphCanvas.__init__
+gPy.K2.K2.__init__
+gPy.LearningUtils.CausalWorld.__init__
+gPy.Models.BN.__init__
+gPy.Models.CBN.__init__
+gPy.Models.JFR.__init__
+gPy.Models.RFR.__init__
+gPy.Models.SFR.__init__
+gPy.Models._AbsM.__init__
+gPy.PC.BFSeparator.__init__
+gPy.PC.CBFSeparator.__init__
+gPy.PC.CI.__init__
+gPy.PC.Chi2Separator.__init__
+gPy.PC.FullBFSearch.__init__
+gPy.PC.GraphCI.__init__
+gPy.PC.GraphSeparator.__init__
+gPy.PC.HypotheticalSeparator.__init__
+gPy.PC.ICPattern.__init__
+gPy.PC.IndepSearch.__init__
+gPy.PC.InterventionalICPattern.__init__
+gPy.PC.PCCI.__init__
+gPy.Parameters.CPT.__init__
+gPy.Parameters.CompactFactor.__init__
+gPy.Parameters.Factor.__init__
+gPy.Parameters.IncrementalCompactFactor.__init__
+gPy.Parameters.SqliteFactor.__init__
+gPy.Parameters.Sumlgammadiffs.__init__
+gPy.Parameters._ADTree.__init__
+gPy.Parameters._IncrementalADTree.__init__
+gPy.RandomGraphs.EstRandomADG.__init__
+gPy.RandomGraphs.RandomADG.__init__
+gPy.Samplers.BNSampler.__init__
+gPy.Samplers.ForwardSampler.__init__
+gPy.Samplers.GibbsSampler.__init__
+gPy.Samplers.MetropolisSampler.__init__
+gPy.Samplers.MultinomialSampler.__init__
+gPy.Utils.Timeout.__init__
+gPy.Utils._ScrolledCanvas.__init__
+gPy.Variables.Domain.__init__
+gPy.Variables.SubDomain.__init__" class="py-name" href="#" onclick="return doclink('link-95', '__init__', 'link-93');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L272"></a><tt class="py-lineno">272</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_sample</tt> <tt class="py-op">=</tt> <tt class="py-name">seed</tt> </tt>
+<a name="L273"></a><tt class="py-lineno">273</tt>  <tt class="py-line"> </tt>
+<a name="L274"></a><tt class="py-lineno">274</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">burnin</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L275"></a><tt class="py-lineno">275</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-96" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-96', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L276"></a><tt class="py-lineno">276</tt>  <tt class="py-line"> </tt>
+<a name="MetropolisSampler.sample"></a><div id="MetropolisSampler.sample-def"><a name="L277"></a><tt class="py-lineno">277</tt> <a class="py-toggle" href="#" id="MetropolisSampler.sample-toggle" onclick="return toggle('MetropolisSampler.sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html#sample">sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">skip</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler.sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MetropolisSampler.sample-expanded"><a name="L278"></a><tt class="py-lineno">278</tt>  <tt class="py-line">        <tt class="py-docstring">"""Obtain one sample, separated from the last by C{skip} steps"""</tt> </tt>
+<a name="L279"></a><tt class="py-lineno">279</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">skip</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L280"></a><tt class="py-lineno">280</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-97" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-97', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L281"></a><tt class="py-lineno">281</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-98" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-98', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L282"></a><tt class="py-lineno">282</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_sample</tt> </tt>
+</div><a name="L283"></a><tt class="py-lineno">283</tt>  <tt class="py-line"> </tt>
+<a name="MetropolisSampler.samples"></a><div id="MetropolisSampler.samples-def"><a name="L284"></a><tt class="py-lineno">284</tt> <a class="py-toggle" href="#" id="MetropolisSampler.samples-toggle" onclick="return toggle('MetropolisSampler.samples');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html#samples">samples</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">num_samples</tt><tt class="py-op">,</tt> <tt class="py-param">skip</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler.samples-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MetropolisSampler.samples-expanded"><a name="L285"></a><tt class="py-lineno">285</tt>  <tt class="py-line">        <tt class="py-docstring">"""Obtain C{num_samples} sample, each separated by C{skip} steps"""</tt> </tt>
+<a name="L286"></a><tt class="py-lineno">286</tt>  <tt class="py-line">        <tt id="link-99" class="py-name"><a title="gPy.Samplers.GibbsSampler.samples
+gPy.Samplers.MetropolisSampler.samples" class="py-name" href="#" onclick="return doclink('link-99', 'samples', 'link-86');">samples</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">None</tt> <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">num_samples</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
+<a name="L287"></a><tt class="py-lineno">287</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">num_samples</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L288"></a><tt class="py-lineno">288</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">j</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-name">skip</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L289"></a><tt class="py-lineno">289</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-100" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-100', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L290"></a><tt class="py-lineno">290</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-101" class="py-name"><a title="gPy.Samplers.GibbsSampler._next_sample
+gPy.Samplers.MetropolisSampler._next_sample" class="py-name" href="#" onclick="return doclink('link-101', '_next_sample', 'link-71');">_next_sample</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L291"></a><tt class="py-lineno">291</tt>  <tt class="py-line">            <tt id="link-102" class="py-name"><a title="gPy.Samplers.GibbsSampler.samples
+gPy.Samplers.MetropolisSampler.samples" class="py-name" href="#" onclick="return doclink('link-102', 'samples', 'link-86');">samples</a></tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_sample</tt><tt class="py-op">.</tt><tt id="link-103" class="py-name" targets="Method gPy.FKMCMC.Order.copy()=gPy.FKMCMC.Order-class.html#copy,Method gPy.Graphs.EssentialGraph.copy()=gPy.Graphs.EssentialGraph-class.html#copy,Method gPy.Graphs.MutilatedADG.copy()=gPy.Graphs.MutilatedADG-class.html#copy,Method gPy.Graphs._AbsGraph.copy()=gPy.Graphs._AbsGraph-class.html#copy,Method gPy.Hypergraphs.Hypergraph.copy()=gPy.Hypergraphs.Hypergraph-class.html#copy,Method gPy.Hypergraphs.JoinForest.copy()=gPy.Hypergraphs.JoinForest-class.html#copy,Method gPy.LearningUtils.CausalWorld.copy()=gPy.LearningUtils.CausalWorld-class.html#copy,Method gPy.Models.BN.copy()=gPy.Models.BN-class.html#copy,Method gPy.Models.JFR.copy()=gPy.Models.JFR-class.html#copy,Method gPy.Models.SFR.copy()=gPy.Models.SFR-class.html#copy,Method gPy.Models._AbsM.copy()=gPy.Models._AbsM-class.html#copy,Method gPy.Parameters.CPT.copy()=gPy.Parameters.CPT-class.html#copy,Method gPy.Parameters.Factor.copy()=gPy.Parameters.Factor-class.html#copy,Method gPy.Parameters.IncrementalCompactFactor.copy()=gPy.Parameters.IncrementalCompactFactor-class.html#copy,Method gPy.Parameters._IncrementalADTree.copy()=gPy.Parameters._IncrementalADTree-class.html#copy,Method gPy.Variables.Domain.copy()=gPy.Variables.Domain-class.html#copy,Method gPy.Variables.SubDomain.copy()=gPy.Variables.SubDomain-class.html#copy"><a title="gPy.FKMCMC.Order.copy
+gPy.Graphs.EssentialGraph.copy
+gPy.Graphs.MutilatedADG.copy
+gPy.Graphs._AbsGraph.copy
+gPy.Hypergraphs.Hypergraph.copy
+gPy.Hypergraphs.JoinForest.copy
+gPy.LearningUtils.CausalWorld.copy
+gPy.Models.BN.copy
+gPy.Models.JFR.copy
+gPy.Models.SFR.copy
+gPy.Models._AbsM.copy
+gPy.Parameters.CPT.copy
+gPy.Parameters.Factor.copy
+gPy.Parameters.IncrementalCompactFactor.copy
+gPy.Parameters._IncrementalADTree.copy
+gPy.Variables.Domain.copy
+gPy.Variables.SubDomain.copy" class="py-name" href="#" onclick="return doclink('link-103', 'copy', 'link-103');">copy</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L292"></a><tt class="py-lineno">292</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-104" class="py-name"><a title="gPy.Samplers.GibbsSampler.samples
+gPy.Samplers.MetropolisSampler.samples" class="py-name" href="#" onclick="return doclink('link-104', 'samples', 'link-86');">samples</a></tt> </tt>
+</div><a name="L293"></a><tt class="py-lineno">293</tt>  <tt class="py-line"> </tt>
+<a name="MetropolisSampler._next_sample"></a><div id="MetropolisSampler._next_sample-def"><a name="L294"></a><tt class="py-lineno">294</tt> <a class="py-toggle" href="#" id="MetropolisSampler._next_sample-toggle" onclick="return toggle('MetropolisSampler._next_sample');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html#_next_sample">_next_sample</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler._next_sample-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MetropolisSampler._next_sample-expanded"><a name="L295"></a><tt class="py-lineno">295</tt>  <tt class="py-line">        <tt id="link-105" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-105', 'sample', 'link-32');">sample</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-106" class="py-name" targets="Method gPy.FKMCMC.OrderSampler._mutate()=gPy.FKMCMC.OrderSampler-class.html#_mutate,Method gPy.Samplers.MetropolisSampler._mutate()=gPy.Samplers.MetropolisSampler-class.html#_mutate"><a title="gPy.FKMCMC.OrderSampler._mutate
+gPy.Samplers.MetropolisSampler._mutate" class="py-name" href="#" onclick="return doclink('link-106', '_mutate', 'link-106');">_mutate</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L296"></a><tt class="py-lineno">296</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">random</tt><tt class="py-op">.</tt><tt class="py-name">random</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-107" class="py-name" targets="Method gPy.FKMCMC.OrderSampler._accept()=gPy.FKMCMC.OrderSampler-class.html#_accept,Method gPy.Samplers.MetropolisSampler._accept()=gPy.Samplers.MetropolisSampler-class.html#_accept"><a title="gPy.FKMCMC.OrderSampler._accept
+gPy.Samplers.MetropolisSampler._accept" class="py-name" href="#" onclick="return doclink('link-107', '_accept', 'link-107');">_accept</a></tt><tt class="py-op">(</tt><tt id="link-108" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-108', 'sample', 'link-32');">sample</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L297"></a><tt class="py-lineno">297</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_sample</tt> <tt class="py-op">=</tt> <tt id="link-109" class="py-name"><a title="gPy.FKMCMC.OrderEnsemble.sample
+gPy.Models.BN.sample
+gPy.Samplers.GibbsSampler.sample
+gPy.Samplers.MetropolisSampler.sample
+gPy.Samplers.MultinomialSampler.sample" class="py-name" href="#" onclick="return doclink('link-109', 'sample', 'link-32');">sample</a></tt> </tt>
+</div><a name="L298"></a><tt class="py-lineno">298</tt>  <tt class="py-line"> </tt>
+<a name="MetropolisSampler._mutate"></a><div id="MetropolisSampler._mutate-def"><a name="L299"></a><tt class="py-lineno">299</tt> <a class="py-toggle" href="#" id="MetropolisSampler._mutate-toggle" onclick="return toggle('MetropolisSampler._mutate');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html#_mutate">_mutate</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler._mutate-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MetropolisSampler._mutate-expanded"><a name="L300"></a><tt class="py-lineno">300</tt>  <tt class="py-line">        <tt class="py-docstring">"""generate to a neighbour of the current sample and the proposal distribution"""</tt> </tt>
+<a name="L301"></a><tt class="py-lineno">301</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_sample</tt> </tt>
+</div><a name="L302"></a><tt class="py-lineno">302</tt>  <tt class="py-line"> </tt>
+<a name="MetropolisSampler._accept"></a><div id="MetropolisSampler._accept-def"><a name="L303"></a><tt class="py-lineno">303</tt> <a class="py-toggle" href="#" id="MetropolisSampler._accept-toggle" onclick="return toggle('MetropolisSampler._accept');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Samplers.MetropolisSampler-class.html#_accept">_accept</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">sample</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MetropolisSampler._accept-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="MetropolisSampler._accept-expanded"><a name="L304"></a><tt class="py-lineno">304</tt>  <tt class="py-line">        <tt class="py-docstring">"""log probability of acceptance"""</tt> </tt>
+<a name="L305"></a><tt class="py-lineno">305</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-number">0.0</tt> </tt>
+</div></div><a name="L306"></a><tt class="py-lineno">306</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Sep 19 13:59:04 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

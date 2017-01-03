@@ -1,0 +1,116 @@
+
+## Complete pooling model
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b*x[i]
+  }
+  a ~ dnorm (0, .0001)
+  b ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+}
+
+################################################################################
+
+## No pooling model
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b*x[i]
+  }
+  b ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (0, .0001)
+  }
+}
+
+###############################################################################
+
+## Classical regression with multiple predictors
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a + b[1]*x[i] + b[2]*winter[i] + b[3]*x[i]*winter[i]
+  }
+  for (k in 1:K){
+    b[k] ~ dnorm (0, .0001)
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (0, .0001)
+  }
+}
+
+###############################################################################
+
+## Vector-matrix notation
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a + inprod(b[],X[i,])
+  }
+  for (k in 1:K){
+    b[k] ~ dnorm (0, .0001)
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (0, .0001)
+  }
+}
+
+###############################################################################
+
+## Vector-matrix notation with a constant in the prediction matrix
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- inprod(b[],X[i,])
+  }
+  for (k in 1:K){
+    b[k] ~ dnorm (0, .0001)
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (0, .0001)
+  }
+}
+
+###############################################################################
+
+## Multilevel model with group-level predictors (this is the same as ## 
+## the radon.2.bug file)                                             ##
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b*x[i]
+  }
+  b ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (a.hat[j], tau.a)
+    a.hat[j] <- g.0 + g.1*u[j]
+  }
+  g.0 ~ dnorm (0, .0001)
+  g.1 ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+}
+

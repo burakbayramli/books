@@ -1,0 +1,329 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb}
+
+\newcommand{\lecnum}{AGM-06}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Conditional independence in factored distributions}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/16 09:46:34 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+  \begin{itemize}
+  \item Factored distributions
+  \item Hypergraphs
+  \item Hierarchical models
+  \item Interaction graphs
+  \item The Hammersley-Clifford theorem
+  \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factor multiplication, generally}
+  
+  \begin{itemize}
+  \item We have multiplied factors representing independent random variables.
+  \item But, \emph{since all the factors can be (implicitly) defined on
+      the same table} the `broadcasting followed by pointwise multiplication'
+    algorithm can be applied to multiply \emph{any} two factors.
+  \item Cue \verb+prod_gen+ from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factored distributions}
+
+  \begin{itemize}
+  \item Given a set of factors $\{f_{1}, f_{2}, \dots f_{n}\}$ with
+    non-negative values, let $Z = \sum f_{1} \times f_{2} \times
+    \dots \times f_{n}$.
+  \item The sum is over all variables, it's the scalar you get by
+    `marginalising away' all the variables.
+  \item As long as $Z>0$ the factors define a distribution:\\ $P =
+    Z^{-1} f_{1} \times f_{2} \times \dots \times f_{n}$
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Representing factored distributions}
+  
+  \begin{itemize}
+  \item Have $P = Z^{-1} f_{1} \times f_{2} \times \dots \times f_{n}$
+  \item So $P = f_{1} \times f_{2} \times \dots \times (f_{i}/Z)
+    \times \dots \times f_{n}$ for any $i$
+  \item Cue \texttt{norming} from \texttt{gPy.Examples}
+  \item Computing $Z$ (the \emph{partition function}) is a pain.
+  \item If we only need probabilities up to common factor, better to
+    represent $P$ (implicitly) by $\{f_{1}, f_{2}, \dots ,f_{n}\}$
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Independence properties of factored distributions}
+  
+  \begin{itemize}
+  \item If $P = f_{1} \times f_{2} \times \dots \times f_{n}$ what can
+    we deduce about the independence properties of $P$?
+  \item If each $f_i$ is a univariate factor for a distinct variable,
+    then as we have seen, each variable is independent.
+  \item But what about the general case?
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Conditional distributions}
+
+  \begin{itemize}
+  \item Let $X$ and $Z$ be subsets of variables of joint distribution $P$.
+  \item Let $P(X,Z)$ denote the distribution produced by projecting
+    $P$ down onto $X \cup Z$ by marginalisation. Similarly $P(Z)$ is
+    the marginal distribution just on $Z$.
+  \item The distribution on $X$ \emph{conditional on $Z$} is $P(X|Z) =
+    \frac{P(X,Z)}{P(Z)}$.
+  \item $P(X|Z)$ contains conditional distributions $P(X|Z=z)$, one
+    for each instantiation $z$ of $Z$.
+  \item $P(X|Z=z)$ is a distribution for $X$, \emph{given that $Z=z$}.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Computing conditional distributions}
+
+  \begin{itemize}
+  \item If $P(X,Z)$ and $P(Z)$ are both represented by factors, then
+    $P(X|Z)$ can be computed by pointwise \emph{division}.
+  \item $P(X|Z)$ is undefined if there's division by zero.
+  \item Cue \texttt{cond} from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Conditional independence}
+
+Let $X$ and $Z$ be subsets of variables of joint distribution $P$.
+
+\emph{$X$ is conditionally independent of $Y$ given $Z$
+      under $P$} if:
+\[
+P(X,Y|Z) = P(X|Z)P(Y|Z)
+\]
+Write this as: $\ci{X}{Y}{Z} [P]$ or just: $\ci{X}{Y}{Z}$ when the $P$
+is obvious.
+
+``$X$ and $Y$ are independent once we know $Z$.''
+
+It turns out that factored distributions have \emph{conditional} independence
+properties which depend on their \emph{structure}.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The structure of a factored distribution}
+  
+  \begin{itemize}
+  \item What matters is not so much the numbers in the factors but
+    the relationship between the \emph{variables} in the various factors.
+  \item Consider $\hg = \{ \mbox{set of variables used by $f_{i}$}
+    \}_{i}$
+  \item So in the example from \texttt{norming}\\ $\hg = \{ \{A,B\},
+    \{B,C\}, \{C,D\}, \{A,D\} \}$.
+  \item \hg{} is a \emph{hypergraph}.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Hypergraphs}
+
+  \begin{itemize}
+  \item A hypergraph \hg{} is a set of subsets of a finite set $H$, the
+    \emph{base set}.
+  \item The elements $h \in \hg$ are called the \emph{hyperedges}.
+  \item We will only consider hypergraphs where $H = \cup_{h \in \hg} h$
+  \item $\mathrm{red}(\hg)$ is the \emph{reduced hypergraph} produced
+    by removing all hyperedges in \hg{} that are contained in some
+    other hyperedge.
+  \item The hyperedges that are left after reduction are called a
+    \emph{generating class}.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Reducing hypergraphs}
+  
+  \begin{itemize}
+  \item $\hg = \{ \{A,B\}, \{B,C\}, \{C,D\}, \{A,D\} \}$ is already
+    reduced.
+  \item Let $\hg' = \{ \{\mathrm{Smoking}\}, \{\mathrm{Cancer},
+    \mathrm{Smoking}\}, \{\mathrm{Bronchitis}, \mathrm{Smoking}\} \}$,
+  \item $\mathrm{red}(\hg') = \{ \{\mathrm{Cancer},
+    \mathrm{Smoking}\}, \{\mathrm{Bronchitis}, \mathrm{Smoking}\} \}$
+  \item Redundant hyperedges correspond to redundant factors.
+  \item Cue \texttt{redund} from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Hierarchical models}
+  
+  \begin{itemize}
+  \item A generating class (i.e.\ a reduced hypergraph) $\hg =
+    \{h_{1}, h_{2}, \dots , h_{n}\}$ defines a set of factored
+    probability distributions.
+  \item It is simply the set of probability distributions of the form:
+    $f_{1} \times f_{2} \times \dots \times f_{n}$ where $h_{i} =
+    \mbox{set of variables used by $f_{i}$}$
+  \item Such a set of probability distributions is called a
+    \emph{hierarchical model}.
+  \item So each generating class defines a hierarchical model.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{(Undirected) Graphs}
+  
+  \begin{itemize}
+  \item A graph is a pair $(V,E)$ where $V$ is a set of vertices and
+    $E$ a set of edges. $E \subset V \times V$.
+  \item If $(\alpha,\beta)$ is an edge and so is $(\beta,\alpha)$ then
+    it is an \emph{undirected edge}.
+  \item Write $\alpha \sim \beta$ if there is an undirected edge
+    between $\alpha$ and $\beta$.
+  \item If all edges in a graph are undirected then call the graph undirected.
+  \item The great thing about graphs is that you can see them!
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{To each hypergraph an undirected graph}
+  
+  Each hypergraph \hg{} has an associated undirected graph $\hg_{[2]}=
+  (V,E)$ where:
+  \begin{itemize}
+  \item $V=H$
+  \item $(\alpha,\beta) \in E \Leftrightarrow \{\alpha,\beta\} \subset
+    h$, for some $h \in \hg$
+  \end{itemize}
+
+  $\hg_{[2]}$ is called the \emph{2-section} of \hg. If \hg{} is the
+  hypergraph for a factored distribution then $\hg_{[2]}$ is the
+  \emph{interaction graph} for the distribution. Cue \texttt{igs} from
+  \texttt{gPy.Examples}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{To each undirected graph a hypergraph}
+  
+  \begin{itemize}
+  \item A set of vertices $A \subseteq V$ is \emph{complete} if
+    for all distinct $\alpha, \beta \in A$: $\alpha \sim \beta$.
+  \item A set of vertices $C$ is a \emph{clique} if it is
+    \emph{maximally} complete.
+  \item That is, it is complete and adding any new vertex to $C$ would
+    produce a set which is not complete.
+  \item For any graph \gr, the set of all its cliques ${\cal C}(\gr)$
+    is the \emph{clique hypergraph} of the graph.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factorising according to a graph}
+
+  \begin{itemize}
+  \item Let \gr{} be a graph whose vertices are the variables of a
+    joint distribution $P$.
+  \item \gr{} has a clique hypergraph ${\cal C}(\gr)$. Each clique $c
+    \in {\cal C}(\gr)$ is a subset of the variables in the joint
+    distribution $P$.
+  \end{itemize}
+
+
+  The distribution $P$ is said to \emph{factorise according to the
+    graph \gr} if there are factors $f_c$ such that:
+  \[
+  P = \prod_{c \in {\cal C}(\gr)} f_{c}
+  \]
+  where each factor $f_c$ only depends on the variables in $c$.
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factorising according to interaction graphs}
+  
+  \begin{itemize}
+  \item Recall that each factored distribution has an associated
+    hypergraph and interaction graph.
+  \item Because the interaction graph is generated from the
+    distribution's hypergraph, it is easy to see that \emph{a
+      factored distribution always factorises according to its own
+      interaction graph}.
+  \item But why should we care about factorising according to a graph?
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The global Markov property}
+  
+  A joint distribution $P$ over variables $V$ obeys the \emph{global
+    Markov property} relative to a graph $\gr = (V,E)$, if for any
+  triple $(A,B,S)$ of disjoint subsets of $V$ such that $S$ separates
+  $A$ from $B$ in \gr, we have:
+  \[
+  \ci{A}{B}{S} [P]
+  \]
+
+  So if the global Markov property obtains we can use the graph to
+  `read off' conditional independence relations.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factorisation implies global Markov property}
+  
+  \begin{itemize}
+  \item You guessed it: if $P$ factorises according to \gr, then $P$
+    obeys the global Markov property relative to \gr.
+  \item This means a distribution's interaction graph can be used to
+    read off its conditional independence relations.
+  \item Cue \texttt{igs} again.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The Hammersley-Clifford theorem}
+  
+  \textbf{The Hammersley-Clifford theorem:} If a distribution $P$ is
+  everywhere positive then it factorises according to a graph \gr{} if
+  and only if it obeys the global Markov property relative to \gr.
+
+  \begin{itemize}
+  \item If there are zeroes in $P$ then we can have the global Markov
+    property without factorisation holding.
+  \item This is a simplified presentation: there are other Markov
+    properties apart from the global one---they are equivalent if $P$
+    is everywhere positive.
+  \end{itemize}
+
+\end{titledslide}
+
+
+\end{document}

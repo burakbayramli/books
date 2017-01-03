@@ -1,0 +1,57 @@
+#!/usr/bin/python
+import sys, os, shutil, re
+
+if len(sys.argv) < 3:
+    print """\
+    Usage: mvcvs [OPTIONS] oldfile newfile
+    or: mvcvs [OPTIONS] file1 file2 ... directory
+    """
+    sys.exit(1)
+
+# first we need to extract options, source files and destination
+options = []
+while sys.argv[1][0] == '-':
+    options.append(sys.argv[1])
+    del sys.argv[1]
+
+# sys.argv now contains file names only
+destination = sys.argv[-1];  del sys.argv[-1]
+sources = sys.argv[1:]
+
+# check for consistency:
+if len(sources) > 1 and not os.path.isdir(destination):
+    print """
+    mvcvs: moving multiple files, but
+    %s is not a directory""" % destination
+    sys.exit(1)
+
+for file in sources:
+    if os.path.isdir(file):
+        print 'mvcvs: directories cannot (yet) be moved'
+        sys.exit(1)
+
+for file in sources:
+    # use copy and remove (instead of rename) to handle
+    # moving files between different file systems
+    print "moving %s to %s" % (file, destination)
+    shutil.copy(file, destination)
+    os.remove(file)
+
+os.system("cvs remove %s" % ' '.join(sources))
+
+# CVS update: add the new file or the new files in another directory:
+if os.path.isdir(destination):
+    os.chdir(destination);
+    # can use basename only of source files now that we have
+    # moved to the destination directory:
+    newfiles = [os.path.basename(file) for file in sources]
+    # add the new file to CVS if the new directory is managed by CVS:
+    if os.path.isdir("CVS"):
+        os.system("cvs add %s" % ' '.join(newfiles))
+    
+else:
+    # destination is a plain file, add to CVS if there is a CVS
+    # directory in the current directory
+    dir = os.path.join(os.path.dirname(destination), "CVS")
+    if os.path.isdir(dir):
+        os.system("cvs add %s" % destination)

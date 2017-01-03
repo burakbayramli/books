@@ -1,0 +1,93 @@
+Vienna, 1908-1909:
+(Source:  R. van Mises, "Probability, Statistics, and Truth")
+
+month	total births	proportion girls
+Jan			.4777
+Feb	(average	.4875
+Mar     was 3903	.4859
+Apr	per month)	.4754
+May			.4874
+Jun			.4864
+Jul			.4813
+Aug			.4787
+Sep			.4895
+Oct			.4797
+Nov			.4876
+Dec			.4859
+Jan			.4857
+Feb			.4907
+Mar			.5010
+Apr			.4903
+May			.4860
+Jun			.4911
+Jul			.4871
+Aug			.4725
+Sep			.4822
+Oct			.4870
+Nov			.4823
+Dec			.4973
+
+Total proportion girls:  .4857
+Observed standard deviation of proportion girls:  .0064
+Expected s.d. of proportion girls:  sqrt((.486)(1-.486)/3903) = .0080
+95% conf. interval for observed s.d. (based on chi^2 with 23 d.f.):
+    (.006, .010)
+(observed s.d not sigificantly different from binomial model)
+
+
+California:
+(Source:  State of California, Department of Health Services, birth records)
+
+year	girl births	total births	proportion girls
+1982	209,674		429,631		.4880
+1983	212,700		435,722		.4882
+1984	218,421		447,394		.4882
+1985	229,843		470,816		.4881
+1986
+1987	244,966		503,376		.4866
+
+Total proportion girls:  .4878
+Observed standard deviation of proportion girls:  .0006
+Expected s.d. of proportion girls:  sqrt((.488)(1-.488)/450,000) = .00075
+95% conf. interval for observed s.d. (based on chi^2 with 4 d.f.):
+    (.0003, .0012)
+(observed s.d not sigificantly different from binomial model)
+
+
+United States:
+(Source:  Statistical Abstract of the United States)
+
+year	girl births	total births	proportion girls
+1975	1,531,000	3,144,000	.4870
+1976	1,543,000	3,168,000	.4871
+1977	1,621,000	3,327,000	.4872
+1978	1,624,000	3,333,000	.4872
+1979	1,703,000	3,494,000	.4874
+1980	1,760,000	3,612,000	.4873
+1981	1,769,000	3,629,000	.4874
+
+Total proportion girls:  .4872
+Observed standard deviation of proportion girls:  .00018
+Expected s.d. of proportion girls:
+    binomial s.d:  sqrt((.487)(1-.487)/3,300,000 = .00028
+    round-off error:
+        relative error in numerator:  1/(sqrt(12)*1,650) = .00017
+        relative error in numerator:  1/(sqrt(12)*3,300) = .00009
+        absolute error of ratio:  .487*sqrt(.00017^2+.00009^2) = .00010
+    total error:  sqrt(.00028^2 + .00010^2) = .00029
+95% conf. interval for observed s.d. (based on chi^2 with 6 d.f.):
+    (.00013, .00045)
+(observed s.d not sigificantly different from binomial model)
+
+
+
+Simple summary (to show sqrt(n)) behavior:
+
+data set   binomial N	sd(x/N)	  sqrt(N)*sd(x/N)	theoretical value
+Vienna	 	3903	.0064		.40			.50
+California    450000	.00067		.45			.50
+U.S.	     3300000	.00018		.32			.50
+
+(Also, the means from the three samples are not quite statistically
+significantly different from each other.)
+

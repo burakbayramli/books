@@ -1,0 +1,881 @@
+\movetooddpage
+
+\chapter{Nesnesel Tasarým} \label{object}
+
+\thischapterhas{
+\item Nesne odaklý tasarým ve programcýlýk
+\item Tasarým düzenleri 
+\item Mimariler
+}
+
+\versal{N}\textsc{esne} odaklý tasarým ve programcýlýk günümüzde o kadar geniþ
+kabul görmüþ haldedir ki, bu kavramlar sahneye çýkmadan önce nasýl program
+yazdýðýmýzý (yaþý uygun olanlar) bile bazen hatýrlayamaz oluyoruz. Fakat aslýnda
+kurumsal programcýlýðýn en popüler dili Java'yý, onun temel aldýðý C++, ve
+Smalltalk dillerini 1967 yýlýnda çýkmýþ tek bir dile baðlamak mümkündür: Simula.
+
+Simula yaratýcýlarý (Kristen Nygaard, Ole-Johan Dahl) dünyanýn ilk nesnesel
+dilini simulasyon programlarý yazmak amacý ile yarattýlar. Ayrýsal olay
+simulasyonu (discrete event simulation), bir matematiksel sistemi cebirsel
+yöntemlerle (analitik modelleme -analytical modeling-) ile deðil, sistemdeki
+aktörleri bir nesne olarak betimleyip, onlarýn üzerine gelen olaylarý (event)
+gerçek dünya þartlarýnda olacaðý gibi ama sanal bir ortamda tekrar yaratarak bir
+sistemi çözmeye verilen addýr. Bazý problemlerin çözülebilir (tractable) bir
+analitik modeli kurulumadýðýndan, ayrýksal olay simulasyonu popüler bir çözüm
+olarak kullaným bulmuþtur.
+
+Nesne odaklý tasarým ve programlama kavramlarýnýn ilk kez simulasyon amaçlý
+yaratýlmýþ bir dil içinde ortaya çýkmalarý kesinlikle bir kaza deðildir
+\cite[sf. 1122]{ooconstruction}. Nesne kavramý, gerçek dünyadaki bir nesneyi çok
+rahat yansýttýðý için, bu yönde kullaným bulmasý rahattý. Daha sonra Simula
+kullanýcýlarýnýn da fark ettiði üzere, simulasyon dýþýnda Simula dilinin genel
+programcýlýk için yararlý olabileceði anlaþýlmaya baþlanmýþtýr. Bundan sonra
+nesne odaklý programlama kavramlarý genel programcý kitlesine de yayýlmaya
+baþladý.
+
+Simula'nýn özellikleri diðer diller tarafýndan hýzla adapte edilmeye baþlandý:
+Xerox PARC þirketinde Alan Kay, Simula'dan esinlendiði nesnesel odaklý
+kavramlarý, grafik ortamda programlama ortamý saðlayan yeni projesine dahil
+ederek Smalltalk dilini yarattý (1972). Eðer Simula akademik çevreleri
+etkilediyse, Smalltalk Byte dergisinin ünlü 1981 Aðustos sayýsýnda {\em
+kitleleri} etkilemiþtir: Bu sayýda görsel bir Smalltalk programlama ortamý ilk
+kez genel programcý seyircisine nesneleri görsel bir þekilde
+tanýtýyordu. Hakikaten de Smalltalk nesnesel diller içinde görsel geliþtirme
+ortamýný ilk destekleyen dil olarak günümüzdeki modern IDE'lerin çoðunun
+fikir babasý sayýlmaktadýr.
+
+Smalltalk'ýn getirdiði ilginç bir özellik class (nesne tanýmý) ile nesne kavramý
+arasýndaki farký ortadan kaldýrmasýydý; Smalltalk dünyasýnda herþey bir
+nesneydi. Bu durum, günümüzde kullanýlan ``nesne odaklý programlama'' teriminin
+bile Smalltalk'tan ne kadar etkilendiðini göstermektedir çünkü bu birleþim, ne
+yazýk ki, her diðer ``nesne odaklý'' dil için doðru deðildir: Java, Eiffel, C++
+gibi güçlü tipleme takip eden dillerde class ve nesne çok net bir þekilde
+birbirinden ayrýlýr, yâni ``nesne odaklý programlama'' terimi, güçlü tipleme
+kullanan bir dil için ``class odaklý programlama'' olarak deðiþtirilmelidir
+(neyse!). Fakat Smalltalk diðer noktalarda, meselâ her þeyi nesne hâline
+getirmiþ olmasý sayesinde debugger, nesne gezici (object browser) gibi koda
+eriþmesi gereken ek araçlarýn iþini rahatlatabilmeyi baþarmýþtýr.
+
+Smalltalk'un dezavantajý, zayýf tipleme kullanan dinamik bir dil olmasýdýr ve bu
+sebeple Smalltalk kullanan programlar ciddi performans problemleri
+yaþamýþtýr. Sebebini þöyle açýklayabiliriz: Statik tipleme kullanan Java, Eiffel
+ve C++ derleyicilerinin bazý performans iyileþtirmelerini programcýlarýna
+derleme anýnda sunmalarý mümkündür: Meselâ, bu dillerin derleyicileri miras
+(inheritance) durumunda fonksiyonlarý bir dizin olarak önceden tutarak, dinamik
+baðlamayý (dynamic binding) anlýk/sabit zamanda çözebilirler. Smalltalk, dinamik
+bir dil olmasý sebebiyle bu tür iyileþtirmelerden faydalanamamýþtýr
+\cite[sf. 1134]{ooconstruction}.
+
+Bu hatalar, AT\&T Bell Labarotuvarlarýnda çalýþan Bjarne Stroustrup tarafýndan
+dikkate alýnarak, tekrarlanmamýþtýr. Simula'nýn ana kavramlarýný C diline
+taþýyarak C++ dilini oluþturan Stroustrup, özellikle C'den nesnesel kavramýna
+geçiþ yapmak isteyen programcýlara 80 sonlarý ve 90 baþlarýnda çok ideal bir
+seçenek sunmayý baþardý. Bu zamanlarda C++, Kurumsal Yazýlým Müdürleri (IT
+Manager) için her iki dünyanýn en iyi birleþimiydi: Mevcut programcýlarý
+korkutmayacak kadar C, ama ileri kavramlarý öðrenmek isteyenlerin seveceði kadar
+``nesnesel''. Fakat C++'ýn nesnesel dil eklerinin gereðinden fazla çetrefil
+olmasý ve C++'ýn bir çöp toplayýcýyý desteklememesi gibi sebepler yüzünden,
+90'lý yýllarýn ortalarýnda sektör kurumsal uygulamalarda Java diline doðru
+kaymýþtýr.
+
+Java, C++'ýn sözdizimini daha temizleþtirerek çöp toplayýcý eklemiþ, ayrýca
+eþzamanlý (concurrent) ve network üzerinde programlamaya paketten çýktýðý
+hâliyle destek vermesi ile, nokta com patlamasý (dot com boom) ile ayný anda
+anýlýr ve bilinir bir duruma gelmiþtir. Bu yüzden ``daha iyi bir C++'' arayan
+kurumsal programcýlar, ve yeni Internet ortamýnýn gerektirdiði programlama için
+Java, gerekeni tam karþýlayan bir dil hâline geliyordu. Günümüzde Java kurumsal
+programcýlýðýn en yaygýn kullanýlan dili hâline gelmiþtir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Nesnesel Tasarým ve Teknoloji][NESNESEL TASARIM VE TEKNOLOJÝ]{Nesnesel Tasarým ve Teknoloji} 
+
+Kurumsal programcýlýkta kullanýlan dilin temizliðine ek olarak, kullanýlan {\em
+yan teknolojiler} ve onlarýn gerektirdiði arayüzler (API) nesnesel tasarýmýmýz
+üzerinde kesinlikle çok etkilidirler. Nesnesel tasarýmýn ve yöntemlerinin ilk
+yaygýnlaþmaya baþladýðý 80'li ve 90'lý yýllarda yapýlan önemli bir hata, dýþ
+teknolojilerin yok sayýlmasý ve nesnesel tasarýmýn bir boþlukta (vacuum)
+içerisindeymiþ gibi yapýlmasýnýn cesaretlendirilmeydi. Bu tavsiyenin projeler
+üzerinde etkisi öldürücü olmuþtur, çünkü bir projede kullandýðýnýz her
+teknoloji, {\em nesne yapýlarýnýzý etkiler}.
+
+Diðer programcýlýk dallarýnda bu her zaman geçerli olmayabilir. Meselâ bilimsel
+formül hesabý (number crunching) yapmasý gereken türden programlar, dýþ
+sistemlerle fazla etkileþime girmezler. Girdi olarak bir dosya alýrlar, ve çýktý
+olarak bir diðer dosya üretirler (ya da çizim (plot) basabilirler). Kýyasla bir
+kurumsal sistem, en azýndan bir veri tabaný ürünüyle, ek olarak ta uygulama
+servisi, JMS ile asenkron iletiþim, e-mail, yardýmcý kütüphaneler gibi birçok
+dýþ araç ile iletiþim hâlinde olacaktýr. Formül hesabý yapan programlarda dýþ
+sistemleri yok sayarak daha rahat nesnesel tasarým yapabilirsiniz, ama kurumsal
+sistemlerde nesnesel tasarýmý {\em nerede} kullanacaðýmýzý çok iyi bilmemiz
+gerekecektir. 
+
+Nesnesel tasarým yapacaðýmýz yer, programýnýzýn iþleyiþ kontrolünün altyapý
+kodlarýndan sizin yazacaðýnýz kodlara geldiði yerde baþlar, ve tekrar dýþ
+teknolojiye geçtiðinde biter. Burada vurgulamak istediðimiz bir {\em öncelik
+mentalitesi} farkýdýr: Yapýlmasý yanlýþ olan, teknolojiden habersiz bir þekilde
+þirin ve güzel nesneler tasarlayýp onu sonra teknolojiye baðlamaktýr. Bunun
+yerine yapýlmasý gereken, önce teknolojiyle nasýl konuþmamýz gerektiðini
+anlamamýz ve sonra iletiþim noktalarýný iyice kavradýktan {\em sonra}, arada
+kalan boþ bölgeleri nesnesel tasarým ile doldurmamýzdýr. Bunu bir örnek ile
+anlatmaya çalýþalým:
+
+Sisteme müþteri eklemesi gereken bir uygulama düþünelim. Bu müþteri veri yapýsý
+hakkýnda tutmamýz gereken özellikler (attributes) biliniyor olsun. Öðeler
+alýndýktan sonra uygulamanýn bazý doðruluk kontrolleri yapmasý gerekiyor, bunlar
+isim ve soyadýnýn mecburi olmasý ve e-mail içinde \PVerb!@! iþaretinin
+bulunmasýnýn kontrol edilmesi gibi iþlemler olacaktýr. Daha sonra, baþka bir
+iþlem ile müþteri veri tabanýna yazýlacaktýr.
+
+Bu gereklilik listesi üzerinden, bazý nesnesel programcýlar tasarýma direk
+baþlanabileceðini savunurlar. Ýdeal bir modeli de þöyle kurabilirler (Þekil
+\ref{object:tech:wrong:customer}).
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/customer-wrong.eps}
+  }
+}
+\caption{\label{object:tech:wrong:customer} Yanlýþ Müþteri Nesnesi}
+\end{figure}
+
+Bu modele göre önyüz, bir \PVerb!Customer! (müþteri) nesnesini yaratacak,
+üzerinde \PVerb!setName!, \PVerb!setLastName!, vs.  ile gereken verileri
+koyacak, daha sonra veri doðruluk kontrolü için \PVerb!validate!  çaðrýsýný
+yapacak, ve en sonunda \PVerb!save! ile müþteri nesnesini kaydedecektir.
+
+Fakat, bu teorik model hiçbir {\em teknolojiyi} dikkate almamýþtýr, bu sebeple
+tasarýmý etkileyebilecek bazý ek faktörler atlanmýþtýr. Bakalým teknolojiyi
+ekleyince modelimiz etkilenecek mi? Meselâ eðer önyüzde Struts altyapýsýný
+kullanýyorsak, baðlanan (client) tarafýnda doðruluk kontrolü yapmanýn bir Struts
+tekniði vardýr. Özellikle örnekte gösterilen müþteri nesnesinde yaptýðýmýz
+türden kontroller (isim, soyadý, e-mail) için, Javascript bazlý çalýþan bir
+altyapý mevcuttur. Bu doðruluk kontrol altyapýsý, Struts'ýn ayar dosyasýndan
+\PVerb!struts-config.xml! ayarlanýr, ve modelde görülen türden bir Java kodu
+yazýlmasýný gerektirmez. Bu yüzden, modelimize koyduðumuz \PVerb!validate!
+metodu tamamen gereksizdir.
+
+
+Ayný þekilde, eðer projemizde Hibernate kullanýyorsak, kalýcýlýk metodu olan
+\PVerb!save!, müþteri nesnesi üzerinde deðil, \PVerb!org.hibernate.Session!
+nesnesi üzerindedir. Hibernate \PVerb!save!'e parametre olarak müþteri nesnesini
+geçmek gerekir, \PVerb!save! metodu müþteri üzerinde çaðýrýlmaz. Yine
+teknolojiyi dikkate alýnmadan modelin eksik olacaðýný kanýtlamýþ oluyoruz.
+
+Fakat bitmedi. Þimdi önyüz ile \PVerb!Customer! nesnesi arasýnda olabilecek
+çaðrýlarý ele alalým. Meselâ, önyüz teknolojisi Swing olsun, ve bu sebeple
+birçok Swing önyüzünün að (network) üzerinden müþteriye eriþmesi gereksin. Pür
+nesnesel modelleme yaptýðýmýz için ve teknolojiyi dikkate (!) almadýðýmýz için
+de, \ref{object:tech:still:wrong:customer} üzerindeki yapýyý kuruyoruz.
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/customer-still-wrong.eps}
+  }
+}
+\caption{\label{object:tech:still:wrong:customer} Network Üzerinden Müþteri Eklemek}
+\end{figure}
+
+Bu model optimal çalýþýr mý? Eðer bir uygulamanýn performansý en az doðruluðu
+kadar önemliyse, bu modelin hýzlý çalýsmasý önemli olmalýdýr. Ne yazýk ki bu
+soruya cevap, ``hayýr'' olacaktýr. Dikkat edersek önyüz, yâni \PVerb!Page!
+(sayfa) nesnesi, \PVerb!new! ile bir \PVerb!Customer! nesnesi yarattýktan sonra,
+bu nesne üzerinde \PVerb!set! metotlarýný çaðýracaktýr. Ýþte problem burada
+ortaya çýkacaktýr, çünkü network üzerinde eriþim kurallarýna göre, ufak ufak
+\PVerb!set!  çaðrýlarý yapmak yerine, tüm gereken parametreleri birarada
+paketleyerek {\em tek bir defada} hepsini göndermek daha hýzlýdýr. Kurumsal
+programcýlýkta ufak ufak ve çok çaðrý yapan sistemlere geveze (chattery)
+sistemler denmektedir, ve bu tür mimarilerden kaçýnýlýr.
+
+O zaman, modelimize arayüzü daha geniþ olan yeni bir class daha eklememiz
+gerekiyor. Bu class, dýþ dünyaya gösterilen arayüz olacaktýr, çünkü parametre
+listesini network üzerinden göndermeye daha elveriþli durumdadýr. Bu yeni model,
+Þekil \ref{object:tech:still:right:customer} üzerinde görülebilir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/customer-right.eps}
+  }
+}
+\caption{\label{object:tech:still:right:customer} Doðru Müþteri Modeli}
+\end{figure}
+
+Bu þekil üzerinde yeni bir class, \PVerb!CustomerService! görüyoruz. Bu class
+hangi daðýtýk nesne teknolojisini kullanýyorsak, o þekilde uzaktan eriþime
+açýlacak olan class'týr.
+
+Özet olarak, ilk yola çýktýðýmýz modelden oldukça uzaklaþtýk. Metot
+\PVerb!validate!, hem Struts hem de Swing ortamýnda ``baðlanan'' tarafa alýnmasý
+gereken bir metottu, bu yüzden \PVerb!Customer!'dan çýkartýldý. Metot
+\PVerb!save!, kalýcýlýk aracý üzerinde olacaktý, bu sebeple çýkartýldý. Ve
+son olarak uzaktan eriþim için ilk modelde hesaba alýnmayan
+\PVerb!CustomerService! class'ý eklendi, böylece \PVerb!Customer! nesnesinin
+uzaktan çaðýrýlmasýný engelledik.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Modelleme}
+
+Teknolojinin kontrolü bize býraktýðý ve bizim kontrolü geri verdiðimiz noktanýn
+arasýnda (ve hâla teknolojiyi aklýmýzda tutarak) artýk klasik anlamda modelleme
+yapabiliriz. Tabii en teorik, ve teknolojiden baðýmsýz olduðunu iddia eden
+modeller bile tek bir teknolojik önkabul yapmaktadýrlar; Bir nesnenin diðer bir
+nesneye yaptýðý metot çaðrýsýnýn milisaniye seviyesinde ve ayný JVM içinde
+iþletileceði önkabulu. Bölümümüzün geri kalanýnda bu teknolojik önkabule
+dayanarak istediðimiz büyüklükte ve sayýda class'ý modelimize koymakta, ve
+herhangi bir metotu bir class'tan ötekine aktarmakta sakýnca görmeyeceðiz.
+
+\subsection{Prensipler}
+
+Modellerimiz için takip etmemiz gereken basit prensipler þunlar olacaktýr:
+
+\begin{itemize}
+\item Fonksiyonlarýn yan etkisi olmamalýdýr.
+
+\item Kurumsal uygulamalarda, model için class seçerken iliþkisel modelde
+  (veri tabaný þemasýnda) tablo olarak planlanmýþ birimlerin class hâline
+  gelmesinde bir sakýnca yoktur. Bu iliþki her zaman birebir olmayabilir, ama
+  þemamýzdaki tablolarýn büyük bir çoðunluðunu modelimizde class olarak
+  görülecektir. 
+  
+\item Bir class'ýn metotlarý ve fonksiyonlarýný bir ``alýþveriþ listesinin
+  kalemleri'' gibi görmeliyiz. Bir class dýþ dünyaya birden fazla servis
+  sunabilir, ve hâtta sunmalýdýr. Bir class sadece tek bir iþ için
+  yazýlma\textbf{ma}lýdýr.
+  
+\item Uygun olduðu yerde, tasarým düzenleri (design patterns) faydalý
+  araçlardýr. Erich Gamma ve arkadaþlarýnýn paylaþtýðý düzenler içinden
+  \begin{itemize}
+   \item Command
+   \item Template Method
+   \item Facade     
+   \item Singleton
+  \end{itemize}
+  kurumsal sistemlerde kullanýlan düzenlerdir (bunlarýn haricindeki Gamma
+  düzenleri kullaným görmez). 
+  
+\item Hibernate ile eþlediðimiz POJO'lara \PVerb!set!  ve \PVerb!get!  haricinde
+  metotlar eklemekte sakýnca yoktur.
+  
+\end{itemize}
+Þimdi bu prensipleri teker teker açýklayalým:
+
+\subsection{Fonksiyonlarýn Yan Etkisi}
+
+Bir fonksiyon, geriye bir sonuç döndüren bir çaðrýdýr. Bu geri döndürülen deðer,
+ya o çaðrý içinde anlýk yapýlan bir hesabýn sonucu, ya da nesnede tutulmakta
+olan bir nesneye ait referans deðeri olacaktýr. Her ne olursa olsun, bir
+fonksiyon bir deðer döndürmekle yükümlüdür. Kýyasla metotlar geriye hiçbir deðer
+döndürmezler. Bu yüzden metot dönüþ tipi olarak \PVerb!void! kullanmak gerekir.
+
+Bir fonksiyonun görevi, raporlamaktýr. Metotlar nesne içinde {\em bir þeyler
+deðiþtirmek} için kullanýlýr. Eðer bir örnek vermek gerekirse bir nesneyi, bir
+radyo gibi düþünebiliriz. Bu radyoda metotlar, kanal deðiþtirme, ses açma/kapama
+gibi düðmelerdir. Fonksiyon ise, radyonun hangi kanalda olduðunu gösteren bir
+ibre olabilir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/dvdplayer.eps}
+  }
+}
+\caption{Java ArrayList Bir Makina Olsaydý}
+\end{figure}
+
+Bu yüzden, fonksiyonlarýmýzý yazarken nesne içinde deðiþiklik yapmamalarý için
+çok özen göstermeliyiz. Bu prensibe dikkat etmeyen ve çaðýrýlýnca nesnede
+deðiþikliðe sebep olan fonksiyonlara {\em yan etkisi olan} fonksiyonlar
+denmektedir, çünkü fonksiyonun ana amacý dýþýnda bir yan etkiye sebebiyet
+vermiþtir; Nesnenin iç verisinde deðiþikliðe sebep olunmuþtur. Radyo örneðimize
+dönersek, düþünün ki hangi kanalda olduðumuza bakýnca radyonun kanalý deðiþiyor!
+Böyle bir radyo muhakkak pek kullanýþlý olmazdý, çünkü bir nesne hakkýnda bilgi
+almak istediðimizde, o bilgi alma iþleminin, nesne üzerinde bir deðiþiklik
+yapmamasýný bekleriz. Nesnesel odaklý tasarýmýmýzda bir fonksiyon yazarken,
+ayný mantýk ile düþünmeliyiz. Fonksiyonlarýmýz deðiþikliðe sebep olmuyorsa,
+içimiz rahat bir þekilde bu fonksiyonlarý istediðimiz kadar çaðýrabiliriz.
+
+\subsection{Veri Tabaný ve Nesnesel Model}
+
+Model için class seçmek, çoðu nesne odaklý tasarým literatüründe iþlenen bir
+konudur, ve birçok kulaða küpe (rule of thumb) kural ortaya atýlmýþtýr. Mesela
+dilbilgilsel bir yöntem söyledir: Gereklilikler (requirements) dokümanýnýn
+cümlelerindeki isimler (noun) seçilir ve bunlardan bazýlarý class olarak
+seçilir. Bu yönteme göre, bir gereklilik dökümanýndaki þu cümlede;
+
+\begin{quote}
+``Asansör hareket etmeden önce kapýlarýný kapatmalýdýr, ve asansör bir kattan
+  öteki kata her hareket ediþinde veri tabanýnda bir kayýt yazýlmalýdýr'' 
+\end{quote}
+{\em asansör}, {\em kat} ve {\em kapý} birer class adayý olarak
+seçilmelidirler.
+
+Fakat böyle basitçi bir yöntem ne yazýk ki bizi fazla uzaða götürmez. Ýnsan dili
+deðiþik nüanslara çok açýktýr ve çok daha katý kurallara göre yazýlmasý gereken
+bir bilgisayar sistemi için bizi yanlýþ yöne sevkedebilir. Mesela üstteki
+örnekte aslýnda class olmasý gereken þey, {\em hareket}'tir. Ama bu kelime isim
+deðil bir fiil olduðu için, yöntemimiz tarafýndan seçilmemiþtir
+\cite[sf. 723]{ooconstruction}.
+
+Kurumsal uygulamalarda dilbilgisel yöntem yerine veri tabanýndaki tablolara
+bakarsak, kullanmamýz gereken class'lar hakkýnda daha iyi bir fikir
+edinebiliriz. Meselâ üstteki örnekteki hareket, iliþkisel modelleme sýrasýnda
+kesinlikle yakalanacak bir tablo olduðundan, bu tabloya bakarak modelimize ayný
+isimde bir class ekleyebiliriz. 
+
+Tabii þemamýzdaki her tabloyu bir class hâline getirmemiz gerekmez. Meselâ daha
+önce kullandýðýmýz \PVerb!Garage! ve \PVerb!Car! örneðine gelirsek, bu iki tablo
+arasýnda çoka çok eþleme yaptýðýmýz durumda bir ara tablo (cross reference
+table) kullanmamýz gerekecektir. Bu tablonun nesne modeline yansýtýlmasý
+gerekmez. Þekil \ref{object:modeling:db} üzerinde bu eþlemeyi görüyoruz. 
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/garage_car_coka_cok_mapping.eps}
+  }
+}
+\caption{\label{object:modeling:db} Þemadaki Her Tablonun Nesne Modeline Yansýtýlmasý Gerekmez}
+\end{figure}
+
+Bu eþlemede \PVerb!GARAGE_CAR! adlý tablo, nesne dünyasýna yansýtýlmamýþtýr (bu
+eþlemenin Hibernate üzerinden nasýl yapýldýðýný anlamak için
+\ref{hibernate:rels:manytomany} bölümüne bakabilirsiniz.
+
+\subsection{Metotlar ve Alýþveriþ Listesi} \label{object:shoppinglist}
+
+Class seçerken eþzamanlý olarak aklýmýzýn bir köþesinde bir seçim daha yaparýz;
+Hangi metotlar ve hangi fonksiyonlarýn bir class üzerinde olacaðý
+seçimi. Zihnimizde belli servisler ile veriler biraraya geldiðinde, bu
+birliktelikten bir class doðar. Peki bu birlikteliði bulmak için bir yöntem var
+mýdýr? Bu iþ için nasýl bir zihin durumu (mindframe) içinde bulunmalýyýz?
+
+\subsubsection{Tek Amaçlý Class}
+
+Nesnesel tasarýmda {\em tek bir} servis saðlayan class'lardan kaçýnmamýz
+gerekir, çünkü bu tür class'lar, hâla class modülünü bir servisler listesi
+olarak görmediðimizi gösterir. Bu tür nesneleri, onlarý belgeleyen dokümanlardan
+rahatça anlayabilirsiniz, genellikle þöyle târif edilirler: ``Bu nesne xxx iþini
+yapýyor''. Bir xyz iþini ``yapýyor'' diyebildiðimiz nesne, demek ki tek o iþ
+için yazýlmýþtýr. Halbuki nesnesel yöntemin gücü, bir veri tanýmý etrafýnda
+birçok servisin saðlanabilmesidir. Bu servislerin illâ ki birbirlerini çaðýrýyor
+ve birbirleri ile yakýn alâkada olacak hâlde tasarlanmýþ olmasý gerekmez. Bu
+yüzden bir class'ýn metot listesi, ``bir alýþveriþ listesine benzer''
+denir. Deðiþik ihtiyaçlar için deðiþik kalemler
+vardýr\footnote{\ref{dist:command} bölümünde bahsedilen Command mimarisinin bu
+kurala uymadýðý düþünülebilir, fakat Command mimarisindeki durum, teknolojik bir
+gereklilikten (network iletiþim hýzýnýn ayný JVM'de olan iletiþimden daha düþün
+olmasý sebebiyle) ortaya çýkmýþtýr. Dediðimiz gibi, teknolojik sýnýrlar mimariyi
+etkilemiþtir.}.
+
+Meselâ \PVerb!java.util.ArrayList! class'ýný örnek alýrsak, dýþ dünyaya
+saðladýðý birçok servis vardýr. \PVerb!add! çaðrýsý ile nesneye (listeye) bir
+eleman eklenmesini saðlar, \PVerb!remove! ile bir nesnenin silinmesi servisini
+saðlar. Çaðrýlar \PVerb!add! ile \PVerb!remove! arasýnda direk bir kod
+baðlantýsý yoktur. Bu iki metot birbirlerini çaðýrmazlar. Ama ayný class
+üzerinde bulunurlar. Eðer bu iþ için sadece ``tek bir iþlem için'' yazýlmýþ bir
+class kullansaydýk, o zaman \PVerb!ListAdder!  ve \PVerb!ListRemover! gibi iki
+class yazmamýz gerekecekti. Bu class'lardaki metotlarý ise \PVerb!doIt!  gibi
+komik bir isimde olabilecek bir tek metot olacaktý. Tavsiyemiz, \PVerb!doIt!
+metotlarýndan ve bu metotlarý içerecek class'lardan kaçýnmanýzdýr.
+
+Deðiþik servisler saðlayan bir nesne düþünmek tasarýmcý için faydalýdýr. Ayný
+þekilde, bir sistem içinde ayný class'tan gelen birçok nesnelenin ayný anda,
+farklý roller oynayabileceðini (yâni iki nesnenin deðiþik metotlarýnýn
+çaðýrýlabileceðini) düþünmek te tasarýmcý için faydalýdýr.
+
+\subsubsection{Nesnesel Modellerde Tepe Fonksiyonu Yoktur!}
+
+Prosedürel disiplinden gelen ve kurtulmamýz gereken ikinci bir alýþkanlýk,
+yazmakta olduðumuz uygulama için sürekli bir ``üst nokta'' aramaktýr. Üst
+noktadan kastýmýz, uygulamada her þeyin baþladýðý ve kontrol edildiði o tek
+iþletici, çaðýrýcý, ana metot, baþlangýç noktasýdýr. Prosedürel günlerden kalma
+bu alýþkanlýðý, nesnesel sistemler kurarken terketmemiz gerekiyor, çünkü eðer
+sürekli üst nokta metotunu düþünürsek, tasarýmýz çok fazla ``o kullaným için''
+olacak, ve kod düzeni açýsýndan tüm fonksiyonlarýmýz o baþlangýç koca metotunun
+uydusu hâline gelerek, en kötü durumda baþlangýç metotunun olduðu class'ta bir
+takým ek metotlar haline gelecektir.
+
+\textbf{Nesnesel sistemlerde üst nokta yoktur}. Nesnesel tasarýmlarda ``uygulama''
+denen þey, tüm class'lar kodlandýktan sonra {\em en son aþama olarak}, son anda
+gereken class'larýn birleþtirilerek (çaðýrýlarak) biraraya getirilmesi gereken
+bir yapboz resmidir. Burada belki de en önemli fark, hangi eylemin hangisinden
+önce geleceðini vurgulayan bir öncelik farkýdýr. Prosedürel yöntemler tasarýmýn
+yukarýdan-aþaðý (top-down) yapýlmasýný zorlarken, nesnesel yöntemde tasarým
+alttan yukarý (bottom-up) doðru gider.
+
+\subsubsection{Örnek}
+
+Bu düþünce farkýný herhalde en iyi þekilde bir örnek üzerinden
+aktarabiliriz. Uygulamamýzýn amacý þu olsun: Bir sayýyý bir sayý düzeninden
+diðerine taþýmak. Meselâ, 2'lik düzende 110010010 sayýsýný, 10'luk düzendeki
+karþýlýðýna gitmemiz gerekiyor. Ya da tam tersi yönde gidebilmemiz lazým. Her
+düzenden her düzene geçebilmeliyiz.
+
+Prosedürel (functional) bir geçmiþten gelen programcý, hemen bu noktada ``ne
+yapýlmasý gerektiðine'' odaklanýr, ve o üst fonksiyonu düþünmeye baþlardý. Onun
+bulmasý gerekenler, verileri alan, iþleyen fonksiyonlar olacaktý, ve veriler bir
+iþlemden diðerine aktarýlýrken yolda deðiþe deðiþe istenen sonuca
+ulaþýlacaktý. Tasarým þöyle olabilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+public static void  main() {
+   double fromNumber;
+   double fromBase;
+   double toBase;
+
+   fromNumber = ...;
+   fromBase = ...;
+   toBase = ...;
+
+   ...   
+}
+\end{lstlisting}
+Ýyi bir prosedürel programcý olarak hemen ana metotu koyduk. Uygulama için
+gereken girdileri burada zaten alýyoruz. O zaman bu girdileri ne yapacaðýmýzý
+tasarlamamýz gerekiyor. Hemen bir takým alt metotlarý kodlamaya baþlýyoruz. Bir
+sayýyý bir düzenden diðerine çevirirken ara seviye olarak onluk düzene gitmemiz
+gerekiyor, çünkü onluk düzenden diðerlerine nasýl geçeceðimizi biliyoruz. O
+zaman ilk önce, onluk düzene geçen metotu çaðýrmamýz ve kodlamamýz gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+public static void  main() {
+   String fromNumber;
+   int fromBase;
+   int toBase;
+
+   fromNumber = ...;
+   fromBase = ...;
+   toBase = ...;
+
+   int fromNumBase10 = convertToBaseTen(fromNumber);
+}
+public double convertToBaseTen(double fromNumber) {
+   ...
+}
+\end{lstlisting}
+Sonra bu ele geçen sayýyý, yeni düzene çevirecek fonksiyona göndereceðiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public static void  main() {
+   String fromNumber;
+   int fromBase;
+   int toBase;
+
+   fromNumber = ...;
+   fromBase = ...;
+   toBase = ...;
+
+   int fromNumBase10 = convertToBaseTen(fromNumber);
+   String toNumber = convertToBase(fromNumBaseTen, toBase);
+}
+public int convertToBaseTen(double fromNumber) {
+   ..
+   return numBaseTen;
+}
+public String convertToBase(int fromNumBaseTen, int toBase){
+   ...
+   return toNum;
+}
+\end{lstlisting}
+Bu yöntem oldukça kalabalýk bir koda sebebiyet verdi. Özellikle ana metot daha
+programýn baþýnda neredeyse yapýlabilecek her çaðrýyý yapýyor, ve tüm gereken
+deðerleri o hatýrlýyor. Bundan daha iyi bir tasarým yapamaz mýydýk? 
+
+Nesnesel tasarýmý deneyelim. Nesnesel yöntemdeki prensipleri
+hatýrlayalým. Yukarýdan aþaðý deðil, aþaðýdan yukarý gidiyoruz. Bunu yaparken
+tasarladýðýmýz metotlarý, bir class'ýn alýþveriþ listesi gibi görüyoruz. Bir
+class, bir uygulama içinde birden fazla rol oynayabilir. O zaman uygulamada bu
+tanýma uyan class nedir?
+
+Bir sayý! Evet, bize gereken {\em kendini} onluk düzene, ya da {\em kendini}
+onluk düzenden baþka bir düzene çevirebilecek olan, ve hangi sayý düzeninde
+olduðunu {\em kendi bilen} bir sayý class'ýdýr. Bir sayý class'ý, uygulama
+sýrasýnda birçok deðiþik rol oynayabilir; Çevirilen rolü oynayan bir nesne,
+kendini onluk düzenden gösterebilecek, hedef rolünü oynayan nesne ise, hangi
+düzende olmasý gerektiðini bilen, ve çevirim için kendini önce onluk düzene,
+sonra gereken hedef düzene çevirmeyi bilecek bir nesne olacaktýr. Bu açýdan
+bakýlýnca sayý class'ý üzerindeki metotlar bir alýþveriþ listesidir. Üst nokta
+düþünmeden bu metotlarý koyduk, yâni uygulamamýz artýk tepe noktadan kontrol
+edilen bir çaðrý zinciri deðil, {\em iki nesnenin rol aldýðý bir simulasyon}
+hâline geldi. Kodu yazalým:
+
+\begin{lstlisting}[language=Java, frame=none]
+public class Number {
+
+  String value;
+  int base;
+
+  public Number(String value, int base) {    
+  }
+
+  public Number(int base) {
+  }
+      
+  public int toBaseTen() {
+    ..
+    return numInTen;
+  }
+
+  public String getValue() {
+    return value;
+  }
+  
+  public void convert(Number from) {
+    //
+    // Çevirilecek sayý: from.toBaseTen()
+    // Hedef: this.base
+    //
+  }
+}
+\end{lstlisting}
+Gördüðümüz gibi kodlama açýsýndan neredeyse ayný olan metotlar doðru class
+üzerinde gelince isimleri daha temiz hâle geldi. Hangi düzende olduðunu bilen
+bir nesneye \PVerb!convert! çaðrýsý gelince ve parametre olarak bir diðer
+\PVerb!Number! nesnesi verilince bunun anlamý çok nettir; Parametre olarak gelen
+\PVerb!Number!'daki sayý düzeninden kendi içimizde tuttuðumuz sayý düzenine
+geçmek istiyoruz.
+
+Ayrýca bu yeni tasarýmda, çevirilecek ve hedef sayýlar hakkýndaki bilgileri ana
+metotta duran deðiþkenlerde tutmamýz gerekmiyor. Her class, kendisi hakkýnda
+bilgileri kendi tutacaktýr. Bunlar, sayý deðeri ve hangi sayý düzeninde
+olunduðudur.
+
+Bu yeni tasarýmý kodladýktan sonra, {\em en son olarak} ana metotu
+kodlayabiliriz. Ana metotun ne kadar daha temiz olduðunu göreceðiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class App {
+
+  public static void main(..) {
+
+   Number from = Number(..,..);
+   Number to = Number(..);
+
+   to.convert(from);
+
+   System.out.println(to.getValue());
+   
+  }
+  
+}
+\end{lstlisting}
+Görüldüðü gibi çevirilecek sayý, hangi düzende olduðu bilgisiyle beraber,
+\PVerb!from! referansýyla eriþilen \PVerb!Number! nesnesi içinde
+tutulmaktadýr. Hedef sayý düzeni, \PVerb!to! referansý ile eriþilen
+\PVerb!Number! içinde tutulmaktadýr. Sayý deðeri ve düzeni, beraber, ayný modül
+içinde durmaktadýrlar, ve bu durum ana modülü rahatlatmýþ, ve genelde kod bakýmý
+açýsýndan bir ilerleme saðlamýþtýr.
+
+Diðer bir ilerleme, \PVerb!convert! adlý metota hedef sayýnýn bir \PVerb!Number!
+parametresi olarak gelmesidir. Eskiden \PVerb!String! ve \PVerb!int! tipinde
+deðerler geliyordu, ve bu basit tiplere bakarak neyin ne olduðu tam
+anlaþýlamýyordu. Yeni yöntem sayesinde daha üst seviyede olan \PVerb!Number!
+tipleri metot'tan metota gönderilmektedir, ve bu da kodun anlaþýlýrlýðý
+açýsýndan iyidir. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Tasarým Düzenleri][TASARIM DÜZENLERÝ]{Tasarým Düzenleri (Design Patterns)} 
+
+Nesnesel dillerin programcýya saðladýðý belli silahlar/yetenekler (capabilities)
+vardýr. Bu yetenekler nesnesel yöntemin tabiatýndan gelirler, meselâ çokyüzlülük
+(polymorphism) ve miras alma (inheritance) yeteneklerinin standart örneði, üst
+seviye bir class'tan miras alan alt seviye gerçek (concrete) class'larýn, üst
+seviye referansý üzerinden eriþilmesi örneðidir. Bu kullanýmda, meselâ, ayný
+\PVerb!List! üzerinde ayný üst seviye tipinde ama gerçek tipi deðiþik alt
+tiplerde olan nesnelerin örneði gösterilebilir. Tüm bu alt tipte nesneler
+üzerinde, üst seviyedeki bir metot alta çokyüzlülük ile intikal etmiþtir, ve bu
+metotun gerçekleþtirimi her alt tipte deðiþik olmasý sebebiyle, üst seviye tip
+üzerinde yapýlan çaðrýlar, deðiþik davranýþta bulunurlar. Bu kullaným, ufak
+çapta bir tasarým düzenidir.
+
+Bu tasarým düzenini kullanan bir uygulama örneði þöyle olabilir: Ekranda üçgen,
+çember ve poligon çizmeye izin veren bir çizim programýný düþünün. Mouse ile
+týkladýðýmýz noktada, hangi figür mod'undaysak (\PVerb!Circle!,
+\PVerb!Triangle!, \PVerb!Polygon!), o figür, o noktada, o nesnenin \PVerb!draw!
+metotu üzerinden çizilecektir.
+
+Buna ek olarak çizim programý, ``ekraný yenile'' komutuna hazýr olmak için
+ekrandaki figürlerin bir listesini tutmalýdýr. Böylece ekrana ``tekrar çiz''
+(\PVerb!refresh!)  komutu verildiðinde, herþey silinip tüm figürler üzerinde
+tekrar \PVerb!draw! metotu çaðýrýlabilecektir. \PVerb!List! nesnesini taþýyan
+\PVerb!Screen! (ekran) nesnesi, o listeyi tekrar gezdiðinde, listedeki
+elemanlarý \PVerb!Figure! tipine dönüþtürmesi (cast) yeterlidir. Çünkü
+\PVerb!Figure! üzerinde \PVerb!draw! interface metotu tanýmlýdýr, ve çokyüzlülük
+kanunlarýna göre \PVerb!Figure! tipi üzerinden baktýðýmýz bir nesnenin
+\PVerb!draw! metotunu çaðýrmak için o nesnenin gerçek tipine inmemiz
+gerekmez. Nesnesel yöntem, \PVerb!draw! çaðrýsýný gerekli koda otomatik olarak
+götürecektir. Böylece alttaki kod parçasý
+
+
+\begin{lstlisting}[language=Java, frame=none]
+for (int i = 0; i < figureList.size(); i++) {
+  Figure figure = (Figure)figureList.get(i);
+  figure.draw();
+}  
+\end{lstlisting}
+ile tüm figürleri tekrar çizmemiz mümkün olacaktýr.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/figures.eps}
+  }
+}
+\caption{Þekiller Nesne Diyagramý}
+\end{figure}
+
+Demek ki tasarým düzenleri, baz seviyedeki nesnesel teknikleri kullanarak,
+deðiþik þekillerde birleþtirerek oluþturulmuþ üst seviye tekniklerdir. Nesnesel
+tekniklerin ve dillerin anlatýldýðý her kitapta aslýnda tasarým düzenleri de bir
+yandan anlatýlmaktadýr, sadece en direk ve dil özelliðini en basitçe
+vurgulayacak olan çeþitleri ön planda olmaktadýr.
+
+\subsection{Kullanýlan Düzenler}
+
+Gamma ve arkadaþlarýnýn çýkardýðý Tasarým Düzenleri \cite{designpatterns} adlý
+kitap, yazarlarýnýn projelerinde üst üste kullandýðý ve temel kullanýmlardan
+daha deðiþik kodlama ve tasarým düzenlerini dünyaya tanýtmýþtýr. Bu kitaptaki
+teknikler bir yana, bir tasarým düzeninin nasýl bulunup ortaya konulacaðýný
+ortaya koymasý açýsýndan kitap daha da faydalý olmuþtur. Kurumsal programcýlar
+için yapmamýz gereken tek uyarý, bu kitaptaki paylaþýlan tasarým numaralarýnýn
+pür dil seviyesinde olmasýdýr (ve kurumsal uygulamalarda dýþ teknolojinin
+önemini artýk biliyoruz). Tasarým Düzenleri kitabýndaki çözümlerin neredeyse
+tamamý ``ayný JVM, yerel metot çaðrýsý'' öngörüsüyle yazýlmýþ
+tekniklerdir. Kurumsal yazýlýmlarda iþe yarayan Gamma TD teknikleri altta
+görülebilir:
+
+\begin{itemize}
+   \item Command
+   \item Template Method
+   \item Facade     
+   \item Singleton
+\end{itemize}
+Bu düzenleri kýsaca açýklayalým (Command düzeni haricinde, çünkü bu düzen
+\ref{dist:command} bölümünde ayrtýntýsýyla anlatýlmýþtýr).
+
+\subsubsection{Template Method}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/templatemethod.eps}
+  }
+}
+\caption{Template Method Nesne Tasarýmý}
+\end{figure}
+
+Arasýnda miras iliþkisi olan üst ve alt class tiplerini kodlarken, ileride yeni
+eklenebilecek alt class tiplerine yarayacak olan metotlarýn üst class'a
+çekilmesi gerekir. Bu metotlar, böylece her yeni alt class tarafýndan
+paylaþýlabilmiþ olacaktýr.
+
+Ortak metotlarý üst class'a koyduðumuzda, bazen, kodun içinde ``genel olmayan''
+ve ``her class için deðiþik olmasý gereken'' bir bölüm gözümüze çarpabilir. Eðer
+böyle bir bölüm mevcut ise, tüm metotu tekrar aþaðý, alt class'a doðru itmeden,
+Template Method düzenini kullanabiliriz. Bu düzene göre, her alt class'ta
+deðiþik olabilecek ufak kod parçasý ayrý bir metot içine konarak, üst tipte
+soyut (\PVerb!abstract!) olarak tanýmlanýr. Böylece alt class'lar bu metotu
+tanýmlamaya mecbur kalýrlar. Ve alt class'taki özel bölüm tanýmlama/kodlamasý
+yapýlýr yapýlmaz üst class'taki metotlar genel bölümlerini iþletip, özel bölüm
+için alt sýnýftaki metota iþleyiþi devredebilirler. Bundan kendilerinin
+haberleri bile olmaz, çünkü onlar kendi seviyelerindeki \PVerb!abstract! metotu
+çaðýrmaktadýrlar.
+
+Template Method, üst seviyede bir metot iskeleti tanýmlayýp alt class'lara
+sadece ufak deðiþiklikler için izin verilmesi gerektiði durumlarda
+kullanýþlýdýr.
+
+\subsubsection{Facade}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/facade.eps}
+  }
+}
+\caption{\label{object:designpatterns:usefulpatterns:facade} Facade}
+\end{figure}
+
+Bir özelliði iþletmek için birçok nesneyi ardý ardýna çaðýrmak gerekiyorsa,
+özellik kullanýmýný tek bir giriþ class'ýna alarak arka plan çaðrýlarý giriþ
+class'ýna yaptýrmak faydalý olabilir. Tasarým Düzenleri kitabýnda bu giriþ
+class'ýna Facade adý veriliyor. Facade'ýn faydasý, karmaþýklýðý azaltarak bir
+sistemin dýþ dünyaya gösterdiði arayüzü basitleþtirmeyi amaçlamasýdýr. Meselâ
+Þekil \ref{object:designpatterns:usefulpatterns:facade} üzerinde gösterilen
+nesne modeli \PVerb!javac! gibi bir derleyici (compiler) sistemin tasarým
+modelidir. Bu modelde görüldüðü gibi birçok iþ yapan class'lar mevcuttur. Fakat
+dýþarýdan baðlanan için bu alt seviye nesneleri yaratýp teker teker çaðýrmak
+þart deðildir, dýþarýsý için tek giriþ nesnesi olan \PVerb!Compiler!'ý kullanmak
+hem kullaným, hem de kod bakýmý açýsýndan daha rahat olacaktýr.
+
+\subsubsection{Singleton}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/singleton.eps}
+  }
+}
+\caption{Singleton}
+\end{figure}
+
+Uygulamamýzda bir class'tan sadece bir nesne olsun istiyorsak ve bunu mimari
+olarak kodu kullanan her programcý üzerinde zorlamak istiyorsak, o zaman
+Singleton düzenini kullanabiliriz. Bu düzene göre Singleton olmasýný istediðimiz
+class'ýn ilk önce kurucu metotunu (constructor) Java \PVerb!private!  komutu ile
+dýþarýdan saklarýz. Böylece kurucu metot sadece class'ýn kendisi tarafýndan
+kullanýlýr olur. Bunu yapmazsak herkes class'ý istediði gibi alýp birden
+fazla nesnesini kullanabilirdi.
+
+Kurucu metotu sakladýðýmýz için, bir yaratýcý metotu bir þekilde saðlamak
+zorundayýz. Singleton class'larýnda bu metot tipik olarak \PVerb!instance!
+adýnda bir yaratýcý metot olur. Bu metot, \PVerb!static! olmalýdýr çünkü
+Singleton class'ýndan hâlen tek bir nesne bile mevcut deðildir ve ilk
+çaðrýlabilecek metot bu yüzden \PVerb!static! olmalýdýr. Bu metot, gerçek
+nesneyi \PVerb!static! olan diðer bir \PVerb!private! deðiþken üzerinde
+arar/tutar, buna \PVerb!uniqueInstance! (tekil nesne) adý verilebilir. Eðer
+\PVerb!uniqueInstance! üzerinde bir nesne var ise, o döndürülür, yok ise, bir
+tane yaratýlýp döndürülür. Önce mevcudiyet kontrolü yapýldýðý için nesnenin bir
+kez yaratýlmasý yeterli olmaktadýr, ilk \PVerb!new! kullanýmýndan sonra
+Singleton'dan geriye gelen nesne hep ayný olacaktýr. 
+
+\subsection{POJO'lar ve Ýþlem Mantýðý}
+
+Kalýcýlýk aracý Hibernate, ya da diðer POJO bazlý teknolojileri kullanýrken, bir
+modelleme tavsiyesini aklýmýzda tutmalýyýz; POJO'lar diðer class'lar gibi bir
+class'týrlar, üzerlerine \PVerb!get! ve \PVerb!set! haricinde çetrefil, iþlem
+mantýðý metotlarý ve fonksiyonlarý konulmasýnda bir zarar yoktur.
+
+Hâtta daha ileri giderek bunu yapýlmasýný þiddetle tavsiye edeceðiz. Son zamanda
+popüler olan veri, uzaktan nesne çaðrýsý yapma teknolojilerinin POJO bazlý
+olmaya baþlamasý ile oluþan bir izlenim, POJO'larýn aptal bir þekilde býrakýlýp
+sadece veri transferi için kullanýlmaya baþlanmasýdýr. Buna hiç gerek yoktur
+çünkü bir eðer bir POJO, uygulamamýzýn verisini tutan {\em yer} ise ve bir
+class, (nesnesel modelleme açýsýndan) veriler ve iþlemleri birarada tutan bir
+birim ise, o zaman iþlemlerimizi POJO'lardan ayýrýp bambaþka bir ``iþlem
+class'ý'' içine gömmemize gerek kalmayacaktýr. Ýþlemimiz bir POJO içindeki
+veriyi kullanýyor ve modelleme açýsýnda bu temiz bir sonuç veriyor ise, iþlemin
+POJO class'ý içine koyulmasýnda hiçbir sakýnca yoktur.
+
+\subsection{Diðer Düzenler}
+
+Gamma ve arkadaþlarýnýn Tasarým Düzenleri kitabýndaki düzenlerin pek azýnýn
+kurumsal uygulamalar için faydalý olmasýna raðmen tasarým düzenleri kavramý, bir
+prensip ve düþünce sistemi olarak yazýlým dünyasý için faydalýdýr. Hatta
+söylenebilir ki matematiksel bazý olmayan yazýlým mühendisliðine disiplinli ve
+metodik bir þekilde yaklaþmak isteyenler için tasarým düzenleri ve iþleyen
+yöntemler (best practices), neredeyse izlenebilecek ``en formele yakýn''
+yöntemlerdir.
+
+Bu baðlamda, okuduðunuz bu kitap bize göre faydalý tasarým düzenleri ve iþleyen
+yöntemlerin toplamýdýr. Fakat bu kitapta Gamma kitabýna kýyasla daha dýþ
+teknolojiye yakýn tasarým düzenleri sunulmaktadýr. Bu sebeple buradaki tasarým
+düzenleri mimari(architecturel) çözümler kategorisine girebilecek
+tavsiyelerdir. Bunun sebepleri bizim þahsi proje tecrübemize dayanýyor; Tasarým
+Düzenleri kitabýnýn neredeyse her kelimesini dikkatle izlediðimiz ve yine de
+birçok badire atlattýðýmýz bir projemizin sonunda teknik liderimiz ve arkadaþým
+Jim D'Augustine yakýnarak þöyle demiþti: ``Bize tasarým düzenleri deðil, mimari
+düzenler lâzým!''
+
+Son olarak, Karþý Düzen (Anti Pattern) akýmýndan bahsedelim. Karþý Düzenler,
+normâl tasarým düzenleri aksine ne yapýlmasý gerektiðini deðil, {\em ne
+yapýlmamasý gerektiðini} tavsiye ederler. Örneklerden bir tanesi DTO (Data
+Transfer Object) karþý düzenidir; Bilindiði gibi DTO tekniðini kullanlar, servis
+tarafýndan yapýlacak her transfer için sadece get/set metotlarýndan oluþan bir
+veri class'ý (Hibernate buna POJO diyor) yazmayý salýk verir. DTO karþý düzeni
+DTO class'larýnýn gereksiz olduðunu söylemektedir. Buna biz de katýlýyoruz,
+çünkü artýk Hibernate gibi modern yaklaþýmlar sayesinde veri alýþveriþinin
+tamamen POJO'lar üzerinden olduðu için, ek veri transfer class'larýna gerek
+kalmamýþtýr. Servis tarafý ve veri tabaný arasýnda kullanýlan nesneler, büyük
+bir rahatlýkla baþka yerlere veri transfer etmek için de
+kullanýlabilirler. (Tarihi olarak insanlar DTO kullanýmýna herhalde Entity
+Bean'lerin hantal yapýsý yüzünden mecbur olmuþtu, fakat Entity Bean'ler artýk
+teknik olarak emekli edildiðine göre, DTO'ya olan ihtiyaç ta ortadan
+kalkmýþtýr).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Mimari][MÝMARÝ]{Mimari} \label{object:architecture}
+
+Nesnesel tasarýmda birkaç class'ý içeren bir tasarým, nokta vuruþ çözümü yâni
+ufak çapta bir tasarýmdýr. Bu teknikler uygulamanýn ufak bir bölümününün çözümü
+için kullanýlan nesnesel {\em numaralardýr}. Fakat uygulamadaki tüm özelliklerin
+kodlanmasý için bazý genel kurallar koyan bir {\em alt tabaka} olmasý
+þarttýr. Bu tabaka bazý kodlama kalýplarýnýn içeren ve programcýlarýn miras
+almasý gereken bir üst class, ya da çaðýrýlmasý proje teknik lideri tarafýndan
+herkese duyurulmuþ olan yardýmcý class'lar toplamý olabilir. Literatürde bu
+þekilde genel kurallar koyan class'larýn ve kod parçalarýnýn toplamýna
+\textbf{mimari} diyoruz. Eðer \PVerb!StrutsHibAdv!  örnek projesini düþünürsek,
+bu projenin mimarisini þöyle tarif edebiliriz:
+
+\begin{quote}
+``Tüm Hibernate iþlemlerinden önce \PVerb!Session! açýlmasý, ve transaction
+baþlatýlmasý \PVerb!HibernateSession! yardýmcý class'ý üzerinden
+yapýlacaktýr. Tüm Struts Action'larý \PVerb!org.mycompany.kitapdemo.actions!
+altýnda olacak, ve her sayfa \PVerb!header.inc! dosyasýný kendi kodlarý içine en
+tepe noktada dahil edecektir. Basit veri erisimi haricinde sorgu içeren tüm veri
+eriþim iþlemleri, bir \PVerb!DAO! kullanmaya mecburdur; Meselâ \PVerb!Car!
+aðýrlýklý sorgular için \PVerb!CarDAO! kullanýlmasý gibi. Her \PVerb!DAO!,
+kurucu metotu içinde bir Hibernate transaction baþlatmalýdýr, ama commit
+\PVerb!DAO! commit yapmayacaktýr. Struts Action'lar da commit yapamazlar. Commit
+yapmak, bir Servlet filtresi olan \PVerb!HibernateCloseSessionFilter!'nin
+görevidir, ve bu filtre her \PVerb!.do!  soneki için yine herkesin kullandýðý
+\PVerb!web.xml!  içinde aktif edilmiþtir.  Ayný filtre, \PVerb!Session!
+kapatmak, ve hata (exception) var ise, o anki transaction'ý rollback etmek ile
+de yükümlüdür''.
+\end{quote}
+
+Görüldüðü gibi bu kurallar projedeki her programcýnýn bilmesi gereken
+kurallardýr. Projeye ortasýnda katýlan bir programcý, hemen bir Struts Action
+yazmaya baþlayýp içine alânen bir takým JDBC kodlarý yazarak veri tabanýna
+eriþmeye çalýþmayacaktýr. Bu projenin kurallarýna, {\em mimarisine} göre, Struts
+Action'da \PVerb!HibernateSession! üzerinde açýlan \PVerb!Session! ile,
+Hibernate yöntemleri üzerinden veri tabanýna eriþilecektir. Yine ayný kurallara
+göre yeni programcý \PVerb!commit!, ve \PVerb!close! çaðrýlarýný elle yapmaktan
+men edilmiþtir. Projenin mimarisi, bu çaðrýlarý merkezileþtirmiþ, ve kodun
+geneline bu þekilde bir temizlik saðlamýþtýr. Yeni gelen programcýnýn bu kuralý
+takip etmesi beklenecektir.
+
+Bu þekilde tarif edilen mimarilerin, kod temizliði açýsýndan olduðu gibi, proje
+idaresi yönünden de etkileri olduðunu anlamamýz gerekiyor. Bir mimari baðlamýnda
+bazý kurallarýn konulmasý ve bazý kullanýmlarýn merkezileþtirilmesi demek,
+uygulamamýzda önce bitmesi gereken parçanýn ``mimari kýsmý'' olduðu sonucunu
+getirir. Proje idaresi açýsýnda mimari, kodlama açýsýndan seri üretime geçmeden
+önce bitmesi gereken þeydir. Eðer seri üretimden çýkan her ürünü bir özellik
+olarak düþünürsek, mimari de fabrika olacaktýr. Tabii bu analojiyi dikkatli
+anlamak gerekiyor, sonuçta iþler hâldeki bir program da bir fabrika gibi
+görülebilir; Bizim burada bahsettiðimiz programýn iþleyiþi deðil, o programýn
+kodlama aþamasýnda programcýlarýn kodlama eforudur.
+
+Proje idaresi bakýmýndan mimarinin önce bitmesine karþý bir argüman, mimarinin
+özellikler kodlanýrken bir yan ürün olarak kendi kendine çýkmasý beklentisidir;
+Fakat eðer mimari kod temizliði, hata azaltýmý gibi getirmesi açýsýndan önemli
+ise, önceden mevcut olmasý gereken bir kavram olduðu ortadadýr. Bir mimariyi
+projenin ortasýnda kodlarýmýza sonradan empoze etmeye karar vermiþsek, bu durum
+mevcut olan kodlar üzerinde yapýlmasý gereken büyük bir deðiþiklik anlamýna
+gelebilir, ve bu deðiþiklik için harcanacak efor, o teknik ilerlemenin
+getireceði herhangi bir avantajý silip yokedebilir. Bu sebeple mimarinin
+projenin baþýnda hazýr olmasý önemlidir.
+
+Mimariyi tasarlamak, her projede teknik liderin görevidir. Ayrýca mimari ortaya
+çýkartýldýktan sonra kurallarýn takip edildiðinin kontrolü de teknik lider
+üzerinde olacaktýr. Öyle ki, proje bittiðinde tüm kod bazý sanki tek bir kiþi
+yazmýþ gibi gözükmelidir. Ýyi bir mimari kodda tekrarý azaltacak, kullaným
+kalýplarýný ortaya koyarak yeni katýlan programcýlara yön gösterecek ve hata
+yapma ihtimallerini azaltacaktýr. Mimari önceki projelerde alýnan dersleri de
+yansýtan bir kurallar toplamýdýr.
+
+Bunun haricinde her özelliði (functionality) kodlayan programcý kendi
+istediði gibi kodlamakta serbesttir.
+
+Tasarým düzenleri ile mimari arasýndaki iliþki þöyledir: Mimarimizin bir kýsmý
+içinde bir tasarým düzeni bir kural olarak ortaya çýkabilir. Örnek olarak
+\ref{dist:command} bölümünde tarif edilen mimari, \PVerb!Command! tasarým
+düzeninin her uzaktan nesne eriþim gerektiren durum için kullanýlmasýný mecbur
+kýlmýþ, böylece bir mimari seçim hâline gelmiþtir. Fakat bir tasarým düzeni
+hiçbir mimarinin parçasý olmadan, tek bir özellik için kendi baþýna da
+kullanýlabilir. Kýsacasý mimari genelde birçok kiþiyi etkileyen, ve genel olan
+bir kavramdýr.

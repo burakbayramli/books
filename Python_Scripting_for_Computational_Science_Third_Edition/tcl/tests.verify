@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+import os, sys
+from py4cs.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('hw.tcl', options='1.2')
+test.run('datatrans1.tcl', options='../py/intro/.datatrans_infile tmp.1')
+test.append('tmp.1')
+test.run('datatrans2.tcl', options='../py/intro/.datatrans_infile tmp.1')
+test.append('tmp.1')
+test.run('commontasks.tcl')
+test.run('simviz1.tcl',  options='-A 5.0 -tstop 2 -case tmp4')
+test.append(os.path.join('tmp4','tmp4.i'))
+test.append(os.path.join('tmp4','tmp4.gnuplot'))
+test.append(os.path.join('tmp4','tmp4.ps'), maxlines=30)
+
+

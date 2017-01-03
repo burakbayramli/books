@@ -1,0 +1,379 @@
+\documentclass[landscape]{slides}
+
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-14}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\betafn}{\mathrm{Beta}}
+\newcommand{\dirchfn}{\mathrm{Dirichlet}}
+
+\begin{document}
+\DeclareGraphicsExtensions{.pdf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Bayesian parameter estimation}}
+
+\begin{verbatim}
+$Date: 2006/11/23 15:42:12 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Overview}
+
+\begin{itemize}
+\item Here we address an old criticism of Bayes nets (and quantitative
+methods in AI generally):
+\item Where do the numbers come from?
+\item The numbers here are probabilities and we get them
+from data.
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{titledslide}{Situating the problem}
+
+%\begin{tabular}{lll} \hline \hline
+%                & fully observed & partially observed \\
+%fixed structure & 
+
+%\end{tabular}
+
+%\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Estimating probabilities}
+
+\begin{itemize}
+\item Suppose we wish to estimate the probability $\theta$ that a certain
+drawing pin lands heads.
+We toss it 100 times and it comes up heads 35 times.
+What's our best guess for $\theta$?
+\item If we had tossed it once, and it had come up heads, what would
+be our guess for $\theta$ then?
+\end{itemize}
+
+\includegraphics*[width=0.9\textwidth]{pin.pdf}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Formalising our assumptions}
+
+We have data points (drawing-pin tosses) $D = D_{1}, D_{2}, \dots D_{n}$
+where 
+\begin{enumerate}
+\item each is sampled from the same distribution 
+\item each is independent
+\end{enumerate}
+
+Such samples are \emph{independent and identically distributed} or \emph{iid}.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The likelihood function}
+
+
+\begin{itemize}
+\item The distribution here is parameterised by a single parameter $\theta$,
+which defines a probability $P(D|\theta)$
+\item (In other cases, $\theta$ will be a vector of parameters.)
+\item For a data set $D$, we define the \emph{likelihood function}:
+\end{itemize}
+\[
+L(D|\theta) = P(D|\theta) = \prod_{i=1}^{m} P(D_{i} | \theta)
+\]
+
+What's the likelihood of the sequence $h,t,t,t,h,h$?
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sufficient statistics}
+
+\begin{itemize}
+\item The likelihood only depends on the number of heads $N_h$ and
+tails $N_t$, not, say, the order in which they occurred
+\item $N_h$ and $N_t$ are therefore \emph{sufficient statistics}
+\item A \emph{sufficient statistic} is a function of the data that
+summarises the relevant information for computing the likelihood.
+\end{itemize}
+
+Formally, $s(D)$ is a sufficient statistic if, for any two datasets, $D$ and
+$D'$:
+\[
+s(D)=s(D') \Rightarrow L(D|\theta) =L(D' | \theta)
+\]
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Maximum likelihood estimation}
+
+\begin{itemize}
+\item The \emph{maximum likelihood estimation} (MLE) principle tells
+us to choose that value of $\theta$ which maxmises the likelihood (for
+the observed data).
+\item This value (often denoted $\hat{\theta}$) is (apparently) the
+best \textbf{estimate} for $\theta$
+\item This is the value of $\theta$ which makes the data as likely as
+possible.
+\item What's $\hat{\theta}$ for our drawing pin?
+
+\end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Classical Statistics}
+
+\begin{itemize}
+\item MLE is an example of \emph{Classical} or \emph{non-Bayesian} statistical
+inference
+\item $\theta$ is treated as an objectively fixed, but unknown value
+\item Therefore it does not make sense to talk of eg the
+probability that $\theta$ lies in the interval $(0.3,0.4)$ the unknown $\theta$ is either definitely in that interval
+or not, so we can't talk of probability in this context.
+\item The data, on the other hand, does have a probability - why is
+this OK?
+\end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Problems with the Classical approach}
+
+\begin{itemize}
+\item Rather than give us the most likely value for $\theta$ given the
+data \dots
+\item \dots MLE gives us that $\hat{\theta}$ such that the data is as
+likely as possible
+\item This is basically the wrong way round,
+\item but to be able to talk about $P(\theta|D)$ we have to have a
+probability distribution over $\theta$
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The Bayesian paradigm}
+
+\begin{itemize}
+\item The Bayesian approach to statistics permits probability to
+represent \emph{subjective uncertainty}
+\item It was a minority view until quite recently, since subjectivity
+was seen as unscientific
+\item More popular now partly because there are better tools available.
+\item For example, the BUGS system (Bayesian inference using Gibbs sampling)
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayesian estimation of probabilities - prior}
+
+\begin{itemize}
+\item We express our uncertainty about the true value of $\theta$ by
+placing a \emph{prior distribution} over possible values of $\theta$
+\item This distribution is defined (somehow!) \textbf{prior} to the collection
+of data
+\item Since there are uncountably infinitely many values of $\theta$
+the distribution is represented by a \emph{probability density
+function} - here's one:
+\end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Prior distribution over $\theta$}
+
+\includegraphics*[height=0.6\textheight]{beta54.pdf}
+
+This is a graph of 
+$
+f(\theta) = \betafn(\theta|5,4) = \frac{\Gamma(9)}{\Gamma(5)\Gamma(4)}
+\theta^{4}(1-\theta)^{3}
+$ \\
+More on the Beta distribution later
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Some points about density functions}
+
+\begin{itemize}
+\item $\betafn(\theta|5,4)(x)$ does \textbf{not} give our prior
+probability that $\theta=x$
+\item To get probabilities out of density functions we integrate
+\item To get the prior probability that $\theta \in (0.3,0.4)$, we
+compute:
+\[
+\int_{0.3}^{0.4} \betafn(\theta|5,4)(x) dx
+\]
+\item Unfortunately, there is no closed form for this integral - a fact
+which upset Rev Bayes considerably
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Connecting prior and evidence}
+
+\begin{itemize}
+\item The hallmark of Bayesian analysis is that everything is treated
+as a random variable - both the unknown parameter $\theta$ and the
+data $D$
+\item $\theta$ is of course never observed
+\item $D$ - the data - is always observed (let us assume that for now
+  anyway). 
+%Represent the set of observed values by $d$, and individual
+%  data by $d_i$.
+\item Since everything is a random variable, we can use a Bayesian
+network to represent the joint distribution over $(\theta,D)$.
+\end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayes net}
+
+\includegraphics*[width=0.8\textwidth]{thetabayes.pdf}
+
+Instead of a table for the distribution over $\theta$ we have the
+density function
+
+The conditional probabilities (which can not be represented by CPTs)
+are all identical,
+\[
+\forall i : P(D_{i}=h|\theta=x) = x
+\]
+Or, for short, $P(D_{i}=h|\theta) = \theta$
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Defining Bayesian networks in the BUGS language}
+
+\begin{itemize}
+\item BUGS represents problems of Bayesian statistics using Bayes nets
+\item Here's a description of our Bayes net in the BUGS language
+\end{itemize}
+
+\begin{verbatim}
+model pin;
+var toss[4],theta;
+data toss in "pin.dat";
+{
+        theta ~ dbeta(5,4);
+        for (i in 1:4) {
+        toss[i] ~ dbern(theta);
+        }
+}
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Beta distributions}
+  
+A beta distribution is determined by two parameters, usually denoted
+$\alpha$ and $\beta$:
+
+\[
+\betafn(\theta|\alpha,\beta) = \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}
+\theta^{\alpha-1}(1-\theta)^{\beta-1}
+\]
+
+Its \emph{mean} value is $\frac{\alpha}{\alpha+\beta}$. If
+$\betafn(\theta|\alpha,\beta)$ represents our current beliefs about
+the likely whereabouts of $\theta$, then this mean value is a good
+estimate for $\theta$.
+
+Its \emph{mode} is at: $\frac{\alpha-1}{\alpha+\beta-2}$
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Why the Beta distributions for estimating
+    probabilities}
+
+  \begin{itemize}
+  \item Suppose $\betafn(\theta|\alpha,\beta)$ represents our beliefs
+    about $\theta$, where $\theta$ is the (true) probability that the
+    drawing pin lands heads.
+  \item Suppose we toss the drawing pin and it lands heads.
+  \item Our new \emph{posterior distribution} is simply\\
+    $\betafn(\theta|\alpha+1,\beta)$ !
+  \item Our new mean is just $\frac{\alpha+1}{\alpha+1+\beta}$
+  \item If it had landed tails, we would have\\ $\betafn(\theta|\alpha,\beta+1)$
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Experience}
+
+  \begin{itemize}
+  \item Following Netica, we can call $\alpha+\beta$
+    \emph{experience}. This increases by one each time we observe a
+    drawing pin toss (or equivalent).
+  It is also called the \emph{effective sample size}, since it
+    reflects how many pieces of data you have observed (or pretend
+    to have observed).
+  \item The larger it is the more pointy the beta distribution
+    is---which makes sense.
+  \item The mean ($\frac{\alpha}{\alpha+\beta}$) and experience
+    ($\alpha+\beta$) determine a beta distribution.
+  \end{itemize}
+
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Estimating conditional probabilities}
+
+  \begin{itemize}
+  \item Estimating conditional probabilities is not really different
+    from estimating any other sort of probability.
+  \item To estimate, say $P(A=true|B=false)$ from a series of
+    observations of $A$ and $B$ just
+    \begin{enumerate}
+    \item Ignore any cases where $B=true$
+    \item Where $B=false$, use the observed values of $A$ to update as
+      above.
+    \end{enumerate}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Multinomial probabilities}
+  
+  \begin{itemize}
+  \item If we wanted to estimate the 6 probabilities associated with a
+    die throw, the beta distribution would be inappropriate.
+  \item Using the \emph{Dirichlet distribution}, we can estimate all 6
+    probabilities simultaneously from a sequence of die throws.
+  \item Beta distribution is just a Dirichlet distribution where $k=2$
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Dirichlet distribution: the grisly details}
+\[
+    \dirchfn(\theta_{1},\dots
+      ,\theta_{n}|\alpha_{1},\dots,\alpha_{k}) = 
+\frac{\Gamma(\alpha_{1}+\dots + \alpha_{k})}{\Gamma(\alpha_{1})\dots
+  \Gamma(\alpha_{k})} \theta_{1}^{\alpha_{1}-1} \dots \theta_{k}^{\alpha_{k}-1}
+\]
+
+Mean value for $\theta_{i}$ is $\frac{\alpha_{i}}{\alpha_{0}}$ where 
+$\alpha_{0} = \sum_{j=1}^{k} \alpha_{j}$ is the ``experience'' as
+before.
+
+Think of the $\alpha_i$ as counts.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayesian learning with Netica}
+  
+  \begin{itemize}
+  \item Each conditional probability  in Netica has a (hidden) Dirichlet distribution
+    associated with it.
+  \item The conditional probability you see is the mean of this distribution.
+  \item The initial experience is set to 1.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayesian learning with Netica}
+ \begin{itemize}
+ \item Netica assumes that the $\theta$ for each conditional
+    probability are independent (this is called \emph{parameter
+      independence})
+  \item These $\theta$s are random variables, but are \textbf{not}
+    represented as nodes in Netica networks (they are in BUGS).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

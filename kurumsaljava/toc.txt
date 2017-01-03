@@ -1,0 +1,313 @@
+* Preface
+  * Niye bu kitap
+  * Tesekkurler
+  
+* Giris
+  
+* Hibernate  
+  * Kurulus
+    * Onbellekleme
+  * CRUD
+  * Transactions
+  * Testing (ileri JUnit'e insanlari refer et)
+  * Many to many
+  * Transactions
+  * Pessimistic/Optimistic Locking
+  * Sirf okunan objeler icin begin() commit() yapmayin (Hibernate
+    Forumlarindaki yorumu incele, belki baska yoldan cozumu vardir,
+    session flush mi cok yapiliyor acaba?)
+  * Iliskiler
+    * Bire bir 
+    * Bire cok
+    * Coka cok
+  * Sorgular (hepsini DAO'ya koy)
+    * Join uzerinden
+    * Theta usulu
+  * evict metotlari (birinci seviye icin session, ikinci seviye icin factory
+    uzerinden)
+  * Toptan programlar (batch) icin, kisim kisim yukleyebilmek.
+  * Iliskiden gelen listeyi kisim kisim alabilmek
+
+* WEB              
+  * Kavramlar
+     * Action
+     * Form
+  * Proje kurulusu
+      * web.xml
+      * build.xml - ne yapiyor, nasil kullanilir, dist ve compile dist
+        incremental gonderebilir. Bu build.xml'in kurulusu teknik liderin
+        sorumlulugudur.
+  * TR encoding     
+     * Hibernate cfg.xml
+     * filter web.xml     
+     * JSP
+     * DB
+        * Mysql
+	* Oracle
+  * struts-config.xml
+  * JSP/JSTL
+    * c:forEach
+  * JSP/JSTL
+    * c:if
+    * c:when
+    * c:switch
+  * c:import ile ufak parcalari include etmek
+  * Tiles
+  * Kendi tag'lerini tanimlamak
+  * web ortaminde hep .get kullan, .load degil.
+        org.hibernate.LazyInitializationException: could not initialize proxy -
+	the owning Session was closed
+	Hib. In. Action 4.4.1, sf 140.
+  * Form session'dan nasil cikartilir.
+  * BeanUtils
+  * ActionError ile hatalari muamele etmek.
+  * Optimistic lock. pg. 170
+     * Tavsiye: Optimistic locking ile basla, gerekli yerlerde pess.'e gec.
+       (Hib. In. Action pg 167)
+       * Hata *
+       16:38:07,963 ERROR [XMLHelper] Error parsing XML: XML InputStream(11) Attribute
+       "unsaved-value" with value "0" must have a value from the list "null negative un
+       defined ".       
+  * Ayni Action uzerinden degisik metotlar nasil cagirilir (Dispatcher)
+  * "Next" numarasi (Dao'yu cagir), Hibernate'i isle
+  * Struts ile file upload
+  * TODO: Birecok iliskide hem parent, hem child uzerinde ekleme yapmak lazim
+
+* Dagitik Nesneler
+  * RMI
+    * Basit nesne cagirmak
+    * Car Demo (tekrar yaz)        
+  * EJB 
+    * SFSB, SLSB
+    * <clustered> teknigi, yuk dagitimi, cokmeden kurtulmak
+    * Car Demo (tekrar yaz)   
+  * JMS
+    * MDB
+    * MessageListener
+    * ...
+    * Car Demo (tekrar yaz)
+
+* Performans & Olceklemek
+  * Giris 
+    * High Perf. Client Serv. alintilar
+    * Response time, throughput tanimla.
+  * Raid
+  * Tikanma noktalarini bulmak (bottleneck)
+    * jMeter <TBD>: Randomizer'i jar olarak ekle, kod olarak degil
+    * HProf
+    * YJP
+    * StopWatch - Eszamanli erisim ve bant genisligi olcmek
+    * Bizim kendi teknigimiz (bant genisligi icin), Thread start
+      ve join kullanimini goster.
+  * Log4J kullanim, JBoss icin ayarlar, performans icin
+    log seviyesini INFO'ya cekin!
+  * Hibernate 2nd lev. cache en son acilan optimiz. teknigi olmali. Ondan once
+    sorgulari optimize et. (Hib. in Act. pg 286).
+  * OsCache kullanmak icin, OSCacheProvider kodu degismeli, bunu StrutsHibPerf
+    ve gereken diger yerlere ekle.
+  * Avoid n+1 problem by specifying EAGER (outer join) fetching at runtime (Hib. In. Act. 
+    pg. 288)
+  * Apache + JBoss ayarlari
+  * Web/Servlet replication
+  * EJB icin HA-JNDI kullanimi
+  <TBD>: For OsCache, dist. option is not tested yet. Will route add be
+  required for it as well?
+
+
+* Deployment & Production & Monitoring
+  * ssh/scp: Cok onemli - bircok makinayi bile kontrol edebilirsiniz.
+  * Yeni DDL production database'e nasil push edilir? Production verisi
+    kaybedilemez!
+  * jobRunner/deamonRunner/Autosys - Process kontrol ederek isleten "watcher" program
+    * Niye
+    * jobRunner
+    * deamonRunner
+    * Autosys
+  * JMX
+    * JMX Nicin Kullanilir
+    * MBean'ler Nedir, Cesitleri
+    * MBean Server
+    * MBean'leri Nasil Kullanalim
+    * JmxMonitor
+       
+* Test Etmek
+  * Ne zaman?
+  * Kurumsal sistemlerde (algoritma fakiri kodlarda) entegre testler daha onemli
+  * JUnit
+  * jMock
+  * Birim test icin veri hazirlama
+  * ClassPathFile
+  * JMeter ile kabul testleri hazirlamak
+
+* Database
+  * Giris: Iliskisel teori, kumeler
+  * SQL dili
+    * select
+    * where
+    * join
+    * WHERE EXISTS <TBD>
+  * Veri Modeli Tasarimi, Normalizasyon
+  * Indeksler
+  * MySql
+  * PostGreSQL
+  * Oracle
+    * Schema
+    * Tablespace
+    * Diger objeler (trigger, view)
+    * SQL*Loader
+    * Auto-increment
+  * Transaction'lar, commit, rollback, truncate (rollback olmaz)
+  * SELECT FOR UPDATE in Oracle and PostgreSql
+  * Bir batch program ornegi
+
+* Nesnesel Tasarim/Kodlamak  
+  * Nesnesel programcilik nedir?
+  * Mimari nedir? (Seri uretimden once gelinmesi gereken asama)
+  * Silahlar
+    * Objelerin metotlarini alisveris listesi gibi gorun
+  * Design Patterns - cok faydali degil, architecture pattens daha onemli
+    * Polymorphism cok onemli - template metot
+
+* Proje Idaresi
+  * Karakterler (lider, inf. guy, kk idare)
+     * Proje idarecisi
+     * Teknik lider
+         * Butun caba, projeyi seri uretim asamasina getirmektir.
+  * Planlama Yontemi (RUP, XP, vs)
+    * Uygulama Gelistirme Dokumani
+    * Sistem Devretme Dokumani
+    * Siparis Degisiklik Dokumani
+  * Is Dagitimi
+  * Kod review
+    * enscript (nasil kurulur)
+  * Gelistirme Ortamini Kurmak
+    * Herkesin kendi DB'si, JBoss portlari, olmali
+  * CVS (kurmak, import, co, ci, branching)
+    * Tum editorler, tab yerine SPACE kullanmali! (Eclipse ve Emacs icin
+      gerekli ayarlari paylas)
+  * Hata Takip
+
+* Genel Kultur
+  * Projelerimi anlat
+    * Putnam DCPA
+    * FPP
+  * Open Source
+  * Sirket tipleri
+  * Amerika & Bati Dusunce Sekli
+    * Darwin teorisi aktif, ama ayni zamanda kisinin potansiyeline olan inanc
+      (everybody is in the process of becoming, Einstein)
+    * Jack Welsch
+    * Kilik kiyafet degil, bilgiye yaklasim ve bilgiyi idare sekli onemlidir.
+    * Mekanik hatalar degil, prensipsel hatalar onemlidir. O yuzden
+      her zaman dogru prensiplerin bulunmasi icin ugrasilir (ya da
+      kafanin bir tarafinda hep o vardir)
+    * Bilmek/Bilmemek
+    * Aslinda egitimli Amerikali, bilmek hakkinda en alcakgonullu insandir.
+      Sadece uzmanlik alaninda otorite ile konusur, diger alanlarda ya
+      konusmaz, ya da bilgiclik taslamaz. Bunlardan anlamamak ile de ovunur.
+    * Bilmiyorum kelimesini (eger durum oyleyse) soylemeye alisin.
+    * Belli bir alanda "derinlemesine" uzmanlik icin ugrasin. Her seyi
+      bilmeye ugrasan, hicbir seyi tam bilemez.
+    * "Ne zaman" bir prensip olusturulacagini bilmek kolaydir. Ne zaman bir
+      "problem" olursa, bu problem hemen bir prensibin parcasi olarak ileride
+      "rutin olarak defedilecek hale getirilmelidir". Bir keresinde
+      CVS'te  coktan cozulmus olan bir problemin baska bir yuzunu
+      onarmaya ugrasirken, sorun aslinda cozulmus, ama e-mail ile kimseye
+      bildirilmemis durumda idi. Sozel olarak bildirilmis ve benimle
+      o anda oturmakta olan arkadas, cozulen sorunun o anda ugrastigimi problem
+      ile alakali olabilecegini anlamamisti. Fakat commit e-mail'ini sahsim
+      gorse, ugrastigimi is ile daha hasir nesir olan biri olarak sorunun artik
+      olmadigini anlardim. Fakat e-mail yoktu, sozel olarak herkese bildirilmesi
+      zor olacagindan, ufak bir problem uzerinde YARIM GUN kaybettik.
+  * Kurallarin aciklamasi
+    * Prensip arayislari, alcakgonullugun bir uzantisidir. Mesela her zaman
+      her yerde olamayacagini alcakgonulluluk ile farkeden Batili,
+      hemen "CVS'e her commit'ten sonra e-mail gondermeliyim" prensibini
+      yaratir. Bu prensip, hatirlamasi cok basit bir kuraldir, ve aliskanlik
+      haline getirilmesi de kolaydir. Bu basit aliskanligin edinilmesiyle Batili
+      her zaman her yerde olma, projede herkese degisiklik oldugunu teker teker
+      soylemeyi hatirlamaktan/ugrasmaktan kurtulmus olur. "Super hatirlayici"
+      olmak yerine, dogasini bilen bir aliskanliklar butunudur modern programci.
+    * Yani, insan dogasini zorlayan seyler yapmayin. Insan dogasi:
+      * Unutkan
+      * Mekanik hatalar yapan
+      Ama
+      * Muthis genelleme yetenegi olan
+      * Aliskanliklar edinebilen
+      * Tek bir noktaya odaklandiginda ve elinde kayitlar oldugunda
+        analiz yetenegi muthis bir yaratiktir.
+      Bu sebeple:
+      * Bol bol yazin
+      * Hatirlanmasi en rahat ve en etkili olacak prensipleri aliskanlik edinin  
+    * Prensip Olusturmak
+      * En basit hatirlanabilecek ve en etkili kural
+    * Prensipler
+      * En fazla etki getirecek en az seyi yapin
+        * Mesela: (CVS)
+  	   * Derlenemeyen kod ci edilmez
+  	   * Test edilmemis kod ci edilmez.
+           * Cvs ci dan sonra e-mail yollayin
+      * Iki dil (teknoloji) arasindan ve gucleri esit olanlar arasindan en kisa
+        dili olanini secin.  
+    * Teknoloji Secmek
+      * Her yeni teknoloji bir "dil"dir.
+      * Kod ureterek miadi dolmus teknolojiyi ayakta tutmaya ugrasmayin. Basit bir
+        text editoru ile idare edemediginiz her teknoloji, yakin zamanda olmeye
+        mahkumdur. EJB, C++ gibi teknolojilerin kurumsal seviyede olumunu aynen
+        bu sekilde tahmin ettik.
+      * "Her yerde X teknolojisi kullanmak istiyorum" tuzagina dusmeyin.
+         Spring'cilerde bunu cok goruyorum. Kurumsal uygulamalarda, 10 sene once
+         de, simdi de, hala projeler bircok degisik teknolojinin birbirine
+         tutkallanmasi ile olusturulur. Biz sistem birlestiricisiyiz, tek
+         teknolojiyi kakalayicilar degiliz.      
+  
+  * Teknolojide en onemli sey nedir? (metot, vs, degil, genel sistem
+    gerekliliklerini bilmek, revactaki teknolojilerin bu gereklilikler icin
+    sagladiklarini kullanmak, zayif taraflarinin etrafindan dolasmak). Ve, en az
+    etrafindan dolasilacak ve destegi iyi olacak, bilen programci bulunacak
+    teknolojileri kullanmak.
+   * Kitabi nasil okuyalim: Nelerin yapilabildigine bakin; Eger onu bilirseniz, 
+     *nasil* yapildigini ileride bulabilirsiniz.      
+  * EJB, Web Services, Hibernate, JDO, Spring
+  * Tipik bir gun (CVS mail'i gorur, XPlanner'dan nesi var bakar,
+    nesnesel tasarim, vs, commit eder)
+  * Bugun ve Ilerisi
+      Bugun
+        * AOP, Spring
+        * JSF
+        * Sektorun gidisati
+	* ITDoesntMatter.pdf'den bilgiler paylas
+      Ileride
+        * Subversion
+        * Ruby
+
+Appendix
+
+* Gelistirme Araclari
+    https://sourceforge.net/project/admin/editpackages.php?group_id=135492
+    * Java Kurmak
+      * Unix
+      * Windows
+    * JBoss Kurmak
+      * Unix
+      * Windows
+    * Emacs
+      * Windows
+    * Ant
+      * Kurmak
+      * Path tanimlamak
+    * Ornek kodlar
+      * https://sourceforge.net/project/admin/editpackages.php?group_id=135492
+      * Nasil kurulur tarif et
+    * Perl
+      * Regex
+      * Dosya okuma
+* Unix
+    * ls
+    * ps
+    * wc
+    * find
+    * netstat
+    * ifconfig
+    * cron
+

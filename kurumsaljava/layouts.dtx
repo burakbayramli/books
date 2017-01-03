@@ -1,0 +1,4842 @@
+% \iffalse meta-comment
+%
+% layouts.dtx
+% Author: Peter Wilson (Herries Press) herries dot press at earthlink dot net) 
+% Copyright 1998 --- 2004 Peter R. Wilson
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either
+% version 1.3 of this license or (at your option) any 
+% later version.
+% The latest version of the license is in
+%    http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of
+% LaTeX version 2003/06/01 or later.
+%
+% This work has the LPPL maintenance status "author-maintained".
+%
+% This work consists of the files listed in the README file.
+%
+% 
+%<*driver>
+\documentclass[twoside]{ltxdoc}
+\usepackage{url}
+\makeatletter
+  \@mparswitchfalse
+\makeatother
+\EnableCrossrefs
+\CodelineIndex
+\setcounter{StandardModuleDepth}{1}
+\renewcommand{\MakeUppercase}[1]{#1}
+\pagestyle{headings}
+\begin{document}
+  \raggedbottom
+  \DocInput{layouts.dtx}
+\end{document}
+%</driver>
+%
+% \fi
+%
+% \CheckSum{6212}
+%
+% \DoNotIndex{\',\.,\@M,\@@input,\@addtoreset,\@arabic,\@badmath}
+% \DoNotIndex{\@centercr,\@cite}
+% \DoNotIndex{\@dotsep,\@empty,\@float,\@gobble,\@gobbletwo,\@ignoretrue}
+% \DoNotIndex{\@input,\@ixpt,\@m}
+% \DoNotIndex{\@minus,\@mkboth,\@ne,\@nil,\@nomath,\@plus,\@set@topoint}
+% \DoNotIndex{\@tempboxa,\@tempcnta,\@tempdima,\@tempdimb}
+% \DoNotIndex{\@tempswafalse,\@tempswatrue,\@viipt,\@viiipt,\@vipt}
+% \DoNotIndex{\@vpt,\@warning,\@xiipt,\@xipt,\@xivpt,\@xpt,\@xviipt}
+% \DoNotIndex{\@xxpt,\@xxvpt,\\,\ ,\addpenalty,\addtolength,\addvspace}
+% \DoNotIndex{\advance,\Alph,\alph}
+% \DoNotIndex{\arabic,\ast,\begin,\begingroup,\bfseries,\bgroup,\box}
+% \DoNotIndex{\bullet}
+% \DoNotIndex{\cdot,\cite,\CodelineIndex,\cr,\day,\DeclareOption}
+% \DoNotIndex{\def,\DisableCrossrefs,\divide,\DocInput,\documentclass}
+% \DoNotIndex{% \DoNotIndex,\egroup,\ifdim,\else,\fi,\em,\endtrivlist}
+% \DoNotIndex{\EnableCrossrefs,\end,\end@dblfloat,\end@float,\endgroup}
+% \DoNotIndex{\endlist,\everycr,\everypar,\ExecuteOptions,\expandafter}
+% \DoNotIndex{\fbox}
+% \DoNotIndex{\filedate,\filename,\fileversion,\fontsize,\framebox,\gdef}
+% \DoNotIndex{\global,\halign,\hangindent,\hbox,\hfil,\hfill,\hrule}
+% \DoNotIndex{\hsize,\hskip,\hspace,\hss,\if@tempswa,\ifcase,\or,\fi,\fi}
+% \DoNotIndex{\ifhmode,\ifvmode,\ifnum,\iftrue,\ifx,\fi,\fi,\fi,\fi,\fi}
+% \DoNotIndex{\input}
+% \DoNotIndex{\jobname,\kern,\leavevmode,\let,\leftmark}
+% \DoNotIndex{\list,\llap,\long,\m@ne,\m@th,\mark,\markboth,\markright}
+% \DoNotIndex{\month,\newcommand,\newcounter,\newenvironment}
+% \DoNotIndex{\NeedsTeXFormat,\newdimen}
+% \DoNotIndex{\newlength,\newpage,\nobreak,\noindent,\null,\number}
+% \DoNotIndex{\numberline,\OldMakeindex,\OnlyDescription,\p@}
+% \DoNotIndex{\pagestyle,\par,\paragraph,\paragraphmark,\parfillskip}
+% \DoNotIndex{\penalty,\PrintChanges,\PrintIndex,\ProcessOptions}
+% \DoNotIndex{\protect,\ProvidesClass,\raggedbottom,\raggedright}
+% \DoNotIndex{\refstepcounter,\relax,\renewcommand,\reset@font}
+% \DoNotIndex{\rightmargin,\rightmark,\rightskip,\rlap,\rmfamily,\roman}
+% \DoNotIndex{\roman,\secdef,\selectfont,\setbox,\setcounter,\setlength}
+% \DoNotIndex{\settowidth,\sfcode,\skip,\sloppy,\slshape,\space}
+% \DoNotIndex{\symbol,\the,\trivlist,\typeout,\tw@,\undefined,\uppercase}
+% \DoNotIndex{\usecounter,\usefont,\usepackage,\vfil,\vfill,\viiipt}
+% \DoNotIndex{\viipt,\vipt,\vskip,\vspace}
+% \DoNotIndex{\wd,\xiipt,\year,\z@}
+%
+% \DoNotIndex{\put,\vector,\line,\texttt,\multiply}
+%
+% \def\dtxfile{layouts.dtx}
+% \def\fileversion{v2.3b} \def\filedate{1999/03/06}
+% \def\fileversion{v2.4} \def\filedate{2001/04/30}
+% \def\fileversion{v2.5} \def\filedate{2001/11/11}
+% \def\fileversion{v2.5a} \def\filedate{2002/03/24}
+% \def\fileversion{v2.6} \def\filedate{2002/06/09}
+% \def\fileversion{v2.6a} \def\filedate{2002/12/12}
+% \def\fileversion{v2.6b} \def\filedate{2003/11/25}
+% \def\fileversion{v2.6c} \def\filedate{2004/10/25}
+% \newcommand*{\Lpack}[1]{\textsf {#1}}           ^^A typeset a package
+% \newcommand*{\Lopt}[1]{\textsf {#1}}            ^^A typeset an option
+% \newcommand*{\file}[1]{\texttt {#1}}            ^^A typeset a file
+% \newcommand*{\Lcount}[1]{\textsl {\small#1}}    ^^A typeset a counter
+% \newcommand*{\pstyle}[1]{\textsl {#1}}          ^^A typeset a pagestyle
+% \newcommand*{\Lenv}[1]{\texttt {#1}}            ^^A typeset an environment
+%
+% \title{The \Lpack{layouts} package: Code\thanks{This
+%        file (\texttt{\dtxfile}) has version number \fileversion, last revised
+%        \filedate.}}
+%
+% \author{%
+% Peter Wilson \\
+% Herries Press \\
+% (\texttt{herries.press@earthlink.net})
+% }
+% \date{\filedate}
+% \maketitle
+% \begin{abstract}
+%    The \Lpack{layouts} package provides facilities for document designers
+% to experiment with various aspects of the layout of \LaTeX ed documents.
+% There is a separate user manual for the package.
+% \end{abstract}
+% \tableofcontents
+%
+% \StopEventually{}
+%
+% 
+%
+% \section{Introduction}
+%
+% This document provides the commented source for a \LaTeX{}
+% package file developed as part of a suite designed for the typesetting of
+% documents according to the rules for ISO international 
+% standards~\cite{PRW96i}.
+% A separate document provides the user manual.
+%
+%    Section~\ref{sec:lays} describes a package to assist in the
+% design of new \LaTeX{} classes and packages by graphically
+% depicting the layout\footnote{With thanks to Frank Mittelbach
+% for noticing some problems with version 2.4 and suggesting additional
+% features.} of various logical elements of a document.
+% This package has general applicability and is not restricted to
+% typesetting ISO documents.
+% 
+% This manual is typeset according to the conventions of the
+% \LaTeX{} \textsc{docstrip} utility which enables the automatic
+% extraction of the \LaTeX{} macro source files~\cite{GOOSSENS94}.
+%
+%
+%
+% \section{The \Lpack{layouts} package} \label{sec:lays}
+%
+%    Announce the name and version of the package which requires \LaTeXe.
+% \changes{v2.1}{1998/10/14}{Changed the Title, the Introduction, and other text}
+% \changes{v2.1}{1998/10/14}{Added requirement for LaTeX2e}
+% \changes{v2.2}{1998/11/14}{Tidied a lot of code}
+% \changes{v2.2}{1998/11/14}{Added drawing of font boxes}
+% \changes{v2.3}{1999/01/21}{Eliminated several new counters}
+% \changes{v2.3}{1999/01/21}{Corrected ToC layout}
+% \changes{v2.3}{1999/01/21}{Added ...values commands}
+% \changes{v2.3a}{1999/01/21}{Tweaked the ToC layout for dotted leader}
+% \changes{v2.3b}{1999/03/06}{Undeleted the l@youtscale command}
+% \changes{v2.4}{2001/04/30}{Added \cs{drawstock} for the memoir class}
+% \changes{v2.4}{2001/04/30}{Added control to switch on/off marginpars}
+% \changes{v2.5}{2001/10/22}{Added several booleans}
+% \changes{v2.5}{2001/11/01}{Added diagram and design macros}
+% \changes{v2.5a}{2002/01/06}{Fixed footheight in page diagrams}
+% \changes{v2.6}{2002/06/09}{Added more bells to page layouts}
+% \changes{v2.6}{2002/06/09}{General tidying of page layouts code}
+% \changes{v2.6a}{2002/12/12}{Cater for negative length in list layout}
+% \changes{v2.6b}{2003/11/25}{Corrected spelling and grammatical errors}
+% \changes{v2.6c}{2004/10/25}{Privatised the \cs{*inch}, etc., macros}
+%    \begin{macrocode}
+%<*lays>
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{layouts}[2004/10/25 v2.6c graphical depiction of document elements]
+
+%    \end{macrocode}
+%
+%    The \Lpack{layouts} package provides means of graphically displaying the layout
+% of various logical elements of a document such as section headings,
+% lists, floats, and others.
+%
+%
+% \section{Counters and such}
+%
+%    First we define some commands, counters, etc., that will be useful
+% later on.
+%
+% \begin{macro}{\bs}
+%    We will be doing a lot of printing of \LaTeX{} commands, so we
+% need a short command to print a backslash.
+% \changes{v2.4}{2001/04/30}{Better definition for the \cs{bs} command}
+%    \begin{macrocode}
+\@ifundefined{bs}{\newcommand{\bs}{\texttt{\char`\\}}}%
+  {\renewcommand{\bs}{\texttt{\char`\\}}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@yoneinch}
+% \begin{macro}{\l@yeighthalfinch}
+% \begin{macro}{\l@yteninch}
+% \begin{macro}{\l@yeleveninch}
+% \begin{macro}{\l@yonepoint}
+% \changes{v2.3}{1999/01/21}{Made `useful values' commands not counters}
+%    Some generally useful values. |\l@yonepoint| is set to 65536 sp and all
+% the others are set to a value in pts.
+%    \begin{macrocode}
+\newcommand{\l@yoneinch}{72}
+\newcommand{\l@yeighthalfinch}{615}
+\newcommand{\l@yteninch}{723}
+\newcommand{\l@yeleveninch}{795}
+\newcommand{\l@yonepoint}{65536}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youtscale}
+%    Internal command that stores the drawing scale factor. Initialised
+% to half scale.
+%    \begin{macrocode}
+\newcommand{\l@youtscale}{0.5}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@ylen}
+%    A length.
+%    \begin{macrocode}
+\newlength{\l@ylen}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\layoutsbox}
+%    A box for storing something. There seems to be no reason why the user
+% should not be able to use this.
+%    \begin{macrocode}
+\newsavebox{\layoutsbox}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@youtunitlength}
+%    This will be used for setting the |\unitlength| for a \Lenv{picture}.
+%    \begin{macrocode}
+\newlength{\l@youtunitlength}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@youtlinethick}
+% \begin{macro}{\l@youtlinethickii}
+%    These will be used as parameters to a |\linethickness| command.
+%    \begin{macrocode}
+\newlength{\l@youtlinethick}
+\newlength{\l@youtlinethickii}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@ysetupparskip}%
+% \begin{macro}{\l@ysetupbaselineskip}
+%    Used for storing the document's |\parskip| and |\baselineskip|.
+%    \begin{macrocode}
+\newlength{\l@ysetupparskip}
+\newlength{\l@ysetupbaselineskip}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@yonem}
+% \begin{macro}{\l@yonex}
+% Used for storing the document's value for 1em and 1ex.
+%    \begin{macrocode}
+\newlength{\l@yonem}
+\newlength{\l@yonex}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@ylmarg}
+% \begin{macro}{\l@yrmarg}
+% \begin{macro}{\l@yitmindent}
+% \begin{macro}{\l@ylblwidth}
+% \begin{macro}{\l@ylblsep}
+% \begin{macro}{\l@ylparindent}
+% \begin{macro}{\l@ytsep}
+% \begin{macro}{\l@ypskip}
+% \begin{macro}{\l@yptsep}
+% \begin{macro}{\l@ypsep}
+% \begin{macro}{\l@yitmsep}
+% We need to store a list environment's values for use when tabulating
+% the actual list values.
+%    \begin{macrocode}
+\newlength{\l@ylmarg}
+\newlength{\l@yrmarg}
+\newlength{\l@yitmindent}
+\newlength{\l@ylblwidth}
+\newlength{\l@ylblsep}
+\newlength{\l@ylparindent}
+\newlength{\l@ytsep}
+\newlength{\l@ypskip}
+\newlength{\l@yptsep}
+\newlength{\l@ypsep}
+\newlength{\l@yitmsep}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@ytok}
+%    A useful token
+%    \begin{macrocode}
+\newtoks\l@ytok
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@youtpw}
+% \begin{macro}{\l@youtph}
+%    We use these for storing the page width and height.
+%    \begin{macrocode}
+\newcount\l@youtpw
+\newcount\l@youtph
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youthpi}
+% \begin{macro}{\l@youthpii}
+% \begin{macro}{\l@youthpiii}
+% \begin{macro}{\l@youthpiv}
+% \begin{macro}{\l@youthpv}
+% \begin{macro}{\l@youthpvi}
+% \begin{macro}{\l@youthpvii}
+%    Counters for horizontal drawing parameters.
+%
+%    \begin{macrocode}
+\newcount\l@youthpi
+\newcount\l@youthpii
+\newcount\l@youthpiii
+\newcount\l@youthpiv
+\newcount\l@youthpv
+\newcount\l@youthpvi
+\newcount\l@youthpvii
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youtparskip}
+% \begin{macro}{\l@youtvpi}
+% \begin{macro}{\l@youtvpii}
+% \begin{macro}{\l@youtvpiii}
+% \begin{macro}{\l@youtvpiv}
+% \begin{macro}{\l@youtvpv}
+% \begin{macro}{\l@youtvpvi}
+% \begin{macro}{\l@youtvpvii}
+%    Counters for vertical drawing parameters.
+%
+%    \begin{macrocode}
+\newcount\l@youtparskip
+\newcount\l@youtvpi
+\newcount\l@youtvpii
+\newcount\l@youtvpiii
+\newcount\l@youtvpiv
+\newcount\l@youtvpv
+\newcount\l@youtvpvi
+\newcount\l@youtvpvii
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youthdo}
+% \begin{macro}{\l@youthdi}
+% \begin{macro}{\l@youthdii}
+% \begin{macro}{\l@youthdiii}
+% \begin{macro}{\l@youthdiv}
+% \begin{macro}{\l@youthdv}
+% \begin{macro}{\l@youthdvi}
+% \begin{macro}{\l@youthdvii}
+%    Horizontal dimensions.
+%
+%    \begin{macrocode}
+\newcount\l@youthdo
+\newcount\l@youthdi
+\newcount\l@youthdii
+\newcount\l@youthdiii
+\newcount\l@youthdiv
+\newcount\l@youthdv
+\newcount\l@youthdvi
+\newcount\l@youthdvii
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youtvdo}
+% \begin{macro}{\l@youtvdi}
+% \begin{macro}{\l@youtvdii}
+% \begin{macro}{\l@youtvdiii}
+% \begin{macro}{\l@youtvdiv}
+% \begin{macro}{\l@youtvdv}
+% \begin{macro}{\l@youtvdvi}
+% \begin{macro}{\l@youtvdvii}
+% \begin{macro}{\l@youtvdviii}
+%    Vertical dimensions.
+%    \begin{macrocode}
+\newcount\l@youtvdo
+\newcount\l@youtvdi
+\newcount\l@youtvdii
+\newcount\l@youtvdiii
+\newcount\l@youtvdiv
+\newcount\l@youtvdv
+\newcount\l@youtvdvi
+\newcount\l@youtvdvii
+\newcount\l@youtvdviii
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youtxci}
+% \begin{macro}{\l@youtxcii}
+% \begin{macro}{\l@youtxciii}
+% \begin{macro}{\l@youtxciv}
+% \begin{macro}{\l@youtxcv}
+% \begin{macro}{\l@youtxcvi}
+%    X coordinates.
+%    \begin{macrocode}
+\newcount\l@youtxci
+\newcount\l@youtxcii
+\newcount\l@youtxciii
+\newcount\l@youtxciv
+\newcount\l@youtxcv
+\newcount\l@youtxcvi
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youtyci}
+% \begin{macro}{\l@youtycii}
+% \begin{macro}{\l@youtyciii}
+% \begin{macro}{\l@youtyciv}
+% \begin{macro}{\l@youtycv}
+% \begin{macro}{\l@youtycvi}
+% \begin{macro}{\l@youtycvii}
+% \begin{macro}{\l@youtycviii}
+%    Y coordinates.
+%    \begin{macrocode}
+\newcount\l@youtyci
+\newcount\l@youtycii
+\newcount\l@youtyciii
+\newcount\l@youtyciv
+\newcount\l@youtycv
+\newcount\l@youtycvi
+\newcount\l@youtycvii
+\newcount\l@youtycviii
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@youtxco}
+% \begin{macro}{\l@youtyco}
+%    For the (X,Y) coordinates of the bottom left hand corner of the page.
+% \changes{v2.4}{2001/04/30}{Added \cs{l@youtxco} and \cs{l@youtyco}}
+%    \begin{macrocode}
+\newcount\l@youtxco
+\newcount\l@youtyco
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \section{Initialisations}
+%
+%    The following are used to set up default conditions.
+%
+% \begin{macro}{\ifoddpagelayout}
+%    Set TRUE to draw an oddside page.
+%    \begin{macrocode}
+\newif\ifoddpagelayout
+  \oddpagelayouttrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\iftwocolumnlayout}
+%    Set TRUE to draw a two column page.
+%    \begin{macrocode}
+\newif\iftwocolumnlayout
+  \twocolumnlayoutfalse
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifdrawmarginpars}
+%    Set TRUE to draw marginpars on a page.
+%    \begin{macrocode}
+\newif\ifdrawmarginpars
+  \drawmarginparstrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifdrawparameters}
+%    Set TRUE to draw a layout with marked dimension lines. 
+%    \begin{macrocode}
+\newif\ifdrawparameters
+  \drawparameterstrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\iflistaspara}
+%    Set TRUE to draw lists as stand-alone paragraph.
+%    \begin{macrocode}
+\newif\iflistaspara
+  \listasparatrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifruninhead}
+%    Set TRUE to draw a run-in heading.
+%    \begin{macrocode}
+\newif\ifruninhead
+  \runinheadfalse
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifprintparameters}
+%    Set TRUE to print table of actual parameter values
+% \changes{v2.5}{2001/10/22}{Added \cs{ifprintparameters}}
+%    \begin{macrocode}
+\newif\ifprintparameters
+  \printparameterstrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifdrawdimensions}
+%    Set TRUE to draw dimension lines
+% \changes{v2.5}{2001/10/22}{Added \cs{ifdrawdimensions}}
+%    \begin{macrocode}
+\newif\ifdrawdimensions
+  \drawdimensionsfalse
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifprintheadings}
+%    Set TRUE to print text about dashed lines.
+% \changes{v2.5}{2001/10/22}{Added \cs{ifprintheadings}}
+%    \begin{macrocode}
+\newif\ifprintheadings
+  \printheadingstrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifl@ytempif}
+%    A scratch |\if|.
+% \changes{v2.5}{2001/10/22}{Added \cs{ifl@ytempif}}
+%    \begin{macrocode}
+\newif\ifl@ytempif
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@yor}
+%    |\l@yor{|\meta{ifA}|}{|\meta{ifB}|}| sets |\ifl@ytempif| to TRUE 
+% unless \meta{ifA} is FALSE and \meta{ifB} is FALSE (i.e.,
+% |\ifl@tempif| = \meta{ifA} OR \meta{ifB}).
+% \changes{v2.5}{2001/10/22}{Added \cs{l@yor}}
+%    \begin{macrocode}
+\newcommand{\l@yor}[2]{%
+  \l@ytempiftrue
+  #1
+  \else
+    #2
+    \else
+      \l@ytempiffalse
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@ynnand}
+%    |\l@ynnand{|\meta{ifA}|}{|\meta{ifB}|}| sets |\ifl@ytempif| to FALSE 
+% unless \meta{ifA} is FALSE and \meta{ifB} is TRUE 
+% \changes{v2.5}{2001/10/22}{Added \cs{l@ynnand}}
+%    \begin{macrocode}
+\newcommand{\l@ynnand}[2]{%
+  \l@ytempiffalse
+  #1
+  \else
+    #2
+     \l@ytempiftrue
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@ynox}
+%    |\l@ynox{|\meta{ifA}|}{|\meta{ifB}|}| sets |\ifl@ytempif| to TRUE 
+% unless \meta{ifA} is TRUE and \meta{ifB} is FALSE.
+% \changes{v2.5}{2001/10/22}{Added \cs{l@ynox}}
+%    \begin{macrocode}
+\newcommand{\l@ynox}[2]{%
+  \l@ytempiftrue
+  #1
+    #2
+    \else
+      \l@ytempiffalse
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\testdrawdimensions}
+% \begin{macro}{\testprintparameters}
+% \changes{v2.5}{2001/10/21}{Added \cs{testdrawdimensions} and
+%         \cs{testprintparameters}}
+% \changes{v2.5}{2001/10/21}{Use \cs{testdrawdimensions} for check to
+%   draw dimensions in actual layouts}
+% \changes{v2.5}{2001/10/21}{Use \cs{testprintparameters} for check to
+%   list parameter values in actual layouts}
+%    \begin{macrocode}
+\newcommand{\testdrawdimensions}{%
+  \l@yor{\ifdrawparameters}{\ifdrawdimensions}}
+\newcommand{\testprintparameters}{%
+  \l@ynnand{\ifdrawparameters}{\ifprintparameters}}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\setlabelfont}
+% \begin{macro}{\l@ylabelfont}
+%    The font for labels in the diagrams.
+% \changes{v2.5}{2001/10/22}{Added \cs{setlabelfont} and \cs{l@ylabelfont}}
+%    \begin{macrocode}
+\newcommand{\setlabelfont}[1]{\renewcommand{\l@ylabelfont}{#1}}
+  \newcommand{\l@ylabelfont}{\normalfont}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\setparametertextfont}
+% \begin{macro}{\l@yparamfont}
+%    The font size for parameters.
+% \changes{v2.5}{2001/10/22}{Added \cs{setparametertextfont} and \cs{l@yparamfont}}
+%    \begin{macrocode}
+\newcommand{\setparametertextfont}[1]{\renewcommand{\l@yparamfont}{#1}}
+  \newcommand{\l@yparamfont}{\footnotesize}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\setvaluestextsize}
+% \begin{macro}{\l@yvalsize}
+%    The font size for value tables.
+% \changes{v2.5}{2001/10/22}{Added \cs{setvaluestextsize} and \cs{l@yvalsize}}
+%    \begin{macrocode}
+\newcommand{\setvaluestextsize}[1]{\renewcommand{\l@yvalsize}{#1}}
+  \newcommand{\l@yvalsize}{\normalsize}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%
+% \begin{macro}{\setlayoutscale}
+%    A user command to set the drawing scale. The scale is initialised
+% to half size.
+% \changes{v2.5a}{2002/01/06}{Added warning to \cs{setlayoutscale}}
+%    \begin{macrocode}
+\newcommand{\setlayoutscale}[1]{\setlength{\l@youtunitlength}{1pt}
+  \l@youtunitlength = #1\l@youtunitlength
+  \renewcommand{\l@youtscale}{#1}
+  \PackageWarning{layouts}{Layout scale set to #1}}
+%%%\setlayoutscale{0.5}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\setuplayouts}
+%    The |\setuplayouts| command should be called immediately at
+% the |\begin{document}|. It must be called before any command that
+% changes font sizes or makes any change to the document layout.
+% It stores relevant skips.
+%    \begin{macrocode}
+\newcommand{\setuplayouts}{%
+  \setlength{\l@ysetupparskip}{\parskip}
+  \setlength{\l@ysetupbaselineskip}{\baselineskip}
+  \setlength{\l@yonem}{1em}
+  \setlength{\l@yonex}{1ex}
+  \setlayoutscale{0.5}
+%%%  \PackageWarning{layouts}{Layout scale set to 0.5}
+}
+\AtBeginDocument{\setuplayouts}
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Utility commands}
+%
+%    A variety of utility commands.
+%
+% \begin{macro}{\l@yltoc}
+%  |\l@yltoc{|\meta{length}|}{|\meta{counter}|}| converts a length into a 
+% counter value. The counter value is to the nearest
+%  pt of the length. 
+%    \begin{macrocode}
+\newcommand{\l@yltoc}[2]{\setlength{\l@ylen}{#1}%
+                         \ifdim\l@ylen > \z@ \advance\l@ylen by 0.5\p@ \else
+                           \ifdim\l@ylen < \z@ \advance\l@ylen by -0.5\p@
+                           \fi
+                         \fi
+                         #2=\l@ylen
+                         \divide #2 by \l@yonepoint\relax}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@yvuda}
+% \begin{macro}{\l@yhrda}
+% |\l@yvuda{|\meta{x}|}{|\meta{y}|}{|\meta{distance}|}| draws a line
+% vertically upwards from (\meta{x},\meta{y}) a \meta{distance} with an
+% outward pointing arrowhead at each end of the line. |\l@yhrda| is
+% similar except that a horizontal line is drawn to the right. Simplistically,
+% the commands produce something like |<---->|.
+%    \begin{macrocode}
+\newcommand{\l@yvuda}[3]{\put(#1,#2){\vector(0,1){#3}}
+                         \put(#1,#2){\vector(0,-1){0}}}
+\newcommand{\l@yhrda}[3]{\put(#1,#2){\vector(1,0){#3}}
+                         \put(#1,#2){\vector(-1,0){0}}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%                          
+% \begin{macro}{\l@yvudia}
+% \begin{macro}{\l@yhrdia}
+% |\l@yvudia{|\meta{x}|}{|\meta{y}|}{|\meta{distance}|}| draws two vertical
+% arrowheads pointing to each other. One is at (\meta{x},\meta{y}) and
+% the other is at (\meta{x},\meta{y + distance}). |\l@yhrdia| is
+% similar except that the arrowheads are horizontal.
+% Simplistically, the commands produce something like |>    <|.
+%    \begin{macrocode}
+\newcommand{\l@yvudia}[3]{\begingroup
+                          \l@youthpvii=#1\relax
+                          \l@youtvpvii=#2\relax
+                          \l@youthdvii=#3\relax
+                          \put(\l@youthpvii,\l@youtvpvii){\vector(0,1){0}}
+                          \advance\l@youtvpvii by \l@youthdvii
+                          \put(\l@youthpvii,\l@youtvpvii){\vector(0,-1){0}}
+                          \endgroup}
+\newcommand{\l@yhrdia}[3]{\begingroup
+                          \l@youthpvii=#1\relax
+                          \l@youtvpvii=#2\relax
+                          \l@youthdvii=#3\relax
+                          \put(\l@youthpvii,\l@youtvpvii){\vector(1,0){0}}
+                          \advance\l@youthpvii by \l@youthdvii
+                          \put(\l@youthpvii,\l@youtvpvii){\vector(-1,0){0}}
+                          \endgroup}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%             
+% \begin{macro}{\l@ypcmd}
+% \begin{macro}{\l@ycmd}
+%  |\l@ypcmd{|\meta{cmdname}|}| typesets a command \meta{cmdname} (which does 
+% not include the backslash) (in a picture). For example, |\l@ypcmd{fred}|
+% prints |\fred|. The font size is given by |\l@yparamfont|. The
+% |\l@ycmd| macro is similar but does not set the font size.
+%    \begin{macrocode}
+\newcommand{\l@ypcmd}[1]{{\l@yparamfont\texttt{\bs #1}}}
+\newcommand{\l@ycmd}[1]{\texttt{\bs #1}}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\printinunitsof}
+% \begin{macro}{\l@yunitperpt}
+% \begin{macro}{\l@yunits}
+% |\printinunitsof{|\meta{unit}|}| sets |\l@yunits| to the value of \meta{unit}
+% and |\l@yunitperpt| to the number of \meta{unit} in 1pt.
+% \changes{v2.5}{2001/10/21}{Added \cs{printinunitsof}, \cs{l@yunitperpt}
+% and \cs{units}}
+%    \begin{macrocode}
+\newcommand{\printinunitsof}[1]{%
+  \def\l@yunitperpt{1.0}\def\l@yunits{pt}%
+  \def\l@yta{#1}\def\l@ytb{pt}%
+  \ifx \l@yta\l@ytb
+    \def\l@yunitperpt{1.0}\def\l@yunits{pt}%
+  \else
+    \def\l@ytb{pc}%
+    \ifx \l@yta\l@ytb
+      \def\l@yunitperpt{0.083333}\def\l@yunits{pc}%
+    \else
+      \def\l@ytb{in}%
+      \ifx \l@yta\l@ytb
+        \def\l@yunitperpt{0.013837}\def\l@yunits{in}%
+      \else
+        \def\l@ytb{mm}%
+        \ifx \l@yta\l@ytb
+          \def\l@yunitperpt{0.351459}\def\l@yunits{mm}%
+        \else
+          \def\l@ytb{cm}%
+          \ifx \l@yta\l@ytb
+            \def\l@yunitperpt{0.0351459}\def\l@yunits{cm}%
+          \else
+            \def\l@ytb{bp}%
+            \ifx \l@yta\l@ytb
+              \def\l@yunitperpt{0.996264}\def\l@yunits{bp}%
+            \else
+              \def\l@ytb{dd}%
+              \ifx \l@yta\l@ytb
+                \def\l@yunitperpt{0.9345718}\def\l@yunits{dd}%
+              \else
+                \def\l@ytb{cc}%
+                \ifx \l@yta\l@ytb
+                  \def\l@yunitperpt{0.0778809}\def\l@yunits{cc}%
+                \else
+                  \def\l@ytb{PT}%
+                  \ifx \l@yta\l@ytb
+                    \def\l@yunitperpt{1.0}\def\l@yunits{PT}%
+                  \fi
+                \fi
+              \fi
+            \fi
+          \fi
+        \fi
+      \fi
+    \fi
+  \fi
+}
+\printinunitsof{pt}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@ytempdima}
+% \begin{macro}{\prntlen}
+% |\l@ytempdima| is a scratch length. |\prntlen{|\meta{length}|}|
+% prints the value of \meta{length} in the units set by |\printinunitsof|.
+% \changes{v2.5}{2001/10/21}{Added \cs{l@ytempdima} and \cs{prntlen}}
+%    \begin{macrocode}
+\newlength{\l@ytempdima}
+\newcommand{\prntlen}[1]{%
+  \def\l@yta{pt}\ifx\l@yta\l@yunits\the#1\else
+    \def\l@yta{PT}%
+    \l@ytempdima=\l@yunitperpt #1\relax\strip@pt\l@ytempdima
+      \ifx\l@yta\l@yunits pt\else\l@yunits\fi\fi}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\l@yval}
+% |\l@yval{|\meta{lcmd}|}| prints a value of the (length) command \meta{lcmd}
+% (which includes the backslash); for example |\l@yval{\mylength}|.
+% \changes{v2.5}{2001/10/21}{Changed the definition of \cs{l@yval}}
+%    \begin{macrocode}
+%%% \newcommand{\l@yval}[1]{\the#1}
+\newcommand{\l@yval}[1]{\prntlen{#1}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing the layout of a page}
+%
+%    A variety of commands are used to draw the layout of a page.
+%
+%    First some utility commands for setting the layout dimensions.
+% \begin{macro}{\trypaperwidth}
+%    Sets the |paperwidth| and stores the result in |\l@youtpw|.
+%    \begin{macrocode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    PAGE LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\trypaperwidth}[1]{\l@yltoc{#1}{\l@youtpw}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trypaperheight}
+%    Sets the |paperheight| and stores the result in |\l@youtph|.
+%    \begin{macrocode}
+\newcommand{\trypaperheight}[1]{\l@yltoc{#1}{\l@youtph}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryhoffset}
+%    Sets the |hoffset| and stores the result in |\l@youthpi|.
+%    \begin{macrocode}
+\newcommand{\tryhoffset}[1]{\l@yltoc{#1}{\l@youthpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryvoffset}
+%    Sets the |voffset| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+\newcommand{\tryvoffset}[1]{\l@yltoc{#1}{\l@youtvpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytopmargin}
+%    Sets the |topmargin| and stores the result in |\l@youtvpii|.
+%    \begin{macrocode}
+\newcommand{\trytopmargin}[1]{\l@yltoc{#1}{\l@youtvpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryheadheight}
+%    Sets the |headheight| and stores the result in |\l@youtvpiii|.
+%    \begin{macrocode}
+\newcommand{\tryheadheight}[1]{\l@yltoc{#1}{\l@youtvpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryheadsep}
+%    Sets the |headsep| and stores the result in |\l@youtvpiv|.
+%    \begin{macrocode}
+\newcommand{\tryheadsep}[1]{\l@yltoc{#1}{\l@youtvpiv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytextheight}
+%    Sets the |textheight| and stores the result in |\l@youtvpv|.
+%    \begin{macrocode}
+\newcommand{\trytextheight}[1]{\l@yltoc{#1}{\l@youtvpv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryfootskip}
+%    Sets the |footskip| and stores the result in |\l@youtvpvi|.
+%    \begin{macrocode}
+\newcommand{\tryfootskip}[1]{\l@yltoc{#1}{\l@youtvpvi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryoddsidemargin}
+%    Sets the |oddsidemargin| and stores the result in |\l@youthpv|.
+%    \begin{macrocode}
+\newcommand{\tryoddsidemargin}[1]{\l@yltoc{#1}{\l@youthpv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryevensidemargin}
+%    Sets the |evensidemargin| and stores the result in |\l@youthpiv|.
+%    \begin{macrocode}
+\newcommand{\tryevensidemargin}[1]{\l@yltoc{#1}{\l@youthpiv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytextwidth}
+%    Sets the |textwidth| and stores the result in |\l@youthpii|.
+%    \begin{macrocode}
+\newcommand{\trytextwidth}[1]{\l@yltoc{#1}{\l@youthpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trymarginparsep}
+%    Sets the |marginparsep| and stores the result in |\l@youthpvi|.
+%    \begin{macrocode}
+\newcommand{\trymarginparsep}[1]{\l@yltoc{#1}{\l@youthpvi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trymarginparwidth}
+%    Sets the |marginparwidth| and stores the result in |\l@youthpvii|.
+%    \begin{macrocode}
+\newcommand{\trymarginparwidth}[1]{\l@yltoc{#1}{\l@youthpvii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trymarginparpush}
+%    Sets the |marginparpush| and stores the result in |\l@youtvpvii|.
+%    \begin{macrocode}
+\newcommand{\trymarginparpush}[1]{\l@yltoc{#1}{\l@youtvpvii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trycolumnsep}
+%    Sets the |columnsep| and stores the result in |\l@youthpiii|.
+%    \begin{macrocode}
+\newcommand{\trycolumnsep}[1]{\l@yltoc{#1}{\l@youthpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trycolumnseprule}
+%    Sets the |columnseprule| and stores the result in |\l@youtlinethick|.
+%    \begin{macrocode}
+\newcommand{\trycolumnseprule}[1]{\setlength{\l@youtlinethick}{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\setfootbox}
+%  Sets the height and depth of the footer box and stores the results 
+% in |\l@youtvdv| and |\l@youtvdvi|.
+% \changes{v2.5a}{2002/03/05}{Added \cs{setfootbox}}
+%    \begin{macrocode}
+\newcommand{\setfootbox}[2]{\l@yltoc{#1}{\l@youtvdv}\l@yltoc{#2}{\l@youtvdvi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\ifreversemarginpar}
+% \begin{macro}{\ifmarginparswitch}
+% Flags for where marginpars should go.
+%    \begin{macrocode}
+\newif\ifreversemarginpar
+  \reversemarginparfalse
+\newif\ifmarginparswitch
+  \marginparswitchtrue
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\ifl@yrightmpars}
+% Internal flag for marginpar location
+%    \begin{macrocode}
+\newif\ifl@yrightmpars
+  \l@yrightmparstrue
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\currentpage}
+%    This routine sets the layout page parameters to those specified
+% for the document, specifically as on the current page.
+% \changes{v2.5a}{2002/01/06}{Added footheight to \cs{currentpage}}
+% \changes{v2.6}{2002/06/09}{Added further settings in \cs{currentpage}}
+% \changes{v2.6}{2002/06/09}{Split \cs{currentpage} into two 
+%          (plus \cs{commonl@ypage}}
+%    \begin{macrocode}
+\newcommand{\currentpage}{%
+  \@ifundefined{paperwidth}{\trypaperwidth{8.5in}}%
+    {\trypaperwidth{\paperwidth}}%
+  \@ifundefined{paperheight}{\trypaperheight{11in}}%
+    {\trypaperheight{\paperheight}}%
+  \tryhoffset{\hoffset}%               % typically 0pt
+  \tryvoffset{\voffset}%               % typically 0pt
+  \tryoddsidemargin{\oddsidemargin}%   % typically 21-63pt
+  \tryevensidemargin{\evensidemargin}% % typically 39-82pt
+  \trytopmargin{\topmargin}%           % typically 27pt
+  \commonl@ypage%
+}  
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\commonl@ypage}
+%    This routine sets the layout page parameters common to both the
+% standard and memoir classes, to those specified
+% for the document, specifically as on the current page.
+% \changes{v2.6}{2002/06/09}{Added \cs{commonl@ypage}}
+%    \begin{macrocode}
+\newcommand{\commonl@ypage}{%
+  \trymarginparwidth{\marginparwidth}% % typically 68-107pt
+  \trymarginparsep{\marginparsep}%     % typically 10-11pt
+  \trymarginparpush{\marginparpush}%   % typically 5-7pt
+  \tryheadheight{\headheight}%         % typically 12pt
+  \tryheadsep{\headsep}%               % typically 25pt
+  \tryfootskip{\footskip}%             % typically 30pt
+  \trytextheight{\textheight}%         % typically 36-43 times baselineskip
+  \trytextwidth{\textwidth}%           % typically 345-390pt
+  \trycolumnsep{\columnsep}%           % typically 10pt
+  \trycolumnseprule{\columnseprule}%   % typically 0pt
+  \setfootbox{\baselineskip}{0pt}%     % footheight = 1 line
+  \reversemarginparfalse               % reversemargin
+  \if@reversemargin \reversemarginpartrue \fi
+  \marginparswitchfalse               % mparswitch
+  \if@mparswitch \marginparswitchtrue \fi
+  \twocolumnlayoutfalse
+  \if@twocolumn \twocolumnlayouttrue \fi
+  \oddpagelayouttrue
+  \if@twoside
+    \ifodd\count\z@
+    \else
+      \oddpagelayoutfalse
+    \fi
+  \fi
+}  
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawpage}
+%    This routine draws a page layout.
+%
+%    \begin{macrocode}
+\newcommand{\drawpage}{%
+%    \end{macrocode}
+%    First set some default vertical and horizontal dimension values.
+%    \begin{macrocode}
+  \l@youtvdiii=\l@yteninch\relax
+    \divide\l@youtvdiii by 24\relax
+  \l@youthdii=\l@youtvdiii
+  \ifdrawparameters
+%    \end{macrocode}
+%    When |drawparameters| is TRUE, we draw a generic layout showing the
+% controlling layout variables.
+% \changes{v2.5a}{2002/01/06}{Added default footheight in \cs{drawpage}}
+%
+%    \begin{macrocode}
+    \l@youtph=\l@yeleveninch\relax     % page height
+    \l@youtpw=\l@yeighthalfinch\relax  % page width
+    \l@youtvpi=\z@                  % voffset
+    \l@youtvpii=\l@youtvdiii        % topmargin
+    \l@youtvpiii=\l@youtvdiii       % headheight
+    \l@youtvpiv=\l@youtvdiii        % headsep
+    \l@youtvpv=\l@yoneinch\relax       % textheight
+      \multiply\l@youtvpv by 6\relax
+    \l@youtvpvi=\l@youtvdiii        % footskip
+      \multiply\l@youtvpvi by \tw@
+    \l@youtvdv=\l@youtvdiii         % default footboxheight
+    \l@youtvdvi=\z@                 % default footboxdepth
+    \l@youtvpvii=\l@youtvdiii       % marginparpush
+    \l@youthpi=\z@            % hoffset
+    \l@youthpii=\l@youthdii   % textwidth
+      \multiply\l@youthpii by 13\relax
+    \l@youthpiii=\l@youthdii  % columnsep
+    \l@youthpiv=\l@youthdii   % evensidemargin
+    \l@youthpv=\l@youthdii    % oddsidemargin
+    \l@youthpvi=\l@youthdii   % marginparsep
+    \l@youthpvii=\l@youthdii  % marginparwidth
+      \multiply\l@youthpvii by \tw@
+  \fi
+%    \end{macrocode}
+%    Calculate coordinates for use in the drawing.
+%    \begin{macrocode}
+  \l@youtycvi=\l@youtph                  % one inch below top of page
+    \advance\l@youtycvi by -\l@yoneinch\relax
+  \l@youtxci=\l@youthpi                  % hofref
+    \advance\l@youtxci by \l@yoneinch\relax
+  \l@youtycv=\l@youtycvi                 % vofref
+    \advance\l@youtycv by -\l@youtvpi
+  \l@youtyciv=\l@youtycv                 % headref
+    \advance\l@youtyciv by -\l@youtvpii
+    \advance\l@youtyciv by -\l@youtvpiii
+  \l@youtycii=\l@youtyciv                % bodyref
+    \advance\l@youtycii by -\l@youtvpiv
+    \advance\l@youtycii by -\l@youtvpv
+  \ifnum\l@youtvdv>\l@youtvpvi
+    \PackageWarning{layouts}{The footbox is higher than the footskip}
+    \l@youtvdv=\l@youtvpvi
+  \fi
+  \l@youtyci=\l@youtycii                 % footref
+    \advance\l@youtyci by -\l@youtvpvi
+    \advance\l@youtyci by -\l@youtvdvi   % box depth
+  \l@youtvdvii=\l@youtvdv                % box height
+    \advance\l@youtvdvii by \l@youtvdvi  % plus depth
+  \l@youtvdii=\l@youtvpv                 % noteheight
+    \divide\l@youtvdii by 4\relax
+  \l@youtyciii=\l@youtycii               % noteref
+    \advance\l@youtyciii by \l@youtvdii
+    \advance\l@youtyciii by \l@youtvpvii
+  \l@youtxcii=\l@youtxci                 % marginref
+  \ifoddpagelayout
+%    \end{macrocode}
+%    Some values are different on odd and even pages
+%    \begin{macrocode}
+    \advance\l@youtxcii by \l@youthpv
+  \else
+    \advance\l@youtxcii by \l@youthpiv
+  \fi
+  \l@youtxciv=\l@youtxcii                % margnoteref
+%    \end{macrocode}
+% The next part of the code was supplied by Frank Mittelbach\footnote{Email
+% dated 2002/05/18.}
+% to add facilities for reversed marginpars. Now find where the marginpars
+% go. |\@tempcnta| = (1 --- right, -1 --- left) corresponds to the
+% treatment in the kernel.
+%    \begin{macrocode}
+  \@tempcnta\@ne
+  \ifmarginparswitch
+    \ifoddpagelayout \else \@tempcnta\m@ne \fi
+  \fi
+  \ifreversemarginpar \@tempcnta -\@tempcnta \fi
+%    \end{macrocode}
+% Change layout values to suit.
+%    \begin{macrocode}
+  \ifnum\@tempcnta > \z@
+    \l@yrightmparstrue
+    \advance\l@youtxciv by \l@youthpii
+    \advance\l@youtxciv by \l@youthpvi
+  \else
+    \l@yrightmparsfalse
+    \advance\l@youtxciv by -\l@youthpvi
+    \advance\l@youtxciv by -\l@youthpvii
+  \fi
+%    \end{macrocode}
+%    Back to my code. Do column dependent values.
+%    \begin{macrocode}
+  \l@youthdi=\l@youthpii                 % columnwidth
+  \l@youtxciii=\l@youtxcii               % colref
+  \iftwocolumnlayout
+    \advance\l@youthdi by -\l@youthpiii
+    \divide\l@youthdi by \tw@
+    \advance\l@youtxciii by \l@youthdi
+    \advance\l@youtxciii by \l@youthpiii
+    \l@youtxcv=\l@youthpiii              % centre of gutter
+      \divide\l@youtxcv by \tw@
+      \advance\l@youtxcv by \l@youtxcii
+      \advance\l@youtxcv by \l@youthdi
+  \fi
+%    \end{macrocode}
+%
+%    Print the caption for the top of the drawing.
+% \changes{v2.5}{2001/10/21}{Don't always print dashed text}
+%    \begin{macrocode}
+  \l@yor{\ifdrawparameters}{\ifprintheadings}
+  \begin{center}
+  \ifl@ytempif
+  \begin{small} The circle is at 1 inch from the top and left of the
+    page. Dashed lines represent (\texttt{\bs hoffset + 1 inch}) and
+    (\texttt{\bs voffset + 1 inch}) from the top and left of the
+    page. 
+  \end{small} \\
+  \medskip
+  \fi
+%    \end{macrocode}
+%
+%    Draw the picture!
+%
+%    \begin{macrocode}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youtpw,\l@youtph)
+    \thicklines
+%    \end{macrocode}
+%    Either reference lines for the page top and side, or the page.
+%    \begin{macrocode}
+    \ifdrawparameters
+      \put(0,0){\line(0,1){\l@youtph}}
+      \put(0,\l@youtph){\line(1,0){\l@youtpw}}
+    \else
+      \put(0,0){\framebox(\l@youtpw,\l@youtph){}}
+    \fi
+%    \end{macrocode}
+%    Draw the offset lines and a circle 1 inch from the top LH corner 
+% of the page.
+%    \begin{macrocode}
+    \put(\l@yoneinch,\l@youtycvi){\circle{12}}
+    \put(0,\l@youtycv){\dashbox{10}(\l@youtpw,0){}}
+    \put(\l@youtxci,0){\dashbox{10}(0,\l@youtph){}}
+%    \end{macrocode}
+%    Draw the header. |put(marginref,headref){framebox(textwidth,headheight)}|
+%    \begin{macrocode}
+    \put(\l@youtxcii,\l@youtyciv){\framebox(\l@youthpii,\l@youtvpiii)%
+      {\l@ylabelfont Header}}
+%    \end{macrocode}
+%    Draw the body.
+%    \begin{macrocode}
+    \iftwocolumnlayout
+%    \end{macrocode}
+%    |put(marginref,bodyref){framebox(columnwidth,textheight)}| and \\
+%    |put(colref,bodyref){framebox(columnwidth,textheight)}|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtycii){\framebox(\l@youthdi,\l@youtvpv)%
+        {\l@ylabelfont Col. 1}}
+      \put(\l@youtxciii,\l@youtycii){\framebox(\l@youthdi,\l@youtvpv)%
+        {\l@ylabelfont Col. 2}}
+      \linethickness{\l@youtscale\l@youtlinethick}
+      \put(\l@youtxcv,\l@youtycii){\line(0,1){\l@youtvpv}}
+      \thicklines
+    \else
+%    \end{macrocode}
+%    |put(marginref,bodyref){framebox(textwidth,textheight)}|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtycii){\framebox(\l@youthpii,\l@youtvpv)%
+        {\l@ylabelfont Body}}
+    \fi
+%    \end{macrocode}
+%    Draw the footer. |put(marginref,footref){framebox(textwidth,footheight)}|
+% Draw this as an open box as there is no defined height for this.
+% \changes{v2.5a}{2002/01/06}{Footer drawn as open box on page diagram}
+%    \begin{macrocode}
+    \put(\l@youtxcii,\l@youtyci){\framebox(\l@youthpii,\l@youtvdvii)%
+        {\l@ylabelfont Footer}}
+%    \end{macrocode}
+%    Marginal notes (two examples), if asked for. \\
+%    |put(margnoteref,bodyref){framebox(marginparwidth,noteheight)}| and \\
+%    |put(margnoteref,noteref){framebox(marginparwidth,noteheight)}|.
+% \changes{v2.4}{2001/04/30}{Added checks for drawing marginpars to \cs{drawpage}}
+%    \begin{macrocode}
+    \ifdrawmarginpars
+      \ifdrawparameters
+        \put(\l@youtxciv,\l@youtycii){\framebox(\l@youthpvii,\l@youtvdii){}}
+        \put(\l@youtxciv,\l@youtyciii){\framebox(\l@youthpvii,\l@youtvdii)%
+          {\l@ylabelfont\shortstack{Margin\\Note}}}
+      \else
+        \put(\l@youtxciv,\l@youtycii){\framebox(\l@youthpvii,\l@youtvdii)%
+          {\l@ylabelfont Note}}
+        \put(\l@youtxciv,\l@youtyciii){\framebox(\l@youthpvii,\l@youtvdii)%
+          {\l@ylabelfont Margin}}
+      \fi
+    \fi
+%    \end{macrocode}
+% If the footbox has a depth, draw a dashed line to mark the footskip.
+%    \begin{macrocode}
+    \ifnum\l@youtvdvi > \z@
+      \thinlines
+      \advance\l@youtyci by \l@youtvdvi
+      \put(\l@youtxcii,\l@youtyci){\dashbox{10}(\l@youthpii,0){}}
+    \fi
+%    \end{macrocode}
+%      We now draw labelled vectors indicating the layout parameters.
+% Life gets tedious as we have to calculate a few more coordinate and
+% length values. The code below is fairly incomprehensible as we are
+% trying to minimise the number of counters.
+% \changes{v2.5}{2001/10/21}{Changed test for drawing dimensions}
+%    \begin{macrocode}
+    \testdrawdimensions
+    \ifl@ytempif
+      \thinlines
+%    \end{macrocode}
+% Calculate more coordinates
+%    \begin{macrocode}
+      \l@youtxcv=\l@youtxcii                % X coord for vertical dimensions
+        \advance\l@youtxcv by \l@youthdii
+      \l@youtxcvi=\l@youthpvii              % X coord for marginparpush
+        \divide\l@youtxcvi by \tw@
+        \advance\l@youtxcvi by \l@youtxciv
+      \l@youtvdviii=\l@youtvdiii             % half l@youtvdiii
+        \divide\l@youtvdviii by \tw@
+      \l@youtycvii=\l@youtycii              % Y coord for low dimensions
+        \advance\l@youtycvii by \l@youtvdiii
+      \l@youtycviii=\l@youtycvii              % Y coord for mid dimensions
+        \advance\l@youtycviii by \l@youtvdiii
+      \l@youtvdi=\l@youtvpv                 % Y coord for top dimensions
+        \multiply\l@youtvdi by \tw@
+        \divide\l@youtvdi by 3\relax
+        \advance\l@youtvdi by \l@youtycii
+%    \end{macrocode}
+%    Draw the vertical dimensional parameters.
+%
+%    Topmargin. |put(x,voffset){vector(0,-1){topmargin}}|
+%    \begin{macrocode}
+      \put(\l@youtxcv,\l@youtycv){\vector(0,-1){\l@youtvpii}}
+      \put(\l@youtxcv,\l@youtycv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{topmargin}}
+        \end{picture}}
+%    \end{macrocode}
+%    Headheight. |put(x,voffset-topmargin){vector(0,-1){headheight}}|
+%    \begin{macrocode}
+      \put(\l@youtxcv,\l@youtyciv){\line(0,1){\l@youtvpiii}}
+      \put(\l@youtxcv,\l@youtyciv){\vector(0,-1){0}}
+      \put(\l@youtxcv,\l@youtyciv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{headheight}}
+        \end{picture}}
+%    \end{macrocode}
+%    Headsep. |put(x,headref){vector(0,-1){headsep}}|
+%    \begin{macrocode}
+      \put(\l@youtxcv,\l@youtyciv){\vector(0,-1){\l@youtvpiv}}
+      \put(\l@youtxcv,\l@youtyciv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{headsep}}
+        \end{picture}}
+%    \end{macrocode}
+%    Textheight. |put(x,top_of_text){vector(0,-1){textheight}}|
+%    \begin{macrocode}
+      \put(\l@youtxcv,\l@youtycii){\line(0,1){\l@youtvpv}}
+      \put(\l@youtxcv,\l@youtycii){\vector(0,-1){0}}
+      \put(\l@youtxcv,\l@youtycii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{textheight}}
+        \end{picture}}
+%    \end{macrocode}
+%    Footskip. |put(x,bodyref){vector(0,-1){footskip}}|
+%    \begin{macrocode}
+      \put(\l@youtxcv,\l@youtycii){\vector(0,-1){\l@youtvpvi}}
+      \put(\l@youtxcv,\l@youtycii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{footskip}}
+        \end{picture}}
+%    \end{macrocode}
+%    Marginparpush. |put(X,noteref){vector(0,-1){marginparpush}}| where \\
+%    |X = margnoteref + 1/2 notewidth|.
+%    \begin{macrocode}
+      \ifdrawmarginpars
+        \put(\l@youtxcvi,\l@youtyciii){\vector(0,-1){\l@youtvpvii}}
+        \put(\l@youtxcvi,\l@youtyciii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{marginparpush}}
+          \end{picture}}
+      \fi
+%    \end{macrocode}
+%
+%    Now for all the horizontal dimensions.
+%
+%    Marginparwidth. |put(margnoteref,low){vector(1,0){marginparwidth}|
+%    \begin{macrocode}
+      \ifdrawmarginpars
+        \put(\l@youtxciv,\l@youtycvii){\vector(1,0){\l@youthpvii}}
+        \put(\l@youtxciv,\l@youtycvii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{marginparwidth}}
+          \end{picture}}
+      \fi
+%    \end{macrocode}
+%    Different placements for marginwidth depending on the oddness of the page. \\
+%    Odd page --- |put(hoffref,mid){\vector(1,0){oddsidemargin}| \\
+%    Even page --- |put(hoffref,mid){\vector(1,0){evensidemargin}|.
+%    \begin{macrocode}
+      \ifoddpagelayout
+        \put(\l@youtxci,\l@youtvdi){\vector(1,0){\l@youthpv}}
+      \else
+        \put(\l@youtxci,\l@youtvdi){\vector(1,0){\l@youthpiv}}
+      \fi
+      \put(\l@youtxci,\l@youtvdi){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+      \ifoddpagelayout
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{oddsidemargin}}
+      \else
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{evensidemargin}}
+      \fi
+        \end{picture}}
+%    \end{macrocode}
+% Different placements for marginparsep, depending on the particular margin. \\
+% Right margin --- |put(margnoteref-marginparsep,mid){vector(1,0){marginparsep}| \\
+% Left margin  --- |put(marginref,top){vector(-1,0){marginparsep}|
+%    \begin{macrocode}
+      \ifdrawmarginpars
+        \ifl@yrightmpars
+          \put(\l@youtxciv,\l@youtycviii){\line(-1,0){\l@youthpvi}}
+          \put(\l@youtxciv,\l@youtycviii){\vector(1,0){0}}
+          \put(\l@youtxciv,\l@youtycviii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+            \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{marginparsep}}
+            \end{picture}}
+        \else
+          \put(\l@youtxcii,\l@youtycviii){\vector(-1,0){\l@youthpvi}}
+          \put(\l@youtxcii,\l@youtycviii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+            \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{marginparsep}}
+            \end{picture}}
+        \fi
+      \fi
+%    \end{macrocode}
+%    Textwidth. |put(marginref,noteref){vector(1,0){textwidth}}|
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtyciii){\vector(1,0){\l@youthpii}}
+      \put(\l@youtxcv,\l@youtyciii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{textwidth}}
+        \end{picture}}
+%    \end{macrocode}
+%    Columnsep. |put(colref-colsep,mid){vector(1,0){colsep}}|
+%    \begin{macrocode}
+      \iftwocolumnlayout
+        \put(\l@youtxciii,\l@youtvdi){\line(-1,0){\l@youthpiii}}
+        \put(\l@youtxciii,\l@youtvdi){\vector(1,0){0}}
+        \put(\l@youtxciii,\l@youtvdi){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{columnsep}}
+          \end{picture}}
+      \fi
+%    \end{macrocode}
+%    Have finished drawing the parameters.
+%    \begin{macrocode}
+    \fi
+    \end{picture}
+    \end{center}
+    \setlength{\unitlength}{1pt}
+%    \end{macrocode}
+%    Print the actual parameter values.
+% \changes{v2.5}{2001/10/21}{Changed test for printing the value table}
+%    \begin{macrocode}
+    \testprintparameters
+    \ifl@ytempif
+      \begin{center}
+      \begin{footnotesize}
+         Lengths are to the nearest pt. \\
+      \begin{ttfamily}
+      \begin{tabular}{l@{\hspace{20pt}}l}
+      \textrm{page height}   = \number\l@youtph pt & 
+      \textrm{page width}    = \number\l@youtpw pt  \\
+      \l@ycmd{hoffset}       = \number\l@youthpi pt         & 
+      \l@ycmd{voffset}       = \number\l@youtvpi pt         \\
+      \ifoddpagelayout
+        \l@ycmd{oddsidemargin} = \number\l@youthpv pt
+      \else
+        \l@ycmd{evensidemargin} = \number\l@youthpiv pt
+      \fi
+      & \l@ycmd{topmargin}   = \number\l@youtvpii pt    \\
+      \l@ycmd{headheight}    = \number\l@youtvpiii pt    & 
+      \l@ycmd{headsep}       = \number\l@youtvpiv pt        \\
+      \l@ycmd{textheight}    = \number\l@youtvpv pt      &
+      \l@ycmd{textwidth}     = \number\l@youthpii pt      \\
+      \l@ycmd{footskip}      = \number\l@youtvpvi pt       &
+      \l@ycmd{marginparsep}  = \number\l@youthpvi pt   \\
+      \l@ycmd{marginparpush} = \number\l@youtvpvii pt &
+      \l@ycmd{columnsep}     = \number\l@youthpiii pt     \\
+      \l@ycmd{columnseprule} = \the\l@youtlinethick & \\
+      \end{tabular}
+      \end{ttfamily}\end{footnotesize}
+      \end{center}
+    \fi
+%    \end{macrocode}
+%    The end of the definition for |\drawpage|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\pagediagram}
+% \begin{macro}{\pagedesign}
+%  Shorthands.
+%    \begin{macrocode}
+\newcommand{\pagediagram}{\drawparameterstrue\drawpage}
+\newcommand{\pagedesign}{\drawparametersfalse\drawpage}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\pagevalues}
+% This macro produces a table of the current page layout actual values.
+%    \begin{macrocode}
+\newcommand{\pagevalues}{%
+%%  \begin{center}
+  \ifprintheadings
+    Actual page layout values.\\[\baselineskip]
+  \fi
+  \begingroup\l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{paperheight} = \@ifundefined{paperheight}{??}{\l@yval{\paperheight}}  &
+  \l@ycmd{paperwidth}  = \@ifundefined{paperwidth}{??}{\l@yval{\paperwidth}}   \\
+  \l@ycmd{hoffset}        = \l@yval{\hoffset}        &
+  \l@ycmd{voffset}        = \l@yval{\voffset}        \\
+  \l@ycmd{evensidemargin} = \l@yval{\evensidemargin} &
+  \l@ycmd{oddsidemargin}  = \l@yval{\oddsidemargin}  \\
+  \l@ycmd{topmargin}      = \l@yval{\topmargin}      &
+  \l@ycmd{headheight}     = \l@yval{\headheight}     \\
+  \l@ycmd{headsep}        = \l@yval{\headsep}        &
+  \l@ycmd{textheight}     = \l@yval{\textheight}     \\
+  \l@ycmd{textwidth}      = \l@yval{\textwidth}      &
+  \l@ycmd{footskip}       = \l@yval{\footskip}       \\
+  \l@ycmd{marginparsep}   = \l@yval{\marginparsep}   &
+  \l@ycmd{marginparpush}  = \l@yval{\marginparpush}  \\
+  \l@ycmd{columnsep}      = \l@yval{\columnsep}      &
+  \l@ycmd{columnseprule}  = \l@yval{\columnseprule}  \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+%%  \end{center}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing the layout of a memoir page}
+%
+%    A variety of commands are used to draw the layout of a page
+% as defined in the memoir class. We can reuse quite a lot from
+% the previous page layout code.
+%
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    STOCK LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%    \end{macrocode}
+%
+% \begin{macro}{\stockwidth}   
+% \begin{macro}{\stockwidth}   
+% \begin{macro}{\trimedge}
+% \begin{macro}{\trimtop}
+% \begin{macro}{\uppermargin}
+% \begin{macro}{\spinemargin}
+%    The memoir class has some page layout parameters that are not
+% in the standard classes. Provide these so the package will at
+% least compile with the standard classes but is highly likely to
+% die at runtime if this part of the code is used in other than
+% the memoir class.
+%    \begin{macrocode}
+\@ifundefined{stockwidth}{\newlength{\stockwidth}}{}
+\@ifundefined{stockheight}{\newlength{\stockheight}}{}
+\@ifundefined{trimedge}{\newlength{\trimedge}}{}
+\@ifundefined{trimtop}{\newlength{\trimtop}}{}
+\@ifundefined{uppermargin}{\newlength{\uppermargin}}{}
+\@ifundefined{spinemargin}{\newlength{\spinemargin}}{}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+%    Now some utility commands for setting the layout dimensions.
+% \begin{macro}{\trystockwidth}
+%    Sets the |stockwidth| and stores the result in |\l@youthdo|.
+%    \begin{macrocode}
+\newcommand{\trystockwidth}[1]{\l@yltoc{#1}{\l@youthdo}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trystockheight}
+%    Sets the |stockheight| and stores the result in |\l@youtvdo|.
+%    \begin{macrocode}
+\newcommand{\trystockheight}[1]{\l@yltoc{#1}{\l@youtvdo}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytrimedge}
+%    Sets the |trimedge| and stores the result in |\l@youthpi|.
+%    \begin{macrocode}
+\newcommand{\trytrimedge}[1]{\l@yltoc{#1}{\l@youthpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytrimtop}
+%    Sets the |trimtop| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+\newcommand{\trytrimtop}[1]{\l@yltoc{#1}{\l@youtvpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryuppermargin}
+%    Sets the |uppermargin| and stores the result in |\l@youtvpii|.
+%    \begin{macrocode}
+\newcommand{\tryuppermargin}[1]{\l@yltoc{#1}{\l@youtvpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryspinemargin}
+%    Sets the |spinemargin| and stores the result in |\l@youthpv|.
+%    \begin{macrocode}
+\newcommand{\tryspinemargin}[1]{\l@yltoc{#1}{\l@youthpv}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\currentstock}
+%    This routine sets the stock layout page parameters to those specified
+% for the document.
+% \changes{2.5a}{2002/01/06}{Added default footheight to \cs{currentstock}}
+% \changes{2.6}{2002/06/09}{Split \cs{currentstock} into two macros 
+%          (plus \cs{commonl@ypage}}
+%    \begin{macrocode}
+\newcommand{\currentstock}{%
+  \trystockwidth{\stockwidth}%         % typically 8.5in
+  \trystockheight{\stockheight}%       % typically 11in
+  \trypaperwidth{\paperwidth}%         % typically 8.5in
+  \trypaperheight{\paperheight}%       % typically 11in
+  \trytrimedge{\trimedge}%             % typically 0pt
+  \trytrimtop{\trimtop}%               % typically 0pt
+  \tryspinemargin{\spinemargin}%       % typically 110pt
+  \tryuppermargin{\uppermargin}%       % typically 125pt
+  \commonl@ypage
+}  
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawstock}
+%    This routine draws a stock page layout.
+%
+%    \begin{macrocode}
+\newcommand{\drawstock}{%
+%    \end{macrocode}
+%    First set some default vertical and horizontal dimension values.
+%    \begin{macrocode}
+  \l@youtvdiii=\l@yteninch\relax
+    \divide\l@youtvdiii by 24\relax
+  \l@youthdii=\l@youtvdiii
+
+  \ifdrawparameters
+%    \end{macrocode}
+%    When |drawparameters| is TRUE, we draw a generic layout showing the
+% controlling layout variables.
+%
+%    \begin{macrocode}
+    \l@youtvdo=\l@yeleveninch\relax            % stock height
+    \l@youthdo=\l@yeighthalfinch\relax         % stock width
+    \l@youtvpi=\z@                          % trimtop
+      \advance\l@youtvpi by \l@youtvdiii
+    \l@youthpi=\z@                          % trimedge
+      \advance\l@youthpi by \l@youtvdiii
+    \l@youtph=\l@youtvdo                    % page height (= stock height)
+      \advance\l@youtph by -\l@youtvpi         % minus trimtop
+      \advance\l@youtph by -\l@youtvpi         % minus trimtop
+      \advance\l@youtph by -\l@youtvpi         % minus trimtop
+    \l@youtpw=\l@youthdo                    % page width (= stock width)
+      \advance\l@youtpw by -\l@youthpi         % minus trimedge
+      \advance\l@youtpw by -\l@youthpi         % minus trimedge
+      \advance\l@youtpw by -\l@youthpi         % minus trimedge
+    \l@youtvpiii=\l@youtvdiii               % headheight
+    \l@youtvpiv=\l@youtvdiii                % headsep
+    \l@youtvpii=\l@youtvdiii                % uppermargin
+      \advance\l@youtvpii by \l@yoneinch          % plus 1in
+      \advance\l@youtvpii by \l@youtvpiii      % plus headheight
+      \advance\l@youtvpii by \l@youtvpiv       % plus headsep
+    \l@youtvpv=\l@yoneinch\relax               % textheight
+      \multiply\l@youtvpv by 6\relax
+    \l@youtvpvi=\l@youtvdiii                % footskip
+      \multiply\l@youtvpvi by \tw@
+    \l@youtvdv=\l@youtvdiii                 % default footboxheight
+    \l@youtvdvi=\z@                         % default footboxdepth
+    \l@youtvpvii=\l@youtvdiii               % marginparpush
+    \l@youthpii=\l@youthdii                 % textwidth
+      \multiply\l@youthpii by 12\relax
+    \l@youthpv=\l@youthdii                  % spine margin
+      \advance\l@youthpv by \l@yoneinch           % plus 1in
+      \multiply\l@youthpv by 7\relax           % and take 70%
+      \divide\l@youthpv by 10\relax
+    \l@youthpiii=\l@youthdii                % columnsep
+    \l@youthpvi=\l@youthdii   % marginparsep
+    \l@youthpvii=\l@youthdii  % marginparwidth
+      \multiply\l@youthpvii by \tw@
+  \fi
+
+%    \end{macrocode}
+%    Calculate coordinates for use in the drawing. Some of these X coordinates
+% depend on whether the page is odd or even.
+%    \begin{macrocode}
+  \ifoddpagelayout
+    \l@youtxco=\l@youthdo                % X coord of page bottom left (= stockwidth)
+      \advance\l@youtxco by -\l@youthpi    % minus trimedge
+      \advance\l@youtxco by -\l@youtpw     % minus page width
+  \else
+    \l@youtxco=\l@youthpi                % X coord of page bottom left = trimedge
+  \fi
+  \l@youtyco=\l@youtvdo                  % Y coord of page bottom left (= stockheight)
+    \advance\l@youtyco by -\l@youtvpi      % minus trimtop
+    \advance\l@youtyco by -\l@youtph       % minus page height
+  \l@youtxcii=\l@youtxco                 % X coord of left of textblock (= left of page)
+  \ifoddpagelayout
+      \advance\l@youtxcii by \l@youthpv    % plus spinemargin
+  \else
+      \advance\l@youtxcii by \l@youtpw     % plus pagewidth
+      \advance\l@youtxcii by -\l@youthpv   % minus spinemargin
+      \advance\l@youtxcii by -\l@youthpii  % minus textwidth
+  \fi
+    \l@youtxciv=\l@youtxcii              % X coord of left of marginnote (= left of textblock)
+  \l@youtxciv=\l@youtxcii
+  \@tempcnta\@ne
+  \ifmarginparswitch
+    \ifoddpagelayout \else \@tempcnta\m@ne \fi
+  \fi
+  \ifreversemarginpar \@tempcnta -\@tempcnta \fi
+  \ifnum\@tempcnta >\z@
+    \l@yrightmparstrue
+    \advance\l@youtxciv by \l@youthpii   % plus textwidth
+    \advance\l@youtxciv by \l@youthpvi   % plus marginnotesep
+  \else
+    \l@yrightmparsfalse
+    \advance\l@youtxciv by -\l@youthpvii % minus marginparwidth
+    \advance\l@youtxciv by -\l@youthpvi  % minus marginnotesep
+  \fi
+  \l@youtycii=\l@youtvdo                 % Y coord of bottom of text (= stockheight)
+    \advance\l@youtycii by -\l@youtvpi     % minus trimtop
+    \advance\l@youtycii by -\l@youtvpii    % minus uppermargin
+    \advance\l@youtycii by -\l@youtvpv     % minus textheight
+  \ifnum\l@youtvdv>\l@youtvpvi
+    \PackageWarning{layouts}{The footbox is higher than the footskip}
+    \l@youtvdv=\l@youtvpvi
+  \fi
+  \l@youtyci=\l@youtycii                 % Y coord of bottom of footer (= bottom of text)
+    \advance\l@youtyci by -\l@youtvpvi     % minus footskip
+    \advance\l@youtyci by -\l@youtvdvi     % minus box depth
+  \l@youtvdvii=\l@youtvdv                % box height
+    \advance\l@youtvdvii by \l@youtvdvi    % plus depth
+  \l@youtyciv=\l@youtycii                % Y coord of bottom of header (= bottom of text)
+    \advance\l@youtyciv by \l@youtvpv      % plus textheight
+    \advance\l@youtyciv by \l@youtvpiv     % plus headsep
+
+  \l@youtvdii=\l@youtvpv                 % height of a marginal note
+    \divide\l@youtvdii by 4\relax
+  \l@youtyciii=\l@youtycii               % Y coord of bottom of top note (= bottom of bottom note)
+    \advance\l@youtyciii by \l@youtvdii    % plus note height
+    \advance\l@youtyciii by \l@youtvpvii   % plus marginparpush
+%    \end{macrocode}
+%    Now for column dependent values.
+%    \begin{macrocode}
+  \l@youthdi=\l@youthpii                 % columnwidth = textwidth
+  \l@youtxciii=\l@youtxcii               % X coord of right col 
+  \iftwocolumnlayout
+    \advance\l@youthdi by -\l@youthpiii  % colwidth = textwidth - colsep
+    \divide\l@youthdi by \tw@              % divided in half
+    \advance\l@youtxciii by \l@youthdi   % X coord of right col X coord of text + col width
+      \advance\l@youtxciii by \l@youthpiii % plus colsep
+    \l@youtxcv=\l@youthpiii              % centre of gutter
+      \divide\l@youtxcv by \tw@
+      \advance\l@youtxcv by \l@youtxcii
+      \advance\l@youtxcv by \l@youthdi
+  \fi
+%    \end{macrocode}
+%
+%    Print the caption for the top of the drawing.
+%    \begin{macrocode}
+  \begin{center}
+  \l@yor{\ifdrawparameters}{\ifprintheadings}
+  \ifl@ytempif
+    \begin{small} Dashed lines represent the actual page size after trimming
+                  the stock. \end{small} \\
+    \medskip
+  \fi
+%    \end{macrocode}
+%
+%    Draw the picture!
+%
+%    \begin{macrocode}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdo,\l@youtvdo)
+    \thicklines
+%    \end{macrocode}
+% Draw the stock, paper, etc. 
+%    \begin{macrocode}
+    \put(0,0){\framebox(\l@youthdo,\l@youtvdo){}}                        % the stock
+    \put(\l@youtxco,\l@youtyco){\dashbox{10}(\l@youtpw,\l@youtph){}}     % the page
+    \put(\l@youtxcii,\l@youtyciv){\framebox(\l@youthpii,\l@youtvpiii)%   % the header
+      {\l@ylabelfont Header}}
+%    \end{macrocode}
+%    Draw the body, either one or two columns, then the footer.
+%    \begin{macrocode}
+    \iftwocolumnlayout
+      \put(\l@youtxcii,\l@youtycii){\framebox(\l@youthdi,\l@youtvpv)%    % col 1
+        {\l@ylabelfont Col. 1}}
+      \put(\l@youtxciii,\l@youtycii){\framebox(\l@youthdi,\l@youtvpv)%   % col2
+        {\l@ylabelfont Col. 2}}
+      \linethickness{\l@youtscale\l@youtlinethick}
+      \put(\l@youtxcv,\l@youtycii){\line(0,1){\l@youtvpv}}               % rule
+      \linethickness{1pt}
+    \else
+      \put(\l@youtxcii,\l@youtycii){\framebox(\l@youthpii,\l@youtvpv)%   % one col
+        {\l@ylabelfont Body}}
+    \fi
+    \put(\l@youtxcii,\l@youtyci){\framebox(\l@youthpii,\l@youtvdvii)%      % footer
+        {\l@ylabelfont Footer}}
+%    \end{macrocode}
+%    Marginal notes (two examples), if asked for
+%    \begin{macrocode}
+    \ifdrawmarginpars
+      \ifdrawparameters
+        \put(\l@youtxciv,\l@youtycii){\framebox(\l@youthpvii,\l@youtvdii){}}
+        \put(\l@youtxciv,\l@youtyciii){\framebox(\l@youthpvii,\l@youtvdii)%
+          {\l@ylabelfont\shortstack{Margin\\Note}}}
+      \else
+        \put(\l@youtxciv,\l@youtycii){\framebox(\l@youthpvii,\l@youtvdii)%
+          {\l@ylabelfont Note}}
+        \put(\l@youtxciv,\l@youtyciii){\framebox(\l@youthpvii,\l@youtvdii)%
+          {\l@ylabelfont Margin}}
+      \fi
+    \fi
+
+%    \end{macrocode}
+% If the footbox has a depth, draw a dashed line to mark the footskip.
+%    \begin{macrocode}
+    \ifnum\l@youtvdvi > \z@
+      \thinlines
+      \advance\l@youtyci by \l@youtvdvi
+      \put(\l@youtxcii,\l@youtyci){\dashbox{10}(\l@youthpii,0){}}
+    \fi
+%    \end{macrocode}
+% That finishes the general drawing. We may have to now draw the
+% parameters
+%    \begin{macrocode}
+    \testdrawdimensions
+    \ifl@ytempif
+      \thinlines
+%    \end{macrocode}
+%      We now draw labelled vectors indicating the layout parameters.
+% Life gets tedious as we have to calculate a few more coordinate and
+% length values. The code below is fairly incomprehensible as we are
+% trying to minimise the number of counters.
+%    \begin{macrocode}
+      \l@youtycv=\l@youtyco                 % Y coord of top of page (= page bottom)
+        \advance\l@youtycv by \l@youtph       % plus pageheight
+      \l@youtvdviii=\l@youtvdiii             % half l@youtvdiii (a small distance)
+        \divide\l@youtvdviii by \tw@
+      \l@youtxcv=\l@youtxcii                % X coord for vertical dimensions
+        \advance\l@youtxcv by \l@youthdii     % for `standard' vertical vectors
+ %% do headheight
+      \put(\l@youtxcv,\l@youtyciv){\vector(0,1){\l@youtvpiii}}
+      \put(\l@youtxcv,\l@youtyciv){\vector(0,-1){0}}
+      \put(\l@youtxcv,\l@youtyciv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{headheight}}
+        \end{picture}}
+ %% do headsep
+      \put(\l@youtxcv,\l@youtyciv){\vector(0,-1){\l@youtvpiv}}
+      \put(\l@youtxcv,\l@youtyciv){\vector(0,1){0}}
+      \put(\l@youtxcv,\l@youtyciv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{headsep}}
+        \end{picture}}
+ %% do textheight
+      \put(\l@youtxcv,\l@youtycii){\vector(0,1){\l@youtvpv}}
+      \put(\l@youtxcv,\l@youtycii){\vector(0,-1){0}}
+      \put(\l@youtxcv,\l@youtycii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{textheight}}
+        \end{picture}}
+ %% do footskip
+      \put(\l@youtxcv,\l@youtycii){\vector(0,-1){\l@youtvpvi}}
+      \put(\l@youtxcv,\l@youtycii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{footskip}}
+        \end{picture}}
+      \ifdrawmarginpars
+        \l@youtxcv=\l@youthpvii              % X coord for marginparpush
+          \divide\l@youtxcv by \tw@
+          \advance\l@youtxcv by \l@youtxciv
+ %% do marginparpush
+        \put(\l@youtxcv,\l@youtyciii){\vector(0,-1){\l@youtvpvii}}
+        \put(\l@youtxcv,\l@youtyciii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{marginparpush}}
+          \end{picture}}
+      \fi 
+%% calculate X coord for uppermargin/trimtop parameters
+      \ifoddpagelayout
+        \ifl@yrightmpars
+          \l@youtxcv=\l@youtxciv              % X coord for uppermargin, etc (= edge of note)
+        \else
+          \l@youtxcv=\l@youtxciv
+            \advance\l@youtxcv by \l@youthpvii  % plus marginparwidth
+        \fi
+      \else
+        \ifl@yrightmpars
+          \l@youtxcv=\l@youtxciv
+        \else
+          \l@youtxcv=\l@youtxciv
+            \advance\l@youtxcv by \l@youthpvii  % plus marginparwidth
+        \fi
+      \fi
+ %% do uppermargin
+      \put(\l@youtxcv,\l@youtycv){\vector(0,-1){\l@youtvpii}}
+      \put(\l@youtxcv,\l@youtycv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{uppermargin}}
+        \end{picture}}
+ %% do trimtop
+      \put(\l@youtxcv,\l@youtvdo){\vector(0,-1){\l@youtvpi}}
+      \put(\l@youtxcv,\l@youtvdo){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{trimtop}}
+        \end{picture}}
+%% X coord for stock height
+      \ifoddpagelayout
+        \ifl@yrightmpars
+          \l@youtxcv=\l@youtxco               % X coord for stock height
+            \divide\l@youtxcv by \tw@           % 1/2 stock/paper left edges
+        \else
+          \l@youtxcv=\l@youtxco               % X coord for stock height
+            \advance\l@youtxcv by \l@youtpw     % plus page width
+            \advance\l@youtxcv by \l@youthpi    % plus trimedge
+        \fi
+      \else
+        \ifl@yrightmpars
+          \l@youtxcv=\l@youtxco               % X coord for stock height
+            \divide\l@youtxcv by \tw@           % 1/2 stock/paper left edges
+        \else
+          \l@youtxcv=\l@youtxco               % X coord for stock height
+            \advance\l@youtxcv by \l@youtpw     % plus page width
+            \advance\l@youtxcv by \l@youthpi    % plus trimedge
+        \fi
+      \fi
+ %% do stockheight
+      \put(\l@youtxcv,0){\vector(0,1){\l@youtvdo}}
+      \put(\l@youtxcv,0){\vector(0,-1){0}}
+      \put(\l@youtxcv,\l@youtvdo){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{stockheight}}
+        \end{picture}}
+%% X coord for paper height
+      \ifoddpagelayout
+        \ifl@yrightmpars
+          \l@youtxcv=\l@youtxco               % X coord for paper height
+            \advance\l@youtxcv by \l@youtxcii   % plus left edge of text
+            \divide\l@youtxcv by \tw@        
+        \else
+          \l@youtxcv=\l@youtxco               % X coord for paper height
+            \advance\l@youtxcv by \l@youtpw     % plus page width
+            \advance\l@youtxcv by \l@youtxcii   % plus left edge of text
+            \advance\l@youtxcv by \l@youthpii   % plus text width
+            \divide\l@youtxcv by \tw@        
+        \fi
+      \else
+        \ifl@yrightmpars
+          \l@youtxcv=\l@youtxco               % X coord for paper height
+            \advance\l@youtxcv by \l@youtxcii   % plus left edge of text
+            \divide\l@youtxcv by \tw@        
+        \else
+          \l@youtxcv=\l@youtxco               % X coord for paper height
+            \advance\l@youtxcv by \l@youtpw     % plus page width
+            \advance\l@youtxcv by \l@youtxcii   % plus left edge of text
+            \advance\l@youtxcv by \l@youthpii   % plus text width
+            \divide\l@youtxcv by \tw@        
+        \fi
+      \fi
+ %% do paperheight
+      \put(\l@youtxcv,\l@youtyco){\vector(0,1){\l@youtph}}
+      \put(\l@youtxcv,\l@youtyco){\vector(0,-1){0}}
+      \put(\l@youtxcv,\l@youtycv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,-\l@youtvdviii){\l@ypcmd{paperheight}}
+        \end{picture}}
+
+      \l@youtvpiii=\l@youtycii              % Y coord for low dimensions
+        \advance\l@youtvpiii by \l@youtvdiii
+      \l@youtvpiv=\l@youtvpiii              % Y coord for mid dimensions
+        \advance\l@youtvpiv by \l@youtvdiii
+      \l@youtvdi=\l@youtvpv               % Y coord for top dimensions
+        \multiply\l@youtvdi by \tw@       % 2/3 of text height
+        \divide\l@youtvdi by 3\relax
+        \advance\l@youtvdi by \l@youtycii
+      \ifdrawmarginpars
+ %% do marginparwidth
+        \put(\l@youtxciv,\l@youtvpiii){\vector(1,0){\l@youthpvii}}
+        \put(\l@youtxciv,\l@youtvpiii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{marginparwidth}}
+          \end{picture}}
+      \fi
+      \ifoddpagelayout
+ %% do spinemargin
+        \put(\l@youtxco,\l@youtvdi){\vector(1,0){\l@youthpv}}
+        \put(\l@youtxco,\l@youtvdi){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{spinemargin}}
+          \end{picture}}
+ %% do trimedge
+        \put(\l@youthdo,\l@youtyciv){\vector(-1,0){\l@youthpi}}
+        \put(\l@youthdo,\l@youtyciv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{trimedge}}
+          \end{picture}}
+      \else 
+        \l@youtxcv=\l@youtxcii         % X coord of right edge of text
+          \advance\l@youtxcv by \l@youthpii
+ %% do spinemargin
+        \put(\l@youtxcv,\l@youtvdi){\line(1,0){\l@youthpv}}
+        \put(\l@youtxcv,\l@youtvdi){\vector(-1,0){0}}
+        \put(\l@youtxcv,\l@youtvdi){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{spinemargin}}
+          \end{picture}}
+ %% do trimedge
+        \put(0,\l@youtyciv){\vector(1,0){\l@youthpi}}
+        \put(0,\l@youtyciv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{trimedge}}
+          \end{picture}}
+      \fi
+  %% marginal elements
+      \ifdrawmarginpars
+ %% do marginparsep
+        \ifl@yrightmpars
+          \put(\l@youtxciv,\l@youtvpiv){\line(-1,0){\l@youthpvi}}
+          \put(\l@youtxciv,\l@youtvpiv){\vector(1,0){0}}
+          \put(\l@youtxciv,\l@youtvpiv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+            \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{marginparsep}}
+            \end{picture}}
+        \else
+          \put(\l@youtxcii,\l@youtvpiv){\vector(-1,0){\l@youthpvi}}
+          \put(\l@youtxcii,\l@youtvpiv){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+            \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{marginparsep}}
+            \end{picture}}
+        \fi
+      \fi
+
+      \l@youtxcv=\l@youtxcii          % X coord for mid textwidth
+        \multiply\l@youtxcv by \tw@
+        \advance\l@youtxcv by \l@youthpii
+        \divide\l@youtxcv by \tw@
+ %% do textwidth
+      \put(\l@youtxcii,\l@youtyciii){\vector(1,0){\l@youthpii}}
+      \put(\l@youtxcii,\l@youtyciii){\vector(-1,0){0}}
+      \put(\l@youtxcv,\l@youtyciii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{textwidth}}
+        \end{picture}}
+      \iftwocolumnlayout
+ %% do columnsep
+        \put(\l@youtxciii,\l@youtvdi){\vector(-1,0){\l@youthpiii}}
+        \put(\l@youtxciii,\l@youtvdi){\vector(1,0){0}}
+        \put(\l@youtxciii,\l@youtvdi){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+          \put(-\l@youtvdviii,\l@youtvdviii){\l@ypcmd{columnsep}}
+          \end{picture}}
+      \fi
+
+      \l@youtxcv=\l@youthdo        % X coord of middle of picture
+        \divide\l@youtxcv by \tw@
+ %% do stockwidth
+      \l@youtvpiii=\l@youtyco      % Y coord for stockwidth
+        \divide\l@youtvpiii by 3\relax
+      \put(0,\l@youtvpiii){\vector(1,0){\l@youthdo}}
+      \put(0,\l@youtvpiii){\vector(-1,0){0}}
+      \put(\l@youtxcv,\l@youtvpiii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{stockwidth}}
+        \end{picture}}
+ %% do paperwidth
+      \l@youtvpiii=\l@youtyci      % Y coord for paperwidth
+        \advance\l@youtvpiii by -\l@youtyco
+        \multiply\l@youtvpiii by 3\relax
+        \divide\l@youtvpiii by 10\relax
+        \advance\l@youtvpiii by \l@youtyco
+      \put(\l@youtxco,\l@youtvpiii){\vector(1,0){\l@youtpw}}
+      \put(\l@youtxco,\l@youtvpiii){\vector(-1,0){0}}
+      \put(\l@youtxcv,\l@youtvpiii){\begin{picture}(\l@youtvdviii,\l@youtvdviii)
+        \put(\l@youtvdviii,\l@youtvdviii){\l@ypcmd{paperwidth}}
+        \end{picture}}
+      \fi
+%    \end{macrocode}
+%    Have finished drawing the parameters.
+%    \begin{macrocode}
+    \end{picture}
+    \end{center}
+    \setlength{\unitlength}{1pt}
+
+    \testprintparameters
+    \ifl@ytempif
+%    \end{macrocode}
+%    Print the actual parameter values.
+%    \begin{macrocode}
+      \begin{center}
+      \begin{footnotesize}
+         Lengths are to the nearest pt. \\
+      \begin{ttfamily}
+      \begin{tabular}{l@{\hspace{20pt}}l}
+      \l@ycmd{stockheight}   = \number\l@youtvdo pt    &
+      \l@ycmd{stockwidth}    = \number\l@youthdo pt     \\
+      \l@ycmd{pageheight}    = \number\l@youtph pt      & 
+      \l@ycmd{pagewidth}     = \number\l@youtpw pt       \\
+      \l@ycmd{textheight}    = \number\l@youtvpv pt      &
+      \l@ycmd{textwidth}     = \number\l@youthpii pt      \\
+      \l@ycmd{trimtop}       = \number\l@youtvpi pt         &
+      \l@ycmd{trimedge}      = \number\l@youthpi pt        \\
+      \l@ycmd{uppermargin}   = \number\l@youtvpii pt    &
+      \l@ycmd{spinemargin}   = \number\l@youthpv pt     \\
+      \l@ycmd{headheight}    = \number\l@youtvpiii pt    & 
+      \l@ycmd{headsep}       = \number\l@youtvpiv pt        \\
+      \l@ycmd{footskip}      = \number\l@youtvpvi pt       &
+      \l@ycmd{marginparsep}  = \number\l@youthpvi pt   \\
+      \l@ycmd{marginparpush} = \number\l@youtvpvii pt &
+      \l@ycmd{columnsep}     = \number\l@youthpiii pt     \\
+      \l@ycmd{columnseprule} = \the\l@youtlinethick  &  \\
+      \end{tabular}
+      \end{ttfamily}\end{footnotesize}
+      \end{center}
+    \fi
+%    \end{macrocode}
+%    The end of the definition for |\drawstock|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\stockdiagram}
+% \begin{macro}{\stockdesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\stockdiagram}{\drawparameterstrue\drawstock}
+\newcommand{\stockdesign}{\drawparametersfalse\drawstock}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\stockvalues}
+% This macro produces a table of the current page layout actual values.
+%    \begin{macrocode}
+\newcommand{\stockvalues}{%
+%%  \begin{center}
+  \ifprintheadings
+    Actual stock page layout values.\\[\baselineskip]
+  \fi
+  \begingroup
+    \l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{stockheight}    = \l@yval{\stockheight}       &
+  \l@ycmd{stockwidth}     = \l@yval{\stockwidth}        \\
+  \l@ycmd{paperheight}    = \l@yval{\paperheight}       &
+  \l@ycmd{paperwidth}     = \l@yval{\paperwidth}         \\
+  \l@ycmd{textheight}     = \l@yval{\textheight}     &
+  \l@ycmd{textwidth}      = \l@yval{\textwidth}      \\
+  \l@ycmd{trimtop}        = \l@yval{\trimtop}        &
+  \l@ycmd{trimedge}       = \l@yval{\trimedge}      \\
+  \l@ycmd{uppermargin}    = \l@yval{\uppermargin}      &
+  \l@ycmd{spinemargin}    = \l@yval{\spinemargin}       \\
+  \l@ycmd{headheight}     = \l@yval{\headheight}     &
+  \l@ycmd{headsep}        = \l@yval{\headsep}        \\
+  \l@ycmd{footskip}       = \l@yval{\footskip}       &
+  \l@ycmd{marginparsep}   = \l@yval{\marginparsep}   \\
+  \l@ycmd{marginparpush}  = \l@yval{\marginparpush}  &
+  \l@ycmd{columnsep}      = \l@yval{\columnsep}      \\
+  \l@ycmd{columnseprule}  = \l@yval{\columnseprule}  & \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing the layout of a list}
+%
+%    We provide a facility for drawing the layout of a \LaTeX{} \Lenv{list}
+% environment.
+%
+%    First the |\try...| commands for setting trial list parameters.
+%
+% \begin{macro}{\tryitemindent}
+%    Sets a trial value for |itemindent| and stores the result in |\l@youthpi|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    LIST LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\tryitemindent}[1]{\l@yltoc{#1}{\l@youthpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trylabelwidth}
+%    Sets a trial value for |labelwidth| and stores the result in |\l@youthpii|.
+%    \begin{macrocode}
+\newcommand{\trylabelwidth}[1]{\l@yltoc{#1}{\l@youthpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trylabelsep}
+%    Sets a trial value for |labelsep| and stores the result in |\l@youthpiii|.
+%    \begin{macrocode}
+\newcommand{\trylabelsep}[1]{\l@yltoc{#1}{\l@youthpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryleftmargin}
+%    Sets a trial value for |leftmargin| and stores the result in |\l@youthpiv|.
+%    \begin{macrocode}
+\newcommand{\tryleftmargin}[1]{\l@yltoc{#1}{\l@youthpiv}
+%    \end{macrocode}
+% But the left margin must not be less than zero.
+%    \begin{macrocode}
+                     \ifnum\l@youthpiv < \z@
+                       \l@youthpiv = \z@
+                     \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryrightmargin}
+%    Sets a trial value for |rightmargin| and stores the result in |\l@youthpv|.
+%    \begin{macrocode}
+\newcommand{\tryrightmargin}[1]{\l@yltoc{#1}{\l@youthpv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trylistparindent}
+%    Sets a trial value for |listparindent| and stores the result in |\l@youthpvi|.
+%    \begin{macrocode}
+\newcommand{\trylistparindent}[1]{\l@yltoc{#1}{\l@youthpvi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytopsep}
+%    Sets a trial value for |topsep| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+\newcommand{\trytopsep}[1]{\l@yltoc{#1}{\l@youtvpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryparskip}
+%    Sets a trial value for |parskip| and stores the result in |\l@youtparskip|.
+%    \begin{macrocode}
+\newcommand{\tryparskip}[1]{\l@yltoc{#1}{\l@youtparskip}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trypartopsep}
+%    Sets a trial value for |partopsep| and stores the result in |\l@youtvpiii|.
+%    \begin{macrocode}
+\newcommand{\trypartopsep}[1]{\l@yltoc{#1}{\l@youtvpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryparsep}
+%    Sets a trial value for |parsep| and stores the result in |\l@youtvpiv|.
+%    \begin{macrocode}
+\newcommand{\tryparsep}[1]{\l@yltoc{#1}{\l@youtvpiv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryitemsep}
+%    Sets a trial value for |itemsep| and stores the result in |\l@youtvpv|.
+%    \begin{macrocode}
+\newcommand{\tryitemsep}[1]{\l@yltoc{#1}{\l@youtvpv}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currentlist}
+%    This routine sets the trial list parameters to be those of the current
+% list environment.
+%    \begin{macrocode}
+\newcommand{\currentlist}{%
+  \tryitemindent{\itemindent}       % typically 0pt
+  \trylabelwidth{\labelwidth}       % typically  pt
+  \trylabelsep{\labelsep}           % typically 0.5em
+  \tryleftmargin{\leftmargin}       % typically  pt
+  \tryrightmargin{\rightmargin}     % typically  pt
+  \trylistparindent{\listparindent} % typically 0pt
+  \trytopsep{\topsep}               % typically  pt
+  \tryparskip{\l@ysetupparskip}     % typically  pt
+  \trypartopsep{\partopsep}         % typically  pt
+  \tryparsep{\parsep}               % typically  pt
+  \tryitemsep{\itemsep}             % typically  pt
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawlist}
+%    This routine draws the layout of a \Lenv{list} environment.
+%    \begin{macrocode}
+\newcommand{\drawlist}{%
+%    \end{macrocode}
+%    First set some some default vertical and horizontal dimensions.
+%    \begin{macrocode}
+  \l@youthdo=\l@yoneinch\relax
+  \l@youtvdo=\l@yoneinch\relax
+    \multiply\l@youtvdo by 12\relax
+    \divide\l@youtvdo by 10\relax
+  \l@youthdi=\l@yeighthalfinch\relax  % major textwidth
+  \ifdrawparameters
+%    \end{macrocode}
+% When |drawparameters| is TRUE, we draw a generic layout showing the
+% controlling layout variables.
+%    \begin{macrocode}
+    \l@youthpi=60\relax                      % itemindent
+    \l@youthpii=80\relax                     % labelwidth
+    \l@youthpiii=\l@youthpi                  % labelsep
+      \divide\l@youthpiii by \tw@
+    \l@youthpiv=\l@youthpi                   % leftmargin
+      \advance\l@youthpiv by \l@youthpii
+      \advance\l@youthpiv by \l@youthpiii
+    \l@youthpv=\l@youthpiv                   % rightmargin
+      \multiply\l@youthpv by \tw@
+      \divide\l@youthpv by \thr@@
+    \l@youthpvi=\l@youthpi                   % listparindent
+      \multiply\l@youthpvi by 4\relax
+      \divide\l@youthpvi by \thr@@
+    \l@youtvpi=40\relax                      % topsep
+    \l@youtparskip=\l@youtvpi                % parskip
+    \l@youtvpiii=\l@youtvpi                  % partopsep
+    \l@youtvpiv=\l@youtvpi                   % parsep
+    \l@youtvpv=\l@youtvpi                    % itemsep
+  \fi
+%    \end{macrocode}
+% Finished with the set up for drawing parameters. Continue calculating
+% other dimensions and coordinates.
+%    \begin{macrocode}
+  \l@youtvdvii=\l@youtvpi                  % topsep + parskip (+ partopsep)
+    \advance\l@youtvdvii by \l@youtparskip
+    \iflistaspara
+      \advance\l@youtvdvii by \l@youtvpiii
+    \fi
+  \l@youtvdvi=\l@youtvpv                   % itemsep + parsep
+    \advance\l@youtvdvi by \l@youtvpiv
+  \l@youtyci=\l@yoneinch\relax                % Y coord of base of item 2
+    \advance\l@youtyci by \l@youtvdvii
+  \l@youtxci=\z@                           % X coord of LH list text
+    \advance\l@youtxci by \l@youthpiv
+  \l@youthdii=\l@youthdi                   % major width of item text
+    \advance\l@youthdii by -\l@youthpiv
+    \advance\l@youthdii by -\l@youthpv
+  \l@youthdiii=\l@youthpi                  % inset of labelled list line
+  \l@youtvdii=\l@youtvdo                   % vertical dim of short inset line
+    \divide\l@youtvdii by 4\relax
+  \l@youthdiv=\l@youthdii                  % X dim of item 2 box top
+    \advance\l@youthdiv by -\l@youthdiii
+  \l@youtvdi=\l@youtvdo                    % Y dim of RH item box
+    \advance\l@youtvdi by \l@youtvdii
+  \l@youtvdiii=\l@youtvdii                 % height of label box
+    \multiply\l@youtvdiii by \thr@@
+    \divide\l@youtvdiii by 4\relax
+  \l@youtxcii=\l@youthdiii                 % X coord of BL of label box
+    \advance\l@youtxcii by -\l@youthpiii
+    \advance\l@youtxcii by -\l@youthpii
+  \l@youtycii=\l@youtvdi                   % Y coord of BL of label box
+    \advance\l@youtycii by -\l@youtvdiii
+  \l@youtyciii=\l@youtyci                  % Y coord of base of para
+    \advance\l@youtyciii by \l@youtvdi
+    \advance\l@youtyciii by \l@youtvdvi
+  \l@youthdv=\l@youthdii                   % Hor. dim of top of para box
+    \advance\l@youthdv by -\l@youthpvi
+  \l@youtyciv=\l@youtyciii                 % Y coord of base of item 1
+    \advance\l@youtyciv by \l@youtvdi
+    \advance\l@youtyciv by \l@youtvpiv
+  \l@youtycv=\l@youtyciv                   % Y coord of base of preceding text
+    \advance\l@youtycv by \l@youtvdi
+    \advance\l@youtycv by \l@youtvdvii
+  \l@youtvdiv=\l@youtycv                   % Height of picture
+    \advance\l@youtvdiv by \l@yoneinch\relax
+  \l@youtxciii=\l@youtxci                  % X coord of vertical lines
+    \advance\l@youtxciii by \l@youtxci
+    \advance\l@youtxciii by \l@youthdii
+    \divide\l@youtxciii by \tw@
+  \l@youtycvi=\l@youtvdi                   % Y coord for margin lines
+    \divide\l@youtycvi by \tw@
+  \l@youtvdv=\l@youtvpiv                   % small dimension (1/2 parsep)
+    \divide\l@youtvdv by \tw@
+  \l@youtxciv=\l@youtycii                 % Y coord for labelwidth (note XCIV)
+    \advance\l@youtxciv by \l@youtvdiii
+    \advance\l@youtxciv by \l@youtvdv
+%    \end{macrocode}
+%
+%    Draw the picture!
+%
+%    \begin{macrocode}
+  \begin{center}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@yeighthalfinch,\l@youtvdiv)
+    \thinlines
+%    \end{macrocode}
+%    Draw a box |(textwidth,height)| representing the page.
+%    \begin{macrocode}
+    \put(0,0){\dashbox{10}(\l@youthdi,\l@youtvdiv){}}
+    \thicklines
+%    \end{macrocode}
+%    Draw successor text box 1 inch deep.
+%    \begin{macrocode}
+    \put(0,0){\framebox(\l@youthdi,\l@yoneinch){\l@ylabelfont Following Text}}
+%    \end{macrocode}
+%
+%    Draw item box 2
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtyci){\begin{picture}(\l@youthdii,\l@youtvdi)
+%    \end{macrocode}
+% The LH horizontal and vertical lines.
+%    \begin{macrocode}
+      \put(0,0){\line(1,0){\l@youthdii}}
+      \put(0,0){\line(0,1){\l@youtvdo}}
+%    \end{macrocode}
+% The lines for the inset (which may be positive or negative).
+%    \begin{macrocode}
+      \ifnum\l@youthdiii > \z@
+        \put(\l@youthdiii,\l@youtvdo){\line(-1,0){\l@youthdiii}}
+      \else
+        \put(\l@youthdiii,\l@youtvdo){\line(1,0){-\l@youthdiii}}
+      \fi
+      \put(\l@youthdiii,\l@youtvdo){\line(0,1){\l@youtvdii}}
+%    \end{macrocode}
+% The top and RH sides. Also add the text.
+%    \begin{macrocode}
+      \put(\l@youthdii,\l@youtvdi){\line(0,-1){\l@youtvdi}}
+      \put(\l@youthdii,\l@youtvdi){\line(-1,0){\l@youthdiv}}
+      \put(0,0){\makebox(\l@youthdii,\l@youtvdi){\l@ylabelfont Item 2}}
+%    \end{macrocode}
+% Finish off with the label box.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtycii){\framebox(\l@youthpii,\l@youtvdiii){}}
+      \put(\l@youtxcii,\l@youtycii){\makebox(\l@youthpii,\l@youtvdiii)[r]%
+          {\l@ylabelfont Label}}
+      \end{picture}}
+%    \end{macrocode}
+%
+%    Draw the paragraph box.
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtyciii){\begin{picture}(\l@youthdii,\l@youtvdi)
+%    \end{macrocode}
+% The LH horizontal and vertical lines.
+%    \begin{macrocode}
+      \put(0,0){\line(1,0){\l@youthdii}}
+      \put(0,0){\line(0,1){\l@youtvdo}}
+%    \end{macrocode}
+% The inset lines.
+% \changes{v2.6a}{2002/12/12}{Added negative test to paragraph box in list layout}
+%    \begin{macrocode}
+      \ifnum\l@youthpvi < \z@
+        \put(\l@youthpvi,\l@youtvdo){\line(1,0){-\l@youthpvi}}
+      \else
+        \put(\l@youthpvi,\l@youtvdo){\line(-1,0){\l@youthpvi}}
+      \fi
+      \put(\l@youthpvi,\l@youtvdo){\line(0,1){\l@youtvdii}}
+%    \end{macrocode}
+% The top and RH side lines. Also the text.
+%    \begin{macrocode}
+      \put(\l@youthdii,\l@youtvdi){\line(0,-1){\l@youtvdi}}
+      \put(\l@youthdii,\l@youtvdi){\line(-1,0){\l@youthdv}}
+      \put(0,0){\makebox(\l@youthdii,\l@youtvdi){\l@ylabelfont Item 1, Paragraph 2}}
+      \testdrawdimensions
+      \ifl@ytempif
+%    \end{macrocode}
+% Add in the dimensions if asked for. First the |listparindent|.
+%    \begin{macrocode}
+        \put(0,\l@youtvdi){\vector(1,0){\l@youthpvi}}
+        \put(0,\l@youtvdi){\begin{picture}(\l@youtvdv,\l@youtvdv)
+          \put(0,\l@youtvdv){\l@ypcmd{listparindent}}
+          \end{picture}}
+%    \end{macrocode}
+% Then the |leftmargin|.
+%    \begin{macrocode}
+        \put(-\l@youthpiv,\l@youtycvi){\vector(1,0){\l@youthpiv}}
+        \put(-\l@youthpiv,\l@youtycvi){\begin{picture}(\l@youtvdv,\l@youtvdv)
+          \put(\l@youtvdv,\l@youtvdv){\l@ypcmd{leftmargin}}
+          \end{picture}}
+%    \end{macrocode}
+% And finally the |rightmargin|.
+%    \begin{macrocode}
+        \ifnum\l@youthpv < \z@
+          \put(\l@youthdii,\l@youtycvi){\line(-1,0){-\l@youthpv}}
+        \else
+          \put(\l@youthdii,\l@youtycvi){\line(1,0){\l@youthpv}}
+        \fi
+        \put(\l@youthdii,\l@youtycvi){\vector(-1,0){0}}
+        \put(\l@youthdii,\l@youtycvi){\begin{picture}(\l@youtvdv,\l@youtvdv)
+          \put(\l@youtvdv,\l@youtvdv){\l@ypcmd{rightmargin}}
+          \end{picture}}
+      \fi
+      \end{picture}}
+%    \end{macrocode}
+%
+%    Draw item box 1. This is very similar to drawing item box 2.
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtyciv){\begin{picture}(\l@youthdii,\l@youtvdi)
+      \put(0,0){\line(1,0){\l@youthdii}}
+      \put(0,0){\line(0,1){\l@youtvdo}}
+      \ifnum\l@youthdiii > \z@
+        \put(\l@youthdiii,\l@youtvdo){\line(-1,0){\l@youthdiii}}
+      \else
+        \put(\l@youthdiii,\l@youtvdo){\line(1,0){-\l@youthdiii}}
+      \fi
+      \put(\l@youthdiii,\l@youtvdo){\line(0,1){\l@youtvdii}}
+      \put(\l@youthdii,\l@youtvdi){\line(0,-1){\l@youtvdi}}
+      \put(\l@youthdii,\l@youtvdi){\line(-1,0){\l@youthdiv}}
+      \put(0,0){\makebox(\l@youthdii,\l@youtvdi){\l@ylabelfont Item 1}}
+      \put(\l@youtxcii,\l@youtycii){\framebox(\l@youthpii,\l@youtvdiii){}}
+      \put(\l@youtxcii,\l@youtycii){\makebox(\l@youthpii,\l@youtvdiii)[r]%
+          {\l@ylabelfont Label}}
+%%      \ifdrawparameters
+      \testdrawdimensions
+      \ifl@ytempif
+%    \end{macrocode}
+%
+% Howevever, if requested, dimensions are drawn for item box 1.
+% First, for |itemindent|.
+%    \begin{macrocode}
+        \ifnum\l@youthpi > \z@
+          \put(0,\l@youtycvi){\vector(1,0){\l@youthpi}}
+        \else
+          \put(0,\l@youtycvi){\vector(-1,0){-\l@youthpi}}
+        \fi
+        \put(0,\l@youtycvi){\begin{picture}(\l@youtvdv,\l@youtvdv)
+          \put(0,-\l@youtvdv){\l@ypcmd{itemindent}}
+          \end{picture}}
+%    \end{macrocode}
+% Then for |labelsep|.
+%    \begin{macrocode}
+        \put(\l@youthdiii,\l@youtvdi){\vector(-1,0){\l@youthpiii}}
+        \put(\l@youthdiii,\l@youtvdi){\begin{picture}(\l@youtvdv,\l@youtvdv)
+          \put(0,\l@youtvdv){\l@ypcmd{labelsep}}
+          \end{picture}}
+%    \end{macrocode}
+% And finish up with |labelwidth|.
+%    \begin{macrocode}
+        \put(\l@youtxcii,\l@youtxciv){\line(1,0){\l@youthpii}}
+        \put(\l@youtxcii,\l@youtxciv){\vector(-1,0){0}}
+        \put(\l@youtxcii,\l@youtxciv){\begin{picture}(\l@youtvdv,\l@youtvdv)
+          \put(0,\l@youtvdv){\l@ypcmd{labelwidth}}
+          \end{picture}}
+      \fi
+      \end{picture}}
+%    \end{macrocode}
+%
+%    Draw the predeccessor text box 1 inch deep.
+%    \begin{macrocode}
+    \put(0,\l@youtycv){\framebox(\l@youthdi,\l@yoneinch){\l@ylabelfont Preceding Text}}
+%%    \ifdrawparameters
+    \testdrawdimensions
+    \ifl@ytempif
+%    \end{macrocode}
+%
+%    We finish off the drawing with any requested vertical spacing parameters.
+% First between item2 and the suceeding text.
+%    \begin{macrocode}
+      \put(\l@youtxciii,\l@youtyci){\vector(0,-1){\l@youtvdvii}}
+      \put(\l@youtxciii,\l@youtyci){\begin{picture}(\l@youtvdv,\l@youtvdv)
+        \put(\l@youtvdv,-\l@youtvdv){%
+          \l@yparamfont\texttt{\bs topsep + \bs parskip [+ \bs partopsep]}}
+        \end{picture}}
+%    \end{macrocode}
+% Between item1, paragraph 2 and item 2.
+%    \begin{macrocode}
+      \put(\l@youtxciii,\l@youtyciii){\vector(0,-1){\l@youtvdvi}}
+      \put(\l@youtxciii,\l@youtyciii){\begin{picture}(\l@youtvdv,\l@youtvdv)
+        \put(\l@youtvdv,-\l@youtvdv){%
+          \l@yparamfont\texttt{\bs itemsep + \bs parsep}}
+        \end{picture}}
+%    \end{macrocode}
+% Between the two paragraphs of item 1.
+%    \begin{macrocode}
+      \put(\l@youtxciii,\l@youtyciv){\vector(0,-1){\l@youtvpiv}}
+      \put(\l@youtxciii,\l@youtyciv){\begin{picture}(\l@youtvdv,\l@youtvdv)
+        \put(\l@youtvdv,-\l@youtvdv){\l@ypcmd{parsep}}
+        \end{picture}}
+%    \end{macrocode}
+% And finally between the preceding text and item 1.
+%    \begin{macrocode}
+      \put(\l@youtxciii,\l@youtycv){\vector(0,-1){\l@youtvdvii}}
+      \put(\l@youtxciii,\l@youtycv){\begin{picture}(\l@youtvdv,\l@youtvdv)
+        \put(\l@youtvdv,-\l@youtvdv){%
+          \l@yparamfont\texttt{\bs topsep + \bs parskip [+ \bs partopsep]}}
+        \end{picture}}
+    \fi
+    \end{picture}
+    \end{center}
+    \setlength{\unitlength}{1pt}
+%    \end{macrocode}
+%
+%    Last of all, we list the values of the parameters if requested.
+%    \begin{macrocode}
+   \testprintparameters
+   \ifl@ytempif
+    \begin{center}
+    \begin{footnotesize}
+      Lengths are to the nearest pt. \\
+    \begin{ttfamily}
+    \begin{tabular}{l@{\hspace{20pt}}l}
+    \l@ycmd{leftmargin}    = \number\l@youthpiv pt    &
+    \l@ycmd{rightmargin}   = \number\l@youthpv pt    \\
+    \l@ycmd{itemindent}    = \number\l@youthpi pt     &
+    \l@ycmd{labelwidth}    = \number\l@youthpii pt    \\
+    \l@ycmd{labelsep}      = \number\l@youthpiii pt     &
+    \l@ycmd{listparindent} = \number\l@youthpvi pt \\
+    \l@ycmd{topsep}        = \number\l@youtvpi pt         &
+    \l@ycmd{parskip}       = \number\l@youtparskip pt    \\
+    \l@ycmd{partopsep}     = \number\l@youtvpiii pt    &
+    \l@ycmd{parsep}        = \number\l@youtvpiv pt        \\
+    \l@ycmd{itemsep}       = \number\l@youtvpv pt  &     \\
+    \end{tabular}
+    \end{ttfamily}\end{footnotesize}
+    \end{center}
+  \fi
+%    \end{macrocode}
+% The end of the definition for |\drawlist|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\listdiagram}
+% \begin{macro}{\listdesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\listdiagram}{\drawparameterstrue\drawlist}
+\newcommand{\listdesign}{\drawparametersfalse\drawlist}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\listvalues}
+% This macro produces a table of the current list layout actual values.
+% Be careful to get the external environment's values, not those of
+% the centered tabular.
+%    \begin{macrocode}
+\newcommand{\listvalues}{%
+  \setlength{\l@ylmarg}{\leftmargin}
+  \setlength{\l@yrmarg}{\rightmargin}
+  \setlength{\l@yitmindent}{\itemindent}
+  \setlength{\l@ylblwidth}{\labelwidth}
+  \setlength{\l@ylblsep}{\labelsep}
+  \setlength{\l@ylparindent}{\listparindent}
+  \setlength{\l@ytsep}{\topsep}
+  \setlength{\l@ypskip}{\parskip}
+  \setlength{\l@yptsep}{\partopsep}
+  \setlength{\l@ypsep}{\parsep}
+  \setlength{\l@yitmsep}{\itemsep}
+  \ifprintheadings
+    Actual list layout values.\\[\baselineskip]
+  \fi
+  \begingroup\l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{leftmargin}    = \l@yval{\l@ylmarg}      &
+  \l@ycmd{rightmargin}   = \l@yval{\l@yrmarg}      \\
+  \l@ycmd{itemindent}    = \l@yval{\l@yitmindent}  &
+  \l@ycmd{labelwidth}    = \l@yval{\l@ylblwidth}   \\
+  \l@ycmd{labelsep}      = \l@yval{\l@ylblsep}     &
+  \l@ycmd{listparindent} = \l@yval{\l@ylparindent} \\
+  \l@ycmd{topsep}        = \l@yval{\l@ytsep}       &
+  \l@ycmd{parskip}       = \l@yval{\l@ypskip}      \\
+  \l@ycmd{partopsep}     = \l@yval{\l@yptsep}      &
+  \l@ycmd{parsep}        = \l@yval{\l@ypsep}       \\
+  \l@ycmd{itemsep}       = \l@yval{\l@yitmsep}     &  \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \section{Drawing the layout of footnotes}
+%
+%    We provide a facility for drawing the layout of footnotes.
+%
+%    First the |\try...| commands for setting trial values of the footnote
+% parameters.
+%
+% \begin{macro}{\tryfootins}
+% Sets the trial value for |footins| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    FOOTNOTE LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\tryfootins}[1]{\l@yltoc{#1}{\l@youtvpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryfootnotesep}
+% Sets the trial value for |footnotesep| and stores the result in |\l@youtvpii|.
+%    \begin{macrocode}
+\newcommand{\tryfootnotesep}[1]{\l@yltoc{#1}{\l@youtvpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryfootnotebaseline}
+% Sets the trial value for |footnotebaseline| and stores the result in |\l@youtvpiii|.
+%    \begin{macrocode}
+\newcommand{\tryfootnotebaseline}[1]{\l@yltoc{#1}{\l@youtvpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryfootruleheight}
+% Sets the trial value for |footruleheight| and stores the result in |\l@youtlinethick|.
+%    \begin{macrocode}
+\newcommand{\tryfootruleheight}[1]{\setlength{\l@youtlinethick}{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryfootrulefrac}
+% Sets the trial value for |footrulefrac| and stores the result in |\l@youthdvii|.
+%    \begin{macrocode}
+\newcommand{\tryfootrulefrac}[1]{\setlength{\l@ylen}{8.5in}
+            \l@ytok={#1}
+            \l@ylen = #1\l@ylen
+            \l@youthdvii=\l@ylen
+     \divide\l@youthdvii by \l@yonepoint}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currentfootnote}
+%
+%    This routine sets the trial footnote parameters to be those specified
+% for the current document. Some parameters have the values embedded as
+% numbers in the class/options files; for these we make an educated
+% guess at a typical value.
+%    \begin{macrocode}
+\newcommand{\currentfootnote}{%
+  \tryfootins{\skip\footins}
+  \tryfootnotesep{\footnotesep}
+  \tryfootnotebaseline{10pt}
+  \tryfootruleheight{0.4pt}
+  \tryfootrulefrac{0.25}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawfootnote}
+%
+%    This routine draws the layout of a footnote.
+%    \begin{macrocode}
+\newcommand{\drawfootnote}{%
+%    \end{macrocode}
+% Set some default values.
+%    \begin{macrocode}
+  \l@youtvdo=4\relax                % vertical scale factor
+  \l@youthdi=\l@yeighthalfinch\relax   % textwidth
+  \l@youtvdi=\l@yoneinch\relax         % small height of note box
+  \ifdrawparameters
+%    \end{macrocode}
+% When |drawparameters| is TRUE we use a generic layout. Set the dimensions
+% and coordinates.
+%    \begin{macrocode}
+    \l@youtvpi=20\relax                     %  \skip\footins
+    \l@youtvpii=30\relax                    %  footenotesep
+    \l@youtvpiii=10\relax                   %  footnote baseline
+    \setlength{\l@youtlinethick}{0.4pt}     % rule thickness
+    \l@youthdvii=\l@yeighthalfinch\relax       % rule length
+      \multiply\l@youthdvii by 4\relax
+      \divide\l@youthdvii by 10\relax
+    \l@youtvdii=\l@youtvpiii                 % vertical box inset
+      \multiply\l@youtvdii by \l@youtvdo
+  \else
+%    \end{macrocode}
+% Continue calculating the drawing parameters.
+%    \begin{macrocode}
+    \l@youtvdii=\l@youtvpiii                % vertical box inset
+      \multiply\l@youtvdii by \l@youtvdo
+      \multiply\l@youtvdii by 8\relax
+      \divide\l@youtvdii by 10\relax
+  \fi
+  \multiply\l@youtvdii by 3\relax
+  \divide\l@youtvdii by 4\relax
+  \l@youtvdv=\l@youtvpi                   % Y dim of footins
+    \multiply\l@youtvdv by \l@youtvdo
+  \l@youthdii=\l@youtvdii                 % horizontal box inset
+  \l@youtvdiii=\l@youtvdi                 % box height
+    \advance\l@youtvdiii by \l@youthdii
+  \l@youthdiii=\l@youthdi                 % box top length
+    \advance\l@youthdiii by -\l@youthdii
+  \l@youtvdiv=\l@youtvpii                 % vertical note spacing
+    \ifnum\l@youtvdiv < \l@youtvpiii
+      \l@youtvdiv=\l@youtvpiii
+    \fi
+    \multiply\l@youtvdiv by \l@youtvdo
+  \l@youtyci=\l@youtvdi                  % Y coord of 1st box base
+    \advance\l@youtyci by \l@youtvdiv
+  \l@youtycii=\l@youtyci                 % Y coord of rule
+    \advance\l@youtycii by \l@youtyci
+  \l@youtyciii=\l@youtycii               %  Y coord of text base
+    \advance\l@youtyciii by \l@youtvdv
+  \l@youtyciv=\l@youtyciii               % top of main text box
+    \advance\l@youtyciv by \l@yoneinch\relax
+  \l@youthdiv=\l@youthdvii               % length of rule
+  \l@youtvdvi=\l@youtvpiv                % height of rule
+    \multiply\l@youtvdvi by \l@youtvdo
+  \l@youthdv=\l@youthdii                 % small value (1/2 box inset)
+    \divide\l@youthdv by \tw@
+  \l@youthdvi=\l@youthdv                 % 1/2 l@youthdv
+    \divide\l@youthdvi by \tw@
+%    \end{macrocode}
+%
+%    Draw the picture!
+%    \begin{macrocode}
+  \begin{center}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdi,\l@youtyciv)
+    \thicklines
+%    \end{macrocode}
+% Draw box 2. First the major bottom and LH side lines.
+%    \begin{macrocode}
+    \put(0,0){\begin{picture}(\l@youthdi,\l@youtvdiii)
+      \put(0,0){\line(1,0){\l@youthdi}}
+      \put(0,0){\line(0,1){\l@youtvdi}}
+%    \end{macrocode}
+% The inset lines
+%    \begin{macrocode}
+      \put(\l@youthdii,\l@youtvdi){\line(-1,0){\l@youthdii}}
+      \put(\l@youthdii,\l@youtvdi){\line(0,1){\l@youtvdii}}
+%    \end{macrocode}
+% The top and RH side lines.
+%    \begin{macrocode}
+      \put(\l@youthdi,\l@youtvdiii){\line(-1,0){\l@youthdiii}}
+      \put(\l@youthdi,\l@youtvdiii){\line(0,-1){\l@youtvdiii}}
+%    \end{macrocode}
+% Finish with the marker.
+%    \begin{macrocode}
+      \put(\l@youthdv,\l@youtvdiii){\makebox(0,0)[t]{2}}
+      \end{picture}}
+%    \end{macrocode}
+% The drawing of box 1 is similar.
+%    \begin{macrocode}
+    \put(0,\l@youtyci){\begin{picture}(\l@youthdi,\l@youtvdiii)
+      \put(0,0){\line(1,0){\l@youthdi}}
+      \put(0,0){\line(0,1){\l@youtvdi}}
+      \put(\l@youthdii,\l@youtvdi){\line(-1,0){\l@youthdii}}
+      \put(\l@youthdii,\l@youtvdi){\line(0,1){\l@youtvdii}}
+      \put(\l@youthdi,\l@youtvdiii){\line(-1,0){\l@youthdiii}}
+      \put(\l@youthdi,\l@youtvdiii){\line(0,-1){\l@youtvdiii}}
+      \put(\l@youthdv,\l@youtvdiii){\makebox(0,0)[t]{1}}
+      \end{picture}}
+%    \end{macrocode}
+% Draw the rule.
+%    \begin{macrocode}
+    \multiply\l@youtlinethick by \l@youtvdo
+    \linethickness{\l@youtlinethick}
+    \put(0,\l@youtycii){\line(1,0){\l@youthdvii}}
+    \thicklines
+%    \end{macrocode}
+% Draw the main text box
+%    \begin{macrocode}
+    \put(0,\l@youtyciii){\framebox(\l@youthdi,\l@yoneinch){\l@ylabelfont MAIN TEXT}}
+    \testdrawdimensions
+    \ifl@ytempif
+      \thinlines
+%    \end{macrocode}
+%
+%    We finish off the drawing with spacing parameters, if requested.
+%
+% Bottom |footnotesep|.
+%    \begin{macrocode}
+    \put(\l@youthdvi,\l@youtyci){\vector(0,-1){\l@youtvdiv}}
+    \put(\l@youthdvi,\l@youtyci){\begin{picture}(\l@youthdv,\l@youthdv)
+      \put(\l@youthdvi,-\l@youthdv){\l@ypcmd{footnotesep}}
+      \end{picture}}
+%    \end{macrocode}
+% Top |footnotesep|.
+%    \begin{macrocode}
+    \put(\l@youthdvi,\l@youtycii){\vector(0,-1){\l@youtvdiv}}
+    \put(\l@youthdvi,\l@youtycii){\begin{picture}(\l@youthdv,\l@youthdv)
+      \put(\l@youthdvi,-\l@youthdv){\l@ypcmd{footnotesep}}
+      \end{picture}}
+%    \end{macrocode}
+% The |\skip\footins|.
+%    \begin{macrocode}
+    \put(\l@youthdii,\l@youtyciii){\vector(0,-1){\l@youtvdv}}
+    \put(\l@youthdii,\l@youtyciii){\begin{picture}(\l@youthdv,\l@youthdv)
+      \put(\l@youthdvi,-\l@youthdv){\l@ypcmd{skip}\l@ypcmd{footins}}
+      \end{picture}}
+%    \end{macrocode}
+% The rule.
+%    \begin{macrocode}
+    \put(\l@youthdiv,\l@youtycii){\begin{picture}(\l@youthdv,\l@youthdv)
+      \put(\l@youthdv,0){\l@ypcmd{footnoterule}}
+      \end{picture}}
+    \fi
+%    \end{macrocode}
+%    Finish off the picture.
+%    \begin{macrocode}
+    \end{picture}
+  \end{center}
+  \setlength{\unitlength}{1pt}
+%    \end{macrocode}
+%
+% Print the value table if appropriate.
+%    \begin{macrocode}
+   \testprintparameters
+   \ifl@ytempif
+    \begin{center}
+    \begin{footnotesize}
+      Lengths are to the nearest pt. \\
+    \begin{ttfamily}
+    \begin{tabular}{l@{\hspace{20pt}}l}
+    \l@ycmd{footins}         = \number\l@youtvpi pt &
+    \l@ycmd{footnotesep}     = \number\l@youtvpii pt \\
+    \l@ycmd{baselineskip}    = \number\l@youtvpiii pt &
+    \textrm{note separation} = \number\l@youtvdiv pt \\
+    \textrm{rule thickness}  = \the\l@youtlinethick & \\
+    \multicolumn{2}{c}{\textrm{rule length} = \the\l@ytok{} times the \bs textwidth} \\
+    \end{tabular}
+    \end{ttfamily}\end{footnotesize}
+    \end{center}
+  \fi
+%    \end{macrocode}
+%    The end of the definition of |\drawfootnote|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\footnotediagram}
+% \begin{macro}{\footnotedesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\footnotediagram}{\drawparameterstrue\drawfootnote}
+\newcommand{\footnotedesign}{\drawparametersfalse\drawfootnote}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\footnotevalues}
+% This macro produces a table of the current footnote layout actual values.
+%    \begin{macrocode}
+\newcommand{\footnotevalues}{%
+  \setlength{\l@ylen}{\columnwidth}
+    \l@ylen = .4\l@ylen
+  \ifprintheadings
+    Actual footnote layout values.\\[\baselineskip]
+  \fi
+  \begingroup\l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{footins}     = \l@yval{\skip\footins} &
+  \l@ycmd{footnotesep} = \l@yval{\footnotesep}  \\
+  rule thickness      = ??               &
+  rule length         = ??    \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \section{Drawing the layout of paragraphs}
+%
+%    We provide a facility for drawing the layout of paragraphs.
+%
+%    First the |\try...| commands for setting trial values of the paragraph
+% parameters.
+%
+% \begin{macro}{\tryparindent}
+% Sets the trial value for |\parindent| and stores the result in |\l@youthdii|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    PARAGRAPH LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\tryparindent}[1]{\l@yltoc{#1}{\l@youthdii}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\tryparlinewidth}
+% Sets the trial value for |\linewidth| and stores the result in |\l@youthdi|.
+%    \begin{macrocode}
+\newcommand{\tryparlinewidth}[1]{\l@yltoc{#1}{\l@youthdi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryparbaselineskip}
+% Sets the trial value for |\baselineskip| and stores the result in |\l@youtvdii|.
+%    \begin{macrocode}
+\newcommand{\tryparbaselineskip}[1]{\l@yltoc{#1}{\l@youtvdii}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currentparagraph}
+%
+%    This routine sets the trial paragraph parameters to be those specified
+% for the current document. 
+%    \begin{macrocode}
+\newcommand{\currentparagraph}{%
+  \tryparindent{\parindent}
+  \tryparskip{\parskip}
+  \tryparlinewidth{\linewidth}
+  \tryparbaselineskip{\baselineskip}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawparagraph}
+%
+%    This routine draws the layout of a paragraph.
+%    \begin{macrocode}
+\newcommand{\drawparagraph}{%
+%    \end{macrocode}
+% Set some default values.
+%    \begin{macrocode}
+  \l@youtvdi=\l@yoneinch\relax            % height of bottom of inset box
+  \ifdrawparameters
+%    \end{macrocode}
+% When |drawparameters| is TRUE we use a generic layout. Set the dimensions
+% and coordinates.
+%    \begin{macrocode}
+    \l@youtvdii=15\relax                %  \baselineskip
+    \l@youthdii=40\relax                 %  \parindent
+    \l@youtparskip=30\relax              %  \parskip
+    \l@youthdi=\l@yeighthalfinch\relax      % linewidth
+  \fi
+%    \end{macrocode}
+% Continue calculating the drawing parameters.
+%    \begin{macrocode}
+    \l@youtvdiii=\l@youtvdi              % total height of para box
+      \advance\l@youtvdiii by \l@youtvdii
+    \l@youtvdiv=\l@youtvdiii             % bottom of Preceding box
+      \advance\l@youtvdiv by \l@youtparskip
+    \l@youtvdv=\l@youtvdiv               % total picture height
+      \advance\l@youtvdv by \l@yoneinch\relax
+    \l@youthdiii=\l@youthdi               % length of top of para box
+      \advance\l@youthdiii by -\l@youthdii
+    \l@youtxci=\l@youthdi                % x coord of middle of picture
+      \divide\l@youtxci by \tw@
+  \l@youthdv=10\relax                    % small value 
+  \l@youthdvi=5\relax                    % 1/2 l@youthdv
+%    \end{macrocode}
+%
+%    Draw the picture!
+%    \begin{macrocode}
+  \begin{center}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdi,\l@youtvdv)
+    \thicklines
+%    \end{macrocode}
+% Draw paragraph box. First the major bottom and LH side lines.
+%    \begin{macrocode}
+    \put(0,0){\begin{picture}(\l@youthdi,\l@youtvdiii)
+      \put(0,0){\line(1,0){\l@youthdi}}
+      \put(0,0){\line(0,1){\l@youtvdi}}
+%    \end{macrocode}
+% The inset lines
+%    \begin{macrocode}
+      \ifnum\l@youthdii < \z@
+        \l@youthdv=-\l@youthdii
+        \put(\l@youthdii,\l@youtvdi){\line(1,0){\l@youthdv}}
+      \else
+        \put(\l@youthdii,\l@youtvdi){\line(-1,0){\l@youthdii}}
+      \fi
+      \put(\l@youthdii,\l@youtvdi){\line(0,1){\l@youtvdii}}
+%    \end{macrocode}
+% The top and RH side lines.
+%    \begin{macrocode}
+      \put(\l@youthdi,\l@youtvdiii){\line(-1,0){\l@youthdiii}}
+      \put(\l@youthdi,\l@youtvdiii){\line(0,-1){\l@youtvdiii}}
+      \end{picture}}
+%    \end{macrocode}
+% Now for the top box.
+%    \begin{macrocode}
+      \put(0,\l@youtvdiv){\framebox(\l@youthdi,\l@yoneinch){\l@ylabelfont Preceding Text}}
+%    \end{macrocode}
+% Finished the main drawing.
+%    \begin{macrocode}
+    \testdrawdimensions
+    \ifl@ytempif
+      \thinlines
+%    \end{macrocode}
+%
+%    We finish off the drawing with spacing parameters, if requested.
+% \changes{v2.5}{2001/10/21}{Changed test for paragraph dimensions}
+% The |\parskip|.
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtvdiv){\begin{picture}(\l@youthdv,\l@youthdv)
+      \put(0,0){\vector(0,-1){\l@youtparskip}}
+      \put(\l@youthdvi,-\l@youthdv){\l@ypcmd{parskip}}
+      \end{picture}}
+%    \end{macrocode}
+% The |\parindent|.
+%    \begin{macrocode}
+    \put(0,\l@youtvdiii){\begin{picture}(\l@youthdv,\l@youthdv)
+      \ifnum\l@youthdii < \z@
+        \put(0,0){\vector(-1,0){-\l@youthdii}}
+        \put(0,0){\vector(1,0){0}}
+      \else
+        \put(0,0){\vector(1,0){\l@youthdii}}
+      \fi
+      \put(0,\l@youthdv){\l@ypcmd{parindent}}
+      \end{picture}}
+    \fi
+%    \end{macrocode}
+%    Finish off the picture.
+%    \begin{macrocode}
+    \end{picture}
+  \end{center}
+  \setlength{\unitlength}{1pt}
+%    \end{macrocode}
+%
+% Print the value table if appropriate.
+% \changes{v2.5}{2001/10/21}{Changed test for paragraph value table}
+%    \begin{macrocode}
+  \testprintparameters
+  \ifl@ytempif
+    \begin{center}
+    \begin{footnotesize}
+      Lengths are to the nearest pt. \\
+    \begin{ttfamily}
+    \begin{tabular}{l@{\hspace{20pt}}l}
+    \l@ycmd{parindent}    = \number\l@youthdii pt &
+    \l@ycmd{parskip}      = \number\l@youtparskip pt \\
+    \l@ycmd{baselineskip} = \number\l@youtvdii pt &
+    \l@ycmd{linewidth}    = \number\l@youthdi pt \\
+    \end{tabular}
+    \end{ttfamily}\end{footnotesize}
+    \end{center}
+  \fi
+%    \end{macrocode}
+%    The end of the definition of |\drawparagraph|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+% \begin{macro}{\paragraphdiagram}
+% \begin{macro}{\paragraphdesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\paragraphdiagram}{\drawparameterstrue\drawparagraph}
+\newcommand{\paragraphdesign}{\drawparametersfalse\drawparagraph}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\paragraphvalues}
+% This macro produces a table of the current paragraph layout actual values.
+% Be careful to get the global, not local, values.
+%    \begin{macrocode}
+\newcommand{\paragraphvalues}{%
+  \setlength{\l@ylen}{\parindent}
+  \ifprintheadings
+    Actual paragraph layout values.\\[\baselineskip]
+  \fi
+  \begingroup\l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{parindent}    = \l@yval{\l@ylen}               &
+  \l@ycmd{parskip}      = \l@yval{\l@ysetupparskip}      \\
+  \l@ycmd{baselineskip} = \l@yval{\l@ysetupbaselineskip} &
+  \l@ycmd{linewidth}    = \l@yval{\linewidth}            \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing the layout of section headings}
+%
+%    We provide a facility for illustrating the layout of sectional headings.
+%
+%    First the |\try...| commands for setting trial values for the heading
+% parameters.
+%
+% \begin{macro}{\trybeforeskip}
+%    Sets the trial value for |beforeskip| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    SECTION HEADING LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\trybeforeskip}[1]{\l@yltoc{#1}{\l@youtvpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryafterskip}
+%    Sets the trial value for |afterskip| and stores the result in |\l@youtvpii|.
+%    \begin{macrocode}
+\newcommand{\tryafterskip}[1]{\l@yltoc{#1}{\l@youtvpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryindent}
+%    Sets the trial value for |indent| and stores the result in |\l@youthpi|.
+%    \begin{macrocode}
+\newcommand{\tryindent}[1]{\l@yltoc{#1}{\l@youthpi}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currentheading}
+%    This routine sets the trial heading parameters to some predefined
+% values that, hopefully, are reasonably representative.
+%    \begin{macrocode}
+\newcommand{\currentheading}{%
+  \trybeforeskip{2\l@ysetupbaselineskip}
+  \tryafterskip{\l@ysetupbaselineskip}
+  \tryindent{2\l@ysetupbaselineskip}
+  \tryparskip{\l@ysetupparskip}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawheading}
+%    This routine draws the layout of a sectional heading. The command
+% takes a single parameter, |\drawheading{|\meta{font style}|}|, which
+% specifies the size and style of the heading font. For example, \\
+% |\drawheading{\Large\sffamily}|
+%    \begin{macrocode}
+\newcommand{\drawheading}[1]{%
+%    \end{macrocode}
+%
+%    Some default values first.
+%    \begin{macrocode}
+  \l@yltoc{\textwidth}{\l@youthdi}               % textwidth
+  \l@yltoc{\baselineskip}{\l@youtvdi}            % baselineskip
+  \ifdrawparameters
+%    \end{macrocode}
+% When |drawparameters| is TRUE we use a generic layout. Set the dimensions
+% and coordinates.
+%    \begin{macrocode}
+    \Huge \l@youtvdii=\baselineskip \normalsize  % Heading baselineskip
+      \divide\l@youtvdii by \l@yonepoint
+    \l@yltoc{40pt}{\l@youtvpi}                   % beforeskip
+    \ifruninhead
+%    \end{macrocode}
+% We need different values for the afterskip and indent depending on whether
+% we are drawing a run-in heading or an ordinary one.
+%    \begin{macrocode}
+      \l@yltoc{-72pt}{\l@youtvpii}                % afterskip
+      \l@yltoc{50pt}{\l@youthpi}                  % indent
+    \else
+      \l@yltoc{45pt}{\l@youtvpii}                 % afterskip
+      \l@yltoc{72pt}{\l@youthpi}                  % indent
+    \fi
+%    \end{macrocode}
+% Calculate the width of a sample heading title text.
+%    \begin{macrocode}
+    \setbox0 = \hbox{{\Huge 3.5 Heading Title }}
+    \l@yltoc{\wd0}{\l@youthdv}  % width of heading text
+  \else
+%    \end{macrocode}
+%  When |drawparameters| is FALSE, we calculate the heading |baselineskip|
+%  and width of the text in the trial font.
+%    \begin{macrocode}
+    {#1 \l@youtvdii=\baselineskip\normalfont\normalsize} % heading baselineskip
+      \divide\l@youtvdii by \l@yonepoint
+    \setbox0 = \hbox{{#1 3.5 Heading Title }}
+    \l@yltoc{\wd0}{\l@youthdv}  % width of heading text
+  \fi
+%    \end{macrocode}
+% Now continue setting all the other drawing lengths and coordinates.
+%    \begin{macrocode}
+  \l@youtvdiii=\l@youtvpii            % afterskip + parskip + textbaselineskip
+    \advance\l@youtvdiii by \l@youtparskip
+    \advance\l@youtvdiii by \l@youtvdi
+  \l@youtvdiv=\l@youtvpi              % beforeskip + parskip + headbaselineskip
+    \ifnum\l@youtvdiv < \z@
+%    \end{macrocode}
+% A negative value for the |indent| signals no indentation of the first
+% line of text after the heading.
+%    \begin{macrocode}
+      \l@youtvdiv = -\l@youtvdiv
+    \fi
+    \advance\l@youtvdiv by \l@youtparskip
+    \advance\l@youtvdiv by \l@youtvdii
+  \l@youtyci=\l@youtvdi                  % Y coord of base of after text
+  \l@youtycii=\l@youtyci                 % Y coord of base of heading text
+    \advance\l@youtycii by \l@youtvdiii
+%    \end{macrocode}
+% We have to handle the case of a negative |afterskip| indicating a
+% run-in heading. |l@youthdiv| is
+% set to either zero of the absolute value of the negative |afterskip|.
+%    \begin{macrocode}
+  \l@youthdiv=\z@                        % 0 or abs(-afterskip)
+  \ifnum\l@youtvpii < \z@
+    \l@youthdiv = -\l@youtvpii
+    \l@youtvdiii=\l@youtvdi              %  textbaselineskip
+    \l@youtxci=\l@youthpi                % X coord of end of heading text
+      \advance\l@youtxci by \l@youthdv
+    \l@youtxcii=\l@youtxci               % X coord of start of after text
+      \advance\l@youtxcii by \l@youthdiv
+    \l@youtycii=\l@youtvdi               % Y coord of base of heading text
+  \fi
+%    \end{macrocode}
+% Continue.
+%    \begin{macrocode}
+  \l@youtyciii=\l@youtycii               % Y coord of base of prior text
+    \advance\l@youtyciii by \l@youtvdiv
+  \l@youtyciv=\l@youtyciii               % Y coord of top of prior text
+    \advance\l@youtyciv by \l@youtvdi
+  \l@youtycv=\l@youtyciv                 % 2*l@youtvdi + l@youtyciv
+    \advance\l@youtycv by \l@youtvdi
+    \advance\l@youtycv by \l@youtvdi
+  \l@youthdii=\l@youtvdi                 % a small amount
+  \l@youthdiii=\l@youthdii               % half a small amount
+    \divide\l@youthdiii by \tw@
+%    \end{macrocode}
+%
+%    Draw the picture!
+%
+%    \begin{macrocode}
+  \begin{center}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdi,\l@youtycv)
+    \ifnum\l@youtvpii < \z@
+      \put(0,\l@youtyci){\begin{picture}(\l@youthdi,\l@youtyciv)
+%    \end{macrocode}
+%
+%     When the |afterskip| is negative we have a run-in heading.
+%
+% Draw the bottom text line
+%    \begin{macrocode}
+        \put(0,0){\l@ylabelfont second line of text following the heading \ldots}
+%    \end{macrocode}
+% Draw the heading
+%    \begin{macrocode}
+        \ifdrawparameters
+          \put(\l@youthpi,\l@youtycii){{\Huge 3.5 Heading Title}}
+        \else
+          \put(\l@youthpi,\l@youtycii){{#1 3.5 Heading Title}}
+        \fi
+%    \end{macrocode}
+% Draw the first line of text after the heading, and the preceding text line.
+%    \begin{macrocode}
+        \put(\l@youtxcii,\l@youtycii){\l@ylabelfont Start of text \ldots}
+        \put(0,\l@youtyciii){\l@ylabelfont \ldots end of last line of preceding text.}
+%%        \ifdrawparameters
+        \testdrawdimensions
+        \ifl@ytempif
+%    \end{macrocode}
+% Draw the dimensions if required. First the before skips.
+%    \begin{macrocode}
+          \put(0,\l@youtyciii){\vector(0,-1){\l@youtvdiv}}
+          \put(0,\l@youtyciii){\begin{picture}(\l@youthdii,\l@youthdii)
+            \put(\l@youthdiii,-\l@youthdii){\makebox(0,0)[tl]%
+              {\l@yparamfont \textit{$\|$beforeskip$\|$} +
+               \l@ypcmd{parskip} (of text font) + \l@ypcmd{baselineskip}
+                (of heading font)}}
+            \end{picture}}
+%    \end{macrocode}
+% The indent.
+%    \begin{macrocode}
+          \put(0,\l@youtycii){\vector(1,0){\l@youthpi}}
+          \put(0,\l@youtycii){\begin{picture}(\l@youthdii,\l@youthdii)
+            \put(\l@youthdii,\l@youthdiii){\l@yparamfont \textit{indent}}
+            \end{picture}}
+%    \end{macrocode}
+% And finish with the negative afterskip
+%    \begin{macrocode}
+          \put(\l@youtxci,\l@youtycii){\vector(1,0){\l@youthdiv}}
+          \put(\l@youtxci,\l@youtycii){\begin{picture}(\l@youthdii,\l@youthdii)
+            \put(\l@youthdiii,\l@youthdii){\l@yparamfont \textit{afterskip} ($< 0$)}
+            \end{picture}}
+        \fi
+        \end{picture}}
+    \else
+      \put(0,\l@youtyci){\begin{picture}(\l@youthdi,\l@youtyciv)
+%    \end{macrocode}
+% The aftterskip is positive, so we draw a normal heading.
+%
+% Draw the two after heading text lines
+%    \begin{macrocode}
+        \put(0,0){\l@ylabelfont second line of text following the heading \ldots}
+        \put(0,\l@youtyci){\l@ylabelfont This is the start of the after-heading text,
+                           which continues on \ldots}
+%    \end{macrocode}
+% Draw the heading
+%    \begin{macrocode}
+        \ifdrawparameters
+          \put(\l@youthpi,\l@youtycii){{\Huge 3.5 Heading Title}}
+        \else
+          \put(\l@youthpi,\l@youtycii){{#1 3.5 Heading Title}}
+        \fi
+%    \end{macrocode}
+% Draw the text line preceding the heading.
+%    \begin{macrocode}
+        \put(0,\l@youtyciii){\l@ylabelfont \ldots end of last line of preceding text.}
+%%        \ifdrawparameters
+        \testdrawdimensions
+        \ifl@ytempif
+%    \end{macrocode}
+% Draw the dimensions if required. First the before skips.
+%    \begin{macrocode}
+          \put(0,\l@youtyciii){\vector(0,-1){\l@youtvdiv}}
+          \put(0,\l@youtyciii){\begin{picture}(\l@youthdii,\l@youthdii)
+            \put(\l@youthdiii,-\l@youthdii){\makebox(0,0)[tl]%
+              {\l@yparamfont \textit{$\|$beforeskip$\|$} +
+               \l@ypcmd{parskip} (of text font) + \l@ypcmd{baselineskip}
+                (of heading font)}}
+            \end{picture}}
+%    \end{macrocode}
+% The indent.
+%    \begin{macrocode}
+          \put(0,\l@youtycii){\vector(1,0){\l@youthpi}}
+          \put(0,\l@youtycii){\begin{picture}(\l@youthdii,\l@youthdii)
+            \put(\l@youthdii,\l@youthdiii){\l@yparamfont \textit{indent}}
+            \end{picture}}
+%    \end{macrocode}
+% And finish with the afterskips
+%    \begin{macrocode}
+          \put(0,\l@youtycii){\vector(0,-1){\l@youtvdiii}}
+          \put(0,\l@youtycii){\begin{picture}(\l@youthdii,\l@youthdii)
+            \put(\l@youthdiii,-\l@youthdii){\makebox(0,0)[tl]%
+              {\l@yparamfont \textit{afterskip} +
+               \l@ypcmd{parskip} (of heading font) + \l@ypcmd{baselineskip}
+                (of text font)}}
+            \end{picture}}
+        \fi
+        \end{picture}}
+      \fi
+%    \end{macrocode}
+% Draw rules.
+%    \begin{macrocode}
+      \put(0,0){\line(1,0){\l@youthdi}}
+      \put(0,\l@youtycv){\line(1,0){\l@youthdi}}
+      \end{picture}
+    \end{center}
+    \setlength{\unitlength}{1pt}
+%%    \ifdrawparameters\else
+    \testprintparameters
+    \ifl@ytempif
+%    \end{macrocode}
+% Write out the table of values if required.
+%    \begin{macrocode}
+      \begin{center}
+      \begin{footnotesize}
+        Lengths are to the nearest pt. \\
+      \begin{ttfamily}
+      \begin{tabular}{l@{\hspace{20pt}}l}
+      \textit{beforeskip}      = \number\l@youtvpi pt &
+      \textit{afterskip}       = \number\l@youtvpii pt \\
+      \textit{indent}          = \number\l@youthpi pt &
+      \textrm{(heading font)} 
+         \l@ycmd{baselineskip} = \number\l@youtvdii pt \\
+      \l@ycmd{parskip}         = \number\l@youtparskip pt &
+      \textrm{heading font}    = \string#1 \\
+      \end{tabular}
+      \end{ttfamily}\end{footnotesize}
+      \end{center}
+    \fi
+%    \end{macrocode}
+% The end of the definition of |\drawheading|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\headingdiagram}
+% \begin{macro}{\headingdesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\headingdiagram}[1]{\drawparameterstrue\drawheading{#1}}
+\newcommand{\headingdesign}[1]{\drawparametersfalse\drawheading{#1}}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\headingvalues}
+% This doesn't do anything --- it's just provided for symmetry.
+%    \begin{macrocode}
+\newcommand{\headingvalues}{%
+  \PackageWarning{layouts}{The \protect\headingvalues\space command does nothing}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing the layouts of floats}
+%
+%    We provide facilities for illustrating the parameters controlling
+% the layout of floats. Respectively these show the layout of an
+% individual float, and the page layout for floats.
+%
+% \subsubsection{Individual float layout}
+%
+%    The code in this section enables the illustration of the parameters
+% of a single float environment.
+%
+%    Start off with the |\try...| commands for setting trial parameter values.
+%
+% \begin{macro}{\trytextfloatsep}
+% Sets the trial value for |textfloatsep| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    INDIVIDUAL FLOAT LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\trytextfloatsep}[1]{\l@yltoc{#1}{\l@youtvpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryfloatsep}
+% Sets the trial value for |floatsep| and stores the result in |\l@youtvpii|.
+%    \begin{macrocode}
+\newcommand{\tryfloatsep}[1]{\l@yltoc{#1}{\l@youtvpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\tryintextsep}
+% Sets the trial value for |intextsep| and stores the result in |\l@youtvpiii|.
+%    \begin{macrocode}
+\newcommand{\tryintextsep}[1]{\l@yltoc{#1}{\l@youtvpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytopfigrule}
+% Sets the trial value for |topfigrule| and stores the result in |\l@youtlinethick|.
+%    \begin{macrocode}
+\newcommand{\trytopfigrule}[1]{\setlength{\l@youtlinethick}{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trybotfigrule}
+% Sets the trial value for |botfigrule| and stores the result in |\l@youtlinethickii|.
+%    \begin{macrocode}
+\newcommand{\trybotfigrule}[1]{\setlength{\l@youtlinethickii}{#1}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currentfloat}
+%    This sets the trial float parameter values to those currently set in
+% the document, or makes a guesstimate where the value is hard-coded.
+%    \begin{macrocode}
+\newcommand{\currentfloat}{%
+  \trytextfloatsep{\textfloatsep}
+  \tryfloatsep{\floatsep}
+  \tryintextsep{\intextsep}
+  \trytopfigrule{0pt}        % guesstimate
+  \trybotfigrule{0pt}        % guesstimate
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawfloat}
+%
+% The command to draw the picture of float parameters.
+%
+%    \begin{macrocode}
+\newcommand{\drawfloat}{%
+  \ifdrawparameters
+%    \end{macrocode}
+%  Set up the lengths and coordinates for drawing the parameters.
+%    \begin{macrocode}
+    \l@yltoc{40pt}{\l@youtvpi}             % textfloatsep
+    \l@yltoc{40pt}{\l@youtvpii}            % floatsep
+    \l@yltoc{40pt}{\l@youtvpiii}           % intextsep
+    \setlength{\l@youtlinethick}{1pt}     % toprule height
+    \setlength{\l@youtlinethickii}{2pt}   % botrule height
+  \fi
+%    \end{macrocode}
+% And the general drawing coodinates and lengths.
+%    \begin{macrocode}
+%  \l@youthdo=\textwidth                  % textwidth
+%    \divide\l@youthdo by \l@yonepoint
+  \l@yltoc{\textwidth}{\l@youthdo}
+    \multiply\l@youthdo by 8\relax
+    \divide\l@youthdo by 10\relax
+  \l@yltoc{\baselineskip}{\l@youtvdvii}  % baselineskip
+  \l@youthdi=\l@youthdo                  % width of floats
+    \divide\l@youthdi by \tw@
+  \l@youtvdi=\l@youthdi                  % float box height
+    \divide\l@youtvdi by 4\relax
+  \l@youtvdii=\l@youtvdvii               % text box height
+    \multiply\l@youtvdii by \thr@@
+  \l@youtvdvi=\l@youtvdvii               % height of top text line
+    \multiply\l@youtvdvi by \tw@
+  \l@youtxci=\l@youthdo                  % X coord of LH of float
+    \advance\l@youtxci by -\l@youthdi
+    \divide\l@youtxci by \tw@
+  \l@youtxcii=\l@youthdo                 % X coord of vertical dims.
+    \divide\l@youtxcii by \tw@
+  \l@youtyci=\l@youtvdi                  % Y coord of top of BFl-n
+  \l@youtycii=\l@youtyci                 % Y coord of bottom of text
+    \advance\l@youtycii by \l@youtvpi
+  \l@youtyciii=\l@youtycii               % Y coord of bottom of HF box
+    \advance\l@youtyciii by \l@youtvdii
+    \advance\l@youtyciii by \l@youtvpiii
+  \l@youtyciv=\l@youtyciii               % Y coord of bottom top text box
+    \advance\l@youtyciv by \l@youtvdi
+    \advance\l@youtyciv by \l@youtvpiii
+  \l@youtycv=\l@youtyciv                 % Y coord of bottom of TFl-2 box
+    \advance\l@youtycv by \l@youtvdii
+    \advance\l@youtycv by \l@youtvpi
+  \l@youtycvi=\l@youtycv                 % Y coord of bottom of TFl-1 box
+    \advance\l@youtycvi by \l@youtvdi
+    \advance\l@youtycvi by \l@youtvpii
+  \l@youtvdo=\l@youtycvi                 % Y dim of text on page
+    \advance\l@youtvdo by \l@youtvdi
+  \l@youthdii=\l@youtvpi                 % a small amount
+    \divide\l@youthdii by \tw@
+  \l@youthdiii=\l@youthdii               % half a small amount
+    \divide\l@youthdiii by \tw@
+%    \end{macrocode}
+%
+%    Draw the picture!
+%
+%    \begin{macrocode}
+  \begin{center}
+%%%  \setlayoutscale{1}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdo,\l@youtvdo)
+    \thicklines
+%    \end{macrocode}
+% A bottom float.
+%    \begin{macrocode}
+    \put(\l@youtxci,0){\framebox(\l@youthdi,\l@youtvdi){\l@ylabelfont A BOTTOM FLOAT}}
+%    \end{macrocode}
+% Bottom text.
+%    \begin{macrocode}
+    \put(0,\l@youtycii){\begin{picture}(\l@youthdo,\l@youtvdii)
+      \put(0,0){\makebox(\l@youthdo,0)[br]{\l@ylabelfont \ldots last text line before bottom float.}}
+      \put(0,\l@youtvdvi){\l@ylabelfont First text line after `here' float \ldots}
+      \end{picture}}
+%    \end{macrocode}
+% Draw a `here' float.
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtyciii){\framebox(\l@youthdi,\l@youtvdi){\l@ylabelfont A `HERE' FLOAT}}
+%    \end{macrocode}
+% Top text.
+%    \begin{macrocode}
+    \put(0,\l@youtyciv){\begin{picture}(\l@youthdo,\l@youtvdii)
+      \put(0,0){\makebox(\l@youthdo,0)[br]{\l@ylabelfont \ldots last text line before `here' float.}}
+      \put(0,\l@youtvdvi){\l@ylabelfont First text line after top float \ldots}
+      \end{picture}}
+%    \end{macrocode}
+% The lowest top float (TFl-2).
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtycv){\framebox(\l@youthdi,\l@youtvdi){\l@ylabelfont A TOP FLOAT}}
+%    \end{macrocode}
+% The highest top float (TFl-1).
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtycvi){\framebox(\l@youthdi,\l@youtvdi){\l@ylabelfont A TOP FLOAT}}
+%    \end{macrocode}
+% Whole page text.
+%    \begin{macrocode}
+    \thinlines
+    \put(0,0){\dashbox{10}(\l@youthdo,\l@youtvdo){}}
+%    \end{macrocode}
+% The top and bottom rules
+%    \begin{macrocode}
+    \linethickness{\l@youtlinethick}
+    \put(0,\l@youtycv){\line(1,0){\l@youthdo}}
+    \linethickness{\l@youtlinethickii}
+    \put(0,\l@youtyci){\line(1,0){\l@youthdo}}
+    \thinlines
+    \testdrawdimensions
+    \ifl@ytempif
+%    \end{macrocode}
+% Draw the parameter lines if required. Start with the bottom |textfloatsep|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtycii){\vector(0,-1){\l@youtvpi}}
+      \put(\l@youtxcii,\l@youtycii){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,-\l@youthdii){\l@ypcmd{textfloatsep}}
+        \end{picture}}
+%    \end{macrocode}
+% Lower |intextsep|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtyciii){\vector(0,-1){\l@youtvpiii}}
+      \put(\l@youtxcii,\l@youtyciii){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,-\l@youthdii){\l@ypcmd{intextsep}}
+        \end{picture}}
+%    \end{macrocode}
+% Upper |intextsep|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtyciv){\vector(0,-1){\l@youtvpiii}}
+      \put(\l@youtxcii,\l@youtyciv){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,-\l@youthdii){\l@ypcmd{intextsep}}
+        \end{picture}}
+%    \end{macrocode}
+% Top |textfloatsep|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtycv){\vector(0,-1){\l@youtvpi}}
+      \put(\l@youtxcii,\l@youtycv){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,-\l@youthdii){\l@ypcmd{textfloatsep}}
+        \end{picture}}
+%    \end{macrocode}
+% Top |floatsep|.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtycvi){\vector(0,-1){\l@youtvpii}}
+      \put(\l@youtxcii,\l@youtycvi){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,-\l@youthdii){\l@ypcmd{floatsep}}
+        \end{picture}}
+%    \end{macrocode}
+% Top rule.
+%    \begin{macrocode}
+      \put(\l@youthdo,\l@youtycv){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(-\l@youthdiii,\l@youthdii){\vector(0,-1){\l@youthdii}}
+        \put(-\l@youthdii,\l@youthdii){\makebox(0,0)[tr]{\l@ypcmd{topfigrule}}}
+        \end{picture}}
+%    \end{macrocode}
+% And finally the bottom rule.
+%    \begin{macrocode}
+      \put(\l@youthdo,\l@youtyci){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(-\l@youthdiii,-\l@youthdii){\vector(0,1){\l@youthdii}}
+        \put(-\l@youthdii,-\l@youthdii){\makebox(0,0)[br]{\l@ypcmd{botfigrule}}}
+        \end{picture}}
+    \fi
+    \end{picture}
+  \end{center}
+  \setlength{\unitlength}{1pt}
+  \testprintparameters
+  \ifl@ytempif
+%    \end{macrocode}
+% Print the table of values.
+%    \begin{macrocode}
+    \begin{center}
+    \begin{footnotesize}
+      Lengths are to the nearest pt. \\
+    \begin{ttfamily}
+    \begin{tabular}{l@{\hspace{20pt}}l}
+    \l@ycmd{floatsep}     = \number\l@youtvpii pt    &
+    \l@ycmd{textfloatsep} = \number\l@youtvpi pt \\
+    \l@ycmd{intextsep}    = \number\l@youtvpiii pt  &
+    \textrm{topfigrule thickness} = \the\l@youtlinethick \\
+    \textrm{botfigrule thickness} = \the\l@youtlinethickii &  \\
+    \end{tabular}
+    \end{ttfamily}\end{footnotesize}
+    \end{center}
+  \fi
+%    \end{macrocode}
+%  End of the definition of |\drawfloat|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+% \begin{macro}{\floatdiagram}
+% \begin{macro}{\floatdesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\floatdiagram}{\drawparameterstrue\drawfloat}
+\newcommand{\floatdesign}{\drawparametersfalse\drawfloat}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\floatvalues}
+% This macro produces a table of the current float layout actual values.
+% \changes{v2.5}{2001/10/21}{Fixed counter printing in \cs{floatvalues}}
+%    \begin{macrocode}
+\newcommand{\floatvalues}{%
+  \ifprintheadings
+    Actual float layout values.\\[\baselineskip]
+  \fi
+  \begingroup\l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{floatsep}             = \l@yval{\floatsep}       &
+  \l@ycmd{textfloatsep}         = \l@yval{\textfloatsep}   \\
+  \l@ycmd{intextsep}            = \l@yval{\intextsep}      &  \\
+  topfig rule thickness        = ??                   &
+  botfig rule thickness        = ??                   \\
+  \l@ycmd{topnumber}            = \the\c@topnumber & % \l@yval{\c@topnumber}    &
+  \l@ycmd{topfraction}          = \topfraction             \\
+  \l@ycmd{bottomnumber}         = \the\c@bottomnumber & % \l@yval{\c@bottomnumber} &
+  \l@ycmd{bottomfraction}       = \bottomfraction          \\
+  \l@ycmd{totalnumber}          = \the\c@totalnumber & % \l@yval{\c@totalnumber}  &
+  \l@ycmd{textfraction}         = \textfraction            \\
+  \l@ycmd{dblfloatsep}          = \l@yval{\dblfloatsep}    &
+  \l@ycmd{dbltextfloatsep}      = \l@yval{\dbltextfloatsep} \\
+  \l@ycmd{dbltopnumber}         = \the\c@dbltopnumber & % \l@yval{\c@dbltopnumber} &
+  \l@ycmd{dbltopfraction}       = \dbltopfraction          \\
+  \l@ycmd{dblfloatpagefraction} = \dblfloatpagefraction    & 
+  \l@ycmd{floatpagefraction}    = \floatpagefraction       \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Floats on a page}
+%
+%    The code in this section illustrates the parameters controlling how
+% one or more floats may be apportioned on a page.
+%
+%    Start off with the |\try...| commands for setting trial parameter values.
+%
+% \begin{macro}{\trytotalnumber}
+% Sets the trial value for |totalnumber| and stores the result in |\l@youtvpvi|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    FLOAT PAGE LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\trytotalnumber}[1]{\l@youtvpvi = #1}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytopnumber}
+% Sets the trial value for |topnumber| and stores the result in |\l@youtvpv|.
+%    \begin{macrocode}
+\newcommand{\trytopnumber}[1]{\l@youtvpv = #1}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trybottomnumber}
+% Sets the trial value for |bottomnumber| and stores the result in |\l@youtvpi|.
+%    \begin{macrocode}
+\newcommand{\trybottomnumber}[1]{\l@youtvpi = #1}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytopfraction}
+% Sets the trial value for |topfraction| and stores the results in |\l@youtvpiv|
+% and |\l@youthdiv|.
+%    \begin{macrocode}
+\newcommand{\trytopfraction}[1]{\setlength{\l@ylen}{10in}
+          \l@ylen = #1\l@ylen
+          \l@youtvpiv=\l@ylen
+          \divide\l@youtvpiv by \l@yonepoint
+          \setlength{\l@ylen}{1000sp}
+          \l@ylen=#1\l@ylen
+          \l@youthdiv=\l@ylen}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytextfraction}
+% Sets the trial value for |textfraction| and stores the results in |\l@youtvpiii|
+% and |\l@youthdv|.
+%    \begin{macrocode}
+\newcommand{\trytextfraction}[1]{\setlength{\l@ylen}{10in}
+          \l@ylen = #1\l@ylen
+          \l@youtvpiii=\l@ylen
+          \divide\l@youtvpiii by \l@yonepoint
+          \setlength{\l@ylen}{1000sp}
+          \l@ylen=#1\l@ylen
+          \l@youthdv=\l@ylen}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trybottomfraction}
+% Sets the trial value for |bottomfraction| and stores the results in |\l@youtvpii|
+% and |\l@youthdvi|.
+%    \begin{macrocode}
+\newcommand{\trybottomfraction}[1]{\setlength{\l@ylen}{10in}
+          \l@ylen = #1\l@ylen
+          \l@youtvpii=\l@ylen
+          \divide\l@youtvpii by \l@yonepoint
+          \setlength{\l@ylen}{1000sp}
+          \l@ylen=#1\l@ylen
+          \l@youthdvi=\l@ylen}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currentfloatpage}
+%
+%    Sets the floatpage parameter trial values to those in the current 
+% document, or makes a guesstimate when these are hard-coded.
+%    \begin{macrocode}
+\newcommand{\currentfloatpage}{%
+  \trytotalnumber{\value{totalnumber}}   % typically 3
+  \trytopnumber{\value{topnumber}}       % typically 2
+  \trytopfraction{0.7}                   % typically 0.7
+  \trytextfraction{0.2}                  % typically 0.2
+  \trybottomfraction{0.3}                % typically 0.3
+  \trybottomnumber{\value{bottomnumber}} % typically 1
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawfloatpage}
+%
+%    The command to draw a picture of the float page layout and
+% parameters.
+%
+%    \begin{macrocode}
+\newcommand{\drawfloatpage}{%
+  \ifdrawparameters
+%    \end{macrocode}
+% Calculate values for parameter drawing.
+%    \begin{macrocode}
+    \l@youtvpvi=\thr@@          % total number
+    \l@youtvpv=\tw@             % topnumber
+    \l@youthdiv=300\relax       % 1000 times topfraction
+    \setlength{\l@ylen}{10in}
+    \l@ylen=0.3\l@ylen
+    \l@yltoc{\l@ylen}{\l@youtvpiv}  % topfraction
+    \l@youthdv=200\relax        % 1000 times textfraction
+    \setlength{\l@ylen}{10in}
+    \l@ylen=0.2\l@ylen
+    \l@yltoc{\l@ylen}{\l@youtvpiii}  % textfraction
+    \l@youthdvi=300\relax       % 1000 times botfraction
+    \setlength{\l@ylen}{10in}
+    \l@ylen=0.3\l@ylen
+    \l@yltoc{\l@ylen}{\l@youtvpii}  % bottomfraction
+    \l@youtvpi=\@ne             % bottomnumber
+  \fi
+%    \end{macrocode}
+% Continue with the general picture coordinates and lengths.
+%    \begin{macrocode}
+  \l@youtvdo=\l@yteninch\relax                    % textheight
+  \l@youthdo=\l@yeighthalfinch\relax              % textwidth
+  \l@youthdi=\l@youthdo                  % width of text box
+    \multiply\l@youthdi by 8\relax
+    \divide\l@youthdi by 10\relax
+  \l@youtyci=\l@youtvdo                  % Y coord of base of textfraction
+    \advance\l@youtyci by -\l@youtvpiii
+    \divide\l@youtyci by \tw@
+  \l@youtycii=\l@youtvpii                % Y coord of top of bottomfraction
+  \l@youtyciii=\l@youtvdo                % Y coord of base of topfraction
+    \advance\l@youtyciii by -\l@youtvpiv
+  \l@youtyciv=\l@youtyci                 % Y coord of top of textfraction
+    \advance\l@youtyciv by \l@youtvpiii
+  \l@youtycv=\l@youtyci                  % Y coord of centre of text box
+    \advance\l@youtycv by \l@youtyciv
+    \divide\l@youtycv by \tw@
+  \l@youtxcii=\l@youthdo                 % X coord of centre dims
+    \divide\l@youtxcii by \tw@
+  \l@youtxci=\l@youtxcii                 % X coord of LH dims
+    \divide\l@youtxci by \tw@
+  \l@youtxciii=\l@youtxcii               % X coord of RH dims
+    \advance\l@youtxciii by \l@youtxci
+  \l@youtxciv=\l@youthdo                 % X coord of LH of text box
+    \advance\l@youtxciv by -\l@youthdi
+    \divide\l@youtxciv by \tw@
+  \l@youthdii=\l@youtxciv                % a small dimension
+  \l@youthdiii=\l@youthdii               % half a small dimension
+    \divide\l@youthdiii by \tw@
+%    \end{macrocode}
+%
+% Draw the picture!
+%
+%    \begin{macrocode}
+  \begin{center}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdo,\l@youtvdo)
+    \thicklines
+%    \end{macrocode}
+% Draw the page boundaries.
+%    \begin{macrocode}
+    \put(0,0){\framebox(\l@youthdo,\l@youtvdo){}}
+%    \end{macrocode}
+% The bottom fraction.
+%    \begin{macrocode}
+    \put(0,\l@youtycii){\dashbox{10}(\l@youthdo,0){}}
+%%%    \ifdrawparameters
+      \put(0,0){\makebox(\l@youthdo,\l@youtvpii){\l@ypcmd{bottomnumber}}}
+      \thinlines
+      \put(\l@youtxciii,0){\vector(0,1){\l@youtvpii}}
+      \thicklines
+%%%    \fi
+%    \end{macrocode}
+% The text fraction.
+%    \begin{macrocode}
+    \put(\l@youtxciv,\l@youtyci){\framebox(\l@youthdi,\l@youtvpiii){}}
+%    \end{macrocode}
+% The top fraction.
+%    \begin{macrocode}
+    \put(0,\l@youtyciii){\dashbox{10}(\l@youthdo,0){}}
+%%%    \ifdrawparameters
+      \put(0,\l@youtyciii){\makebox(\l@youthdo,\l@youtvpiv){\l@ypcmd{topnumber}}}
+      \thinlines
+      \put(\l@youtxci,\l@youtvdo){\vector(0,-1){\l@youtvpiv}}
+      \thicklines
+%%%    \fi
+    \thinlines
+    \testdrawdimensions
+    \ifl@ytempif
+%    \end{macrocode}
+% Draw the dimensions.
+% First the bottom fraction.
+%    \begin{macrocode}
+      \put(\l@youtxciii,0){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(-\l@youthdiii,\l@youthdiii){%
+          \makebox(0,0)[br]{\l@ypcmd{bottomfraction}}}
+        \end{picture}}
+%    \end{macrocode}
+% The text fraction.
+%    \begin{macrocode}
+      \put(\l@youtxcii,\l@youtyci){\vector(0,1){\l@youtvpiii}}
+      \put(\l@youtxcii,\l@youtyci){\vector(0,-1){0}}
+      \put(\l@youtxcii,\l@youtycv){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,0){%
+          \makebox(0,0)[l]{\l@ypcmd{textfraction}}}
+        \end{picture}}
+%    \end{macrocode}
+% Finally the top fraction.
+%    \begin{macrocode}
+      \put(\l@youtxci,\l@youtvdo){\begin{picture}(\l@youthdii,\l@youthdii)
+        \put(\l@youthdiii,-\l@youthdiii){%
+          \makebox(0,0)[tl]{\l@ypcmd{topfraction}}}
+        \end{picture}}
+    \fi
+    \end{picture}
+  \end{center}
+  \setlength{\unitlength}{1pt}    
+  \testprintparameters
+  \ifl@ytempif
+%    \end{macrocode}
+% Print the parameter value table.
+%    \begin{macrocode}
+    \begin{center}
+    \begin{footnotesize}\begin{ttfamily}
+    \begin{tabular}{l@{\hspace{20pt}}l}
+    \l@ycmd{topnumber}      = \number\l@youtvpv &
+    \l@ycmd{topfraction}    = 0.\number\l@youthdiv \\
+    \l@ycmd{bottomnumber}   = \number\l@youtvpi &
+    \l@ycmd{bottomfraction} = 0.\number\l@youthdvi \\
+    \l@ycmd{totalnumber}    = \number\l@youtvpvi &
+    \l@ycmd{textfraction}   = 0.\number\l@youthdv \\
+    \end{tabular}
+    \end{ttfamily}\end{footnotesize}
+    \end{center}
+  \fi
+%    \end{macrocode}
+% End of the definition of |\drawfloatpage|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\floatpagediagram}
+% \begin{macro}{\floatpagedesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\floatpagediagram}{\drawparameterstrue\drawfloatpage}
+\newcommand{\floatpagedesign}{\drawparametersfalse\drawfloatpage}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\floatpagevalues}
+% The same as the |\floatvalues| command.
+%    \begin{macrocode}
+\newcommand{\floatpagevalues}{\floatvalues}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing the layout of a Table of Contents entry}
+%
+%    We provide means of illustrating the layout of a sectional title
+% in a Table of Contents.
+%
+% As usual, start off with the |\try...| commands for setting trial values
+% of the parameters.
+%
+% \begin{macro}{\trytocindent}
+% Sets the trial value for |tocindent| and stores the result in |\l@youthpi|.
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    TOC LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\trytocindent}[1]{\l@yltoc{#1}{\l@youthpi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytocnumwidth}
+% Sets the trial value for |tocnumwidth| and stores the result in |\l@youthpii|.
+%    \begin{macrocode}
+\newcommand{\trytocnumwidth}[1]{\l@yltoc{#1}{\l@youthpii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytoclinewidth}
+% Sets the trial value for |toclinewidth| and stores the result in |\l@youthdo|.
+%    \begin{macrocode}
+\newcommand{\trytoclinewidth}[1]{\l@yltoc{#1}{\l@youthdo}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytocrmarg}
+% Sets the trial value for |tocrmarg| and stores the result in |\l@youthpiii|.
+%    \begin{macrocode}
+\newcommand{\trytocrmarg}[1]{\l@yltoc{#1}{\l@youthpiii}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytocpnumwidth}
+% Sets the trial value for |tocpnumwidth| and stores the result in |\l@youthpiv|.
+%    \begin{macrocode}
+\newcommand{\trytocpnumwidth}[1]{\l@yltoc{#1}{\l@youthpiv}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\l@ydotsep}
+% Stores the actual value for the ToC dotsep.
+%    \begin{macrocode}
+\newcommand{\l@ydotsep}{\@dotsep}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\trytocdotsep}
+% Sets the trial value for |tocdotsep| and stores the result in |\l@youthpv|.
+%    \begin{macrocode}
+\newcommand{\trytocdotsep}[1]{\renewcommand{\l@ydotsep}{#1}
+            \setlength{\l@ylen}{1em}
+            \l@ylen = #1\l@ylen
+            \divide\l@ylen by 18\relax    % 18mu = 1em
+            \addtolength{\l@ylen}{0.4pt}  % small addition for the dot width
+            \l@yltoc{\l@ylen}{\l@youthpv}}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\currenttoc}
+%
+%    This routine sets the trial ToC parameters to those specified for
+% the current document. For those values that are hard-coded it guesstimates
+% typical values (actually I use the values for |\subsection| entries
+% in the \Lpack{article} class).
+%    \begin{macrocode}
+\newcommand{\currenttoc}{%
+  \trytocindent{1.5em}                  % guesstimate
+  \trytocnumwidth{2.3em}                % guesstimate
+  \trytoclinewidth{\textwidth}
+  \trytocrmarg{\@tocrmarg} 
+  \trytocpnumwidth{\@pnumwidth} 
+  \trytocdotsep{\@dotsep} 
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawtoc}
+%
+%    The command to draw the layout of a ToC entry.
+%    \begin{macrocode}
+\newcommand{\drawtoc}{%
+  \ifdrawparameters
+%    \end{macrocode}
+% Calculate drawing lengths and coordinates for picturing the parameters.
+%    \begin{macrocode}
+    \l@yltoc{100pt}{\l@youthpi}           % indent
+    \l@yltoc{50pt}{\l@youthpii}           % numwidth
+    \l@yltoc{100pt}{\l@youthpiii}         % tocrmarg
+    \l@yltoc{60pt}{\l@youthpiv}           % pnumwidth
+    \l@yltoc{20pt}{\l@youthpv}            % dotsep
+    \l@yltoc{6.5in}{\l@youthdo}           % linewidth
+  \fi
+%    \end{macrocode}
+% Continue with the general lengths and coordinate values.
+%    \begin{macrocode}
+  \l@yltoc{20pt}{\l@youtvdi}          % baselineskip
+  \l@youtvdii=\l@youtvdi                    % twice baselineskip
+    \multiply\l@youtvdii by \tw@
+  \l@youtvdiii=\l@youtvdi                    % three times baselineskip
+    \multiply\l@youtvdiii by \thr@@
+  \l@youtvdiv=\l@youtvdi                    % four times baselineskip
+    \multiply\l@youtvdiv by 4\relax
+  \l@youtxci=\l@youthpi                    % X coord of start of numwidth
+  \l@youtxcii=\l@youtxci                    % X coord of start of text
+    \advance\l@youtxcii by \l@youthpii
+  \l@youtxciii=\l@youthdo                    % X coord of start of pnumwidth
+    \advance\l@youtxciii by -\l@youthpiv
+  \l@youtxciv=\l@youthdo                    % X coord of start of tocrmarg
+    \advance\l@youtxciv by -\l@youthpiii
+  \l@youtxcv=\l@youtxciv                    % X coord of penultimate dot
+    \advance\l@youtxcv by -\l@youthpv
+  \l@youtyci=\z@                    % Y coord of base of dotsep text
+  \l@youtycii=\l@youtyci                    % dotsep vector
+    \advance\l@youtycii by \l@youtvdii
+  \l@youtyciii=\l@youtycii                    % Y coord of base of bottom text
+    \advance\l@youtyciii by \l@youtvdii
+  \l@youtyciv=\l@youtyciii                    % Y coord of base of middle text
+    \advance\l@youtyciv by \l@youtvdi
+  \l@youtycv=\l@youtyciv                    % Y coord of base of top text
+    \advance\l@youtycv by \l@youtvdi
+  \l@youtycvi=\l@youtycv                    % Y coord of top vectors
+    \advance\l@youtycvi by \l@youtvdi
+    \advance\l@youtycvi by \l@youtvdi
+  \l@youtvdo=\l@youtycvi                    % picture height
+    \advance\l@youtvdo by \l@youtvdii
+  \l@youthdii=\l@youtxciv                    % width of title text
+    \advance\l@youthdii by -\l@youtxcii
+  \l@youthdiii=\l@youtvdi                    % a small amount
+  \l@youthdiv=\l@youthdiii                    % half a small amount
+    \divide\l@youthdiv by \tw@
+%    \end{macrocode}
+%
+% Draw the picture!
+%
+%    \begin{macrocode}
+  \begin{center}
+  \setlength{\unitlength}{\l@youtunitlength}
+  \begin{picture}(\l@youthdo,\l@youtvdo)
+    \thinlines
+    \put(0,0){\framebox(\l@youthdo,\l@youtvdo){}}
+%    \end{macrocode}
+% The top text line.
+%    \begin{macrocode}
+    \put(\l@youtxci,\l@youtycv){\l@ylabelfont \textbf{3.5}}
+    \put(\l@youtxcii,\l@youtycv){\l@ylabelfont Heading \ldots}
+    \put(\l@youtxciv,\l@youtycv){\makebox(0,0)[br]{\l@ylabelfont \ldots title}}
+%    \end{macrocode}
+% The middle text line.
+%    \begin{macrocode}
+    \put(\l@youtxcii,\l@youtyciv){\l@ylabelfont continue \ldots}
+    \put(\l@youtxciv,\l@youtyciv){\makebox(0,0)[br]{\l@ylabelfont \ldots title}}
+%    \end{macrocode}
+% The bottom text line.
+%    \begin{macrocode}
+    \put(\l@youtxcii,\l@youtyciii){\l@ylabelfont title end}     % end of title heading
+    \put(\l@youthdo,\l@youtyciii){\makebox(0,0)[br]{\l@ylabelfont 487}} % page number
+%    \end{macrocode}
+% Calculate the number of dots required for the dotted leader,
+% then draw the leader. The length of the `title end' text is a true
+% length so we have to divide it by the drawing scale factor to convert
+% it to the picture length.
+%    \begin{macrocode}
+%    \settowidth{\l@ylen}{title end\quad}
+    \settowidth{\l@ylen}{\l@ylabelfont title end\space}
+    \l@yltoc{\l@ylen}{\l@youthdv}              % width of `title end' text
+      \l@youthpvi=\l@youtunitlength
+      \multiply\l@youthdv by \l@yonepoint\relax
+      \divide\l@youthdv by \l@youthpvi\relax
+    \l@youthdvi=\l@youtxciv                    % space for dots
+      \advance\l@youthdvi by -\l@youtxcii
+      \advance\l@youthdvi by -\l@youthdv
+    \l@youthdvii=\l@youthdvi                   % number of dots
+      \divide\l@youthdvii by \l@youthpv
+%    \end{macrocode}
+% Use |\multiput| for dot drawing if we are drawing the parameters and the
+% values calculated above. Otherwise multiply the dotsep by 4 to give a
+% more realistic rendition; also make sure that we don't print just one dot.
+%    \begin{macrocode}
+    \ifdrawparameters
+      \multiput(\l@youtxciv,\l@youtyciii)(-\l@youthpv,0){\l@youthdvii}%
+          {\makebox(0,0)[r]{.}}                  % draw the dots
+    \else
+      \multiply\l@youthpv by 4\relax
+      \l@youthdvii=\l@youthdvi
+        \divide\l@youthdvii by \l@youthpv
+        \advance\l@youthdvii by \@ne
+      \ifnum\l@youthdvii >\@ne
+        \multiput(\l@youtxciv,\l@youtyciii)(-\l@youthpv,0){\l@youthdvii}%
+            {\makebox(0,0)[r]{.}}                  % draw the dots
+      \fi
+    \fi
+%%    \ifdrawparameters
+    \testdrawdimensions
+    \ifl@ytempif
+%    \end{macrocode}
+%
+% Draw the parameters if requested. 
+%
+% The top vectors (which we put into their own picture).
+%    \begin{macrocode}
+      \put(0,\l@youtycvi){\begin{picture}(\l@youthdo,\l@yoneinch)
+%    \end{macrocode}
+% The indent.
+%    \begin{macrocode}
+        \put(0,0){\vector(1,0){\l@youthpi}}
+        \put(\l@youtxci,0){\line(0,-1){\l@youthdiii}}
+        \put(0,0){\begin{picture}(\l@youthdiii,\l@youthdiii)
+          \put(\l@youthdiv,\l@youthdiv){\l@yparamfont\textit{indent}}
+          \end{picture}}
+%    \end{macrocode}
+% The numwidth.
+%    \begin{macrocode}
+        \put(\l@youtxci,0){\vector(1,0){\l@youthpii}}
+        \put(\l@youtxcii,0){\line(0,-1){\l@youthdiii}}
+        \put(\l@youtxci,0){\begin{picture}(\l@youthdiii,\l@youthdiii)
+          \put(\l@youthdiv,\l@youthdiv){\l@yparamfont\textit{numwidth}}
+          \end{picture}}
+%    \end{macrocode}
+% Lastly, the pnumwidth.
+%    \begin{macrocode}
+        \put(\l@youthdo,0){\vector(-1,0){\l@youthpiv}}
+        \put(\l@youtxciii,0){\line(0,-1){\l@youthdiii}}
+        \put(\l@youthdo,0){\begin{picture}(\l@youthdiii,\l@youthdiii)
+          \put(-\l@youthdiv,\l@youthdiv){\makebox(0,0)[br]%
+            {\l@ypcmd{@pnumwidth}}}
+          \end{picture}}
+        \end{picture}}
+%    \end{macrocode}
+% Now do the linewidth.
+%    \begin{macrocode}
+      \thicklines
+      \put(0,\l@youtvdo){\vector(1,0){\l@youthdo}}
+      \thinlines
+      \put(0,\l@youtvdo){\begin{picture}(\l@youthdiii,\l@youthdiii)
+        \put(\l@youtxcii,-\l@youthdiv){\makebox(0,0)[tl]%
+          { \quad  \l@ypcmd{linewidth}}}
+        \end{picture}}
+%    \end{macrocode}
+% The bottom vectors (which we put into their own picture).
+%    \begin{macrocode}
+      \put(0,\l@youtycii){\begin{picture}(\l@youthdo,\l@yoneinch)
+%    \end{macrocode}
+% The tocrmarg.
+%    \begin{macrocode}
+        \put(\l@youthdo,0){\vector(-1,0){\l@youthpiii}}
+        \put(\l@youtxciv,0){\line(0,1){\l@youthdiii}}
+        \put(\l@youthdo,0){\begin{picture}(\l@youthdiii,\l@youthdiii)
+          \put(-\l@youthdiv,-\l@youthdiv){\makebox(0,0)[tr]%
+            {\l@ypcmd{@tocrmarg}}}
+          \end{picture}}
+%    \end{macrocode}
+% Finish with the dotsep.
+%    \begin{macrocode}
+        \put(\l@youtxciv,0){\vector(-1,0){\l@youthpv}}
+        \put(\l@youtxciv,0){\vector(1,0){0}}
+        \put(\l@youtxcv,0){\line(0,1){\l@youthdiii}}
+        \put(\l@youtxciv,0){\begin{picture}(\l@youthdiii,\l@youthdiii)
+          \put(0,-\l@youthdiv){\makebox(0,0)[tr]%
+            {\l@ypcmd{@dotsep}}}
+          \end{picture}}
+        \end{picture}}
+    \fi
+    \end{picture}
+  \end{center}
+  \setlength{\unitlength}{1pt}
+%%  \ifdrawparameters\else
+  \testprintparameters
+  \ifl@ytempif
+%    \end{macrocode}
+% Print the table of parameter values.
+%    \begin{macrocode}
+    \begin{center}
+    \begin{footnotesize}
+      Lengths are to the nearest pt. \\
+    \begin{ttfamily}
+    \begin{tabular}{l@{\hspace{20pt}}l}
+    \textit{indent}     = \number\l@youthpi pt &
+    \textit{numwidth}   = \number\l@youthpii pt \\
+    \l@ycmd{@tocrmarg}  = \number\l@youthpiii pt &
+    \l@ycmd{@pnumwidth} = \number\l@youthpiv pt \\
+    \l@ycmd{@dotsep}    = \l@ydotsep &   \\
+    \end{tabular}
+    \end{ttfamily}\end{footnotesize}
+    \end{center}
+  \fi
+%    \end{macrocode}
+% The end of the definition of |\drawtoc|.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%
+% \begin{macro}{\tocdiagram}
+% \begin{macro}{\tocdesign}
+% Shorthands.
+%    \begin{macrocode}
+\newcommand{\tocdiagram}{\drawparameterstrue\drawtoc}
+\newcommand{\tocdesign}{\drawparametersfalse\drawtoc}
+
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\tocvalues}
+% This macro produces a table of the current ToC layout actual values.
+%    \begin{macrocode}
+\newcommand{\tocvalues}{%
+  \ifprintheadings
+    Actual ToC layout values.\\[\baselineskip]
+  \fi
+  \begingroup\l@yvalsize
+  \begin{tabular}{l@{\hspace{20pt}}l}
+  \l@ycmd{@tocrmarg}  = \@tocrmarg  &
+  \l@ycmd{@pnumwidth} = \@pnumwidth \\
+  \l@ycmd{@dotsep}    = \@dotsep    &
+  \textit{indent}     = ??    \\
+  \textit{numwidth}   = ??    &  \\
+  1em = \l@yval{\l@yonem}  & 1ex = \l@yval{\l@yonex} \\
+  \end{tabular}
+  \endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \section{Drawing a spread}
+%
+%    We provide a facility for drawing a simple double page spread.
+%
+% \begin{macro}{\drawaspread}
+%
+%    This command takes eight (8) parameters. These are:
+% \begin{enumerate}
+% \item The ratio of the height of the foot to the width of the spine. If
+%       this is zero then the foot height is calculated from the other
+%       vertical spacings.
+% \item The width of a page (as a length).
+% \item The ratio of the height of the page to its width.
+% \item The ratio of the height of the text to the width of the text.
+% \item The ratio of the width of the spine to the width of the page.
+% \item The ratio of the height of the top to the width of the spine.
+% \item The ratio of the width of the fore edge to the width of the spine.
+% \item The ratio of the width of the gutter to the spine (for a two column
+%       layout). If this is zero, then a single column layout is drawn.
+% \end{enumerate}
+%
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    SPREAD PAGE LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\drawaspread}[8][0]{%
+  \begingroup
+  \setlength{\unitlength}{1pt}
+%    \end{macrocode}
+% Get the pagewidth as all values depend on this. Store it in |\l@youthdo|.
+% Also use |\l@youtunitlength| to hold it temporarily.
+%    \begin{macrocode}
+  \setlength{\l@youtunitlength}{#2}
+  \l@yltoc{\l@youtunitlength}{\l@youthdo}  % page width
+  \l@youthdiv=\l@youthdo                   % total width of double spread
+    \advance\l@youthdiv by \l@youthdo
+%    \end{macrocode}
+% The height of a page is kept in |\l@youtvdo|.
+%    \begin{macrocode}
+  \setlength{\l@ylen}{#3\l@youtunitlength}
+  \l@yltoc{\l@ylen}{\l@youtvdo}           % page height
+%    \end{macrocode}
+% The width of the spine is kept in |\l@youthdiii|. We also use
+% |\l@youtunitlength| as a temporary store for the spine width.
+%    \begin{macrocode}
+  \setlength{\l@ylen}{#5\l@youtunitlength}
+  \l@yltoc{\l@ylen}{\l@youthdiii}           % spine width
+  \setlength{\l@youtunitlength}{\l@ylen}
+%    \end{macrocode}
+% The width of the fore edge is kept in |\l@youthdi|.
+%    \begin{macrocode}
+  \setlength{\l@ylen}{#7\l@youtunitlength}
+  \l@yltoc{\l@ylen}{\l@youthdi}             % fore edge width
+%    \end{macrocode}
+% Calculate the text width and store it in |\l@youthdii|.
+%    \begin{macrocode}
+  \l@youthdii=\l@youthdo                  % text width
+    \advance\l@youthdii by -\l@youthdi
+    \advance\l@youthdii by -\l@youthdiii
+%    \end{macrocode}
+%  The X coordinate of the left-hand side of the text box on the right-hand
+%  page is stored in |\l@youtxci|.
+%    \begin{macrocode}
+  \l@youtxci=\l@youthdo
+    \advance\l@youtxci by \l@youthdiii
+%    \end{macrocode}
+% The height of the top margin is stored in |\l@youtvdiii|
+%    \begin{macrocode}
+  \setlength{\l@ylen}{#6\l@youtunitlength}
+  \l@yltoc{\l@ylen}{\l@youtvdiii}         % top margin
+%    \end{macrocode}
+% The height of the bottom margin is stored in |\l@youtvdi|.
+%    \begin{macrocode}
+  \setlength{\l@ylen}{#1\l@youtunitlength}
+  \l@yltoc{\l@ylen}{\l@youtvdi}           % bottom margin
+%    \end{macrocode}
+% The text height is stored in |\l@youtvdii|.
+%    \begin{macrocode}
+  \setlength{\l@ylen}{\l@youthdii pt}
+  \setlength{\l@ylen}{#4\l@ylen}
+  \l@yltoc{\l@ylen}{\l@youtvdii}          % text height
+%    \end{macrocode}
+% The height of the bottom margin was stored in |\l@youtvdi|. If the 
+% value is zero then we calculate the height from the page, text and top
+% margin height values already obtained.
+%    \begin{macrocode}
+  \ifnum\l@youtvdi=\z@
+    \l@youtvdi=\l@youtvdo
+    \advance\l@youtvdi by -\l@youtvdiii
+    \advance\l@youtvdi by -\l@youtvdii
+  \fi
+%    \end{macrocode}
+% We store the gutter width in |\l@youthdv|.
+%    \begin{macrocode}
+  \setlength{\l@ylen}{#8\l@youtunitlength}
+  \l@yltoc{\l@ylen}{\l@youthdv}           % gutter width
+%    \end{macrocode}
+%
+% Now we can draw a single column spread.
+%    \begin{macrocode}
+  \ifnum\l@youthdv=\z@
+    \begin{picture}(\l@youthdiv,\l@youtvdo)
+      \thicklines
+      \put(0,0){\framebox(\l@youthdiv,\l@youtvdo){}} % spread pages
+      \put(\l@youthdo,0){\line(0,1){\l@youtvdo}}     % the spine
+      \thinlines
+      \put(\l@youthdi,\l@youtvdi){\framebox(\l@youthdii,\l@youtvdii){}} % LH text
+      \put(\l@youtxci,\l@youtvdi){\framebox(\l@youthdii,\l@youtvdii){}} % RH text
+      \end{picture}
+  \else
+%    \end{macrocode}
+% We have two columns. Calculate some additional lengths and coordinates.
+%
+% Store the column width in |\l@youthdvi|.
+%    \begin{macrocode}
+    \l@youthdvi=\l@youthdii      % column width
+      \advance\l@youthdvi by -\l@youthdv
+      \divide\l@youthdvi by \tw@
+%    \end{macrocode}
+% We also need the positions of the x coordinate of the LH inner column 
+% (store in |\l@youtxcii|) and of the RH outer column (store in
+% |\l@youtxciii|).
+%    \begin{macrocode}
+    \l@youtxcii=\l@youthdi          % X coord of LH inner column
+      \advance\l@youtxcii by \l@youthdvi
+      \advance\l@youtxcii by \l@youthdv
+    \l@youtxciii=\l@youtxci          % X coord of RH outer column
+      \advance\l@youtxciii by \l@youthdvi
+      \advance\l@youtxciii by \l@youthdv
+%    \end{macrocode}
+% Now draw the two column spread.
+%    \begin{macrocode}
+    \begin{picture}(\l@youthdiv,\l@youtvdo)
+      \thicklines
+      \put(0,0){\framebox(\l@youthdiv,\l@youtvdo){}} % spread pages
+      \put(\l@youthdo,0){\line(0,1){\l@youtvdo}}     % the spine
+      \thinlines
+      \put(\l@youthdi,\l@youtvdi){\framebox(\l@youthdvi,\l@youtvdii){}} % LH LH col
+      \put(\l@youtxcii,\l@youtvdi){\framebox(\l@youthdvi,\l@youtvdii){}} % LH RH col
+      \put(\l@youtxci,\l@youtvdi){\framebox(\l@youthdvi,\l@youtvdii){}} % RH LH col
+      \put(\l@youtxciii,\l@youtvdi){\framebox(\l@youthdvi,\l@youtvdii){}} % RH RH col
+      \end{picture}
+  \fi
+%    \end{macrocode}
+% End of the definition of |\drawaspread|.
+%    \begin{macrocode}
+\endgroup
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \section{Drawing a font box}
+%
+% We provide a facility for drawing a box around some text. This can also
+% be used in a picture environment as |\put(x,y){\frametext{text}}|.
+% The |\unitlength| \emph{must} be 1pt!
+%
+%    \begin{macrocode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    FONT LAYOUT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%    \end{macrocode}
+%
+% \begin{macro}{\drawfontframe}
+%  Draws a tightly fitting box with the text reference point marked and a
+%  dotted line along the baseline. 
+%    \begin{macrocode}
+\newcommand{\drawfontframe}[1]{%
+%    \end{macrocode}
+% Save the (text) argument.
+%    \begin{macrocode}
+  \savebox{\layoutsbox}{#1}%
+%    \end{macrocode}
+% Save the width in |\l@youthdo|, height in |\l@youtvdii| and depth in |\l@youtvdi|.
+%    \begin{macrocode}
+  \l@yltoc{\wd\layoutsbox}{\l@youthdo}%
+  \l@yltoc{\ht\layoutsbox}{\l@youtvdii}%
+  \l@yltoc{\dp\layoutsbox}{\l@youtvdi}%
+%    \end{macrocode}
+%  Save the total height in |\l@youtvdo|.
+%    \begin{macrocode}
+  \l@youtvdo=\l@youtvdi
+  \advance\l@youtvdo by \l@youtvdii
+%    \end{macrocode}
+% Save half the width in |\l@youtxci|.
+%    \begin{macrocode}
+  \l@youtxci=\l@youthdo
+  \divide\l@youtxci by \tw@
+%    \end{macrocode}
+% Draw a picture, with origin at the box's baseline. Use |\qbezier| to draw
+% a dotted line with a dot at intervals of 2pt.
+%    \begin{macrocode}
+  \begin{picture}(\l@youthdo,\l@youtvdii)
+    \thinlines
+    \put(0,0){\usebox{\layoutsbox}}
+    \put(0,0){\circle*{2}}
+    \qbezier[\l@youtxci](0,0)(\l@youtxci,0)(\l@youthdo,0)
+    \put(0,-\l@youtvdi){\framebox(\l@youthdo,\l@youtvdo){}}
+  \end{picture}%
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\drawfontframelabel}
+%  Draws a tightly fitting box with the text reference point marked and a
+%  dotted line along the baseline and marks the width, height and depth. 
+%    \begin{macrocode}
+\newcommand{\drawfontframelabel}[1]{%
+%    \end{macrocode}
+% Save the (text) argument.
+%    \begin{macrocode}
+  \savebox{\layoutsbox}{#1}%
+%    \end{macrocode}
+% Save the width in |\l@youthdo|, height in |\l@youtvdii| and depth in |\l@youtvdi|.
+%    \begin{macrocode}
+  \l@yltoc{\wd\layoutsbox}{\l@youthdo}%
+  \l@yltoc{\ht\layoutsbox}{\l@youtvdii}%
+  \l@yltoc{\dp\layoutsbox}{\l@youtvdi}%
+%    \end{macrocode}
+%  Save the total height in |\l@youtvdo|.
+%    \begin{macrocode}
+  \l@youtvdo=\l@youtvdi
+  \advance\l@youtvdo by \l@youtvdii
+%    \end{macrocode}
+% Save half the width in |\l@youtxci|.
+%    \begin{macrocode}
+  \l@youtxci=\l@youthdo
+  \divide\l@youtxci by \tw@
+%    \end{macrocode}
+% Set |\l@youtdvi| to be space between dimensions and labels.
+%    \begin{macrocode}
+  \l@youthdvi=5\relax
+%    \end{macrocode}
+% Add |2\l@youthdvi| plus 7pt (i.e. 17pt) to the box height to allow for 
+% width label,
+% and add |2\l@youthdvi| plus 25pt (i.e 35pt) to the box width to allow 
+% for height label.
+%    \begin{macrocode}
+  \l@youtycv=\l@youtvdii
+  \advance\l@youtycv by 17\relax
+  \l@youtxcii=\l@youthdo
+  \advance\l@youtxcii by 35\relax
+%    \end{macrocode}
+% Draw a picture, with origin at the box's baseline. Use |\qbezier| to draw
+% a dotted line with a dot at intervals of 2pt.
+%    \begin{macrocode}
+  \begin{picture}(\l@youtxcii,\l@youtycv)
+    \thinlines
+    \put(0,0){\usebox{\layoutsbox}}
+    \put(0,0){\circle*{2}}
+    \qbezier[\l@youtxci](0,0)(\l@youtxci,0)(\l@youthdo,0)
+    \put(0,-\l@youtvdi){\framebox(\l@youthdo,\l@youtvdo){}}
+%    \end{macrocode}
+%
+%  Add the dimension lines and labels (in tiny print).
+% Mark the reference point on the left of the box.
+%    \begin{macrocode}
+    \begin{tiny}
+    \put(-\l@youthdvi,0){\makebox(0,0)[r]{reference}}
+%    \end{macrocode}
+% Draw the width dimension above the box and the label above the dimension.
+%    \begin{macrocode}
+    \l@youtycv=\l@youtvdii
+    \advance\l@youtycv by \l@youthdvi
+    \ifnum\l@youthdo > 6\relax
+      \l@yhrda{0}{\l@youtycv}{\l@youthdo}
+    \else
+      \l@yhrdia{0}{\l@youtycv}{\l@youthdo}
+    \fi
+    \advance\l@youtycv by \l@youthdvi
+    \put(\l@youtxci,\l@youtycv){\makebox(0,0)[b]{width}}
+%    \end{macrocode}
+% Draw the height dimension and label on the right of the box. |\l@youtxcii|
+% is the x coordinate of the dimension line(s) and |\l@youtxciii| is the
+% x coordinate of the right side label(s).
+%    \begin{macrocode}
+    \l@youtxcii=\l@youthdo
+    \advance\l@youtxcii by \l@youthdvi
+    \l@youtxciii=\l@youtxcii
+    \advance\l@youtxciii by \l@youthdvi
+    \ifnum\l@youtvdii > \z@
+%    \end{macrocode}
+%  The height is positive, so draw it, putting the label at the center of
+%  the dimension line.
+%    \begin{macrocode}
+      \ifnum\l@youtvdii > 6\relax
+        \l@yvuda{\l@youtxcii}{0}{\l@youtvdii}
+      \else
+        \l@yvudia{\l@youtxcii}{0}{\l@youtvdii}
+      \fi
+      \divide\l@youtvdii by \tw@
+      \put(\l@youtxciii,\l@youtvdii){\makebox(0,0)[l]{height}}
+    \fi
+    \ifnum\l@youtvdi > \z@
+%    \end{macrocode}
+% The depth is positive, so draw it putting the label at the center of
+% the dimension line.
+%    \begin{macrocode}
+      \ifnum\l@youtvdi > 6\relax
+        \l@yvuda{\l@youtxcii}{-\l@youtvdi}{\l@youtvdi}
+      \else
+        \l@yvudia{\l@youtxcii}{-\l@youtvdi}{\l@youtvdi}
+      \fi
+      \divide\l@youtvdi by \tw@
+      \put(\l@youtxciii,-\l@youtvdi){\makebox(0,0)[l]{depth}}
+    \fi
+%    \end{macrocode}
+% This finishes the picture. Print the values if asked for.
+% \changes{v2.5}{2001/11/11}{Use \cs{ifprintparameters} for \cs{drawfontframelabel}}
+%    \begin{macrocode}
+    \end{tiny}
+  \end{picture}
+  \ifprintparameters
+    \begin{center}\begin{footnotesize}\begin{ttfamily}
+      \begin{tabular}{lll}
+        \textrm{width} = \the\wd\layoutsbox &
+        \textrm{height} = \the\ht\layoutsbox &
+        \textrm{depth} = \the\dp\layoutsbox \\
+      \end{tabular}
+    \end{ttfamily}\end{footnotesize}\end{center}
+  \fi
+%    \end{macrocode}
+% All done.
+%    \begin{macrocode}
+}
+
+%    \end{macrocode}
+% \end{macro}
+%
+%    The end of this package.
+%    \begin{macrocode}
+%</lays>
+%    \end{macrocode}
+%
+%
+% \bibliographystyle{alpha}
+%
+% \begin{thebibliography}{GMS94}
+%
+% \bibitem[GMS94]{GOOSSENS94}
+% Michel Goossens, Frank Mittelbach, and Alexander Samarin.
+% \newblock {\em The LaTeX Companion}.
+% \newblock Addison-Wesley Publishing Company, 1994.
+%
+% \bibitem[Wil96]{PRW96i}
+% Peter~R. Wilson.
+% \newblock {\em {LaTeX for standards: The LaTeX package files user manual}}.
+% \newblock NIST Report NISTIR, June 1996.
+%
+% \end{thebibliography}
+%
+%
+% \Finale
+% \PrintIndex
+%
+\endinput
+
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+
+

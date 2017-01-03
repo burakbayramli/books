@@ -1,0 +1,61 @@
+#YAML
+
+use_forecast_scale_estimates: True
+use_forecast_weight_estimates: True
+use_instrument_weight_estimates: True
+#
+# Raw data
+#
+# Trading rules
+#
+trading_rules:
+  ewmac8:
+     function: systems.provided.example.rules.ewmac_forecast_with_defaults_no_vol
+     data:
+         - "rawdata.get_daily_prices"
+         - "rawdata.daily_returns_volatility"
+     other_args: 
+         Lfast: 8
+         Lslow: 32
+  ewmac16:
+     function: systems.provided.example.rules.ewmac_forecast_with_defaults_no_vol
+     data:
+         - "rawdata.get_daily_prices"
+         - "rawdata.daily_returns_volatility"
+     other_args: 
+         Lfast: 16
+         Lslow: 64
+  carry:
+     function: systems.provided.futures_chapter15.rules.carry
+     data:
+         - "rawdata.daily_annualised_roll"
+         - "rawdata.daily_returns_volatility"
+     other_args:
+         smooth_days: 90
+#
+# forecast capping and scaling
+#
+# weird value to test if config is coming through
+forecast_cap: 21.0
+#
+# forecast combination
+#
+#
+rule_variations:
+     EDOLLAR: ['ewmac8','ewmac16', 'carry']
+     US10: ['ewmac8','ewmac16', 'carry']
+     BUND: ['ewmac8','ewmac16']
+#
+#
+#
+# Capital correction
+#
+percentage_vol_target: 16.0
+notional_trading_capital: 100000
+base_currency: "GBP"
+#
+# Portfolio creation
+#
+instruments: ['EDOLLAR','US10','BUND']
+##
+

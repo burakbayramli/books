@@ -1,0 +1,523 @@
+                                               Effect of moisture on yield of tomatos                                              1
+                                       An example of a polynomial regression in one variable
+                                                              raw data
+
+                                             Obs    moist    yield    moist2    moist3
+
+                                               1       6      49.2       36       216 
+                                               2       6      48.1       36       216 
+                                               3       6      48.0       36       216 
+                                               4       6      49.6       36       216 
+                                               5       6      47.0       36       216 
+                                               6       8      51.5       64       512 
+                                               7       8      51.7       64       512 
+                                               8       8      50.4       64       512 
+                                               9       8      51.2       64       512 
+                                              10       8      48.4       64       512 
+                                              11      10      51.1      100      1000 
+                                              12      10      51.5      100      1000 
+                                              13      10      50.3      100      1000 
+                                              14      10      48.9      100      1000 
+                                              15      10      48.7      100      1000 
+                                              16      12      48.6      144      1728 
+                                              17      12      47.0      144      1728 
+                                              18      12      48.0      144      1728 
+                                              19      12      46.4      144      1728 
+                                              20      12      46.2      144      1728 
+                                              21      14      43.2      196      2744 
+                                              22      14      42.6      196      2744 
+                                              23      14      42.1      196      2744 
+                                              24      14      43.9      196      2744 
+                                              25      14      40.5      196      2744 
+                                               Effect of moisture on yield of tomatos                                              2
+                                       An example of a polynomial regression in one variable
+                                                          preliminary plot
+
+                                      Plot of yield*moist.  Legend: A = 1 obs, B = 2 obs, etc.
+
+          yield |
+                |
+             52 +
+                |                           A
+                |                           A                        A
+                |                           A                        A
+                |
+                |
+                |                           A                        A
+             50 +
+                |  A
+                |
+                |  A
+                |                                                    A
+                |                                                    A                        A
+                |                           A
+             48 +  B                                                                          A
+                |
+                |
+                |  A                                                                          A
+                |
+                |
+                |                                                                             B
+             46 +
+                |
+                |
+                |
+                |
+                |
+                |
+             44 +                                                                                                      A
+                |
+                |
+                |                                                                                                      A
+                |
+                |                                                                                                      A
+                |
+             42 +                                                                                                      A
+                |
+                |
+                |
+                |
+                |                                                                                                      A
+                |
+             40 +
+                |
+                ---+------------------------+------------------------+------------------------+------------------------+--
+                   6                        8                       10                       12                       14
+
+                                                                   moist
+                                               Effect of moisture on yield of tomatos                                              3
+                                       An example of a polynomial regression in one variable
+                                            What if a simple linear regression to data?
+
+                                                         The REG Procedure
+                                                           Model: MODEL1
+                                                     Dependent Variable: yield 
+
+                                              Number of Observations Read          25
+                                              Number of Observations Used          25
+
+
+                                                        Analysis of Variance
+ 
+                                                               Sum of           Mean
+                           Source                   DF        Squares         Square    F Value    Pr > F
+
+                           Model                     1      116.12880      116.12880      21.32    0.0001
+                           Error                    23      125.26880        5.44647                     
+                           Corrected Total          24      241.39760                                    
+
+
+                                        Root MSE              2.33377    R-Square     0.4811
+                                        Dependent Mean       47.76400    Adj R-Sq     0.4585
+                                        Coeff Var             4.88604                       
+
+
+                                                        Parameter Estimates
+ 
+                                                     Parameter       Standard
+                                Variable     DF       Estimate          Error    t Value    Pr > |t|
+
+                                Intercept     1       55.38400        1.71496      32.29      <.0001
+                                moist         1       -0.76200        0.16502      -4.62      0.0001
+                                               Effect of moisture on yield of tomatos                                              4
+                                       An example of a polynomial regression in one variable
+                                            What if a simple linear regression to data?
+                                                           residual plot
+
+                                      Plot of resid*moist.  Legend: A = 1 obs, B = 2 obs, etc.
+
+               |
+               |
+             4 +
+               |                                                    A
+               |
+               |                                                    A
+             3 +
+               |
+               |                           A                        A
+               |                           A                                                 A
+             2 +                           A
+               |                                                                             A
+               |
+               |                                                    A
+             1 +                           A                        A
+               |                                                                             A
+          R    |
+          e    |                                                                             A
+          s  0 +-----------------------------------------------------------------------------A---------------------------
+          i    |
+          d    |
+          u    |                                                                                                      A
+          a -1 +                           A
+          l    |  A
+               |  A                                                                                                   A
+               |
+            -2 +                                                                                                      A
+               |
+               |                                                                                                      A
+               |  B
+            -3 +
+               |
+               |
+               |  A
+            -4 +
+               |                                                                                                      A
+               |
+               |
+            -5 +
+               |
+               ---+------------------------+------------------------+------------------------+------------------------+--
+                  6                        8                       10                       12                       14
+
+                                                                  moist
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+                                            notice the obvious pattern to the residuals
+                                               Effect of moisture on yield of tomatos                                              5
+                                       An example of a polynomial regression in one variable
+                                              Fit a cubic and test higher order terms
+
+                                                         The REG Procedure
+                                                           Model: MODEL1
+                                                     Dependent Variable: yield 
+
+                                              Number of Observations Read          25
+                                              Number of Observations Used          25
+
+
+                                                        Analysis of Variance
+ 
+                                                               Sum of           Mean
+                           Source                   DF        Squares         Square    F Value    Pr > F
+
+                           Model                     3      212.57314       70.85771      51.62    <.0001
+                           Error                    21       28.82446        1.37259                     
+                           Corrected Total          24      241.39760                                    
+
+
+                                        Root MSE              1.17158    R-Square     0.8806
+                                        Dependent Mean       47.76400    Adj R-Sq     0.8635
+                                        Coeff Var             2.45285                       
+
+
+                                                        Parameter Estimates
+ 
+                                                     Parameter       Standard
+                                Variable     DF       Estimate          Error    t Value    Pr > |t|
+
+                                Intercept     1       20.52114       15.27986       1.34      0.1936
+                                moist         1        7.72048        4.99299       1.55      0.1370
+                                moist2        1       -0.56786        0.51895      -1.09      0.2862
+                                moist3        1        0.00917        0.01726       0.53      0.6009
+                                               Effect of moisture on yield of tomatos                                              6
+                                       An example of a polynomial regression in one variable
+                                              Fit a cubic and test higher order terms
+
+                                                         The REG Procedure
+                                                           Model: MODEL1
+
+                                          Test test1 Results for Dependent Variable yield
+ 
+                                                                     Mean
+                                     Source             DF         Square    F Value    Pr > F
+
+                                     Numerator           1        0.38720       0.28    0.6009
+                                     Denominator        21        1.37259                     
+                                               Effect of moisture on yield of tomatos                                              7
+                                       An example of a polynomial regression in one variable
+                                              Fit a cubic and test higher order terms
+
+                                                         The REG Procedure
+                                                           Model: MODEL1
+
+                                          Test test2 Results for Dependent Variable yield
+ 
+                                                                     Mean
+                                     Source             DF         Square    F Value    Pr > F
+
+                                     Numerator           2       48.22217      35.13    <.0001
+                                     Denominator        21        1.37259                     
+                                               Effect of moisture on yield of tomatos                                              8
+                                       An example of a polynomial regression in one variable
+                                                 fit a quadratic regression to data
+
+                                                         The REG Procedure
+                                                           Model: MODEL1
+                                                     Dependent Variable: yield 
+
+                                              Number of Observations Read          25
+                                              Number of Observations Used          25
+
+
+                                                        Analysis of Variance
+ 
+                                                               Sum of           Mean
+                           Source                   DF        Squares         Square    F Value    Pr > F
+
+                           Model                     2      212.18594      106.09297      79.90    <.0001
+                           Error                    22       29.21166        1.32780                     
+                           Corrected Total          24      241.39760                                    
+
+
+                                        Root MSE              1.15230    R-Square     0.8790
+                                        Dependent Mean       47.76400    Adj R-Sq     0.8680
+                                        Coeff Var             2.41249                       
+
+
+                                                        Parameter Estimates
+ 
+                                                     Parameter       Standard
+                                Variable     DF       Estimate          Error    t Value    Pr > |t|
+
+                                Intercept     1       28.44114        3.27893       8.67      <.0001
+                                moist         1        5.09514        0.69344       7.35      <.0001
+                                moist2        1       -0.29286        0.03443      -8.51      <.0001
+                                               Effect of moisture on yield of tomatos                                              9
+                                       An example of a polynomial regression in one variable
+                                                 fit a quadratic regression to data
+                                                           residual plot
+
+                                      Plot of resid*moist.  Legend: A = 1 obs, B = 2 obs, etc.
+
+                |
+                |
+            1.5 +                                                                                                      A
+                |                                                    A
+                |
+                |                           A                                                 A
+                |  A
+            1.0 +                           A                        A
+                |
+                |                                                                                                      A
+                |  A                        A
+                |                                                                             A
+            0.5 +
+                |
+                |
+                |                                                    A                                                 A
+                |
+            0.0 +---------------------------------------------------------------------------------------------------------
+         R      |                           A
+         e      |
+         s      |                                                                                                      A
+         i      |  A                                                                          A
+         d -0.5 +  A
+         u      |
+         a      |
+         l      |
+                |
+           -1.0 +                                                                             A
+                |
+                |                                                    A                        A
+                |
+                |                                                    A
+           -1.5 +  A
+                |
+                |
+                |
+                |                                                                                                      A
+           -2.0 +
+                |                           A
+                |
+                |
+                |
+           -2.5 +
+                |
+                ---+------------------------+------------------------+------------------------+------------------------+--
+                   6                        8                       10                       12                       14
+
+                                                                   moist
+                                               Effect of moisture on yield of tomatos                                             10
+                                       An example of a polynomial regression in one variable
+                                                 fit a quadratic regression to data
+                                                      fitted response surface
+
+                                             Plot of yield*moist.  Symbol used is '*'.
+                                             Plot of pred*moist.   Symbol used is 'x'.
+
+          yield |
+                |
+             52 +
+                |                           *
+                |                           *                        *
+                |                           *                        *
+                |
+                |                           x
+                |                           *                        *
+             50 +                                                    x
+                |  *
+                |
+                |  *
+                |                                                    *
+                |  x                                                 *                        *
+                |                           *
+             48 +  *                                                                          *
+                |
+                |                                                                             x
+                |  *                                                                          *
+                |
+                |
+                |                                                                             *
+             46 +
+                |
+                |
+                |
+                |
+                |
+                |
+             44 +                                                                                                      *
+                |
+                |
+                |                                                                                                      *
+                |
+                |                                                                                                      *
+                |                                                                                                      x
+             42 +                                                                                                      *
+                |
+                |
+                |
+                |
+                |                                                                                                      *
+                |
+             40 +
+                |
+                ---+------------------------+------------------------+------------------------+------------------------+--
+                   6                        8                       10                       12                       14
+
+                                                                   moist
+
+NOTE: 22 obs hidden.
+                                               Effect of moisture on yield of tomatos                                             11
+                                       An example of a polynomial regression in one variable
+                                                 fit a quadratic regression to data
+                                                      normal probability plot
+
+                                       Plot of resid*normscr$moist.  Symbol points to label.
+
+              |
+              |
+          1.5 +                                                                                                    > 14
+              |                                                                                           > 10
+              |
+              |                                                                              12 <   >  8
+              |                                                                             >  6
+          1.0 +                                                                   10 <  >  8
+              |
+              |                                                                   > 14
+              |                                                            6 < >  8
+              |                                                           > 12
+          0.5 +
+              |
+              |
+              |                                                   10 <  > 14
+              |
+          0.0 +
+       R      |                                                   >  8
+       e      |
+       s      |                                                 > 14
+       i      |                                         12 < >  6
+       d -0.5 +                                         >  6
+       u      |
+       a      |
+       l      |
+              |
+         -1.0 +                                      > 12
+              |
+              |                            12 <   > 10
+              |
+              |                           > 10
+         -1.5 +                       >  6
+              |
+              |
+              |
+              |                 > 14
+         -2.0 +
+              |        >  8
+              |
+              |
+              |
+         -2.5 +
+              |
+              ---+------------+------------+------------+------------+------------+------------+------------+------------+--
+               -2.0         -1.5         -1.0         -0.5          0.0          0.5          1.0          1.5          2.0
+
+                                                               Normal score
+                                               Effect of moisture on yield of tomatos                                             12
+                                       An example of a polynomial regression in one variable
+                                            Illustration of response surface regression
+
+                                                        The RSREG Procedure
+
+                                          Coding Coefficients for the Independent Variables
+ 
+                                              Factor    Subtracted off      Divided by
+
+                                              moist          10.000000        4.000000
+
+
+                                                Response Surface for Variable yield
+
+                                              Response Mean                  47.764000
+                                              Root MSE                        1.152303
+                                              R-Square                          0.8790
+                                              Coefficient of Variation          2.4125
+
+
+                                                          Type I Sum
+                              Regression          DF      of Squares    R-Square    F Value    Pr > F
+
+                              Linear               1      116.128800      0.4811      87.46    <.0001
+                              Quadratic            1       96.057143      0.3979      72.34    <.0001
+                              Crossproduct         0               0      0.0000        .       .    
+                              Total Model          2      212.185943      0.8790      79.90    <.0001
+
+
+                                                            Sum of
+                             Residual           DF         Squares     Mean Square    F Value    Pr > F
+
+                             Lack of Fit         2        0.387657        0.193829       0.13    0.8749
+                             Pure Error         20       28.824000        1.441200                     
+                             Total Error        22       29.211657        1.327803                     
+
+
+                                                                                                     Parameter
+                                                                                                      Estimate
+                                                               Standard                             from Coded
+                      Parameter      DF        Estimate           Error    t Value    Pr > |t|            Data
+
+                      Intercept       1       28.441143        3.278934       8.67      <.0001       50.106857
+                      moist           1        5.095143        0.693437       7.35      <.0001       -3.048000
+                      moist*moist     1       -0.292857        0.034432      -8.51      <.0001       -4.685714
+
+
+                                                        Sum of
+                                 Factor     DF         Squares     Mean Square    F Value    Pr > F
+
+                                 moist       2      212.185943      106.092971      79.90    <.0001
+                                               Effect of moisture on yield of tomatos                                             13
+                                       An example of a polynomial regression in one variable
+                                            Illustration of response surface regression
+
+                                                        The RSREG Procedure
+                                     Canonical Analysis of Response Surface Based on Coded Data
+
+                                                                Critical Value
+                                               Factor           Coded         Uncoded
+
+                                               moist        -0.325244        8.699024
+
+                                           Predicted value at stationary point: 50.602529
+
+
+                                                                    Eigenvectors
+                                                     Eigenvalues           moist
+
+                                                       -4.685714        1.000000
+
+                                                   Stationary point is a maximum.

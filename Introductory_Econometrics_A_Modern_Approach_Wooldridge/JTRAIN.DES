@@ -1,0 +1,40 @@
+JTRAIN.DES
+
+year      fcode     employ    sales     avgsal    scrap     rework    tothrs   
+union     grant     d89       d88       totrain   hrsemp    lscrap    lemploy  
+lsales    lrework   lhrsemp   lscrap_1  grant_1   clscrap   cgrant    
+clemploy  clsales   lavgsal   clavgsal  cgrant_1  chrsemp   clhrsemp  
+
+  Obs:   471
+
+  1. year                     1987, 1988, or 1989
+  2. fcode                    firm code number
+  3. employ                   # employees at plant
+  4. sales                    annual sales, $
+  5. avgsal                   average employee salary
+  6. scrap                    scrap rate (per 100 items)
+  7. rework                   rework rate (per 100 items)
+  8. tothrs                   total hours training
+  9. union                    =1 if unionized
+ 10. grant                    =1 if received grant
+ 11. d89                      =1 if year = 1989
+ 12. d88                      =1 if year = 1988
+ 13. totrain                  total employees trained
+ 14. hrsemp                   tothrs/totrain
+ 15. lscrap                   log(scrap)
+ 16. lemploy                  log(employ)
+ 17. lsales                   log(sales)
+ 18. lrework                  log(rework)
+ 19. lhrsemp                  log(1 + hrsemp)
+ 20. lscrap_1                 lagged lscrap; missing 1987
+ 21. grant_1                  lagged grant; assumed 0 in 1987
+ 22. clscrap                  lscrap - lscrap_1; year > 1987
+ 23. cgrant                   grant - grant_1
+ 24. clemploy                 lemploy - lemploy[t-1]
+ 25. clsales                  lavgsal - lavgsal[t-1]
+ 26. lavgsal                  log(avgsal)
+ 27. clavgsal                 lavgsal - lavgsal[t-1]
+ 28. cgrant_1                 cgrant[t-1]
+ 29. chrsemp                  hrsemp - hrsemp[t-1]
+ 30. clhrsemp                 lhrsemp - lhrsemp[t-1]
+

@@ -1,0 +1,155 @@
+Eligible topics include:
+
+simple linear regression: least-squares and maximum likelihood
+estimation of regression coefficients; moment properties of estimators; 
+confidence intervals and prediction intervals; analysis of variance; 
+R coding (related to the lm() function) and interpretation of output
+
+bivariate normal distribution and correlation (you do not have to
+derive the expressions in the notes, but you do need to be familiar with
+the relations between the regression slope and the correlation 
+coefficient) 
+
+multiple regression: least-squares estimation; confidence
+intervals and prediction intervals; analysis of variance;  extra
+sums of squares and partial F-tests; theory of quadratic forms; F
+and t statistics; testing the general linear hypothesis; Gauss-Markov
+theorem
+
+residuals of all types; lack of fit testing; partial regression 
+plots; normal qq plots
+
+variance stabilizing transformation; Box-Cox transformation; 
+
+weighted least-squares; generalized least-squares
+
+Cook's D; leverage; DFFITS, DFBETAS (you do not have to derive these
+formulas, but you should be able to interpret these quantities)
+
+polynomial regression: orthogonal polynomials (you do not have to
+derive them using Gramm-Schmidt, but you should be familiar with
+the orthogonality property and how this simplifies the analysis)
+
+multicollinearity and variance inflation factors
+
+PRESS
+
+Indicator variables;  analysis of covariance
+
+
+************************** R coding ******************************
+
+##You should know how to access installed libraries: e.g. 
+library(DAAG)
+library(MASS)
+
+##You should know how to use the source() function to retrieve
+# a dumped data file from an external directory:  e.g.
+
+source("litters.R")  # assuming litters.R is in your directory
+
+##You should know how to use the read.table() function to read
+# an external text file into a data frame: e.g.
+
+mydata <- read.table("mydata.txt", header=T)  # assumes you have 
+# a data file called mydata.txt in your external folder which has
+# a header (column names) and some columns of data values
+
+##You should know how to use the lm() function, using an
+#existing data frame (e.g. litters), to estimate parameters for 
+
+# simple regression  lm(brainwt ~ lsize, data=litters) 
+#  or 
+litters.lm <- lm(brainwt ~ lsize, data=litters)  # use library(DAAG) first
+# regression through the origin  lm(brainwt ~ lsize -1, data=litters)
+# multiple regression lm(brainwt ~ lsize + bodywt, data=litters)
+# weighted regression lm(brainwt ~ bodywt, data=litters, weights=1/lsize)
+# polynomial regression lm(brainwt ~ bodywt + I(bodywt^2), data=litters)
+
+
+##You should know how to obtain the output summary from lm: e.g.
+
+summary(litters.lm)
+
+##You should know how to obtain the 4 basic diagnostic plots from lm:
+
+plot(litterslm)
+
+##You should know how to basic matrix and vector addition, 
+#multiplication, transpose, and inversion in order to be able to 
+#calculate most regression objects by hand, e.g.
+
+X <- cbind(c(1,1,1,1,1,1), c(1,2,3,4,5,6), c(2, 2, 1, 1, 3, 3))
+y <- c(5, 4, 7, 8, 2, 1)
+
+betahat <- solve(t(X)%*%X, t(X)%*%y)
+p <- 3
+n <- 6
+SSE <- sum(y*y) - t(betahat)%*%t(X)%*%y
+MSE <- SSE/(n-p)
+
+sebetahat <- sqrt(MSE*diag(solve(t(X)%*%X))) 
+
+betahat # coefficient estimates
+MSE # error variance estimate
+sebetahat # estimates of coefficient standard errors
+
+##You should be able to calculate variance inflation factors using
+# the cor() function: e.g. 
+
+WTW <- cor(X[, c(2,3)])   # correlation matrix 
+diag(solve(WTW))
+
+##You should be able to calculate the hat diagonal values using
+# the hat function: e.g. 
+
+hat(X)
+
+##You should be able to compute quantities like the PRESS statistic:
+sum((y - X%*%betahat)^2/(1-hat(X))^2)
+
+##You should be able to use the predict function to produce both
+#confidence intervals and prediction intervals at new data values: e.g.
+
+litters.lm <- lm(brainwt ~ lsize + bodywt, data=litters)
+predict(litters.lm, newdata=data.frame(bodywt=c(5,6), lsize=c(3, 7)), 
+interval="confidence")
+predict(litters.lm, newdata=data.frame(bodywt=5, lsize=3), 
+interval="prediction")
+
+##You should know how to estimate the Box-Cox transformation parameter: e.g. 
+
+library(MASS)
+hills.lm <- lm(time ~ dist + climb, data=hills)
+boxcox(hills.lm)
+
+
+##You should know how to delete incorrect observations from a data frame
+#when fitting a model: e.g. 
+
+hills.lm <- lm(sqrt(time) ~ dist + climb, data=hills[-18,])
+# observation 18 was recorded incorrectly 
+
+
+##You should know how to use the anova function to compute the
+# sequential sums of squares:
+
+anova(litters.lm)
+
+***********************Interpreting R Output**********************
+
+**You must be able to interpret the summary() output from lm(): 
+coefficient estimates, standard errors, t-values, p-values, residual
+standard error, multiple R-square, adjusted R-square, F, degrees
+of freedom.
+
+**You must be able to interpret the 4 basic plots from lm: residuals
+versus fitted, qqnorm, scale-location, influence
+
+**You must be able to interpret output from anova()  
+
+**You must be able to interpret output on all leverage and influence
+* functions such as hat(), dfbetas, dffits, cook's D etc
+
+**You must be able to interpret output from the other functions 
+* describing in the coding section above

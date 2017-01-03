@@ -1,0 +1,951 @@
+\movetooddpage
+
+\chapter{Test Etmek} \label{testing}
+
+\thischapterhas{
+  \item JUnit ile birim testleri
+  \item JMeter ile kabul testleri
+  \item jMock
+}
+
+\versal{P}\textsc{rogramlama} sýrasýnda, üzerinde çalýþtýðýmýz kodu arada sýrada
+iþletebilmek için kodu derleme iþleminden geçirmemiz gerekir. Derleme iþlemini
+görevlerinden biri iþler kod üretmektir, ve çok önemli diðer bir görevi ise tüm
+kodlar üzerinde sözdizim kontrolü yapmaktýr. Meselâ güçlü tipleme (strong
+typing) bekleyen bir dil kullanýyorsak, bir eþitliðin (\PVerb!=!) iki
+tarafýndaki iki deðiþkenin tiplerinin birbiri ile ayný olmasý gerekecektir. Bu,
+bize dil tarafýndan verilen bir kontroldür, ve yapabileceðimiz potansiyel bir
+hata için hatýrlatýcý nitelik taþýr.
+
+Dil tarafýndan getirilmiþ bu þekildeki kurallar, programýmýzýn doðruluðu için
+getirilmiþ tecrübeye dayalý kurallarýn toplamýdýr. Bu kurallar nasýl
+konulmuþtur? Eðer istatistiki olarak bir tipteki deðiþkenin ötekine eþitlenmesi
+programcý tarafýndan çok yapýlan bir hata ise, bu hatayý öngören bir kural,
+programýmýzý eþitleme hatalarýndan kurtarmýþ olur. Alternatif olarak zayýf tipli
+(weakly typed) diller her tipi, her diðer tipe eþitlemeye izin verip,
+programcýya sormadan tip deðiþimini iþleyiþ anýnda yaparlar. Bu dillerin
+kullaným beklentileri ona göredir.
+
+Derleme aþamasý sözdizim hatalarýný kontrol eder; Fakat bu kontrollerden geçen
+kodumuz, tüm hatalar arýnmýþ mýdýr? Bu soruya cevap doðal olarak ``Hayýr''
+olacaktýr. Programcýlýk ile uðraþan herkesin bildiði gibi, sözdizimsel kurallar
+potansiyel hatalarý bulmakta yardýmcý olsalar da, programýn içinde mantýk
+hatalarý (bug) olmasý hâla muhtemeldir. Hâtta, yine istatiksel olarak
+diyebiliriz ki, çetrefillik seviyesi orta ve üstü seviyede olan hiçbir program
+ilk düzgün derlenmesinden sonra beklendiði gibi çalýþmayacaktýr. Unutkan olan
+insanlar (Kural \#4), muhakkak programý yazarken mantýk hatasý yaparlar.
+
+O zaman programýmýzý yazarken, aynen sözdizimsel hatalarý derleyiciye
+yakalattýrdýðýmýz gibi, mantýk hatalarýný da yakalayabilecek olan kendi kontrol
+edici kurallarýmýzý kendi üzerimizde yaratmamýz gereklidir. Fakat bu
+kontrollerin tip kontrolleri gibi sözdizimsel seviyede deðil, programýn iþleyiþi
+seviyesinde olmasý gerekecektir.
+
+Program iþleyiþini kontrol etmek istiyorsak, programýmýzý {\em iþletmemiz} ve
+sonucunu kontrol etmemiz gerekecektir. Bu iþleyiþin önemli faktörlerinden biri
+{\em otomatik} yapýlabilmesi olmalýdýr çünkü otomatik yapýlabilen kontroller,
+birden fazla ve sýra hâlinde kodun üzerinde iþletilebilirler.
+
+Bu tür otomatik iþleyiþ kontrollerini iki seviyede gerçekleþtirmemiz mümkündür:
+Birincisi en ufak kod birimi (modül) bazýnda, ikincisi ise programýn geneli,
+yâni programýn dýþ kullanýlýþ bazýnda olacaktýr. Bu iki kontrolü yöntemini nasýl
+kuracaðýmýzý ve kullanabileceðimizi alttaki bölümlerde göreceðiz.
+
+\section[Birim Testleri][BÝRÝM TESTLERÝ]{Birim Testleri}
+
+Birim testleri bir fonksiyon ya da metot seviyesinde yapýlýr. Birim testleri
+isimlerini, en ufak iþler kod birimi olan ``fonksiyonu'' test ediyor
+olmalarýndan alýrlar.
+
+Birim testinin kullanýmý oldukça basittir: Normal program iþleyiþi sýrasýnda bir
+bir metot ya da fonksiyonu test etmek istiyorsak, o metotu içeren nesneyi
+\PVerb!new! ile yaratýrýz, ve sadece test etmek istediðimiz metotu
+çaðýrýrýz. Meselâ elimizde iki sayýyý toplayan \PVerb!add!  adlý bir metot
+olsun.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AdderService
+{
+   public int add(int x, int y) {
+      return x+y;
+   }
+}
+\end{lstlisting}
+Bu class'ý test etmek için, bir \PVerb!main! iþlevden bu class'ý þöyle
+kullanýrýz (aslýnda tavsiye ettiðimiz test çaðýrýcý nokta \PVerb!main!
+deðildir, fakat þimdilik -kurmasý çok basit olmasý sebebiyle- örneðe bu þekilde
+baþlamak istedik)
+
+\begin{lstlisting}[language=Java, frame=none]
+public static void main(String[] args) throws Exception {
+  
+   AdderService service = new AdderService();
+   if (service.add(2, 2) != 4) {
+      System.out.println(``test failed'');
+      System.exit(-1);
+   }
+}
+\end{lstlisting}
+Bu testi komut satýrýndan çaðýrdýðýmýzda, eðer fonksiyon doðru yazýlmýþsa hiçbir
+hata mesajý görmememiz gerekir. Birim testlerinin amacý budur: Belli deðerleri
+iþlem mantýðýna girdi olarak verince, beklediðimiz çýktý deðerlerinin verilip
+verilmediðini iþlem anýnda (runtime) kontrol etmek, verilmediyse hata raporu
+verebilmek. Üstte verilen fonksiyon ve test çok basit örneklerdir, fakat orta ve
+daha üstü çetrefillikte olan bir fonksiyonu da ayný yöntemle test edebiliriz, ve
+bu gibi testlerden birçoðunu otomatik olarak iþlem kodu üzerinde arka arkaya
+iþletebiliriz.
+
+\subsection{JUnit - Birim Test Ýþletici}
+
+Eðer birden fazla birim testi çaðýrabilmek ve daha iyi karþýlaþtýrýcý
+foknsiyonlar kullanmak istiyorsak, JUnit\footnote{http://www.junit.org}
+projesinin test altyapýsýný kullanabiliriz. JUnit,
+
+\begin{itemize}
+   \item Birim testlerinizi \PVerb!main! yerine, test edici özel class'lar
+   içinden çaðýrmamýzý saðlar.
+   
+   \item Özel test edici class'da ismi ``\PVerb!test!'' ile baþlayan her metotu,
+   JUnit otomatik olarak çaðýrabilir (böylece \PVerb!main! içinden (elle) her
+   çaðrýyý eklememiz gerekmez)
+   
+   \item \PVerb!assertEquals!, \PVerb!assertTrue! gibi karþýlaþtýrýcý
+   fonksiyonlar saðlayarak, basmakalýp \PVerb!if! çaðrýlarýndan bizi kurtarýr
+   
+\end{itemize}
+
+Bu altyapýnýn üstüne, tarafýmýzdan, ``sonu \PVerb!Test.class! ile biten'' her
+class'ýn da birim test class'i kabul edilip, iþletilmesini saðlayan
+\PVerb!AllTest! adlý bir global iþletici yazýlmýþtýr. Bu global iþletici, sonu
+\PVerb!Test.class! ile biten tüm dosyalarý \PVerb!CLASSPATH!'ten toplayarak
+JUnit'i çaðýrabilir ve birim testlerin iþletilmesini ve sonuçlarýn toplanmasýný
+saðlayabilir. \PVerb!AllTest!  yardýmcý kodu Ant \PVerb!build.xml! içinden
+çaðýrýlabilir. Örnek kitap kodlarýmýzdaki her proje içindeki
+\PVerb!build.xml! içinde bu tür bir \PVerb!test! target'i
+bulabilirsiniz. Kullaným þöyledir:
+
+\begin{lstlisting}[language=Java, frame=none]
+...
+<target name="test" depends="clean,compile">
+  <java fork="yes" classname="org.mycompany.kitapdemo.util.AllTest"
+        taskname="junit" failonerror="true">
+    <arg value="Test.class"/>
+    <classpath refid="compile.classpath"/>
+  </java>
+</target>
+...
+\end{lstlisting}
+Bu \PVerb!build.xml! bloðuna göre, önce \PVerb!clean! ve \PVerb!compile!
+target'leri iþletilerek eski iþler kodlar silinip kaynak kodlar derlenecek,
+sonra \PVerb!AllTest! class'ý, \PVerb!Test.class! parametresi ile
+çaðýrýlacaktýr.
+
+\PVerb!Test.class! yerine deðiþik bir sonekle biten birim test
+class'larýný çaðýrmak istiyorsaniz, \PVerb!<arg value ..>! için deðiþik bir
+deðer verebilirsiniz. Þimdi örnek bir JUnit birim testini görebiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+import junit.framework.TestCase;
+
+public class AdderServiceTest extends TestCase  {
+    
+    public void testAdd() {
+        AdderService service = new AdderService();
+        assertEquals(5, service.add(3, 2));
+    }    
+}
+\end{lstlisting}
+Testleri iþletmek için komut satýrýnda \PVerb!ant test! yazmanýz
+yeterlidir. Bunun sonuc olarak þöyle bir çýktý göreceksiniz:
+
+\begin{lstlisting}[language=Java, frame=none]
+...
+...
+
+test:
+Adding org.mycompany.kitapdemo.sample.AdderServiceTest
+Adding org.mycompany.kitapdemo.util.AllTest\$Test
+
+...
+Time: 3.835
+
+OK (3 tests)
+\end{lstlisting}
+Testlerimiz iþlemiþ, kodlarýn doðru iþlediðini bulmuþ ve sonucu
+bildirmiþtir. Eðer kodlarda bir yanlýþlýk olsaydý (meselâ \PVerb!+! iþareti
+yerine yanlýþlýkla bir \PVerb!-! iþareti konmuþ olsa),
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AdderService   {
+    
+    public int add(int x, int y) {
+        return x +- y; // yanlýþ kod!
+    }    
+}
+\end{lstlisting}
+o zaman test þöyle bir hata yakalayacaktý:
+
+\begin{lstlisting}[language=Java, frame=none]
+..
+..
+There was 1 failure:
+1) testAdd(org.mycompany.kitapdemo.sample.AdderServiceTest)junit.fram
+        ework.AssertionFailedError: expected:<5> but was:<1>
+	at org.mycompany.kitapdemo.sample.AdderServiceTest.testAdd(Ad
+	derServiceTest.java:30)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAcc
+	essorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingM
+	ethodAccessorImpl.java:25)
+	at org.mycompany.kitapdemo.util.AllTest.main(AllTest.java:86)
+
+FAILURES!!!
+Tests run: 4,  Failures: 1,  Errors: 0
+...
+\end{lstlisting}
+
+Sonuca bakarsak, \PVerb!expected:<5> but was:<1>! mesajýnýn verildiðini
+görüyoruz, yâni JUnit bize birim testimizin sonuç olarak 5 beklediðini, ama test
+edilen birimden 1 deðerinin geldiðini söylemektedir. Bu hatalý bir durumdur,
+beklenen ve gelen deðeri karþýlaþtýran JUnit, bir uyumsuzluk olduðunu görünce,
+hatalý bir kod olduðunu anlamýþtýr, ve çok detaylý bir tarif vermiþtir. Bu
+detaylý târif \PVerb!assertEquals! kullanýmý sayesinde gelmiþtir. Hatanýn sebebi
+ise, yanlýþlýkla koda koyulmuþ \PVerb!+-!  iþleminin toplama deðil, çýkartma
+yapmasýdýr!
+
+\subsection{Kurumsal Kodlarý Birim Testinden Geçirmek}
+
+\PVerb!AdderService.add()! islemi, dýþarýdan oldukça izole bir iþlem kodudur.
+Bu metot üzerinde test gerçekleþtirmek bu sebeble oldukça kolaydý. Fakat bir
+kurumsal uygulamalanýn iþlemesi için yazýlan kodlarýn, genellikle bir {\em
+birleþtirici} (integrator) özelliði vardýr; Sektörümüzde, iþi sadece kurumsal
+uygulama yazmak olan þirketlere bu sebeple ``sistem birleþtiricisi (system
+integrator)'' ismi verilir. Kurumsal bir uygulama, çok nadiren bir ada olarak
+tek baþýna iþ yapmaktadýr. Ya bir veri tabanýna baðlanýrýz, ya bir e-mail server
+üzerinde e-mail atarýz, ya da eski (legacy) bir sisteme baðlanarak bilgi
+alýþveriþi yapmamýz gerekir.
+
+Bu iletiþim gereklilikleri, doðal olarak iþlem mantýðý kodlarýmýzýn içine kadar
+nüfuz eder. Bunun kod bakýmý açýsýndan bir sakýncasý yoktur. Sadece test
+ederken, dýþ bir sistemle iletiþim gerekliliklerinden dolayý birim testinden
+geçirmek için çaðýrdýðýnýz kod parçacýklarý, bir birim test ortamý içinde
+iþlediklerinden habersiz {\em o dýþ sisteme} baðlanabilmeye çalýþacaklardýr. Ve
+bunda baþarýsýz olacaklardýr, çünkü sonuçta, içinde iþlem yaptýðýmýz ortam bir
+{\em test} ortamýdýr. Gerekli olan tüm dýþ servisler büyük bir ihtimalle daha
+baþlatýlmamýþtýr, ve zaten baþlatýlmalarýnýn da beklenmemesi gerekir: Bir birim
+testinden beklediðimiz, komut satýrýndan, hiçbir dýþ sisteme ihtiyaç duymadan
+programýn çetrefil mantýðýný (onu çagýr bunu çaðýr mantýðýný deðil) test
+edip bize sonucu bildirmesidir.
+
+O zaman kurumsal uygulamalarý nasýl edeceðiz? Kurumsal uygulamalar bir ada
+deðildir, ama birim testler uygulamanýn bir ada olmasýný ister. O zaman ada
+olmayan kodlarý ada hâline getirmenin tekniklerini öðrenmemiz gerekiyor.
+
+\subsubsection{Bir Nesneyi Taklit Etmek}
+
+Taklit etmek (mocking), kurumsal uygulamalarý birim testinden geçirebilmek için
+ihtiyacýmýz olan tekniktir. Bir birim testinin çaðýrdýðý iþlem kodlarýnýn {\em
+baðlanmak istediði} dýþ sistemin yerine taklitini koyarsak ve o taklit nesneye
+istediðimiz (o test senaryosu için gereken) verileri verdirebilirsek, iþlem
+kodlarýmýz hiçbir þeyden habersiz iþleyip geri dönebileceklerdir. Birim testleri
+de böylece istedikleri iþlem mantýðýný test edebilmiþ olacaklardýr. Yâni birim
+testlerinin iþlemesi için, dýþ sistem nesneleri, taklit edilmelidir. 
+
+Taklitlemeyi, her dýþ sistem için deðiþik bir þekilde yapacaðýz (taklitlemeden
+muhaf tutacaðýmýz tek dýþ sistem veri tabaný olacak, bunun sebeplerini
+\ref{hibernate:test:whichdb} bölümünde okuyabilirsiniz).
+
+\begin{itemize}
+    \item \textbf{Socket, vs gibi dýþ sistemlere ve ya API'larý çâðýran kodlar
+      için}: jMock aracýlýðý ile bir nesnenin yerine metotlarýnýn içi
+      boþaltýlmýþ ve sadece bizim istediðimiz cevaplarý döndüren bir Java taklit
+      nesnesi koymak mümkündür.
+
+    \item \textbf{Diðer}: Bu tür þartlar daha çetrefil taklitleme
+    gerektirebilir, ve elle kodlama isteyebilirler. O zaman, dýþ sisteme
+    baðlanan o nesneden miras alýp (\PVerb!extend!), metotlarýnýn içine
+    testimizin beklediði cevaplarý verecek kodlar koyarýz. Bu, jMock
+    kütüphanesinin otomatik, "perde arkasýnda" yaptýðýnýn "perde önünde" olan
+    karþýlýðýdýr.
+\end{itemize}
+
+jMock ile istediðimiz herhangi bir nesnenin yerine onun taklidini koyabilir, ve
+bu taklidin metotlarýna "dinamik olarak" istediðimiz cevaplarý
+verdirebiliriz. jMock, arka planda CGLIB adýnda baytkod üretmeyi saðlayan bir
+araç kullanmaktadýr. CGLIB sayesinde jMock, meselâ dönüþ deðeri bir
+\PVerb!String! olarak tanýmlanan metot ismi ve onun "beklediðimiz dönüþ
+deðerlerini" dinamik olarak, sanki esas taklit edilen nesneden geliyormuþ gibi,
+iþlem anýnda üretebilmektedir. 
+
+jMock kullanýmýný bir örnek üzerinde görelim. Alttaki kodlar içinde
+\PVerb!SocketClient! adlý bir nesne görüyoruz. Bu nesne, Ýnternet'teki bir
+makina ve o makinadaki port'a bir Socket açmaktadýr. Bu makinanýn nerede
+olduðuna dikkat edelim. Evet, Japonya'da! Þimdi, bu \PVerb!SocketClient!'ý
+kullanan iþlem mantýðý koduna gelelim. Bu class'ýn ismi de (uygun olarak)
+\PVerb!AppLogic!, ve yaptýðý da \PVerb!SocketClient! üzerinden Japonya'ya
+baðlanýp oradan aldýðý Japonca bilgileri Türkçe'ye tercüme etmek.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class SocketClient {    
+
+    public String takeWordFromJapan(){
+        
+       String inputLine = "";
+
+       try{
+            Socket socket = new Socket("www.japan.jp", 5555);
+
+            PrintWriter out = new PrintWriter(socket.getOutputStream(),
+                                              true);
+            BufferedReader in = new BufferedReader(new InputStreamReader
+            (socket.getInputStream()));
+
+            out.println("DOMO ARIGATO!!! ");
+            while ((inputLine = in.readLine()) != null) {
+               out.println(inputLine);
+            }
+            out.close();
+            in.close();
+            socket.close();
+
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+
+        return inputLine;
+    
+     }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AppLogic {
+    
+    SocketClient client = new SocketClient();
+
+    public void setSocketClient(SocketClient client) {
+        this.client = client;
+    }
+    
+    public String translate() {
+
+        String message = client.takeWordFromJapan() ;
+
+        if (message.equals("HAI")) {
+
+            return "evet";
+
+        } else if (message.equals("DOZO")) {
+
+            return "lutfen";
+
+        } else if (message.equals("CAMPARE")) {
+
+            return "??";
+
+        }
+
+        return "";
+    }       
+} 
+\end{lstlisting}
+Bizim amacýmýz, \PVerb!AppLogic! nesnesini test etmektir. O zaman
+\PVerb!AppLogic! kodlarýný dýþarýdan izole olmuþ bir ada hâline getirmemiz
+gerekiyor.  \PVerb!AppLogic! kodlarýna bakarsak, test ettiðimiz mantýðýn
+\PVerb!translate! metotu içindeki \PVerb!if! komutunun olduðunu görüyoruz.
+Demek ki, \PVerb!SocketClient! yerine bir taklidini koyarsak, kodlarýmýzý dýþ
+dünyadan izole etmiþ olacaðýz, ve bu taklide testimiz içinde istediðimiz Japonca
+kelimeyi "söylettirebilirsek", bu senaryonun gerektirdiði \PVerb!translate!
+metotunu test edebilmiþ olacaðýz. Ýþte jMock burada sahneye giriyor. jMock
+kullanan bir test aþaðýdaki gibi olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none, numbers=left,numberstyle=\tiny]
+public class TranslateTest extends MockObjectTestCase {
+
+    public void testHai() {
+
+        Mock mockObj = mock(SocketClient.class);
+
+        AppLogic logic = new AppLogic();
+
+        logic.setSocketClient((SocketClient)mockObj.proxy());
+
+        mockObj.expects(atLeastOnce()).
+            method("takeWordFromJapan")
+            .will(returnValue("HAI"));
+
+        String answer = logic.translate();
+
+        assertEquals("evet", answer);        
+    }                
+} 
+\end{lstlisting}
+
+\#5'te \PVerb!SocketClient! nesnesinin taklit tanýmýný yapýyoruz. \#7'de test
+edeceðimiz \PVerb!AppLogic! nesnesini yaratýyoruz, ve taklit nesnesinin kendisi
+\#9'da yaratýp \PVerb!AppLogic! üzerinde set ediyoruz. Bu numaraya dikkat! Eðer
+\PVerb!AppLogic! ihtiyacý olan \PVerb!SocketClient! nesnesini \PVerb!translate!
+metotu {\em içinde kendisi} yaratýyor olsaydý, biz bu þekilde taklide dayalý bir
+testi yapamazdýk. Çünkü iþlem kodlarý bizim verdiðimiz taklit dýþ nesnesi
+yerine, kendi yarattýðý ve Japonya'ya baðlanmaya çalýþacak esas nesneyi
+kullanýrdý. O zaman, iþlem kodlarýmýzýn dýþ nesneleri her zaman dýsarýdan, bir
+set aracýlýðý ile almasý gerekmektedir.
+
+Taklit nesnesine belli cevaplarý verdirmek için ise, jMock'un \PVerb!expects!,
+\PVerb!method! \PVerb!returnValue! komutlarýný kullanacaðýz. Bu özellikler jMock
+teknolojisinin en güçlü tarafýný teþkil etmektedir, dinamik, \PVerb!String! ile
+tanýmladýðýmýz metot isimleri ve dönüþ deðerlerini arka planda baytkod hâline
+gelip, JVM tarafýndan anýnda iþleme konulmaktadýr! Üstteki örnekte,
+\#11. satýrda taklit nesnesine beklenen (ve taklit edilmiþ) çaðrýnýn ``en az bir
+kere geleceðini'' tanýmlamýþ oluyoruz. Yâni \PVerb!expects(atLeastOnce())!
+kullanýmý sayesinde, taklit edilmiþ nesneye ``kaç kere çaðrý yapýlýyor
+olmasýný'' bile test senaryomuza dahil etmemiz mümkün olmaktadýr. Bu da
+önemlidir, çünkü eðer iþlem kodlarý biz dýþ nesne çaðrýlmasý beklerken hiç çaðrý
+yapmazsa, bu da bir hata durumu olacaktýr ve bu durumun yakalanmasý kodumuzun
+doðruluðu açýsýndan faydalý olabilir.
+
+Taklit nesne üzerinde çaðýrýlacak metodun ismini \#12'de tanýmlýyoruz. \#13,
+dönüþ deðerini tanýmlýyor. Bu hazýrlýklardan sonra, artýk \PVerb!AppLogic!'i
+çaðýrarak, teste gelen sonucu kontrol edebiliriz.
+
+\#15'te yapýlan \PVerb!translate! çaðrýsý, \PVerb!AppLogic!'den taklit
+\PVerb!SocketClient!'a yapýlan bir \PVerb!takeWordFromJapan! çaðrýsýna sebebiyet
+verecektir. Biz de zaten bu senaryoyu planlamýþtýk ve \#11'deki
+\PVerb!expects(atLeastOnce())! tanýmýnýn sebebi buydu. Beklenen bu çaðrýnýn
+cevabýný da piþirip taklit nesneye hazýrlatmýþtýk, cevap ``HAI'' kelimesi
+olacaktý.
+
+Bu cevap gelince, sýra (esas test ettiðimiz) \PVerb!AppLogic!  class'ýna gelir,
+\PVerb!translate! kodunun geri kalaný iþler. ``HAI'' görünce ``evet'' Türkçe
+cevabý verilmesi gerektiðine, \PVerb!if! kodlarý karar verecektir (eðer doðru
+yazýlmýþlarsa). Eðer hakikaten geriye ``evet'' cevabý döndürülürse, bu cevabý
+kontrol eden JUnit testimiz, baþarýyla senaryonun geçtiðini rapor edecektir.
+
+Üstte gösterilen örnek kodlarýn tümünü \PVerb!JUnitSample! projesi altýnda
+bulabilirsiniz. Birim testleri iþletmek için \PVerb!ant test! komutunu
+kullanýnýz.
+
+\subsubsection{Kendi Kodumuz ile Taklit Etmek}
+
+Eðer jMock ile taklitleme tekniðini kullanmak istemezsek, taklit nesnesini
+kendimiz de yaratabiliriz. Bunun için yapmamýz gereken, taklit edilen nesneden
+miras alýp, taklit edilen metotu tekrar tanýmlamaktýr (redefine). Meselâ
+\PVerb!SocketClient! class'ýnýn taklitini elle þöyle yazabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class SocketClientManualMock extends SocketClient {    
+
+    private String returnThis;
+    
+    public void setReturnWhichWord(String word) {
+        this.returnThis = word;
+    }
+
+    // tekrar taným
+    public String takeWordFromJapan(){
+        return returnThis;
+    }
+}       
+\end{lstlisting}
+Bu nesnede, görüldüðü gibi, hiçbir socket iþlemi yapýlmýyor. Japonya'dan
+\PVerb!String! almasý gereken metot, sadece, daha önceden set edilmiþ bir
+\PVerb!String! deðerini döndürmek üzere ayarlanmýþtýr. Bu düzen, jMock
+þartlarýnda gördüðümüz \PVerb!will(returnValue(..))! kullanýmýna
+eþdeðerdir. Testin kendisi de þöyle gözükecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class TranslateManualMockTest extends TestCase {
+
+    public void testHai() {
+
+        SocketClientManualMock mockObj = new SocketClientManualMock();
+
+        AppLogic logic = new AppLogic();
+
+        logic.setSocketClient(mockObj);
+
+        mockObj.setReturnWhichWord("HAI");
+
+        String answer = logic.translate();
+
+        assertEquals("evet", answer);
+        
+    }               
+} 
+\end{lstlisting}
+Bu testin de iþleyip baþarýyla geri döndüðünü göreceðiz.
+
+Bu yöntemin, jMock yöntemine nazaran dezavantajý fazladan bir class yazýlmasýný
+macbur býrakmasýdýr. Bu da kod bazýmýzda class enflasyonuna yol açabilir. jMock
+ile dýþ class dinamik olarak üretilmiþtir, ve hiçbir ek class'a gerek
+yoktur. Ýki yöntem arasýnda seçim yaparken tavsiyemiz, taklitlemeyi önce jMock
+ile baþlamak eðer bir þekilde takýlýnýr ve çok çetrefil bir ortamda jMock
+kullanýmý zorlamaya baþlarsa, elle taklitleme yapýlmaya baþlanmasýdýr.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Hibernate Test Altyapýsý}
+\label{testing:unit:hibernate}
+
+
+\PVerb!SimpleHibernate! örnek projesinde Hibernate üzerinden veri tabanýna
+eriþen birçok senaryoyu görmeniz mümkündür. \PVerb!SimpleHibernate! JUnit test
+kodlarýný çalýþtýrmak için, komut satýrýndan \PVerb!ant test! komutunu vermeniz
+yeterlidir. Bu bölümde, Hibernate kodlarýný test edebilmek için faydalý bir
+class \PVerb!org/mycompany/util/TestUtil! kodlarýný göreceðiz. \PVerb!TestUtil!
+ile, bir test senaryosu için gereken test verisini yüklememiz mümkün olacak.
+
+\subsubsection{Test Verisi}
+
+Hibernate (ya da baþka tekniklerle) veri eriþimi yapan kodlarý test etmenin en
+zor tarafý test baþlamadan önce veri tabanýnda belli bir test verisinin olmasý
+zorunluluðudur. Bu test verilerin yüklenmesini tabii ki yine Hibernate'i
+kullanarak ekleme, güncelleme komutlarý üzerinden yapmak mümkündür, fakat, test
+etmeye uðraþtýðýmýz zaten Hibernate veriye eriþim kodlarýnýn kendisi deðil
+midir? Test edilen kodlarý teste hazýrlýk için kullanmak garip bir tavuk/yumurta
+yumurta/tavuk iliþkisi ortaya çýkarmaktadýr. Bu sebeple test verisi yüklemek
+için pür SQL kullanarak (SQL komutlarý içeren bir dosyadan) veri yüklemek ideal
+yöntem olacaktýr. Zaten test için gereken veri bazen ``mevcut bir tabandan''
+``SQL formatýnda'' geliyor olabilir. O zaman bu veriyi bir \PVerb!.sql! dosyasý
+üzerinden kullanabilen bir test altyapýsý bizim için faydalý olacak.
+
+\PVerb!TestUtil! kodlarý birim testi baþlar baþlamaz sýfýrdan þema kurmak ve
+veri yükleme iþlemleri için tarafýmýzdan yazýlmýþ bir class'týr. Hibernate
+kodlarýný test etmek için gereken veri yükleme iþlemini
+\PVerb!TestUtil.createFromFile! ve \PVerb!TestUtil.insertFromFile!  metotlarý
+ile yapabilirsiniz.
+
+Yâni veri tabanýnda þema yaratýmý ve veri yüklemesi için bize iki \PVerb!SQL!
+dosyasý gerekiyor. Bu dosyalardan biri þema üretmemizi saðlayacak \PVerb!CREATE
+TABLE! komutlarý içeren dosya olmalýdýr, ikincisi, \PVerb!INSERT!  içeren veri
+yükleme dosyasý olmalýdýr. Bu iki dosyanýn bir örneðini aþaðýda görüyoruz.
+
+\begin{lstlisting}[language=SQL,caption=tables\_mysql.sql]
+DROP TABLE IF EXISTS car;
+CREATE TABLE car (
+  license_plate varchar(30) default '',
+  description varchar(30) default ''
+) TYPE=MyISAM;
+\end{lstlisting}
+
+\begin{lstlisting}[language=SQL,caption=sample\_data.sql]
+truncate table car;
+insert into car(license_plate, description)
+       values('34 TTD 2202','ornek description');
+\end{lstlisting}
+Bu dosyalarý taban üzerinde iþletmek için \PVerb!TestUtil!'in iki çaðrýsýný
+sýrasýyla \PVerb!tables_mysql.sql!  ve \PVerb!sample_data.sql!  üzerinde
+kullanýyoruz. \PVerb!TestUtil!, bu dosyalarýn içeriðini
+\PVerb!hibernate.cfg.xml! içinde belirtilmiþ tabanda iþletecektir. Böylece
+tabana istediðimiz örnek veri yüklenmiþ olacaktýr.
+
+\begin{lstlisting}[language=Java,caption=SimpleCarTest.java]
+public class SimpleCarTest  extends TestCase  {
+
+    public SimpleCarTest() { }
+
+    public void testCar() throws Exception {
+        Connection c = TestUtil.createTestConnection();
+
+        TestUtil.createFromFile("tables_mysql.sql", c);
+        TestUtil.insertFromFile("sample_data.sql", c);
+
+        try {
+            Session s = HibernateSession.openSession();
+            HibernateSession.beginTransaction();
+            Car car = (Car) s.get(Car.class, "34 TTD 2202");
+            assertEquals("ornek description", car.getDescription());
+
+            HibernateSession.commitTransaction();
+
+        } finally {
+            HibernateSession.closeSession();
+        }
+    }
+}
+\end{lstlisting}
+\PVerb!SimpleCarTest! çok basit bir testi gerçekleþtirmektedir. Test baþýnda
+\PVerb!SQL!  dosyalarýnýn belli verileri yüklediðini bildiðimiz için testin tek
+yapmasý gereken, Hibernate ile veriye eriþimi test etmektir. Örnekte \PVerb!Car!
+eþlemesi üzerinden Hibernate \PVerb!get!'i test etmiþ oluyoruz. Hibernate
+\PVerb!get!, kendisine verilen ID üzerinden tek bir nesneyi yüklememizi saðlayan
+bir çaðrýdýr. \PVerb!Car! eþlemesindeki \PVerb!licensePlate! öðesi kimlik olduðu
+için \PVerb!get!'e (daha önce test verisini yüklemiþ olduðumuz) bir
+\PVerb!licensePlate! verince, geriye tek bir nesne gelmesini bekleriz. JUnit
+birim testi de aynen bunu yapmaktadýr. Kontrol amaçlý olarak biraz önce
+okuduðumuz nesne üzerinde \PVerb!description! olarak \PVerb!`örnek description'!
+metnini bulmayý amaçlýyoruz (çünkü örnek veride böyledir), ve bu þartý
+\PVerb!assertEquals! ile kontrol ediyoruz.
+
+\PVerb!TestUtil! kullanan JUnit testleri hakkýnda bilmemiz gereken diðer önemli
+noktalar þunlardýr:
+
+\begin{itemize}
+
+\item \PVerb!TestUtil!'in \PVerb!TestUtil.createFromFile! ve
+  \PVerb!TestUtil.insertFromFile!  metotlarýna geçilen her \PVerb!sql! dosya,
+  \PVerb!CLASSPATH! belirtilen bir dizinde mevcut olmalýdýr. \PVerb!TestUtil!,
+  kendisine iþletilmesi için verilen \PVerb!sql! dosyalarýný CLASSPATH altýnda
+  aramak üzere programlanmýþtýr. \PVerb!SimpleHibernate! ve diðer tüm kitap
+  örnek kodlarýnda \PVerb!src/sql! dizinini biz CLASSPATH'e ekledik.
+  
+\item Her test baþýnda \PVerb!TestUtil.createFromFile! ile þemayý sýfýrdan
+  yaratmamýz çok önemlidir, çünkü kodlama süreci içinde þemamýz baþkasý
+  tarafýndan deðiþtirilmiþ olabilir. Kodlar ve þema bir bütün olduðu için, en
+  son kod, en son þema ile çalýþtýrýlmalýdýr. Bu sebeple her test baþýnda þemayý
+  sýfýrdan yaratarak, kod ve þema uyumsuzluklarýný birim test seviyesinde
+  yakalayabilmiþ oluyoruz. Kural \#3 baðlamýnda, basit bir alýþkanlýk edinerek
+  (her test baþýnda þema tekrar yaratýlýr), þema ve kod arasýndaki
+  uyumsuzluklarý erkenden yakalama þansýna kavuþuyoruz. Emin olun ki bu
+  uyumsuzluklarýn kod içerisinde haftalarca kalýp büyümesi kod kalitesi
+  açýsýndan hiç iyi olmayacaktýr!
+  
+\item Birim test felsefesine göre her birim testi kendi kendine yeter bir
+  þekilde yazýlmalýdýr, ve bir birim testinin sonucu diðer birim testini
+  etkilememelidir (her birim testi baþýnda þemayý sýfýrdan kurmak için bir sebep
+  daha, çünkü bir test sonucunu bir ötekini veri tabaný üzerinden bile
+  etkilememelidir).
+  
+\end{itemize}
+
+\subsubsection{Hibernate Birim Testleri Hangi Tabana Baðlanýyor?} \label{hibernate:test:whichdb} 
+
+Örnek projelerimizdeki birim testleri, testlerin iþlediði makinadan eriþilebilen
+bir veri tabanýnýn varlýðýný þart koþmaktadýr. Fakat gereksinimler bundan
+ibarettir. Meselâ testlerimizin çalýþmasý için tabanda hiçbir þemanýn kurulmuþ
+olmasý gerekmez. \PVerb!TestUtil! aracýlýðý ile þemayý sýfýrdan kurmak JUnit
+birim testleri içinden otomatik olarak gerçekleþtirilecektir.
+
+\begin{quote}
+\textbf{Not}: \PVerb!TestUtil! bu baðlamda uzun bir deðiþim sürecinden geçti. Kodun daha
+önceki versiyonlarý, birim testleri iþleten kiþinin bilgisayarýnda bir veri
+tabanýnýn olamayacaðýný ihtimale katarak, SQL þema script'lerini MySQL ya da
+Oracle formatýndan HSQLDB formatýna anýnda çevirmeye uðraþýyordu. HSQLDB, gömülü
+(embedded) bir taban olduðu için, kullanmak için bir servis baþlatmaya gerek
+býrakmaz, bu sayede JUnit tarafýndan rahatlýkla hafýzada baþlatýlarak, yüklenip
+testler için hazýr hâle getirilebilir. Bu yöntemi takip etmekte amaç, test
+iþletici üzerinde en az külfeti getirmek idi.
+
+Fakat, bu yöntemin iþlemesinde problemler bulunmuþtur;
+
+\begin{enumerate}
+  \item HSQLDB, bazý çetrefil Hibernate sorgularýný iþletmekte problemler çýkarmýþ
+  \item Oracle ya da MySQL þema script'lerinden HSQLDB script'lerine otomatik
+  olarak çevirim yapan Perl script'lerinin bakýmý ve kodlamasý fazla zaman alýcý
+  bir eylem hâline gelmiþtir.
+\end{enumerate}
+
+Bu sebeple, Kural \#3 ýþýðýnda birim testlerini iþletmek isteyen her
+programcýnýn `ciddi bir veri taban ürününe eriþiminin olmasý' prensibini takip
+etmek uygun gözükmüþtür.
+\end{quote}
+
+
+\subsubsection{Deðiþik Test Senaryolarý}
+
+Eðer birim testlerinizde deðiþik senaryolarý test etmek isterseniz, bu, çoðu
+zaman {\em deðiþik örnek veri} kullanmak anlamýna gelecektir. Bu yeni
+senaryolarda (ve JUnit testlerinde), þemayý üreten satýr önceki örneklerimizdeki
+gibi kalacak, fakat {\em deðiþik} bir örnek veri dosyasýný iþleten ve {\em
+deðiþik} deðerleri \PVerb!assertEquals! ile kontrol eden bir kod
+olacaktýr. Meselâ, bu þekilde bir yeni testi altta görelim:
+
+\begin{lstlisting}[language=Java,caption=SimpleCarTestManyRows.java]
+public class SimpleCarTestManyRows  extends TestCase  {
+
+    public SimpleCarTest() { }
+
+    ...
+
+    public void testCarNew() throws Exception {
+        Connection c = TestUtil.createTestConnection();
+
+        TestUtil.createFromFile("tables_mysql.sql", c);
+        TestUtil.insertFromFile("sample_data_2.sql", c);
+
+        try {
+            Session s = HibernateSession.openSession();
+            HibernateSession.beginTransaction();
+            Car car = (Car) s.get(Car.class, "52 TT 30");
+            assertEquals("description 4", car.getDescription());
+
+            HibernateSession.commitTransaction();
+
+        } finally {
+            HibernateSession.closeSession();
+        }
+    }
+}
+\end{lstlisting}
+Yeni testimizin deðiþik veriye ihtiyacý var. Bu veriyi, alttaki dosyadan
+saðlayabiliriz. 
+
+\begin{lstlisting}[language=SQL,caption=sample\_data\_2.sql]
+truncate table car;
+insert into car(license_plate, description)
+   values('34 TTD 2202',description 1');
+insert into car(license_plate, description)
+   values('14 TF 399','description 2');
+insert into car(license_plate, description)
+   values('34 RF 493','description 3');
+insert into car(license_plate, description)
+   values('52 TT 30','description 4');
+\end{lstlisting}
+
+Görüldüðü gibi yeni testte yüklenen veri \PVerb!sample_data.sql! deðil,
+\PVerb!sample_data_2.sql!  adlý dosyadýr, çünkü testimiz için yaratmamýz gereken
+senaryo bunu gerektiriyordu. Yeni veri üzerinden testin kontrol edeceði araba
+nesnesi, \PVerb!52 TT 30! no'lu plakayý taþýyan arabadýr. Test, \PVerb!get!
+komutu ile bu nesneyi yükler \PVerb!assertEquals! ile sonucu kontrol eder.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Kabul Testleri][KABUL TESTLERÝ]{Kabul Testleri} \label{testing:acceptance}
+
+Birim testleri en ufak modül (metot) bazýnda test yapýyorsa, kabul testleri de
+(acceptance test) programýn dýþýndan, birden fazla modüle dokunabilecek þekilde
+bir kullanýcý gözünden test etmemize yarar. Kabul testlerine sektörde
+fonksiyonel (functional) test, ya da entegrasyon (integration) testleri isimleri
+de verilmektedir. Kabul testleri mümkün olduðu kadar dýþ sistemlerle
+entegrasyonu yapýlmýþ bir sistem üzerinde gerçekleþtirilmelidir. 
+
+Kabul testlerini en basit þekilde elle (uygulamayý bizzat kullanarak) yapmak
+mümkündür. Uygulamamýz test edilmeye hazýr hâle gelince kodlar test makinasýna
+gönderilir, ve bir test kullanýcý(lar) belli test senaryolarýný uygulama
+üzerinde iþletip, uygulama için kabul testlerinden geçti ya da kaldý raporu
+verebilirler. Test kullanýcýsý kabul testlerini gerçekleþtirirken elinde belli
+test senaryolarý olur. Kullanýcý bu senaryolarý sýrasýyla program üzerinde
+iþletir sonuçlarýný kontrol eder, ve bir yere not eder. Hatalý gözüken sonuçlar,
+hata takip sistemine (bug tracking system) girilir, ve düzeltme süreci baþlamýþ
+olur.
+
+
+\subsection{Otomatik Kabul Testleri}
+
+Elle yapýlan testler için zaman ve insan gücü harcanmasý gerekir. Fakat yapýlan
+iþin oldukça mekanik olmasý sebebiyle otomatik yapýlan kabul testleri de artýk
+tercih edilmeye baþlanmýþtýr (Kural \#7). Kurumsal Web ortamýnda otomatik kabul
+testleri iþletmek için birçok ürün mevcuttur; Bizim tavsiyemiz,
+\ref{perf:jmeter} bölümünde iþlediðimiz ve yük testleri için kullanýlan JMeter
+ürününü {\em kabul testleri için} kullanmaktýr.
+
+JMeter'i bu þekilde iki amaçlý kullanabilmemizin sebebi, bu ürününün Web
+uygulamasýndan gelen cevaplarý iþleyebilen bir birim saðlamasýdýr;
+Kullanacaðýmýz bu birim, \PVerb!Reponse Assertion! adlý birimdir.
+
+\subsubsection{JMeter Kullanýmý}
+
+Bir kabul testinin yük testinden en önemli farký, kabul testi için baðlanan tek
+Thread'in (sanal kullanýcý olarak) yeterli olmasýdýr, çünkü test edilen arka
+plan kodlarýnýn ölçeklenebilmesi deðil, doðru çalýþýp çalýþmadýðýdýr. Þekil
+\ref{testing:accept:thread} üzerinde gereken Thread ayarlarýný görüyoruz. 
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_3.eps}
+  }
+}
+\caption{\label{testing:accept:thread} Kabul Test için JMeter Thread Sayýsý}
+\end{figure}
+
+Geri kalan ayarlar, \ref{perf:jmeter} bölümünden tanýdýk olacaktýr. JMeter sanal
+kullanýcýsýnýn bir dinamik sayfaya baðlanýp form'a test deðerleri girmesi için
+\PVerb!Http Request! biriminin eklenmesi ve gerekli parametrelerin bu birime
+verilmesi yeterlidir. Örnek için \PVerb!StrutsHibPerformance! projesinin
+\PVerb!resources/acceptance-test-add.jmx! dosyasýnda içinde tanýmlanmýþ
+\PVerb!/kitapdemo/add-car.do! birimine bakabiliriz. Bu örnek kabul testini
+\PVerb!StrutsHibPerformance! projesi üzerinde kullanabiliriz.
+
+Örnek test dosyasýný, JMeter menüsü \PVerb!File | Open! ile açabilirsiniz. Þekil
+\ref{testing:accept:add} üzerinde kabul testin tüm birimlerini, Þekil
+\ref{testing:accept:add:detail} üzerinde ise \PVerb!/kitapdemo/add-car.do!
+biriminin detaylarýný görüyoruz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_1.eps}
+  }
+}
+\caption{\label{testing:accept:add} Örnek bir Kabul Testi}
+\end{figure}
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_8.eps}
+  }
+}
+\caption{\label{testing:accept:add:detail} Araba Eklemek}
+\end{figure}
+
+Bir kabul testinin yapmasý gereken doðruluk kontrollerini JMeter'ýn
+\PVerb!Response Assertion! birimini kullanarak yapabiliriz. Bu kontrol, JUnit
+birim testlerinden kullandýðýmýz \PVerb!assert! metotlarý ile eþdeðer bir
+özelliktir; Amacýmýz, testin beklediði cevap deðerleri uygulamadan geri
+gelmezse, bu kontrol edici birim ile bu hatayý yakalayýp bize bildirmesini
+saðlamaktýr.
+
+\PVerb!Response Assertion! birimi, yapýlan bir Web isteðinden sonra geri gelen
+cevap (response) içindeki deðerlere bakabilme yeteneðine sahiptir. Bu cevap
+içeriði, bir Web sayfasýný tarayýcýnýz ile ziyaret edince tarayýcýnýza
+gönderilen içerik ile aynýdýr. Tarayýcýya gelen HTML içeriði görmek için
+Mozilla'da \PVerb!View | Page Source! seçeneðini kullanýlabiliriz.
+
+\PVerb!Response Assertion! birimininin kontrolünü yapabilmesi için, hangi Web
+isteðinin içeriðine bakacaðýný bilmesi gerekiyor. Yâni \PVerb!Response
+Assertion! her zaman bir ``\PVerb!Http Request!'e'' {\em alt birim} olarak
+eklenmelidir. O zaman \PVerb!Response Assertion!  eklemek için, bir \PVerb!Http
+Request!'e týklayýp, mouse sað týklama ile \PVerb!Add | Assertions | Response
+Assertion!  seçeneðini seçmeliyiz. Eðer kontrol birimini yanlýþ yere eklediysek,
+bu birimi sürükle/býrak ile gereken \PVerb!Http Request!  üzerine götürüp,
+\PVerb!Add As Child! seçeneðini kullanmalýyýz. Alt birim olarak eklenmiþ
+\PVerb!Response Assertion! birimini Þekil \ref{testing:accept:add} üzerinde
+görüyoruz. Örneðimizde kullanýlan \PVerb!Response Assertion! içeriðini Þekil
+\ref{testing:accept:assert:detail} üzerinde görülmektedir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_2.eps}
+  }
+}
+\caption{\label{testing:accept:assert:detail} Araba Kontrolü Yapan Response Assertion}
+\end{figure}
+
+Bu cevap kontrolünde, cevap metni içinde aranacak deðerler ``34 TT 2000'' ve
+``benim arabam'' kelimeleridir. Bu kelimelerin orada olmasý lâzýmdýr, çünkü
+\PVerb!add-car.do! Struts Action'ýný iþini bitirdikten sonra yönlendirmeyi
+\PVerb!main.do!'ya yapar. \PVerb!main.do! ise, o anda sistemde olan tüm arabalarý
+listelemek ile yükümlüdür, ve biz de daha önceden \PVerb!add-car.do! ile plakasý
+``34 TT 2000'' ve açýklamasý ``benim arabam'' olan bir arabayý sisteme
+eklettirdiðimiz için, bu kelimelerin araba listesinde olmasýný beklememiz
+normâldir. \PVerb!Run | Start! ile iþletebileceðiniz ekleme kabul testinin
+sonuçlarý \PVerb!Aggregate Report! biriminde þöyle
+(\ref{testing:accept:assert:result}) gözükecektir. Eðer \PVerb!Error! kolonu
+altýnda \PVerb!0.00%! görüyorsak, tüm testlerin baþarý ile geçtiðini anlarýz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_7.eps}
+  }
+}
+\caption{\label{testing:accept:assert:result}  Sonuçlar}
+\end{figure}
+
+Özet olarak, JMeter ile bir Web uygulamasýný test etmek için, þunlarý yapmak
+gerekir:
+
+\begin{itemize}
+   \item Test edilen Action'a \PVerb!Http Request! ile bazý test deðerleri
+   göndermek
+   \item \PVerb!struts-config.xml! dosyasýna bakarak, iþ bittikten sonra
+   yönlendirmenin nasýl yapýlacaðýna bakmak
+   \item Bu yönlendirmeye göre, hangi deðerlerin geleceðine göre bir kontrol
+   edici \PVerb!Response Assertion! birimini \PVerb!Http Request! altýna eklemek
+\end{itemize}
+Eðer \PVerb!Http Request! birimlerini elle eklemek istemiyorsak,
+\ref{perf:jmeter:record} bölümünde anlatýldýðý gibi, kullanýcý programý tarayýcýda
+kullanýrken, hareketlerinin kaydedilmesini saðlayabiliriz.
+
+\subsubsection{Kontrol Çeþitleri}
+
+Bir \PVerb!Response Assertion! tanýmlarken, yapacaðýmýz ayarlardan bir tanesi,
+``hangi içerik kontrolünün'' yapýldýðýný tanýmlamaktýr. Üstte gösterilen
+kontrol, bir ``mevcudiyet'' kontrolü, ya da, bizim beklediðimiz deðerin {\em
+olmasýný} bekleyen türden bir kontroldür. Fakat bir metnin olma kontrolünü
+yaptýðýmýz gibi, {\em olmamama} kontrolünü de yapabiliriz. Bu durum, meselâ bir
+arabanýn sistemden silindiði \PVerb!delete-car.do! Action'ý için gereklidir. Bu
+Action bir araba sildiði için, mantýken o arabanýn bir sonraki araba listesi
+ekranýnda olmamasý gerekecektir.
+
+Eðer \PVerb!Response Assertion!'ýn yaptýðý kontrol çeþidini deðiþtirmek
+istersek, bunu \PVerb!Pattern Matching Rules! ayarlarý altýndan
+yapabiliriz. Meselâ, örnek olarak biraz önce eklediðimiz arabayý
+\PVerb!delete-car.do! ile silelim, ve \PVerb!delete-car.do! altýna koyacaðýmýz
+bir kontrol Þekil \ref{testing:accept:assert:not} üzerindeki gibi olsun. Bu
+kontrolün detaylarýnda, uymama kontrolü için \PVerb!Contains! seçeneðine ek
+olarak, \PVerb!Not! (deðil) seçeneðini de seçmemiz gerekti. Eðer \PVerb!Not!
+seçilmemiþ olsaydý kontrol, pozitif bir kontrol olacaktý.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_5.eps}
+  }
+}
+\caption{\label{testing:accept:assert:not}  Uymama Kontrolü}
+\end{figure}
+Bu testi de iþletince, geriye gelen sonuç Þekil \ref{testing:accept:assert:both}
+üzerindeki gibi olacaktýr. Yine hata yüzdesi \PVerb!0.00%! seviyesindedir, yâni
+tüm testler baþarýyla geçmiþtir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_4.eps}
+  }
+}
+\caption{Ekleme ve Silme Testleri}
+\end{figure}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/accept_test_6.eps}
+  }
+}
+\caption{\label{testing:accept:assert:both} Ekleme ve Silme Test Sonuçlarý}
+\end{figure}
+
+
+\section{Ne Kadar Test Gerekli?}
+
+Birim ve kabul testlerini ciddi bir þekilde uygulamaya karar verilince ve
+teknikleri öðrenilince, programcýlarý en çok düþündüren kararlardan biri ``ne
+kadar testin yeterli olduðu'' sorusudur. Ne de olsa testler, varlýðý ve yokluðu
+gereklilik kodlarý seviyesinde kontrol edilen iþler deðillerdir. Eðer yazmazsak,
+yazýlmayan testler yapýlmayan kontrollerdir. Uygulamamýz üzerinde bir deðiþiklik
+olmaz.
+
+\subsection{Birim Test Miktarý}
+
+Birim testleri için ``ne kadar'' sorusunun cevabýnda iyi bir kulaða küpe kural
+(rule of thumb) öncelikle kodun ne kadar çetrefil olduðu ile alâkalýdýr. Kodun
+çetrefilliðini en basit olarak, üstün körü bir þekilde, koda çýplak gözel bakýþ
+kullanarak bile yapýlabilir. Ne zaman ki bir metot kodlarýnýn girinti
+(indentation) seviyesi iki ya da daha fazla seviye içeri giriyor, o zaman o
+metotu test etmemiz iyi olacaktýr. Girinti seviyesi, bir metot içinde
+\PVerb!while!, \PVerb!if!, \PVerb!else! komutlarýnýn kullanýmýna bir iþaret
+olduðu için, basit bir litmus testi olarak faydalý bir göstergedir.
+
+Diðer þartlarda, birim testi yazmak ve yazmamak kararý için her durumu ayrý ayrý
+tartabiliriz. Biz, meselâ Hibernate kullanýlan kurumsal kodlarýmýzda her kalýcý
+nesne ve o nesne üzerindeki her iliþkiyi bir þekilde kullanan (genelde bir
+\PVerb!get! komutu ile) bir testi yeterli buluyoruz. Bu çeþit bir test en
+azýndan eþlemelerin doðru yapýldýðýna dair bize bir rahatlýk vereceði için
+yapýlmasý faydalý olmaktadýr. Ama her kalýcý nesne için dört iþlemin (ekle, sil,
+güncelle, yükle) test edilmesi fuzuli (overkill) olabilir. Bu tür birim
+testlerini yazmak hýzlý geliþtirmenize engel olacaðý için tarafýmýzdan tavsiye
+edilmeyecektir.
+
+\subsection{Kabul Test Miktarý}
+
+Felsefe olarak þunu da eklemek gerekiyor. Kabul testleri birim testlerinden daha
+önemlidir. Tecrübe gösteriyor ki, ufak, mikro seviyede yazýlan testlerden geçen
+ve doðru çalýþtýðý zannedilen bir uygulamanýn bütününün çalýþmamasý
+mümkündür. Özellikle birden fazla dýþ sistemin biraraya geldiði kurumsal
+uygulama dünyasýnda iç ve dýþ entegrasyon, sistemin iþleyiþi için had safhada
+önem taþýr. O zaman kabul testlerini, özellikle anlattýðýmýz þekilde otomatik
+olanlarýný hazýrlamamýz, ve güncel tutmamýz önemlidir.
+
+Kabul test miktarý açýsýndan, en azýndan, her orta ve üstü zorlukta olan
+gereklilik (functionality) ve bu gerekliliðin deðiþik senaryolarýnýn test
+edilmesi iyi olacaktýr. Eðer daha fazla zaman ve kaynak ayýrabiliyorsanýz, en
+basit sayfalarý bile otomatik test havuzunuza dahil etmemiz, projemiz için ileri
+safhalarda çok faydalý bir seçim olacaktýr.
+

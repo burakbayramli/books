@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Models.HM</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        <a href="gPy.Models-module.html">Module&nbsp;Models</a> ::
+        Class&nbsp;HM
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Models.HM-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class HM</h1><span class="codelink"><a href="gPy.Models-pysrc.html#HM">source&nbsp;code</a></span><br /><br />
+<center>
+<center>  <map id="class_hierarchy_for_hm" name="class_hierarchy_for_hm">
+<area shape="rect" href="gPy.Models.BNM&#45;class.html" title="BNM" alt="" coords="19,233,70,257" />
+<area shape="rect" href="gPy.Models.DM&#45;class.html" title="DM" alt="" coords="94,233,137,257" />
+<area shape="rect" href="gPy.Models.JFM&#45;class.html" title="JFM" alt="" coords="93,289,138,313" />
+<area shape="rect" href="gPy.Models.GM&#45;class.html" title="GM" alt="" coords="27,177,70,201" />
+<area shape="rect" href="gPy.Models.HM&#45;class.html" title="HM" alt="" coords="61,121,103,145" />
+<area shape="rect" href="gPy.Models.RM&#45;class.html" title="RM" alt="" coords="94,177,137,201" />
+<area shape="rect" href="gPy.Variables.Domain&#45;class.html" title="Variables.Domain" alt="" coords="19,9,145,33" />
+<area shape="rect" href="gPy.Variables.SubDomain&#45;class.html" title="Variables.SubDomain" alt="" coords="7,65,157,89" />
+</map>
+  <img src="class_hierarchy_for_hm.gif" alt='' usemap="#class_hierarchy_for_hm" ismap="ismap" class="graph-without-title">
+</center></center>
+<hr />
+<p>Hierarchical models</p>
+  Probability distributions which are the product of a number of 
+  factors. If each factor is a <a href="gPy.Parameters.Factor-class.html" 
+  class="link">Parameters.Factor</a> object then we have a <i>fitted</i> 
+  model, i.e. a particular probability distribution. If one or more factor 
+  is not a <a href="gPy.Parameters.Factor-class.html" 
+  class="link">Parameters.Factor</a> object but only a <a 
+  href="gPy.Variables.SubDomain-class.html" 
+  class="link">Parameters.SubDomain</a> object (and thus lacks data), then 
+  a (non-singleton) <i>set</i> of distributions is defined.<br /><br />
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">factors</span>=<span class="summary-sig-default">()</span>,
+        <span class="summary-sig-arg">domain</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">new_domain_variables</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">must_be_new</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">check</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Initialise a hierarchical model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Parameters.Factor-class.html" 
+      class="link">Parameters.Factor</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#__getitem__" class="summary-sig-name">__getitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>)</span><br />
+      Return the factor (not a copy) whose variables are 
+      <code>hyperedge</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Iterator</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#__iter__" class="summary-sig-name">__iter__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an iterator over the factors in the model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">String</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Print each factor separately
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#add" class="summary-sig-name">add</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">factor</span>)</span><br />
+      Include a factor in a hierarchical model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#add_ident" class="summary-sig-name">add_ident</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>)</span><br />
+      Add an ident factor for a hyperedge to a hierarchical model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#condition" class="summary-sig-name">condition</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">condition</span>,
+        <span class="summary-sig-arg">keep_class</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Alter a hierarchical model by effecting the restriction on 
+      variables given by <code>condition</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Same type as <code>self</code></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#copy" class="summary-sig-name">copy</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">copy_domain</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Return a deep copy of a hierarchical model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#eliminate_variable" class="summary-sig-name">eliminate_variable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variable</span>,
+        <span class="summary-sig-arg">trace</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Alter a hierarchical model by summing out a variable
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Dictionary</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#factors" class="summary-sig-name">factors</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return (a copy of) the dictionary mapping factor variables (as 
+      frozensets) to the factors themselves
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">List</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#factors_containing_variable" class="summary-sig-name">factors_containing_variable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variable</span>)</span><br />
+      Return a list of factors containing <code>variable</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">List</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#items" class="summary-sig-name">items</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return sequence of <code>factor.variables(),factor</code> pairs 
+      for each factor in the model.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#gui_display" class="summary-sig-name">gui_display</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">parent</span>,
+        <span class="summary-sig-arg">colours</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Display a GUI widget for displaying a model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Structures.HyperGraph-class.html" 
+      class="link">HyperGraph</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#hypergraph" class="summary-sig-name">hypergraph</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return (a copy of) the hypergraph associated with the model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#inc_from_rawdata" class="summary-sig-name">inc_from_rawdata</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">rawdata</span>)</span><br />
+      Increment <code>self</code> with counts directly from 
+      <code>rawdata</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Structures.UGraph-class.html" 
+      class="link">Structures.UGraph</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#interaction_graph" class="summary-sig-name">interaction_graph</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the interaction graph for a model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Models.DM-class.html" class="link">DM</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#make_decomposable" class="summary-sig-name">make_decomposable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">elimination_ordering</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Return a decomposable model using an elimination ordering
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#marginal" class="summary-sig-name">marginal</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>)</span><br />
+      Alter a model to represent the marginal distibution on 
+      <code>variables</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Set</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#markov_blanket" class="summary-sig-name">markov_blanket</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variable</span>)</span><br />
+      Return the Markov blanket for <code>variable</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#num_factors_containing_variable" class="summary-sig-name">num_factors_containing_variable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variable</span>)</span><br />
+      Return the number of factors containing a given variable
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#remove" class="summary-sig-name">remove</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>)</span><br />
+      Remove a factor from a hierarchical model
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">List</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#red" class="summary-sig-name">red</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Reduce the model, returning any redundant hyperedges
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Boolean</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#reduced" class="summary-sig-name">reduced</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test whether a model is reduced
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Parameters.Factor-class.html" class="link">Factor</a>
+      object</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#sumout" class="summary-sig-name">sumout</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>)</span><br />
+      Sum out (marginalise away) variables using maximum cardinality
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#marginalise_away" class="summary-sig-name">marginalise_away</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>)</span><br />
+      Alter a hierarchichal model by summing out variables
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#variable_elimination" class="summary-sig-name">variable_elimination</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>)</span><br />
+      Alter a hierarchichal model by summing out variables
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><code>None</code> or <code>Float</code></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#variable_elimination_trace" class="summary-sig-name">variable_elimination_trace</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>)</span><br />
+      As <a href="gPy.Models.HM-class.html#marginalise_away" 
+      class="link">variable_elimination</a> but also return the 
+      corresponding <a href="gPy.Structures.DiForest-class.html" 
+      class="link">Structures.DiForest</a> object
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Float</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#z" class="summary-sig-name">z</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the sum of values associated with each full joint 
+      instantiation
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.HM-class.html#zero" class="summary-sig-name">zero</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Set all values in all factors to zero
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#__div__">__div__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__idiv__">__idiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__imul__">__imul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__mul__">__mul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rdiv__">__rdiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rmul__">__rmul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#inst2index">inst2index</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#insts">insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#marginalise_onto">marginalise_onto</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#variables">variables</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_get_result_variables">_get_result_variables</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_insts">_insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_pointwise_op">_pointwise_op</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b>:
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variable">add_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables">add_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables_from_rawdata">add_domain_variables_from_rawdata</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variable">change_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variables">change_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#common_domain">common_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#numvals">numvals</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#values">values</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== STATIC METHODS ==================== -->
+<a name="section-StaticMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Static Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-StaticMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#clear_default_domain">clear_default_domain</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_default_domain">_default_domain</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Dictionary</code>
+  </td><td class="summary">
+    <a href="gPy.Models.HM-class.html#_factors">_factors</a><br />
+      A mapping from each hyperedge in the associated hypergraph to its 
+      corresponding factor.
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Structures.HyperGraph-class.html" 
+      class="link">HyperGraph</a> object</code>
+  </td><td class="summary">
+    <a href="gPy.Models.HM-class.html#_hypergraph">_hypergraph</a><br />
+      The hypergraph associated with the model.
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_variables">_variables</a></code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b> (private):
+      <code><a href="gPy.Variables.Domain-class.html#_domain">_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#_numvals">_numvals</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">factors</span>=<span class="sig-default">()</span>,
+        <span class="sig-arg">domain</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">new_domain_variables</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">must_be_new</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">check</span>=<span class="sig-default">False</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.__init__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Initialise a hierarchical model</p>
+  Each factor has its domain expanded to be the domain of the model, if 
+  necessary.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>factors</code></strong> (<code>Sequence, each element of which is a <a 
+          href="gPy.Parameters.Factor-class.html" 
+          class="link">Parameters.Factor</a> or <a 
+          href="gPy.Variables.SubDomain-class.html" 
+          class="link">Variables.SubDomain</a> object. (Alternatively an 
+          object of class <a href="gPy.Models.HM-class.html" 
+          class="link">HM</a> or one of its subclasses.)</code>) - The factors in the hierarchical model. (Alternatively an 
+          existing object of class <a href="gPy.Models.HM-class.html" 
+          class="link">HM</a> (or its subclasses), in which case 
+          <code>self</code> has identical attributes.)</li>
+        <li><strong class="pname"><code>domain</code></strong> (<code><a href="gPy.Variables.Domain-class.html" 
+          class="link">Variables.Domain</a> or None</code>) - A domain for the model. If None the internal default domain is
+          used.</li>
+        <li><strong class="pname"><code>new_domain_variables</code></strong> (<code>Dict or None</code>) - A dictionary containing a mapping from any new variables to 
+          their values. <code>domain</code> is updated with these 
+          values</li>
+        <li><strong class="pname"><code>must_be_new</code></strong> (<code>Boolean</code>) - Whether domain variables in <code>new_domain_variables</code> 
+          have to be new</li>
+        <li><strong class="pname"><code>check</code></strong> (<code>Boolean</code>) - Whether to check that all variables exist in 
+          <code>domain</code></li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>VariableError</strong></code> - If a variable in <code>new_domain_variables</code> already 
+        exists with values different from its values in 
+        <code>new_domain_variables</code>; Or if <code>must_be_new</code> 
+        is set and the variable already exists. Or if <code>check</code> is
+        set and a variable in <code>variables</code> is not in the 
+        domain</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="gPy.Variables.SubDomain-class.html#__init__">Variables.SubDomain.__init__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__getitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__getitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>)</span>
+    <br /><em class="fname">(Indexing operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.__getitem__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the factor (not a copy) whose variables are 
+  <code>hyperedge</code>
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>hyperedge</code></strong> (<code>Iterable</code>) - The variables of the sought factor</li>
+    </ul>
+    <dl><dt>Returns: <code><a href="gPy.Parameters.Factor-class.html" 
+      class="link">Parameters.Factor</a></code></dt>
+        <dd>The factor</dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If there is no factor with these variables</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__iter__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__iter__</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.__iter__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return an iterator over the factors in the model</p>
+  To allow <code>for factor in model: ...</code> constructions.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>Iterator</code></dt>
+        <dd>An iterator over the factors in the model</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.__repr__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  None
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      <a href="gPy.Variables.SubDomain-class.html#__repr__">Variables.SubDomain.__repr__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.__str__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Print each factor separately</p>
+  Use lexicographical ordering on factor variables
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>String</code></dt>
+        <dd>Pretty representation of a <a href="gPy.Models.HM-class.html" 
+          class="link">HM</a></dd></dl>
+    <dl><dt>Overrides:
+      object.__str__
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="add"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">factor</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.add">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Include a factor in a hierarchical model</p>
+  If a factor with exactly the same variables already exists in the 
+  model, then this factor is multiplied by <code>factor</code>. This is to 
+  ensure that there is a 1-1 mapping between factors and hyperedges (recall
+  that the associated <a href="gPy.Structures.HyperGraph-class.html" 
+  class="link">HyperGraph</a> is a <b>set</b> of hyperedges). Otherwise 
+  <code>factor</code> is just added to the existing factors.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>factor</code></strong> (<code><a href="gPy.Parameters.Factor-class.html" 
+          class="link">Factor</a> object</code>) - The factor to be added</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="add_ident"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_ident</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.add_ident">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Add an ident factor for a hyperedge to a hierarchical model</p>
+  Typically <code>hyperedge</code> will come from a <a 
+  href="gPy.Structures.HyperGraph-class.html" class="link">HyperGraph</a> 
+  model. If {hyperedge} is already in the model's hypergraph nothing is 
+  done. An ident factor maps all instantiations to 1.0
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>hyperedge</code></strong> (<code>Ordered tuple of variables</code>) - The variables for the factor</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="condition"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">condition</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">condition</span>,
+        <span class="sig-arg">keep_class</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.condition">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Alter a hierarchical model by effecting the restriction on variables 
+  given by <code>condition</code></p>
+  This alters the model's domain. Make a copy with 
+  <code>copy_domain=True</code> if the original domain will be needed
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>condition</code></strong> (<code>Dict</code>) - Dictionary of the form {var1:values1,var2:values2..} Each 
+          value of this dictionary must be an iterable</li>
+        <li><strong class="pname"><code>keep_class</code></strong> (<code>Boolean</code>) - If true, <code>self</code> keeps its original class after 
+          conditioning, otherwise it will be of class <a 
+          href="gPy.Models.HM-class.html" class="link">HM</a> after 
+          conditioning</li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If a variable is used that is not in the model</li>
+        <li><code><strong class='fraise'>ValueError</strong></code> - If a value is used that is not a possible value of the variable 
+        it is attached to</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="copy"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">copy_domain</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.copy">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return a deep copy of a hierarchical model
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>copy_domain</code></strong> (<code>Boolean</code>) - If true <code>self</code>'s domain is copied, otherwise the 
+          copy shares <code>self</code>'s domain</li>
+    </ul>
+    <dl><dt>Returns: <code>Same type as <code>self</code></code></dt>
+        <dd>A copy of <code>self</code></dd></dl>
+    <dl><dt>Overrides:
+      <a href="gPy.Variables.SubDomain-class.html#copy">Variables.SubDomain.copy</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="eliminate_variable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">eliminate_variable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variable</span>,
+        <span class="sig-arg">trace</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.eliminate_variable">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Alter a hierarchical model by summing out a variable</p>
+  <p>NOTE: This is a deliberately naive implementation which does not use 
+  any conditional independence properties of the distribution.</p>
+  Removes one or more factors.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variable</code></strong> (<code>String</code>) - The variable to eliminate</li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If <code>variable</code> is not in the model</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="factors"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">factors</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.factors">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return (a copy of) the dictionary mapping factor variables (as 
+  frozensets) to the factors themselves</p>
+  Each frozenset is also a hyperedge in the model's hypergraph. A copy 
+  of this hypergraph is available via <a 
+  href="gPy.Models.HM-class.html#hypergraph" 
+  class="link">hypergraph</a>.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>Dictionary</code></dt>
+        <dd>(A copy of) the dictionary mapping factor variables to the 
+          factors themselves</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="factors_containing_variable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">factors_containing_variable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variable</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.factors_containing_variable">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return a list of factors containing <code>variable</code>
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variable</code></strong> (<code>Immutable (usually string)</code>) - A variable</li>
+    </ul>
+    <dl><dt>Returns: <code>List</code></dt>
+        <dd>A list of factors containing <code>variable</code></dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="items"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">items</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.items">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return sequence of <code>factor.variables(),factor</code> pairs for 
+  each factor in the model.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>List</code></dt>
+        <dd>Sequence of <code>factor.variables(),factor</code> pairs for 
+          each factor in the model</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="gui_display"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">gui_display</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">parent</span>,
+        <span class="sig-arg">colours</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.gui_display">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Display a GUI widget for displaying a model
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>parent</code></strong> (<code>Some suitable Tk object.</code>) - A widget into which the GUI is placed.</li>
+        <li><strong class="pname"><code>colours</code></strong> (<code>Dictionary</code>) - Mapping from hyperedges to colours</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="hypergraph"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">hypergraph</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.hypergraph">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return (a copy of) the hypergraph associated with the model
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code><a href="gPy.Structures.HyperGraph-class.html" 
+      class="link">HyperGraph</a></code></dt>
+        <dd>(A copy of) the hypergraph associated with the model</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="inc_from_rawdata"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">inc_from_rawdata</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">rawdata</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.inc_from_rawdata">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Increment <code>self</code> with counts directly from 
+  <code>rawdata</code></p>
+  OK for parameter fitting not for structure learning
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>rawdata</code></strong> (<code>Tuple</code>) - A tuple like that returned by <a 
+          href="gPy.IO-module.html#read_csv" 
+          class="link">IO.read_csv</a>.</li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>IndexError</strong></code> - If <code>self</code> has a variable missing from 
+        <code>rawdata</code></li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="interaction_graph"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">interaction_graph</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.interaction_graph">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return the interaction graph for a model</p>
+  The interaction graph contains an edge for any pair of variables which
+  are members of a common factor.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code><a href="gPy.Structures.UGraph-class.html" 
+      class="link">Structures.UGraph</a></code></dt>
+        <dd>The interaction graph</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="make_decomposable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_decomposable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">elimination_ordering</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.make_decomposable">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return a decomposable model using an elimination ordering</p>
+  <p>If no <code>elimination_ordering</code> is given <a 
+  href="gPy.Structures.HyperGraph-class.html#maximum_cardinality_search" 
+  class="link">Structures.ReducedHyperGraph.maximum_cardinality_search</a> 
+  is used to provide one.</p>
+  Returned object shares many attributes with <code>self</code>. Use a 
+  copy of self, if it still needed as an independent object.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>elimination_ordering</code></strong> (<code>Sequence</code>) - Order in which to eliminate variables</li>
+    </ul>
+    <dl><dt>Returns: <code><a href="gPy.Models.DM-class.html" class="link">DM</a></code></dt>
+        <dd>A decomposable model</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="marginal"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">marginal</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.marginal">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Alter a model to represent the marginal distibution on 
+  <code>variables</code></p>
+  If <code>self</code> is a BNM and <code>variables</code> is an 
+  ancestral set then <code>self</code> remains a BN otherwise it becomes a 
+  general hierarchical model.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="markov_blanket"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">markov_blanket</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variable</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.markov_blanket">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the Markov blanket for <code>variable</code>
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variable</code></strong> (<code>Immutable</code>) - Variable in the model</li>
+    </ul>
+    <dl><dt>Returns: <code>Set</code></dt>
+        <dd>Markov blanket for <code>variable</code></dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If <code>variable</code> is not in the model</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="num_factors_containing_variable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">num_factors_containing_variable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variable</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.num_factors_containing_variable">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the number of factors containing a given variable
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="remove"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">remove</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.remove">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Remove a factor from a hierarchical model
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>hyperedge</code></strong> (<code>Iterable</code>) - The variables of the factor</li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If no factor with these variables exists</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="red"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">red</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.red">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Reduce the model, returning any redundant hyperedges</p>
+  Any factor all of whose variables are contained in another is 
+  removed
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>List</code></dt>
+        <dd>Redundant hyperedges</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="reduced"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">reduced</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.reduced">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Test whether a model is reduced
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>Boolean</code></dt>
+        <dd>Whether a model is reduced</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="sumout"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">sumout</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.sumout">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Sum out (marginalise away) variables using maximum cardinality</p>
+  <code>variables</code> may be altered
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variables</code></strong> (<code>Iterable</code>) - Variables to sum out</li>
+    </ul>
+    <dl><dt>Returns: <code><a href="gPy.Parameters.Factor-class.html" class="link">Factor</a>
+      object</code></dt>
+        <dd>New factor with vars_togo summed out</dd></dl>
+    <dl><dt>Overrides:
+      <a href="gPy.Variables.SubDomain-class.html#sumout">Variables.SubDomain.sumout</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="marginalise_away"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">marginalise_away</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.marginalise_away">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Alter a hierarchichal model by summing out variables</p>
+  NOTE: This is a deliberately naive implementation which does not use 
+  any conditional independence properties of the distribution.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variables</code></strong> (<code>Sequence type</code>) - Ordered variables to eliminate</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="gPy.Variables.SubDomain-class.html#marginalise_away">Variables.SubDomain.marginalise_away</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="variable_elimination"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">variable_elimination</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.marginalise_away">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Alter a hierarchichal model by summing out variables</p>
+  NOTE: This is a deliberately naive implementation which does not use 
+  any conditional independence properties of the distribution.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variables</code></strong> (<code>Sequence type</code>) - Ordered variables to eliminate</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="variable_elimination_trace"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">variable_elimination_trace</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.variable_elimination_trace">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>As <a href="gPy.Models.HM-class.html#marginalise_away" 
+  class="link">variable_elimination</a> but also return the corresponding 
+  <a href="gPy.Structures.DiForest-class.html" 
+  class="link">Structures.DiForest</a> object</p>
+  If all variables are summed out then the relevant scalar is 
+  returned
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variables</code></strong> (<code>Sequence type</code>) - Ordered variables to eliminate</li>
+    </ul>
+    <dl><dt>Returns: <code><code>None</code> or <code>Float</code></code></dt>
+        <dd><code>None</code> usually. The relevant scalar if all 
+          variables are summed out</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="z"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">z</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.z">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return the sum of values associated with each full joint 
+  instantiation</p>
+  This is the partition function. Result is generally not 1.0 since 
+  models may represent distributions only up to normalisation. An expensive
+  operation.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>Float</code></dt>
+        <dd>The sum of values associated with each full joint 
+          instantiation</dd></dl>
+      <p><strong>To Do:</strong>
+        Use sensible ordering of variables to eliminate
+      </p>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="zero"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">zero</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#HM.zero">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Set all values in all factors to zero
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="_factors"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">_factors</h3>
+  A mapping from each hyperedge in the associated hypergraph to its 
+  corresponding factor. See <a href="gPy.Models.HM-class.html" 
+  class="link">HM</a> documentation for further information on factors.
+  <dl><dt></dt><dd>
+    <dl><dt>Type:</dt>
+      <dd>Dictionary</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="_hypergraph"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">_hypergraph</h3>
+  The hypergraph associated with the model. There is exactly one 
+  hyperedge for each factor. The hyperedge for a given factor is just the 
+  set of that factor's variables (implemented as a frozenset).
+  <dl><dt></dt><dd>
+    <dl><dt>Type:</dt>
+      <dd><a href="gPy.Structures.HyperGraph-class.html" 
+      class="link">HyperGraph</a> object</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha3 on Sun Jan 14 18:48:33 2007</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

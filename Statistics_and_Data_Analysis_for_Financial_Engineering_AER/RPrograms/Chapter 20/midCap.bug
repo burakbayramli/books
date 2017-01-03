@@ -1,0 +1,16 @@
+model{
+for (i in 1:n){
+for (j in 1:m){
+x1[i,j] ~ dnorm(mu[j],tau_eps)
+}
+}
+for (j in 1:m)
+{
+mu[j] ~ dnorm(alpha,tau_mu)
+}
+alpha ~ dnorm(0.0,1.0E-3)
+tau_eps ~ dgamma(0.1,.01)
+tau_mu ~ dgamma(0.1,.01)
+sigma_eps <- 1 / sqrt(tau_eps)
+sigma_mu <- 1/sqrt(tau_mu)
+}

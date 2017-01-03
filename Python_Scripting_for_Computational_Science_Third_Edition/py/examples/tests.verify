@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('Grid2D.py')
+test.run('Grid2Dit.py', options='_verify1_Grid2Dit')
+test.run('Grid2Dit.py', options='_verify1_Grid2Ditv')
+test.run('SparseVec.py')
+test.run('cmlparsing.py', options='-d mydir --confirm file1 file2 f3')
+test.run('copytypes.py')
+test.run('exceptions.py')
+test.run('funcwrap_test.py')
+test.run('integrate.py', options='Simpson')
+test.run('integrate.py', options='Trapezoidal')
+test.run('integrate.py', options='GaussLegendre2')
+test.run('scope.py')
+test.run('type.py')
+test.run('typedlist.py')
+test.run('xdr.py')

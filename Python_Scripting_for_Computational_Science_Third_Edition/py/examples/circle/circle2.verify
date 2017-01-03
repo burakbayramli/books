@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import TestRunNumerics, defaultfilter
+test = TestRunNumerics('circle2.v')
+test.run('circle.py', options='1 0.21')
+# truncate numerical expressions in the output:
+test.approx(defaultfilter)
+
+# generate circle2.vd file in correct format:
+fd = open('circle2.vd', 'w')
+fd.write('## exact data\n')
+# grab the output from circle.py, throw away the
+# first and last line, and merge the numbers into
+# one column:
+cmd = 'circle.py 1 0.21'
+output = os.popen(cmd)
+res = output.readlines()
+output.close()
+numbers = []
+for line in res[1:-1]: # skip first and last line
+    for r in line.split():
+        numbers.append(r)
+# dump length of numbers and its contents:
+fd.write('%d\n' % len(numbers))
+for r in numbers: fd.write(r + '\n')
+fd.close()
+# end of script

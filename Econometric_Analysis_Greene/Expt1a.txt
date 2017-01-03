@@ -1,0 +1,214 @@
+/*===================================================
+Section 4.9.4.  Example of Various Test Procedures.
+*/===================================================
+Read ; Nobs = 20 ; Nvar = 3 ; Names = I,Y,E$
+     1         20.5      12
+     2         31.5      16 
+     3         47.7      18          
+     4         26.2      16          
+     5         44.0      12          
+     6         8.28      12          
+     7         30.8      16          
+     8         17.2      12          
+     9         19.9      10          
+    10         9.96      12          
+    11         55.8      16  
+    12         25.2      20  
+    13         29.0      12  
+    14         85.5      16   
+    15         15.1      10   
+    16         28.5      18
+    17         21.4      16
+    18         17.7      20
+    19         6.42      12
+    20         84.9      16
+Sample;1-20$
+?
+? Just change name to be consistent with text
+?
+Create;x=e$
+?
+? Unrestricted maximum likelihood estimation.
+?
+Maxize ; fcn = -r*log(beta+x)-log(gma(r))-y/(beta+x)+(r-1)*log(y)
+       ; start=-5,1
+       ; labels=beta,r$
+/*
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations               20     |
+              | Iterations completed                  4     |
+              | Log likelihood function       -82.91605     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BETA     -4.718503621      3.6568024       -1.290   .1969
+ R         3.150896345      1.2398481        2.541   .0110
+*/
+?
+? Pick off parameter estimates
+?
+Calc ; betaml=b(1);rml=b(2)$
+?
+? Compute variables that are first and second derivatives
+? gb and gr are first derivatives, hbb,hrr,hbr = Hessian
+? Also computes log likelihood function
+?
+Create ; gb=-rml/(betaml+x)+y/(betaml+x)^2
+       ; gr=-log(betaml+x)-psi(rml)+log(y)
+       ; hbb=rml/(betaml+x)^2-2*y/(betaml+x)^3
+       ; hrr=-psp(rml)
+       ; hbr=-1/(betaml+x)$
+       ; loglik=-rml*log(betaml+x)-log(gma(rml))
+               -y/(betaml+x)+(rml-1)*log(y)$
+?
+? Summing terms produces log likelihood and derivatives.
+?
+calc;list;lloglu=sum(loglik)
+         ;gbu=sum(gb)
+         ;gru=sum(gr)
+         ;hbbu=sum(hbb)
+         ;hrru=sum(hrr)
+         ;hbru=sum(hbr)$
+         ;hbru=sum(hbr)$
+*/
+    LLOGLU  = -.82916048583538210D+02
+    GBU     = -.16887894027650670D-07
+    GRU     =  .54968437801505840D-07
+    HBBU    = -.85570382274745960D+00
+    HRRU    = -.74591837131888800D+01
+    HBRU    = -.22419691609929970D+01
+Calculator: Computed   6 scalar results
+*/
+? Estimators for asymptotic covariance matrix
+? 1.  Based on actual Hessian
+?
+Matrix ; vh=[hbbu/hbru,hrru] ; vh=-1*vh ; list; vh= <vh>$
+*/
+Matrix VH      has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .5499144D+01 -.1652850D+01
+       2| -.1652850D+01  .6308517D+00
+*/
+? 2.  Expected Hessian.  Compute variables and sum
+?
+Create ; ehbb=rml/(betaml+x)^2
+       ; ehrr=psp(rml)
+       ; ehbr=1/(betaml+x)$
+Calc   ; vehbb=sum(ehbb)
+       ; vehrr=sum(ehrr)
+       ; vehbr=sum(ehbr)$
+Matrix ; list;evh=[vehbb/vehbr,vehrr];evh=<evh>$
+/*
+Matrix EVH      has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .4900316D+01 -.1472863D+01
+       2| -.1472863D+01  .5767540D+00
+*/
+
+? 3.  BHHH estimator can be obtained using simple sums
+?  
+Namelist ; G=gb,gr$
+Matrix   ; list ; VB = <G'G> $
+/*
+Matrix VB       has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .1337220D+02 -.4321743D+01
+       2| -.4321743D+01  .1537223D+01
+*/
+
+?---------------------------------------------------------
+? Testing procedures for the hypothesis RHO = 1.
+?---------------------------------------------------------
+? 1.  Form confidence interval
+?
+Calc ; list ; rholower=r-1.96*sqr(vh(2,2))
+            ;rhoupper=r+1.96*sqr(vh(2,2))$
+/*
+    RHOLOWER=  .15941433617939830D+01
+    RHOUPPER=  .47076493284860730D+01
+*/
+?
+? 2.  Likelihood ratio test requires restricted maximum
+?     Note it's done by fixing RHO at the start value.
+?
+Maximize ; fcn=-r*log(beta+x)-log(gma(r))-y/(beta+x)+(r-1)*log(y)
+         ; start=-5,1
+         ; labels=beta,r
+         ; fix=r$
+Calc;list; lrtest=-2*(logl-lloglu)$
+/*
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations               20     |
+              | Iterations completed                  2     |
+              | Log likelihood function       -88.43626     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BETA      15.60272448      .24174096E-02 6454.316   .0000
+ R         1.000000000    ........(Fixed Parameter)........
+
+    LRTEST  =  .11040428574057930D+02
+*/
+
+? Wald test
+? Recompute estimates, then use built-in Wald procedure.
+? This uses the BHHH estimator for the VC matrix.
+?
+Maximize ; fcn=-r*log(beta+x)-log(gma(r))-y/(beta+x)+(r-1)*log(y)
+         ; start=-5,1
+         ; labels=beta,r$
+Wald     ; fn1=r-1$
+/*
+               +-----------------------------------------------+
+               | WALD procedure. Estimates and standard errors |
+               | for nonlinear functions and joint test of     |
+               | nonlinear restrictions.                       |
+               | Wald Statistic             =      3.00955     |
+               | Prob. from Chi-squared[ 1] =       .08278     |
+               +-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  2.150896345      1.2398481        1.735   .0828
+*/
+?
+? Unfortunately, if the test is based on the Hessian, a different
+? conclusion is reached.  Using asymptotic results with 20
+? observations can lead to this.
+?
+Calc  ; List ; Waldtest=(rml-1)^2/VH(2,2)$
+/*
+    WALDTEST=  .73335066911316080D+01
+*/
+? LM Test.  Compute gradient and Hessian using restricted values.
+?
+? These maximization results appear above.
+?
+Maximize ; fcn=-r*log(beta+x)-log(gma(r))-y/(beta+x)+(r-1)*log(y)
+         ; start=-5,1
+         ; labels=beta,r ; Fix = r $
+Calc     ; betaml=b(1);rml=b(2)$
+Create   ; gb=-rml/(betaml+x)+y/(betaml+x)^2
+         ; gr=-log(betaml+x)-psi(rml)+log(y) $
+Namelist ; G=gb,gr$
+Matrix   ; list ; lm=1'G*<G'G>*G'1$
+/*
+Matrix LM       has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .1568679D+02
+*/
+

@@ -1,0 +1,126 @@
+\documentclass{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[pdftex]{graphicx}
+%\usepackage{amsmath}
+
+
+
+\begin{document}
+
+
+\section{A note for Svar function in Matlab}
+
+\noindent
+\begin{verbatim}
+ Marco Aiolfi
+ maiolfi@iol.it
+ Bocconi University and Banca Intesa, Milan
+\end{verbatim}
+
+
+SVAR verifies the identification conditions for a given structural form to
+be imposed on an estimated VAR model. The require inputs are the set of
+constraints to be placed on the elements of the A and B matrices so that
+\begin{eqnarray}
+Vec(A) &=&s_{A}\cdot \gamma _{A}+d_{A}  \label{res} \\
+Vec(B) &=&s_{B}\cdot \gamma _{B}+d_{B}.  \nonumber
+\end{eqnarray}
+
+Here is an example.
+
+Consider a 2 variables VAR and suppose you want Choleski identification:
+\begin{equation}
+A=\left[
+\begin{array}{cc}
+1 & 0 \\
+a_{21} & 1
+\end{array}
+\right] ,B=\left[
+\begin{array}{cc}
+b_{11} & 0 \\
+0 & b_{22}
+\end{array}
+\right] .
+\end{equation}
+
+Using \ref{res} the constraints can be rewritten as follows:
+\begin{eqnarray}
+\left[
+\begin{array}{c}
+1 \\
+a_{21} \\
+0 \\
+1
+\end{array}
+\right]  &=&\left[
+\begin{array}{c}
+0 \\
+1 \\
+0 \\
+0
+\end{array}
+\right] \cdot \left[ a_{21}\right] +\left[
+\begin{array}{c}
+1 \\
+0 \\
+0 \\
+1
+\end{array}
+\right]  \\
+\left[
+\begin{array}{c}
+b_{11} \\
+0 \\
+0 \\
+b_{22}
+\end{array}
+\right]  &=&\left[
+\begin{array}{cc}
+1 & 0 \\
+0 & 0 \\
+0 & 0 \\
+0 & 1
+\end{array}
+\right] \cdot \left[
+\begin{array}{c}
+b_{11} \\
+b_{22}
+\end{array}
+\right] +\left[
+\begin{array}{c}
+0 \\
+0 \\
+0 \\
+0
+\end{array}
+\right] .
+\end{eqnarray}
+After creating $s_{A},d_{A},s_{B},d_{B}$ the SVAR procedure is run with
+\begin{verbatim}
+[a,b,a_se,b_se]=svar1(results,sa,sb,da,db,afree,bfree)
+\end{verbatim}
+
+\noindent
+where \texttt{results} is a VARE structure, \texttt{sa},\texttt{sb},\texttt{da%
+},\texttt{db}, are the constraints and \texttt{afree} and \texttt{bfree} are
+the number of free parameters in $A$ and $B$ matrices.
+
+The demo file \textit{svar\_d.m} gives an example of SVAR procedure for a 5
+variables VAR.
+
+The interested reader can find details about identification and estimation
+of a structural VAR models in Amisano and Giannini (1997). A good reference
+for alternative identification schemes and their application to monetary
+policy analys is Favero (2000).
+
+\section{References}
+\begin{enumerate}
+\item[]   Amisano, G., and Giannini, C., (1997). \textit{Topics in
+structural var econometrics}. Second edition, Springer Verlag, New York.
+
+\item[] Favero, C. A., (2000). Applied Macroeconometrics. Oxford
+University Press, Oxford.
+
+\end{enumerate}
+
+\end{document}

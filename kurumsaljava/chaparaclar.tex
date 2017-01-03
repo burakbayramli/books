@@ -1,0 +1,1477 @@
+\movetooddpage
+
+\chapter{Araçlar} \label{install}
+
+\versal{B}\textsc{u} kitapta anlatýlan kavramlarý evde uygulayabilmeniz için,
+bazý programlarýn kurulmasý gerekiyor. Bu programlar sýrasýyla \PVerb!javac!
+derleyicisi, \PVerb!java! yorumlayýcýsý, Ant derleme sistemi, JBoss Uygulama
+Servisidir. Geliþtirme aracý olarak Emacs editörü ve IDE ortamý anlatýlacaktýr,
+fakat herkes kendi ortamýný kullanabilir, örnekler hiçbir IDE'ye baðlý
+deðildir. Bu programlarýn hepsinin nasýl kurulacaðýný ve kullanýlacaðýný bu
+bölümde anlatacaðýz.
+
+Kitapta referans edilen tüm örnek kodlar ve araçlar
+
+\begin{lstlisting}[language=sh, frame=none]
+http://sourceforge.net/project/showfiles.php?group_id=135492
+\end{lstlisting}
+ya da
+
+\begin{lstlisting}[language=sh, frame=none]
+http://www.mycompany.com/kurumsaljava
+\end{lstlisting}
+adresinden bulunabilir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Örnek Kodlar} \label{install:samples}
+Projede referans edilen örnek kodlarý kurmak ve iþletmek üstteki baðlantýdan
+\PVerb!kitap-code-xx.xx.zip! dosyasýný indirin ve açýn. Dosyanýn açýlmýþ hâli,
+aþaðýdaki gibi olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
++- DistObjs
+| +- EJB
+| | +- CarsEJB
+| | +- CounterStateful
+| +- JMS
+| | +- CarsJms
+| | +- Filtered
+| | +- SimpleListenerServer
+| | +- SimpleMdbServer
+| +- RMI
+| | +- CarsRMI
++- Hibernate
+| +- HibernateComposite
+| +- HibernateManyToMany
+| +- HibernateQueries
+| +- HibernateRelFetchSelect
+| +- HibernateSimpleRelations
+| +- SimpleHibernate
++- ProfileSample
++- Struts
+| +- StrutsHibAdv
+| +- StrutsHibLogin
+| +- StrutsHibPerformance
+| +- StrutsHibSimple
+| +- StrutsHibTags
+| +- StrutsTiles
+| +- StrutsUpload
++- lib
+| +- commons
+| | +- commons-beanutils.jar
+| | +- commons-collections.jar
+| | ...
+| +- hibernate
+| | +- c3p0-0.8.4.5.jar
+| | +- classes12.zip
+| | +- ehcache-1.1.jar
+| | +- hibernate3.jar
+|  ...
+| +- web
+| | +- jstl.jar
+| | +- struts.jar
++- tools
++- README.english
++- README.turkce
++- build.xml
++- clean.sh
++- lgpl.txt
+\end{lstlisting}
+
+Projelerin hepsi üst dizin \PVerb!lib! altýndaki jar dosyalarýný
+kullanmaktadýrlar. Pür Hibernate için gereken jar'lar \PVerb!lib/hibernate!, pür
+Web/Struts/JSTL odaklý jar'lar \PVerb!lib/web! ve Apache Commons jar'larýna
+ihtiyaç duyan projeler, \PVerb!lib/commons! dizinleri altýndan Ant derleme
+sistemi tarafýndan alýnýp kullanýlýr.
+
+HEr projenin derlenmesi o projenin altýndaki \PVerb!build.xml! aracýlýðý ile
+yapýlmaktadýr. Hibernate üzerinden veri tabaný etkileþimi gerektiren her proje
+\PVerb!./resources/hibernate.cfg.xml! dosyasýnda tanýmlý veri tabanýna gitmek
+üzere ayarlanmýþtýr. Bu veri tabaný üzerinde gereken þemayý her proje içinde
+mevcut (ve ötekilerden deðiþik olabilecek) \PVerb!./src/sql/tables_mysql.sql!
+dosyasý içinde bulabilirsiniz.
+
+\subsection{Hibernate}
+Pür Hibernate ile alâkalý örnek kodlarý \PVerb!Hibernate! üst dizini altýndaki
+projelerde bulacaksýnýz. Bu kodlar yanlýzca komut satýrýndan iþleyebilecek
+þekilde hazýrlanmýþtýr; Hiçbir görsel birim mevcut deðildir. Her Hibernate
+projesi \PVerb!ant! komutu ile derlenebilir ve JUnit birim testleri \PVerb!ant
+test! ile iþletilebilir. Birim testleri, \PVerb!hibernate.cfg.xml! üzerinde
+tanýmlý olan tabana gitmek üzere ayarlanmýþtýr.
+
+\subsection{Web} \label{install:samples:web}
+
+\PVerb!Struts! üst dizini altýndaki her proje bir Web uygulamasýdýr.  Çoðunluðu
+JSP/JSTL/Struts/Hibernate teknolojisini kullanýr. Web projelerini JBoss üzerinde
+deploy etmek için \PVerb!build.properties! içindeki JBoss dizinini tanýmlamamýz
+gerekiyor. Örnek bir \PVerb!build.properties! aþaðýda gözükmektedir.
+
+\begin{lstlisting}[language=Java, caption=build.properties]
+project.title=Jakarta Struts Blank
+project.distname=kitapdemo
+project.version=1.1
+doc.src=./WEB-INF/src/java
+jboss.home=c:/devprogs/jboss-4.0.1
+distpath.project=\${jboss.home}/server/default/deploy
+\end{lstlisting}
+
+\begin{itemize}
+   \item Bu tanýmlardan, kendi özel JBoss'umuz için deðiþmesi gereken
+     \PVerb!jboss.home!  deðiþkenidir. Bu deðiþkenin programcýnýn kendi
+     makinasýnda kurulmuþ olan JBoss'un yerini göstermesi gerekir.
+   \item \PVerb!distpath.project!, SAR paketinin hangi dizine gideceðini
+   gösterir. 
+   \item \PVerb!project.distname!, JBoss altýnda gidece SAR paketinin ismini
+   oluþturacak baz kelimedir. Tüm örneklerde bu \PVerb!kitapdemo! kelimesidir,
+   yâni Web projeleri için SAR dosyasýnýn ismi \PVerb!kitapdemo.sar! olacaktýr.
+\end{itemize}
+Web projemizi derlemek için geliþtirme dizininde 
+\begin{lstlisting}[language=Java, frame=none]
+\$ ant
+\end{lstlisting}
+komutunu kullanýrýz. Birim testleri iþletmek için ise
+\begin{lstlisting}[language=Java, frame=none]
+\$ ant test
+\end{lstlisting}
+yeterlidir.
+
+\subsection{Daðýtýk Nesneler}
+
+JMS, EJB, RMI teknolojilerini kullanan daðýtýk nesne mimari örnekleri,
+\PVerb!DistObjs! dizini altýnda bulunabilir. Her ana teknolojinin örnekleri
+\PVerb!DistObjs! altýnda alt dizinler olarak bulunacaktýr.
+
+Her daðýtýk teknoloji örnek dizini içinde, daðýtýk teknolojiyi kullanan bir Web
+projesi de mevcut olacaktýr. Bu projenin yapabildikleri (functionality)
+\PVerb!StrutsHibAdv!  projesi ile aynýdýr. Sadece, tüm Hibernate eriþim kodlarý
+{\em ikinci bir servis katmaný} üzerinde, ve daðýtýk nesne teknolojisi üzerinden
+eriþilerek yapýlmaktadýr. O zaman \PVerb!DistObjs! altýndaki Web kodlarýný test
+ederken, servis tarafýnda bir deðil, iki JBoss JVM'i baþlatmamýz gerekiyor.
+
+Ýki JBoss demek, iki geliþtirme projesi demektir. \PVerb!DistObjs! altýndaki Web
+projelerinin dizinlerine girerseniz, en üst seviyede \PVerb!Server! ve
+\PVerb!Webclient! dizinlerine ayrýlmýþ olduðunu göreceksiniz. Bu iki proje, iki
+deðiþik JBoss \PVerb!deploy! dizinine gitmesi gereken iki deðiþik
+projedir. Hangi projenin hangi JBoss'a gideceðini ayarlamak için
+\PVerb!build.properties!  dosyasýnda gerekli deðiþikliði yapabilirsiniz. Ayný
+makinada iki JBoss baþlatmak için gerekli deðiþiklikleri
+\ref{install:jboss:ports:dev} bölümünde anlatýlmaktadýr.
+
+Her iki projeyi bir kerede derlemek için, teknoloji dizinin (JMS, EJB, RMI)
+altýnda bir \PVerb!build.xml! bulacaksýnýz. Bu \PVerb!build.xml!'in amacý, önce
+\PVerb!Server! dizini, sonra \PVerb!Webclient! dizinine teker teker girip iki
+kere \PVerb!ant! komutu vermekten kurtulmaktýr. Böylece bir üst seviyeden tek
+\PVerb!ant! ile iþimizi halletmiþ oluyoruz. Ayrýca, \PVerb!Server!  projesindeki
+POJO tanýmlarýnýn \PVerb!WebClient!'a gönderilmesi için bir kopyalama iþlemi
+gerekir, bunun için \PVerb!Server! dizinindeki derleme, \PVerb!WebClient!
+derlemesinden önce yapýlmalýdýr; Üst seviyedeki \PVerb!build.xml! bu sýrayý
+hatýrlayacak þekilde hazýrlanmýþtýr.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Java} \label{install:java}
+
+Java derleyicisini (\PVerb!javac!) ve yorumlayýcýsýný (\PVerb!java!) kurmak
+için, \PVerb!http://java.sun.com/j2se/1.4.2/download.html! sitesine girin ve
+J2SE 1.4.2 (ya da en son) sürümü týklayýn. Tercihen içinde NetBeans programý
+dahil edilmemiþ olan paketi kurmanýz daha iyi olacaktýr.
+
+\subsubsection{Windows}
+
+Windows için sonu exe ile biten kuruluþ programýný alýn. Ýndirim bitince exe
+dosyasýna týklayýn, ve yönlendirici (wizard) ekranlarýný takip edin. JDK'yi
+nereye kurmak istediðiniz size sorulacaktýr.
+
+\subsubsection{Unix} \label{install:java:unix}
+
+Ýndirmiþ olduðunuz \PVerb!j2sdk-1_4_2_08-linux-i586.bin! adýndaki bir dosyayý,
+komut satýrýndan \PVerb!root! ya da yeterli haklarý olan bir kullanýcý altýndan
+
+\begin{lstlisting}[language=Java, frame=none]
+\$ j2sdk-1_4_2_08-linux-i586.bin
+\end{lstlisting}
+þeklinde iþletin. Bu dosya, kendi kendini açan (self inflating executable)
+türünden bir iþler dosyadýr, yâni bir tür zip dosyasýdýr. Dosya açýlýnca,
+\PVerb!j2sdk-1_4_2_08-linux-i586! adýnda yeni bir dizin göreceksiniz. Bu dizini
+alýp, herhangi bir diðer dizine (genelde \PVerb!/usr/local/!) altýna koyarsanýz,
+Java kuruluþ iþlemini gerçekleþtirmiþ olursunuz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ant} \label{install:ant}
+
+Ant, Java için vazgeçilmez derleme sistemidir. Herhangi bir görsel IDE'nin
+saðlayabileceði derlemeden çok daha güçlü ek özellikler taþýr. Ant ile her türlü
+derleme ve alâkalý ek iþleri yerine getirebiliriz.
+
+Mesela Ant, shell'den komut çaðýrma, dosya ve dizin kopyalama, jar oluþturma
+gibi birçok özelliði \PVerb!build.xml! içinden kullanamanýza izin verir. Bunlar
+neden yapýlmýþtýr?  Çünkü bir derleme süreci, yanlýzca \PVerb!.java! dosyalarýný
+\PVerb!.class!  dosyalarýna çevirmekten ibaret deðildir. Bazý ayar dosyalarýnýn
+bir yerden ötekine kopyalanmasý, bazý dizinlerin silinmesi (meselâ JBoss
+altýndan) ve bir XYZ programýnýn çaðýrýlmasý gerekebilir. Tüm bunlarý derleme
+dilimiz içinde ihtiyaç oldukça yapabiliyor durumda olmalýyýz.
+
+\subsection{Kurmak}
+
+Ant'in kuruluþ programýný \PVerb!http://ant.apache.org/bindownload.cgi!
+adresinden indirebilirsiniz. Ýndirdiðiniz dosya, bir zip ya da tar.gz dosyasý
+olacaktýr. Bu dosyayý Ant'i kurmak istediðiniz dizin üzerinde açýn. Biz
+geliþtirme ortamý olarak \PVerb!c:/devprogs! adlý bir dizin altýnda tüm
+geliþtirme odaklý programlarý koyuyoruz.
+
+Zip'in açýlmasý bittikten sonra, mesela \PVerb!c:/devprogs/apache-ant-1.6! gibi
+bir dizin yaratýlmýþ olur. Komut satýrýndan \PVerb!ant! komutunu uygulayabilmek
+için, \PVerb!c:/devprogs/apache-ant-1.6/bin! dizininin sistem \PVerb!PATH!'ine
+eklenmiþ olmasý gerekiyor. Bunun için Windows'da \PVerb!Control Panel | System |
+Advanced | Environment Variables! listesindeki \PVerb!PATH! deðiþkenine Ant'in
+\PVerb!bin! dizinini vermeniz gerekiyor. Þekil \ref{install:ant:path} üzerinde
+bu iþlemi görüyoruz.
+
+Ayný þekilde, \PVerb!JAVA_HOME! deðiþkeninin de ayný panelden sisteme
+bildirilmesi gerekiyor. \PVerb!JAVA_HOME! için JDK'nin kurulmuþ olduðu dizini
+veriniz. Java kuruluþu için \ref{install:java} bölümüne bakýnýz.
+
+\begin{figure}[!tbp]
+\center{
+  \scalebox{0.50}{
+  \includegraphics{./images/ant_path.eps}
+  }
+}
+\caption{\label{install:ant:path} Ant Dizinini PATH'e Eklemek}
+\end{figure}
+
+\subsection{Kullanmak}
+
+Ant ile bir projeyi derlemek istiyorsanýz, o projenin (genelde en üst) dizini
+içinde \PVerb!build.xml! adýnda bir dosya bulmanýz gerekir. Bu dosya içinde Ant
+için lazým olan tüm derleme komutlarý mevcuttur. Derleme iþlemini baþlatmak için
+
+\begin{lstlisting}[language=Java, frame=none]
+ant
+\end{lstlisting}
+komutunu, \PVerb!build.xml!'in olduðu ayný dizinden baþlatýrsanýz, Ant otomatik
+olarak o dizindeki \PVerb!build.xml! dosyasýný kullanacaðýný bilecektir. Onu
+okur ve içindeki derleme iþlemlerini baþlatýr.
+
+Eðer geliþtirme sýrasýnda herhangi bir sebebten ötürü komut satýrýndan
+(\PVerb!cd! ile) daha alt dizinlere indiyseniz, \PVerb!ant! komutunun alt
+dizinden baþlayýp üst dizinlere çýkarak en yakýndaki \PVerb!build.xml!'i bulup
+iþletmesi için, \PVerb!ant -find! komutunu kullanabilirsiniz.
+
+Derleme komutlarýmýzý, ismi \PVerb!build.xml! {\em olmayan} bir dosyada tutmak
+istersek (bu pek nadir yapýlýr), o zaman, meselâ \PVerb!my-build.xml! adýnda bir
+dosya için,
+
+\begin{lstlisting}[language=Java, frame=none]
+ant -f ./my-build.xml
+\end{lstlisting}
+komutunu kullanabiliriz.
+
+\subsection{Build.xml}
+
+Ant kullanmak, \PVerb!build.xml! içinde Ant {\em task}'leri kullanarak {\em
+target}'ler yaratmak demektir. Task, daha önceden yazýlmýþ ve etiketi saðlanmýþ
+Ant komutudur. Meselâ Java kodu derlemek için kullanýlan \PVerb!javac! bir Ant
+task'idir. Bu task, ismi tipik olarak \PVerb!compile! olan bir target içinde
+kullanmak gerekir.
+
+Bir target'i, komut satýrýndan ismini belirterek direk çaðýrabiliriz.
+
+Bir target, \PVerb!build.xml! içindeki diðer bir target'i çaðýrabilir, ya da bir
+target ötekine ``dayanýyor'' (depends) olabilir; O zaman ``dayanýlan'' target,
+ilk çaðýrýlan target iþletilmeden {\em önce} iþletilecektir.
+
+\subsubsection{Baþlangýç}
+
+Her \PVerb!build.xml!, \PVerb!<project>! etiketi ile baþlar.
+
+\begin{lstlisting}[language=Java, frame=none]
+<project name="blank" basedir="." default="all">
+...
+</project>
+\end{lstlisting}
+Burada proje ismi bir tanýmdan ibarettir, \PVerb!basedir! projenin ana dizininin
+neresi olduðunu belirtir (``\PVerb!.!'' içinde bulunan dizin demektir), ve
+\PVerb!default! ise Ant iþletilirken target belirtilmezse, hangi target'in farz
+edilmesinin gerektiðini (default) belirtir.
+
+\subsubsection{Sabit Deðerler}
+
+\begin{lstlisting}[language=Java, frame=none]
+<property file="build.properties"/>
+\end{lstlisting}
+þeklinde bir kullaným ile, sabit deðiþkenleri alýþýk olduðumuz bir
+\PVerb!.properties! dosyasýndan alabiliyoruz. Bu dosya içinde tanýmlanan her
+\PVerb!variable=vsvs! þeklindeki deðiþkene, \PVerb!build.xml! içinden
+\PVerb!\${variable}! þeklinde eriþebiliriz.
+
+\subsubsection{Classpath}
+
+\PVerb!javac! ve \PVerb!java! Ant task'lerine bir \PVerb!CLASSPATH!  gerekir
+(ayen komut satýrýnda \PVerb!java! ve \PVerb!javac!'nin ayný bilgilere ihtiyaç
+duyduðu gibi).
+
+Ayrýca, ayný classpath, hem derleme hem iþletmek amaçlý gerektiði için, tek bir
+kez tanýmlanmasý faydalýdýr. Bu tanýmý merkezileþtirmek için \PVerb!<path>!
+etiketi kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+<path id="compile.classpath">
+  <pathelement location ="build/WEB-INF/classes"/>
+  <pathelement location="`\{jboss.home}/lib/jboss-jmx.jar"/>
+  <fileset dir="lib">
+    <include name="**/*.jar"/>
+    <include name="**/*.zip"/>
+  </fileset>
+  ....
+</path>
+\end{lstlisting}
+Bir \PVerb!<path>! tanýmlarken, hem \PVerb!jar!, hem de direk dizin ismi
+kullanýlabilir. Ayrýca bir dizin altýnda belli isim düzenine uyan bir dosya
+grubu da kullanýlabilir. Bu \PVerb!<fileset>! task'i ile baþarýlmýþtýr.
+
+Taným yapýldýktan sonra, bu dizin, dosya topluluðuna sadece
+\PVerb!compile.classpath! ismi ile referans edilebilecektir. 
+
+\subsubsection{Derlemek}
+
+Derlemek için (meselâ \PVerb!compile! adýnda bir target içinde) \PVerb!javac!
+task'i þöyle kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+<target name="compile" depends="prepare,resources">
+  <javac srcdir="src/java" destdir="./build/classes" debug="true">
+    <classpath refid="compile.classpath"/>
+  </javac>
+</target>
+\end{lstlisting}
+\begin{itemize}
+\item \PVerb!srcdir!, tüm Java kaynaklarýnýn baþladýðý üst dizini belirtmektedir. Ant,
+  buradan baþlayarak tüm alt dizinlerdeki tüm \PVerb!.java! dosyalarýný bularak
+  derleme iþlemini yapacaktýr.
+\item \PVerb!destdir! ise, sonuç dosyalarý olan \PVerb!.class! dosyalarýnýn nereye
+  konulacaðýný belirtir.
+\item \PVerb!debug! ise, bir Exception atýldýðýnda bu hata içinde hatanýn hangi
+  Java satýrýndan geldiði bilgisinin hataya dahil edilip edilmemesini kontrol
+  eder. Geliþtirme sýrasýnda bu seçeneðin \PVerb!true!  olmasýný þiddetle
+  tavsiye ediyoruz.
+\item \PVerb!<classpath refid>! ise, daha önce tanýmladýðýmýz classpath dizini,
+  sadece ismini kullanarak referans ederek kullanmaktadýr.
+\end{itemize}
+
+\subsubsection{Bir Java Class'ý Ýþletmek}
+
+Bir Java programýný çaðýrmak için komut satýrýnda iþletilecek Java class'ýn
+paketiyle beraber ismi, ve bulunabileceði bir \PVerb!CLASSPATH! yeterli olurdu
+(tabii bir de Java class'ýnýn içinde bir \PVerb!main()! metotu gerekir). Bu iþi
+Ant ile yapmak istiyorsak, þöyle bir kullaným gerekir.
+
+\begin{lstlisting}[language=Java, frame=none]
+<target name="xxx" depends="clean,compile">
+  <java fork="yes" classname="org.mycompany.kitapdemo.vs.MyClass"
+        taskname="xxx" failonerror="true">
+    <classpath refid="compile.classpath"/>
+  </java>
+</target>
+\end{lstlisting}
+\begin{itemize}
+\item \PVerb!fork!, Java sürecinin çaðýran sürecin parçasý olup olmayacaðýný
+  kontrol eder.
+\item \PVerb!classname! paket ismiyle beraber class ismini alýr.
+\item \PVerb!failonerror! hata olursa durulup durulmayacaðýdýr.
+\end{itemize}
+Burada en ilginç gelecek kullaným, ilk kez bir ``dayanma'' (depends) iliþkisinin
+gösterilmesidir. Bu target'in tanýmýna göre, \PVerb!depends="clean, compile"! ile
+\PVerb!xxx! target'i iþlemeden {\em önce} \PVerb!clean! ve \PVerb!compile!
+target'lerinin iþlemesi þart konulmuþtur. Bu da normâldir, bir class'i
+iþletmeden önce derleme yapmak isteriz.
+
+Ant, ayrýca sadece deðiþen dosyalarý derlemeyi bilecek kadar akýllýdýr. Yâni,
+eðer bir önceki derleme ile o an arasýnda hiç Java dosyasý deðiþtirmediyseniz,
+derleme iþleme hiçbir þey yapmadan geri dönecektir.
+
+\subsubsection{Komut Satýrýna Çýkma}
+
+Ant, normâlde shell üzerinden çaðýrabileceðiniz her komutu, \PVerb!build.xml!
+içinden çaðýrabilir. Bunun için \PVerb!<exec>! task'i kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+<exec executable="command">
+  <arg line="-filan"/>
+  <arg line="param1"/>
+  <arg line="-falan"/>
+  <arg line="param2"/>
+</exec>
+\end{lstlisting}
+Bu komut, eðer komut satýrýnda verilseydi, þöyle gözükecekti:
+
+\begin{lstlisting}[language=Java, frame=none]
+\$ command -filan param1 -falan param2
+\end{lstlisting}
+
+\subsubsection{Dosyayý Dosyaya Kopyalamak}
+
+Bir dosyayý diðer bir dosya ismiyle (hâtta baþka bir dizine) kopyalamak için, þu
+komut kullanýlýr. 
+\begin{lstlisting}[language=Java, frame=none]
+<copy overwrite="true"
+      file="./from/directory/myFileName.txt"
+      tofile="./to/directory/otherFileName.txt"/>
+\end{lstlisting}
+
+\subsubsection{Dosyayý Dizine Kopyalamak}
+
+Bir dosyayý diðer bir dizine ayný isimle kopyalamak için, þu komut kullanýlýr.
+\begin{lstlisting}[language=Java, frame=none]
+<copy overwrite="true"
+      file="./from/directory/myFileName.txt"
+      toDir="./to/directory"/>
+\end{lstlisting}
+
+\subsubsection{Birçok Dosyalarý Kopyalamak}
+
+Bunun için, classpath tekniðinden tanýdýk gelebilecek \PVerb!<fileset>!
+kavramýný kullanýyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<copy todir="/to/dir" includeEmptyDirs="yes">
+  <fileset dir="src">
+    <patternset>
+      <include name="**/*.xml"/>
+    </patternset>
+  </fileset>
+</copy>
+\end{lstlisting}
+Bu komutla, \PVerb!build.xml!'in olduðu dizinin altýndaki \PVerb!src! dizini
+içindeki, her \PVerb!.xml! ile biten dosya, dizin yapýsýyla beraber,
+\PVerb!/to/dir! adlý dizine postalanacaktýr.
+
+\subsubsection{Dizin Silmek ve Yaratmak}
+
+Dizin silmek için (\PVerb!dir! isminde bir dizin için meselâ)
+
+\begin{lstlisting}[language=Java, frame=none]
+<delete dir="dir"/>
+\end{lstlisting}
+eklemek için ise, 
+
+\begin{lstlisting}[language=Java, frame=none]
+<mkdir  dir="dir"/>
+\end{lstlisting}
+kullanýlýr.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{JBoss} \label{install:jboss}
+
+Kurulmasý en rahat uygulamalardan biri herhalde JBoss'tur. Tek yapmanýz
+gereken, \PVerb!http://www.jboss.com/products/jbossas/downloads! adresinden en
+son JBoss zip dosyasýný indirmektir. Kurmak için þunlarý yapýn.
+
+\subsubsection{Windows}
+
+Dosyayý bir dizinde açýn. JBoss'un kurulmuþ olduðu dizine, \PVerb!JBOSS_HOME!
+diyelim. JBoss servisini baþlatmak için, \PVerb!JBOSS_HOME/bin/run.bat!
+dosyasýna týklarsanýz, servis baþlayacaktýr. Windows üzerinde \PVerb!JAVA_HOME!
+deðiþkeni tanýmlanmiþ olduðu için, daha fazla bir deðiþiklik yapmanýz
+gerekmemiþtir.
+
+\subsubsection{Linux}
+
+JBoss kodlarý pür Java kodu olduklarý için hem Windows hem de Unix ortamýnda hiç
+deðiþiklik gerektirmeden çalýsabilirler. Ýndirdiðimiz zip dosyasýný Unix'e
+kopyalayýp orada açarsak, JBoss'u Unix ortamýnda hiç deðiþiklik gerektirmeden
+iþletebiliriz. Unix'te bir zip dosyasýný açmak için, \PVerb!unzip! komutu
+kullanýlýr. JBoss zip'ini açmak için
+
+\begin{lstlisting}[language=Java, frame=none]
+unzip jboss-4.0.1.zip
+\end{lstlisting}
+komutunu kullanýn. Þu anda içinde bulunduðunuz dizinde \PVerb!jboss-4.0.1!
+adýnda bir ek dizin oluþturulmuþ olmasý gerekiyor. Bu dizin altýnda
+\PVerb!./bin/run.conf! dosyasýna girin. Bu dosya içinde
+
+\begin{lstlisting}[language=Java, frame=none]
+#JAVA_HOME="/opt/java/jdk"
+\end{lstlisting}
+þeklinde comment edilmiþ bir satýr bulacaksýnýz. Bu satýrý comment-out edip,
+\PVerb!JAVA_HOME! deðiþkenine \ref{install:java:unix} bölümünde JDK'yi kurmuþ
+olduðu dizini eþitleyin. Artýk JBoss'u baþlatmak için
+
+\begin{lstlisting}[language=Java, frame=none]
+sh JBOSS_HOME/bin/run.sh
+\end{lstlisting}
+komutunu kullanabilirsiniz.
+
+\subsection{Deploy Dizinleri} \label{install:jboss:deploy}
+Tabii ilk kurulduðu haliyle JBoss'un içinde sadece örnek uygulamalar
+mevcuttur. Eðer kendi uygulamanýzý JBoss'a dahil edip çalýþtýrtmak istiyorsanýz,
+uygulamanýzýn nereye gideceðini bilmeniz gerekiyor.
+
+Bir JBoss uygulamasý, bir WAR, EAR ya da SAR paketleri içinde olabilir. Bir
+JBoss paketi, aslýnda uygulamanýn çalýþmasý için gereken tüm dosyalarý içeren
+bir dizin ya da bir dosyadýr. Eðer paketi tek bir dosya olarak görmek
+istiyorsanýz, meselâ \PVerb!myapp.ear! adýnda bir dosya üretebilirsiniz. Bu
+üretimi her zaman Ant script'lerimize yaptýrýrýz, çünkü belli dosyalarýn paket
+içinde belli dizinler altýnda olmasý gerekmektedir (J2EE standartý bunu
+belirler) ve Ant bu iþlemleri kodlayabileceðimiz uygun yerdir.
+
+Tek bir dosya içinde bir EAR, WAR ya da SAR yapýsýný koymak, {\em kapalý dosya}
+kullanýmýdýr. Açýk dosya kullanýmý ise, biraz önce paketin içine (bir sýkýþtýrma
+programý ile) koyduðumuz tüm dosyalara ve dizinlere hiç dokunmadan, ama ayný
+sonek ile (meselâ \PVerb!.ear!) olduðu gibi bir {\em dizini} JBoss'a
+göndermektir. Yâni \PVerb!myapp.ear! dosyasý yerine \PVerb!myapp.ear/! gibi bir
+dizin ismini JBoss'a verirsek, JBoss hiç bir fark gözetmeden bu dizini de iþleme
+koyacaktýr.
+
+Tercihimiz hangisi? Biz açýk paket þeklini tercih ediyoruz. Bunun sebepleri için
+\ref{web:development} bölümündeki anlatýma bakabilirsiniz.
+
+Uygulama paketimizi oluþturduktan sonra göndermemiz gereken yer, çoðu zaman ve
+geliþtirme amaçlý olarak \PVerb!JBOSS_HOME/server/default/deploy! dizini
+olacaktýr. Bu dizin, JBoss için özel bir dizindir; JBoss, baþlar baþlamaz bu
+dizinde ne olup olmadýðýna bakar. Bu dizinde olan ve sonu \PVerb!sar!,
+\PVerb!ear! ya da \PVerb!war! ile biten dizinlerin ya da dosyalarýn bir kurumsal
+uygulama olduðuna kanaat getirir, ve onlarýn içindeki ayar dosyalarýna giderek
+(J2EE standartýna göre nerede olduklarý bellidir) uygulamanýzý iþleme koyar.
+
+Peki neden \PVerb!JBOSS_HOME/server/default! altýndaki \PVerb!deploy! dizinine
+bakýlmaktadýr? Baþka bir dizin altýndaki \PVerb!deploy! dizinine bakýlmaz mi? Bu
+kesinlikle yapýlabilir. Eðer JBoss'u baþlatýrken komut satýrýnda
+
+\begin{lstlisting}[language=Java, frame=none]
+bin/run.bat -c newdirectory
+\end{lstlisting}
+gibi bir komut verirseniz, JBoss uygulamalarý
+\PVerb!JBOSS_HOME/server/newdirectory/deploy! altýnda arayacaktýr. Fakat genelde
+\PVerb!-c!  seçeneði ile {\em hiçbir dizin verilmediði için} JBoss,
+\PVerb!default! dizininin istendiðini farz eder ve uygulamalarý orada arar. Bu
+kullaným, küme ile çalýsmamýz gereken ortamlarda deðiþecektir.
+
+\subsection{Geliþtirme Amaçlý Port Deðiþtirmek} \label{install:jboss:ports:dev}
+
+Bazen birden fazla kullanýcýnýn ortak bir Unix makinasýnda geliþtirme yapmasý ya
+da test programlarýný iþletmesi gerekebilir. Birden fazla geliþtiriciyi tek bir
+JBoss kuruluþundan desteklemek için, \PVerb!JBOSS_HOME/server/default! dizininin
+bir kopyasýný çýkartarak, meselâ \PVerb!JBOSS_HOME/server/user1! gibi bir dizin
+yarabilirsiniz. Ýkinci bir kullanicý için \PVerb!JBOSS_HOME/server/user2!
+olabilir, vs. Böylece meselâ birinci kullanýcý, kendi JBoss'unu baþlatmak için
+
+\begin{lstlisting}[language=Java, frame=none]
+sh run.sh -c user1
+\end{lstlisting}
+komutunu kullanabilir. Fakat iþimiz daha bitmedi: Bu düzende eðer hiçbir
+deðiþiklik yapýlmazsa ve kullanýcý ötekinden habersiz bir þekilde \PVerb!sh
+run.sh! ile birden fazla JBoss servisini ayný makine üzerinde çalýþtýrmaya
+kalkýþýrsa, ikinci JBoss'u baþlatan kullanýcý, kullandýðý portlarýn ``baþkasý
+tarafýndan kullanýlmakta olduðuna'' dair bir mesaj görecektir. Bunun sebebi de
+basittir. JBoss içindeki HTTP, RMI, JNDI gibi J2EE servisleri, kendilerini dýþ
+dünyaya afiþe etmek bir port'a ihtiyaç duyarlar. \PVerb!sh run.sh! kullanan
+herkes \PVerb!JBOSS_HOME/server/default! dizinin bir kopyasýný kullandýðý için,
+o dizin altýnda tanýmlanmýþ ve {\em ayný olan} port deðerlerini kullanýyor
+olacaktýr.  Bu sebeple ikinci servisi baþlatan kullanýcýnýn port çakýþma hatasý
+görmesi çok normâldir.
+
+Geliþtirme ve test amaçlý olarak bu hatadan kurtulmak için, tarafýmýzdan
+\PVerb!JBOSS_HOME/server/default! altýnda port tanýmý yapan her dosya
+çýkartýlýp, port deðerlerinin baþ tarafýna 1'den 6'ya kadar olan sayýlar
+eklenerek, ayrý ayrý dizinlerde yeni ve birbirinden deðiþik port taným dosyalarý
+yaratýlmýþtýr.
+
+Bu yeni taným dosyalarýný almak örnek kodlar ve araçlarýn adresinden
+\PVerb!kitap-tools-jboss-4.0.1-portlar.zip! adlý dosyayý indirin. Bu dosyayý
+geçici bir dizin altýnda açýn.
+
+\begin{lstlisting}[language=Java, frame=none]
++- jboss-4.0.1-portlar
+| +- 1-port
+| | +- conf
+| | | +- jboss-service.xml
+| | +- deploy
+| | | +- jbossweb-tomcat50.sar
+| | | | +- server.xml
+| | | | +- jms
+| | | | | +- uil2-service.xml
+| +- 2-port
+| | +- conf
+| | | +- jboss-service.xml
+| | +- deploy
+| | | +- jbossweb-tomcat50.sar
+| | | | +- server.xml
+| | | | +- jms
+| | | | | +- uil2-service.xml
+...
+\end{lstlisting}
+Görüldüðü gibi port dizinleri, \PVerb!1-port! ile baþlayýp \PVerb!6-port!'a
+kadar devam edecektir. JBoss'unuzun hangi port baþlangýç deðeri ile baþlamasýný
+istiyorsanýz, o baþlangýç deðerine ait olan alt dizinin altýndaki herþeyi olduðu
+gibi alýn, ve kendi ayrý JBoss kuruluþunuzun (meseâ
+\PVerb!JBOSS_HOME/server/user1!)  dizini altýna býrakýn. Ayný þeyi ikinci
+kullanýcý \PVerb!user2! altýnda yapacaktýr. Böylece \PVerb!sh run.sh -c user1!
+ve \PVerb!sh run.sh -c user2! komutlarý birbiri ile çakýþmamýþ olur.
+
+\subsection{Küme Ortamýnda Port Deðiþtirmek} \label{install:jboss:cluster:ports}
+Küme ortamýnda ve yine test amaçlý olarak, eðer ayný makinada bir küme
+oluþturmak istiyorsak, yine port deðiþikliði yapmamýz gerekiyor (kümeler
+hakkýnda detaylarý \ref{perf:opt:cluster} bölümünde bulabilirsiniz).
+
+Ama dikkat: JBoss, bir küme iþletebilmek için gerekli olan ayarlarý
+\PVerb!JBOSS_HOME/server/default! altýnda deðil, \PVerb!JBOSS_HOME/server/all!
+altýnda tutmaktadýr. Eðer test hattâ sonuç ortamýnýz her makinada bir JBoss
+JVM'i olmak üzere planlanmýþsa, o zaman her makinada 
+
+\begin{lstlisting}[language=Java, frame=none]
+sh run.sh -c all
+\end{lstlisting}
+komutunu kullanarak kümenizi baþlatabilirsiniz. JBoss, içindeki JGroups
+kütüphanesinin yardýmýyla multicast protokolu üzerinden network üzerindeki diðer
+küme birimlerini otomatik olarak bulacaktýr.
+
+Fakat elinizde tek bir makina var ise, ve bu tek makinada bir küme testi yapmak
+istiyorsak, yine port deðiþikliði yapmamýz gerekecek. Ve
+\ref{install:jboss:ports:dev} bölümünde anlatýlan tekniði burada
+kullanamayýz. Ama aslýnda küme þartlarýnda port deðiþtirme iþlemi daha da basit
+olacak. 
+
+Ayný JBOSS kuruluþu altýnda (ve ayný makinada) yeni bir küme birimi yaratmak
+için, \PVerb!JBOSS_HOME/server/all! dizinini \PVerb!JBOSS_HOME/server! altýnda
+\PVerb!node1! ve \PVerb!node2! olarak olarak kopyalayalým. Daha sonra meselâ
+\PVerb!node1! altýndaki \PVerb!/conf/jboss-service.xml! dosyasýna girelim, ve
+burada ``ports'' kelimesini arayalým. Þu þekilde bir kod tanýmýný bulacaksýnýz:
+
+\begin{lstlisting}[language=Java, frame=none]
+   <!--
+      | ...
+   <mbean code="org.jboss.services.binding.ServiceBindingManager"
+     name="jboss.system:service=ServiceBindingManager">
+     <attribute name="ServerName">ports-01</attribute>
+     <attribute name="StoreURL">
+        ../docs/examples/binding-manager/sample-bindings.xml
+     </attribute>
+     <attribute name="StoreFactoryClassName">
+       org.jboss.services.binding.XMLServicesStoreFactory
+     </attribute>
+   </mbean>
+   -->
+\end{lstlisting}
+Bu taným parçasýnýnýn, \PVerb!<!--! ve \PVerb!-->! iþaretleri ile sarýlmýþ
+olduðuna dikkat edelim; XML tanýmlarýnda bu iþaretler {\em comment} için
+kullanýlýr, yâni üstte gördüðümüz taným, aslýnda {\em iptal edilmiþ} bir
+tanýmdýr. Küme ortamýnda port deðiþikliði için, bu tanýmý önce aktif hâle
+getirmemiz gerekiyor. Eðer \PVerb!<!--! ve \PVerb!-->! iþaretlerini doðru yerlere
+koyarsak, yâni üstteki tanýmý
+
+\begin{lstlisting}[language=Java, frame=none]
+   <!--
+      | ...
+   -->
+   <mbean code="org.jboss.services.binding.ServiceBindingManager"
+     name="jboss.system:service=ServiceBindingManager">
+     <attribute name="ServerName">ports-01</attribute>
+     <attribute name="StoreURL">
+        ../docs/examples/binding-manager/sample-bindings.xml
+     </attribute>
+     <attribute name="StoreFactoryClassName">
+       org.jboss.services.binding.XMLServicesStoreFactory
+     </attribute>
+   </mbean>
+\end{lstlisting}
+durumuna getirirsek, o zaman taným aktif hâle gelmiþ olur (sadece \PVerb!-->!
+iþaretini alttan, taným bloðununun üstüne taþýmýþ olmakla) ve JBoss'umuz
+\PVerb!ports-01!  kimlikli port tanýmýný kullanmaya baþlar. \PVerb!ports-01!,
+üstte belirtilen \PVerb!../docs/examples/binding-manager/sample-bindings.xml!
+dosyasýndaki bir kimlik deðeridir.
+
+Ýkinci küme birimi içinse, \PVerb!JBOSS_HOME/server/node2! altýndaki
+\PVerb!/conf/jboss-service.xml! dosyasýna girip, ayný comment deðiþikliðini
+yapýp, bu sefer \PVerb!ports-01! yerine \PVerb!ports-02! kullanmamýz
+gerekecektir. Bu son deðiþikliði yapmakla, \PVerb!sh run.sh -c node1! ve
+\PVerb!sh run.sh -c node2! ile baþlatýlacak JBoss'larýn birbirleri ile çakýþmasý
+engellenmiþ olur. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Linux}
+
+Örnek programlarý kodlarken onlarý iþletebilmek için bir servis ortamýna
+ihtiyacýmýz vardý: Test makinamýzda Linux iþletim sistemini kullandýk. Ýstanbul
+Mecidiyeköy'de mbSan þirketinde toplattýrdýðýmýz Intel bazlý, network ve grafik
+kartý ana kart üzerinde dahil olan ve 1 GB hafýza, 2 Ghz iþlemci, 40 GB disk
+kapasitesine sahip olan bir servis makinasýnda Suse Linux kuruldu (bu donanýma
+600 YTL ödenmiþtir).
+
+Dizüstü geliþtirme bilgisayarýndan kod gönderimi, ve \PVerb!ssh! ile sisteme
+girebilmek için, makinayý yerel bir aða dahil etmek gerekti. Bunun için her iki
+bilgisayar bir hub'a baðlandý (bir RJ-45 kablosu ile iki bilgisayar arasýnda
+direk kablo çekilmesi bir iþe yaramayacaktýr). Linux kurulumu, paketten çýktýðý
+hâliyle network'e hazýrdýr, fakat buna ek olarak servis makinasýna bir IP adresi
+verilmesi gerekecek. En basit yöntem olarak bir statik bir IP vermek için
+Ethernet kartý \PVerb!eth0! için (eðer tek kart var ise)
+\PVerb!/etc/sysconfig/network/ifcfg-eth0! dosyasýnda
+
+\begin{lstlisting}[language=Java, frame=none]
+STARTMODE="onboot"
+BOOTPROTO="static"
+BROADCAST="10.10.255.255"
+IPADDR="10.10.11.184"
+NETMASK="255.255.0.0"
+\end{lstlisting}
+tanýmlarý yaparsanýz bilgisayarýnýz baþladýðýnda yeni bir IP adresi
+olacaktýr. Bu ayarlara göre, bilgisayarýnýzýn IP adresi \PVerb!10.10.11.184!
+olarak seçilmiþtir. Bundan sonra eðer bu makinayý görmek istiyorsanýz, dizüstü
+bilgisayarýnýza ayný alandan (\PVerb!10.10.11.! ile baþlayan) bir IP adresi
+verebiliriz. Bundan sonra \PVerb!telnet! ve \PVerb!ssh! ile Linux makinanýzý
+eriþilebilir hâle gelecektir.
+
+Linux'u reboot etmek için, \PVerb!root! olarak
+
+\begin{lstlisting}[language=sh, frame=none]
+\$ shutdown -r now
+\end{lstlisting}
+komutunu, sadece durdurmak için
+\begin{lstlisting}[language=sh, frame=none]
+\$ shutdown -h now
+\end{lstlisting}
+komutlarýný kullanabilirsiniz. Seçenek \PVerb!-r! reboot, \PVerb!-h! ise halt
+kelimeleri için birer kýsaltmadýr.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cygwin} \label{install:cygwin}
+
+Cygwin programýný kurmak için, \PVerb!http://www.cygwin.com! sitesini ziyaret
+edelim. Ýlk sayfa yüklendikten sonra, Þekil \ref{install:cygwin} üzerinde
+gözüken sað taraftaki \PVerb!Install Cygwin Now! ikonu üzerine týklamamýz
+gerekiyor. Bunun sonucunda bize \PVerb!setup.exe! programýný indireceðimiz bir
+yer sorulacaktýr. Bir yer seçelim, ve program indirildikten sonra üzerinde
+týklayarak kuruluþ iþlemini baþlatalým.
+
+\begin{figure}[!tbp]
+\center{
+  \scalebox{0.50}{
+  \includegraphics{./images/cygwin.eps}
+  }
+}
+\caption{Cygwin Sitesi}
+\end{figure}
+
+
+Kuruluþun ilk ekranýnda hemen \PVerb!Next! tuþuna basabiliriz. Bundan sonra,
+çýkan üçlü seçenekten \PVerb!Install from Internet!  seçeneðini
+seçelim. \PVerb!Root Directory! olarak \PVerb!c:/cygwin! dizinini
+seçebiliriz. Tekrar \PVerb!Next! tuþundan sonra, kuruluþ dosyalarýný nereye
+koyacaðýný soracaktýr. Burada \PVerb!c:/installs! gibi bir dizin ismi
+verebiliriz. \PVerb!Select Your Internet Connection! seçeneði ile, kuruluþ
+iþleminin Internet'e nasýl baðlacaðýný tanýmlýyoruz. \PVerb!Direct Connection!
+uygundur. Þekil \ref{install:cygwin:download:site} üzerinde gösterilen bir
+sonraki ekran, Cygwin'in hangi siteden indirileceðini sorar.
+
+\begin{figure}[!tbp]
+\center{
+  \scalebox{0.50}{
+  \includegraphics{./images/cygwin_download_site.eps}
+  }
+}
+\caption{\label{install:cygwin:download:site} }
+\end{figure}
+
+Bir sonraki ekran, Cygwin'in indirilecebileceði mevcut sitelerin bir listesidir.
+Buradan bir site ismini seçebiliriz, ve \PVerb!Next!  tuþuna basarýz. Bu
+aþamada, kodlarýn indirileceði siteden mevcut paketlerin bir listesi
+alýnacaktýr. Bu yükleme aþamasý 10-15 saniye sürebilir. Cevap gelince, kurulacak
+Cygwin paketlerin listesi alttaki Þekil \ref{install:cygwin:packages:before}
+üzerindeki gibi gözükecektir.
+
+\begin{figure}[!tbp]
+\center{
+  \scalebox{0.50}{
+  \includegraphics{./images/cygwin_download_packages_before.eps}
+  }
+}
+\caption{\label{install:cygwin:packages:before} }
+\end{figure}
+
+
+Dikkat: \PVerb!Next! tuþuna basýp kuruluþu baþlatmadan önce, bir iþlem daha
+yapmamýz gerekiyor. En son listede bize lazým olacak tüm programlarýn hepsi
+halen seçilmiþ deðildir. Bu seçimi yapmak için, en üstteki \PVerb!All! yazýsýnýn
+yanýndaki yuvarlak iþaretinin üzerinde ``sadece bir kez'' týklamamýz
+gerekiyor. Bunu yaptýktan sonra bekleyin, ve ekran Þekil
+\ref{install:cygwin:packages:after} üzerinde görülen hâle dönüþecek.
+
+\begin{figure}[!tbp]
+\center{
+  \scalebox{0.50}{
+  \includegraphics{./images/cygwin_download_packages_after.eps}
+  }
+}
+\caption{\label{install:cygwin:packages:after}}
+\end{figure}
+
+Gördüðümüz gibi \PVerb!Default! yazýlarý \PVerb!Install! yazýlarýna
+dönüþtü. Artýk bir daha \PVerb!Next! tuþuna bastýðýnýzda, Cygwin altýndaki tüm
+paketler kurulmaya baþlanacaktýr. Bu kuruluþ aþamasý çok uzun zaman sürebilir!
+Tavsiyemiz, bu kuruluþ iþlemini makinanýn baþka bir iþi olmadýðý zaman
+yapmanýzdýr. Fakat Cygwin paketinin tüm bekleyiþinize deðen bir paket olduðunu
+söylememiz gerekiyor; Ne de olsa Windows üzerinde Unix komut satýrýna ve
+komutlarýna sahip olmak, yabana atýlýr bir avantaj deðildir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{MySQL Front}\label{install:mysqlfront}
+MySQL-Front, MySQL veri tabaný için en popüler önyüzlerden biridir. Bu programý
+kullanarak veri tabanlarýný görebilir, sorgu yapabilir, görsel olarak tablo,
+kolon ekleyebilir ve bir tablo içindeki veri satýrlarýnýn (belli bir limit
+dahilinde) listesini görebilirsiniz.
+
+Programý indirmek için \PVerb!http://www.mysqlfront.de/download.html! adresinden
+en son sürümü alýn. Kurulmasý, standart bir Windows programý gibidir ve oldukça
+basittir. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{OpenSSH} \label{install:sshscp}
+
+\PVerb!ssh! ve \PVerb!scp! programlarýný kurmayý, sadece Windows ortamý ve Cygwin
+(\ref{install:cygwin}) kurulmadýðý þartlar için anlatacaðýz çünkü eðer
+geliþtirme ortamýnýz Linux ise \PVerb!ssh! zaten iþletim sisteminde kurulmuþ
+olarak gelecektir. Solaris ortamýnda ise eðer \PVerb!ssh! yoksa (çoðunlukla
+vardýr) makinadan sorumlu admin'e bu programý kurdurtabilirsiniz. Hattâ Windows
+ortamýnda da, eðer Cygwin kurmuþsanýz \PVerb!ssh!, Cygwin paketinin içinden
+kullanýma hazýr bir hâlde çýkacaktýr.
+
+Windows'da \PVerb!ssh!'i ve \PVerb!scp! programlarýný kurmak için, önce
+\PVerb!http://sshwindows.sourceforge.net/download/! adresinden \PVerb!Binary
+Installer Release!'i indirin. Kuruluþ programýný baþlatýn ve sadece
+\PVerb!Client! için kuruluþu seçin. Kurulum yaptýðýnýz makina, üzerinde
+geliþtirme yaptýðýnýz makina olduðu için, sadece kod {\em göndermekle} yükümlü
+olacaktýr, bu yüzden bir \PVerb!ssh! müþterisi (client) olmasý yeterlidir.
+
+Kuruluþ ekranlarýný takip edin, istediðiniz bir kuruluþ dizini seçin, ve
+kuruluþu tamamlayýn. Þimdi yeni açtýðýnýz bir komut satýrý ekranýndan
+\PVerb!ssh! ya da \PVerb!scp! komutlarýný iþletebilirsiniz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ITracker} \label{install:itracker}
+
+\begin{lstlisting}[language=XML, frame=none]
+http://sourceforge.net/project/showfiles.php?group_id=54141
+\end{lstlisting}
+adresinden \PVerb!Download! baðlantýsýný takip ederek oradan
+\PVerb!itracker_xxx.express.zip! dosyasýný bulup indirin. Bu zip tamamen kendi
+kendine yeterli (self-contained) bir JBoss da içermektedir, yâni hazýrlýklar
+tamamlandýktan sonra tek yapmanýz meselâ \PVerb!ITRACKER! dizini altýndaki
+kurulumu \PVerb!ITRACKER/jboss-3.2.5/bin!  altýndaki \PVerb!run.bat! ya da
+\PVerb!run.sh! ile baþlatmaktýr. 
+
+Ýlk önce ITracker'ýn verilerini tutacak MySQL'de çalýþan yeni bir veri tabanýna
+ihtiyacýmýz var. Bu veri tabanýnýn ismi \PVerb!itracker! olsun. Veri tabanýný
+MySQLFront (\ref{install:mysqlfront}) ile yaratabiliriz. Taban hazýr olunca,
+tabaný doðru tablolarla doldurmak için \PVerb!ITRACKER/sql/mysql/install!
+altýndaki \PVerb!create_itracker_core.sql! ve \PVerb!create_mysql_user.sql!
+dosyalarýný iþletmemiz gerekecektir. 
+
+Bunlardan sonra, JBoss ITracker'ýn veri tabanýndan haberdar olmasý için, JBoss
+üzerinde \PVerb!ITrackerDS! adýnda bir J2EE veri kaynaðý (data source)
+yaratmamýz lazým. Bunun için bildiðimiz gibi \PVerb!deploy! dizini altýnda sonu
+\PVerb!-ds.xml! ile biten bir dosya yeterli oluyor. Biz ITracker için 
+\PVerb!itracker-ds.xml! adýnda bir dosya yarattýk. Bu örnek dosyayý kitap kodlarý
+altýndaki \PVerb!conf! dizininde bulabilirsiniz. Ayrýca
+\PVerb!ITRACKER/jboss-3.2.5/server/default/deploy/it-hsqldb-ds.xml! adýndaki
+dosyayý silin, çünkü paketten çýktýðý haliyle ITracker HSQLDB kullanmak üzere
+ayarlanmýþtýr. \PVerb!ITrackerDS!'in tanýmýný altta veriyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+  <local-tx-datasource>
+    <jndi-name>ITrackerDS</jndi-name>
+    <connection-url>
+      jdbc:mysql://localhost:3306/itracker
+    </connection-url>
+    <driver-class>org.gjt.mm.mysql.Driver</driver-class>
+    <user-name>root</user-name>
+    <password></password>
+    <exception-sorter-class-name>
+        org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter
+    </exception-sorter-class-name>
+    <metadata>
+       <type-mapping>mySQL</type-mapping>
+    </metadata>
+  </local-tx-datasource>
+</datasources>
+\end{lstlisting}
+Son bir basamak, MySQL için JDBC sürücüsü (driver) jar dosyasýný JBoss'a vermek,
+bu da yine kitap kodlarý altýnda bulabileceðiniz 
+\PVerb!lib/hibernate/mysql-connector-java-3.1.11-bin.jar! dosyasýný
+\PVerb!ITRACKER/jboss-3.2.5/server/default/lib! dizini altýna atmaktýr.
+
+Artýk \PVerb!localhost:8080/itracker! adresinden programý kullanmaya
+baþlayabilirsiniz. Program otomatik olarak ilk kullanýcýyý yaratýyor, kullanýcý:
+\PVerb!admin!, þifre: \PVerb!admin! ile programa girip projeniz için gerekli
+bilgileri girmeye baþlayabilirsiniz.
+
+ITracker resmi sürümü, Türkçeleþtirilmiþtir durumdadýr. Kullanýcý olarak sisteme
+girdikten sonra, \PVerb!Tercihlerim! (My Preferences) seçeneði altýndan Türkçe
+dilini seçerek uygulamanýn dilini tamamen deðiþtirmeniz mümkündür.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Linux Üzerinde CVS} \label{install:cvs}
+
+CVS'i kurmak için öncelikle
+
+\begin{lstlisting}[language=XML, frame=none]
+ftp://ftp.gnu.org/gnu/non-gnu/cvs/
+\end{lstlisting}
+adresinden en son cvs kaynak sürümünü indirin. Bu dizin altýnda bugün için en
+son sürüm \PVerb!cvs-1.11.tar.gz! dosyasýdýr. Bu dosyayý Unix makinanýza
+kopyalayýp \PVerb!tar xvzf! ile açabilirsiniz. Açýlan yeni dizin içinde
+
+\begin{lstlisting}[language=Java, frame=none]
+./configure
+make
+make install
+\end{lstlisting}
+komutlarýný sýrasýyla uygulayýn. Bu komutlar CVS iþler kodlarýný gerekli yerlere
+koyacaktýr.
+
+CVS servisini baþlatabilmek için \PVerb!cvs! adýnda bir kullanýcý ve \PVerb!cvs!
+adýnda bir grup yaratmanýz gerekiyor. Þu komutlarý sýrasýyla uygulayýn.
+
+\begin{lstlisting}[language=Java, frame=none]
+groupadd cvs
+
+mkdir /home/cvs
+
+chgrp cvs /home/cvs
+
+useradd cvs -d /home/cvs -g cvs
+
+chown cvs /home/cvs
+\end{lstlisting}
+Bu satýrlar ile \PVerb!cvs! Unix grubu altýnda olan bir \PVerb!cvs! kullanýcýsý
+yarattýk. Bunlarý yaptýktan sonra \PVerb!/etc/inetd.conf! dosyasý içine þu
+satýrlarý eklemelisiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+cvspserver stream tcp nowait root /usr/bin/cvs cvs
+           --allow-root=/home/cvs pserver
+\end{lstlisting}
+Ek olarak \PVerb!/etc/services! dosyasý içinde þu satýrlarýn olmasýna dikkat
+etmeliyiz:
+
+\begin{lstlisting}[language=Java, frame=none]
+cvspserver 2401/tcp
+\end{lstlisting}
+
+Artýk \PVerb!inetd! servisini tekrar baþlatýrsak (\PVerb!killall -HUP inetd!),
+yeni ayarlar devreye girmiþ olacaktýr. Eðer Unix sistemimiz xinetd kullanýyorsa,
+ek bir aþama olarak \PVerb!/etc/xinet.d/cvspserver! dosyasýna þunlarý yazmalýyýz
+
+\begin{lstlisting}[language=Java, frame=none]
+service cvspserver
+{
+	socket_type	= stream
+	wait		= no
+	user		= cvs
+	group		= cvs
+	env		= HOME=/home/cvs # Fixes RHL 7.0 problem!
+	server		= /usr/bin/cvs
+	server_args	= -f --allow-root=/home/cvs pserver
+	disable		= no
+}
+\end{lstlisting}
+Bu ayarlarý \PVerb!xinitd! ile devreye sokmak için, \PVerb!root! kullanýcýsýndan
+
+\begin{lstlisting}[language=Java, frame=none]
+/etc/init.d/xinetd restart
+\end{lstlisting}
+komutunu çaðýrmalýyýz. Bunlar yapýldýktan sonra, sisteme yeni bir CVS kullanýcý
+eklemek, o kullanýcýyý yeni \PVerb!cvs! Unix grubuna eklemek kadar
+basittir. Bunu
+
+\begin{lstlisting}[language=Java, frame=none]
+/usr/sbin/usermod -G cvs user123
+\end{lstlisting}
+sözdizimini kullanarak yapabiliriz.
+
+\subsection{Kullanmak}
+
+CVS'e baðlanan sistemler için bazý ayarlamalar gerecektir. Her CVS kullanýcýsý,
+öncelikle hangi havuzda iþlem yapacaðýný belirtmelidir. \PVerb!cvs -d
+havuz_ismi!  seçeneði ile bunu rahatça yapabiliriz, ya da \PVerb!CVSROOT! çevre
+degiþkeninde havuz ismini tanýmlayabiliriz; Böylece sürekli \PVerb!-d!
+kullanýlmasýna gerek kalmaz.Eðer kod havuzu yerel ise (ayný makina üzerinde
+yani), o zaman
+
+\begin{lstlisting}[language=Java, frame=none]
+export CVSROOT=/tmp/deneme1
+\end{lstlisting}
+kullanýlabilir. Fakat havuz ile kullanýcý ayrý sistemlerde ise (ki genelde
+böyle olur), o zaman
+
+\begin{lstlisting}[language=Java, frame=none]
+export CVSROOT=:pserver:remoteuser@hostname:/tmp/deneme1
+\end{lstlisting}
+Þimdi bu ayarlarý kullanarak CVS'e giriþ yapabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs login
+\end{lstlisting}
+Cevap olarak alttaki çýktý gelecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+(Logging in to hostname)
+CVS password: ...
+\end{lstlisting}
+Þifrenizi girdikten sonra, \PVerb!cvs co MODULE! komutunu kullanarak
+(\PVerb!MODULE! yerine kendi kod havuz ismimizi koymayý unutmayalým) depolanmýþ
+kodlarý kendi yerel diskimize alabiliriz.
+
+Kodlar yerel dizine geldikten sonra, istediðimiz dosyada deðiþliklik yapmakta
+serbestiz. Yaptýðýmýz deðiþikliklerden tatmin olduysak, o zaman kodu geri
+koyabiliriz. En üst dizin seviyesinden,
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs commit
+\end{lstlisting}
+komutunu verince, bu komut en baþtan baþlayýp her alt dizini ziyaret ederek
+orada bulduðu deðiþiklikleri havuza gönderecektir.
+
+Eðer biz baþkalarýnýn yaptýðý deðiþiklikleri görmek istiyorsak, yine en üst
+seviyeden, 
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs up -d
+\end{lstlisting}
+komutunu verebiliriz. Bu komut bizim dokunmadýðýmýz dosyalarýn en son hâlini
+alacak, fakat hem bizim hem de baþka bir programcýnýn yaptýðý deðiþiklikleri
+birleþtirim (auto-merge) bize sunacaktýr. Bu dosyalarýn hangileri olduðu bize
+ekrandan bildirilecektir.
+
+Eðer \PVerb!cvs commit! komutunu gönderdiðimizde güncelleme çakýþmasý var ise,
+\PVerb!cvs commit! hata verip geri döner. Bunun anlamý, yukarýda gösterildiði
+gibi \PVerb!cvs up -d! ile auto-merge yaparak çakýþmalarý çözmeye mecbur
+olduðumuz anlamýna gelir.
+
+\subsubsection{Çakýþma Örneði}
+
+Programcýlar, projenin son hâlini almak ve kendileri kodlamaya baþlamak için
+depodan dosyalarý kendi ortamlarýna indirirler. Dosya üzerinde ekleme, çýkarma
+iþini kendi ortamlarýnda yaparlar. Ýþleri bitince KKI sistemine "geri"
+verirler. KKÝ sistemi, eðer ``ayný anda'' iki kiþinin deðistirdiði bir dosya
+varolduðunu bulursa, deðiþim ``çarpýþmasý'' olduðunu haber verir. Bu haber ayný
+dosyayý ikinci geri veren programcýya gösterilir. Böyle bir durumda
+programcýnýn, deðiþmiþ dosyayý depodan çýkartýp, kendi sürümü ile
+`birleþtirmesi' (merge) gerekir. CVS programý iþimizi rahatlatmak için otomatik
+bir birleþtirici sunmaktadýr.
+
+Meselâ, \PVerb!BeniDegistir.c! dosyasiný iki kiþi ayný anda
+deðiþtirmiþtir. Ýþleri bittikten sonra, belli aralar ile þu iþlemý yapmýslardýr;
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs commit BeniDegistir.c
+\end{lstlisting}
+Bu komutu veren ikinci programcý bir hata mesajý görecektir, ve depo ikinci
+sürümü kabul etmeyecektir. Çünkü ikinci deðiþiklikten önce ``baþkasý'' dosyayý
+deðiþtirmiþ, ve ikinci kiþi eklememimizi ondan bir önceki sürüme göre
+yapmýþtýr. CVS þunu demeye çalýþmaktadýr; ``Bir de kodun son haline bir bakýn,
+eðer deðiþikliðiniz hala geçerliyse, bana birinci deðiþiklikle beraber tekrar
+geri vermeniz gerekiyor. Eski deðiþikliðin üzerinde yazýp onu kaybetmek
+istemiyorum". Bu durumda, en yeni (birinci deðiþiklikten sonraki) sürümü depodan
+alýp, kendi dosyamýz ile ``birleþtirmemiz'' gerekecektir. Dikkat edelim, bu
+birleþtirme hala merkezi depoda deðil, bizim þahsi dosyamýzda olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs -q co -P BeniDegistir.c
+\end{lstlisting}
+Bu komuttan sonra, elinizde þöyle bir kayýt gececek..
+
+\begin{lstlisting}[language=Java, frame=none]
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(int argc,
+         char **argv)
+{
+    init_arayici();
+    ara();
+    if (argc != 1)
+    {
+        fprintf(stderr, "tc: Hic Oge Gondermeye Gerek Yok.\\n");
+        exit(1);
+    }
+    if (nerr == 0)
+        KodYarat();
+    else
+        fprintf(stderr, "Kod Yaratilmadi.\\n");
+<<<<<<< BeniDegistir.c
+    exit(nerr == 0 ? CIKIS_BASARILI : CIKIS_BASARISIZ);
+=======
+    exit(!!nerr);
+>>>>>>> 1.6
+}
+\end{lstlisting}
+Karakterler \PVerb!<<<<<<<! ve \PVerb!=======! arasýna gelen satýrlar, bizim
+eklememiz. \PVerb!=======! ve \PVerb!>>>>>>> 1.6! arasýna gelenler depoda bizden
+önce yapýlan deðiþikliklerdir. Bu birleþmiþ dosyaya bakarak, bizim eklememizin
+geçerli olup olmadýðýna bakmalýyýz, ve dosyayý son haline getirmeliyiz. Bunu
+yaparken \PVerb!====!  iþaretlerini çýkartartmamýz gerekecektir, ve öteki
+deðiþikliði yapan programcýya deðiþiklikleri hakkýnda soru sormamýz
+gerekebilir. Bundan sonra, en son formu bulup, þu komutu tekrar iþletmemiz
+gerekecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs commit BeniDegistir.c 
+\end{lstlisting}
+Fakat artýk cvs komutu baþarýyla tamamlanacak. Depoda artýk güncel dosyanýz
+bulunuyor!
+
+\subsection{CVS ve Binary Dosyalar}
+
+ CVS'te en sýk karþýlanan problemlerden biri, \PVerb!gif!, \PVerb!jpg! ve
+\PVerb!jar! gibi ikisel (binary) dosyalarý CVS'e ekleyip, geri alýnca bu
+dosyalarýn bozulduðunu görmektir.  Bunun sebebi, CVS'in bu dosyalarý metin bazlý
+dosyalar gibi görmesi ve üzerinde deðiþim yaparken dosyayý bozmasýdýr.
+
+Bu hatayý düzetlmek için, CVS'i kurduðunuz makine ve dizine girip þu deðiþikliði
+yapýn. \PVerb!CVS_DIZIN/CVSROOT/cvswrappers! adlý bir dosya bulacaksýnýz. Metin
+bazlý dosyadan daha deðiþik muamele görmesini istediðiniz dosyalarý, þu þekilde
+cvswrappers içine ekleyin.
+
+\begin{lstlisting}[language=Java, frame=none]
+*.gif -k 'b'
+*.jpg -k 'b'
+*.jar -k 'b'
+..
+\end{lstlisting}
+Bu yeterli olacaktýr. CVS'i tekrar baþlatmanýza bile gerek yoktur. Þimdi yeni
+ekleyeceðiniz dosyalar doðru muamele ediliyor olacaklar. Eðer daha önceden
+eklenmiþ dosyalarý düzeltmek istiyorsanýz, \PVerb!cvs remove!, \PVerb!cvs
+commit! ve arkasýndan \PVerb!cvs add! ve \PVerb!cvs commit!  ile bu dosyalarýn
+düzgün hâlini tekrar ekleyin.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Enscript} \label{install:enscript}
+
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{0.75}{
+      \includegraphics{./images/enscript_kucuk.eps}
+     }
+    }
+\end{figure}
+
+Kod gözden geçirmek için en rahat yol, kodu yazýcýdan basmak, ve üzerine
+yorumlar yazarak kodu bu þekilde gözden geçirmektir. Kod gözden geçirme (code
+review) toplantýlarý için kodu kaðýda basmak, ayrýca önem taþýmaktadýr. Kodu
+gözden geçirilen programcý da toplantý sýrasýnda kendisine verilen yorumlarý,
+düzeltmeleri kendi yazýcý çýktýsý üzerine yazarsa, kendi için yararlý olacaktýr.
+
+Yazýcýdan alýnacak çýktýdaki kodlarýn ``2 kod sayfasý bir yazýcý sayfasýna''
+gelecek, ve her satýrýn numaralý olacak þekilde alýnmasý en iyisidir.  Bu
+sayede, kod gözden geçirme toplantýsý sýrasýnda ``..þu, ve þu hata, þu no'lu
+satýrda'' gibi sözler söylenebilecektir. Bu türden bir çýktýnýn alýnmasý için
+kullanýlan program, \PVerb!enscript! programýdýr.
+
+Enscript'i Windows'da kurmak için kitap kodlarýmýz
+\PVerb!kitap-tools-enscript.zip! dosyasýný açtýktan sonra en üst dizin
+\PVerb!enscript! dizinini olduðu gibi alýp \PVerb!c:! seviyesine kopyalayýn. Bu
+kopyalama iþleminden sonra \PVerb!PATH! deðiþeninize \PVerb!c:/enscript!
+dizinini ekleyebilirsiniz. Cygwin'i \ref{install:cygwin} bölümünde anlatýldýðý
+gibi kurmuþ olanlar için hiçbir ek iþleme gerek yok, \PVerb!enscript! zaten
+kurulmuþ olarak gelecektir. Artýk komut satýrýnda herhangi bir yerden
+\PVerb!enscript! komutunu kullanabilirsiniz.
+
+Þimdi sýra Ghostview ve Ghostscript kurmaya geldi. Postscript dosyalarý
+Unix'çilerin uzun süredir bildiði bir formattýr. Enscript programý formatladýðý
+kaynak kodlarý görsel olarak biçimlendirip, çýktýyý postscript olarak yazdýðý
+için, Ghostview adýnda bir gösterici programa ihtiyacýmýz var.
+
+\PVerb!ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/ghostgum/gsv46w32.exe!) ve
+\PVerb!ftp://mirror.cs.wisc.edu/pub/mirrors/ghost/AFPL/gs814/gs814w32.exe!
+baðlantýlarýndan Windows için Ghostview ve Ghostscript'i indirebilirsiniz.
+
+Bu kadar! Artýk istediðiniz kodu güzel basmak için aþaðýdaki þekilde bir komut
+verebilirsiniz. Enscript'in birçok seçeneði vardýr, bunlari \PVerb!enscript
+--help! ile öðrenebilirsiniz. En standart kullaným, 2 kod sayfasý bir yazýcý
+sayfasý, satýrlarda numaralar, en baþta kod isminin ismi baþlýk olarak ve Java
+sözdiziminde önemli olan anahtar kelimelerin (keyword) koyu olarak basýldýðý
+formattýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+enscript -pcikti.ps -r -c -C -2 -j --pretty-print=java
+          -r -v --lines-per-page=90 CLASS.java
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Emacs}
+
+Emacs dünyada en çok fazla dili destekleyen editör'lerden biridir. Teknik lider
+olarak iþiniz shell script'lerden Java'ya, oradan XML'e oradan da Perl'e
+atlamanýzý gerektireceði için, her türlü ihtiyacýnýzý karþýlayabilecek bir
+editör'e ihtiyacýnýz olacak.
+
+Kurmak için \PVerb!http://ftp.gnu.org/gnu/windows/emacs/latest/! adresinden
+Emacs'in son versiyonun indirin. Bu zip dosyasýný bir dizinde açýn (windows
+üzerinde genellikle \PVerb!c:/! Unix'de genellikle \PVerb!/usr/local/!
+). Kurduðunuz dizinin yerine \PVerb!EMACS_DIR! olarak referans edersek,
+Windows'da kuruluþu tamamlamak için \PVerb!EMACS_DIR/bin/addpm.exe! dosyasýna
+çift týklamanýz gerekmektedir.
+
+Bizim kullandýðýmýz ayarlarý kullanmak/almak için, kitap kodlarýmýz arasýnda
+bulunan \PVerb!kitap-tools-emacs-xxx.zip! dosyasýný indirin ve Windows'da
+\PVerb!c:/! üzerinde açýn. Bu açýlým, \PVerb!c:/! altýna bazý \PVerb!.el!
+dosyalarý ve \PVerb!c:/emacs-21.4! dizini altýna bir takým ek dosyalar
+býrakacaktýr. Bizim kullandýðýmýz Java geliþtirme ortamý ve bir süredir toplamýþ
+olduðumuz, beðendiðimiz ayarlar bu dosyalar içindedir.
+
+\subsection{Emacs Özellikleri}
+
+\subsubsection{Mod'lar}
+
+Emacs, her dosya için belli bir mod açabilir. Mod'lar o anda edit etmekte
+olduðunuz dil için özel bazý yetenekler saðlarlar. O dile özel girintilendirme
+(indentation), anahtar kelime renklendirmesi (syntax coloring), yardýmcý tuþlar
+bu yardýmlardan bazýlarýdýr. Hangi dosya için hangi mod kullanýlmasý gerektiði
+\PVerb!_emacs.el! içinde tanýmlanabilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+(setq auto-mode-alist
+      (append '(("\\.C\$"   . c++-mode)
+                ("\\.xml\$" . nxml-mode)
+                ("\\.java" . jde-mode)
+\end{lstlisting}
+Görüldüðü gibi Emasc XML dosyalarýný sonek \PVerb!.xml! sayesinde anlamaktadýr,
+ve bu dosyalarý \PVerb!nxml-mode! açmaktadýr.
+
+Her mod kendi dili için girintileme (indentation) yapabilir. Indent için
+istediðiniz bölgeyi mouse ile seçin, ve \PVerb!MyJDE | Indent!, ya da
+\PVerb!\C-x\=!  tuþlarýný kullanýn. Ayrýca herhangi bir satýr üzerindeyken
+(satýrýn neresinde olursanýz olun) TAB'e basarak girintileme yapabilirsiniz. Bu
+özellik çoðu editör'de mevcut deðildir.
+
+\PVerb!M-! sembolü, Emacs dünyasýnda Escape tuþu olarak bilinir. Yerine
+\PVerb!ALT! tuþu basýk tutularak ta kullanýlabilir.
+
+Dosya açmak için \PVerb!File | Open File!, ya da \PVerb!\C-x\C-f!, kaydetmek
+için \PVerb!File | Save!, ya da \PVerb!\C-x\C-s! kullanýlýr.
+
+\subsubsection{Dired}
+
+Dizin gezmek için Dired mod'u kullanýlabilir. Dired kelimesi, \textbf{Dir}ectory
+\textbf{ed}itor kelimelerinden gelir. \PVerb!File | Open Directory! ya da
+\PVerb!\C-x\d <ENTER>!  ile girebilirsiniz. Dired size o anki dizinin listesini
+verir. Bu listede
+\begin{itemize}
+\item Aþaðý yukarý gitmek için ``\PVerb!n!'' ve ``\PVerb!p!'' tuþlarýný
+\item Dosyaya girmek için \PVerb!f! tuþunu
+\item Ya da mouse ile dosyaya iþaret ederek sol düðmeyi
+\end{itemize}
+kullanabilirsiniz. Eðer Dired'de bakmakta olduðumuz dizin üzerinden bir Explorer
+penceresi açmak istiyorsak, bunun için \PVerb!MyJDE | Open Explorer In Current
+Dir! menü seçeneðini kullanabiliriz (ya da \PVerb!F10! tuþu). Ayný þekilde
+\PVerb!MyJDE | Open Cmd In Current Dir! Dired'deki dizinde bir komut satýrý
+(shell) açacaktýr.
+
+\subsubsection{JDE}
+
+Çok kuvvetli bir Java mod'udur. Herhangi bir \PVerb!.java! dosyasýna girdiðiniz
+anda aktif olur. Projenizin en üst seviyesinde \PVerb!prj.el! varsa, size daha
+yardýmcý olacaktýr. \PVerb!prj.el! þöyle gözükebilir;
+
+\begin{lstlisting}[language=Java, frame=none]
+(custom-set-variables
+ '(jde-built-class-path
+   (quote ("./lib/hibernate3.jar"
+	   ...
+	   )))
+ '(jde-complete-function  (quote jde-complete-menu))
+ '(jde-global-classpath
+   (quote ("./lib/hibernate3.jar"
+	   ....
+	   )))
+ '(jde-sourcepath
+   (quote ("./src/java"	 
+	   )) )
+ )
+\end{lstlisting}
+
+Üstteki ayarlar üzerinden, bir metotu çaðýranlarý bulmak için \PVerb!F4!,
+\PVerb!MyJDE | Call Tree (Usage)!, iþleç üzerindeyken bir class tanýmýna gitmek
+için \PVerb!F3!, \PVerb!MyJDE | Goto! kullanýlýr.
+
+Bir class'ý otomatik import etmek için, class'ýn üzerine gidip \PVerb!MyJDE |
+Import Class!, ya da \PVerb!\M-uv! kullanabilirsiniz. Bir referansýn metotlarýný
+listelemek için, noktadan sonra \PVerb!F7! ya da \PVerb!MyJDE | Complete!
+kullanýlabilir.
+
+Tüm bu Java yardýmcýlarý, \PVerb!prj.el! içinde jar'larýný koyduðunuz dosyalar
+ve dizinler üzerinde çalýþýr.
+
+\subsubsection{Derlemek}
+
+Bizim ayarlarýmýzý kurduysanýz, \PVerb!MyJDE | Compile! ya da \PVerb!\C-x\c!,
+otomatik olarak \PVerb!ant -emacs -find! komutunu iþletecektir. Çýktý, Emacs
+tarafýndan taranýr. Hatalara gitmek için \PVerb!\C-x\~!. Ya da hatanýn üstüne
+gidip \PVerb!\C-c\C-c! kullanabilirsiniz.
+
+\subsubsection{Kopyalama, Yapýþtýrma, Silme}
+
+\begin{itemize}
+   \item Kopyalama için \PVerb!\C-c!
+   \item Yapýþtýrma için \PVerb!\C-y!
+   \item Geri tek karakter silmek için \PVerb!\C-k!
+   \item Satýr silmek için \PVerb!\C-t!
+\end{itemize}
+
+\subsubsection{Hareket Tuþlarý}
+
+\begin{itemize}
+   \item Yukarý: \PVerb!\C-p!
+   \item Aþaðý: \PVerb!\C-n!
+   \item Sola: \PVerb!\C-j!
+   \item Saða: \PVerb!\C-l!
+   \item Kelime saða: \PVerb!\C-d!
+   \item Kelime sola: \PVerb!\C-w!
+   \item Kelime sola silmek: \PVerb!\C-f!
+   \item Belli bir satýra gitmek: \PVerb!\C-x\g!
+\end{itemize}
+
+\subsubsection{Buffer'lar}
+
+Emacs'de her dosya bir buffer içinde tutulur. Buffer'lar arasýnda gezinmek için
+\PVerb!Buffers! menü seçeneðinden (ya da \PVerb!\C-x\C-b! ile) ya da
+\PVerb!CTRL! artý sol mouse düðmesine týklayarak tüm mevcut buffer'larý
+görebilirsiniz 
+
+\subsection{Emacs ve CTRL tuþu}
+
+Emacs'de CTRL tuþu çok kullanýlýr. Normal klavyelerde, CTRL çok eriþilmez bir
+yerde olduðu için çözüm \PVerb!CAPS LOCK! tuþunu \PVerb!CTRL!'a
+çevirmektir. Alttaki kodu \PVerb!ctrl.reg! olarak kaydedip, ve üzerine çift
+týklarsanýz, bilgisayarý kapatýp açtýktan sonra \PVerb!CAPS LOCK! tuþunun
+\PVerb!CTRL! tuþuna dönüþmüþ olduðunu göreceksiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+REGEDIT4
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+"Scancode Map"=hex:00,00,00,00,00,00,00,00,02,00,00,00,1d,00,3a,00,00,\
+00,00,00
+\end{lstlisting}
+Not: \PVerb!\! iþareti satýrýn bitmediðini göstermek için bizim tarafýmýzdan
+koyulmuþtur, normâl dosyanýn içine bu karakteri koymaya gerek yoktur.
+
+\subsection{Ayar Deðiþiklikleri}
+
+Ayar deðiþiklikleri için \PVerb!_emacs.el! dosyasýný istediðiniz gibi
+deðiþtirebilirsiniz. Sonra \PVerb!\C-x\C-b! ile derleyin ya da \PVerb!\M-x
+byte-me! LISP komutunu iþletin. Yeni deðiþiklikler anýnda etkili olacaktýr.
+
+Deðiþik renkler kullanmak istiyorsanýz, \PVerb!_emacs.el! ile ayný seviyede olan
+\PVerb!_colors-public.el! dosyasýnda gereken deðiþiklikleri
+yapabilirsiniz. 
+
+\section{Cygwin Üzerinde X Windows} \label{install:cygwin:xwindows}
+
+Cygwin/X kurmadan önce Cygwin'i kurmuþ olmanýz gerekecektir. Eðer bu kurulumu
+yaptýysanýz, \PVerb!http://x.cygwin.com/! adresinden \PVerb!Install Cywgin/X
+Now!  baðlantýsýný týklayýn. Bir \PVerb!setup.exe! programý ortaya çýkacaktýr,
+bunu sabit diskinizde bir yere kaydedin. Bu programýn üzerine týklayýp,
+\PVerb!Next!'e basýn, ve ``Install from Internet'' seçimini yapýn. Cywgin \PVerb!Root
+Directory! olarak Cygwin'inizin nerede olduðu algýlacacaktýr, eðer
+algýlanmadýysa doðru dizin yerini siz girin. Sonra iki kere \PVerb!Next! ile
+kurulumu yapýn.
+
+Herþey doðru kurulduktan sonra, komut satýrýndan
+
+\begin{lstlisting}[language=Java, frame=none]
+startx
+\end{lstlisting}
+ile X altyapýnýzý baþlatabilirsiniz. Bu altyapý baþladýktan sonra, bir (üzerinde
+X servisi iþleyen) bir Unix makinasýna baðlanýp, X programlarýnýn çýktýsýný
+kendi makinanýza alabilirsiniz.
+
+\section{Kaynak Kod Yamalarý} \label{install:patch}
+
+Bazýlarý, açýk kaynak kültürünün baþarýsýný her projenin kodunun eriþilebilir
+(okunabilir) olmasýndan hareketle, ayný zamanda kodun {\em herkes tarafýndan}
+CVS deposunda deðiþtirilebilir olmasý olduðunu zanneder. Halbuki, birçok aktif
+açýk yazýlým destekçilerinin çoðunun bir projeye hiçbir zaman CVS commit hakký
+olmamýþtýr\footnote{http://www.opensymphony.com/oscache/contribute.action}. Peki
+o zaman ``açýk yazýlýmda test'çilerin fazlalýðý ve hata onarýmýnýn çabukluðu''
+nasýl mümkün olmaktadýr, ve bu ne demektir?
+
+Burada kritik teknoloji, yama (patch) teknolojisidir. Bir yama dosyasý, en basit
+anlatýmýyla, bir text dosyasýdýr. Bu dosya, programcý yamayý oluþturacak komutu
+verdikten sonra, kod geliþtirme dizininde programcýnýn yaptýðý deðiþiklikler ile
+kodun eski, deðiþmemiþ hâli arasýndaki {\em farklarýn} toplamýdýr. Bu
+deðiþiklikler, bir ya da daha fazla dosya üzerinde daðýlmýþ olabilir; Yama
+dosyasý bunun takibini doðru bir þekilde yapacaktýr.
+
+Yama dosyasý, text bazlý bir dosya olduðu için, bir forum'a asýlabilir, e-mail
+ile baþka bir programcýya gönderilebilir, istenilen ortamda saklanabilir. Eðer
+bu yamayý baþka bir programcýya alýp kullanmak isterse, bu programcý, kendi kod
+bazý üzerinde yamayý uygular (applying the patch) ve böylece deðiþiklikler, onun
+kod bazýnda da aktif hâle gelir. Bu uygulama iþleminin güzel tarafý, uygulamayý
+yapan programcýnýn önceden kendi yaptýðý (farklý) deðiþiklikleri bile olsa,
+yamadaki deðiþikliklerin çoðunlukla baþarýyla uygulanabilmesidir, çünkü
+deðiþikliklerin hangi dosyada olduðu yama çýkartma tarafýndan kaydedilmiþtir,
+tek potansiyel problem ayný dosya üzerinde iki taraf ta deðiþiklik yapmýþsa
+ortaya çýkar; Fakat bu þartlarda çakýþmalar bir birleþtirim (merge) ile
+çözülebilir.
+
+Yama çýkarmak için \PVerb!diff!, yama uygulamak için \PVerb!patch!  komutu
+kullanýlýr. Yama çýkartmak için kodun öncesinin bilinmesi gerekir; Bu ``önce''
+kod bazý, ya bir CVS'e \PVerb!anonymous! eriþim üzerinden, ya da programcýnýn
+sabit diskinde mevcut bir kod dizini üzerinden eriþilebilir. Genellikle
+uygulanan yöntem CVS üzerindendir (fakat CVS yoksa, bir alternatif olduðunu
+bilmek iyidir). 
+
+Açýk yazýlým projelerinde yamalar, genelde önce kullanýcý ve programcý mailing
+list'lerine asýlýr, ya da, projenin herkese açýk olan hata takip sistemine
+eklenir. Bu hataya eklenti (attachement) olarak tamiri gerçekleþtirecek olan
+yama dosyasý da eklenir.
+
+Açýk yazýlým projesinin CVS'e commit hakký olan çekirdek geliþtiricileri,
+sürekli bu hata takip sistemini takip ediyor olurlar. Böylece en son girilen
+hatayý farkeden çekirdek gruptan bir programcý, yamayý hemen kendi kod bazýna
+uygulayýp hakikaten bir hatayý iyi edip etmediðini kontrol edecektir. Eðer hata
+hakikaten düzeltilmiþse, testi yapan programcý yamadan gelen deðiþiklikleri
+CVS'e ekler (bunu yapmaya hakký vardýr), ve arkasýndan hata takip sistemindeki
+hatayý kapatýr.
+
+\subsection{Yama Üretmek}
+
+CVS üzerinden yama üretmek için, projenin en üst seviyesinden 
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs -q diff -u > /tmp/patchfile.patch
+\end{lstlisting}
+þeklinde bir komut kullanýlabilir. Eðer CVS eriþimi yoksa, þu komut kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+diff  -rup /path/to/unmodified/source /path/to/modified/source >
+      /path/to/patchfile.patch. 
+\end{lstlisting}
+Yeni dosyalarý yamaya eklemek için ise:
+
+\begin{lstlisting}[language=Java, frame=none]
+diff -u /dev/null MyCoolNewFile.java >> /path/to/patchfile.patch
+\end{lstlisting}
+
+\subsection{Yama Uygulamak}
+
+Yamayý uygulamak için, CVS'ten en son kod alýndýktan sonra, projemizin en üst
+seviyesinden \PVerb!patch! komutunu þu þekilde kullanmalýyýz.
+
+\begin{lstlisting}[language=Java, frame=none]
+patch -Np1 < /path/to/patchfile.patch
+\end{lstlisting}
+Eðer ``missing header for unfiled diff at line 8 of patch'' gibi hatalar
+geliyorsa, þu da denenebilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+patch -Np0 < /path/to/patch.diff
+\end{lstlisting}
+
+
+

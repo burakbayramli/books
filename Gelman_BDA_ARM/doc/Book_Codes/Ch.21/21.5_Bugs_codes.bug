@@ -1,0 +1,22 @@
+# Setting up the computations
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+    e.y[i] <- y[i] - y.hat[i]                     # data-level errors
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] <- B[j,1]
+    b[j] <- B[j,2]
+    B[j,1:2] ~ dmnorm (B.hat[j,], Tau.B[,])
+    B.hat[j,1] <- g.a.0 + g.a.1*u[j]
+    B.hat[j,2] <- g.b.0 + g.b.1*u[j]
+    for (k in 1:2){                              # group-level errors
+      E.B[j,k] <- B[j,k] - B.hat[j,k]
+  }
+}
+....

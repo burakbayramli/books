@@ -1,0 +1,344 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb}
+
+\newcommand{\lecnum}{AGM-05}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Factors}}\vfill
+
+\begin{verbatim}
+$Date: 2007/10/10 15:07:37 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+  \begin{itemize}
+  \item Factors
+  \item Factor algebra
+    \begin{itemize}
+    \item Marginalisation
+    \item Multiplication
+    \end{itemize}
+  \item Independence models
+  \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Recall: A joint probability distribution}
+
+\begin{verbatim}
+Bronchitis | Cancer  | Smoker    |
+---------- | ------- | --------- | --------
+absent     | absent  | nonsmoker | 0.030000
+absent     | absent  | smoker    | 0.000000
+absent     | present | nonsmoker | 0.270000
+absent     | present | smoker    | 0.150000
+present    | absent  | nonsmoker | 0.020000
+present    | absent  | smoker    | 0.000000
+present    | present | nonsmoker | 0.180000
+present    | present | smoker    | 0.350000
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factors}
+  
+  \begin{itemize}
+  \item This joint probability distribution is represented by a \emph{factor}.
+  \item A factor is simply a mapping from joint instantiations of
+    variables to real numbers.
+  \item Factors are the workhorses of graphical models.
+  \item Most joint probability distributions we will study are defined
+    using more than one factor. Saturated models are thus unusual.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factors formally (almost)}
+  
+  \begin{itemize}
+  \item Let \variables{} be a set of variables.
+  \item In our example $\variables =
+    \{\mathrm{Bronchitis}, \mathrm{Cancer}, \mathrm{Smoker}\}$.
+  \item For each variable $\variable \in \variables$, define \values{}
+    to be the variable's values.
+  \item In our example we have, 
+    ${\cal I}_{\mathrm{Bronchitis}} = \{\mathrm{absent},
+    \mathrm{present}\}$, \\
+    ${\cal I}_{\mathrm{Cancer}} = \{\mathrm{absent}, \mathrm{present}\}$,
+    ${\cal I}_{\mathrm{Smoker}} = \{\mathrm{nonsmoker}, \mathrm{smoker}\}$
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factors formally (almost) (ctd)}
+  \begin{itemize}
+  \item Let $\table = \times_{\variable \in \variables} \values$ be
+    called a \emph{table}.
+  \item In our example $\table = \{\mathrm{absent},
+    \mathrm{present}\}
+    \times \{\mathrm{absent}, \mathrm{present}\} \times \{\mathrm{nonsmoker}, \mathrm{smoker}\}$
+  \item Each element \cell{} of \table{} is a vector of values and is
+    called a \emph{cell}.
+  \item In our example,
+    $(\mathrm{absent},\mathrm{absent},\mathrm{smoker})$\\ and
+    $(\mathrm{absent},\mathrm{present},\mathrm{nonsmoker})$ are both cells.
+  \item A factor with table \table{} is simply a function $f:\table
+    \rightarrow \reals$. 
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginalisation}
+  
+  \begin{itemize}
+  \item Marginalisation 'throws some information away' from a factor
+    by reducing the number of variables involved.
+  \item Easiest to understand by looking at contingency tables (which
+    are also factors).
+  \item Cue \texttt{marginalise\_demo} from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginalisation = summing out}
+  
+  \begin{itemize}
+  \item Each cell in the marginal table is simply the sum of all the
+    `corresponding' cells in the original table.
+  \item Think of marginalisation as `projecting down' a factor to a
+    smaller number of dimensions
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginalisation formally}
+  
+  \begin{itemize}
+  \item Let $f(\cell)$ be the value associated with cell \cell{} in
+    some factor with variables \variables{} and table \table.
+  \item Let $a \subset \variables$, then $\table_{a}$, the table for
+    the marginal factor defined by $a$ is given by $\table_{a} =
+    \times_{\variable \in a} \values$.
+  \item For any cell $\cell \in \table$, let $\cell_{\variable}$ be
+    its value for variable $\variable$.
+  \item Let $\cell_{a}$ be the projection of \cell{} onto $a \subset
+    \variables$ defined as: $\times_{\variable \in a}
+    \cell_{\variable}$
+  \item $f_a: \table_{a} \rightarrow \reals$, the function defining
+    the marginal factor is defined as follows: $f_{a}(\cell_{a}) =
+    \sum_{j \in \table :j_{a}=i_{a}} f(j)$
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginalisation informally}
+  
+  \begin{itemize}
+  \item Suppose factor $f$ involves variables $A,B,C,D$ (i.e.\ these
+    variables define its table). It is normal to reflect this by
+    writing $f$ as $f(A,B,C,D)$.
+  \item This is informal since the factor is actually a function
+    operating on tuples of \emph{values} of its variables, not on the
+    variables themselves.
+  \end{itemize}
+  With this informal notation, marginalising away $A$ would be
+    written:
+    \[
+    f'(B,C,D) = \sum_{A}f(A,B,C,D)
+    \]
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginalisation for probability distributions}
+  
+  \begin{itemize}
+  \item Recall that if `James-in-York' and `James-in-Oxford' are
+    mutually exclusive events then $P(\mbox{James-in-York } \cup
+    \mbox{ James-in-Oxford}) = P(\mbox{James-in-York}) +
+    P(\mbox{James-in-Oxford})$, where `$\mbox{James-in-York } \cup
+    \mbox{ James-in-Oxford}$' is the event that one of
+    $\mbox{James-in-York}$ or $\mbox{James-in-Oxford}$ happens.
+  \item A joint probability distribution (like all probability
+    distributions) assigns probabilities to a \emph{sample space} of events.
+  \item Each joint instantiation is an event, \emph{and they are all
+      mutually exclusive}.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginal distributions}
+  
+  \begin{itemize}
+  \item A \emph{marginal distribution} is one computed by summing out
+    one or more variables from some joint distribution.
+  \item If the original joint distribution is defined by a single
+    factor, then it is computed by marginalising that factor.
+  \item Cue \texttt{marginalise\_.demo2} from \texttt{gPy.Examples}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Events/cells in the marginal table}
+  
+  \begin{eqnarray*}
+    \lefteqn{(Bronchitis=absent)} && \\
+    & = & (Bronchitis=absent,Cancer=absent,Smoking=nonsmoker) \\
+    & \vee & (Bronchitis=absent,Cancer=absent,Smoking=smoker) \\
+    & \vee & (Bronchitis=absent,Cancer=present,Smoking=nonsmoker) \\
+    & \vee & (Bronchitis=absent,Cancer=present,Smoking=smoker) \\
+  \end{eqnarray*}
+
+Since exclusive, we can add probabilities:
+$0.03+0.0+0.27+0.15 = 0.45$
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{On the importance of marginal distributions}
+  
+  \begin{itemize}
+  \item Big joint probability distributions are difficult to make
+    sense of, hence the need to compute less informative marginal
+    distributions. 
+  \item Usually we want marginal distributions with a single variable.
+  \item Many of the algorithms we will study are efficient ways to
+    compute marginal distributions for all variables in a joint
+    distribution.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Independence}
+  
+$A=a$ and $B=b$ are two \emph{independent events} iff $P(A=a
+    \cap B=b) = P(A=a)P(B=b)$.
+    
+  Two random variables $C$ and $D$ are independent in a joint
+  distribution $P$ iff
+\[
+\forall c \in \table_{C}, d \in \table_{D}:
+P(C=c,D=d) = P(C=c)P(D=d)
+\]
+where $P(C=c) = \sum_{d \in \table_{D}}P(C=c,D=d)$ is the marginal
+probability of $C=c$, and $P(D=d)$ is the marginal probability of $D=d$.
+
+NB. This is a strong condition: independence has to hold for
+\emph{all} combinations of values.
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factor multiplication}
+  
+  \begin{itemize}
+  \item If $C$ and $D$ are independent and the distributions for $C$
+    and $D$ are each represented by a single factor, [denoted $P(C)$
+    and $P(D)$, resp.] then computing a new factor for the joint
+    [denoted $P(C,D)$] is just a question of multiplying the
+    appropriate values.
+  \item To do this we `broadcast' each factor so that
+    both have the same variables, and then apply pointwise multiplication.
+  \item Cue \texttt{prod\_demo} from \texttt{gPy.Examples}
+
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factors formally (really!)}
+
+  \begin{itemize}
+  \item Each factor involved in defining a joint distribution---for example
+    $P(\mathrm{Cancer},\mathrm{VisitAsia})$---can be defined on \emph{the
+      same table}.
+  \item In our example, we can have some table \table{} such that\\
+    $P(\mathrm{Cancer}) : \table \rightarrow \reals$ and\\
+    $P(\mathrm{VisitAsia}) : \table \rightarrow \reals$.
+  \item This means that factor multiplication is normal pointwise
+    function multiplication.
+  \item This table involves all variables in the joint distribution.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Factors formally (really!) (ctd.)}
+
+  \begin{itemize}
+  \item However, particular factors typically only depend on a subset of all
+    the variables in the joint distribution. So we take advantage of
+    this to give them a compact representation.
+  \item The data broadcasting makes the existence of this shared table
+    more obvious.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Independence and factored models}
+  
+  \begin{itemize}
+  \item If two random variables $C$ and $D$ are independent then their
+    joint distribution $P(C,D)$ is simply the product of the two
+    relevant marginal distributions $P(C)$ and $P(D)$.
+  \item It follows that the joint distribution can be represented by
+    these two factors.
+  \item This is our first example of a \emph{factored model}.
+  \item Similarly, if we have $n$ mutually independent random
+    variables, then their joint distribution can be represented by $n$
+    factors.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Independence model}
+  
+  \begin{itemize}
+  \item Recall that a model is a set of probability distributions.
+  \item For a set of $n$ variables, let the \emph{independence model} be
+    the set of all distributions where there is independence between
+    all variables.
+  \item Any distribution in this model can be represented by $n$
+    univariate distributions (each represented by a factor).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The blessings of independence}
+  
+  \begin{itemize}
+  \item Suppose each variable has $m$ values, then if no independence
+    relations exist (the saturated model), a single factor with $m^n$
+    numbers is needed.
+  \item Assuming the independence model, $n$ factors each with $m$
+    values are needed: only $nm$ numbers in total.
+  \item (You can save a bit more if you're desperate since
+    probabilities have to sum to one.)
+  \item Computations are also far cheaper with the independence model
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{From independence to conditional independence}
+  
+  \begin{itemize}
+  \item The big problem is that such complete independence rarely models the
+    world well.
+  \item We need models somewhere in between the saturated and
+    independence models.
+  \item And so to models which use \emph{conditional independence} \dots
+  \end{itemize}
+
+\end{titledslide}
+
+\end{document}

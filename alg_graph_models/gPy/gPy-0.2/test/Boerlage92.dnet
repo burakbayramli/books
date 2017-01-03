@@ -1,0 +1,476 @@
+// ~->[DNET-1]->~
+
+// File created by Norsys using Netica 1.06 on Mar 29, 1998 at 04:52:10.
+
+bnet Boerlage92 {
+comment = "From Boerlage, Brent (1994) Link Strength in Bayesian \
+	Networks, Tech. Report 94-17, Dept. Computer Science, Univ. \
+	of British Columbia, BC.\n\
+	It is also in the Boerlage92 UBC MSc thesis.";
+whenchanged = 886771325;
+
+visual V1 {
+	defdispform = LABELBOX;
+	nodelabeling = NAMETITLE;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	commentfont = font {shape= "Arial"; size= 10;};
+	windowposn = (3, 3, 637, 457);
+	resolution = 72;
+	drawingbounds = (1104, 730);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	};
+
+node CV {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = ();
+	probs = 
+		// True         False        
+		  (0.01,        0.99);
+	title = "Tom's\ncousin is\nvisiting him";
+	visual V1 {
+		center = (72, 72);
+		height = 23;
+		};
+	};
+
+node HT {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = ();
+	probs = 
+		// True         False        
+		  (0.7,         0.3);
+	title = "Lots of\ntraffic on 5th\nstreet last year";
+	visual V1 {
+		center = (534, 48);
+		height = 19;
+		};
+	};
+
+node SW {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (HT);
+	probs = 
+		// True         False          // HT    
+		 ((0.7,         0.3),          // True  
+		  (0.6,         0.4));         // False ;
+	title = "Tom's\nhardware store\ndid well last year";
+	visual V1 {
+		center = (408, 48);
+		height = 18;
+		};
+	};
+
+node TW {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (SW);
+	probs = 
+		// True         False          // SW    
+		 ((0.7,         0.3),          // True  
+		  (0.3,         0.7));         // False ;
+	title = "Tom is\ncurrently\nfairly wealthy";
+	visual V1 {
+		center = (282, 48);
+		height = 21;
+		};
+	};
+
+node TC {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TW);
+	probs = 
+		// True         False          // TW    
+		 ((0.3,         0.7),          // True  
+		  (0.1,         0.9));         // False ;
+	title = "Tom just\nbought a new\nBMW car";
+	visual V1 {
+		center = (186, 114);
+		height = 20;
+		};
+	};
+
+node CD {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (CV, TC);
+	probs = 
+		// True         False           // CV    TC    
+		(((0.95,        0.05),          // True  True  
+		  (0.9,         0.1)),          // True  False 
+		 ((0.9,         0.1),           // False True  
+		  (0.05,        0.95)));        // False False ;
+	title = "A new BMW\nis parked in Tom's\ndriveway";
+	visual V1 {
+		center = (72, 174);
+		height = 22;
+		};
+	};
+
+node TR {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TW);
+	probs = 
+		// True         False          // TW    
+		 ((0.1,         0.9),          // True  
+		  (0.05,        0.95));        // False ;
+	title = "Tom told Molly\nhe is rich";
+	visual V1 {
+		center = (384, 132);
+		height = 17;
+		};
+	};
+
+node TF {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TR, TW);
+	probs = 
+		// True         False           // TR    TW    
+		(((0.6,         0.4),           // True  True  
+		  (0.15,        0.85)),         // True  False 
+		 ((0.2,         0.8),           // False True  
+		  (0.05,        0.95)));        // False False ;
+	title = "Tom told Molly\nhe will donate\ncampaign funds";
+	visual V1 {
+		center = (312, 204);
+		height = 14;
+		};
+	};
+
+node TD {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TF, TW);
+	probs = 
+		// True         False           // TF    TW    
+		(((0.8,         0.2),           // True  True  
+		  (0.5,         0.5)),          // True  False 
+		 ((0.1,         0.9),           // False True  
+		  (0.02,        0.98)));        // False False ;
+	title = "Tom makes big\ndonation to Molly's\ncampaign";
+	visual V1 {
+		center = (246, 318);
+		height = 12;
+		link 2 {
+			path = ((275, 74), (246, 168), (246, 293));
+			};
+		};
+	};
+
+node TA {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TC, TD, TW);
+	probs = 
+		//  True         False            // TC    TD    TW    
+		((((0.8,         0.2),            // True  True  True  
+		   (0.3,         0.7)),           // True  True  False 
+		  ((0.802,       0.198),          // True  False True  
+		   (0.302,       0.698))),        // True  False False 
+		 (((0.81,        0.19),           // False True  True  
+		   (0.31,        0.69)),          // False True  False 
+		  ((0.812,       0.188),          // False False True  
+		   (0.312,       0.688))));       // False False False ;
+	title = "Tom can afford to\n\
+		move to an expensive\n\
+		neighborhood next year";
+	visual V1 {
+		center = (84, 318);
+		height = 13;
+		link 3 {
+			path = ((268, 74), (228, 144), (104, 293));
+			};
+		};
+	};
+
+node TM {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TA);
+	probs = 
+		// True         False          // TA    
+		 ((0.3,         0.7),          // True  
+		  (0.05,        0.95));        // False ;
+	title = "Tom moves\nnext door to Hank\nnext year";
+	visual V1 {
+		center = (84, 480);
+		height = 7;
+		};
+	};
+
+node CP {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (HT, SW);
+	probs = 
+		// True         False           // HT    SW    
+		(((0.8,         0.2),           // True  True  
+		  (0.7,         0.3)),          // True  False 
+		 ((0.7,         0.3),           // False True  
+		  (0.2,         0.8)));         // False False ;
+	title = "Lots of cars are\nusually parked in\nfront of Tom's store";
+	visual V1 {
+		center = (516, 132);
+		height = 16;
+		};
+	};
+
+node GT {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (CP);
+	probs = 
+		// True         False          // CP    
+		 ((0.1,         0.9),          // True  
+		  (0.002,       0.998));       // False ;
+	title = "Gale told Molly\n\
+		that lots of cars are\n\
+		usually parked in\n\
+		front of Tom's store";
+	visual V1 {
+		center = (516, 222);
+		height = 15;
+		};
+	};
+
+node MR {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (TR, GT);
+	probs = 
+		// True         False           // TR    GT    
+		(((0.71,        0.29),          // True  True  
+		  (0.7,         0.3)),          // True  False 
+		 ((0.31,        0.69),          // False True  
+		  (0.3,         0.7)));         // False False ;
+	title = "Molly thinks\nTom is rich";
+	visual V1 {
+		center = (516, 318);
+		height = 10;
+		link 1 {
+			path = ((387, 150), (402, 234), (493, 301));
+			};
+		};
+	};
+
+node MT {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (MR, TF);
+	probs = 
+		// True         False           // MR    TF    
+		(((0.8,         0.2),           // True  True  
+		  (0.1,         0.9)),          // True  False 
+		 ((0.5,         0.5),           // False True  
+		  (0.02,        0.98)));        // False False ;
+	title = "Molly thinks Tom\nis going to make big\ncampaign donation";
+	visual V1 {
+		center = (378, 318);
+		height = 11;
+		};
+	};
+
+node MD {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (MT);
+	probs = 
+		// True         False          // MT    
+		 ((0.7,         0.3),          // True  
+		  (0.5,         0.5));         // False ;
+	title = "Molly decides\nto run for mayor";
+	visual V1 {
+		center = (378, 396);
+		height = 5;
+		};
+	};
+
+node MM {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (MD, TD);
+	probs = 
+		// True         False           // MD    TD    
+		(((0.5,         0.5),           // True  True  
+		  (0.3,         0.7)),          // True  False 
+		 ((1e-7,        1),             // False True  
+		  (1e-7,        1)));           // False False ;
+	title = "Molly gets\nelected mayor";
+	visual V1 {
+		center = (246, 396);
+		height = 1;
+		};
+	};
+
+node PA {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (MM);
+	probs = 
+		// True         False          // MM    
+		 ((0.7,         0.3),          // True  
+		  (0.4,         0.6));         // False ;
+	title = "Neighborhood\npark is approved";
+	visual V1 {
+		center = (246, 468);
+		height = 2;
+		};
+	};
+
+node PC {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (PA);
+	probs = 
+		// True         False          // PA    
+		 ((0.9,         0.1),          // True  
+		  (1e-5,        0.99999));     // False ;
+	title = "Neighborhood\npark is constructed\nnext year";
+	visual V1 {
+		center = (246, 540);
+		height = 3;
+		};
+	};
+
+node FW {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (HT, MM, PC);
+	probs = 
+		//  True         False            // HT    MM    PC    
+		((((0.52,        0.48),           // True  True  True  
+		   (0.5,         0.5)),           // True  True  False 
+		  ((0.42,        0.58),           // True  False True  
+		   (0.4,         0.6))),          // True  False False 
+		 (((0.15,        0.85),           // False True  True  
+		   (0.15,        0.85)),          // False True  False 
+		  ((0.12,        0.88),           // False False True  
+		   (0.1,         0.9))));         // False False False ;
+	title = "5th street\nis widened next\nyear";
+	visual V1 {
+		center = (408, 468);
+		height = 9;
+		link 1 {
+			path = ((559, 74), (588, 102), (588, 402), (459, 450));
+			};
+		};
+	};
+
+node DT {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (FW);
+	probs = 
+		// True         False          // FW    
+		 ((0.8,         0.2),          // True  
+		  (0.2,         0.8));         // False ;
+	title = "Traffic more than\ndoubles on Hank's\nstreet next year";
+	visual V1 {
+		center = (444, 570);
+		height = 4;
+		};
+	};
+
+node VU {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (DT, PC);
+	probs = 
+		// True         False           // DT    PC    
+		(((0.8,         0.2),           // True  True  
+		  (0.5,         0.5)),          // True  False 
+		 ((0.82,        0.18),          // False True  
+		  (0.51,        0.49)));        // False False ;
+	title = "Hank's property\nvalue goes up more\nthan 20% in two years";
+	visual V1 {
+		center = (276, 612);
+		height = 8;
+		};
+	};
+
+node HM {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (True, False);
+	parents = (VU, TM, PC, DT);
+	probs = 
+		//   True         False             // VU    TM    PC    DT    
+		(((((0.12,        0.88),            // True  True  True  True  
+		    (0.1,         0.9)),            // True  True  True  False 
+		   ((0.31,        0.69),            // True  True  False True  
+		    (0.3,         0.7))),           // True  True  False False 
+		  (((0.13,        0.87),            // True  False True  True  
+		    (0.11,        0.89)),           // True  False True  False 
+		   ((0.33,        0.67),            // True  False False True  
+		    (0.31,        0.69)))),         // True  False False False 
+		 ((((0.11,        0.89),            // False True  True  True  
+		    (0.09,        0.91)),           // False True  True  False 
+		   ((0.31,        0.69),            // False True  False True  
+		    (0.29,        0.71))),          // False True  False False 
+		  (((0.12,        0.88),            // False False True  True  
+		    (0.1,         0.9)),            // False False True  False 
+		   ((0.32,        0.68),            // False False False True  
+		    (0.3,         0.7)))));         // False False False False ;
+	title = "Hank moves\naway sometime in\nthe next 5 years";
+	visual V1 {
+		center = (84, 642);
+		height = 6;
+		link 4 {
+			path = ((441, 592), (432, 642), (143, 642));
+			};
+		};
+	};
+};

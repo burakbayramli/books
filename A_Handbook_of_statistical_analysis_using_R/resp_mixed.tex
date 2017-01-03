@@ -1,0 +1,241 @@
+\documentclass[12pt,fleqn]{article}\usepackage{../common}
+\begin{document}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+%load_ext rpy2.ipython
+%R library(lme4)
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import statsmodels.api as sm, pandas as pd
+import statsmodels.formula.api as smf
+df = pd.read_csv('respiratory2.csv',index_col=0)
+baseline = df[df['month'] == 0][['subject','status']].set_index('subject')
+df['status'] = (df['status'] == 'good').astype(int)
+df['baseline'] = df.apply(lambda x: baseline.ix[x['subject']],axis=1)
+df['centre'] = df['centre'].astype(str)
+df = df[df['month'] > 0]
+print df.head(4)
+\end{minted}
+
+\begin{verbatim}
+    centre treatment  gender  age  status  month  subject baseline
+112      1   placebo  female   46       0      1        1     poor
+223      1   placebo  female   46       0      2        1     poor
+334      1   placebo  female   46       0      3        1     poor
+445      1   placebo  female   46       0      4        1     poor
+\end{verbatim}
+
+
+\begin{minted}[fontsize=\footnotesize]{python}
+mdlm = smf.logit("status ~ baseline + month  + treatment + gender + age + C(centre)", df)
+mdlmf = mdlm.fit()
+print(mdlmf.summary())
+\end{minted}
+
+\begin{verbatim}
+Optimization terminated successfully.
+         Current function value: 0.543694
+         Iterations 6
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                 status   No. Observations:                  444
+Model:                          Logit   Df Residuals:                      437
+Method:                           MLE   Df Model:                            6
+Date:                Fri, 20 Feb 2015   Pseudo R-squ.:                  0.2071
+Time:                        12:36:57   Log-Likelihood:                -241.40
+converged:                       True   LL-Null:                       -304.47
+                                        LLR p-value:                 8.385e-25
+==========================================================================================
+                             coef    std err          z      P>|z|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------------------
+Intercept                  1.1436      0.426      2.682      0.007         0.308     1.979
+baseline[T.poor]          -1.8841      0.241     -7.802      0.000        -2.357    -1.411
+treatment[T.treatment]     1.3006      0.237      5.488      0.000         0.836     1.765
+gender[T.male]             0.1194      0.295      0.405      0.686        -0.458     0.697
+C(centre)[T.2]             0.6723      0.240      2.805      0.005         0.203     1.142
+month                     -0.0643      0.100     -0.646      0.518        -0.259     0.131
+age                       -0.0182      0.009     -2.050      0.040        -0.036    -0.001
+==========================================================================================
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+%R -i df 
+%R resp_lmer <- glmer(status ~ baseline + month + treatment + gender + age + centre + (1 | subject),family = binomial(), data = df)
+%R -o res res = summary(resp_lmer)
+%R -o exp_res exp_res = exp(fixef(resp_lmer))
+print res
+print exp_res
+\end{minted}
+
+\begin{verbatim}
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: status ~ baseline + month + treatment + gender + age + centre +  
+    (1 | subject)
+   Data: df
+
+     AIC      BIC   logLik deviance df.resid 
+   444.3    477.1   -214.2    428.3      436 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.8574 -0.3590  0.1427  0.3693  2.2393 
+
+Random effects:
+ Groups  Name        Variance Std.Dev.
+ subject (Intercept) 3.89     1.972   
+Number of obs: 444, groups:  subject, 111
+
+Fixed effects:
+                   Estimate Std. Error z value Pr(>|z|)    
+(Intercept)         1.68254    0.84436   1.993 0.046296 *  
+baselinepoor       -3.07838    0.60272  -5.107 3.26e-07 ***
+month              -0.10133    0.12518  -0.809 0.418257    
+treatmenttreatment  2.16325    0.55644   3.888 0.000101 ***
+gendermale          0.20249    0.67270   0.301 0.763402    
+age                -0.02546    0.02014  -1.264 0.206125    
+centre2             1.04667    0.54784   1.911 0.056064 .  
+---
+
+Correlation of Fixed Effects:
+            (Intr) bslnpr month  trtmnt gndrml age   
+baselinepor -0.367                                   
+month       -0.383  0.041                            
+trtmnttrtmn -0.178 -0.301 -0.031                     
+gendermale   0.065 -0.102 -0.003  0.219              
+age         -0.655 -0.015  0.009 -0.050 -0.263       
+centre2     -0.184  0.150 -0.015  0.058 -0.147 -0.223
+
+       (Intercept)       baselinepoor              month treatmenttreatment 
+        5.37919357         0.04603378         0.90363768         8.69940763 
+        gendermale                age            centre2 
+        1.22445202         0.97485954         2.84815273 
+
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+%R data("respiratory", package = "HSAUR2")
+%R write.csv(respiratory, 'respiratory2.csv')
+%R resp <- subset(respiratory, month > "0")
+%R resp$baseline <- rep(subset(respiratory, month == "0")$status,rep(4, 111))
+%R resp_lmer <- glmer(status ~ baseline + month + treatment + gender + age + centre + (1 | subject),family = binomial(), data = resp)
+%R -o resp_lmer_summary resp_lmer_summary = summary(resp_lmer)
+%R -o exp_res exp_res = exp(fixef(resp_lmer))
+print resp_lmer_summary
+print exp_res
+\end{minted}
+
+\begin{verbatim}
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: status ~ baseline + month + treatment + gender + age + centre +  
+    (1 | subject)
+   Data: resp
+
+     AIC      BIC   logLik deviance df.resid 
+   446.6    487.6   -213.3    426.6      434 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.5855 -0.3609  0.1430  0.3640  2.2119 
+
+Random effects:
+ Groups  Name        Variance Std.Dev.
+ subject (Intercept) 3.779    1.944   
+Number of obs: 444, groups:  subject, 111
+
+Fixed effects:
+                   Estimate Std. Error z value Pr(>|z|)    
+(Intercept)        -1.65460    0.77621  -2.132   0.0330 *  
+baselinegood        3.08897    0.59859   5.160 2.46e-07 ***
+month.L            -0.20348    0.27957  -0.728   0.4667    
+month.Q            -0.02821    0.27907  -0.101   0.9195    
+month.C            -0.35571    0.28085  -1.267   0.2053    
+treatmenttreatment  2.16620    0.55157   3.927 8.59e-05 ***
+gendermale          0.23836    0.66606   0.358   0.7204    
+age                -0.02557    0.01994  -1.283   0.1997    
+centre2             1.03850    0.54182   1.917   0.0553 .  
+---
+
+Correlation of Fixed Effects:
+            (Intr) bslngd mnth.L mnth.Q mnth.C trtmnt gndrml age   
+baselinegod -0.392                                                 
+month.L      0.017 -0.037                                          
+month.Q      0.002 -0.005 -0.009                                   
+month.C      0.030 -0.065  0.007  0.005                            
+trtmnttrtmn -0.437  0.305 -0.029 -0.004 -0.050                     
+gendermale  -0.014  0.109 -0.003  0.000 -0.005  0.225              
+age         -0.712  0.013  0.008  0.001  0.014 -0.051 -0.264       
+centre2     -0.089 -0.149 -0.013 -0.002 -0.023  0.058 -0.144 -0.224
+
+       (Intercept)       baselinegood            month.L            month.Q 
+         0.1911685         21.9544829          0.8158839          0.9721799 
+           month.C treatmenttreatment         gendermale                age 
+         0.7006762          8.7251064          1.2691661          0.9747510 
+           centre2 
+         2.8249730 
+
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+%load_ext rpy2.ipython
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+%R data("respiratory", package = "HSAUR2")
+%R resp <- subset(respiratory, month > "0")
+%R resp$baseline <- rep(subset(respiratory, month == "0")$status,rep(4, 111))
+%R resp_lmer <- glm(status ~ baseline + month + treatment + gender +age + centre,family = binomial(), data = resp)
+%R -o res res = summary(resp_lmer)
+print res
+\end{minted}
+
+\begin{verbatim}
+
+Call:
+glm(formula = status ~ baseline + month + treatment + gender + 
+    age + centre, family = binomial(), data = resp)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.2735  -0.8440   0.4263   0.8872   1.9974  
+
+Coefficients:
+                    Estimate Std. Error z value Pr(>|z|)    
+(Intercept)        -0.903635   0.338301  -2.671  0.00756 ** 
+baselinegood        1.889451   0.241998   7.808 5.82e-15 ***
+month.L            -0.143725   0.222718  -0.645  0.51872    
+month.Q            -0.024551   0.222655  -0.110  0.91220    
+month.C            -0.232552   0.222989  -1.043  0.29700    
+treatmenttreatment  1.304109   0.237383   5.494 3.94e-08 ***
+gendermale          0.119695   0.295213   0.405  0.68514    
+age                -0.018237   0.008882  -2.053  0.04004 *  
+centre2             0.674176   0.240049   2.808  0.00498 ** 
+---
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 608.93  on 443  degrees of freedom
+Residual deviance: 481.70  on 435  degrees of freedom
+AIC: 499.7
+
+Number of Fisher Scoring iterations: 4
+
+
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

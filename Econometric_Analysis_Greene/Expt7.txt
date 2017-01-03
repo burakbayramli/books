@@ -1,0 +1,1016 @@
+﻿Chapter 18. Time Series Models
+
+/*=================================================================
+Example 18.1.  ACF and PACF for a Series of Bond Yields
+*/=================================================================
+   Read ; Nobs = 60 ; Nvar = 2 ; Names = Date,Y$
+   1990.01      8.99
+   1990.02      9.72
+   1990.03      9.37
+   1990.04      9.46
+   1990.05      9.47
+   1990.06      9.26
+   1990.07      9.24
+   1990.08      9.41
+   1990.09      9.56
+   1990.10      9.53
+   1990.11      9.30
+   1990.12      9.05
+   1991.01      9.04
+   1991.02      8.83
+   1991.03      8.93
+   1991.04      8.86
+   1991.05      8.86
+   1991.06      9.01
+   1991.07      9.00
+   1991.08      8.75
+   1991.09      8.61
+   1991.10      8.55
+   1991.11      8.48
+   1991.12      8.31
+   1992.01      8.20
+   1992.02      8.29
+   1992.03      8.35
+   1992.04      8.33
+   1992.05      8.28
+   1992.06      8.22
+   1992.07      8.07
+   1992.08      7.95
+   1992.09      7.92
+   1992.10      7.99
+   1992.11      8.10
+   1992.12      7.98
+   1993.01      7.91
+   1993.02      7.71
+   1993.03      7.58
+   1993.04      7.46
+   1993.05      7.43
+   1993.06      7.33
+   1993.07      7.17
+   1993.08      6.85
+   1993.09      6.66
+   1993.10      6.67
+   1993.11      6.93
+   1993.12      6.93
+   1994.01      6.92
+   1994.02      7.08
+   1994.03      7.48
+   1994.04      7.88
+   1994.05      7.99
+   1994.06      7.97
+   1994.07      8.11
+   1994.08      8.07
+   1994.09      8.34
+   1994.10      8.57
+   1994.11      8.68
+   1994.12      8.46
+Date     ; 1990.01 $
+Period   ; 1990.01 - 1994.12 $
+Plot     ; Rhs = Y $
+Identify ; Rhs = y ; Pds = 15 $
+Period   ; 1990.03 - 1994.12 $
+Regress  ; Lhs = y ; Rhs = One,y[-1],y[-2] ; Res = u $
+Identify ; Rhs = u ; Pds = 15 $
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+-------------------------------------------------------------------------------
+Time series identification for Y
+Box-Pierce Statistic =   321.9940      Box-Ljung Statistic  =   360.5745
+Degrees of freedom   =         15      Degrees of freedom   =         15
+Significance level   =      .0000      Significance level   =      .0000
+* => |coefficient| > 2/sqrt(N) or > 95% significant.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Lag |  Autocorrelation Function     |Box/Prc|    Partial Autocorrelations   X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  1 | .967*|           |*********** | 56.05*| .967*|            |***********X
+  2 | .909*|           |**********  |105.63*|-.381*|       **** |           X
+  3 | .853*|           |*********   |149.27*| .138 |            |**         X
+  4 | .795*|           |*********   |187.17*|-.156 |         ** |           X
+  5 | .736*|           |********    |219.64*| .012 |            |*          X
+  6 | .674*|           |*******     |246.92*|-.101 |          * |           X
+  7 | .606*|           |*******     |268.94*|-.144 |         ** |           X
+  8 | .530*|           |******      |285.83*|-.093 |          * |           X
+  9 | .451*|           |*****       |298.04*|-.102 |          * |           X
+ 10 | .379*|           |****        |306.67*| .123 |            |*          X
+ 11 | .318*|           |***         |312.73*| .009 |            |*          X
+ 12 | .260*|           |***         |316.77*|-.056 |          * |           X
+ 13 | .209 |           |**          |319.39*| .115 |            |*          X
+ 14 | .165 |           |**          |321.03*|-.037 |          * |           X
+ 15 | .127 |           |*           |321.99*| .071 |            |*          X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = Y        Mean=   8.254137931    , S.D.=   .7940392727     |
+| Model size: Observations =      58, Parameters =   3, Deg.Fr.=     55 |
+| Residuals:  Sum of squares= 1.330096379    , Std.Dev.=         .15551 |
+| Fit:        R-squared=  .962990, Adjusted R-squared =          .96164 |
+| Model test: F[  2,     55] =  715.53,    Prob value =          .00000 |
+| Diagnostic: Log-L =     27.1821, Restricted(b=0) Log-L =     -68.4180 |
+|             LogAmemiyaPrCrt.=   -3.672, Akaike Info. Crt.=      -.834 |
+| Autocorrel: Durbin-Watson Statistic =   1.41841,   Rho =       .29079 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .4067997149      .21073101        1.930   .0587
+ Y   [-1]  1.156647985      .11066012       10.452   .0000  8.2758621
+ Y   [-2] -.2082934278      .11016139       -1.891   .0639  8.2812069
+
+-------------------------------------------------------------------------------
+All observations in current sample
+-------------------------------------------------------------------------------
+Time series identification for U
+Box-Pierce Statistic =     7.9816      Box-Ljung Statistic  =     9.5540
+Degrees of freedom   =         14      Degrees of freedom   =         14
+Significance level   =      .8903      Significance level   =      .7940
+* => |coefficient| > 2/sqrt(N) or > 95% significant.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Lag |  Autocorrelation Function     |Box/Prc|    Partial Autocorrelations   X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  1 | .213 |           |**          |  2.64 | .213 |            |**         X
+  2 |-.007 |          *|            |  2.64 |-.063 |          * |           X
+  3 |-.022 |          *|            |  2.67 |-.016 |          * |           X
+  4 | .108 |           |*           |  3.35 | .126 |            |*          X
+  5 | .079 |           |*           |  3.71 | .043 |            |*          X
+  6 | .045 |           |*           |  3.83 | .027 |            |*          X
+  7 |-.062 |          *|            |  4.05 |-.086 |          * |           X
+  8 | .032 |           |*           |  4.11 | .073 |            |*          X
+  9 |-.065 |          *|            |  4.36 |-.153 |         ** |           X
+ 10 |-.069 |          *|            |  4.63 |-.068 |          * |           X
+ 11 | .038 |           |*           |  4.72 | .120 |            |*          X
+ 12 |-.134 |          *|            |  5.75 |-.249 |        *** |           X
+ 13 |-.141 |         **|            |  6.91 |-.117 |          * |           X
+ 14 |-.136 |          *|            |  7.98 |-.183 |         ** |           X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+*/
+/*=================================================================
+Example 18.2.  ARMAX and Distributed Lag Models for Gasoline Sales
+*/=================================================================
+Read ; Nobs = 36 ; Nvar = 11 ; Names = 
+Year,  G,     Pg,  Y,   Pnc,   Puc,  Ppt,   Pd,   Pn,   Ps,   Pop $
+1960  129.7   .925  6036  1.045   .836   .810   .444   .331   .302  180.7
+1961  131.3   .914  6113  1.045   .869   .846   .448   .335   .307  183.7
+1962  137.1   .919  6271  1.041   .948   .874   .457   .338   .314  186.5
+1963  141.6   .918  6378  1.035   .960   .885   .463   .343   .320  189.2
+1964  148.8   .914  6727  1.032  1.001   .901   .470   .347   .325  191.9
+1965  155.9   .949  7027  1.009   .994   .919   .471   .353   .332  194.3
+1966  164.9   .970  7280   .991   .970   .952   .475   .366   .342  196.6
+1967  171.0  1.000  7513  1.000  1.000  1.000   .483   .375   .353  198.7
+1968  183.4  1.014  7728  1.028  1.028  1.046   .501   .390   .368  200.7
+1969  195.8  1.047  7891  1.044  1.031  1.127   .514   .409   .386  202.7
+1970  207.4  1.056  8134  1.076  1.043  1.285   .527   .427   .407  205.1
+1971  218.3  1.063  8322  1.120  1.102  1.377   .547   .442   .431  207.7
+1972  226.8  1.076  8562  1.110  1.105  1.434   .555   .458   .451  209.9
+1973  237.9  1.181  9042  1.111  1.176  1.448   .566   .497   .474  211.9
+1974  225.8  1.599  8867  1.175  1.226  1.480   .604   .572   .513  213.9
+1975  232.4  1.708  8944  1.276  1.464  1.586   .659   .615   .556  216.0
+1976  241.7  1.779  9175  1.357  1.679  1.742   .695   .638   .598  218.0
+1977  249.2  1.882  9381  1.429  1.828  1.824   .727   .671   .648  220.2
+1978  261.3  1.963  9735  1.538  1.865  1.878   .769   .719   .698  222.6
+1979  248.9  2.656  9829  1.660  2.010  2.003   .821   .800   .756  225.1
+1980  226.8  3.691  9722  1.793  2.081  2.516   .892   .894   .839  227.7
+1981  225.6  4.109  9769  1.902  2.569  3.120   .957   .969   .926  230.0
+1982  228.8  3.894  9725  1.976  2.964  3.460  1.000  1.000  1.000  232.2
+1983  239.6  3.764  9930  2.026  3.297  3.626  1.041  1.021  1.062  234.3
+1984  244.7  3.707 10421  2.085  3.757  3.852  1.038  1.050  1.117  236.3
+1985  245.8  3.738 10563  2.152  3.797  4.028  1.045  1.075  1.173  238.5
+1986  269.4  2.921 10780  2.240  3.632  4.264  1.053  1.069  1.224  240.7
+1987  276.8  3.038 10859  2.321  3.776  4.413  1.085  1.111  1.271  242.8
+1988  279.9  3.065 11186  2.368  3.939  4.494  1.105  1.152  1.336  245.0
+1989  284.1  3.353 11300  2.414  4.019  4.719  1.129  1.213  1.408  247.3
+1990  282.0  3.834 11389  2.451  3.926  5.197  1.144  1.285  1.482  249.9
+1991  271.8  3.766 11272  2.538  3.942  5.427  1.167  1.332  1.557  252.6
+1992  280.2  3.751 11466  2.528  4.113  5.518  1.184  1.358  1.625  255.4
+1993  286.7  3.713 11476  2.663  4.470  6.086  1.200  1.379  1.684  258.1
+1994  290.2  3.732 11636  2.754  4.730  6.268  1.225  1.396  1.734  260.7
+1995  297.8  3.789 11934  2.815  5.224  6.410  1.239  1.419  1.786  263.2
+?
+? Data Setup
+?
+Create ; lg = Log(100*G/Pop)
+       ; ly = Log(Y)
+       ; lpg= Log(Pg)
+       ; lpnc = Log(Pnc)
+       ; lpuc = log(Puc) 
+       ; lppt = log(Ppt) 
+       ; t=trn(1,1) $
+Create ; lg1=lg[-1]
+       ; ly1=ly[-1] ; ly2=ly[-2] 
+       ; lp1=lpg[-1] ; lp2=lpg[-2] $
+Sample ; 3 - 36 $
+?
+? Unrestricted distributed lag model
+?
+Regress; Lhs = lg ; Rhs = One,lpnc,lpuc,lppt,t,lpg,lp1,lp2,ly,ly1,ly2 $
+Calc   ; List ; eeu=sumsqdev
+              ; LRPrice = b(6)+b(7)+b(8) 
+              ; LRIncome=b(9)+b(10)+b(11) $
+?
+? Autoregressive distributed lag model. Adds lagged dependent variable.
+?
+Regress; Lhs = lg ; Rhs = One,lpnc,lpuc,lppt,t,lpg,lp1,lp2,ly,ly1,ly2,lg1 $ 
+Calc   ; List ; eeardl=sumsqdev
+              ; LRPrice = (b(6)+b(7)+b(8))/(1-b(12)) 
+              ; LRIncome= (b(9)+b(10)+b(11))/(1-b(12)) $
+?
+? ARMAX 1,1 model.  Same as previous + MA term in disturbance
+?
+Armax ; Lhs = lg ; Rhs = One,lpnc,lpuc,lppt,t,lpg,lp1,lp2,ly,ly1,ly2 
+       ; Model = 1,0,1 $
+Calc   ; List ; ee101l=sumsqdev
+              ; LRPrice = (b(7)+b(8)+b(9))/(1-b(1)) 
+              ; LRIncome= (b(10)+b(11)+b(12))/(1-b(1)) $
+?
+? ARMAX 1,2 model
+?
+Armax ; Lhs = lg ; Rhs = One,lpnc,lpuc,lppt,t,lpg,lp1,lp2,ly,ly1,ly2 
+       ; Model = 1,0,2 $
+Calc   ; List ; ee101=sumsqdev
+              ; LRPrice = (b(7)+b(8)+b(9))/(1-b(1)) 
+              ; LRIncome= (b(10)+b(11)+b(12))/(1-b(1)) $
+?
+? Likelihood ratio tests for MA disturbance terms
+?
+Calc   ; List ; LRtest = n*log(eeardl/ee101)$
+Calc   ; List ; LRtest = n*log(eeardl/ee102)$
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LG       Mean=   4.620873819    , S.D.=   .1319690203     |
+| Model size: Observations =      34, Parameters =  11, Deg.Fr.=     23 |
+| Residuals:  Sum of squares= .1260984686E-01, Std.Dev.=         .02341 |
+| Fit:        R-squared=  .978059, Adjusted R-squared =          .96852 |
+| Model test: F[ 10,     23] =  102.53,    Prob value =          .00000 |
+| Diagnostic: Log-L =     86.0499, Restricted(b=0) Log-L =      21.1200 |
+|             LogAmemiyaPrCrt.=   -7.228, Akaike Info. Crt.=     -4.415 |
+| Autocorrel: Durbin-Watson Statistic =    .99232,   Rho =       .50384 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -14.29662165      1.5073767       -9.484   .0000
+ LPNC      .5882663457E-01  .15788778         .373   .7129  .46667946
+ LPUC      .2428456789E-01  .10955418         .222   .8265  .71204645
+ LPPT     -.1468164915      .80724704E-01   -1.819   .0820  .82861565
+ T        -.1724148643E-01  .68946034E-02   -2.501   .0200  19.500000
+ LPG      -.1423360612      .60999130E-01   -2.333   .0287  .71868477
+ LP1      -.1355717985      .92045537E-01   -1.473   .1543  .67686045
+ LP2       .1527629660      .65706547E-01    2.325   .0293  .63583381
+ LY        1.066226960      .36456200        2.925   .0076  9.1344038
+ LY1      -.2646159004      .43702942        -.605   .5508  9.1147281
+ LY2       1.330349791      .35703039        3.726   .0011  9.0954233
+
+    EEU     =  .12609846858095140D-01
+    LRPRICE = -.12514489369519600D+00
+    LRINCOME=  .21319608506567860D+01
+
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LG       Mean=   4.620873819    , S.D.=   .1319690203     |
+| Model size: Observations =      34, Parameters =  12, Deg.Fr.=     22 |
+| Residuals:  Sum of squares= .4087856687E-02, Std.Dev.=         .01363 |
+| Fit:        R-squared=  .992887, Adjusted R-squared =          .98933 |
+| Model test: F[ 11,     22] =  279.19,    Prob value =          .00000 |
+| Diagnostic: Log-L =    105.1997, Restricted(b=0) Log-L =      21.1200 |
+|             LogAmemiyaPrCrt.=   -8.288, Akaike Info. Crt.=     -5.482 |
+| Autocorrel: Durbin-Watson Statistic =   2.23098,   Rho =      -.11549 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -4.627715460      1.6758475       -2.761   .0114
+ LPNC     -.6487625126E-01  .93714005E-01    -.692   .4960  .46667946
+ LPUC      .4561854245E-01  .63856274E-01     .714   .4825  .71204645
+ LPPT     -.7486180042E-01  .48181135E-01   -1.554   .1345  .82861565
+ T        -.3644937438E-02  .44879063E-02    -.812   .4254  19.500000
+ LPG      -.2245579505      .37529595E-01   -5.983   .0000  .71868477
+ LP1       .8694928014E-01  .62857352E-01    1.383   .1805  .67686045
+ LP2       .9215605606E-01  .39284923E-01    2.346   .0284  .63583381
+ LY        .5782447449      .22413330        2.580   .0171  9.1344038
+ LY1      -.5417725200      .25769338       -2.102   .0472  9.1147281
+ LY2       .6317025598      .23204386        2.722   .0124  9.0954233
+ LG1       .7236274196      .10685159        6.772   .0000  4.6073642
+
+    EEARDL  =  .40878566872995180D-02
+    LRPRICE = -.16446137389191410D+00
+    LRINCOME=  .24176594644651640D+01
++---------------------------------------------------------+
+| Model:y(t) = mu + bx + phi(1)y(t-1)...phi(p)y(t-p))     |
+|               + e(t) + tau(1)e(t-1)...tau(q)e(t-q))     |
+|       y(t) = [(1-L)^d]Y(t)  (differences))              |
+| Dependent variable                             LG       |
+| Raw data were differenced d =  0 times.                 |
+| Sum of squares at best estimates:               .003794 |
+| Estimated standard deviation of e(t):           .010723 |
+| For diagnostic checking, use IDENTIFY with residuals.   |
+| Number of iterations completed                       10 |
+| Number of observations in the sample                 34 |
++---------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Phi( 1)   .7567895407      .10933025        6.922   .0000
+ Mu       -4.241262015      1.6260814       -2.608   .0091
+ LPNC     -.7103594420E-01  .84364675E-01    -.842   .3998  .46667946
+ LPUC      .4294366513E-01  .56172547E-01     .764   .4446  .71204645
+ LPPT     -.7406407555E-01  .44872033E-01   -1.651   .0988  .82861565
+ T        -.2817177434E-02  .41662590E-02    -.676   .4989  19.500000
+ LPG      -.2301678388      .29763433E-01   -7.733   .0000  .71868477
+ LP1       .1032765894      .49429729E-01    2.089   .0367  .67686045
+ LP2       .8746080080E-01  .30851084E-01    2.835   .0046  .63583381
+ LY        .5711896035      .18242745        3.131   .0017  9.1344038
+ LY1      -.5551523610      .20507375       -2.707   .0068  9.1147281
+ LY2       .5911142674      .18871370        3.132   .0017  9.0954233
+ Tau( 1)  -.2012147439      .21103910        -.953   .3404
+
+    EE101   =  .37941383576883920D-02
+    LRPRICE = -.16212480626093280D+00
+    LRINCOME=  .24964037797167360D+01
++---------------------------------------------------------+
+| Model:y(t) = mu + bx + phi(1)y(t-1)...phi(p)y(t-p))     |
+|               + e(t) + tau(1)e(t-1)...tau(q)e(t-q))     |
+|       y(t) = [(1-L)^d]Y(t)  (differences))              |
+| Dependent variable                             LG       |
+| Raw data were differenced d =  0 times.                 |
+| Sum of squares at best estimates:               .002348 |
+| Estimated standard deviation of e(t):           .008567 |
+| For diagnostic checking, use IDENTIFY with residuals.   |
+| Number of iterations completed                       46 |
+| Number of observations in the sample                 34 |
++---------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Phi( 1)   .6782460416      .10639955        6.375   .0000
+ Mu       -5.376139750      1.6339620       -3.290   .0010
+ LPNC     -.6700029245E-01  .80836954E-01    -.829   .4072  .46667946
+ LPUC      .1198396402E-01  .51321503E-01     .234   .8154  .71204645
+ LPPT     -.9170603295E-01  .38558900E-01   -2.378   .0174  .82861565
+ T        -.2740882117E-02  .44658357E-02    -.614   .5394  19.500000
+ LPG      -.2079645837      .23028449E-01   -9.031   .0000  .71868477
+ LP1       .8194823327E-01  .39585361E-01    2.070   .0384  .67686045
+ LP2       .1018543456      .20421712E-01    4.988   .0000  .63583381
+ LY        .8158187084      .16005178        5.097   .0000  9.1344038
+ LY1      -.6739998128      .16094847       -4.188   .0000  9.1147281
+ LY2       .6314479677      .14170962        4.456   .0000  9.0954233
+ Tau( 1)  -.3513342541      .18326241       -1.917   .0552
+ Tau( 2)  -.5215635178      .15679811       -3.326   .0009
+
+    EE102   =  .23484984739687290D-02
+    LRPRICE = -.75094661971386960D-01
+    LRINCOME=  .24032862471922000D+01
+
+    LRTEST  =.25351575386092380D+01
+    LRTEST  =  .18844317034750870D+02
+
+/*=================================================================
+Example 18.3.  Spectral Density for an AR(1) Process
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 18.4.  Spectral Analysis of the Growth Rate of GNP
+*/=================================================================
+Read ; Nobs = 136 ; Nvar = 4 ; Names = Qtr,GNP,M1,Price$
+    1950.1     267.6    110.20    56.04
+    1950.2     277.1    111.75    56.21
+    1950.3     294.8    112.95    56.41
+    1950.4     306.3    113.93    56.67
+    1951.1     320.4    115.08    56.77
+    1951.2     328.3    116.19    57.01
+    1951.3     335.0    117.76    56.99
+    1951.4     339.2    119.89    57.58
+    1952.1     341.9    121.31    57.58
+    1952.2     342.1    122.37    57.57
+    1952.3     347.8    123.64    57.92
+    1952.4     360.0    124.72    58.58
+    1953.1     366.1    125.33    58.76
+    1953.2     369.4    126.05    58.80
+    1953.3     368.4    126.22    59.00
+    1953.4     363.1    126.37    58.74
+    1954.1     362.5    126.54    59.38
+    1954.2     362.3    127.18    59.58
+    1954.3     366.7    128.38    59.45
+    1954.4     375.6    129.72    59.77
+    1955.1     388.2    131.07    60.27
+    1955.2     396.2    131.88    60.65
+    1955.3     404.8    132.40    61.03
+    1955.4     411.0    132.64    61.40
+    1956.1     412.8    133.11    61.91
+    1956.2     418.4    133.38    62.43
+    1956.3     423.5    133.48    63.13
+    1956.4     432.1    134.09    63.69
+    1957.1     440.2    134.29    64.40
+    1957.2     442.3    134.36    64.65
+    1957.3     449.4    134.26    65.28
+    1957.4     444.0    133.48    65.37
+    1958.1     436.8    133.72    65.63
+    1958.2     440.7    135.22    65.79
+    1958.3     453.9    136.64    66.17
+    1958.4     467.0    138.48    66.47
+    1959.1     477.0    140.35    67.04
+    1959.2     490.6    141.75    67.55
+    1959.3     489.0    142.23    67.81
+    1959.4     495.0    141.20    68.00
+    1960.1     506.9    140.83    68.44
+    1960.2     506.3    140.83    68.56
+    1960.3     508.0    142.00    68.86
+    1960.4     504.8    141.98    68.96
+    1961.1     508.2    142.85    68.88
+    1961.2     519.2    143.88    69.22
+    1961.3     528.2    144.90    69.54
+    1961.4     542.6    146.18    69.65
+    1962.1     554.2    147.18    70.23
+    1962.2     562.7    147.95    70.48
+    1962.3     568.9    147.90    70.62
+    1962.4     574.3    148.93    71.08
+    1963.1     582.0    150.45    71.41
+    1963.2     590.7    151.93    71.46
+    1963.3     601.8    153.38    71.66
+    1963.4     612.4    154.80    72.17
+    1964.1     625.3    155.85    72.36
+    1964.2     634.0    157.20    72.57
+    1964.3     642.8    159.75    72.97
+    1964.4     648.8    161.63    73.16
+    1965.1     668.8    162.90    73.77
+    1965.2     681.7    163.90    74.13
+    1965.3     696.4    166.05    74.56
+    1965.4     717.2    169.10    74.96
+    1966.1     738.5    171.95    75.71
+    1966.2     750.0    172.98    76.58
+    1966.3     760.6    172.80    76.99
+    1966.4     774.9    173.33    77.75
+    1967.1     780.7    175.25    78.27
+    1967.2     788.6    178.10    78.53
+    1967.3     805.7    181.93    79.28
+    1967.4     823.3    184.73    80.13
+    1968.1     841.2    187.15    81.15
+    1968.2     867.2    190.63    82.14
+    1968.3     884.9    194.30    82.84
+    1968.4     900.3    198.55    83.99
+    1969.1     921.2    201.73    84.97
+    1969.2     937.4    203.18    86.10
+    1969.3     955.3    204.18    87.49
+    1969.4     962.0    206.10    88.62
+    1970.1     972.0    207.90    89.89
+    1970.2     986.3    209.78    91.07
+    1970.3    1003.6    212.78    91.79
+    1970.4    1009.0    216.08    93.03
+    1971.1    1049.3    220.28    94.40
+    1971.2    1068.9    225.25    95.70
+    1971.3    1086.6    228.45    96.52
+    1971.4    1105.8    230.70    97.39
+    1972.1    1142.4    235.60    98.72
+    1972.2    1171.7    239.38    99.42
+    1972.3    1196.1    244.55   100.25
+    1972.4    1233.5    250.70   101.54
+    1973.1    1283.5    254.80   102.95
+    1973.2    1307.6    258.40   104.75
+    1973.3    1337.7    261.03   106.53
+    1973.4    1376.7    264.68   108.74
+    1974.1    1387.7    268.77   110.72
+    1974.2    1423.8    271.23   113.48
+    1974.3    1451.6    273.73   116.42
+    1974.4    1473.8    276.73   119.79
+    1975.1    1479.8    278.75   122.88
+    1975.2    1516.7    283.80   124.44
+    1975.3    1578.5    288.13   126.68
+    1975.4    1621.8    290.88   128.99
+    1976.1    1672.0    295.18   130.12
+    1976.2    1698.6    299.53   131.30
+    1976.3    1729.0    303.35   132.89
+    1976.4    1772.5    309.35   134.99
+    1977.1    1834.8    316.55   136.80
+    1977.2    1895.1    321.80   139.01
+    1977.3    1954.4    327.60   141.03
+    1977.4    1988.9    334.80   143.24
+    1978.1    2031.7    341.13   145.12
+    1978.2    2139.5    348.70   148.89
+    1978.3    2202.5    335.45   152.02
+    1978.4    2281.6    361.38   155.38
+    1979.1    2335.5    367.08   158.60
+    1979.2    2377.9    376.10   161.85
+    1979.3    2454.8    384.58   165.12
+    1979.4    2502.9    388.38   168.05
+    1980.1    2572.9    394.30   171.94
+    1980.2    2578.8    390.00   176.46
+    1980.3    2639.1    405.50   180.24
+    1980.4    2736.0    416.10   185.13
+    1981.1    2875.8    420.90   190.01
+    1981.2    2918.0    429.30   193.03
+    1981.3    3009.3    432.60   197.70
+    1981.4    3027.9    437.50   201.69
+    1982.1    3026.0    448.80   203.98
+    1982.2    3061.2    451.30   206.77
+    1982.3    3080.1    458.20   208.53
+    1982.4    3109.6    475.70   210.27
+    1983.1    3173.8    490.90   212.87
+    1983.2    3267.0    505.20   214.25
+    1983.3    3346.6    517.20   215.89
+    1983.4    3431.7    523.40   218.21
+Create  ; z=log(gnp/price) $
+Create  ; dz=100*(z-z[-1])$  (Just change to DZ=Z to analyze REAL GNP.)
+Create  ; y=dz[+1]$       Move data back to rows 1-135
+Sample  ; 1 - 135 $ 
+Create  ; yd = y - xbr(y) $  Data in deviation form 
+Date    ; 1950.2$
+Period  ; 1950.2-1983.4$
+Create  ; gnpgrwth=yd$   (Just labels the graph)
+Plot    ; Rhs=gnpgrwth$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*=====================================================================
+  Spectral Analysis of a variable.  LIMDEP is not good at this. The
+  following is a brute force computation.  Better to use RATS or GAUSS
+*/=====================================================================
+?
+? The following analyzes the growth rate for GNP
+?
+?    Compute column of sample autocovariances
+?    Move into c0 and vector of 134 covariances
+Matrix  ; Auto=init(135,1,0)$
+Procedure
+Calc    ; i=j+1;mj=-j$
+Sample  ; 1-135$
+Create  ; lagyd=yd[mj]$
+Sample  ; i-135$
+Matrix  ; {cj=yd'lagyd/135} ; auto(i)=cj$
+Endproc
+Execute ; j=0,134$
+Calc    ; c0=auto(1)$
+Matrix  ; ck=auto(2:135)$
+? 3:  Sample periodogram (spectral density function)
+Sample  ; 1-135$
+Create  ; wj = Trn(1,1) ; Freq=2*pi*wj/135$  Frequencies in 2pi interval
+Matrix  ; W = wj ; omegas=freq ; Spectrum = 0.0 [135,1]  $  
+? Procedure computes spectral density at each frequency
+Procedure
+Calc    ; omegaj=omegas(i)$        Particular frequency
+Create  ; coswj=cos((wj*omegaj))$   Column of k*omega
+Matrix  ; cosines=coswj ; cosines=cosines(1:134)$ Subvector
+Calc    ; hy=1/(2*pi)*(c0+2*ck'cosines)$   Spectrum
+Matrix  ; Spectrum(i)=hy$      Move spectrum to vector
+Endproc
+Execute ; i=1,135$           Compute for all 135 frequencies
+? 4.  Plot periodogram
+Matrix  ; spectrum=spectrum(1:67); w=w(1:67)  $  Only useful for 67
+Mplot   ; lhs=W;rhs=spectrum;fill;endpoints=0,70;limits=0,1.5$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Date    ; 1950.1 $
+Period  ; 1950.1-1983.4 $
+Create  ; z=log(gnp/price) $
+Create  ; yd = z - xbr(z) $  Data in deviation form 
+Create  ; realgnp=yd$   (Just labels the graph)
+Plot    ; Rhs=realgnp$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?
+? The following analyzes the original series of real GNP
+?
+Matrix  ; Auto=init(136,1,0)$
+Procedure
+Calc    ; i=j+1;mj=-j$
+Sample  ; 1-136$
+Create  ; lagyd=yd[mj]$
+Sample  ; i-136$
+Matrix  ; {cj=yd'lagyd/135} ; auto(i)=cj$
+Endproc
+Execute ; j=0,135$
+Calc    ; c0=auto(1)$
+Matrix  ; ck=auto(2:136)$
+? 3:  Sample periodogram (spectral density function)
+Sample  ; 1-136$
+Create  ; wj = Trn(1,1) ; Freq=2*pi*wj/136$  Frequencies in 2pi interval
+Matrix  ; W = wj ; omegas=freq ; Spectrum = 0.0 [135,1]  $  
+? Procedure computes spectral density at each frequency
+Procedure
+Calc    ; omegaj=omegas(i)$        Particular frequency
+Create  ; coswj=cos((wj*omegaj))$   Column of k*omega
+Matrix  ; cosines=coswj ; cosines=cosines(1:135)$ Subvector
+Calc    ; hy=1/(2*pi)*(c0+2*ck'cosines)$   Spectrum
+Matrix  ; Spectrum(i)=hy$      Move spectrum to vector
+Endproc
+Execute ; i=1,136$           Compute for all 136 frequencies
+? 4.  Plot periodogram
+Matrix  ; spectrum=spectrum(1:68); w=w(1:68)  $  Only useful for 68
+Mplot   ; lhs=W;rhs=spectrum;fill;endpoints=0,70;limits=0,1.5$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*=================================================================
+Example 18.5.  A Nonstationary Series
+*/=================================================================
+Date   ; 1950.1 $
+Period ; 1950.1 - 1983.4 $
+Create ; LogPrice = log(price) $
+Create ; dlogP = logprice - logprice[-1] $
+Create ; d2logP = dlogp - dlogp[-1] $
+Period ; 1950.3 - 1983.4 $
+Plot   ; Rhs = LogPrice $
+Plot   ; Rhs = dlogP $
+Plot   ; Rhs = d2logP $
+Identify ; Rhs = LogPrice ; Pds = 10 $
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+
+ 
+All observations in current sample
+-------------------------------------------------------------------------------
+Time series identification for LOGPRICE
+Box-Pierce Statistic =  1015.5567      Box-Ljung Statistic  =  1071.4523
+Degrees of freedom   =         10      Degrees of freedom   =         10
+Significance level   =      .0000      Significance level   =      .0000
+* => |coefficient| > 2/sqrt(N) or > 95% significant.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Lag |  Autocorrelation Function     |Box/Prc|    Partial Autocorrelations   X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  1 | .977*|           |*********** |127.94*| .977*|            |***********X
+  2 | .954*|           |**********  |249.86*|-.045 |          * |           X
+  3 | .930*|           |**********  |365.80*|-.048 |          * |           X
+  4 | .906*|           |**********  |475.78*|-.042 |          * |           X
+  5 | .881*|           |**********  |579.87*|-.048 |          * |           X
+  6 | .857*|           |*********   |678.17*|-.024 |          * |           X
+  7 | .831*|           |*********   |770.76*|-.044 |          * |           X
+  8 | .806*|           |*********   |857.74*|-.042 |          * |           X
+  9 | .780*|           |*********   |939.26*|-.027 |          * |           X
+ 10 | .755*|           |********    |*******|-.017 |          * |           X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*=================================================================
+Example 18.6.  Test for a Unit Root
+*/=================================================================
+?
+? Data are read in Example 18.4.  
+? Variables read are qtr,GNP,M1,Price
+?
+Create   ; yt=log(GNP/Price)
+         ; yt1=yt[-1] ; yt2=yt[-2] ; t = trn(1,1) $
+Create   ; dy1 = yt  - yt1
+         ; dy2 = yt1 - yt2 $
+Sample   ; 3 - 136 $
+Regress  ; Lhs = dy1 ; Rhs = One,yt1 $
+Regress  ; Lhs = dy1 ; Rhs = One,t,yt1,dy2 $
+Calc     ; List ; Rsqa = Rsqrd $
+Regress  ; Lhs = dy1 ; Rhs = One,dy2 $
+Calc     ; List ; Rsq  = Rsqrd $
+Calc     ; List ; Ftest = ((Rsqa - Rsq)/2)/((1-rsqa)/(n-4))
+                ; Ftb(.95,2,(n-4)) $
+
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = DY1      Mean=   .8657234086E-02, S.D.=   .1193419965E-01 |
+| Model size: Observations =     134, Parameters =   2, Deg.Fr.=    132 |
+| Residuals:  Sum of squares= .1814441450E-01, Std.Dev.=         .01172 |
+| Fit:        R-squared=  .042134, Adjusted R-squared =          .03488 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .2557909796E-01  .70952420E-02    3.605   .0004
+ YT1      -.7505859933E-02  .31149356E-02   -2.410   .0173  2.2544870
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = DY1      Mean=   .8657234086E-02, S.D.=   .1193419965E-01 |
+| Model size: Observations =     134, Parameters =   4, Deg.Fr.=    130 |
+| Residuals:  Sum of squares= .1292009899E-01, Std.Dev.=         .00997 |
+| Fit:        R-squared=  .317932, Adjusted R-squared =          .30219 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .1419956872      .39096783E-01    3.632   .0004
+ T         .6550410295E-03  .19676684E-03    3.329   .0011  69.500000
+ YT1      -.8125692526E-01  .23363228E-01   -3.478   .0007  2.2544870
+ DY2       .4926268437      .73297048E-01    6.721   .0000  .87873400E-02
+RSQA    =  .31793211367952040D+00
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = DY1      Mean=   .8657234086E-02, S.D.=   .1193419965E-01 |
+| Model size: Observations =     134, Parameters =   2, Deg.Fr.=    132 |
+| Residuals:  Sum of squares= .1423933668E-01, Std.Dev.=         .01039 |
+| Fit:        R-squared=  .248288, Adjusted R-squared =          .24259 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .4335601869E-02  .11105839E-02    3.904   .0002
+ DY2       .4918020950      .74482005E-01    6.603   .0000  .87873400E-02
+
+    RSQ     =  .24828793663054320D+00
+    FTEST   =  .66369808621315140D+01
+    Result  =  .30658390938300010D+01
+/*=================================================================
+Example 18.7.  Long Term Memory in the Growth of Real GNP
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 18.8.  Long Term Memory in Foreign Exchange Markets
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 18.9.  Cointegrated Series
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 18.10.  Multiple Cointegrating Vectors
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 18.11.  An ARCH Model for Inflation
+*/=================================================================
+?
+? The data are read in Example 18.4.
+? Variables are Qtr,GNP,M1,Price.  To do this set of computations,
+? the program should be reset, and the data set read in fresh.
+? Data setup
+Create ; logp=log(price)           ; logm1=log(m1) 
+       ; logy=log(gnp/price)$
+Create ; dlogp=100*(logp-logp[-1]) ; dlogm1=100*(logm1-logm1[-1])$
+Create ; dlogy=100*(logy-logy[-1]) ; xsdm1=dlogm1-dlogy$
+Create ; lagxsdm1=xsdm1[-1]        ; lagdlogp=dlogp[-1]$
+?
+? Set sample to observations 3-136 then run step 1 regression
+?
+Calc   ; t0 = 1 ; t1=3 ; tt=136 ; t2=4 ; ttminus1=135$
+Sample ; t1-tt$
+Regress; lhs=dlogp;rhs=one,lagxsdm1,lagdlogp;res=et$
+?
+? Compute squared residuals, then set sample for step 2 regression
+Matrix ; beta=b$
+Create ; ee=et*et$
+Create ; ee1=ee[-1]$
+Sample ; t2-tt$
+Regress; lhs=ee;rhs=one,ee1$
+Matrix ; a=b$
+?
+? LM test for ARCH effects
+?
+Calc   ; a0=a(1);a1=a(2);list;lmtest=nreg*rsqrd$
+?
+? Set sample for step 3 regression, then update alpha. Report results.
+?
+Sample ; t1-tt$
+Create ; ht=a0+a1*ee1 ;gt=ee/ht-1 ;zt1=1/ht ; zt2=ee1/ht$
+Names  ; z=zt1,zt2 ; x=one,lagxsdm1,lagdlogp $
+Sample ; t2-tt$
+Matrix ; da=<Z'Z>*Z'gt;alpha=a+da;valpha=2*<Z'Z>
+       ; stat(alpha,valpha)$
+?
+? Compute weighted least squares to update beta, step 4
+?
+Calc   ; alpha0=alpha(1);alpha1=alpha(2)$
+Create ; ht=alpha0+alpha1*ee1$
+Create ; htplus1=ht[1] ; eeplus1=ee[1]$
+Create ; rt=sqr((1/ht)+2*(alpha1*et/htplus1)^2)
+       ; st=1/ht - (alpha1/htplus1)*(eeplus1/htplus1-1)
+       ; etst = et*st$
+Sample ; t2-ttminus1$
+Matrix ; ww=bhhh(X,rt) ; Vbeta=<WW> ; db=vbeta*X'[etst]et 
+       ; beta=beta+db  ; Stat(beta,vbeta)$
+
+
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = DLOGP    Mean=   1.012211362    , S.D.=   .7100138982     |
+| Model size: Observations =     134, Parameters =   3, Deg.Fr.=    131 |
+| Residuals:  Sum of squares= 24.97239974    , Std.Dev.=         .43661 |
+| Fit:        R-squared=  .627544, Adjusted R-squared =          .62186 |
+| Model test: F[  2,    131] =  110.36,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -77.5732, Restricted(b=0) Log-L =    -143.7448 |
+|             LogAmemiyaPrCrt.=   -1.635, Akaike Info. Crt.=      1.203 |
+| Autocorrel: Durbin-Watson Statistic =   2.55356,   Rho =      -.27678 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .2427295991      .67062129E-01    3.619   .0004
+ LAGXSDM1  .4069687470E-01  .28237757E-01    1.441   .1519  .27509641
+ LAGDLOGP  .7533929131      .57618919E-01   13.075   .0000  1.0064950
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = EE       Mean=   .1877485342    , S.D.=   .2704841669     |
+| Model size: Observations =     133, Parameters =   2, Deg.Fr.=    131 |
+| Residuals:  Sum of squares= 9.502250517    , Std.Dev.=         .26933 |
+| Fit:        R-squared=  .016059, Adjusted R-squared =          .00855 |
+| Model test: F[  1,    131] =    2.14,    Prob value =          .14607 |
+| Diagnostic: Log-L =    -13.2373, Restricted(b=0) Log-L =     -14.3139 |
+|             LogAmemiyaPrCrt.=   -2.609, Akaike Info. Crt.=       .229 |
+| Autocorrel: Durbin-Watson Statistic =   2.03347,   Rho =      -.01674 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .1640206032      .28437769E-01    5.768   .0000
+ EE1       .1266244001      .86596535E-01    1.462   .1461  .18738830
+Matrix statistical results: Coefficients=ALPHA     Variance=VALPHA
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ ALPHA_ 1  .1705917119      .26902111E-01    6.341   .0000
+ ALPHA_ 2  .8660076551E-01  .11804850         .734   .4632
+Matrix statistical results: Coefficients=BETA      Variance=VBETA
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BETA _ 1  .3985526844      .67435646E-01    5.910   .0000
+ BETA _ 2  .6569283509E-01  .27693141E-01    2.372   .0177
+ BETA _ 3  .7737730896      .58064792E-01   13.326   .0000
+*/
+
+/*=================================================================
+Example 18.12.  GARCH Model for Inflation
+No computations
+*/=================================================================
+
+

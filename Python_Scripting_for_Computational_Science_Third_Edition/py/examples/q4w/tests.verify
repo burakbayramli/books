@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('./q4w-generate.py', options='example1.q4w language.en')
+os.chdir('example1')
+test.append('example1.html')
+
+# fill QUERY_STRING environment variable for sending form variables,
+answers="filenamebase=example1&1=1 week&2=just playing around&3=computer science&4=Tcl&5=Perl&7=2"
+os.environ['QUERY_STRING'] = answers
+test.run("./q4w-record.cgi")
+answers="filenamebase=example1&1=1 week&2=trying Java&3=computer science&4=Java&5=Java&7=2"
+os.environ['QUERY_STRING'] = answers
+test.run("./q4w-record.cgi")
+
+test.run('./q4w-statistics.cgi', options='filenamebase=example1')
+test.append('ans.html')
+test.append('example1.dball')
+test.append('example1.dbsum')
+test.append('example1.q4w')
+
+os.chdir(os.pardir)
+#import shutil
+#shutil.rmtree('example1')
+

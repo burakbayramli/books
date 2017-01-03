@@ -1,0 +1,348 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-13}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\jt}{\ensuremath{{\cal T}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Gibbs sampling}}\vfill
+
+\begin{verbatim}
+$Date: 2006/11/24 09:53:00 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+  \begin{itemize}
+  \item Markov chain Monte Carlo
+  \item Gibbs sampling
+  \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Limitations of importance sampling}
+  
+  \begin{itemize}
+  \item If evidence is improbable we end up with very low weighted samples.
+  \item The bottom line is that importance sampling becomes less
+    useful the further the proposal distribution is from the target
+    distribution.
+  \item We want the instantiated variables to have a more direct
+    effect on what gets sampled (for both their descendant and
+    non-descendant nodes).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain Monte Carlo}
+  
+  \begin{itemize}
+  \item \emph{Markov chain Monte Carlo}: Instead of sampling from the
+    target distribution, sample from a \emph{sequence of
+      distributions} which gets progressively closer to the target
+    distribution.
+  \item If we do this for long enough we will end up sampling from a
+    distribution very close to the target distribution.
+  \item We now have two dimensions of approximation: the distributions
+    from which we sample only approximates the target distribution
+    and, (as with all sampling)
+    any sample only provides an approximate picture of the
+    distribution from which it is sampled.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Why `Monte Carlo'?}
+  
+  \begin{itemize}
+  \item Any simulation-based and thus approximate computational method
+    is a \emph{Monte Carlo} method.
+  \item They have become popular in statistics with the advent of
+    cheap, powerful computers.
+  \item Named after the casino
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{(Finite) Markov chains}
+  
+A \emph{finite (homogenous) Markov chain} is a linear infinite BN:
+\[
+X_{0} \rightarrow X_{1} \rightarrow X_{2} \rightarrow \dots
+\]
+where 
+\begin{enumerate}
+\item each $X_i$ has the same \emph{finite} set of values; and
+\item each CPT $P(X_{i+1}|X_{i})$ is the same.
+\end{enumerate}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain intuitions}
+  
+  \begin{itemize}
+  \item The values of the $X_i$ are best thought of as \emph{states}
+    of some dynamic system.
+  \item Sampling from a Markov chain thus corresponds to one possible
+    evolution of such a system.
+  \item For example, if the states are possible locations of an object,
+    a `run' of the Markov chain corresponds to the object moving
+    probabilistically---where the next move only depends on the
+    current position.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov chain terminology}
+  
+  \begin{itemize}
+  \item $X_0$ is the \emph{initial distribution}.
+  \item The probabilities $P(X_{i+1}=s|X_{i}=s')$ are \emph{transition
+      probabilities}.
+  \item The CPT of transition probabilities---remember there's only
+    one---is the \emph{transition matrix}.
+  \item We can number the states $s_{1},s_{2},\dots s_{m}$ and let
+    entry $p_{jk}$ in the transition matrix be $P(X_{i+1}=s_{k}|X_{i}=s_{j})$,
+    the probability of moving from state $s_{j}$ to state $s_{k}$
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Using transition matrices}
+  
+Matrix multiplication gives the distribution after one iteration of
+the chain:
+
+\begin{verbatim}
+> rosenthal.mat               > start                 
+     [,1] [,2] [,3] [,4]           [,1] [,2] [,3] [,4]
+[1,]  0.4  0.2  0.3  0.1      [1,]    1    0    0    0
+[2,]  0.4  0.4  0.2  0.0
+[3,]  0.6  0.2  0.1  0.1
+[4,]  0.7  0.1  0.0  0.2
+
+> start %*% rosenthal.mat
+     [,1] [,2] [,3] [,4]
+[1,]  0.4  0.2  0.3  0.1
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Variable elimination by matrix multiplication}
+  
+\begin{verbatim}
+> start %*% rosenthal.mat %*% rosenthal.mat %*% rosenthal.mat
+      [,1]  [,2]  [,3]  [,4]
+[1,] 0.465 0.237 0.212 0.086
+
+> start2
+     [,1] [,2] [,3] [,4]
+[1,]    0    0    1    0
+
+> start2 %*% rosenthal.mat %*% rosenthal.mat %*% rosenthal.mat
+      [,1]  [,2]  [,3]  [,4]
+[1,] 0.473 0.237 0.204 0.086
+\end{verbatim}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Stationary distribution}
+  
+  \begin{itemize}
+  \item Notice that the two different Markov chains in the previous
+    slide appear to be `forgetting' their initial distributions and
+    both be converging to a common distribution.
+  \item Let $P$ be the transition matrix for a Markov chain. If $\pi$
+    is a distribution such that $\pi P = \pi$ (matrix multiplication)
+    then $\pi$ is said to be a \emph{stationary distribution}.
+  \item If $X_i$ is a stationary distribution, then
+    $X_{i}=X_{i+1}=X_{i+2}=\dots$.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{What's stationary}
+  \begin{itemize}
+  \item In a run of the chain, we (generally) continue to move between
+    states once we hit a stationary distribution, but the
+    \emph{probability} of being in any given state will then be constant.
+  \end{itemize}
+\end{titledslide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{MCMC for approximate sampling}
+    
+  \begin{itemize}
+  \item The aim of Markov chain Monte Carlo (MCMC) methods is to
+    design a Markov chain whose stationary distribution is the target
+    distribution \dots
+  \item \dots such that $X_i$ quickly converges to the stationary
+    distribution \emph{irrespective of the initial distribution}.
+  \item We can then run the chain to produce a sample; throwing away
+    an initial `burn-in' sample which is too influenced by the initial
+    distribution.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{MCMC for joint distributions}
+  
+  \begin{itemize}
+  \item To do approximate probabilistic inference for a joint
+    distribution (e.g.\ a Bayesian network) we design a Markov chain
+    each state of which is a full joint instantiation of the distribution.
+  \item So a transition is a move from one joint instantiation to another.
+  \item One popular option is to make this transition one variable at
+    a time: \emph{Gibbs sampling}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Gibbs sampling}
+  
+  \begin{itemize}
+  \item Order the variables in the BN somehow: $V_{1}, V_{2},
+    \dots V_{n}$ 
+  \item Suppose the current state is $V_{1}=v_{1},V_{2}=v_{2},\dots
+    ,V_{n}=v_{n}$. Sample a new value for $V_1$ from $P(V_{1}|V_{2}=v_{2},\dots
+    ,V_{n}=v_{n})$. Let $v'_{1}$ be the new value.
+  \item Next sample a new value for $V_2$ from $P(V_{2}|V_{1}=v'_{1},\dots
+    ,V_{n}=v_{n})$. Then $V_3$ from $P(V_{3}|V_{1}=v'_{1},V_{2}=v'_{2},\dots
+    ,V_{n}=v_{n})$
+  \item Continue similarly for $V_{4}, V_{5}, \dots V_{n}$ until we have a new state $V_{1}=v'_{1},V_{2}=v'_{2},\dots
+    ,V_{n}=v'_{n}$
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Already instantiated variables}
+  
+  \begin{itemize}
+  \item If a variable is instantiated (i.e.\ the distribution we want
+    to sample from is a \emph{conditional} distribution),
+  \item Then we don't need to sample a value for it,
+  \item We just `clamp' it to whatever value it is instantiated to.
+  \item So the more evidence we have, the easier Gibbs sampling is.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{It doesn't always work}
+  
+  \begin{itemize}
+  \item Consider a BN $A \rightarrow B$ where both variables are
+    binary, $A$ has a uniform distribution and $B$ has the same value
+    as $A$ with probability one.
+  \item If we start at $A=0,B=0$ (with probability one) then a
+    realisation of the Markov chain will remain stuck there,
+  \item even though $P(A=0.5)$
+  \item This chain is not \emph{ergodic} and so does not converge to
+    the desired distribution.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Continuous variables}
+  
+  \begin{itemize}
+  \item In this module we restrict attention almost entirely to
+    \emph{discrete} random variables---those that have only finitely
+    many values.
+  \item This is artificial: most real problems require continuous
+    random variables: think of temperature, weight, time etc.
+  \item Since it does depend on manipulating factors, Gibbs sampling
+    can be used for continuous distributions (as well as those with a
+    mixture of discrete and continuous).
+  \item Continuous distributions are defined by a \emph{density function}:
+    probabilities are computed by integrating this function.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The Normal model}
+
+  \begin{itemize}
+  \item Numerical data is very often modelled by a Normal
+    distribution (hence the name).
+  \item Also known as the Gaussian distribution.
+  \end{itemize}
+  \[
+f(x|\mu,\sigma^{2}) = \frac{1}{\sqrt{2\pi}\sigma} 
+\exp\left(- \frac{1}{2\sigma^{2}} (x-\mu)^{2}\right)
+\]
+\[
+P(z \leq x \leq z') = \int_{z}^{z'} f(x|\mu,\sigma^{2}) \, dx
+\]
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The standard Normal distribution}
+  
+Here is
+\[
+x \sim \mathrm{Norm}(\mu=0,\sigma^{2}=1)
+\]
+
+
+\includegraphics*[width=0.6\textwidth]{norm.pdf}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A multivariate continuous distribution}
+  
+Suppose:
+\begin{enumerate}
+\item $X \sim  \mathrm{Norm}(\mu=0,\sigma^{2}=1)$
+\item $Y \sim  \mathrm{Norm}(\mu=X,\sigma^{2}=3)$
+\end{enumerate}
+Then we have a BN $X \rightarrow Y$ to which we can apply Gibbs
+sampling.
+
+Cue demo (data produced by the BUGS system).
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Exploiting conditional independence in Gibbs sampling}
+  
+  \begin{itemize}
+  \item When we sample from $P(V_{i}|V_{1}=v_{1},V_{2}=v_{2},\dots,
+    V_{i-1}=v_{i-1},V_{i+1}=v_{i+1},V_{n}=v_{n})$ we can take advantage
+    of conditional independence.
+  \item Conditional on its neighbours in the interaction graph, $V_i$
+    is independent of all other variables, so their current values are
+    irrelevant and constructing the right sampling distribution is
+    much simpler.
+  \item This allows rapid Gibbs sampling in very big distributions.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov blankets}
+
+  \begin{itemize}
+  \item Neighbours in the interaction graph form the \emph{Markov
+      blanket} for a variable.
+  \item A Markov blanket shields a variable from the influence of
+    other variables.
+  \item For a BN, the Markov blanket is the variable's children,
+    parents and co-parents in the DAG.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

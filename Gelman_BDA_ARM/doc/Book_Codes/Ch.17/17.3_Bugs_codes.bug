@@ -1,0 +1,25 @@
+
+## Flight simulator 
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- mu + gamma[treatment[i]] + delta[airport[i]]
+  }
+  mu ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:n.treatment){
+    gamma[j] ~ dnorm (0, tau.gamma)
+  }
+  tau.gamma <- pow(sigma.gamma, -2)
+  sigma.gamma ~ dunif (0, 100)
+
+  for (k in 1:n.airport){
+    delta[k] ~ dnorm (0, tau.delta)
+  }
+  tau.delta <- pow(sigma.delta, -2)
+  sigma.delta ~ dunif (0, 100)
+}
+

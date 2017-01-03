@@ -1,0 +1,292 @@
+\movetooddpage
+
+\chapter[Düzenli Ýfadeler][DÜZENLÝ ÝFADELER]{Düzenli Ýfadeler} \label{regex}
+
+Düzenli ifadeler (regular expressions), bir metin içinde belli bir düzene uyan
+bir kelime dizisini bulmak için kullanýlýr. Teknik olarak bu iþlemin sonucundan
+bazen þu þekilde bahsedilir: ``xyz düzenli ifadesi abc ifadesine uydu
+(matched)''. Ýfade, aslýnda bir kelime dizisini temsil eden genelci bir
+beyandýr; Aslýnda komut satýrýndan bir düzenli ifadeyi sürekli
+kullanýyoruz. `\PVerb!*!' iþareti. Bu iþareti bir listeleme komutu ile beraber
+kullandýðýmýzda, `\PVerb!*!' iþareti ``ne olursa olsun'' düzenli ifadesi olduðu
+için, bu tarife uyan tüm dosyalarý ve dizinleri geri almýþ oluruz.
+
+Fakat düzenli ifade `\PVerb!*!' iþaretinden ibaret deðildir. Çok daha güçlü ve
+sayesinde deðiþik ve çetrefil metinler çekip çýkarabileceðimiz ifadeler
+vardýr. Ama ondan önce, üzerinde düzenli ifade iþleyeceðimiz girdi dosyalarýný
+nasýl okuyacaðýmýzý görmemiz gerekiyor, yâni Perl'ün dosya eriþim özelliklerini.
+
+\section{Perl ile Metin Ýþleme}
+
+Perl'ün metin iþleme yeteneklerini bir örnek üzerinde görelim: Perl ile dosya
+açmak için \PVerb!open! komutu kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+open IN, ``fileName.txt'';
+\end{lstlisting}
+Bu komutla \PVerb!fileName.txt! okunmak için açýlmýþ olur. Bir dosyayý satýr
+satýr, ya da tamamen okuyabiliriz. Çoðunlukla (meselâ kodda) yapýlan metin
+deðiþiklikleri için dosyanýn tamamýný ayný anda okumak gerekir. Bunu yapmak
+için, \PVerb!undef \$/;! iþareti kullanmamýz gerekecektir. Bu tanýmdan sonra tüm
+dosya içeriðini bir deðiþkene atamak için, þu kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+\$fileContent = <IN>;
+\end{lstlisting}
+Bu yapýldýktan sonra \PVerb!\$fileContent! deðiþkeni, dosyadaki tüm içeriði
+içinde barýndýrmaya baþlar. Kodlamanýzý daha kýsa tutmak istiyorsanýz,
+\PVerb!\$fileContent! yerine özel bir deðiþken olan \PVerb!\$_! deðiþkenini de
+kullanabilirsiniz. Gizli deðiþkeni kullanmanýn iyi taraflarýndan biri, takip
+eden tüm düzenli ifade iþlemlerinin (eðer onlar da deðiþken belirtmemiþse)
+otomatik olarak gizli deðiþken üzerinde yapýlabilmesidir. Çok basit örnek bir
+düzenli ifade kullanmak gerekirse
+
+\begin{lstlisting}[language=Java, frame=none]
+open IN, ``fileName.txt'';
+\$_ = <IN>;
+s/ahmet/mehmet/sg ;
+print;
+close IN;
+\end{lstlisting}
+Bu örnekte, ``\PVerb!ahmet!'' kelimesini ``\PVerb!mehmet!'' ile deðiþtirdik, ve
+ekrana bastýk. \PVerb!print! komutuna hiç parametre vermezseniz, ayný þekilde
+gizli deðiþken olan \PVerb!\$_! kullanýldýðýný farz edecektir.
+
+Ýlk düzenli ifademiz, hem bulan, hem deðiþtiren bir ifade. Bu ifadenin
+\PVerb!s/string1/string2/sg;! tabirinde olan \PVerb!string1!, aranan kýsýmdýr,
+\PVerb!string2! ise, aranan ifade bulununca, yerine geçecek
+kýsýmdýr. Deðiþtirmek yerine sadece bulmak istiyorsanýz, \PVerb!string1!
+ifadesini sadece \PVerb!if! ile kullanabilirsiniz; \PVerb!if (/string1/) {.. .}!
+gibi. 
+
+\subsection{Çýktý Dosyasý}
+
+Metin deðiþimi yapmak için genellikle deðiþtirilen dosya ikinci bir dizin
+altýnda ayný isimde yazýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+open IN, ``fileName.txt'';
+open OUT, ``/tmp/fileName.txt'';
+\$_ = <IN>;
+s/ahmet/mehmet/sg ;
+print OUT;
+close IN;
+close OUT;
+\end{lstlisting}
+Bu kod parçasýndaki \PVerb!OUT!, deðiþmiþ içeriðimizin gittiði dosya
+olacaktýr. Dosyayýnýn ayný isimle açýldýðý dizinin deðiþik bir yerde olduðuna
+dikkat edelim.
+
+\subsection{Birçok Giriþ Dosyasý}
+
+Eðer bir dizin altýndaki birçok dosyayý iþlemek istiyorsak, dosya listesi almak
+için \PVerb!<>! iþaretlerini kullanabiliriz. Bu iþaretlerin arasýnda, çoðu
+iþletim sisteminden alýþýk olduðumuz `\PVerb!*!' kullanýmý mümkündür. \PVerb!<>!
+kullanýmýnda geriye bir Perl listesi gelecektir, bu listeyi \PVerb!foreach! Perl
+komutu ile gezebiliriz. Meselâ
+
+\begin{lstlisting}[language=Perl, frame=none]
+foreach \$file(<*.java>) {
+  # ..
+  # \$file ile iþlemler yap
+  # ..
+}
+\end{lstlisting}
+Eðer biraz önceki deðiþtirme mantýðýný üstte gösterilen tüm dosyalara uygulamak
+istersek,
+
+\begin{lstlisting}[language=Java, frame=none]
+foreach \$file(<*.java>) {
+  open IN, ``\$file'';
+  open OUT, ``/tmp/\$file'';
+  \$_ = <IN>;
+  s/ahmet/mehmet/sg ;
+  print OUT;
+  close IN;
+  close OUT;
+}
+\end{lstlisting}
+Dosyalarýn okunacaðý dizini deðiþtirmek için ise, Perl \PVerb!chdir! komutu
+kullanýlabilir; \PVerb!chdir(``/vs/vs'')! gibi.
+
+\section[Ýfadeler][ÝFADELER]{Ýfadeler}
+
+Artýk daha zor düzenli ifadeleri gösterebiliriz. Bu yeni daha çetrefil ifadeleri
+\PVerb!//! arasýna yerleþtirirsek, bu yeni ifadeleri kullanmiþ oluruz. Böylece o
+ifadenin temsil ettiði metne göre, o anda okunmakta olan dosya üzerinde bu
+verilen ifade {\em uydurulmaya} çalýþýlacaktýr. Uydurulan (bulunan) ifade ise,
+otomatik olarak deðiþtirme bölümünü devreye sokacaktýr.
+
+Düzenli ifadeler içinde her çeþit metin dizisi için, bir komut vardýr. Meselâ
+eðer \PVerb!22.33.22!, ya dâ, \PVerb!33.22.44! yâni, genel olarak, ``iki sayý,
+sonra bir nokta, iki sayý daha, sonra nokta ve son olarak iki sayý'' içeren bir
+{\em düzeni} bulmak istersek, o zaman tek vermemiz gereken düzenli ifade þu
+olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+/\d{2}\.\d{2}\.\d{2}\./
+\end{lstlisting}
+
+Burada \PVerb!\d! komutu, tek haneli bir sayýyý temsil etmektedir. Tek karakteri
+temsil eden tüm özel komutlarýn listesi Tablo \ref{regex:characters} üzerinde
+bulunabilir.
+
+\begin{table}[!hbp]
+\begin{center}
+  \caption{\label{regex:characters} Düzenli Ýfade Komutlarý}
+  \begin{tabular}{|p{5.0pc}|p{10.0pc}|}
+    \hline
+    \textbf{Komut} &  \textbf{Târif}  \\
+    \hline
+    \PVerb!\d! & Tek haneli bir sayý \\
+    \hline
+    \PVerb!\D! & Tek haneli haricinde her þey \\
+    \hline
+    \PVerb!\w! & Bir alfabe harfi (a ile z, A ile Z arasý, ve \PVerb!_! iþareti)  \\
+    \hline
+    \PVerb!\w! & Alfabe haricinde herhangi bir karakter  \\
+    \hline
+    \PVerb!\s! & Beyaz boþluk (SPACE, TAB) karakteri  \\
+    \hline
+    \PVerb!\S! & Beyaz boþluk haricinde herhangi bir karakter  \\
+    \hline
+    \PVerb!\! & META (ESC) karakteri  \\
+    \hline
+    \PVerb!^! & Satýr baþlangýç karakteri  \\
+    \hline
+    \PVerb!.! & Herhangi bir karakter  \\
+    \hline
+    \PVerb!\$! & Satýr sonu karakteri \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+Tablo \ref{regex:characters} komutlarý, elle gömeceðimiz sabit metin ile ayný
+ifadenin parçasý olarak kullanýlabilir. Ayrýca çoðu zaman, karakter komutlarýný
+``bazý özel tekrar etme kurallarý'' ile beraber kullanmak gerekiyor. Bu özel
+tekrar kurallarý, genellikle, bir düzenli ifade komutunun hemen yanýna eklenir,
+ve yanýna eklendiði tabirin temsil gücünü daha da arttýrýr. Tablo
+\ref{regex:repeats} üzerinde tekrar kurallarýný görüyoruz.
+
+\begin{table}[!hbp]
+\begin{center}
+  \caption{\label{regex:repeats} Tekrar Komutlarý}
+  \begin{tabular}{|p{5.0pc}|p{10.0pc}|}
+    \hline
+    \textbf{Komut} &  \textbf{Târif}  \\
+    \hline
+    \PVerb!*! & 0 ya da daha fazla \\
+    \hline
+    \PVerb!+! & 1 ya da daha fazla \\
+    \hline
+    \PVerb!?! & 1 ya da hiç \\
+    \hline
+    \PVerb!{n}! & n kere \\
+    \hline
+    \PVerb!{n,}! & en az ne kere \\
+    \hline
+    \PVerb!{n,m}! & en az ne kere, ama m'den fazla deðil \\
+    \hline
+    \PVerb!str1 | str2! & Ya ifade1 ya da ifade2 bulunacak  \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection{Örnekler}
+
+\PVerb!\$_ = ``abbbccdaabccdde''! üzerinde bazý düzenli ifade örnekleri
+görelim\footnote{Can Uður Ayfer,
+\url{http://www.mycompany.com/localhost/mycompany/yazi.jsp@dosya=a_regular_expression.xml.html}}:
+
+\begin{itemize}
+\item \PVerb!/Abc/! Uymaz! \PVerb!\$d! içinde hiç "A" yoktur yâni "Abc" bulunamaz.
+
+\item \PVerb!/Abc/i! Uyar! Sondaki "i" ignore case, yani büyük-küçük harf ayýrýmý
+yapýlmasýn anlamýnda olduðu için "Abc" ile "abc" eþleþir.
+
+\item \PVerb!/abc/! Uyar! 
+
+\item \PVerb!/^abc/! Uymaz! Çünkü "\PVerb!^!" meta-karakteri dizinin baþýnda anlamýndadýr ve
+"abc" alt dizisi \PVerb!\$d!'nin basinda deðildir.
+
+\item \PVerb!/abc>/! Uymaz! Çünkü "\PVerb!>!" meta-karakteri dizinin sonunda
+anlamýndadýr ve "abc" alt dizisi \PVerb!\$d!'nin sonunda deðildir.
+
+\item \PVerb!/De>/i! Uyar! Dizimizin sonunda "de" var ve büyük-küçük harf
+ayýrýmý yapýlmayacak!
+
+\item \PVerb!/^ab*c/! Uyar, çünkü dizinin basinda "a" ve ardýndan ``sýfýr veya
+daha fazla b'' ve ardýndan "c" var! Bu düzenli ifadede olan "\PVerb!*!"
+karakteri hemen solundaki karakter için ``sýfýr veya daha fazla kez tekrar
+eden'' anlamýnda bir meta karakterdir.
+
+\item \PVerb!/aH*bc/! Uyar! Çünkü dizide "a" ve ardýndan sýfýr veya daha fazla "H" ve
+ardinda "bc" var!
+
+\item \PVerb!/aH+bc/! Uymaz! Çünkü dizide "a" ve ardýndan en az bir tane "H" ve onun
+ardýnda "bc" seklinde bir düzen yok! Bu Duzenli ifadede olan "+" karakteri hemen
+solundaki karakter için "bir veya daha fazla kez tekrar eden" anlamýnda bir
+meta-karakterdir.
+
+\item \PVerb!/a*bc/! Uymaz! Çünkü dizinin içinde hiç "a" ve ardýndan gelen "*" yok! Bu
+örnekte "*" bir meta-karakter olarak deðil; basit anlamýyla bir asterisk
+karakteri olarak kullanýldýðý için önündeki "" ile iþaretlenmiþtir.
+
+\item \PVerb!/a+bc/! Uymaz! Çünkü dizinin içinde hiç "a" ve ardindan gelen "+"
+yok! Bu örnekte "+" bir meta-karakter olarak deðil; basit anlamýyla bir artý
+iþareti olarak kullanýldýðý için önündeki "" ile iþaretlenmiþtir.
+
+\item \PVerb!/a c/! Uymaz! Çünkü dizinin içinde hiç "a" ve ardindan gelen ""
+yok!
+
+\item \PVerb!/a.*b/! Uyar! Çünkü dizide ``a ve aralarýnda birþeyler ve sonra b''
+var! ``.''  (nokta) meta-karakteri herhangi bir karaktere uyar; ardýndan gelen
+``*'' ile birlikte (yâni ``\PVerb!.*!'') birþeyler olarak okunabilir.
+
+\item \PVerb!/d.*a/! Uyar! Çünkü "birþey" anlamýndaki noktanýn ardýndan gelen
+"*" meta-karakteri sýfýr veya daha fazla herhangi birþey anlamýndadýr.
+
+\item \PVerb!/d.+a/! Uyar! Çünkü "birþey" anlamýndaki noktanýn ardýndan gelen
+meta-karakter bir "\PVerb!+!"; Yâni bir veya daha fazla "herhangi birþey"
+
+\item \PVerb!/da?/! Uyar! Çünkü dizide "d" ve ardýndan bir veya sýfýr tane "a"
+gelen alt dizi var.
+
+\end{itemize}
+
+\section{Gruplama ve Bulunaný Kullanmak}
+
+Çoðu deðiþtirme iþlemi için, bulmak için kullandýðýmýz düzenli ifadenin bulduðu
+metnin ``bir bölümünü'' yeni deðiþtirmenin bir parçasý olarak kullanmamýz
+gerekebilir. Meselâ, alttaki gibi bir kod parçasý üzerinde
+
+\begin{lstlisting}[language=Java, frame=none]
+import com.sirket.paket.vs;
+
+if (bilmemne)
+   soyle boyle;
+
+soyle boyle;
+   
+if (filan)
+   soyle boyle oyle;
+\end{lstlisting}
+yapacaðýmýz deðiþiklik þöyle olabilir; ``sadece \PVerb!if! komutunu içeren kod
+satýrlarý (\PVerb!;! iþareti ile biten kod satýrlarý, dosya satýrlarý deðil)
+içinde bütün ``þöyle böyle'' ibarelerini, ``böyle þöyle'' yapalým''. Bu gibi
+durumlarda, bulunan kelimenin kendisi yeni kelimenin bir parçasýdýr, bu yüzden
+bir þekilde onlara eriþebilmemiz gerekir. Bunun için Perl'ün \PVerb!()! gruplama
+iþaretlerini kullanabiliriz. Perl'de her düzenli ifade komutu, parantez içine
+alýnabilir. Alýndýðý zaman, ve bu ifade metin parçasý ile uyuþtuðu zaman
+(matching), parantez içindeki uyan kýsým, deðiþtirme yapan (ikinci \PVerb!//!
+arasýndaki komutlar) kýsýmda, gruplamanýn kullanýlýþ sýrasýna göre, \PVerb!\$1!,
+\PVerb!\$2!, \PVerb!\$3!, .. ile eriþilebilir. Meselâ örneðimizde üç tane
+\PVerb!()!  kullanýmý var, birinci uyan kýsma eriþmek için \PVerb!\$1!
+kullanacaðýz.
+
+\begin{lstlisting}[language=Java, frame=none]
+s/\;(.*?)if (.*?) soyle boyle(.*?)\;/\;\$1if \$2 boyle soyle\$3\;/sg;
+\end{lstlisting}
+

@@ -1,0 +1,635 @@
+\movetooddpage
+
+\chapter{Unix} \label{unix}
+
+\thischapterhas{
+\item Unix felsefesi
+\item Süreçler
+\item Kullanýcýlar
+\item Araçlar
+}
+
+
+\versal{U}\textsc{nix} bir güzelliktir. Unix, en az ile en fazla yapmanýn en
+baþarýlý örneði, bir yalýn tasarým abidesidir. Unix bize bir yazýlým mimarinin
+nasýl olmasý gerektiðinin en çýplak þekliyle anlatýr, tarif eder. Piyasada bu
+kadar zaman kalabilmiþ, ve kritik uygulamalarda servis tarafýn pazar payýný
+tamamen eline geçirmiþ olmasýnda bu doðru tasarýmýn büyük etkisi
+vardýr. Aslýnda, kitabýmýzýn diðer bölümlerinde önerdiðimiz mimariler ve
+teknolojiler, ruh olarak Unix felsefesine birebir uyumludurlar. Çünkü biz bu
+felsefenin takipçileri, ve bu felsefeyi projelerimizde kullanabilmiþ sektörün
+elemanlarýyýz.
+
+Peki bu felsefe nedir?
+
+Unix, tasarým bakýmýndan özel hallerden kaçýnmýþ bir iþletim sistemidir\cite[sf.
+77]{torvalds}. Herkes için herþey olmaya çalýþmaz, ama herþeyin yapýlabilmesine
+izin verecek en baz altyapýyý saðlar. Bunun yan etkilerinde bir tanesi,
+altyapýnýn uygulamalardan net bir þekilde ayrýlmasý, ve böylece uygulamanýn bir
+baþkasý ile rahat bir þekilde deðiþtirilebilmesidir. 
+
+Meselâ komut satýrý programý, DOS'ta olduðu gibi iþletim sisteminin içine
+sokuþturulmamýþtýr. Bu sadece bir görevten ibarettir, ve Unix'te ayrý programý
+ayrý süreç altýnda (aynen diðer uygulamalar gibi) çalýþýr. Unix'te ``birþeyler
+yapan herþey'' bir süreç, bir iþlemdir\cite[sf. 77]{torvalds}. Bu ayrýlýk
+sayesinde Unix dünyasýnda birçok komut satýrý alternatifi geliþtirilmiþtir
+(\PVerb!bash!, \PVerb!sh!, \PVerb!tcsh!, \PVerb!ksh!) ama DOS dünyasýnda hâla
+sadece tek bir komut satýrý mevcuttur. 
+
+Unix iþletim sisteminin yalýn yapýsý, insanlarý en baþta en çok þaþýrtan, ve
+sonra merakýný uyandýran faktörlerden biridir. Unix'de neredeyse herþey altý
+temel iþlemle yapýlýr, ki bunlara ``sistem çaðrýlarý'' adý verilmiþtir; Bu altý
+temel sistem çaðrýsýyla neredeyse herþeyi geliþtirebilirsiniz. Bu altý temel
+çaðrýyý kavrarsanýz, Unix'i kavramýþ olursunuz\cite[sf. 88]{torvalds}.
+
+Yâni Unix'in güzelliklerinden birisi, karmaþýk þeyler oluþturmak için karmaþýk
+ara birimlere gereksinmediðinizi anlamýþ olmasýdýr. Basit þeylerin etkileþimiyle
+istediðiniz kadar karmaþýk yapýlar oluþturabilirsiniz. Yapmanýz gereken,
+karmaþýk problem çözme yapýlarý yaratmak için basit iþlemler arasýnda iletiþim
+kanallarý (pipe) oluþturmaktýr\cite[sf. 78]{torvalds}. 
+
+Temel bilimlerde de bir fiziksel olayý açýklayacak matematiksel kuramlar
+arasýnda seçim yapýlýrken aranan özelliklerden birisi basitliktir. Bilim
+dünyasýna yön veren önemli bir deyiþ olan Occam'ýn Usturasý der ki: ``Mevcut
+alternatifler arasýnda en basit açýklamayý seçiniz''. Temel bilimler, tarih
+boyunca ve günümüzde bu desturu takip etmektedirler. Kurumsal programcýlýkta da
+aynen temel bilimlerde olduðu gibi, basitlik {\em esastýr} (Kural
+\#1). Bilgisayar dünyasýnda, karýþýk yapýyý yaratmak programcýnýn iþidir
+(uygulama yazmak), kýyasla temel bilimler karýþýklýktan basit açýklamaya doðru
+gitmeye çalýþýr; Fakat felsefe her iki taraf için aynýdýr. Sadece gidilen yön
+deðiþiktir.
+
+\section{Unix Araçlarý}
+
+Bahsedilen türden basit yapý, Unix için birçok aracýn yazýlmasýný
+saðlamýþtýr. Unix felsefesine uyumlu olan Unix araçlarý, aynen iþletim sistemin
+kendisinin olduðu gibi, sadece {\em bir} iþi, {\em en iyi} þekilde yapmak için
+yazýlýrlar.
+
+Kitabýmýzýn ana amacý kurumsal yazýlým sektörde çalýþan programcýlar ve teknik
+liderlere yardým etmek olduðu için, her Unix aracýnýn tüm özelliklerini teker
+teker anlatmayacaðýz. Bizim faydalý olduðunu düþündüðümüz bilgi, {\em
+ihtiyaçlar} ýþýðýnda hangi Unix aracý ve araçlar dizisinin (çoðu zaman iletiþim
+kanallarý ile birkaçýný birbirine baðlayarak) kullanýlmasý gerektiðini
+anlatmaktýr.
+
+\subsection{Komut Birleþtirme}
+
+Unix araçlarý arasýnda iletiþim kanalý oluþturmak için ``\PVerb!|!'' iþareti
+kullanýlýr. Meselâ eðer \PVerb!command1! ve \PVerb!command2! adýnda iki Unix
+programýmýz olsa ve \PVerb!command1!'in çýktýsýný \PVerb!command2!'ye göndermek
+istesek, o zaman
+
+\begin{lstlisting}[language=Java, frame=none]
+command1 | command2
+\end{lstlisting}
+komut sýrasýný kullanýrdýk. Burada en son iþletilecek komut olan
+\PVerb!command2!'nin çýktýsý (büyük ihtimalle) ekrana basýlacaktýr.
+
+Ekrana basýlacak bir çýktýyý bir dosyaya yönlendirmek istersek, ``\PVerb!>!''
+iþareti ya da ``\PVerb!>>!'' iþaretinden sonra bir dosya ismi
+kullanýlýr. ``\PVerb!>!'' iþareti, yeni bir dosyaya yazmak, ``\PVerb!>>!'' ise
+mevcut bir dosyaya eklemek için kullanýlýr.
+
+
+\begin{lstlisting}[language=Java, frame=none]
+command1 | command2 >> /tmp/out.txt
+\end{lstlisting}
+Bu iþletim sýrasýna göre, önce \PVerb!command1! çaðýrýlacak, onun çýktýsý
+\PVerb!command2!'ye girdi olarak verilecek ve \PVerb!command2!'nin çýktýsý
+\PVerb!/tmp/out.txt! adlý dosyaya yazýlacaktýr. 
+
+
+\subsection{Süreçler} \label{unix:process}
+
+Unix'de iþlettiðiniz her program bir süreç (process) hâline gelir.
+
+\subsubsection{Listelemek}
+
+O ana kadar sizin baþlatmýþ olduðunuz süreçleri görmek istiyorsanýz, \PVerb!ps!
+komutunu kullanabilirsiniz. Þuna benzer bir çýktý gelecektir
+
+\begin{lstlisting}[language=Java, frame=none]
+ PID    PPID    PGID     TTY  UID    STIME COMMAND
+ 452       1     452     con 1004 11:55:54 /usr/bin/bash
+1656     452    1656     con 1004 11:55:58 /usr/bin/ps
+\end{lstlisting}
+Bu listedeki \PVerb!PID! kolonu sürecin kimlik numarasýdýr. Eðer sistemde, sizin
+dahil, tüm kullanýcýlarýn baþlatmýþ olduðu süreçleri görmek istiyorsanýz,
+
+\begin{lstlisting}[language=Java, frame=none]
+ps -eaf
+\end{lstlisting}
+komutunu kullanabilirsiniz. Bu sefer daha büyük bir liste gelecektir (çünkü
+herkesin süreçlerini görmek istediniz).
+
+\subsubsection{Öldürmek}
+
+Bir süreci öldürmek için \PVerb!PID! no'sunu öðrenip o numarayý kullanarak þu
+komutu kullanabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+kill -9 <PID>
+\end{lstlisting}
+Eðer bir programý \PVerb!ps -eaf! listesinde çýkan bir ``isme'' göre öldürmek
+istiyorsanýz, çoðu Unix'de bunun için bir \PVerb!pkill! komutu vardýr. Ama
+dikkat edin! Mesela \PVerb!pkill java! gibi bir komut, sistemde iþleyen tüm Java
+programlarýný öldürür; Eðer ayný makinada birden fazla kiþi Java uygulamasýný
+test ediyor ve siz de \PVerb!root! iseniz, insanlarýn çalýþmasýný
+etkileyebilirsiniz. Bu yüzden bu komutu dikkatli kullanýn.
+
+\subsection{Dosyalar}
+
+\subsubsection{Ekrana Basmak}
+
+\PVerb!cat! ile bir dosyayý tamamen ekrana basabiliriz. Eðer dosyayý kýsým kýsým
+görmek istiyorsak, \PVerb!less <dosya>! komutu iþe yarar. \PVerb!less!  iþlerken
+bir sonraki sayfaya geçmek için \PVerb!SPACE!, geri gitmek için \PVerb!b!, en
+tepeye gitmek için \PVerb!g!, ve en alta gitmek için \PVerb!G!  tuþlarý
+kullanýlabilir. \PVerb!q! ile \PVerb!less!  programýndan çýkmak
+mümkündür. \PVerb!less! komutu, ondan önce gelmiþ olan \PVerb!more! komutundan
+daha kuvvetlidir, tavsiyemiz \PVerb!less!  kullanmanýzdýr. Buradaki isimlendirme
+esprisi, raslantýsal bir þekilde (ya da bilerek) Unix felsefesinin özünü yine
+ortaya koymuþtur: (daha az anlamýna gelen) \PVerb!less!  komutu (daha fazla
+anlamýna gelen) \PVerb!more!'dan daha kuvvetlidir!
+
+\subsubsection{Dosya Ýçinde Bulmak}
+
+Herhangi bir dizin altýndaki bir veya daha fazla dosyalar {\em içinde} bir
+kelimeyi aramak istiyorsanýz, \PVerb!grep! komutunu kullanabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+grep 'aranan kelime' *.java
+\end{lstlisting}
+gibi. Bu komut sonucundan bulunan dosyalar listenecektir.
+
+\subsubsection{Dosya Bulmak}
+
+Bir isim düzenine uyan tüm dosyalarý bulmak için, \PVerb!find! komutu
+kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+find /usr/local -name '*.java'
+\end{lstlisting}
+Bu komut \PVerb!/usr/local! seviyesinden baþlayarak sonu \PVerb!*.java! ile
+biten tüm dosyalarý bulup geri getirecektir. \PVerb!find! komutundan hemen sonra
+gelen dizin, aramanýn nereden baþlayacaðýna iþaret eder.
+
+Eðer bulunan dosyalar {\em üzerinde} bir komut iþletmek istiyorsanýz,
+\PVerb!find! ile \PVerb!xargs! komutunu birbiri ile iletiþim (pipe) kurdurarak
+kullanabilirsiniz. Meselâ sonu \PVerb!*.java! ile biten tüm dosyalarý ekrana
+basmak için
+
+\begin{lstlisting}[language=Java, frame=none]
+find . -name '*.java' | xargs cat
+\end{lstlisting}
+
+\subsubsection{Dosya ve Dosya Ýçinde Bulmak}
+
+Ýþte Unix felsefesinin bir örneði: Öðrendiðimiz iki komutu birleþtirerek, bir
+dizinden baþlayarak hem o dizin hem de altýndaki tüm dizinler altýnda belli bir
+düzene uyan dosyalar {\em içinde} bir kelimeyi arýyorsak,
+
+\begin{lstlisting}[language=Java, frame=none]
+find . -name '*.java' | xargs grep -l 'aranan kelime' 
+\end{lstlisting}
+komutunu kullanabiliriz. \PVerb!-l! seçeneði, bulunan dosya ismini ekrana
+basmak için kullanýlýr.
+
+\subsubsection{Dosya ve Dizin Büyüklüklükleri}
+
+Bir dizinin ya da tek dosyanýn ne kadar yer tuttuðunu anlamak için, \PVerb!du!
+kullanýlýr. Tek baþýna kullanýlýnca, komutun kullanýldýðý dizin altýndaki {\em
+her dizinin} ne kadar büyük olduðu ekranda gösterilecektir. Eðer \PVerb!du -s!
+kullanýlýrsa, bu alt dizin büyüklüklerinin toplamý alýnacaktýr, yâni tek sayý
+geri gelecektir.
+
+Eðer bir dizinin altýndaki hangi alt dizinin en fazla yer tuttuðunu merak
+ediyorsak (ki bu bazen çok iþe yarar), o zaman, \PVerb!du!'dan gelen sonuçlarý
+baþka bir Unix komutuna iletmek gerekecektir. Bu diðer komur, sýraya dizme
+(sort) komutudur.
+
+\begin{lstlisting}[language=Java, frame=none]
+du | sort -n
+\end{lstlisting}
+Bu komut dizinleri büyüklük sýrasýna göre küçükten büyüðe doðru dizer. Peki
+\PVerb!sort! komutu, \PVerb!du!'dan gelen sonuç üzerinde ilk kolona (büyüklüðe)
+bakacaðýný nereden bildi?  Çünkü \PVerb!du!'dan gelen sonuçlarda büyüklük, ilk
+kolonda idi, ve \PVerb!sort!, satýrlarý ilk karakterlerinden baþlayarak dizmek
+için yazýlmýþtýr.
+
+\subsubsection{Satýr Sayýsý}
+
+Bir dosyanýn kaç satýr ve kaç kelime içerdiðini anlamak için \PVerb!wc!
+kullanýlýr. Tek baþýna \PVerb!wc! bir dosyadaki satýr, kelime sayýsýný beraber
+gösterir, ayrý ayrý bilgi almak için \PVerb!wc -l!, sadece satýr sayýsýný,
+\PVerb!wc -w! kelime sayýsý için kullanýlabilir.
+
+\subsubsection{Ýçerik Deðiþtirmek}
+
+Bunun için Perl kullanacaðýz. Komut satýrýnda Perl, hem yerinde deðiþiklik ve
+hem de düzenli ifade kullanabilmektedir.
+
+\begin{lstlisting}[language=Java, frame=none]
+perl -pi -e 's/filan/falan/sg'
+\end{lstlisting}
+komutu, \PVerb!filan! ile \PVerb!falan! kelimesini deðiþtirir. Ýþ bittikten
+sonra bir yedek dosyasi (\PVerb!.bak!) bulacaksýnýz. 
+
+\section{Kullanýcýlar}
+
+Unix'de her kullanýcý \PVerb!/etc/passwd! dosyasýnda tutulur. Bu dosyaya
+eriþmeye sadece \PVerb!root! kullanýcýnýn hakký vardýr. Projenizde genelde
+programcýlara \PVerb!root! eriþimi verilmez, ama teknik lidere bu hak
+tanýnýr. Bu, Unix'i daha yeni öðrenmekte olan programcýlarýn yanlýþlýkla sistemi
+hasar vermesine karþý yapýlýr.
+
+En güçlü kullanýcý olan \PVerb!root!, birçok admin odaklý iþi yapabilir, bu
+yüzden haklarý tüm diðer kullanýcýlardan daha fazladýr. Mesela \PVerb!root!,
+herkesin sürecini \PVerb!kill! ile öldürebilir. Diðer kullanýcýlar böyle bir þey
+yapmaya kalkýþsa, sistem onlara izin vermeyecektir.
+
+Bir kullanýcýn giriþ yaptýðýnda hangi komut satýr progamýný (shell) kullanacaðý
+(birçok seçenek mevcuttur), \PVerb!/etc/passwd! içinde tanýmlýdýr. Bu shell,
+kullanýcý yaratýlýrken \PVerb!useradd! komutuna parametre olarak verilir;
+
+\begin{lstlisting}[language=Java, frame=none]
+useradd -d /home/user123 -s /bin/bash user123 
+\end{lstlisting}
+Parametre \PVerb!-d! kullanýcý (\PVerb!HOME!) dizini, \PVerb!-s! ise shell tipi
+için kullanýlýr. 
+
+Bir kullanýcý sisteme girdiðinde, ya da bir xterm, yeni bir shell baþlattýðýnda,
+kullandýðý shell türüne göre iþletilen ayar dosyasý deðiþtiktir. Shell
+\PVerb!sh!, ve \PVerb!bash! ise, önce \PVerb!/etc/profile! script'i, sonra
+kullanýcý \PVerb!HOME! dizini altýndaki \PVerb!.profile! iþletilir. Eðer admin
+isek ve tüm kullanýcýlarýn etkileneceði türden bir deðiþiklik yapmak istersek,
+bunu \PVerb!/etc/profile! içinde yaparýz. Her kullanýcý kendi isteðine göre
+\PVerb!.profile!'ý deðiþtirebilir.
+
+Her kullanýcý için bir \PVerb!HOME! deðiþkeni mevcut olacaktýr. Bu deðiþkeni
+ekranda göstermek için \PVerb!echo \$HOME! komutunu kullanabilirsiniz.
+
+Eriþim haklarýný daha geniþ bir kategori üzerinden idare edebilmeye admin'ler
+için gereklidir. Bu ihtiyaca cevaben Unix, ``kullanýcý gruplarý'' kavramýný
+destekler. Bir kullanýcý birden fazla gruba dahil olabilir. Bir kullanýcýyý
+\PVerb!useradd! ile yaratýrken hangi gruba dahil olmasýný istediðinizi
+biliyorsak, \PVerb!-g! seçeneði ile bu grubu tanýmlayabiliriz. Sisteme bir grup
+eklemek için \PVerb!groupadd! komutunu kullanmak gerekiyor.
+
+Eðer \PVerb!useradd! iþlemi bittikten sonra kullanýcýyý bir gruba dahil etmek
+istersek, \PVerb!/etc/passwd! dosyasýný güncelleyerek bunu baþarabiliriz. Bu
+dosyada kullanýcýnýn tanýmlandýðý satýrý bulup, oradaki grup listesine yeni grup
+no'sunun eklenmesi gerekiyor. Grup ismine bakadar grup numarasýný bulmak için
+\PVerb!/etc/group! dosyasýna bakabiliriz.
+
+Bir kullanýcý hangi gruba dahil olduðunu görmek isterse, komut satýrýndan
+\PVerb!groups! komutunu vermesi yeterlidir. Süper kullanýcý \PVerb!root!
+baþkalarýnýn gruplarýna bakabilir, bunu için \PVerb!groups <username>!
+komutunu kullanýr.
+
+\subsection{Dosya Haklarý ve Kullanýcýlar}
+
+\PVerb!ls -al! ile bir dizindeki tüm dosyalarýn kullaným haklarýný
+görebilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+drwxr-xr-x   9 burak None 0 Jun 14 15:57 Example
+-rwxr-xr-x   9 burak None 0 Jun 14 15:57 Ex.txt
+\end{lstlisting}
+Bu listede iki birim görüyoruz; \PVerb!Example! ve \PVerb!Ex.txt!. Her dosya ya
+da dizin için onun olduðu satýrýn baþýna bakarsak, \PVerb!drwxr-xr-x! gibi bir
+taným görürüz. \PVerb!Example! dizini örnek alalým. \PVerb!drwxr-xr-x! ne
+demektir?
+
+Bu taným kelimesini, öncelikle zihnimizde dörde bölmemiz gerekir. Yâni biraz
+önceki örnek, þuna dönüþür: \PVerb!d!, \PVerb!rwx!, \PVerb!r-x!, ve
+\PVerb!r-x!. Bu bölümlerden tek hâneli birinci bölüm birimin dosya mý,
+dizin mi olduðunu belirtir. \PVerb!d! dizin, \PVerb!-! dosya demektir.
+
+Ondan sonra gelen üç büyük grup, sýrasýyla kullanýcý (user), grup (group) ve
+ötekiler (others) içindir. Kullanýcý, kullanýcýn kendisi için geçerli olan
+haklar, grup, kullanýcýnýn içinde olduðu gruptaki herkes için olan haklar,
+ötekiler ise bunun haricinde kalan herkes için geçerli olan haklardýr. Böylece
+kendinize verdiðini bir hakký, grubunuzdaki bir kiþiye vermemeyi (meselâ)
+seçebilirsiniz.
+
+Her kelime grubu içindeki haklar, þunlar olabilir. O dosyayý okumak (read),
+deðiþtirebilmek (write), ve iþletebilmek (execute). Okumak için \PVerb!r!,
+deðiþtirebilmek için \PVerb!w! ve iþletebilmek için \PVerb!x! karakteri
+kullanýlýr. Eðer bu haklar var ise onun karakteri, yok ise \PVerb!-! karakteri
+kullanýlacaktýr.
+
+Haklarýn karakterleri bir grup içinde hep ayný yerlerde çýkarlar; Grubu içinde
+\PVerb!r! hep birinci sýrada, \PVerb!w! ikinci sýrada, ve \PVerb!x! ise üçüncü
+sýrada olacaktýr. 
+
+\subsubsection{Dosya Kullaným Hakký Vermek ve Almak} \label{unix:tools:files:chmod}
+
+Hak vermek için \PVerb!chmod! komutu kullanýlýr. Kullaným \PVerb!chmod <haklar>
+dosya! þeklindedir. Bir dosyanýn tüm haklarýný ayný anda set edebilen sayý
+yöntemi yerine (meselâ \PVerb!chmod 777 file.txt!) biz, \PVerb!+! ve \PVerb!-!
+ile hak ekleme çýkarma yöntemini tercih ediyoruz. Bunun için, meselâ kullanýcýya
+okuma hakký vermek için \PVerb!chmod u+r <dosya>! komutu kullanýlýr. Hak
+eksiltmek için \PVerb!+! yerine \PVerb!-! kullanmak gerekir. Ayný þekilde gruba
+okuma hakký vermek için \PVerb!chmod g+r <dosya>!  kullanýlýr. ``Öteki''
+kullanýcýlar için \PVerb!o!, ve her kullanýcý {\em herkes} için \PVerb!a!
+kullanýlmalýdýr. \PVerb!a! ile tüm kullanýcýlara (\PVerb!u!, \PVerb!g!,
+\PVerb!o!) belli bir hakký ayný anda verme yeteneðine kavuþuyoruz.
+
+\section{Scripting}
+
+Bir arada iþlemesini istediðini komutlarý bir dosyaya koyup, bir script olarak
+iþletebilirsiniz. Script'leriniz herhangi bir shell için yazabilirsiniz, ama
+bizim tavsiye ettiðimiz shell, her Unix sisteminde olmasý garanti olan
+\PVerb!sh! shell'idir.
+
+Bir script'i iþletmek, kurumsal programcýlar tarafýndan Unix'in en az anlaþýlan
+ve en son ``tamamiyle'' öðrenilen tekniklerden biridir. Bir script içinde set
+edilen deðiþkenler, {\em çaðýran} shell'i nasýl etkileyecektir? Bir script'i
+birkaç þekilde çaðýrma þekillerinden hangisi uygundur?
+
+Elimizde \PVerb!script.sh! adýnda bir script olduðunu farz edelim. Bu script
+içinde þunlar olsun;
+
+\begin{lstlisting}[language=Java, frame=none]
+VAR1=/tmp/vs/vs
+command1
+command2
+\end{lstlisting}
+Bu script'i üç þekilde iþletebilirsiniz.
+
+\begin{enumerate}
+   \item \PVerb!sh script.sh!: Script'in iþlemesi tamamlandýktan sonra, çaðýran
+   shell, içeride tanýmlanan ve set edilen \PVerb!VAR1!'ý göremez.
+   
+   \item \PVerb!script.sh!: Avantajý, iþletmek için shell üzerinde sadece tek
+   kelime kullanmasýdýr. Bunun için \PVerb!script.sh! dosyasýnýn en üst satýrýna
+   \url{#!/bin/sh!} ibaresini eklemeliyiz. Bir de, iþletmeden önce (sadece bir
+   kez) \PVerb!chmod u+x shell.sh! ile bu dosyayý ``sadece kendi kullanýcýmýz
+   için'' iþletilebilir hâle getirmeliyiz. Bundan sonra komut satýrýndan
+   uygulanacak tek baþýna \PVerb!shell.sh! komutu, çalýþacaktýr. Fakat
+   \PVerb!VAR1!, aynen biraz önce olduðu gibi, çaðýran shell tarafýndan
+   gözükmeyecektir.
+   
+   \item \PVerb!. shell.sh!: Bu kullaným, Unix'de kaynaklama (sourcing) yapar,
+   yâni script {\em sanki içindeki her satýr, komut satýrý üzerinde elle
+   yazýlýyormuþ gibi} iþletilir. Ayrýca daha önceki iþletim stillerinde,
+   \PVerb!shell.sh!  çaðýrýmý yeni bir süreç altýnda iþliyordu, ve orada
+   yaratýlan her deðiþken yapýlan her iþ o süreç bitince onunla beraber
+   ölüyordu. Kaynaklama yönteminde durum deðiþiktir. Bu yöntemde, çaðýrým geri
+   gelince \PVerb!VAR1!'in deðeri çaðýran shell tarafýndan görülüyor olacaktýr.
+\end{enumerate}
+Ayrýca eðer 1. ve 2. yöntemlerde de \PVerb!shell.sh! iþledikten sonra içeride
+tanýmlanan ve set edilen deðiþkenlerin dýþarýdan (çaðýran shell içinden)
+görülmesini istiyorsak, o zaman bu yöntemlerde script içinde deðiþkene bir deðer
+set ettikten sonra onu dýþarýya ``ithal'' etmeliyiz; Bourne shell (\PVerb!sh!)
+içinde bu \PVerb!export VAR1! komutu kullanýlarak yapýlýr.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Makina Baþlayýnca Program Ýþletmek][MAKÝNA BAÞLADIÐINDA PROGRAM ÝÞLETMEK]{Makina Baþlayýnca Program Ýþletmek}
+
+Bazý programlarýn bilgisayar açýldýðý zaman ``otomatik'' olarak baþlamasýný
+istiyor musunuz? Mesela, bir Linux makinasýný tamamen Oracle icin ayýrdýk, ve
+Oracle, bilgisayar açýlýr açýlmaz baþlamalý. Sistem idarecisi olarak her
+seferinde oracle kullanýcýsýna girip, durdurma/baþlatma yapmak istemiyoruz..
+
+Unix'te bu iþler, diðer pek çok þeyde olduðu gibi, metin bazlý ayar dosyalarý
+üzerinden yapýlýyor. Bir Unix sisteminde bilinen, ve önemli dizin bölgeleri
+vardýr. Mesela \PVerb!/etc/! dizini bunlardan biridir. Çogu Unix versiyonu,
+\PVerb!/etc/! altýna onemli ayar dosyalarýný koyar. Yâni, bir script ile
+\PVerb!/etc/! altýndaki dosyalarý deðiþtirirseniz, sistemin iþleyiþi
+deðiþecektir. Dikkatli olmamýz isabetli olacaktýr.
+
+Durdurup baþlatma ayar dosyalarý \PVerb!/etc/rc.d! dizini altýndadýr. Buraya
+girip \PVerb!ls -al! iþletirseniz, aþaðýdaki tabloyu görebilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+drwxr-xr-x   10 root     root         4096 Sep 15 01:09 .
+drwxr-xr-x   43 root     root         4096 Sep 15 01:23 ..
+drwxr-xr-x    2 root     root         4096 Sep  6 15:51 init.d
+-rwxr-xr-x    1 root     root         3219 Jul 10  2001 rc
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc0.d
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc1.d
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc2.d
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc3.d
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc4.d
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc5.d
+drwxr-xr-x    2 root     root         4096 Apr  4 13:25 rc6.d
+-rwxr-xr-x    1 root     root         3200 Sep 15 01:08 rc.local
+..
+..
+\end{lstlisting}
+
+\PVerb!rc! kelimesinden sonra gelen sayý, ``baþlama seviyesini'' belirtir. Bir
+Linux makinasýný deðiþik baþlama seviyesinde baþlatmamýz mümkündür. Meselâ çok
+önemli bir sistem bakýmý gerekiyorsa ve bu bakým yapýlýrken hiçbir kullanýcýnýn
+sisteme baðlanamamasý lâzým ise, baþlama seviyesi 0 yada 1, bu iþ için
+kullanýlabilir. Bu seviyelerde kullanýcý giriþ programlarý saðlanmamýþtýr, ve
+böylece sadece \PVerb!root! sisteme terminalden girerek istediði bakýmý yapabilir.
+
+Sistemi 4. baþlama seviyesinde baþlatmak demek, \PVerb!rc4.d! altýna girip,
+oradaki baþlatma script'lerini iþletmektir. Þimdi \PVerb!rc4.d! altýnda ne var
+görelim.
+
+\begin{lstlisting}[language=Java, frame=none]
+lrwxrwxrwx    1 root     root           14 Apr  2 13:36 K74ntpd 
+lrwxrwxrwx    1 root     root           16 Apr  2 13:38 K74ypserv
+lrwxrwxrwx    1 root     root           16 Apr  2 13:38 K74ypxfrd
+lrwxrwxrwx    1 root     root           15 Apr  2 13:34 S05kudzu 
+lrwxrwxrwx    1 root     root           18 Apr  2 13:34 S08ipchains
+lrwxrwxrwx    1 root     root           18 Apr  2 13:34 S08iptables
+lrwxrwxrwx    1 root     root           17 Apr  2 13:34 S10network 
+lrwxrwxrwx    1 root     root           16 Apr  2 13:33 S12syslog
+lrwxrwxrwx    1 root     root           17 Apr  2 13:36 S13portmap
+lrwxrwxrwx    1 root     root           17 Apr  2 13:37 S14nfslock
+lrwxrwxrwx    1 root     root           18 Apr  2 13:33 S17keytable
+lrwxrwxrwx    1 root     root           16 Apr  2 13:34 S20random
+lrwxrwxrwx    1 root     root           15 Apr  2 13:34 S25netfs 
+lrwxrwxrwx    1 root     root           14 Apr  2 13:34 S26apmd
+\end{lstlisting}
+
+
+\PVerb!ipchains!, \PVerb!syslog! gibi programlar tanýdýk gelebilir. Bu
+programlarýn baþlatýldýðý noktayý böylece görmüþ oluyoruz. 
+
+Bir kavram daha kaldý: Bazý script'lerin ``\PVerb!K!'' ile, ötekilerinin
+``\PVerb!S!'' ile baþladýðýný görüyoruz. Bunun sebebi nedir? \PVerb!S!
+``\PVerb!Start!'' icin \PVerb!K! ``\PVerb!Kill!'' için kullanýlýr, yâni baþlat
+ve durdur komutlarýdýr. Eðer Unix sistemi, \PVerb!rc4.d! altýndaki servisleri
+baþlatmak istiyorsa, önce, \PVerb!rc4.d! altinda ``\PVerb!ls S*!''  benzeri bir
+komut iþletecektir. Bu komut sadece ``\PVerb!S!'' ile baþlayan script'leri
+toplar. Sonra Unix sistemi, bu script'leri teker teker ``\PVerb!start!''
+kelimesini ekleyerek caðýrýr. Ayný þekilde sistem kapanýrken, Unix \PVerb!ls K*!
+benzeri komut iþletip, durdurmak için gerekli script'leri toplar, ve onlarý
+``\PVerb!stop!'' kelimesini ekleyerek çaðýrýr.
+
+Peki niye çaðýrým yaparken ``\PVerb!start!'' ve ``\PVerb!stop!'' eklemek
+gerekiyor? Bunun sebebini script içeriðine baktýðýmýzda göreceðiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+..
+..
+start() {
+        echo -n >"Kaydediciyi baslatiyoruz.. "
+..
+..
+stop() {
+        echo -n >"Kaydediciyi durduruyoruz.. "
+..
+..
+case ">1" in
+  start) ;; eger Unix start kelimesi gondermis ise
+        start
+        ;;
+  stop)
+        stop eger Unix stop kelimesi gondermis ise
+        ;;
+  status)
+        rhstatus
+        ;;
+  restart|reload)
+        restart
+        ;;
+..
+..	
+\end{lstlisting}
+
+\section{Takvime Baðlý Program Ýþletmek} \label{unix:cron}
+
+Bir zamana, takvime baðlý program iþletmek için, \PVerb!cron! programý
+kullanýlýr. \PVerb!cron! programý, \PVerb!crontab! adýnda bir ayar dosyasý
+kullanýr, ve bu dosya \PVerb!/etc/crontab! altýnda bulunur. Bu ayar dosyasýný ya
+direk (\PVerb!root! olarak) ya da komut satýrýndan \PVerb!crontab -e! ile edit
+etmeye baþlayabilirsiniz. Eðer herhangi bir dosyanýn \PVerb!crontab! {\em
+dosyasý olarak} kullanýlmasýný istiyorsanýz, \PVerb!crontab <file>! komut ile
+bunu yapabilirsiniz. Bu durum genellikle \PVerb!crontab! dosyasýný CVS gibi bir
+kaynak kod idare sisteminde tutmak isteyenler için gerekli olmaktadýr.
+
+Bazý \PVerb!crontab! seçenekleri (ve alâkalý bir komut) þunlardýr:
+
+\begin{itemize}
+\item \PVerb!export EDITOR=vi! \PVerb!crontab!'in hangi editör ile açýlacaðýný
+kontrol eder. \PVerb!vi! yerine (eðer varsa) \PVerb!emacs! kullanabilirsiniz.
+\item \PVerb!crontab -e!: Ayar dosyasýný günceller
+\item \PVerb!crontab -l!: Ayarlarý ekranda gösterir
+\item \PVerb!crontab -r!: \PVerb!crontab! dosyasýný siler
+\item \PVerb!crontab -v!: Dosyayý en son güncellediðimiz tarihini gösterir
+\end{itemize}
+
+\PVerb!crontab! dosyasýnýn her satýrý, deðiþik bir programý ayarlamak için
+kullanýlýr. Bu her satýrda, her kolon, zaman ayarýnýn belli bir bölümü için
+kullanýlýr. Kolonlar sýrasýyla þunlardýr: Dakika, saat, ayýn günü, ay, haftanýn
+günü ve yýl. Her kolon için yýldýz ``\PVerb!*!'' iþareti, o ayarýn dikkate
+alýnmadýðý anlamýna gelir, meselâ gün için ``\PVerb!*!'' var ise, o program her
+gün iþleyecektir. Tablo \ref{unix:table:cron} üzerinde izin verilen kolon
+deðerlerini görüyoruz.
+
+\begin{table}[!hbp]
+\begin{center}
+  \caption{\label{unix:table:cron} Crontab Kolon Deðerleri}
+  \begin{tabular}{|p{5.0pc}|p{15.0pc}|}
+    \hline
+    \textbf{Alan} &  \textbf{Ýzin Verilen Deðerler}  \\
+    \hline
+    dakika    &     0-59 \\
+    \hline
+    saat      &     0-23 \\
+    \hline
+    ayýn günü &  0-31 \\
+    \hline
+    ay      &    0-12  \\
+    \hline
+    haftanýn günü  &  0-7  \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+Örnek bir \PVerb!crontab! dosyasý ise, altta görülmektedir.
+
+\begin{lstlisting}[language=Java, frame=none]
+SHELL=/bin/sh
+MAILTO=burak
+5 0 * * *       \$HOME/bin/daily.job >> \$HOME/tmp/out 2>&1
+15 14 1 * *     \$HOME/bin/monthly
+0 22 * * 1-5   mail -s "Saat 10pm" burak%Burak,%%Nabersin?%
+\end{lstlisting}
+Her bir program tanýmýný teker teker tarif etmek gerekirse:
+
+\begin{enumerate}
+\item Ýlk önce iþletilen programlarýn hangi shell'i kullanmasý gerektiðini
+  tanýmlýyoruz. Burada seçim \PVerb!/bin/sh! olmuþtur.
+\item Bu satýrda, \PVerb!cron! iþledikten sonra onun iþlettiði dosyalarýn
+  çýktýsýnýn kime mail edileceðini tanýmlýyoruz. Bu kiþi burada \PVerb!burak!
+  adýndaki kullanýcýdýr.
+\item Bu satýrda, ilk takvimli program tanýmý yapýlmýþtýr. Bu program, her gece
+  yarýsýndan beþ dakika sonra her gün iþletilecektir. \PVerb!\$HOME! deðiþkeni,
+  \PVerb!crontab! dosyasýnýn sahibidir.
+\item Her ayýn ilk gününde saat 2:15pm'de \PVerb!\$HOME/bin/monthly! adlý
+  program iþletilecektir. 
+\item Her iþ günü (Pazartesi ve Cuma arasýndaki her gün, ve bu günler dahil
+  olmak üzere) saat 10 pm'de bu program iþletilir.
+\end{enumerate}
+
+\section{Network Durumu} \label{unix:netstat}
+
+\PVerb!netstat!, sisteminizdeki network durumu gösterir. Genellikle kullanýlma
+sebebi, bir port'un o anda kullanýlýp kullanýlmadýðýný anlamaktýr. Sistemde
+kullanýlan tüm port'larýn listesini almak için \PVerb!netstat -a! kullanýlýr. 
+
+\section{Yardým Almak}
+
+\PVerb!man! komutundan sonra bir program ismi belirsek, bu program hakkýndaki
+sistemde olan tüm açýklama ekrandan verilecektir. Unix dünyasýnda \PVerb!man!
+oldukça fazla kullanýlýr, çünkü yeni öðrendiðimiz (hâtta bazen eski
+bildiklerimizin bile) komutlarýn seçeneklerini öðrenmek için, \PVerb!man
+komut_ismi!  kullanýrýz.
+
+\section{X-Windows Kullanýmý} \label{unix:xwindows}
+
+X-windows, Unix dünyasýnda (Java applet'lerden çok önce) görsel herhangi bir
+programýn ekranýný, penceresini, baþka bir makinanýn monitoründe göstermek için
+kullanýlan tekniktir.
+
+X-windows ile servis tarafýnda bir programý shell üzerinden iþletip, penceresini
+kendi sisteminize alabilirsiniz. Bunu yapabilmek için öncelikle masaüstü
+(çaðýran) sisteminizde bir X ortamý gerekecektir. Böyle bir ortam, eðer masaüstü
+Linux ya da diðer bir Unix ise kendiliðinden olacaktýr (kurulum sýrasýnda
+X-windows seçtiyseniz). Windows üzerinde ise, Cygwin üzerinden X-windows
+kullanabilirsiniz. Cygwin kurulumu için \ref{install:cygwin} bölümüne, Cygwin
+üzerinde X ortamý kurulumu için \ref{install:cygwin:xwindows} bölümüne
+bakabiliriz.
+
+Görsel programý iþletmek için önce servis tarafýna \PVerb!ssh! ile
+baðlanýlýr. \PVerb!ssh! üzerinden X bilgilerinin geriye alýnabilmesi için,
+\PVerb!-X! seçeneði kullanýlmalýdýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+(desktop) \$ ssh host1 -l root -X
+\end{lstlisting}
+Servis sistemine girdikten sonra, servis makinasýna ekranýn {\em nerede}
+olduðunu söylememiz gerekiyor. Bunun için \PVerb!DISPLAY! çevre deðiþkenine
+ekranýn makina ismi (ya da IP numarasý) sonuna \PVerb!:0.0! eklenerek verilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+(host1) \$ export DISPLAY=desktop:0.0
+\end{lstlisting}
+
+Son basamak, masaüstü tarafýnda servis tarafýna görsel bilgileri göndermesi için
+izin vermektir:
+
+\begin{lstlisting}[language=Java, frame=none]
+(desktop) \$ xhost +
+\end{lstlisting}
+Bu komut tüm servis programlarýna X bilgisi göndermesi için izin
+verecektir. Artýk X programýný baþlatabiliriz. Meselâ \PVerb!xclock!;
+
+\begin{lstlisting}[language=Java, frame=none]
+(host1) \$ xclock
+\end{lstlisting}
+Bu programýn görüntüsü olan bir saat, masaüstü ekranýmýzda çýkacaktýr.
+
+
+
+
+

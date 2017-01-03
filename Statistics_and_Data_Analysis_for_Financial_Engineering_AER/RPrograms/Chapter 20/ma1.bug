@@ -1,0 +1,17 @@
+model{
+for (i in 1:(N+q)){ w[i] ~ dnorm(0,tau) }
+mu[1] <- w[1] + M
+for(i in 2:N){
+mu[i] <- w[i] + theta*w[i-1]
+}
+for (i in 1:N){
+y[i] ~ dnorm(mu[i],10000)
+}
+theta ~ dnorm(0,.001)
+tau ~ dgamma(0.01,0.0001)
+sigma <- 1/sqrt(tau)
+M ~ dnorm(0,.01)
+for (i in 1:q){ypred[i] <- w[N+i] + theta*w[N+i-1]
+}
+}
+

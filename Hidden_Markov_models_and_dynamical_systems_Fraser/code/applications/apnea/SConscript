@@ -1,0 +1,107 @@
+from os.path import join
+import os
+Import('DDA RDA KEY BUILD')
+
+low_line = '1.82'
+high_line = '2.60'
+fudge_low = 2.5
+power_low = 1.25
+fudge_medium = 1.8
+power_medium = 2.0
+fudge_high = 0.6
+power_high = 6.0
+
+apnea = DDA('')
+r_times = DDA('r_times')
+lp_hr = DDA('low_pass_heart_rate')
+respiration = DDA('respiration')
+expert = RDA('summary_of_training')
+
+records_list = os.listdir(r_times)
+a_records = [x for x in records_list if x.startswith('a')]
+train_records = [x for x in records_list if not x.startswith('x')]
+records = lambda path: [join(path, x) for x in records_list]
+r_time_records = records(r_times)
+lp_hr_records = records(lp_hr)
+respiration_records = records(respiration)
+
+env = Environment()
+env.args = {}
+
+target = lp_hr_records
+source = ['rr2hr.py'] + r_time_records
+env.args[KEY(target)] = [r_times, lp_hr] + records_list
+env.Command(target, source, BUILD)
+
+target = respiration_records + [DDA(x+'.resp') for x in
+                                ['mean', 'C', 'AN', 'AA']]
+source = ['respire.py'] + r_time_records
+env.args[KEY(target)] = (expert, r_times, apnea, respiration)
+env.Command(target, source, BUILD)
+
+target = tuple(DDA(x) for x in ('init_A2', 'mod_C1', 'init_H', 'init_M',
+                                'init_L'))
+source = ['mod_init.py'] + lp_hr_records + respiration_records
+env.args[KEY(target)] = (lp_hr, respiration, expert, DDA(''))
+env.Command(target, source, BUILD)
+
+target = (DDA('mod_A2'),)
+source = ('ApTrain.py', DDA('init_A2'))
+env.args[KEY(target)] = [
+    '--hr_dir', lp_hr, '--resp_dir', respiration, '--iterations', '20',
+    DDA('init_A2'), DDA('mod_A2'), '--record'] + a_records
+env.Command(target, source, BUILD)
+
+target = (DDA('pass1_report'),)
+source = ('DoubleClassify.py', DDA('mod_A2'), DDA('mod_C1'))
+env.args[KEY(target)] = tuple([
+    '--Single', '--report', DDA('pass1_report'), DDA('mod_A2'),
+    DDA('mod_C1'), lp_hr, respiration, low_line, high_line] + records_list)
+env.Command(target, source, BUILD)
+
+target = (DDA('score_train'),)
+source = ('DoubleClassify.py', DDA('mod_L'), DDA('mod_M'), DDA('mod_H'))
+env.args[KEY(target)] = tuple([
+    '--report', DDA('score_train'),
+    '--Lmodel', DDA('mod_L'), str(fudge_low), str(power_low),
+    '--Mmodel', DDA('mod_M'), str(fudge_medium), str(power_medium),
+    '--Hmodel', DDA('mod_H'), str(fudge_high), str(power_high),
+    DDA('mod_A2'), DDA('mod_C1'), lp_hr, respiration,
+    low_line, high_line] + train_records)
+env.Command(target, source, BUILD)
+
+def train_cmd(init, mod, group):
+    target = (DDA(mod),)
+    source = ('ApTrain.py', DDA(init), DDA('pass1_report'))
+    env.args[KEY(target)] = ('--hr_dir', lp_hr, '--resp_dir', respiration,
+    '--expert', expert, '--iterations', '20', DDA(init), DDA(mod),
+    '--pass1', DDA('pass1_report'), group)
+    env.Command(target, source, BUILD)
+
+train_cmd('init_L', 'mod_L', 'Low')
+train_cmd('init_M', 'mod_M', 'Medium')
+train_cmd('init_H', 'mod_H', 'High')
+
+# Do pf surveys for groups "High", "Medium", and "Low"
+def survey_cmd(mod, group, power, fudge, target_):
+    import os.path
+    target = (DDA(target_),)
+    source = ('PFsurvey.py', DDA(mod), DDA('pass1_report'))
+    env.args[KEY(target)] = (
+        DDA(mod), expert, lp_hr, respiration, DDA('pass1_report'), group, 
+        '%4.2f'%power[0], '%4.2f'%power[1], '%4.2f'%power[2],
+        '%4.2f'%fudge[0], '%4.2f'%fudge[1], '%4.2f'%fudge[2],
+        DDA(target_))
+    env.Command(target, source, BUILD)
+
+# Survey for "High" group.  6.8&0.64 .8124 on watcher, 6.0&0.7 .8129 on orr
+# The command below takes several days
+#survey_cmd('mod_H', 'High', (1.0, 13.1, 1), (.2, 1.01, .1), 'pf_H')
+# Survey for "Medium" group.  1.0 & 2.5 .9292 on watcher, 1.5 & 1.6 .9095 orr
+survey_cmd('mod_M', 'Medium', (0.0, 3.1, 0.5), (1.0, 2.3, .1), 'pf_M')
+# Survey for "Low" group.  Choose 0.5 & 2.5. OK on watcher and orr.
+survey_cmd('mod_L', 'Low', (0, 2.6, 0.5), (1.5, 3.6, 0.5), 'pf_L')
+
+#Local Variables:
+#mode:python
+#End:

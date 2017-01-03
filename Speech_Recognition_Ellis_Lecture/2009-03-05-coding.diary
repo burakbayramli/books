@@ -1,0 +1,101 @@
+% 2009-03-05-coding.diary
+% Examples of speech coding with LPC
+
+d = wavread('mpgr1_sx419-8k.wav')';
+% Linear quantization at 6 bits (64 levels)
+max(d)
+% ans =
+%     0.1481
+min(d)
+% ans =
+%    -0.1549
+% So quantize for an absolute maximum of 0.16
+dq = myquant(d, 0.16, 64);
+% Original sound
+sound(d)
+% Post quantization
+sound(dq)
+% Can clearly hear quantization noise during nonsilent periods
+
+% 'added' noise
+de = d - dq;
+sound(de)
+% Sounds like a white noise being gated on and off
+% What is the SNR?
+% Energy of original signal in dB:
+Ed = 10*log10(mean(d.^2))
+% Ed =
+%   -35.5895
+% Energy of difference = added noise
+Edq = 10*log10(mean((de).^2))
+% Edq =
+%   -58.3559
+% SNR is the difference
+Ed - Edq
+% ans =
+%    22.7664
+% i.e. about 23 dB, rather less than 6db / bit, because not full-scale
+
+% LPC analysis
+% Run in "no overlap" mode, so residual exactly reconstructs
+% original waveform (but has discontinuities when taken on its own)
+[ai,g,ex] = lpcfit(d,12,128,256,0);
+% Reconstruction should now be nearly perfect:
+r = lpcsynth(ai,g,ex,128,0);
+% Energy of difference:
+Edr = 10*log10(mean((d-r).^2))
+% Edr =
+%  -104.1072
+% (almost all in a little glitch in the last window)
+% So SNR in dB
+Ed - Edr
+% ans =
+%    68.5177
+% Very respectable 70 dB SNR - actually almost inf over most of signal
+
+% For residual encoding, we actually want to use the overlapped
+% residual:
+[ai,g,ex] = lpcfit(d);
+r = lpcsynth(ai,g,ex);
+% (lengths of d and r don't quite match in this case)
+10*log10(mean( (d - r(1:length(d))).^2))
+% ans =
+%   -46.1717
+% i.e. only about 11 dB SNR, but sounds pretty good.
+% n.b.: When modifying residual, measure SNR as difference to this 
+% 'best case' reconstruction (rather than to the original d)
+Er = 10*log10(mean(r.^2)) 
+% Er =
+%   -35.4634
+
+% Now try quantizing the residual to 6 bits:
+min(ex)
+% ans =
+%   -17.9191
+max(ex)
+% ans =
+%    21.2953
+% So quantizing it in the range -18..22 will cause no clipping
+eq = myquant(ex, [-18 22], 64);  % 64 = 2^6
+rq = lpcsynth(ai,g,eq);
+sound(rq)
+% Still sounds OK
+% How's the noise energy compared to the unquantized resid?
+Errq = 10*log10(mean((r-rq).^2))
+% Errq =
+%   -54.8946
+% i.e. the SNR compared to the best reconstruction
+Er - Errq
+% ans =
+%    19.4312
+% 20 dB, still OK, but getting significant.
+% Actually a worse SNR than quantizing the original (because SNR 
+% is dominated by the high-energy regions), but perceptually 
+% less noticeable noise.
+
+% Listen to the difference i.e. the 'added noise' in each case
+% Don't use autoscalign (soundsc) so we can judge relative level
+sound((r-rq)*10)
+% Sounds like whispering in the background
+sound((d-dq)*10)
+% Sounds like added, gated white noise, quite loud

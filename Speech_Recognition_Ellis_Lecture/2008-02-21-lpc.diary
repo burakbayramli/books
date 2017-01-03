@@ -1,0 +1,88 @@
+% 2008-02-21-lpc.diary
+% Examples of using LPC functions
+
+% Load speech soundfile
+[d,r]=wavread('mpgr1_sx419.wav');
+% Downsample to 8 kHz (LPC works better with a limited bandwidth)
+d = resample(d,1,2);
+r = r/2;
+soundsc(d,r);
+
+% 8th-order LPC modeling
+[a,g,e] = lpcfit(d,8);
+
+% Noise-excited resynthesis
+rd = lpcsynth(a,g);
+% Listen
+soundsc(rd)
+
+% Compare spectrograms
+subplot(211)
+specgram(d,256,r);
+subplot(212)
+specgram(rd,256,r);
+% Clearly the same broad shape, but without pitch structure.
+
+% Residual-excited resynthesis (i.e. using the 'e' argument)
+rde = lpcsynth(a,g,e);
+soundsc(rde)
+% Perceptually identical to original
+% What is the excitation signal like?
+% It should contain everything *not* in the noise-excited reconstruction
+soundsc(e)
+% Weird, flat power in time and frequency, still intelligible!
+specgram(e,256,r);
+% Interesting that formants still visible, resulting from slight 
+% modeling mismatch in the LPC
+
+% Compare original waveform with residual
+plot(d)
+% Choose a portion straddling fricative-vowel in "football"
+subplot(311)
+plot(d(2000+[1:1000]))
+subplot(312)
+plot(rde(2000+[1:1000]))
+% Residual-excited resynth is close but not identical due to
+% the overlap-adding of adjacent frames
+subplot(313)
+plot(e(2000+[1:1000]))
+% Residual is basically noise during fricatives or silence;
+% clearly shows pitch pulses during voicing
+
+% Let's just check the model during this vowel
+% Frames occur every 128 samples, so middle of vowel (sample 2500)
+% is around frame 20...  Look at the gain (energy) terms to 
+% find peak
+g(17:23)
+%ans =
+%    0.0015
+%    0.0009
+%    0.0053
+%    0.0071
+%    0.0037
+%    0.0003
+%    0.0000
+% g(20) is the peak.  Let's see the spectrum: reconstruct the polynomial
+a20 = a(20,:);
+g20 = g(20);
+% see the filter response (scale up by energy of one window's excitation)
+[h,w]=freqz(g20*sqrt(256), a20);
+subplot(211)
+plot(w/pi, 20*log10(abs(h)));
+% Compare to poles of the IIR filter
+subplot(212)
+zplane(roots(a20))
+% poles close to unit circle corresponding to spectral peaks.
+
+% Compare to spectral slice at that point
+% (Include pre-emphasis in spectrogram, to match actual modeled signal)
+sg=specgram(filter([1 -0.9], 1, d),256,r);
+subplot(212)
+plot([0:128]/128, 20*log10(abs(sg(:,20))))
+axis([0 1 -40 0])
+grid
+% LPC traces/approximates general trend of actual spectrum: superimpose it
+hold on
+plot(w/pi, 20*log10(abs(h)), '-r')
+hold off
+

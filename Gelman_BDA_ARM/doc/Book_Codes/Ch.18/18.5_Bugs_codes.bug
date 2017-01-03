@@ -1,0 +1,13 @@
+# Bugs model for censored data (same as file "censoring.bug")
+
+model {
+  for (i in 1:n){
+    z.lo[i] <- C*equals(y[i],C)
+    z[i] ~ dnorm (z.hat[i], tau.y) I(z.lo[i],)
+    z.hat[i] <- a + b*x[i]
+  }
+  a ~ dnorm (0, .0001)
+  b ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+}

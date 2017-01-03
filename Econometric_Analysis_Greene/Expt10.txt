@@ -1,0 +1,1272 @@
+﻿/*=================================================================
+Example 19.18.  Nested Logit Model
+*/=================================================================
+Read ; Nobs=840 ; Nvar = 7
+     ; Names=2 $
+Mode TTME Invc Invt GC Hinc Psize
+0  69   59  100   70   35 1 
+0  34   31  372   71   35 1 
+0  35   25  417   70   35 1 
+1   0   10  180   30   35 1 
+... total 840 observations in 210 groups of 4 ...
+?----------------------------------------------------------------
+Create ; AASC=Dmy(4,1)
+       ; TASC=Dmy(4,2)
+       ; BASC=Dmy(4,3)
+       ; CASC=Dmy(4,4) $
+Create ; HincAir = Hinc*AASC $
+?----------------------------------------------------------------
+? Unconditional
+?----------------------------------------------------------------
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir $
+Calc   ; List ; L0 = LogL $
+?----------------------------------------------------------------
+? FIML
+?----------------------------------------------------------------
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Tree= Fly(Air),Ground(Train,Bus,Car)
+       ; Model:
+         U(Air,Train,Bus,Car)=at*TASC+ab*BASC+bg*GC+bt*TTME /
+         U(Fly,Ground)=aa*AASC + g*HincAir 
+       ; ShowTree ; Describe ; Effects:GC(*) $
+Calc   ; List ; LFIML = LogL $
+Calc   ; List ; LRTest = 2*(LFIML - L0) $
+Matrix ; List ; tau = b(7:8) ; Vtau = Part(Varb,7,8,7,8) $
+Wald   ; Fn1=tauF-1 ; Fn2=tauG-1
+       ; Start = Tau ; Var = Vtau ; Labels = tauF,tauG $
+?----------------------------------------------------------------
+? LIML
+?----------------------------------------------------------------
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; IVB=IncVlu ; Conditional  
+       ; Tree= Fly(Air),Ground(Train,Bus,Car)
+       ; Model:
+         U(Air,Train,Bus,Car)=at*TASC+ab*BASC+bg*GC+bt*TTME /
+         U(Fly,Ground)=aa*AASC + g*HincAir $
+Create ; IVAir = AASC*IncVlu 
+       ; IVGround = (1-AASC) * IncVlu $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Sequential ; Maxit=400 
+       ; Tree= Fly(Air),Ground(Train,Bus,Car)
+       ; Model:
+         U(Air,Train,Bus,Car)=at*TASC+ab*BASC+bg*GC+bt*TTME /
+         U(Fly,Ground)=aa*AASC + g*HincAir + tauA*IVAir + tauG*IvGround $
+/*
+?----------------------------------------------------------------
+?----------------------------------------------------------------
+?  Unconditional
+?----------------------------------------------------------------
+?----------------------------------------------------------------
++---------------------------------------------+
+| Discrete choice (multinomial logit) model   |
+| Maximum Likelihood Estimates                |
+| Dependent variable               Choice     |
+| Weighting variable                  ONE     |
+| Number of observations              210     |
+| Iterations completed                  6     |
+| Log likelihood function       -199.1284     |
+| Log-L for Choice   model =    -199.1284     |
+| R2=1-LogL/LogL*  Log-L fncn  R-sqrd  RsqAdj |
+| No coefficients   -291.1218  .31600  .30942 |
+| Constants only    -283.7588  .29825  .29150 |
+| Response data are given as ind. choice.     |
+| Number of obs.=   210, skipped   0 bad obs. |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ AASC      5.207443299      .77905514        6.684   .0000
+ TASC      3.869042702      .44312685        8.731   .0000
+ BASC      3.163194212      .45026593        7.025   .0000
+ GC       -.1550152532E-01  .44079931E-02   -3.517   .0004
+ TTME     -.9612479610E-01  .10439847E-01   -9.207   .0000
+ HINCAIR   .1328702625E-01  .10262407E-01    1.295   .1954
+ L0      = -.19912836871598160D+03
+
+?----------------------------------------------------------------
+?----------------------------------------------------------------
+?  FIML
+?----------------------------------------------------------------
+?----------------------------------------------------------------
+
+Tree Structure Specified for the Nested Logit Model
+          Sample proportions are marginal, not conditional.
+          Choices marked with * are excluded for the IIA test.
+----------------+----------------+----------------+----------------+------+---
+Trunk    (prop.)|Limb     (prop.)|Branch   (prop.)|Choice   (prop.)|Weight|IIA
+----------------+----------------+----------------+----------------+------+---
+Trunk{1} 1.00000|Lmb[1|1] 1.00000|FLY       .27619|AIR       .27619| 1.000|
+                |                |GROUND    .72381|TRAIN     .30000| 1.000|
+                |                |                |BUS       .14286| 1.000|
+                |                |                |CAR       .28095| 1.000|
+----------------+----------------+----------------+----------------+------+---
++---------------------------------------------+
+| Start values obtained using non-nested mode |
+| Maximum Likelihood Estimates                |
+| Dependent variable               Choice     |
+| Weighting variable                  ONE     |
+| Number of observations              210     |
+| Iterations completed                  5     |
+| Log likelihood function       -378.5920     |
+| Log-L for Choice   model =    -260.1975     |
+| R2=1-LogL/LogL*  Log-L fncn  R-sqrd  RsqAdj |
+| No coefficients   -312.5500  .16750  .16218 |
+| Constants only    -283.7588  .08303  .07717 |
+| Log-L for Branch   model =    -118.3945     |
+| Response data are given as ind. choice.     |
+| Number of obs.=   210, skipped   0 bad obs. |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Model for Choice Among Alternatives
+ AT        .7777869968      .20792992        3.741   .0002
+ AB       -.1307604798      .22872416        -.572   .5675
+ BG       -.1773795033E-01  .40547008E-02   -4.375   .0000
+ BT       -.1340138348E-01  .31790445E-02   -4.216   .0000
+          Model for Choice Among Branches
+ AA       -1.922542151      .35420335       -5.428   .0000
+ G         .2612090765E-01  .81743148E-02    3.195   .0014
++---------------------------------------------+
+| FIML: Nested Multinomial Logit Model        |
+| Dependent variable                 MODE     |
+| Number of observations              840     |
+| Iterations completed                 27     |
+| Log likelihood function       -193.6561     |
+| Restricted log likelihood     -312.5500     |
+| Chi-squared                    237.7877     |
+| Degrees of freedom                    8     |
+| Significance level             .0000000     |
+| R2=1-LogL/LogL*  Log-L fncn  R-sqrd  RsqAdj |
+| No coefficients   -312.5500  .38040  .37243 |
+| Constants only    -283.7588  .31753  .30875 |
+| At start values   -287.6816  .32684  .31818 |
+| Response data are given as ind. choice.     |
+| Number of obs.=   210, skipped   0 bad obs. |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AT        5.064602771      .66202159        7.650   .0000
+ AB        4.096314801      .61515554        6.659   .0000
+ BG       -.3158748258E-01  .81563642E-02   -3.873   .0001
+ BT       -.1126174878      .14129116E-01   -7.971   .0000
+          Attributes of Branch Choice Equations (alpha)
+ AA        3.540865214      1.2081272        2.931   .0034
+ G         .1533131683E-01  .93813382E-02    1.634   .1022
+          IV parameters, tau(j|i,l),sigma(i|l),phi(l)
+ FLY       .5860093848      .14062118        4.167   .0000
+ GROUND    .3889619203      .12366583        3.145   .0017
+ LRTEST  =  .10944440274998270D+02
+Matrix TAU      has  2 rows and  1 columns.
+        +--------------
+       1|  .5860094D+00
+       2|  .3889619D+00
+Matrix VTAU     has  2 rows and  2 columns.
+        +----------------------------
+       1|  .1977432D-01  .9621190D-02
+       2|  .9621190D-02  .1529324D-01
++-----------------------------------------------+
+| WALD procedure. Estimates and standard errors |
+| for nonlinear functions and joint test of     |
+| nonlinear restrictions.                       |
+| Wald Statistic             =     24.47765     |
+| Prob. from Chi-squared[ 2] =       .00000     |
++-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1) -.4139906152      .14062118       -2.944   .0032
+ Fncn( 2) -.6110380797      .12366583       -4.941   .0000
++-------------------------------------------------------------------------+
+:             Descriptive Statistics for Alternative AIR                  :
+|     Utility Function          |                    |     58.0 observs.  |
+|     Coefficient               | All      210.0 obs.|that chose AIR      |
+| Name          Value  Variable : Mean      Std. Dev.|Mean      Std. Dev. |
+| -------------------  -------- | -------------------+------------------- |
+| AT           5.0646  TASC     |     .000       .000|     .000      .000 |
+| AB           4.0963  BASC     |     .000       .000|     .000      .000 |
+| BG           -.0316  GC       |  102.648     30.575|  113.552    33.198 |
+| BT           -.1126  TTME     |   61.010     15.719|   46.534    24.389 |
+:             Descriptive Statistics for Alternative TRAIN                :
+|     Utility Function          |                    |     63.0 observs.  |
+|     Coefficient               | All      210.0 obs.|that chose TRAIN    |
+| Name          Value  Variable : Mean      Std. Dev.|Mean      Std. Dev. |
+| -------------------  -------- | -------------------+------------------- |
+| AT           5.0646  TASC     |    1.000       .000|    1.000      .000 |
+| AB           4.0963  BASC     |     .000       .000|     .000      .000 |
+| BG           -.0316  GC       |  130.200     58.235|  106.619    49.601 |
+| BT           -.1126  TTME     |   35.690     12.279|   28.524    19.354 |
+:             Descriptive Statistics for Alternative BUS                  :
+|     Utility Function          |                    |     30.0 observs.  |
+|     Coefficient               | All      210.0 obs.|that chose BUS      |
+| Name          Value  Variable : Mean      Std. Dev.|Mean      Std. Dev. |
+| -------------------  -------- | -------------------+------------------- |
+| AT           5.0646  TASC     |     .000       .000|     .000      .000 |
+| AB           4.0963  BASC     |    1.000       .000|    1.000      .000 |
+| BG           -.0316  GC       |  115.257     44.934|  108.133    43.244 |
+| BT           -.1126  TTME     |   41.657     12.077|   25.200    14.919 |
+:             Descriptive Statistics for Alternative CAR                  :
+|     Utility Function          |                    |     59.0 observs.  |
+|     Coefficient               | All      210.0 obs.|that chose CAR      |
+| Name          Value  Variable : Mean      Std. Dev.|Mean      Std. Dev. |
+| -------------------  -------- | -------------------+------------------- |
+| AT           5.0646  TASC     |     .000       .000|     .000      .000 |
+| AB           4.0963  BASC     |     .000       .000|     .000      .000 |
+| BG           -.0316  GC       |   95.414     46.827|   89.085    49.833 |
+| BT           -.1126  TTME     |     .000       .000|     .000      .000 |
++-------------------------------------------------------------------------+
+      +-----------------------------------------------------------+
+      | Partial effects = average over observations               |
+      |                                                           |
+      | dlnP[alt=k,br=j,lmb=i,tr=l]                               |
+      | ---------------------------- = D(m:K,J,I,L) = delta(m)*F  |
+      | dx(m):alt=K,br=J,lmb=I,tr=L]                              |
+      |                                                           |
+      | delta(m) = coefficient on x(m) in U(K:J,I,L)              |
+      | F = (l=L) (i=I) (j=J) [(k=K)-P(K:JIL)]                    |
+      |  +  (l=L) (i=I) [(j=J)-P(J:IL)] P(K:JIL)t(J:IL)           |
+      |  +  (l=L) [(i=I)-P(I:L)] P(J:IL) P(K:JIL)t(J:IL)s(I:L)    |
+      |  + [(l=L)-P(L)] P(I:L) P(J:IL) P(K:JIL)t(J:IL)s(I:L)f(L)  |
+      |                                                           |
+      | P(K|JIL)=Prob[choice=K |branch=J,limb=I,trunk=L]          |
+      | P(J|IL), P(I³L), P(L) defined likewise.                   |
+      | (n=N) = 1 if n=N, 0 else, for n=k,j,i,l and N=K,J,I,L.    |
+      | Elasticity = x(l) * D(l:K,J,I)                            |
+      | Marginal effect = P(KJIL)*D = P(K:JIL)P(J:IL)P(I:L)P(L)D  |
+      | F is decomposed into the 4 parts in the tables.           |
+      +-----------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice AIR                             |
+      | Effects on probabilities of all choices in the model:           |
+      | * indicates direct Elasticity effect of the attribute.          |
+      |                         Decomposition of Effect           Total |
+      |                        Trunk   Limb   Branch   Choice     Effect|
+      | Trunk=Trunk{1}                                                  |
+      | Limb=Lmb[1|1]                                                   |
+      |    Branch=FLY                                                   |
+      | *     Choice=AIR        .000   .000  -1.377    .000     -1.377  |
+      |    Branch=GROUND                                                |
+      |       Choice=TRAIN      .000   .000    .523    .000       .523  |
+      |       Choice=BUS        .000   .000    .523    .000       .523  |
+      |       Choice=CAR        .000   .000    .523    .000       .523  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice TRAIN                           |
+      | Effects on probabilities of all choices in the model:           |
+      | * indicates direct Elasticity effect of the attribute.          |
+      |                         Decomposition of Effect           Total |
+      |                        Trunk   Limb   Branch   Choice     Effect|
+      | Trunk=Trunk{1}                                                  |
+      | Limb=Lmb[1|1]                                                   |
+      |    Branch=FLY                                                   |
+      |       Choice=AIR        .000   .000    .377    .000       .377  |
+      |    Branch=GROUND                                                |
+      | *     Choice=TRAIN      .000   .000   -.125  -2.820     -2.945  |
+      |       Choice=BUS        .000   .000   -.125   1.293      1.167  |
+      |       Choice=CAR        .000   .000   -.125   1.293      1.167  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice BUS                             |
+      | Effects on probabilities of all choices in the model:           |
+      | * indicates direct Elasticity effect of the attribute.          |
+      |                         Decomposition of Effect           Total |
+      |                        Trunk   Limb   Branch   Choice     Effect|
+      | Trunk=Trunk{1}                                                  |
+      | Limb=Lmb[1|1]                                                   |
+      |    Branch=FLY                                                   |
+      |       Choice=AIR        .000   .000    .196    .000       .196  |
+      |    Branch=GROUND                                                |
+      |       Choice=TRAIN      .000   .000   -.064    .668       .604  |
+      | *     Choice=BUS        .000   .000   -.064  -2.973     -3.037  |
+      |       Choice=CAR        .000   .000   -.064    .668       .604  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice CAR                             |
+      | Effects on probabilities of all choices in the model:           |
+      | * indicates direct Elasticity effect of the attribute.          |
+      |                         Decomposition of Effect           Total |
+      |                        Trunk   Limb   Branch   Choice     Effect|
+      | Trunk=Trunk{1}                                                  |
+      | Limb=Lmb[1|1]                                                   |
+      |    Branch=FLY                                                   |
+      |       Choice=AIR        .000   .000    .337    .000       .337  |
+      |    Branch=GROUND                                                |
+      |       Choice=TRAIN      .000   .000   -.175   1.318      1.142  |
+      |       Choice=BUS        .000   .000   -.175   1.318      1.142  |
+      | *     Choice=CAR        .000   .000   -.175  -1.696     -1.872  |
+      +-----------------------------------------------------------------+
+
+
+?----------------------------------------------------------------
+?----------------------------------------------------------------
+?  First step of sequential
+?----------------------------------------------------------------
+?----------------------------------------------------------------
++---------------------------------------------+
+| Conditional logit model for choices only    |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Model for Choice Among Alternatives
+ AT        4.463667918      .64053383        6.969   .0000
+ AB        3.104743906      .60901921        5.098   .0000
+ BG       -.6368191629E-01  .10042373E-01   -6.341   .0000
+ BT       -.6987782750E-01  .14880300E-01   -4.696   .0000
+
+?----------------------------------------------------------------
+?----------------------------------------------------------------
+?  Second step of sequential
+?----------------------------------------------------------------
+?----------------------------------------------------------------
++---------------------------------------------+
+| Second step estimates of nested logit model |
+| Maximum Likelihood Estimates                |
+| Dependent variable               Choice     |
+| Weighting variable                  ONE     |
+| Number of observations              210     |
+| Iterations completed                401     |
+| Log likelihood function       -406.4572     |
+| Log-L for Choice   model =    -291.1218     |
+| R2=1-LogL/LogL*  Log-L fncn  R-sqrd  RsqAdj |
+| No coefficients   -312.5500  .06856  .06261 |
+| Constants only    -283.7588 -.02595 -.03250 |
+| Log-L for Branch   model =    -115.3354     |
+| Response data are given as ind. choice.     |
+| Number of obs.=   210, skipped   0 bad obs. |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Model for Choice Among Alternatives
+ AT        4.463667918      .64053383        6.969   .0000
+ AB        3.104743906      .60901921        5.098   .0000
+ BG       -.6368191629E-01  .10042373E-01   -6.341   .0000
+ BT       -.6987782750E-01  .14880300E-01   -4.696   .0000
+          Model for Choice Among Branches
+ AA       -.6470323005E-01  .98495183        -.066   .9476
+ G         .2078766440E-01  .85219716E-02    2.439   .0147
+ TAUA      .2266245484      .10104018        2.243   .0249
+ TAUG      .1587210160      .71831401E-01    2.210   .0271
+*/
+
+/*=================================================================
+Example 19.19.  A Heteroscedastic Extreme Value Model
+*/=================================================================
+? Unconditional
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; Effects:GC(*) $
+? Heteroscedastic Extreme Value
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; HET ; Effects:GC(*) $
+? Heteroscedastic Extreme Value with Restrictions 
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; HET ; IVSet:(Train,BUS)=[1]$ 
+? Nested Logit
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Tree= Fly(Air),Ground(Train,Bus,Car)
+       ; Model:
+         U(Air,Train,Bus,Car)=at*TASC+ab*BASC+bg*GC+bt*TTME /
+         U(Fly,Ground)=aa*AASC + g*HincAir 
+       ; Effects:GC(*) $
+/*
++---------------------------------------------+
+| Heteroskedastic Extreme Value Model         |
+| Number of observations              840     |
+| Iterations completed                 49     |
+| Log likelihood function       -195.6605     |
+| Restricted log likelihood     -291.1218     |
+| Degrees of freedom                    9     |
+| Response data are given as ind. choice.     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AASC      7.832613245      10.950710         .715   .4744
+ TASC      7.171796833      9.1351209         .785   .4324
+ BASC      6.865474896      8.8290904         .778   .4368
+ GC       -.5155873099E-01  .69439362E-01    -.743   .4578
+ TTME     -.1968357725      .28826209        -.683   .4947
+ HINCAIR   .4023973693E-01  .60667280E-01     .663   .5071
+          Scale Parameters of Extreme Value Distns.
+ s_AIR     .2485151009      .36917696         .673   .5008
+ s_TRAIN   .2594728814      .41877591         .620   .5355
+ s_BUS     .6065447951      1.0399765         .583   .5597
+ s_CAR     1.000000000    ........(Fixed Parameter)........
+
+ s_AIR     5.160852582      7.6666081         .673   .5008
+ s_TRAIN   4.942904989      7.9775949         .620   .5355
+ s_BUS     2.114517857      3.6255342         .583   .5597
+ s_CAR     1.282549800    ........(Fixed Parameter)........
++---------------------------------------------+
+| Heteroskedastic Extreme Value Model         |
+| Log likelihood function       -200.3791     |
+| Response data are given as ind. choice.     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AASC      2.972882222      .99511560        2.987   .0028
+ TASC      4.049855081      .49357307        8.205   .0000
+ BASC      3.041937384      .42851620        7.099   .0000
+ GC       -.2840881580E-01  .57954841E-02   -4.902   .0000
+ TTME     -.8279350315E-01  .57583453E-02  -14.378   .0000
+ HINCAIR   .2831068885E-01  .18590319E-01    1.523   .1278
+          Scale Parameters of Extreme Value Distns.
+ s_AIR     .4958593162      .12406770        3.997   .0001
+ s_TRAIN   1.000000000    ........(Fixed Parameter)........
+ s_BUS     1.000000000    ........(Fixed Parameter)........
+ s_CAR     1.000000000    ........(Fixed Parameter)........
+
+ s_AIR     2.586519519      .64716650        3.997   .0001
+ s_TRAIN   1.282549800    ........(Fixed Parameter)........
+ s_BUS     1.282549800    ........(Fixed Parameter)........
+ s_CAR     1.282549800    ........(Fixed Parameter)........
+
+Tree Structure Specified for the Nested Logit Model
+Sample proportions are marginal, not conditional.
+Choices marked with * are excluded for the IIA test.
+----------------+----------------+----------------+----------------+------+---
+Trunk    (prop.)|Limb     (prop.)|Branch   (prop.)|Choice   (prop.)|Weight|IIA
+----------------+----------------+----------------+----------------+------+---
+Trunk{1} 1.00000|Lmb[1|1] 1.00000|FLY       .27619|AIR       .27619| 1.000|
+                |                |GROUND    .72381|TRAIN     .30000| 1.000|
+                |                |                |BUS       .14286| 1.000|
+                |                |                |CAR       .28095| 1.000|
+----------------+----------------+----------------+----------------+------+---
++---------------------------------------------+
+| FIML: Nested Multinomial Logit Model        |
+| Maximum Likelihood Estimates                |
+| Dependent variable                 MODE     |
+| Weighting variable                  ONE     |
+| Number of observations              840     |
+| Iterations completed                 27     |
+| Log likelihood function       -193.6561     |
+| Restricted log likelihood     -312.5500     |
+| Chi-squared                    237.7877     |
+| Degrees of freedom                    8     |
+| Significance level             .0000000     |
+| R2=1-LogL/LogL*  Log-L fncn  R-sqrd  RsqAdj |
+| No coefficients   -312.5500  .38040  .37243 |
+| Constants only    -283.7588  .31753  .30875 |
+| At start values   -287.6816  .32684  .31818 |
+| Response data are given as ind. choice.     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AT        5.064602771      .66202159        7.650   .0000
+ AB        4.096314801      .61515554        6.659   .0000
+ BG       -.3158748258E-01  .81563642E-02   -3.873   .0001
+ BT       -.1126174878      .14129116E-01   -7.971   .0000
+          Attributes of Branch Choice Equations (alpha)
+ AA        3.540865214      1.2081272        2.931   .0034
+ G         .1533131683E-01  .93813382E-02    1.634   .1022
+          IV parameters, tau(j|i,l),sigma(i|l),phi(l)
+ FLY       .5860093848      .14062118        4.167   .0000
+ GROUND    .3889619203      .12366583        3.145   .0017
+
+Comparison of Elasticities
+==========================
+Multinomial Logit
+==========================
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice AIR                             |
+      | *     Choice=AIR        .000   .000    .000  -1.136     -1.136  |
+      |       Choice=TRAIN      .000   .000    .000    .456       .456  |
+      |       Choice=BUS        .000   .000    .000    .456       .456  |
+      |       Choice=CAR        .000   .000    .000    .456       .456  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice TRAIN                           |
+      |       Choice=AIR        .000   .000    .000    .498       .498  |
+      | *     Choice=TRAIN      .000   .000    .000  -1.520     -1.520  |
+      |       Choice=BUS        .000   .000    .000    .498       .498  |
+      |       Choice=CAR        .000   .000    .000    .498       .498  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice BUS                             |
+      |       Choice=AIR        .000   .000    .000    .238       .238  |
+      |       Choice=TRAIN      .000   .000    .000    .238       .238  |
+      | *     Choice=BUS        .000   .000    .000  -1.549     -1.549  |
+      |       Choice=CAR        .000   .000    .000    .238       .238  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice CAR                             |
+      |       Choice=AIR        .000   .000    .000    .418       .418  |
+      |       Choice=TRAIN      .000   .000    .000    .418       .418  |
+      |       Choice=BUS        .000   .000    .000    .418       .418  |
+      | *     Choice=CAR        .000   .000    .000  -1.061     -1.061  |
+      +-----------------------------------------------------------------+
+Comparison of Elasticities
+==========================
+Nested Logit
+==========================
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice AIR                             |
+      |    Branch=FLY                                                   |
+      | *     Choice=AIR        .000   .000  -1.377    .000     -1.377  |
+      |    Branch=GROUND                                                |
+      |       Choice=TRAIN      .000   .000    .523    .000       .523  |
+      |       Choice=BUS        .000   .000    .523    .000       .523  |
+      |       Choice=CAR        .000   .000    .523    .000       .523  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice TRAIN                           |
+      |    Branch=FLY                                                   |
+      |       Choice=AIR        .000   .000    .377    .000       .377  |
+      |    Branch=GROUND                                                |
+      | *     Choice=TRAIN      .000   .000   -.125  -2.820     -2.945  |
+      |       Choice=BUS        .000   .000   -.125   1.293      1.167  |
+      |       Choice=CAR        .000   .000   -.125   1.293      1.167  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice BUS                             |
+      |    Branch=FLY                                                   |
+      |       Choice=AIR        .000   .000    .196    .000       .196  |
+      |    Branch=GROUND                                                |
+      |       Choice=TRAIN      .000   .000   -.064    .668       .604  |
+      | *     Choice=BUS        .000   .000   -.064  -2.973     -3.037  |
+      |       Choice=CAR        .000   .000   -.064    .668       .604  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice CAR                             |
+      |    Branch=FLY                                                   |
+      |       Choice=AIR        .000   .000    .337    .000       .337  |
+      |    Branch=GROUND                                                |
+      |       Choice=TRAIN      .000   .000   -.175   1.318      1.142  |
+      |       Choice=BUS        .000   .000   -.175   1.318      1.142  |
+      | *     Choice=CAR        .000   .000   -.175  -1.696     -1.872  |
+      +-----------------------------------------------------------------+
+
+Comparison of Elasticities
+=============================
+Heteroscedastic Extreme Value
+=============================
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice AIR                             |
+      | *     Choice=AIR        .000   .000    .000  -1.040     -1.040  |
+      |       Choice=TRAIN      .000   .000    .000    .277       .277  |
+      |       Choice=BUS        .000   .000    .000    .688       .688  |
+      |       Choice=CAR        .000   .000    .000    .690       .690  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice TRAIN                           |
+      |       Choice=AIR        .000   .000    .000    .367       .367  |
+      | *     Choice=TRAIN      .000   .000    .000  -1.495     -1.495  |
+      |       Choice=BUS        .000   .000    .000    .858       .858  |
+      |       Choice=CAR        .000   .000    .000    .930       .930  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice BUS                             |
+      |       Choice=AIR        .000   .000    .000    .221       .221  |
+      |       Choice=TRAIN      .000   .000    .000    .250       .250  |
+      | *     Choice=BUS        .000   .000    .000  -6.562     -6.562  |
+      |       Choice=CAR        .000   .000    .000   1.254      1.254  |
+      +-----------------------------------------------------------------+
+      +-----------------------------------------------------------------+
+      | Elasticity             Averaged over observations.              |
+      | Attribute is GC       in choice CAR                             |
+      |       Choice=AIR        .000   .000    .000    .441       .441  |
+      |       Choice=TRAIN      .000   .000    .000    .553       .553  |
+      |       Choice=BUS        .000   .000    .000   3.384      3.384  |
+      | *     Choice=CAR        .000   .000    .000  -2.717     -2.717  |
+      +-----------------------------------------------------------------+
+
+*/
+/*=================================================================
+Example 19.20.  Multinomial Choice Models Based on the Normal
+                Distribution
+*/=================================================================
+? Note:  Estimated Models are based on simulations and large
+? samples of random draws by the random number generators. As
+? such, models will differ slightly from one estimation to the
+? next.  Also, for purposes of our illustrations, we restricted
+? the simulations to only 10 draws, rather than the more common
+? 100, 500, etc.  Thus, there will be correspondingly greater
+? variation across estimations with our specifications.
+?
+? Random Parameters Logit Model
+? =================================================
+? 1.  Full correlation across all parameters
+Calc   ; Ran(12345) $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; RPL ; Pts=10 ; Cor
+       ; Fcn=AASC(n),TASC(n),BASC(n),GC(n),TTME(n),HincAir(n) $
+?  
+? 2.  Variation only in constants
+Calc   ; Ran(12345) $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; RPL ; Pts=10 ; Cor
+       ; Fcn=AASC(n),TASC(n),BASC(n) $
+? 
+? 3.  Variation only in constants, no correlation
+Calc   ; Ran(12345) $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; RPL ; Pts=10 
+       ; Fcn=AASC(n),TASC(n),BASC(n) $
+?
+? Multinomial Probit Model
+? =================================================
+? 1.  Full correlation across all parameters
+Calc   ; Ran(12345) $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; MNP ; Pts=10 ; Maxit=20 $
+?  
+? 2.  Variation only in constants
+?
+Calc   ; Ran(12345) $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; MNP ; Cor = 0 ; Pts=10 ; Maxit=20 $
+? 
+? 3.  Variation only in constants, no correlation
+Calc   ; Ran(12345) $
+Nlogit ; Lhs = Mode ; Choices=Air,Train,Bus,Car
+       ; Rhs = AASC,TASC,BASC,GC,TTME,HincAir 
+       ; MNP ; Cor = 0 ; Sdv = 1 ; Pts=10 ; Maxit=20 $
+/*
+?------------------------------------------------------------------------
+? 1.  Full Correlation Across All Parameters
+?------------------------------------------------------------------------
++---------------------------------------------+
+| Random Parameters Logit Model               |
+| Log likelihood function       -197.9334     |
+| Restricted log likelihood     -291.1218     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Random parameters in utility functions
+ AASC      5.210610839      .78241485        6.660   .0000
+ TASC      3.895497875      .45155332        8.627   .0000
+ BASC      3.193247950      .44313075        7.206   .0000
+ GC       -.1577132538E-01  .41136706E-02   -3.834   .0001
+ TTME     -.9673312450E-01  .82787952E-02  -11.684   .0000
+ HINCAIR   .1397298084E-01  .12312150E-01    1.135   .2564
+Standard deviations of parameter distributions
+ sdAASC    .1678260955      .83029443         .202   .8398
+ sdTASC    .1066964583      .42817760         .249   .8032
+ sdBASC    .1833593466      .41112141         .446   .6556
+ sdGC      .2142443244E-02  .40277618E-02     .532   .5948
+ sdTTME    .4639897606E-02  .56932490E-02     .815   .4151
+ sdHINCAI  .8370196663E-02  .96359410E-02     .869   .3850
+Correlation matrix for parameter distribution
+	   AASC       TASC       BASC         GC           TTME      HINCAIR
+AASC       1	    
+TASC    -0.870886      1 
+BASC    -0.579687   0.130959     1	 
+GC       0.503925  -0.708258  -0.0603856     1	 
+TTME     0.192478   0.12705   -0.402587   -0.590564        1 
+HINCAIR -0.576742   0.255188   0.698427    0.0267751   -0.788595     1
+?------------------------------------------------------------------------
+? 2.  Variation only in constants
+?------------------------------------------------------------------------
++---------------------------------------------+
+| Log likelihood function       -198.7000     |
+| Restricted log likelihood     -291.1218     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Random parameters in utility functions
+ AASC      5.233930537      .77010781        6.796   .0000
+ TASC      3.884530736      .44541793        8.721   .0000
+ BASC      3.178206546      .44003568        7.223   .0000
+          Nonrandom parameters in utility functions
+ GC       -.1563941393E-01  .40592047E-02   -3.853   .0001
+ TTME     -.9650546973E-01  .81527479E-02  -11.837   .0000
+ HINCAIR   .1321950760E-01  .12024222E-01    1.099   .2716
+Standard deviations of parameter distributions
+ sdAASC    .5211407146E-01  .21748990         .240   .8106
+ sdTASC    .1714587904      .21969891         .780   .4351
+ sdBASC    .6557712583E-01  .30155423         .217   .8278
+Correlation Matrix for Random Parameters
+              AASC          TASC          BASC
+AASC    |  .1000000D+01 -.5678506D+00 -.7194674D+00
+TASC    | -.5678506D+00  .1000000D+01  .3474249D+00
+BASC    | -.7194674D+00  .3474249D+00  .1000000D+01
+?------------------------------------------------------------------------
+? 3.  Variation only in constants, no correlation
+?------------------------------------------------------------------------
++---------------------------------------------+
+| Log likelihood function       -198.8125     |
+| Restricted log likelihood     -291.1218     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Random parameters in utility functions
+ AASC      5.225968684      .76908720        6.795   .0000
+ TASC      3.876949903      .44470640        8.718   .0000
+ BASC      3.172163898      .43872419        7.230   .0000
+          Nonrandom parameters in utility functions
+ GC       -.1560515982E-01  .40564896E-02   -3.847   .0001
+ TTME     -.9638637425E-01  .81209276E-02  -11.869   .0000
+ HINCAIR   .1321839675E-01  .12027976E-01    1.099   .2718
+          Derived standard deviations of parameter distributions
+ sAASC     .1556649341E-01  .19840352         .078   .9375
+ sTASC     .1421779588      .21024893         .676   .4989
+ sBASC     .4505564992E-01  .31097125         .145   .8848
+?------------------------------------------------------------------------
+? 1.  Full Correlation Across Utilities
+?------------------------------------------------------------------------
++---------------------------------------------+
+| Multinomial Probit Model                    |
+| Log likelihood function       -197.9501     |
+| Restricted log likelihood     -291.1218     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AASC      2.392879948      450968.66         .000  1.0000
+ TASC      2.946165064      555242.25         .000  1.0000
+ BASC      2.477439448      466905.03         .000  1.0000
+ GC       -.2298928711E-01  4332.6248         .000  1.0000
+ TTME     -.6181985221E-01  11650.737         .000  1.0000
+ HINCAIR   .1493573312E-01  2814.8288         .000  1.0000
+          Std. Devs. of the Normal Distribution.
+ s[AIR]    2.448501692      538421.98         .000  1.0000
+ s[TRAIN]  .9021138036      378927.52         .000  1.0000
+ s[BUS]    .1813388761      1073461.0         .000  1.0000
+ s[CAR]    1.000000000    ........(Fixed Parameter)........
+          Correlations in the Normal Distribution
+ rAIR,TRA  .6310147286E-01  154048.33         .000  1.0000
+ rAIR,BUS -.8505614608      5750372.3         .000  1.0000
+ rTRA,BUS -.8960409889      7646989.0         .000  1.0000
+ rAIR,CAR  .0000000000    ........(Fixed Parameter)........
+ rTRA,CAR  .0000000000    ........(Fixed Parameter)........
+ rBUS,CAR  .0000000000    ........(Fixed Parameter)........
+
+?------------------------------------------------------------------------
+? 2.  Heteroscedasticity Across Utilities
+?------------------------------------------------------------------------
++---------------------------------------------+
+| Log likelihood function       -197.2509     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AASC      1.794017985      1.0954530        1.638   .1015
+ TASC      3.072820243      .98985704        3.104   .0019
+ BASC      2.617159162      .84530764        3.096   .0020
+ GC       -.2565426732E-01  .82572136E-02   -3.107   .0019
+ TTME     -.6191745807E-01  .22755956E-01   -2.721   .0065
+ HINCAIR   .3138903239E-01  .21621825E-01    1.452   .1466
+          Std. Devs. of the Normal Distribution.
+ s[AIR]    2.863986386      1.2450290        2.300   .0214
+ s[TRAIN]  1.020614943      .51751047        1.972   .0486
+ s[BUS]    .3066857069      .55260505         .555   .5789
+ s[CAR]    1.000000000    ........(Fixed Parameter)........
+?------------------------------------------------------------------------
+? 3.  Homoscedastic and Uncorrelated Across Utilities
+?------------------------------------------------------------------------
++---------------------------------------------+
+| Multinomial Probit Model                    |
+| Log likelihood function       -207.2862     |
+| Restricted log likelihood     -291.1218     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Attributes in the Utility Functions (beta)
+ AASC      2.979533160      .44323694        6.722   .0000
+ TASC      2.393819674      .27058346        8.847   .0000
+ BASC      1.813333670      .25526258        7.104   .0000
+ GC       -.1136554682E-01  .27043424E-02   -4.203   .0000
+ TTME     -.5625903347E-01  .40844136E-02  -13.774   .0000
+ HINCAIR   .1276769130E-01  .77850428E-02    1.640   .1010
+          Std. Devs. of the Normal Distribution.
+ s[AIR]    1.000000000    ........(Fixed Parameter)........
+ s[TRAIN]  1.000000000    ........(Fixed Parameter)........
+ s[BUS]    1.000000000    ........(Fixed Parameter)........
+ s[CAR]    1.000000000    ........(Fixed Parameter)........
+          Correlations in the Normal Distribution
+ rAIR,TRA  .0000000000    ........(Fixed Parameter)........
+ rAIR,BUS  .0000000000    ........(Fixed Parameter)........
+ rTRA,BUS  .0000000000    ........(Fixed Parameter)........
+ rAIR,CAR  .0000000000    ........(Fixed Parameter)........
+ rTRA,CAR  .0000000000    ........(Fixed Parameter)........
+ rBUS,CAR  .0000000000    ........(Fixed Parameter)........
+
+This is the same model based on the extreme value distribution rather
+than the normal distribution
+
++---------------------------------------------+
+| Multinomial Logit Model                     |
+| Log likelihood function       -199.1284     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ AASC      5.207443299      .77905514        6.684   .0000
+ TASC      3.869042702      .44312685        8.731   .0000
+ BASC      3.163194212      .45026593        7.025   .0000
+ GC       -.1550152532E-01  .44079931E-02   -3.517   .0004
+ TTME     -.9612479610E-01  .10439847E-01   -9.207   .0000
+ HINCAIR   .1328702625E-01  .10262407E-01    1.295   .1954
+
+*/
+/*=================================================================
+Example 19.21.  Rating Assignments
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 19.22.  Poisson Regression Model
+*/=================================================================
+?
+Read ; Nobs=40 ; Nvar=14 ; Names = 1 $
+Type TA TB TC TD TE T6064 T6569 T7074 T7579 O6074 O7579  Months  Acc
+ 1    1  0  0  0  0   1     0     0     0     1     0      127     0
+ 1    1  0  0  0  0   1     0     0     0     0     1       63     0
+ 1    1  0  0  0  0   0     1     0     0     1     0     1095     3
+ 1    1  0  0  0  0   0     1     0     0     0     1     1095     4
+ 1    1  0  0  0  0   0     0     1     0     1     0     1512     6
+ 1    1  0  0  0  0   0     0     1     0     0     1     3353    18
+ 1    1  0  0  0  0   0     0     0     1     1     0        .     .
+ 1    1  0  0  0  0   0     0     0     1     0     1     2244    11
+ 2    0  1  0  0  0   1     0     0     0     1     0    44882    39
+ 2    0  1  0  0  0   1     0     0     0     0     1    17176    29
+ 2    0  1  0  0  0   0     1     0     0     1     0    28609    58
+ 2    0  1  0  0  0   0     1     0     0     0     1    20370    53
+ 2    0  1  0  0  0   0     0     1     0     1     0     7064    12
+ 2    0  1  0  0  0   0     0     1     0     0     1    13099    44
+ 2    0  1  0  0  0   0     0     0     1     1     0        .     .
+ 2    0  1  0  0  0   0     0     0     1     0     1     7117    18
+ 3    0  0  1  0  0   1     0     0     0     1     0     1179     1
+ 3    0  0  1  0  0   1     0     0     0     0     1      552     1
+ 3    0  0  1  0  0   0     1     0     0     1     0      781     0
+ 3    0  0  1  0  0   0     1     0     0     0     1      676     1
+ 3    0  0  1  0  0   0     0     1     0     1     0      783     6
+ 3    0  0  1  0  0   0     0     1     0     0     1     1948     2
+ 3    0  0  1  0  0   0     0     0     1     1     0        .     .
+ 3    0  0  1  0  0   0     0     0     1     0     1      274     1
+ 4    0  0  0  1  0   1     0     0     0     1     0      251     0
+ 4    0  0  0  1  0   1     0     0     0     0     1      105     0
+ 4    0  0  0  1  0   0     1     0     0     1     0      288     0
+ 4    0  0  0  1  0   0     1     0     0     0     1      192     0
+ 4    0  0  0  1  0   0     0     1     0     1     0      349     2
+ 4    0  0  0  1  0   0     0     1     0     0     1     1208    11
+ 4    0  0  0  1  0   0     0     0     1     1     0        .     .
+ 4    0  0  0  1  0   0     0     0     1     0     1     2051     4
+ 5    0  0  0  0  1   0     0     0     1     0     1       45     0
+ 5    0  0  0  0  1   1     0     0     0     0     1        .     .
+ 5    0  0  0  0  1   0     1     0     0     1     0      789     7
+ 5    0  0  0  0  1   0     1     0     0     0     1      437     7
+ 5    0  0  0  0  1   0     0     1     0     1     0     1157     5
+ 5    0  0  0  0  1   0     0     1     0     0     1     2161    12
+ 5    0  0  0  0  1   0     0     0     1     1     0        .     .
+ 5    0  0  0  0  1   0     0     0     1     0     1      542     1
+?
+Reject  ; Acc = -999 $
+Create  ; LogM = Log(Months) $
+
+?
+? Full model with period and ship effects.  Use RST to force coefficient
+? on logMonths to equal 1.
+?
+Poisson ; Lhs = Acc 
+        ; Rhs = One,TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM
+        ; Rst =  B1,B2,B3,B4,B5,   B6,  B7,    B8,   B9, 1.0 $
+Calc    ; List ; Lfull = LogL $
+/*
++---------------------------------------------+
+| Poisson Regression                          |
+| Log likelihood function       -68.41456     |
+| Chi- squared =    42.44145  RsqP=   .9456   |
+| G  - squared =    38.96262  RsqD=   .9366   |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -6.402877189      .21752283      -29.435   .0000
+ TB       -.5447114535      .17761347       -3.067   .0022  .20588235
+ TC       -.6887644611      .32903575       -2.093   .0363  .20588235
+ TD       -.7430913936E-01  .29055779        -.256   .7981  .20588235
+ TE        .3205288062      .23575203        1.360   .1740  .17647059
+ T6569     .6958454875      .14965625        4.650   .0000  .29411765
+ T7074     .8174553971      .16983764        4.813   .0000  .29411765
+ T7579     .4449706379      .23323916        1.908   .0564  .17647059
+ O7579     .3838591307      .11826046        3.246   .0012  .58823529
+ LOGM      1.000000000    ........(Fixed Parameter)........ 7.0492545
+ LFULL   = -.68414555743851670D+02
+*/
+? Force ship effect coefficients to equal zero.
+?
+Poisson ; Lhs = Acc 
+        ; Rhs = One,TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM
+        ; Rst =  B1, 0, 0, 0, 0,   B6,  B7,    B8,   B9, 1.0 $
+Calc    ; List ; Lnoship = LogL $
+/*
++---------------------------------------------+
+| Log likelihood function       -80.20123     |
+| Chi- squared =    82.83708  RsqP=   .8938   |
+| G  - squared =    62.53596  RsqD=   .8982   |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -6.946953167      .12694255      -54.725   .0000
+ TB        .0000000000    ........(Fixed Parameter)........ .20588235
+ TC        .0000000000    ........(Fixed Parameter)........ .20588235
+ TD        .0000000000    ........(Fixed Parameter)........ .20588235
+ TE        .0000000000    ........(Fixed Parameter)........ .17647059
+ T6569     .7536172371      .14876631        5.066   .0000  .29411765
+ T7074     1.050336097      .15756211        6.666   .0000  .29411765
+ T7579     .6998988259      .22030227        3.177   .0015  .17647059
+ O7579     .3872453960      .11810212        3.279   .0010  .58823529
+ LOGM      1.000000000    ........(Fixed Parameter)........ 7.0492545
+ LNOSHIP = -.80201227220281030D+02
+*/
+?
+? Force period effects to equal zero
+?
+Poisson ; Lhs = Acc 
+        ; Rhs = One,TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM
+        ; Rst =  B1,B2,B3,B4,B5,    0,   0,     0,   B9, 1.0 $
+Calc    ; List ; Lnopd = LogL $
+/*
++---------------------------------------------+
+| Log likelihood function       -84.11515     |
+| Chi- squared =    78.04910  RsqP=   .9000   |
+| G  - squared =    70.36380  RsqD=   .8855   |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -5.799973547      .17841956      -32.507   .0000
+ TB       -.7437270799      .16914752       -4.397   .0000  .20588235
+ TC       -.7548677304      .32763934       -2.304   .0212  .20588235
+ TD       -.1843231891      .28755268        -.641   .5215  .20588235
+ TE        .3841930549      .23479004        1.636   .1018  .17647059
+ T6569     .0000000000    ........(Fixed Parameter)........ .29411765
+ T7074     .0000000000    ........(Fixed Parameter)........ .29411765
+ T7579     .0000000000    ........(Fixed Parameter)........ .17647059
+ O7579     .5000989766      .11156453        4.483   .0000  .58823529
+ LOGM      1.000000000    ........(Fixed Parameter)........ 7.0492545
+ LNOPD   = -.84115146686612620D+02
+*/
+?
+? Likelihood ratio tests of restrictions
+? 
+Calc    ; List ; LRpd = 2*(Lfull - Lnopd)
+               ; Ctb(.95,3)
+               ; LRship = 2*(Lfull - Lnoship)
+               ; Ctb(.95,4) $
+/*
+    LRPD    =  .31401181885521910D+02
+    Result  =  .78147277654400000D+01
+    LRSHIP  =  .23573342952858720D+02
+    Result  =  .94877290383399850D+01
+ */
+/*=================================================================
+Example 19.23.  A Regression-Based Test for Overdispersion in
+                the Poisson Model
+*/=================================================================
+Poisson ; Lhs = Acc 
+        ; Rhs = One,TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM
+        ; Rst =  B1,B2,B3,B4,B5,   B6,  B7,    B8,   B9, 1.0 
+        ; Keep = Lambdai $
+Create  ; zi = ((Acc-Lambdai)^2 - Acc) / (sqr(2)*Lambdai) $
+Regress ; Lhs = zi ; Rhs = One $
+Regress ; Lhs = zi ; Rhs = lambdai $
+/*
++---------------------------------------------+
+| Poisson Regression                          |
+| Maximum Likelihood Estimates                |
++---------------------------------------------+
+Results appear in previous examples
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .2248018912      .24061138         .934   .3569
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LAMBDAI  -.7910265460E-02  .12906232E-01    -.613   .5441  10.470588
+*/
+
+/*=================================================================
+Example 19.24.  A Conditional Moment Test for Overdispersion 
+*/=================================================================
+Poisson ; Lhs = Acc 
+        ; Rhs = One,TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM
+        ; Rst =  B1,B2,B3,B4,B5,   B6,  B7,    B8,   B9, 1.0 
+        ; Keep = Lambdai $
+Create  ; ei = Acc - Lambdai  ; ei2 = ei*ei$
+Create  ; vi = ei^2 - Lambdai ; vi2 = vi*vi ; eivi = ei*vi $
+Namelist; Z  = TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM 
+        ; X  = One,Z $
+Matrix  ; MM = Z'[vi2]Z ; DD = X'[ei2]X ; MD = Z'[eivi]X 
+        ; Q  = MM - MD*<DD>*MD'
+        ; r  = Z'vi
+        ; List ; CM = r'<Q>r $
+Calc    ; List ; Ctb(.95,8) $
+/*
+Regression Results appear in earlier examples
+Matrix CM       has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .2655515D+02
+Result  =  .15507313057789990D+02
+*/
+/*=================================================================
+Example 19.25.  A Lagrange Multiplier Test for Overdispersion 
+*/=================================================================
+Poisson ; Lhs = Acc 
+        ; Rhs = One,TB,TC,TD,TE,T6569,T7074,T7579,O7579,LogM
+        ; Rst =  B1,B2,B3,B4,B5,   B6,  B7,    B8,   B9, 1.0 
+        ; Keep = Lambdai ; Res = ei $
+Calc    ; List ; LM = (ei'ei - n*xbr(Acc))^2/(2*Lambdai'Lambdai) $
+/*
+Regression results appear in earlier examples.
+LM      =  .75044204556764770D+00
+*/
+
+/*==================================================================
+Example 19.26  A Split Population Model for Major Derogatory Reports
+*/==================================================================
+?
+? Initial Data Setup.  Used for all examples
+?
+Read ; Nobs = 100 ; Nvar = 7 ; Names = 
+Derogs,Card,Age,Income,Exp,OwnRent,SelfEmpl $
+   0  1 38  4.52   124.98   1  0
+   0  1 33  2.42     9.85   0  0
+   0  1 34  4.50    15.00   1  0
+   0  1 31  2.54   137.87   0  0
+   0  1 32  9.79   546.50   1  0
+   0  1 23  2.50    92.00   0  0
+   0  1 28  3.96    40.83   0  0
+   0  1 29  2.37   150.79   1  0
+   0  1 37  3.80   777.82   1  0
+   0  1 28  3.20    52.58   0  0
+   0  1 31  3.95   256.66   1  0
+   0  0 42  1.98     0.00   1  0
+   0  0 30  1.73     0.00   1  0
+   0  1 29  2.45    78.87   1  0
+   0  1 35  1.91    42.62   1  0
+   0  1 41  3.20   335.43   1  0
+   0  1 40  4.00   248.72   1  0
+   7  0 30  3.00     0.00   1  0
+   0  1 40 10.00   548.03   1  1
+   3  0 46  3.40     0.00   0  0
+   0  1 35  2.35    43.34   1  0
+   1  0 25  1.88     0.00   0  0
+   0  1 34  2.00   218.52   1  0
+   1  1 36  4.00   170.64   0  0
+   0  1 43  5.14    37.58   1  0
+   0  1 30  4.51   502.20   0  0
+   0  0 22  3.84     0.00   0  1
+   0  1 22  1.50    73.18   0  0
+   0  0 34  2.50     0.00   1  0
+   0  1 40  5.50  1532.77   1  0
+   0  1 22  2.03    42.69   0  0
+   1  1 29  3.20   417.83   0  0
+   1  0 25  3.15     0.00   1  0
+   0  1 21  2.47   552.72   1  0
+   0  1 24  3.00   222.54   0  0
+   0  1 43  3.54   541.30   1  0
+   0  0 43  2.28     0.00   0  0
+   0  1 37  5.70   568.77   1  0
+   0  1 27  3.50   344.47   0  0
+   0  1 28  4.60   405.35   1  0
+   0  1 26  3.00   310.94   1  0
+   0  1 23  2.59    53.65   0  0
+   0  1 30  1.51    63.92   0  0
+   0  1 30  1.85   165.85   0  0
+   0  1 38  2.60     9.58   0  0
+   0  0 28  1.80     0.00   0  1
+   0  1 36  2.00   319.49   0  0
+   0  0 38  3.26     0.00   0  0
+   0  1 26  2.35    83.08   0  0
+   0  1 28  7.00   644.83   1  0
+   0  0 50  3.60     0.00   0  0
+   0  1 24  2.00    93.20   0  0
+   0  1 21  1.70   105.04   0  0
+   0  1 24  2.80    34.13   0  0
+   0  1 26  2.40    41.19   0  0
+   1  1 33  3.00   169.89   0  0
+   0  1 34  4.80  1898.03   0  0
+   0  1 33  3.18   810.39   0  0
+   0  0 45  1.80     0.00   0  0
+   0  1 21  1.50    32.78   0  0
+   2  1 25  3.00    95.80   0  0
+   0  1 27  2.28    27.78   0  0
+   0  1 26  2.80   215.07   0  0
+   0  1 22  2.70    79.51   0  0
+   3  0 27  4.90     0.00   1  0
+   0  0 26  2.50     0.00   0  1
+   0  1 41  6.00   306.03   0  1
+   0  1 42  3.90   104.54   0  0
+   0  0 22  5.10     0.00   0  0
+   0  1 25  3.07   642.47   0  0
+   0  1 31  2.46   308.05   1  0
+   0  1 27  2.00   186.35   0  0
+   0  1 33  3.25    56.15   0  0
+   0  1 37  2.72   129.37   0  0
+   0  1 27  2.20    93.11   0  0
+   1  0 24  4.10     0.00   0  0
+   0  1 24  3.75   292.66   0  0
+   0  1 25  2.88    98.46   0  0
+   0  1 36  3.05   258.55   0  0
+   0  1 33  2.55   101.68   0  0
+   0  0 33  4.00     0.00   0  0
+   1  1 55  2.64    65.25   1  0
+   0  1 20  1.65   108.61   0  0
+   0  1 29  2.40    49.56   0  0
+   3  0 40  3.71     0.00   0  0
+   0  1 41  7.24   235.57   1  0
+   0  0 41  4.39     0.00   1  0
+   0  0 35  3.30     0.00   1  0
+   0  0 24  2.30     0.00   0  0
+   1  0 54  4.18     0.00   0  0
+   2  0 34  2.49     0.00   0  0
+   0  0 45  2.81     0.00   1  0
+   0  1 43  2.40    68.38   0  0
+   4  0 35  1.50     0.00   0  0
+   2  0 36  8.40     0.00   0  0
+   0  1 22  1.56     0.00   0  0
+   1  1 33  6.00   474.15   1  0
+   1  1 25  3.60   234.05   0  0
+   0  1 26  5.00   451.20   1  0
+   0  1 46  5.50   251.52   1  0
+
+
+
+
+
+
+
+
+
+?
+? Variables in model parts. Y=Derogs, for convenience
+?
+Namelist ; X = One,Age,Income,Exp
+         ; Z = One,Age,Income,OwnRent $
+Create   ; y = Derogs $
+Histogram; Rhs = Derogs $
+?
+? Basic Poisson Model
+?
+Poisson  ; Lhs = y ; Rhs = X $
+Create   ; q = y > 0 $
+?
+? Population splitting model
+?
+Logit    ; Lhs = q ; Rhs = Z $
+?
+? FIML estimation of splitting and Poisson Models.
+?
+Poisson  ; Lhs = y ; Rhs = X ; Rh2 = Z ; ZIP $
+/*
+Histogram for DEROGS       NOBS=   100, Too low:     0, Too high:     0
+Bin  Lower limit   Upper limit       Frequency     Cumulative Frequency
+========================================================================
+  0         .000         1.000         82 ( .8200)          82( .8200)
+  1        1.000         2.000         10 ( .1000)          92( .9200)
+  2        2.000         3.000          3 ( .0300)          95( .9500)
+  3        3.000         4.000          3 ( .0300)          98( .9800)
+  4        4.000         5.000          1 ( .0100)          99( .9900)
+  5        5.000         6.000          0 ( .0000)          99( .9900)
+  6        6.000         7.000          0 ( .0000)          99( .9900)
+  7        7.000         8.000          1 ( .0100)         100(1.0000)
+
+
+
+
+
+
+
+
++---------------------------------------------+
+| Poisson Regression                          |
+| Log likelihood function       -79.70528     |
+| Restricted log likelihood     -91.93738     |
+| Chi- squared =   208.89386  RsqP=   .2557   |
+| G  - squared =   115.52058  RsqD=   .1748   |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -1.548100204      .71359684       -2.169   .0300
+ AGE       .1202353857E-01  .19632020E-01     .612   .5402  32.080000
+ INCOME    .2211135873      .10113784        2.186   .0288  3.3693000
+ EXP      -.6640641019E-02  .19205129E-02   -3.458   .0005  189.02310
++---------------------------------------------+
+| Multinomial Logit Model                     |
+| Log likelihood function       -45.31587     |
+| Restricted log likelihood     -47.13935     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+Constant -3.180366866      1.1781296       -2.700   .0069
+ AGE       .4167728346E-01  .34188956E-01    1.219   .2228  32.080000
+ INCOME    .1681214063      .16468011        1.021   .3073  3.3693000
+ OWNRENT  -.8770336915      .64392165       -1.362   .1732  .36000000
++----------------------------------------------------------------------+
+| Zero Altered Poisson      Regression Model                           |
+| Logistic distribution used for splitting model.                      |
+| ZAP term in probability is F[tau x Z(i)     ]                        |
+| Comparison of estimated models                                       |
+|             Pr[0|means]       Number of zeros        Log-likelihood  |
+| Poisson          .82882   Act.=    82 Prd.=    82.9       -79.70528  |
+| Z.I.Poisson      .83497   Act.=    82 Prd.=    83.5       -64.68706  |
+| Note, the ZIP log-likelihood is not directly comparable.             |
+| ZIP model with nonzero Q does not encompass the others.              |
+| Vuong statistic for testing ZIP vs. unaltered model is      6.1102   |
+| Distributed as standard normal. A value greater than                 |
+| +1.96 favors the zero altered Z.I.Poisson model.                     |
+| A value less than -1.96 rejects the ZIP model.                       |
++----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Poisson/Negbin regression model
+ Constant  1.344753055      1.0535528        1.276   .2018
+ AGE      -.1048765464E-01  .32483456E-01    -.323   .7468  32.080000
+ INCOME   -.6937899516E-01  .20630881        -.336   .7367  3.3693000
+ EXP      -.5837869726E-02  .20820489E-02   -2.804   .0050  189.02310
+          Zero inflation model
+ Constant  4.258106947      1.7639127        2.414   .0158
+ AGE      -.3831975891E-01  .39309689E-01    -.975   .3297  32.080000
+ INCOME   -.7299972822      .39815656       -1.833   .0667  3.3693000
+ OWNRENT   .4918209292      .78944268         .623   .5333  .36000000
+

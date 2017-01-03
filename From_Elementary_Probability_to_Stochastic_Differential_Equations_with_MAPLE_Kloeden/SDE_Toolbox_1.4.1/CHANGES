@@ -1,0 +1,67 @@
+SDE TOOLBOX - SIMULATION AND ESTIMATION OF STOCHASTIC DIFFERENTIAL EQUATIONS WITH MATLAB
+
+Available at: http://sdetoolbox.sourceforge.net
+
+Copyright (C) 2007, Umberto Picchini
+umberto.picchini@biomatematica.it
+http://www.biomatematica.it/pages/picchini.html
+
+
+HISTORY OF CHANGES
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+v. 1.4.1 (build 5th Dec. 2007)     - Faster implementations for the parameter estimation procedures:
+                                           i. the parametric estimation procedure (SDE_PSML.m) speed has been boosted for the case of multi-dimensional 
+                                             SDEs, now it is 14x-27x times faster, depending on the machine; negligible improvement for the non-parametric
+                                             estimation procedure (SDE_NPSML.m);
+                                           ii. no improvement for the estimation of one-dimensional SDEs;
+                                           iii. error checking in SDE_split_sdeinput.m has been removed to improve the speed;
+                                   - error checking added for the stepsize control in SDE_NPSML_milstein/euler.m and SDE_NPSML_euler.m;
+                                   - SDE_PSML_milstein.m has been removed: in fact the parametric SML procedure, as presented in Pedersen (1995) and Brandt-Santa-Clara (2002),
+                                     is defined only with respect to the Euler-Maruyama (EM) approximation; thus an error is produced if attempting to estimate the parameters using
+                                     the SDE_PSML procedure with an approximation other than EM. As a consequence of that, since the EM algorithm is not defined for Stratonovich SDEs,
+                                     the only parameter estimation method available for such SDEs is the non-parametric one (SDE_NPSML.m); of course the syntax to call SDE_PSML and
+                                     SDE_PSML_euler is changed;
+                                    - the User's Guide has been updated to reflect the changes above;
+                                    - fixed misprints here and there in the functions' help; 
+                                     
+v. 1.4.0 (build 28th Nov. 2007))   - NO changes in the codes;
+                                   - Errors in the User's Guide "Variance reduction" section have been fixed; 
+                                   
+v. 1.4.0 (build 24th Nov. 2007)    - The use of global variables is avoided (except for the demo files): this makes the present version much more capable of interfacing with other 
+                                     Matlab programs, but the structure of the 'sdefiles' is different. Thus sdefiles created under previous versions will not work with v. 1.4.0 
+                                     (however, it is straightforward to adapt them, just look at the new sdefiles in the "models_library" folder); as a consequence the Toolbox can be used
+                                     without necessarily running SDE_library_run.m, and can be integrated into user defined Matlab programs. See the user's guide manual.pdf;
+                                   - the 'antithetic variates' variance reduction method has been implemented for the Wiener increments generation;
+                                   - the CIR (Cox-Ingersoll-Ross) model has been added to the models library;
+                                   - a new datafile ('sampledata3.dat') has been added;
+                                   - approximated parameters 95% intervals can now be calculated;
+                                   - case-sensitive issues have been fixed;
+                                   - the functions' input check has been improved; 
+                                   - the help sections in the functions have been checked and fixed; 
+                                   - documentation (manual.pdf) enlarged and improved;
+                                   
+v. 1.3.0 (build 10th Sept. 2007)   Major revision: the most relevant addition is the inclusion of two parameter estimation tools; the users can now load and analyze data stored 
+                                   in ASCII tab-delimited files; previous versions' users should read the documentation (manual.pdf) before using v. 1.3.0. However user defined
+                                   sdefiles should work with this new version.
+                                   
+v. 1.2.1 (build 21th June 2007):   Major bug fixed: the bug was in the sdefiles' code: it only affected multi-dimensional SDE (not one-dimensional): thus
+                                   simulations/results obtained with SDE_Toolbox 1.2 (and previous versions) are correct if a one-dimensional SDE has been
+                                   considered, otherwise results may be wrong. In version 1.2.1 all the sdefile were rewritten.
+                                   
+v. 1.2 (build 12th March 2007):    'repmat' invocations substituted with a faster code; added SDE process statistics (SDE_stats.m, SDE_skewness.m, SDE_kurtosis.m, SDE_moment.m);
+                                   the code in SDE_main.m performing graphics has been moved in SDE_graph.m, which also produces histograms;
+                                   SDE_demo.m routine rewritten according to the modification above; SDE_demo_interactive_settings.m added to the archive; 
+                                   SDE_demo2.m and demo2_sdefile.m removed; lot of additions in manual.pdf;
+                                   
+v. 1.1 (build 1 March 2007):       Major revision; code vectorized over the simulations; sdefile's created with previous versions may not work
+                                   under v. 1.1; SDE_euler_demo.m, SDE_milstein_demo.m, SDE_interactive_settings.m and SDE_split_sdeinput.m added; 
+                                   manual.pdf updated;
+                                   
+v. 1.0 (build 18th February 2007): Credits added in manual.pdf, SDE_euler.m and SDE_milstein.m; no changes in the code;
+
+v. 1.0 (build 15th February 2007): MLINT warnings partially fixed (minor changes to the code); 
+                                   demos names changed to "SDE_demo.m" and "SDE_demo2.m"; 
+                                   minor changes to manual.pdf;
+                                   
+v. 1.0 (build 13th February 2007): First release

@@ -1,0 +1,1516 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Data.Data</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        <a href="gPy.Data-module.html">Module&nbsp;Data</a> ::
+        Class&nbsp;Data
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Data.Data-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Data</h1><p class="nomargin-top"><span class="codelink"><a href="gPy.Data-pysrc.html#Data">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="class_hierarchy_for_data" name="class_hierarchy_for_data">
+<area shape="rect" href="gPy.Data.Data&#45;class.html" title="Data" alt="" coords="59,124,109,151"/>
+<area shape="rect" href="gPy.Variables.Domain&#45;class.html" title="Variables.Domain" alt="" coords="17,7,151,33"/>
+<area shape="rect" href="gPy.Variables.SubDomain&#45;class.html" title="Variables.SubDomain" alt="" coords="5,65,163,92"/>
+</map>
+  <img src="class_hierarchy_for_data.gif" alt='' usemap="#class_hierarchy_for_data" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Factors whose data is stored in a table in an sqlite database</p>
+  <p>There is one row in the table for each non-zero value. These are meant
+  to be used for factors with many variables, but not too many non-zero 
+  values: contingency tables for example. This object is a sensible choice 
+  when most of the information required from the data can be gleaned in a 
+  few passes over it.</p>
+  <p>At present all database are stored in RAM.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">variables</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">domain</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">new_domain_variables</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">must_be_new</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">check</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">convert</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Initialise a <a href="gPy.Data.Data-class.html" class="link">Data</a>
+      object</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__del__"></a><span class="summary-sig-name">__del__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.__del__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__getstate__"></a><span class="summary-sig-name">__getstate__</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.__getstate__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Iterator</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#__iter__" class="summary-sig-name">__iter__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Iterates over those joint instantiations of the data which have 
+      non-zero counts associated with them</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.__iter__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__setstate__"></a><span class="summary-sig-name">__setstate__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">state</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.__setstate__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Float</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#h_score" class="summary-sig-name">h_score</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">1.0</span>)</span><br />
+      Return the <a href="gPy.gPyC-module.html#lgh" 
+      class="link">gPyC.lgh</a> score for entire data set</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.h_score">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type"><a href="gPy.Data.Data-class.html" class="link">Data</a> object</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#marginal" class="summary-sig-name">marginal</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>)</span><br />
+      Return the marginal dataset containing only <code>variables</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.marginal">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="conditional_entropy"></a><span class="summary-sig-name">conditional_entropy</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">x</span>,
+        <span class="summary-sig-arg">y</span>)</span><br />
+      Return the conditional entropy H(x|y) for variable sets 
+      <code>x</code> and <code>y</code> using the empirical distribution 
+      given by the data</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.conditional_entropy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="entropy"></a><span class="summary-sig-name">entropy</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">x</span>)</span><br />
+      Return the entropy of the marginal empirical distribution given by 
+      <code>x</code> and the data</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.entropy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_bic_search2"></a><span class="summary-sig-name">_bic_search2</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">child</span>,
+        <span class="summary-sig-arg">n</span>,
+        <span class="summary-sig-arg">child_df</span>,
+        <span class="summary-sig-arg">old_parents</span>,
+        <span class="summary-sig-arg">further_parents</span>,
+        <span class="summary-sig-arg">store</span>,
+        <span class="summary-sig-arg">pa_lim</span>,
+        <span class="summary-sig-arg">highest_llh</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data._bic_search2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#_bic_search" class="summary-sig-name" onclick="show_private();">_bic_search</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">child</span>,
+        <span class="summary-sig-arg">n</span>,
+        <span class="summary-sig-arg">child_df</span>,
+        <span class="summary-sig-arg">lower</span>,
+        <span class="summary-sig-arg">bic_lower</span>,
+        <span class="summary-sig-arg">upper</span>,
+        <span class="summary-sig-arg">upper_bound</span>,
+        <span class="summary-sig-arg">store</span>)</span><br />
+      Compute the BIC score for every parent set for <code>child</code> 
+      which is a proper superset of <code>lower</code> and a subset of the 
+      union of <code>lower</code> and <code>upper</code> and add it to the 
+      dictionary <code>store</code>.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data._bic_search">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#bic_search" class="summary-sig-name">bic_search</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">child</span>,
+        <span class="summary-sig-arg">pa_lim</span>)</span><br />
+      Branch and bound search for all parent sets for <code>child</code> 
+      which do not have a higher scoring subset</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.bic_search">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#loglikelihood" class="summary-sig-name">loglikelihood</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adg</span>)</span><br />
+      The log-likelihood of <code>adg</code> with MLE parameters (up to an 
+      additive constant)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.loglikelihood">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="bic_complexity_penalty"></a><span class="summary-sig-name">bic_complexity_penalty</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adg</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.bic_complexity_penalty">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Float</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#mutual_information" class="summary-sig-name">mutual_information</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">x</span>,
+        <span class="summary-sig-arg">y</span>)</span><br />
+      Return the mutual information between the variable sets 
+      <code>x</code> and <code>y</code> in the empirical distribution 
+      determined by the data</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.mutual_information">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">The number of datapoints in the data</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#total_count" class="summary-sig-name">total_count</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the number of datapoints in the data</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.total_count">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#populate" class="summary-sig-name">populate</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">records</span>,
+        <span class="summary-sig-arg">variables</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Simply inserts the records into the database</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.populate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="qhs"></a><span class="summary-sig-name">qhs</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.qhs">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#ub" class="summary-sig-name">ub</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">qpa</span>,
+        <span class="summary-sig-arg">alpha</span>,
+        <span class="summary-sig-arg">ri</span>)</span><br />
+      The upper bound self provides on a the score of a smaller parent set 
+      where</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.ub">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#qh" class="summary-sig-name">qh</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">h</span>=<span class="summary-sig-default">0</span>)</span><br />
+      Return the number of instantiations (ie cells) having a value greater
+      than <code>h</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.qh">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#make_family_scores_naively" class="summary-sig-name">make_family_scores_naively</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">pa_size_lim</span>=<span class="summary-sig-default">4</span>,
+        <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">10.0</span>,
+        <span class="summary-sig-arg">batch_size</span>=<span class="summary-sig-default">65536</span>)</span><br />
+      Make scores for all parent sets for all variables where (1) the size 
+      of the parent set is at most <code>pa_size_lim</code>.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.make_family_scores_naively">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#makeFactorsn" class="summary-sig-name">makeFactorsn</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">n</span>,
+        <span class="summary-sig-arg">block</span>=<span class="summary-sig-default">1000000</span>)</span><br />
+      Yield counts for all marginals with <code>n</code> variables in 
+      blocks of <code>block</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactorsn">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_countsfromdata"></a><span class="summary-sig-name">_countsfromdata</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">count</span>,
+        <span class="summary-sig-arg">mults</span>,
+        <span class="summary-sig-arg">marginals_including</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data._countsfromdata">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#makeFactorsn_old" class="summary-sig-name">makeFactorsn_old</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">n</span>)</span><br />
+      Return counts for all marginals with <code>n</code> variables</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactorsn_old">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="family_score"></a><span class="summary-sig-name">family_score</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">child</span>,
+        <span class="summary-sig-arg">parents</span>,
+        <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">1.0</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.family_score">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="score_adg"></a><span class="summary-sig-name">score_adg</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adg</span>,
+        <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">1.0</span>)</span><br />
+      Get Bdeu score for an adg</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.score_adg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="h_scores"></a><span class="summary-sig-name">h_scores</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">precision</span>=<span class="summary-sig-default">1.0</span>,
+        <span class="summary-sig-arg">textfun</span>=<span class="summary-sig-default">&lt;type 'str'&gt;</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.h_scores">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#makeCPT" class="summary-sig-name">makeCPT</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">child</span>,
+        <span class="summary-sig-arg">parents</span>,
+        <span class="summary-sig-arg">force_cpt</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">check</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">prior</span>=<span class="summary-sig-default">0</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeCPT">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type"><a href="gPy.Parameters.Factor-class.html" class="link">Factor</a> 
+      object</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#makeFactor" class="summary-sig-name">makeFactor</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Simple way to get a factor</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactor">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type"><a href="gPy.Parameters.Factor-class.html" class="link">Factor</a> 
+      object</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Data.Data-class.html#__getitem__" class="summary-sig-name">__getitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variables</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Simple way to get a factor</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactor">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#__add__">__add__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__div__">__div__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__iadd__">__iadd__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__idiv__">__idiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__imul__">__imul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__isub__">__isub__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__mul__">__mul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rdiv__">__rdiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__repr__">__repr__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rmul__">__rmul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__str__">__str__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__sub__">__sub__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#copy">copy</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#inst2index">inst2index</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#insts">insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#insts_indices">insts_indices</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#marginalise_away">marginalise_away</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#marginalise_onto">marginalise_onto</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#sumout">sumout</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#table_size">table_size</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#uses_default_domain">uses_default_domain</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#variables">variables</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#varvalues">varvalues</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_decode_inst" onclick="show_private();">_decode_inst</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_get_result_variables" onclick="show_private();">_get_result_variables</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_insts" onclick="show_private();">_insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_insts_indices" onclick="show_private();">_insts_indices</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_pointwise_op" onclick="show_private();">_pointwise_op</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b>:
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variable">add_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables">add_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables_from_rawdata">add_domain_variables_from_rawdata</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variable">change_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variables">change_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#common_domain">common_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#known_variable">known_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#numvals">numvals</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#values">values</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">sqlite3.Connection object</span>
+    </td><td class="summary">
+        <a name="db"></a><span class="summary-name">db</span> = <code title="sqlite.connect(':memory:')">sqlite.connect(':memory:')</code><br />
+      The common database for objects of this class
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="cursor"></a><span class="summary-name">cursor</span> = <code title="db.cursor()">db.cursor()</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Integer</span>
+    </td><td class="summary">
+        <a href="gPy.Data.Data-class.html#n" class="summary-name">n</a><br />
+      Number of datapoints in the data
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">String</span>
+    </td><td class="summary">
+        <a href="gPy.Data.Data-class.html#table" class="summary-name">table</a><br />
+      The name of table containing the object's data.
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_variables" onclick="show_private();">_variables</a></code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b> (private):
+      <code><a href="gPy.Variables.Domain-class.html#_domain" onclick="show_private();">_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#_instd" onclick="show_private();">_instd</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#_numvals" onclick="show_private();">_numvals</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<p class="indent-wrapped-lines"><b>Imports:</b>
+  <span title="pysqlite2.dbapi2">sqlite</span>
+</p><br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">variables</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">domain</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">new_domain_variables</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">must_be_new</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">check</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">convert</span>=<span class="sig-default">False</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Initialise a <a href="gPy.Data.Data-class.html" class="link">Data</a> 
+  object</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>data</code></strong> (Tuple) - If <code>None</code>, then an empty <a 
+          href="gPy.Data.Data-class.html" class="link">Data</a> object is 
+          created. If a file object, then assumed to be connected to a CSV 
+          file in the format that <a href="gPy.IO-module.html#read_csv" 
+          class="link">IO.read_csv</a> can read. If a string, assumed to be
+          the name of a CSV file in the format that <a 
+          href="gPy.IO-module.html#read_csv" class="link">IO.read_csv</a> 
+          can read. If a tuple, assumed to be like one returned by <a 
+          href="gPy.IO-module.html#read_csv" class="link">IO.read_csv</a>.
+          <p>Unless <code>data</code> is None any values for 
+          <code>variables</code> and <code>new_domain_variables</code> are 
+          ignored.</p></li>
+        <li><strong class="pname"><code>variables</code></strong> (Sequence) - Variables in the data</li>
+        <li><strong class="pname"><code>new_domain_variables</code></strong> (Dict or None) - A dictionary containing a mapping from any new variables to their
+          values.</li>
+        <li><strong class="pname"><code>domain</code></strong> (<a href="gPy.Variables.Domain-class.html" 
+          class="link">Variables.Domain</a> or None) - A domain for the model. If None the internal default domain is 
+          used.</li>
+        <li><strong class="pname"><code>must_be_new</code></strong> (Boolean) - Whether domain variables in <code>new_domain_variables</code> 
+          have to be new</li>
+        <li><strong class="pname"><code>check</code></strong> (Boolean) - Whether to check that (1) <code>variables</code> is of the right 
+          form, and (2) that each variable has an associated set of values 
+          and (3) that <code>data</code> is the right size and type.</li>
+        <li><strong class="pname"><code>convert</code></strong> (Boolean) - If <code>True</code>, <code>data</code> is converted to a list.</li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>TypeError</strong></code> - If <code>check</code> is set and <code>convert</code> is not set 
+        and <code>data</code> is of the wrong type.</li>
+        <li><code><strong class='fraise'><a href="gPy.Variables.VariableError-class.html">VariableError</a></strong></code> - If <code>check</code> is set and there is a variable in 
+        <code>variables</code> which does not have associated values. Or If
+        a variable in <code>new_domain_variables</code> already exists with
+        values different from its values in 
+        <code>new_domain_variables</code>; Or if <code>must_be_new</code> 
+        is set and the variable already exists.</li>
+    </ul></dd>
+    <dt>Overrides:
+        object.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__iter__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__iter__</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.__iter__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Iterates over those joint instantiations of the data which have 
+  non-zero counts associated with them</p>
+  <p>On each iteration a tuple of non-negative integers is returned. The 
+  final number is the count, the preceding numbers encode the joint 
+  instantiation. For example, (1,0,2,23) states that the instantiation 
+  (1,0,2) has occurred 23 times. (1,0,2) is the first variable with its 
+  instantiation 1 (its 2nd), the second with instantiation 0 (its 1st) and 
+  the third with instantiation 2 (its 3rd). Variables and values are 
+  ordered lexicographically.</p>
+  <dl class="fields">
+    <dt>Returns: Iterator</dt>
+        <dd>Iterator over non-zero count instantiations</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="h_score"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">h_score</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">precision</span>=<span class="sig-default">1.0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.h_score">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the <a href="gPy.gPyC-module.html#lgh" 
+  class="link">gPyC.lgh</a> score for entire data set</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>precision</code></strong> (Float) - BDe-like precision</li>
+    </ul></dd>
+    <dt>Returns: Float</dt>
+        <dd><a href="gPy.gPyC-module.html#lgh" class="link">gPyC.lgh</a> 
+          score</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="marginal"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">marginal</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.marginal">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the marginal dataset containing only <code>variables</code></p>
+  <p>Returned Data object will have same domain as <code>self</code></p>
+  <p>Does not alter <code>self</code></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>variables</code></strong> (Iterable, e.g. list, tuple, set) - Variables in returned marginal table</li>
+    </ul></dd>
+    <dt>Returns: <a href="gPy.Data.Data-class.html" class="link">Data</a> object</dt>
+        <dd>New marginal dataset</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_bic_search"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_bic_search</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">child</span>,
+        <span class="sig-arg">n</span>,
+        <span class="sig-arg">child_df</span>,
+        <span class="sig-arg">lower</span>,
+        <span class="sig-arg">bic_lower</span>,
+        <span class="sig-arg">upper</span>,
+        <span class="sig-arg">upper_bound</span>,
+        <span class="sig-arg">store</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data._bic_search">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Compute the BIC score for every parent set for <code>child</code> 
+  which is a proper superset of <code>lower</code> and a subset of the 
+  union of <code>lower</code> and <code>upper</code> and add it to the 
+  dictionary <code>store</code>. <code>bound</code> is a bound on the 
+  log-likelihood (modulo an additive constant) on any possible parentset 
+  <code>bic_lower</code> is the BIC score of <code>lower</code>.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="bic_search"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bic_search</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">child</span>,
+        <span class="sig-arg">pa_lim</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.bic_search">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Branch and bound search for all parent sets for <code>child</code> 
+  which do not have a higher scoring subset</p>
+  <p>TODO: use a random graph as an input</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="loglikelihood"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">loglikelihood</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">adg</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.loglikelihood">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>The log-likelihood of <code>adg</code> with MLE parameters (up to an 
+  additive constant)</p>
+  <p>The missing constant is the log of the multinomial coefficient which 
+  is the  same for all adgs.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="mutual_information"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">mutual_information</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">x</span>,
+        <span class="sig-arg">y</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.mutual_information">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the mutual information between the variable sets <code>x</code>
+  and <code>y</code> in the empirical distribution determined by the 
+  data</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>x</code></strong> (Iterable, frozenset most efficient) - Variable set</li>
+        <li><strong class="pname"><code>y</code></strong> (Iterable, frozenset most efficient) - Variable set</li>
+    </ul></dd>
+    <dt>Returns: Float</dt>
+        <dd>The mutual information</dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>ValueError</strong></code> - If <code>x</code> and <code>y</code> are not disjoint</li>
+        <li><code><strong class='fraise'>TypeError</strong></code> - If either <code>x</code> or <code>y</code> are not iterables</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="total_count"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">total_count</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.total_count">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the number of datapoints in the data</p>
+  <dl class="fields">
+    <dt>Returns: The number of datapoints in the data</dt>
+        <dd>Integer</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="populate"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">populate</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">records</span>,
+        <span class="sig-arg">variables</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.populate">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Simply inserts the records into the database</p>
+  <p>Each record is a tuple of integers. Each integer, except the last, 
+  corresponds to a value. The last value is the count. If a joint 
+  instantiation occurs more than once, only the last count is used.</p>
+  <p>Assumes lexicographic order of variables if <code>variables</code> is 
+  None, otherwise the order given by <code>variables</code>.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="ub"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">ub</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">qpa</span>,
+        <span class="sig-arg">alpha</span>,
+        <span class="sig-arg">ri</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.ub">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>The upper bound self provides on a the score of a smaller parent set 
+  where</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>qpa</code></strong> - Size of contingency table for smaller parent set</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="qh"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">qh</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">h</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.qh">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the number of instantiations (ie cells) having a value greater 
+  than <code>h</code></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>h</code></strong> (Integer) - Threshold</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="make_family_scores_naively"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_family_scores_naively</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">pa_size_lim</span>=<span class="sig-default">4</span>,
+        <span class="sig-arg">precision</span>=<span class="sig-default">10.0</span>,
+        <span class="sig-arg">batch_size</span>=<span class="sig-default">65536</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.make_family_scores_naively">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Make scores for all parent sets for all variables where (1) the size 
+  of the parent set is at most <code>pa_size_lim</code>. No pruning!</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="makeFactorsn"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">makeFactorsn</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">n</span>,
+        <span class="sig-arg">block</span>=<span class="sig-default">1000000</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactorsn">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Yield counts for all marginals with <code>n</code> variables in blocks
+  of <code>block</code></p>
+  <p>Marginals are ordered according to how they are generated by the 
+  generator <a href="gPy.Utils-module.html#subseteqn" 
+  class="link">Utils.subseteqn</a>.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>n</code></strong> (Int) - The number of variables in the marginals</li>
+    </ul></dd>
+    <dt>Returns: List</dt>
+        <dd><code>counts</code> where <code>counts[i][idx]</code> is the 
+          count for the <code>idx</code>th instantiation of the 
+          <code>i</code>th marginal</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="makeFactorsn_old"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">makeFactorsn_old</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">n</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactorsn_old">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return counts for all marginals with <code>n</code> variables</p>
+  <p>Marginals are ordered according to how they are generated by the 
+  generator <a href="gPy.Utils-module.html#subseteqn" 
+  class="link">Utils.subseteqn</a>.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>n</code></strong> (Int) - The number of variables in the marginals</li>
+    </ul></dd>
+    <dt>Returns: List</dt>
+        <dd><code>counts</code> where <code>counts[i][idx]</code> is the 
+          count for the <code>idx</code>th instantiation of the 
+          <code>i</code>th marginal</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="makeCPT"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">makeCPT</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">child</span>,
+        <span class="sig-arg">parents</span>,
+        <span class="sig-arg">force_cpt</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">check</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">prior</span>=<span class="sig-default">0</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeCPT">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>prior</code></strong> - the Dirichlet prior parameter (the same parameter value is used 
+          for all instances!)  Note there may be some problems with this 
+          method: a <b>different</b> prior is used by the BDeu score. 
+          However, in practice, for parameter estimation, this prior method
+          seems to be ok. I was lazy and it was simple to implement (cb).  
+          If prior is zero, then the parameters are the maximum likelihood 
+          estimation solutions.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="makeFactor"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">makeFactor</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactor">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Simple way to get a factor</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>variables</code></strong> (Iterable) - The variables in the required factor. If <code>None</code>, then 
+          all of <code>self</code>'s variables are used: which could 
+          produce a very large object!</li>
+    </ul></dd>
+    <dt>Returns: <a href="gPy.Parameters.Factor-class.html" class="link">Factor</a> 
+      object</dt>
+        <dd>Marginal table</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__getitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__getitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variables</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Indexing operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Data-pysrc.html#Data.makeFactor">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Simple way to get a factor</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>variables</code></strong> (Iterable) - The variables in the required factor. If <code>None</code>, then 
+          all of <code>self</code>'s variables are used: which could 
+          produce a very large object!</li>
+    </ul></dd>
+    <dt>Returns: <a href="gPy.Parameters.Factor-class.html" class="link">Factor</a> 
+      object</dt>
+        <dd>Marginal table</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="n"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">n</h3>
+  Number of datapoints in the data
+  <dl class="fields">
+    <dt>Get Method:</dt>
+    <dd class="value"><span class="summary-sig"><i>unreachable</i>.n(<span class="summary-sig-arg">self</span>)</span>
+        - Return the current number of datapoints stored
+    </dd>
+    <dt>Type:</dt>
+      <dd>Integer</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="table"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">table</h3>
+  The name of table containing the object's data. This is read-only (it is 
+  defined by a 'property') and is always equal to: 'table%d' % id(self)
+  <dl class="fields">
+    <dt>Get Method:</dt>
+    <dd class="value"><span class="summary-sig"><i>unreachable</i>.table(<span class="summary-sig-arg">self</span>)</span>
+        - Return the name of the table storing <code>self</code>'s data
+    </dd>
+    <dt>Type:</dt>
+      <dd>String</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Dec  3 09:37:56 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

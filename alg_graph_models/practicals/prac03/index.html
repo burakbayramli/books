@@ -1,0 +1,184 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>AGM Practical 03</title>
+  </head>
+  <body>
+    <h1>Algorithms for Graphical Models (AGM)</h1>
+    <h2>Practical 03: Knowledge engineering with Bayesian nets</h2>
+
+
+    <hr />
+
+    <ol>
+      <li><a href="#netica">Getting started with Netica</a></li>
+      <li><a href="#redgreen">The red and the green</a></li>
+      <li><a href="#evidence">Thinking about evidence</a></li>
+      <li><a href="#prizes">Winning prizes</a></li>
+      <li><a href="#joints">Joint distributions and
+	  Bayes nets</a></li>
+      <li><a href="#ci">Conditional independence in Bayes nets</a></li>
+    </ol>
+    <hr />
+    <h4><a id="netica"></a>Getting started with Netica</h4>
+    <p>
+      The purpose of this question is to introduce you to Netica, the
+      Bayes net software you will use for some questions in this practical.
+    </p>
+    <ol>
+      <li>
+	Reboot to Windows XP, if necessary
+      </li>
+      <li>
+	Start up Netica, it's at: g:\apps\Netica\Netica
+	1.12\Netica.exe
+      </li>
+      <li>
+	Find the on-line help (yes, it's under the Help menu
+	item).Netica is not terribly good at finding the file
+	containing the on-line help.  If it can't find it, it will ask
+	you to look for it. The file in question is called Netica.hlp
+	in g:\apps\Netica\Netica 1.12\
+      </li> 
+      <li>
+	Under Getting Started, select the Quick Tour
+      </li> 
+      <li>
+	Please ignore anything you come across about Decision nodes.
+	Decision theory is not part of this module.
+      </li>
+      <li>
+	Go through the first 4 parts of the Quick Tour, ie up to and
+	including Network Construction
+      </li>
+    </ol>
+    <hr />
+    <h4><a id="redgreen"></a>The red and the green</h4>
+    <p>
+      Model the card trick with the red and green sided cards using a
+      Bayesian net. Use Netica. Use your Bayesian net to compute the
+      probability distribution over the possible identities of the
+      selected card conditional on the colour you are shown.
+    </p>
+    <hr />
+    <h4><a id="evidence"></a>Thinking about evidence</h4>
+    <p>
+      A doctor wishes to test one of his/her patients for Blogg's
+      disease which afflicts one person in every 1000. There is a
+      well-developed test for the occurrence of Blogg's disease, so
+      that
+    </p>
+    <ul>
+      <li>
+	if an individual has Blogg's disease the probability of a positive test
+	result is 0.95
+      </li>
+      <li>
+	if an individual does not have Blogg's the probability of a
+	positive test result is 0.01
+      </li>
+    </ul>
+    <p>
+      The patient gets a positive test result. How likely is it that
+      he/she has Blogg's disease?
+    </p>
+    <hr />
+    <h4><a id="prizes"></a>Winning prizes</h4>
+    <p>
+      We haven't "covered" this sort of topic in the module - this is
+      just a test of your probabilistic intuition. There's a game show
+      in the US where a prize is hidden behind one of three
+      curtains. Firstly, the contestant chooses one of these curtains.
+      Let's call this curtain A. At this point, at least one of the
+      other curtains, let's call them B and C, does not have a prize
+      behind it. The host then selects one curtain other than the one
+      chosen, and shows the contestant that there is no prize behind
+      it. If the host has a choice of curtains he chooses one at
+      random. Suppose B were the chosen curtain. The contestant can
+      now either stick with their initial guess (A) or switch to the
+      remaining curtain (C). Which should they do to maximise their
+      probability of winning the prize? What are the probabilities of
+      winning the prize with the two strategies?
+    </p>
+
+<hr />
+
+    <h4><a id="joints"></a>Joint distributions
+      and Bayes nets</h4>
+
+    <p>
+      Rewrite P(A,B,C,D,E,F) using the conditional independencies
+      expressed by the following Bayesian net, which we will refer to
+      as NET1 in subsequent questions:
+    </p>
+
+    <p>
+      Suppose that all the random variables A-F in NET1 can only have
+      two possible values yes and no. What's the minimum number of
+      probabilities required to fully define the Bayesian net whose
+      structure is given above?  (Remember that eg P(E=yes) = 1 -
+      P(E=no).
+    </p>
+
+
+    <p>
+      How many probabilities would be required to define the full
+      joint distribution over A-F, if we could not assume the
+      conditional independencies expressed by the Bayesian net NET1?
+    </p>
+
+    <p><img src="complexnet.gif" height="321" width="433" alt = "NET1"
+	/> </p>
+
+    <p><a href="sol_joint.html">Solution</a></p>
+
+    <hr />
+
+    <h4><a id="ci"></a>Conditional independence in Bayesian nets</h4>
+
+    <p>
+      All these questions refer to the above network NET1. 
+    </p>
+
+    <ol>
+      <li>
+	Is C independent of F conditional on D? 
+      </li>
+      <li>
+	Is C independent of F conditional on D and E? 
+      </li>
+      <li>
+	Write down all pairs of nodes which are independent of each other.
+      </li>
+      <li>
+	Which pairs of nodes are independent of each other given B? 
+      </li>
+      <li>
+	Do we have that: P(A,F|E)= P(A|E)P(F|E)? (ie are A and F
+	independent given E?)
+      </li>
+    </ol>
+
+    <p><a href="ci.html">Solution</a></p>
+
+<hr />
+
+   <p>
+<!-- hhmts start -->
+Last modified: Wed Nov  7 15:09:54 GMT 2007
+<!-- hhmts end -->
+    </p>
+    
+    <p>
+      <a href="http://validator.w3.org/check?uri=referer"><img
+          src="../../valid-xhtml11"
+          alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+    </p>
+
+
+
+</body>
+</html>

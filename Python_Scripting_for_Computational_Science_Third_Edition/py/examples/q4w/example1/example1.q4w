@@ -1,0 +1,53 @@
+# headline:
+T: A basic example of using the q4w tool
+
+# Lines starting with # are comment lines, these will not appear
+# in the web page. Text without comment signs are inserted "as is".
+# If you want some kind of formatting, e.g., making the text appear
+# as a separate paragraph, suitable HTML statements must be inserted.
+# Here is an example:
+
+<P>
+This is a self-explanatory introduction to the q4w tool for
+specifying questionnaires on the web.
+The questions and answers can be translated to valid HTML code,
+yielding a Web page with input fields, buttons, etc.
+By clicking the "submit" button in this Web page, a program 
+(CGI script) interprets the answers and stores them in a database.
+Another program (CGI script) displays statistics about the answers
+obtained so far. 
+<P>
+Here are a few examples demonstrating the various types of
+answers that can be used with the q4w tool:
+<P>
+
+# *** notice that questions (Q) and answers (A) must be a single line!! ***
+
+# single choice pull-down menu:
+Q: What is your total full-time experience with programming?
+A: pull-down-menu  1 week | 2 months | more than 1 year
+
+# free text:
+Q: Give a short description of the type of programming you have experience with (university courses, industrial projects, games etc.)
+A: free-text
+
+# single choice (radio box)
+Q: Specialization:
+A: single-choice  computer science | scientific computing | mathematics/physics | engineering | economics | management | another subject
+
+# multiple choice (check box)
+Q: Which of the following languages do you master ?
+A: multiple-choice  Perl | Tcl | Python | Java | C | C++ | F77 | F90
+
+Q: What's your favorite language?
+A: single-choice    Perl | Python | Java | C++ | F90
+
+# one-line text field:
+Q: In case your favorite language was not mentioned, please provide it:
+A: one-line-text
+
+# single choice (grading with numbers)
+Q: Evaluate your quality as a computer programmer:
+A: single-choice   1 (poor) | 2 | 3 | 4 | 5 | 6 (excellent)
+# answers starting with integers enable computation of
+# the average score in the output statistics

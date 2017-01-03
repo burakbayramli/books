@@ -1,0 +1,7 @@
+#!/bin/sh
+# remove \r line ends in DOS files so they execute properly under Unix:
+for file in #@; do
+  echo "transforming file $file"
+  tr -d '\r' < $file > tmptmp
+  mv tmptmp $file
+done

@@ -1,0 +1,375 @@
+\documentclass[landscape]{slides}
+
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-09}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\jt}{\ensuremath{{\cal T}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Decomposable models and join forests}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/16 10:33:15 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+    \begin{itemize}
+    \item Triangulated (decomposable) graphs
+    \item Maximum cardinality search
+    \item Decomposable hypergraphs
+    \item Join forests
+    \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The structure of variable elimination}
+
+  \begin{itemize}
+  \item In variable elimination, to sum out a variable we have to
+    first multiply all factors containing that variable. This
+    corresponds to merging the associated hyperedges.
+  \item If there is more than one factor this may produce a new hyperedge.
+  \item We then sum out the variable: this corresponds to removing the
+    variable from the (possibly new) hyperedge.
+  \item But it's easier to `see' this process by looking at the distribution's
+    interaction graph.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Adding lines to interaction graphs by vertex
+    elimination}
+  
+  \begin{itemize}
+  \item Recall that two variables are connected in the interaction
+    graph if they both appear in a common hyperedge, i.e.\ they are
+    both variables for some factor.
+  \item Merging all hyperedges containing a given variable $v$
+    corresponds to connecting---in the interaction graph---all variables
+    in these hyperedges. A
+    new connection is called a \emph{fill-in}.
+  \item Deleting a vertex from the only hyperedge to contain it
+    corresponds to deleting that vertex from the graph.
+  \end{itemize}
+\end{titledslide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Triangulation by variable elimination}
+
+  \begin{itemize}
+  \item This process is known as \emph{triangulation}.
+  \item If carried out exactly as described we would end up with an
+    empty graph (since all variables would eventually get deleted).
+  \item Instead we just mark `eliminated' vertices and treat them
+    \emph{as if} they were deleted.
+  \item It's most easily understood graphically. Cue
+    \verb+triangulation_demo+ from \texttt{gPy.Examples}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Complexity of variable elimination}
+  
+  \begin{itemize}
+  \item The triangulated graph gives a nice graphical representation
+    of the complexity of variable elimination with a particular ordering.
+  \item If there are $n$ variables and $N$ is the size (number of
+    rows) of the biggest factor, then variable elimination is $O(nN)$.
+  \item If this biggest factor has $\mu$ variables each with no more
+    than $v$ values then we only get an exponential upper bound: $N
+    \leq v^\mu$.
+  \item Need to keep $\mu$, the size of the biggest clique, small!
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Looking for good triangulations}
+
+  \begin{itemize}
+  \item Even deciding whether there is an ordering which bounds the
+    biggest clique by some value is NP-complete. Thus finding an
+    ordering which minimises the biggest clique is a hard problem.
+  \item Nonetheless, there are reasonable heuristic approaches.
+  \item One \emph{greedy} option is, at each point, to eliminate
+    whichever vertex produces the fewest fill-in lines (preferably
+    none).
+  \item Another option is to compute an elimination ordering
+    \emph{backwards}, using \emph{maximum cardinality search}.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Maximum cardinality search on graphs}
+  
+  \begin{quote}
+    Number vertices from [$n-1$] to [$0$] in descending order. As
+    the next vertex to number, select the vertex adjacent to the
+    largest number of previously numbered vertices, breaking ties
+    arbitrarily. (Tarjan and Yannakakis, Siam J. Computing, 13:3, 1984)
+  \end{quote}
+  
+  It's really that simple.  Cue
+  \verb+max_card_search_demo.py+ from \texttt{gPy.Examples}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Properties of maximum cardinality search}
+    
+  \begin{itemize}
+  \item If there are $n$ vertices and $m$ edges in the graph, then
+    maximum cardinality search is $O(n+m)$, so it's linear :-).
+  \item If there is a zero fill-in for a graph, maximum cardinality
+    search will find one. :-)
+  \item If there is not, then Kj\ae rulff has shown that the order it
+    finds is generally not that great. :-(
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Key facts about triangulated graphs}
+  
+  \begin{itemize}
+  \item A triangulated graph is \emph{defined} to be an undirected
+    graph such that every cycle of length $n \geq 4$ has a
+    \emph{chord}: two non-consecutive vertices which are neighbours.
+  \item This is why triangulated graphs are also called \emph{chordal}.
+  \item A graph is triangulated if and only if it has a zero fill-in.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Some definitions}
+  
+  \begin{itemize}
+  \item An \emph{elimination ordering} for a graph is just an ordering
+    of the vertices of the graph.
+  \item The \emph{fill-in} generated by an elimination ordering is the
+    collection of \emph{extra} lines added by running the vertex
+    elimination algorithm with this ordering.
+  \item An elimination ordering is a \emph{zero fill-in} if its
+    fill-in is empty.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Towards join forests}
+  
+  \begin{itemize}
+  \item The cliques of a triangulated graph can be arranged in an
+    important data structure: a \emph{join forest}. These are very
+    closely related to the cluster trees we have seen previously.
+  \item A join forest is a collection of trees---connected graphs without
+    cycles---whose vertices are the cliques of the triangulated graphs.
+  \item We will construct them by doing vertex elimination on a
+    distribution's \emph{hypergraph} rather than its interaction graph.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Decomposable hypergraphs}
+  
+  \begin{itemize}
+  \item A hypergraph is \emph{decomposable} if its reduction is the clique
+    hypergraph of a decomposable (i.e. triangulated) graph.
+  \item This is not (usually) given as the \emph{definition} of
+    decomposable hypergraphs, but it may as well be.
+  \item Note that decomposable hypergraphs are always
+    graphical.
+  \item In the maths literature decomposable hypergraphs are usually
+    called \emph{acyclic hypergraphs}.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Graham's algorithm: variable elimination on hypergraphs}
+  
+  Graham's algorithm: Repeat the following two operations on a
+  hypergraph until neither apply:
+  \begin{enumerate}
+  \item Delete a vertex that appears in only one hyperedge.
+  \item Delete a hyperedge that is contained in another hyperedge
+  \end{enumerate}
+
+  A hypergraph is decomposable iff Graham's algorithm deletes
+  all vertices.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Join trees}
+  
+A \emph{join tree} \jt{} for a hypergraph \hg{} is a tree such that:
+\begin{enumerate}
+\item the vertices of \jt{} are the hyperedges of \hg{}, and
+\item for all $h_{1}, h_{2} \in \hg$ and any $h$ on the unique path
+  between $h_1$ and $h_2$ in \jt{}, we have $h_{1} \cap h_{2}
+  \subseteq h$.
+\end{enumerate}
+
+The second condition is the \emph{join} or \emph{junction}
+property. Join trees are often called \emph{junction trees}.
+
+Cue \verb+join_forest_demo+ from \texttt{gPy.Examples}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Join forests}
+
+A \emph{join forest} for a hypergraph \hg{} is simply a collection of
+join trees for hypergraphs $\hg_i$ where \hg{} is the disjoint union
+of the $\hg_i$ such that hyperedges in different trees are disjoint.
+
+Almost always we will deal with join forests containing a single tree.
+  
+So, most of the literature talks about junction trees rather than join
+forests.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Decomposable hypergraphs and join forests}
+  
+A fundamental theorem is that:
+\begin{quote}
+  A hypergraph is decomposable if and only if it has a join forest.
+\end{quote}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Constructing join forests}
+  
+  \begin{itemize}
+  \item There are number of different ways of constructing a join
+    forest for a decomposable hypergraph.
+  \item Recall that a decomposable hypergraph is always the clique
+    hypergraph of some triangulated graph, and that each triangulated
+    graph has an associated elimination order which is a zero fill-in.
+  \item If we run variable elimination with this ordering then each
+    elimination `happens in a clique'. If clique $C_i$ produces a
+    message which is `used' by clique $C_j$ then connect these two
+    cliques in the join forest.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Constructing join forests with Graham's algorithm}
+
+ \begin{enumerate}
+  \item Delete a vertex that appears in only one hyperedge.
+  \item Delete a hyperedge that is contained in another hyperedge
+  \end{enumerate}
+  
+  \begin{itemize}
+  \item Graham's algorithm is just `structural' variable elimination
+    on a decomposable hypergraph using a zero fill-in ordering.
+  \item When a hyperedge gets deleted just connect it to one of the
+    hyperedges which contained it. Cue \verb+grahams_demo+ from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+Definition: A triple $(A,B,S)$ of subsets of the
+    vertices $V$ of some graph \gr{} is a \emph{decomposition of \gr}
+    if:
+    \begin{enumerate}
+    \item $A$, $B$ and $S$ are disjoint and $V=A \cup B \cup S$. (So
+      $A$, $B$ and $S$ partition $V$.)
+    \item $S$ separates $A$ from $B$.
+    \item $S$ is complete (i.e. all its vertices are pairwise connected).
+    \end{enumerate}
+
+If $A$ and $B$ are both non-empty, then the decomposition is \emph{proper}.
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Decomposition via vertex elimination}
+  
+  \begin{itemize}
+  \item Let \gr be a triangulated graph and let $\alpha$ be an
+    ordering of its vertices that is a zero fill-in.
+  \item Since $\alpha$ is a zero fill-in, each vertex is in only one
+    clique at the time of its elimination. (If it were in, say, two we
+    would have to add fill-ins to create a new clique, but $\alpha$ is
+    a zero fill-in.)
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+\end{titledslide}
+  \item For any run of the vertex elimination algorithm there is
+    another important (related) data structure: a \emph{triangulated graph}.
+  \item This is produced by adding edges to the distribution's
+    interaction graph.
+
+
+    vertex elimination algori
+  \item Decomposable hypergraphs are closely linked to decomposable
+    \emph{graphs}, which are often called \emph{triangulated} (or
+    \emph{chordal}) graphs.
+  \item Triangulated graphs arise naturally from the vertex
+    elimination algorithm.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{titledslide}{Join forest}
+  
+  \begin{itemize}
+  \item Note first that, in fact, we may get a \emph{forest} of
+    cluster trees if the variables can be partitioned into disjoint subsets.
+  \item Consider, for example, the independence model.
+  \item A \emph{join forest} is like a cluster forest except that
+    \begin{enumerate}
+    \item redundant hyperedges are not included
+    \item edges are (undirected) lines not arrows.
+    \end{enumerate}
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{Decomposable hypergraphs}
+  
+  \begin{itemize}
+  \item Join forests are such a useful data structure that we will
+    create them for arbitrary factored distributions (hierarchical models).
+  \item For now, we focus on distributions with a particular sort of
+    associated hypergraph: a \emph{decomposable} hypergraph.
+  \end{itemize}
+
+\end{titledslide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Revision: cluster trees}
+  
+  \begin{itemize}
+  \item Recall that each run of the variable elimination algorithm
+    (whichever the order of the variables) creates a cluster tree.
+  \item Cue \verb+cluster_tree.py+
+  \end{itemize}
+
+\end{titledslide}
+
+\end{document}

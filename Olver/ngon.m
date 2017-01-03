@@ -1,0 +1,1 @@
+function V = ngon(n)%%  V = ngon(n)%    %  rows of V are (x,y) coordinates of vectices of regular unit n-gon%%   See also CGRAPH, CEDGE, GRAPH for i= 1:n,  V(i,:) = [cos(2*(i-1)*pi/n) sin(2*(i-1)*pi/n)];end

@@ -1,0 +1,110 @@
+SHANNON0
+Gref=[];
+for i=1:8
+if i==1
+   label = fopen('hfinn10.txt');
+elseif i==2
+   label = fopen('lmiss10.txt');
+elseif i==3
+   label = fopen('puddn10.txt');
+elseif i==4
+   label = fopen('sawy210.txt');
+elseif i==5
+   label = fopen('sawy310.txt');
+elseif i==6
+   label = fopen('sawyr10.txt');
+elseif i==7
+   label = fopen('tramp11.txt');
+else
+   label = fopen('yanke11.txt');
+end
+   
+[hk,count] = fread(label,'uchar');
+[i count]
+F = double(hk);
+F(F<33) = 27;				% line feeds, tabs, spaces --> 27
+F(F>64 & F<91) = F(F>64 & F<91)-64;	% l.c. letters --> [1,26]
+F(F>96 & F<123)=F(F>96 & F<123)-96;	% u.c. letters --> [1,26]
+F = F(F<28);				% Throw out numbers, punctuation
+F2 = [0;F(1:(size(F)-1))]+F;
+Gref = [Gref; F(F2<54)];% The text with one space between words
+fclose(label);
+end
+
+save 'twain' Gref
+++++++++++++++++++++++++++++++++++++++++++++
+SHANNON0B
+load twain
+s0 = size(Gref,1);
+Gref = double(Gref);
+if Gref(s0)==27
+   Gref = Gref(1:s0-1);
+end
+ind = find(Gref==27)+1;
+Gref(ind) = Gref(ind)-32;
+Gref = int8(96+Gref(Gref ~= 27));
+Gref = Gref(Gref ~= 91); % got 6 double spaces from merging files
+save 'twain2' Gref;
+++++++++++++++++++++++++++++++++++++++++++++++
+SHANNON1
+% cd D:\IHPBook\EngStrCh1\WordExp;
+load twain;
+
+F = double(Gref(Gref<27))-1;	% The text with no spaces, values 0,..,25
+s = size(F,1)
+0
+F = F(1:(s-3))+26*(F(2:(s-2)) + 26*(F(3:(s-1)) + 26*F(4:s)));
+1
+h4 = hist(F,0:(26^4-1));
+2
+h4 = h4/sum(h4);
+h3 = sum(reshape(h4,26,26^3));
+h2 = sum(reshape(h3,26,26^2));
+h1 = sum(reshape(h2,26,26));
+3
+save 'histtwain' h1 h2 h3 h4;
+F4 = uint32(F+1);
+save 'twain4' F4;
+++++++++++++++++++++++++++++++++++++++++++++++
+SHANNON2
+load histtwain;
+load twain4;
+s=size(F4,1)
+0
+F2 = uint16(floor((double(F4)-1)/676)+1);
+1
+p = log(h4(F4(3:s))./(h2(F2(1:(s-2))).*h2(F2(3:s))));
+2
+save 'twainMI' p;
+p = diff(p);
+3
+pl = uint8(p(1:(s-4))<0 & p(2:(s-3))>0);
+save 'twainind' pl;
++++++++++++++++++++++++++++++++++++++++++++++++++
+SHANNON2B
+load histtwain;
+load twain4;
+s=size(F4,1)
+0
+F = uint16(floor((double(F4)-1)/17576)+1);
+1
+pb = log(h4(F4(4:s))./(h1(F(1:(s-3))).*h1(F(2:(s-2))).*h1(F(3:(s-1))).*h1(F(4:s))));
+2
+save 'twainMIb' pb;
+p = diff(pb);
+3
+plb = uint8(p(1:(s-5))<0 & p(2:(s-4))>0);
+save 'twainindb' plb;
+++++++++++++++++++++++++++++++++++++++++++++++++++
+SHANNONB
+
+load twain2;
+load twainind;
+load twainindb;
+load twainMI;
+load twainMIb;
+
+J = 110000:110150;
+sp = char(32*ones(size(J,2),1));
+A=[num2str(p(J)') sp num2str(double(pl(J-1)')) sp char(Gref(J)) sp num2str(double(plb(J-2)')) sp num2str(pb(J-1)')];
+save 'tmp' A -ascii

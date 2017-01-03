@@ -1,0 +1,1436 @@
+﻿Chapter 13. Autocorrelation
+
+/*===============================================================
+Example 13.1.  Investment Equation
+*/===============================================================
+Read ; Nobs = 20 ; Nvar = 5 ; Names = 1 $
+        Year    GNP     Invest     Price  Interest
+        1963   596.7      90.9    0.7167    3.23
+        1964   637.7      97.4    0.7277    3.55
+        1965   691.1     113.5    0.7436    4.04
+        1966   756.0     125.7    0.7676    4.50
+        1967   799.6     122.8    0.7906    4.19
+        1968   873.4     133.3    0.8254    5.16
+        1969   944.0     149.3    0.8679    5.87
+        1970   992.7     144.2    0.9145    5.95
+        1971  1077.6     166.4    0.9601    4.88
+        1972  1185.9     195.0    1.0000    4.50
+        1973  1326.4     229.8    1.0575    6.44
+        1974  1434.2     228.7    1.1508    7.83
+        1975  1549.2     206.1    1.2579    6.25
+        1976  1718.0     257.9    1.3234    5.50
+        1977  1918.3     324.1    1.4005    5.46
+        1978  2163.9     386.6    1.5042    7.46
+        1979  2417.8     423.0    1.6342   10.28
+        1980  2631.7     401.9    1.7842   11.77
+        1981  2954.1     474.9    1.9514   13.42
+        1982  3073.0     414.5    2.0688   11.02
+Create ; If(_Obsno > 1)DP = 100*(Price - Price[-1])/Price[-1] $
+Create ; RealInt = Interest - DP
+       ; RealGNP = GNP/Price
+       ; RealNvst= Invest/Price $
+Dates  ; 1963 $
+Period ; 1964 - 1982 $
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; PlotResiduals $
+
+               
+/*======================================================================
+Example 13.2.  Autocorrelation Induced by Misspecification of the Model
+/*======================================================================
+Read ; Nobs = 36 ; Nvar = 11 ; Names = 1 $
+Year   G       Pg     Y    Pnc    Puc    Ppt    Pd     Pn     Ps    Pop 
+1960  129.7   .925  6036  1.045   .836   .810   .444   .331   .302  180.7
+1961  131.3   .914  6113  1.045   .869   .846   .448   .335   .307  183.7
+1962  137.1   .919  6271  1.041   .948   .874   .457   .338   .314  186.5
+1963  141.6   .918  6378  1.035   .960   .885   .463   .343   .320  189.2
+1964  148.8   .914  6727  1.032  1.001   .901   .470   .347   .325  191.9
+1965  155.9   .949  7027  1.009   .994   .919   .471   .353   .332  194.3
+1966  164.9   .970  7280   .991   .970   .952   .475   .366   .342  196.6
+1967  171.0  1.000  7513  1.000  1.000  1.000   .483   .375   .353  198.7
+1968  183.4  1.014  7728  1.028  1.028  1.046   .501   .390   .368  200.7
+1969  195.8  1.047  7891  1.044  1.031  1.127   .514   .409   .386  202.7
+1970  207.4  1.056  8134  1.076  1.043  1.285   .527   .427   .407  205.1
+1971  218.3  1.063  8322  1.120  1.102  1.377   .547   .442   .431  207.7
+1972  226.8  1.076  8562  1.110  1.105  1.434   .555   .458   .451  209.9
+1973  237.9  1.181  9042  1.111  1.176  1.448   .566   .497   .474  211.9
+1974  225.8  1.599  8867  1.175  1.226  1.480   .604   .572   .513  213.9
+1975  232.4  1.708  8944  1.276  1.464  1.586   .659   .615   .556  216.0
+1976  241.7  1.779  9175  1.357  1.679  1.742   .695   .638   .598  218.0
+1977  249.2  1.882  9381  1.429  1.828  1.824   .727   .671   .648  220.2
+1978  261.3  1.963  9735  1.538  1.865  1.878   .769   .719   .698  222.6
+1979  248.9  2.656  9829  1.660  2.010  2.003   .821   .800   .756  225.1
+1980  226.8  3.691  9722  1.793  2.081  2.516   .892   .894   .839  227.7
+1981  225.6  4.109  9769  1.902  2.569  3.120   .957   .969   .926  230.0
+1982  228.8  3.894  9725  1.976  2.964  3.460  1.000  1.000  1.000  232.2
+1983  239.6  3.764  9930  2.026  3.297  3.626  1.041  1.021  1.062  234.3
+1984  244.7  3.707 10421  2.085  3.757  3.852  1.038  1.050  1.117  236.3
+1985  245.8  3.738 10563  2.152  3.797  4.028  1.045  1.075  1.173  238.5
+1986  269.4  2.921 10780  2.240  3.632  4.264  1.053  1.069  1.224  240.7
+1987  276.8  3.038 10859  2.321  3.776  4.413  1.085  1.111  1.271  242.8
+1988  279.9  3.065 11186  2.368  3.939  4.494  1.105  1.152  1.336  245.0
+1989  284.1  3.353 11300  2.414  4.019  4.719  1.129  1.213  1.408  247.3
+1990  282.0  3.834 11389  2.451  3.926  5.197  1.144  1.285  1.482  249.9
+1991  271.8  3.766 11272  2.538  3.942  5.427  1.167  1.332  1.557  252.6
+1992  280.2  3.751 11466  2.528  4.113  5.518  1.184  1.358  1.625  255.4
+1993  286.7  3.713 11476  2.663  4.470  6.086  1.200  1.379  1.684  258.1
+1994  290.2  3.732 11636  2.754  4.730  6.268  1.225  1.396  1.734  260.7
+1995  297.8  3.789 11934  2.815  5.224  6.410  1.239  1.419  1.786  263.2
+Create ; G=G/Pop
+       ; lg=log(g) ; lpg=log(pg) ; ly=log(y) ; lpnc=log(pnc)
+       ; lpuc=log(puc) ; lpd=log(pd) ; lpn=log(pn) ; lppt=log(ppt)
+       ; lpd=log(pd)   ; lps=log(ps) ; t=year - 1959 $
+Date   ; 1960 $
+Period ; 1960-1995 $
+Regress ; lhs = lg ; Rhs = One,lpg ; Plot $
+Regress ; lhs = lg ; Rhs = One,lpg,ly ; Plot $
+Regress ; lhs = lg ; Rhs = One,lpg,ly,lpnc,lpuc,lppt,lpn,lpd,lps,t ; Plot $
+Create  ; post=year > 1973
+        ; p1=post*lpg ; p2=post*ly ; p3=post*lpnc ; p4=post*lpuc 
+        ; p5=post*lppt ; p6=post*lpn ; p7=post*lpd ;p8=post*lps ; p9=post*t $
+Regress ; lhs = lg ; Rhs = One,lpg,ly,lpnc,lpuc,lppt,lpn,lpd,lps,t,
+          post,p1,p2,p3,p4,p5,p6,p7,p8,p9  ; PlotResiduals $
+
+
+
+
+     
+/*===============================================================
+Example 13.3.  Autocorrelation Consistent Covariance Estimation
+*/===============================================================
+Read ; Nobs = 20 ; Nvar = 5 ; Names = 1 $
+<... Data are in Example 13.1 ...>
+Create ; If(_Obsno > 1)DP = 100*(Price - Price[-1])/Price[-1] $
+Create ; RealInt = Interest - DP
+       ; RealGNP = GNP/Price
+       ; RealNvst= Invest/Price $
+Dates  ; 1963 $
+Period ; 1964 - 1982 $
+?
+? Uncorrected
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = REALNVST Mean=   192.4258285    , S.D.=   37.62753735     |
+| Model size: Observations =      19, Parameters =   3, Deg.Fr.=     16 |
+| Residuals:  Sum of squares= 4738.626169    , Std.Dev.=       17.20942 |
+| Fit:        R-squared=  .814062, Adjusted R-squared =          .79082 |
+| Model test: F[  2,     16] =   35.03,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -79.3909, Restricted(b=0) Log-L =     -95.3732 |
+|             LogAmemiyaPrCrt.=    5.838, Akaike Info. Crt.=      8.673 |
+| Autocorrel: Durbin-Watson Statistic =   1.32151,   Rho =       .33924 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.53360059      24.915269        -.503   .6218
+ REALGNP   .1691364542      .20566451E-01    8.224   .0000  1217.5764
+ REALINT  -1.001438013      2.3687491        -.423   .6781  .97572578
+*/
+?
+? Newey-West with 4 periods
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ;Pds = 4 $
+/*
++-----------------------------------------------------------------------+
+| Autocorrelation consistent covariance matrix for lags of  4 periods   |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.53360059      18.958298        -.661   .5179
+ REALGNP   .1691364542      .16750786E-01   10.097   .0000  1217.5764
+ REALINT  -1.001438013      3.3423754        -.300   .7683  .97572578
+*/
+/*===============================================================
+Example 13.4.  Durbin-Watson Test
+*/===============================================================
+Read ; Nobs = 20 ; Nvar = 5 ; Names = 1 $
+<... Data are in Example 13.1 ...>
+Create ; If(_Obsno > 1)DP = 100*(Price - Price[-1])/Price[-1] $
+Create ; RealInt = Interest - DP
+       ; RealGNP = GNP/Price
+       ; RealNvst= Invest/Price $
+Dates  ; 1963 $
+Period ; 1964 - 1982 $
+?
+? Uncorrected
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = REALNVST Mean=   192.4258285    , S.D.=   37.62753735     |
+| Model size: Observations =      19, Parameters =   3, Deg.Fr.=     16 |
+| Residuals:  Sum of squares= 4738.626169    , Std.Dev.=       17.20942 |
+| Fit:        R-squared=  .814062, Adjusted R-squared =          .79082 |
+| Model test: F[  2,     16] =   35.03,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -79.3909, Restricted(b=0) Log-L =     -95.3732 |
+|             LogAmemiyaPrCrt.=    5.838, Akaike Info. Crt.=      8.673 |
+| Autocorrel: Durbin-Watson Statistic =   1.32151,   Rho =       .33924 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.53360059      24.915269        -.503   .6218
+ REALGNP   .1691364542      .20566451E-01    8.224   .0000  1217.5764
+ REALINT  -1.001438013      2.3687491        -.423   .6781  .97572578
+*/
+?
+? This is from the earlier regression
+?
+/*
++-----------------------------------------------------------------------+
+| Autocorrel: Durbin-Watson Statistic =   1.32151,   Rho =       .33924 |
++-----------------------------------------------------------------------+
+*/
+/*===============================================================
+Example 13.5.  Tests of Autocorrelation
+*/===============================================================
+Read ; Nobs = 20 ; Nvar = 5 ; Names = 1 $
+<... Data are in Example 13.1 ...>
+Create ; If(_Obsno > 1)DP = 100*(Price - Price[-1])/Price[-1] $
+Create ; RealInt = Interest - DP ; RealGNP = GNP/Price
+       ; RealNvst= Invest/Price $
+Dates  ; 1963 $
+Period ; 1964 - 1982 $
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Res = e $
+Create ; e1=0 ; e2=0 ; e3=0 ; e4 = 0 $
+Create ; If(Year > 1964) e1=e[-1] ; If(Year > 1965) e2=e[-2] $
+Create ; If(Year > 1966) e3=e[-3] ; If(Year > 1967) e4=e[-4] $
+Regress; Lhs = e ; Rhs = One,RealGNP,RealInt,e1,e2,e3,e4 $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = E        Mean=   .2692582999E-13, S.D.=   16.22519674     |
+| Model size: Observations =      19, Parameters =   7, Deg.Fr.=     12 |
+| Residuals:  Sum of squares= 1728.432029    , Std.Dev.=       12.00150 |
+| Fit:        R-squared=  .635246, Adjusted R-squared =          .45287 |
+| Model test: F[  6,     12] =    3.48,    Prob value =          .03129 |
+| Autocorrel: Durbin-Watson Statistic =   2.14283,   Rho =      -.07142 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -.9840129568      17.570750        -.056   .9563
+ REALGNP  -.2737440451E-03  .14506081E-01    -.019   .9853  1217.5764
+ REALINT   4.781480338      2.0801228        2.299   .0403  .97572578
+ E1       -.3866480026      .30834110       -1.254   .2337  1.7543872
+ E2       -.2851881078      .32520577        -.877   .3977  1.5487491
+ E3       -.8375322739      .36154515       -2.317   .0390  2.0273388
+ E4       -.6398668666      .37206559       -1.720   .1111  .82848421
+*/
+Calc    ; List ; LMG_G = n * Rsqrd  ; Ctb(.95,5) ; Ctb(.99,4) $
+/*
+    LMG_G   =  .12069677290650900D+02
+    Result  =  .11070497756249990D+02
+    Result  =  .13276704137459990D+02
+*/
+Period   ; 1964-1982 $
+Identify ; Rhs = e ; Pds = 4 $
+/*
+Time series identification for E
+Box-Pierce Statistic =     9.5330      Box-Ljung Statistic  =    12.4321
+Degrees of freedom   =          4      Degrees of freedom   =          4
+Significance level   =      .0491      Significance level   =      .0144
+* => |coefficient| > 2/sqrt(N) or > 95% significant.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Lag |  Autocorrelation Function     |Box/Prc|    Partial Autocorrelations   X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  1 | .222 |           |**          |   .94 | .222 |            |**         X
+  2 |-.239 |        ***|            |  2.02 |-.457 |      ***** |           X
+  3 |-.558*|     ******|            |  7.93*|-.699*|   ******** |           X
+  4 |-.291 |        ***|            |  9.53*|-.386 |       **** |           X
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+*/
+
+/*===============================================================
+Example 13.6.  Estimation of rho in the AR(1) Model
+*/===============================================================
+Read ; Nobs = 20 ; Nvar = 5 ; Names = 1 $
+<... Data are in Example 13.1 ...>
+Create ; If(_Obsno > 1)DP = 100*(Price - Price[-1])/Price[-1] $
+Create ; RealInt = Interest - DP
+       ; RealGNP = GNP/Price
+       ; RealNvst= Invest/Price $
+Dates  ; 1963 $
+Period ; 1964 - 1982 $
+?
+? Least Squares
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = REALNVST Mean=   192.4258285    , S.D.=   37.62753735     |
+| Model size: Observations =      19, Parameters =   3, Deg.Fr.=     16 |
+| Residuals:  Sum of squares= 4738.626169    , Std.Dev.=       17.20942 |
+| Fit:        R-squared=  .814062, Adjusted R-squared =          .79082 |
+| Model test: F[  2,     16] =   35.03,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -79.3909, Restricted(b=0) Log-L =     -95.3732 |
+|             LogAmemiyaPrCrt.=    5.838, Akaike Info. Crt.=      8.673 |
+| Autocorrel: Durbin-Watson Statistic =   1.32151,   Rho =       .33924 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.53360059      24.915269        -.503   .6218
+ REALGNP   .1691364542      .20566451E-01    8.224   .0000  1217.5764
+ REALINT  -1.001438013      2.3687491        -.423   .6781  .97572578
+*/
+?
+? Prais-Winsten, no iteration
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Ar1 ; Maxit=1 $
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .33924 |
+| Iter=  1, SS=   4430.888, Log-L= -78.814170 |
+| Final value of Rho    =              .35272 |
+| Durbin-Watson:   e(t) =             1.29456 |
+| Std. Deviation:  e(t) =            17.78423 |
+| Std. Deviation:  u(t) =            16.64123 |
+| Durbin-Watson:   u(t) =             1.83010 |
+| Autocorrelation: u(t) =              .08495 |
+| N[0,1] used for significance levels         |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -15.65512900      33.764549        -.464   .6429
+ REALGNP   .1707344360      .27905479E-01    6.118   .0000  1217.5764
+ REALINT  -.7039317251      2.8157615        -.250   .8026  .97572578
+ RHO       .3527183077      .22055357        1.599   .1098
+*/
+?
+? Prais-Winsten, iterated
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Ar1 $
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .33924 |
+| Iter=  2, SS=   4434.763, Log-L= -78.827770 |
+| Final value of Rho    =              .33924 |
+| Durbin-Watson:   e(t) =             1.29125 |
+| Std. Deviation:  e(t) =            17.69029 |
+| Std. Deviation:  u(t) =            16.64123 |
+| Durbin-Watson:   u(t) =             1.84077 |
+| Autocorrelation: u(t) =              .07961 |
+| N[0,1] used for significance levels         |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -15.65512900      33.764549        -.464   .6429
+ REALGNP   .1707344360      .27905479E-01    6.118   .0000  1217.5764
+ REALINT  -.7039317251      2.8157615        -.250   .8026  .97572578
+ RHO       .3392438009      .22172476        1.530   .1260
+*/
+?
+? Cochrane-Orcutt, no iteration
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Ar1 ; Alg = Corc ; Maxit=1$
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .33924 |
+| Maximum iterations         =              1 |
+| Iter=  1, SS=   4428.177, Log-L= -78.808355 |
+| Final value of Rho    =              .35592 |
+| Durbin-Watson:   e(t) =             1.28816 |
+| Std. Deviation:  e(t) =            18.38569 |
+| Std. Deviation:  u(t) =            17.18173 |
+| Durbin-Watson:   u(t) =             1.83080 |
+| Autocorrelation: u(t) =              .08460 |
+| N[0,1] used for significance levels         |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -18.35665003      44.832617        -.409   .6822
+ REALGNP   .1728550839      .36328913E-01    4.758   .0000  1217.5764
+ REALINT  -.8077352213      3.1024426        -.260   .7946  .97572578
+ RHO       .3559204945      .22026759        1.616   .1061
+*/
+?
+? Cochrane-Orcutt, iterated
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Ar1 ; Alg = Corc $
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .33924 |
+| Iter=  2, SS=   4432.635, Log-L= -78.824507 |
+| Final value of Rho    =              .33924 |
+| Durbin-Watson:   e(t) =             1.28251 |
+| Std. Deviation:  e(t) =            18.26486 |
+| Std. Deviation:  u(t) =            17.18173 |
+| Durbin-Watson:   u(t) =             1.84420 |
+| Autocorrelation: u(t) =              .07790 |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -18.35665003      44.832617        -.409   .6822
+ REALGNP   .1728550839      .36328913E-01    4.758   .0000  1217.5764
+ REALINT  -.8077352213      3.1024426        -.260   .7946  .97572578
+ RHO       .3392438009      .22172476        1.530   .1260
+*/
+?
+? Maximum Likelihood
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Ar1 ; Alg=MLE $
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .33924 |
+| Iter=  3, SS=   4427.608, Log-L= -78.786810 |
+| Final value of Rho    =              .27957 |
+| Durbin-Watson:   e(t) =             1.30606 |
+| Std. Deviation:  e(t) =            17.32595 |
+| Std. Deviation:  u(t) =            16.63507 |
+| Durbin-Watson:   u(t) =             1.78681 |
+| Autocorrelation: u(t) =              .10659 |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -14.49886226      31.556137        -.459   .6459
+ REALGNP   .1700598065      .26075834E-01    6.522   .0000  1217.5764
+ REALINT  -.8242123000      2.7180836        -.303   .7617  .97572578
+ RHO       .2795732015      .22630349        1.235   .2167
+*/
+? Durbin's estimator.  Uses r(Durbin) in Cochrane-Orcutt
+? First step to estimate rho
+?
+Period ; 1965-1982 $
+Regress; Lhs = RealNvst ; Rhs = RealNvst[-1],
+                                One,RealGNP,RealInt,RealGNP[-1],RealInt[-1]$
+Calc   ; Durbin = b(1) $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ REAL[-1]  .6385436366      .12796334        4.990   .0003  191.98517
+ Constant -32.34674009      13.765052       -2.350   .0367
+ REALGNP   .6924822569      .61735020E-01   11.217   .0000  1236.5350
+ REALINT  -1.560727766      1.6372713        -.953   .3593  .91797790
+ REAL[-1] -.6242457613      .64077072E-01   -9.742   .0000  1202.6972
+ REAL[-1]  1.820487907      2.0286062         .897   .3872  .75194352
+*/
+? Second step
+?
+Period ; 1964-1982 $
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt ; Ar1 ; Rho=Durbin $
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .63854 |
+| Iter=  1, SS=   4727.374, Log-L= -79.630253 |
+| Final value of Rho    =              .63854 |
+| Durbin-Watson:   e(t) =             1.08041 |
+| Std. Deviation:  e(t) =            22.33536 |
+| Std. Deviation:  u(t) =            17.18898 |
+| Durbin-Watson:   u(t) =             1.93870 |
+| Autocorrelation: u(t) =              .03065 |
+| N[0,1] used for significance levels         |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -35.68666732      53.137278        -.672   .5018
+ REALGNP   .1843982111      .43910331E-01    4.199   .0000  1217.5764
+ REALINT   .4984430353      3.3725989         .148   .8825  .97572578
+ RHO       .6385436366      .18139307        3.520   .0004
+*/
+?
+? Hildreth-Lu grid search
+?
+Regress; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt 
+       ; Ar1 ; Alg = Grid(.1,.9,.03) $$
+/*
++---------------------------------------------+
+| AR(1) Model:     e(t) = rho * e(t-1) + u(t) |
+| Initial value of rho       =         .33924 |
+| Maximum iterations         =             20 |
+| Method = Grid Search over interval          |
+| Rho = .1000 to  .9000 in steps of    .0300  |
+| Iter= 27, SS=   4850.972, Log-L= -80.358033 |
+| GLS with optimal rho                        |
+| Final value of Rho    =              .31000 |
+| Durbin-Watson:   e(t) =              .36931 |
+| Std. Deviation:  e(t) =            17.49469 |
+| Std. Deviation:  u(t) =            16.63284 |
+| Durbin-Watson:   u(t) =             1.80940 |
+| Autocorrelation: u(t) =              .09530 |
+| N[0,1] used for significance levels         |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -15.03194914      32.628853        -.461   .6450
+ REALGNP   .1703660777      .26964694E-01    6.318   .0000  1217.5764
+ REALINT  -.7678180718      2.7666129        -.278   .7814  .97572578
+ RHO       .3100000000      .22409076        1.383   .1666
+*/
+/*======================================================================
+Example 13.7.  Tests for common Factors
+/*======================================================================
+Read ; Nobs = 36 ; Nvar = 11 ; Names = 1 $
+<... Data are in Example 13.2 ...>
+Create ; G=G/Pop
+       ; lg=log(g) ; lpg=log(pg) ; ly=log(y) ; lpnc=log(pnc)
+       ; lpuc=log(puc) ; lpd=log(pd) ; lpn=log(pn) ; lppt=log(ppt)
+       ; lpd=log(pd)   ; lps=log(ps) ; t=year - 1959 $
+Date   ; 1960 $
+Period ; 1960-1995 $
+Period  ; 1961-1995 $
+?
+? Original Model generates starting values for least squares
+?
+Regress ; Lhs = lg ; Rhs = one,lpg,ly,lpnc,lpuc $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LG       Mean=   .5660123001E-02, S.D.=   .1429479464     |
+| Model size: Observations =      35, Parameters =   5, Deg.Fr.=     30 |
+| Residuals:  Sum of squares= .3221515019E-01, Std.Dev.=         .03277 |
+| Fit:        R-squared=  .953631, Adjusted R-squared =          .94745 |
+| Model test: F[  4,     30] =  154.25,    Prob value =          .00000 |
+| Diagnostic: Log-L =     72.6738, Restricted(b=0) Log-L =      18.9290 |
+|             LogAmemiyaPrCrt.=   -6.703, Akaike Info. Crt.=     -3.867 |
+| Autocorrel: Durbin-Watson Statistic =    .62880,   Rho =       .68560 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.59419663      .70019567      -17.987   .0000
+ LPG      -.5899395539E-01  .32220963E-01   -1.831   .0771  .69558165
+ LY        1.401655336      .78457513E-01   17.865   .0000  9.1225115
+ LPNC     -.1849482733      .13455582       -1.375   .1795  .45460339
+ LPUC     -.8964335606E-01  .84071091E-01   -1.066   .2948  .68769049
+*/
+?
+? AR(1) model with nonlinear restrictions
+? First create lagged values
+Period  ; 1960-1995 $
+Create  ; lg1=lg[-1]     ; lpg1=lpg[-1] ; ly1=ly[-1]
+        ; lpnc1=lpnc[-1] ; lpuc1=lpuc[-1] $
+Period  ; 1961-1995 $
+Mini    ; Fcn = (lg-(b1 + b2*(lpg-r*lpg1)   + b3*(ly-r*ly1)
+              + b4*(lpnc-r*lpnc1) + b5*(lpuc-r*lpuc1) + r*lg1))^2
+        ; Labels=b1,b2,b3,b4,b5,r
+        ; Start =b ; output=1 $maxit=500 $
+/*
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations               35     |
+              | Iterations completed                 82     |
+              | Log likelihood function       -.1058078E-01 |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1       -.4615029339      1689.5382         .000   .9998
+ B2       -.2237281149      67.802613        -.003   .9974
+ B3        .8710401765      400.73680         .002   .9983
+ B4        .8423654168E-01  489.08698         .000   .9999
+ B5       -.4147907912E-01  136.72685         .000   .9998
+ R         .9402079240      196.82878         .005   .9962
+*/
+Calc    ; list ; eer = logl $
+/*
+    EER     =  .10580776412476630D-01
+*/
+?
+? Unrestricted model
+?
+Regress ; Lhs = lg ; Rhs=One,lpg,ly,lpnc,lpuc,lg1,lpg1,ly1,lpnc1,lpuc1 $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LG       Mean=   .5660123001E-02, S.D.=   .1429479464     |
+| Model size: Observations =      35, Parameters =  10, Deg.Fr.=     25 |
+| Residuals:  Sum of squares= .5681943859E-02, Std.Dev.=         .01508 |
+| Fit:        R-squared=  .991822, Adjusted R-squared =          .98888 |
+| Model test: F[  9,     25] =  336.88,    Prob value =          .00000 |
+| Diagnostic: Log-L =    103.0388, Restricted(b=0) Log-L =      18.9290 |
+|             LogAmemiyaPrCrt.=   -8.138, Akaike Info. Crt.=     -5.317 |
+| Autocorrel: Durbin-Watson Statistic =   2.46386,   Rho =      -.23193 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -2.767067048      1.1651346       -2.375   .0255
+ LPG      -.2571382493      .34841096E-01   -7.380   .0000  .69558165
+ LY        .6945043254      .24726979        2.809   .0095  9.1225115
+ LPNC      .5271610467E-01  .18304866         .288   .7757  .45460339
+ LPUC      .8722096439E-01  .76151454E-01    1.145   .2629  .68769049
+ LG1       .8290331665      .98450499E-01    8.421   .0000 -.73433635E-02
+ LPG1      .2054211804      .40347106E-01    5.091   .0000  .65529411
+ LY1      -.3836343685      .23222987       -1.652   .1110  9.1030357
+ LPNC1    -.1747114895      .16764160       -1.042   .3073  .42629066
+ LPUC1    -.4688845523E-01  .59265160E-01    -.791   .4363  .63533649
+*/
+Calc    ; List ; eeu = sumsqdev
+               ; F = ((eer-eeu)/5)/(eeu/25) 
+               ; Ftb(.95,4,25) $
+/*
+    EEU     =  .56819438592170710D-02
+    F       =  .43108772936156550D+01
+    Result  =  .27587104697200010D+01
+
+*/
+
+?
+? Repeat common factor study for investment data
+?
+Reset $
+Read ; Nobs = 20 ; Nvar = 5 ; Names = 1 $
+<... Data are in Example 13.1 ...>
+Create ; If(_Obsno > 1)DP = 100*(Price - Price[-1])/Price[-1] $
+Create ; RealInt = Interest - DP
+       ; RealGNP = GNP/Price
+       ; RealNvst= Invest/Price $
+Create ; GNP1 = RealGNP[-1]
+       ; Nvst1= RealNvst[-1] 
+       ; Int1 = RealInt[-1] $
+Dates  ; 1963 $
+Period ; 1965 - 1982 $
+?
+? Original Model generates starting values for least squares
+?
+Regress ; Lhs = RealNvst ; Rhs = one,RealGNP,RealInt $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = REALNVST Mean=   195.6802431    , S.D.=   35.86147600     |
+| Model size: Observations =      18, Parameters =   3, Deg.Fr.=     15 |
+| Residuals:  Sum of squares= 4738.582002    , Std.Dev.=       17.77373 |
+| Fit:        R-squared=  .783258, Adjusted R-squared =          .75436 |
+| Model test: F[  2,     15] =   27.10,    Prob value =          .00001 |
+| Diagnostic: Log-L =    -75.6990, Restricted(b=0) Log-L =     -89.4604 |
+|             LogAmemiyaPrCrt.=    5.910, Akaike Info. Crt.=      8.744 |
+| Autocorrel: Durbin-Watson Statistic =   1.30185,   Rho =       .34908 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.69630855      29.180604        -.435   .6697
+ REALGNP   .1692659471      .23897949E-01    7.083   .0000  1236.5350
+ REALINT  -1.009511692      2.5399256        -.397   .6966  .91797790
+*/
+Nlsq    ; Lhs = RealNvst 
+        ; Fcn = b1 + b2*(RealGNP - r*GNP1) + b3*(RealInt - r*Int1) 
+                   + r*Nvst1 
+        ; labels = b1,b2,b3,r
+        ; Start = b,0 ; maxit=500 $
+/*
++-----------------------------------------------------------------------+
+| User Defined Optimization                                             |
+| Nonlinear   least squares regression    Weighting variable = none     |
+| Number of iterations completed =  10                                  |
+| Dep. var. = REALNVST Mean=   195.6802431    , S.D.=   35.86147600     |
+| Model size: Observations =      18, Parameters =   4, Deg.Fr.=     14 |
+| Residuals:  Sum of squares= 4424.285402    , Std.Dev.=       15.67781 |
+| Fit:        R-squared=  .797634, Adjusted R-squared =          .80888 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  3,     14] =   18.39,    Prob value =          .00004 |
+| Diagnostic: Log-L =    -75.0813, Restricted(b=0) Log-L =     -89.4604 |
+|             LogAmemiyaPrCrt.=    5.705, Akaike Info. Crt.=      8.787 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1       -11.82420047      27.501045        -.430   .6672
+ B2        .1719269810      .31414021E-01    5.473   .0000
+ B3       -.8627422066      2.7634259        -.312   .7549
+ R         .3038637095      .26668281        1.139   .2545
+*/
+Calc    ; List ; eer = sumsqdev $
+/*
+    EER     =  .44242854020687100D+04
+*/
+Regress ; Lhs = RealNvst ; Rhs = One,RealGNP,RealInt,GNP1,Int1,Nvst1 $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = REALNVST Mean=   195.6802431    , S.D.=   35.86147600     |
+| Model size: Observations =      18, Parameters =   6, Deg.Fr.=     12 |
+| Residuals:  Sum of squares= 513.1205047    , Std.Dev.=        6.53912 |
+| Fit:        R-squared=  .976530, Adjusted R-squared =          .96675 |
+| Model test: F[  5,     12] =   99.86,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -55.6921, Restricted(b=0) Log-L =     -89.4604 |
+|             LogAmemiyaPrCrt.=    4.043, Akaike Info. Crt.=      6.855 |
+| Autocorrel: Durbin-Watson Statistic =   2.39017,   Rho =      -.19508 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -32.34674009      13.765052       -2.350   .0367
+ REALGNP   .6924822569      .61735020E-01   11.217   .0000  1236.5350
+ REALINT  -1.560727766      1.6372713        -.953   .3593  .91797790
+ GNP1     -.6242457613      .64077072E-01   -9.742   .0000  1202.6972
+ INT1      1.820487907      2.0286062         .897   .3872  .75194352
+ NVST1     .6385436366      .12796334        4.990   .0003  191.98517
+*/
+Calc    ; List ; eeu = sumsqdev
+               ; F = ((eer - eeu)/2)/(eeu/12) 
+               ; Ftb(.95,2,12) $
+/*
+    EEU     =  .51312050469399730D+03
+    F       =  .45733875706726950D+02
+    Result  =  .38852938346599990D+01
+*/
+Chapter 14. Models for Panel Data
+
+/*======================================================================
+Example 14.1.  Cost Function for Airline Production
+*/======================================================================
+Read ; Nobs = 90 ; Nvar = 6 ; Names = 1 $
+I    T       C              Q         PF            LF
+1    1     1140640       .952757    106650       .534487
+1    2     1215690       .986757    110307       .532328
+1    3     1309570      1.091980    110574       .547736
+1    4     1511530      1.175780    121974       .540846
+1    5     1676730      1.160170    196606       .591167
+1    6     1823740      1.173760    265609       .575417
+1    7     2022890      1.290510    263451       .594495
+1    8     2314760      1.390670    316411       .597409
+1    9     2639160      1.612730    384110       .638522
+1   10     3247620      1.825440    569251       .676287
+1   11     3787750      1.546040    871636       .605735
+1   12     3867750      1.527900    997239       .614360
+1   13     3996020      1.660200    938002       .633366
+1   14     4282880      1.822310    859572       .650117
+1   15     4748320      1.936460    823411       .625603
+2    1      569292       .520635    103795       .490851
+2    2      640614       .534627    111477       .473449
+2    3      777655       .655192    118664       .503013
+2    4      999294       .791575    114797       .512501
+2    5     1203970       .842945    215322       .566782
+2    6     1358100       .852892    281704       .558133
+2    7     1501350       .922843    304818       .558799
+2    8     1709270      1.000000    348609       .572070
+2    9     2025400      1.198450    374579       .624763
+2   10     2548370      1.340670    544109       .628706
+2   11     3137740      1.326240    853356       .589150
+2   12     3557700      1.248520   1003200       .532612
+2   13     3717740      1.254320    941977       .526652
+2   14     3962370      1.371770    856533       .540163
+2   15     4209390      1.389740    821361       .528775
+3    1      286298       .262424    118788       .524334
+3    2      309290       .266433    123798       .537185
+3    3      342056       .306043    122882       .582119
+3    4      374595       .325586    131274       .579489
+3    5      450037       .345706    222037       .606592
+3    6      510412       .367517    278721       .607270
+3    7      575347       .409937    306564       .582425
+3    8      669331       .448023    356073       .573972
+3    9      783799       .539595    378311       .654256
+3   10      913883       .539382    555267       .631055
+3   11     1041520       .467967    850322       .569240
+3   12     1125800       .450544   1015610       .589682
+3   13     1096070       .468793    954508       .587953
+3   14     1198930       .494397    886999       .565388
+3   15     1170470       .493317    844079       .577078
+4    1      145167       .086393    114987       .432066
+4    2      170192       .096740    120501       .439669
+4    3      247506       .141500    121908       .488932
+4    4      309391       .169715    127220       .484181
+4    5      354338       .173805    209405       .529925
+4    6      373941       .164272    263148       .532723
+4    7      420915       .170906    316724       .549067
+4    8      474017       .177840    363598       .557140
+4    9      532590       .192248    389436       .611377
+4   10      676771       .242469    547376       .645319
+4   11      880438       .256505    850418       .611734
+4   12     1052020       .249657   1011170       .580884
+4   13     1193680       .273923    951934       .572047
+4   14     1303390       .371131    881323       .594570
+4   15     1436970       .421411    831374       .585525
+5    1       91361       .051028    118222       .442875
+5    2       95428       .052646    116223       .462473
+5    3       98187       .056348    115853       .519118
+5    4      115967       .066953    129372       .529331
+5    5      138382       .070308    243266       .557797
+5    6      156228       .073961    277930       .556181
+5    7      183169       .084946    317273       .569327
+5    8      210212       .095474    358794       .583465
+5    9      274024       .119814    397667       .631818
+5   10      356915       .150046    566672       .604723
+5   11      432344       .144014    848393       .587921
+5   12      524294       .169300   1005740       .616159
+5   13      530924       .172761    958231       .605868
+5   14      581447       .186670    872924       .594688
+5   15      610257       .213279    844622       .635545
+6    1       68978       .037682    117112       .448539
+6    2       74904       .039784    119420       .475889
+6    3       83829       .044331    116087       .500562
+6    4       98148       .050245    122997       .500344
+6    5      118449       .055046    194309       .528897
+6    6      133161       .052462    307923       .495361
+6    7      145062       .056977    323595       .510342
+6    8      170711       .061490    363081       .518296
+6    9      199775       .069027    386422       .546723
+6   10      276797       .092749    564867       .554276
+6   11      381478       .112640    874818       .517766
+6   12      506969       .154154   1013170       .580049
+6   13      633388       .186461    930477       .556024
+6   14      804388       .246847    851676       .537791
+6   15     1009500       .304013    819476       .525775
+?
+? Data Setup
+?
+Create ; logc = Log(c) ; logq = log(q) ; logf = log(pf) $
+?
+? Initial Least Squares Regression
+?
+Regress ; Lhs = logc ; Rhs = One,logq,logf,lf ; Res = e $
+Calc    ; list ; eer = sumsqdev ; ssqrd$
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =   4, Deg.Fr.=     86 |
+| Residuals:  Sum of squares= 1.335442194    , Std.Dev.=         .12461 |
+| Fit:        R-squared=  .988290, Adjusted R-squared =          .98788 |
+| Model test: F[  3,     86] = 2419.34,    Prob value =          .00000 |
+| Diagnostic: Log-L =     61.7702, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -4.122, Akaike Info. Crt.=     -1.284 |
+| Autocorrel: Durbin-Watson Statistic =    .38330,   Rho =       .80835 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  9.516921859      .22924451       41.514   .0000
+ LOGQ      .8827385540      .13254516E-01   66.599   .0000 -1.1743092
+ LOGF      .4539770541      .20304180E-01   22.359   .0000  12.770359
+ LF       -1.627510341      .34530204       -4.713   .0000  .56046016
+ 
+ EER     =  .13354421939811450D+01
+ SSQRD   =  .15528397604431940D-01
+*/
+
+/*======================================================================
+Example 14.2.  Cost Equations with Firm and Period Effects
+Uses same data as Example 14.1
+*/======================================================================
+?
+Namelist ; X = logq,logf,lf $
+?-----------------------------------------------------------------------
+? 1.  Least squares with no effects.  Restricted sum of squares has all
+?     constants constrained to be equal.
+? -----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = one,X $
+Calc    ; list ; eer = sumsqdev ; ssqrd $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =   4, Deg.Fr.=     86 |
+| Residuals:  Sum of squares= 1.335442194    , Std.Dev.=         .12461 |
+| Fit:        R-squared=  .988290, Adjusted R-squared =          .98788 |
+| Model test: F[  3,     86] = 2419.34,    Prob value =          .00000 |
+| Diagnostic: Log-L =     61.7702, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -4.122, Akaike Info. Crt.=     -1.284 |
+| Autocorrel: Durbin-Watson Statistic =    .38330,   Rho =       .80835 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  9.516921859      .22924451       41.514   .0000
+ LOGQ      .8827385540      .13254516E-01   66.599   .0000 -1.1743092
+ LOGF      .4539770541      .20304180E-01   22.359   .0000  12.770359
+ LF       -1.627510341      .34530204       -4.713   .0000  .56046016
+ EER     =  .13354421939811450D+01
+ SSQRD   =  .15528397604431940D-01
+*/
+?-----------------------------------------------------------------------
+? Group Means Regression
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel ; Means $
+Calc     ; list ; ssqrd $
+/*
++-----------------------------------------------------------------------+
+| Group Means Regression                                                |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = YBAR(i.) Mean=   13.36560930    , S.D.=   .9978687061     |
+| Model size: Observations =       6, Parameters =   4, Deg.Fr.=      2 |
+| Residuals:  Sum of squares= .3167435995E-01, Std.Dev.=         .12585 |
+| Fit:        R-squared=  .993638, Adjusted R-squared =          .98410 |
+| Model test: F[  3,      2] =  104.12,    Prob value =          .00953 |
+| Diagnostic: Log-L =      7.2184, Restricted(b=0) Log-L =      -7.9539 |
+|             LogAmemiyaPrCrt.=   -3.635, Akaike Info. Crt.=     -1.073 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  85.81207792      56.481742        1.519   .1287
+ LOGQ      .7824496503      .10876395        7.194   .0000  .23051463E-11
+ LOGF     -5.524215185      4.4786958       -1.233   .2174  .18644311
+ LF       -1.751096777      2.7430775        -.638   .5232  .32540123
+ SSQRD   =  .15837179973004820D-01
+*/
+?-----------------------------------------------------------------------
+? Firm Effects, and test for firm effects
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel 
+        ; Fixed Effects ; Output = 2 $
+Calc    ; eeu = sumsqdev 
+        ; list ; ssqrd
+               ; F = ((eer - eeu)/5)/(eeu/81) 
+               ; Ftb(.95,5,81) $
+/*
++-----------------------------------------------------------------------+
+| Least Squares with Group Dummy Variables                              |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =   9, Deg.Fr.=     81 |
+| Residuals:  Sum of squares= .2926127513    , Std.Dev.=         .06010 |
+| Fit:        R-squared=  .997434, Adjusted R-squared =          .99718 |
+| Model test: F[  8,     81] = 3935.92,    Prob value =          .00000 |
+| Diagnostic: Log-L =    130.0877, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -5.528, Akaike Info. Crt.=     -2.691 |
+| Estd. Autocorrelation of e(i,t)     .516200                           |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9192931104      .29889750E-01   30.756   .0000 -1.1743092
+ LOGF      .4174883826      .15198961E-01   27.468   .0000  12.770359
+ LF       -1.070404704      .20168647       -5.307   .0000  .56046016
++------------------------------------------------------------------------+
+|                Test Statistics for the Classical Model                 |
+|                                                                        |
+|        Model            Log-Likelihood    Sum of Squares    R-squared  |
+| (1)  Constant term only     -138.35810   .1140408949D+03     .0000000  |
+| (2)  Group effects only      -90.48802   .3936107526D+02     .6548512  |
+| (3)  X - variables only       61.77016   .1335442193D+01     .9882898  |
+| (4)  X and group effects     130.08770   .2926127513D+00     .9974341  |
+|                                                                        |
+|                                Hypothesis Tests                        |
+|               Likelihood Ratio Test                F Tests             |
+|          Chi-squared   d.f.  Prob.         F    num. denom. Prob value |
+| (2) vs (1)    95.740      5     .00000    31.875    5    84     .00000 |
+| (3) vs (1)   400.257      3     .00000  2419.341    3    86     .00000 |
+| (4) vs (1)   536.892      8     .00000  3935.923    8    81     .00000 |
+| (4) vs (2)   441.151      3     .00000  3604.930    3    81     .00000 |
+| (4) vs (3)   136.635      5     .00000    57.734    5    81     .00000 |
++------------------------------------------------------------------------+
+Estimated Fixed Effects
+        Group       Coefficient       Standard Error       t-ratio
+            1           9.70599               .19312      50.25843
+            2           9.66475               .19898      48.57160
+            3           9.49708               .22496      42.21756
+            4           9.89056               .24176      40.91056
+            5           9.73007               .26094      37.28867
+            6           9.79307               .26366      37.14294
+SSQRD   =  .36125031024485010D-02
+F       =  .57734452434158600D+02
+Result  =  .23272689375300000D+01
+*/
+?-----------------------------------------------------------------------
+? Time Effects
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=t ; Panel 
+        ; Fixed Effects ; Output = 2 $
+Calc    ; eeu = sumsqdev 
+        ; list ; ssqrd
+               ; F = ((eer - eeu)/14)/(eeu/72) 
+               ; Ftb(.95,14,72) $
+/*
++-----------------------------------------------------------------------+
+| Least Squares with Group Dummy Variables                              |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =  18, Deg.Fr.=     72 |
+| Residuals:  Sum of squares= 1.088199385    , Std.Dev.=         .12294 |
+| Fit:        R-squared=  .990458, Adjusted R-squared =          .98820 |
+| Model test: F[ 17,     72] =  439.61,    Prob value =          .00000 |
+| Diagnostic: Log-L =     70.9834, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -4.010, Akaike Info. Crt.=     -1.177 |
+| Estd. Autocorrelation of e(i,t)     .000000                           |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .8677271602      .15408346E-01   56.315   .0000 -1.1743092
+ LOGF     -.4844720940      .36412133       -1.331   .1868  12.770359
+ LF       -1.954413839      .44237965       -4.418   .0000  .56046016
+
+        Estimated Fixed Effects
+        Group       Coefficient       Standard Error       t-ratio
+            1          20.49568              4.20968       4.86871
+            2          20.57791              4.22167       4.87435
+            3          20.65560              4.22433       4.88968
+            4          20.74063              4.24590       4.88486
+            5          21.19970              4.44049       4.77418
+            6          21.41148              4.53878       4.71745
+            7          21.50321              4.57156       4.70370
+            8          21.65389              4.62305       4.68390
+            9          21.82943              4.65707       4.68737
+           10          22.11366              4.79282       4.61392
+           11          22.46518              4.95008       4.53834
+           12          22.65119              5.00877       4.52231
+           13          22.61640              4.98632       4.53569
+           14          22.55208              4.95612       4.55035
+           15          22.53661              4.94071       4.56142
++------------------------------------------------------------------------+
+|                Test Statistics for the Classical Model                 |
+|                                                                        |
+|        Model            Log-Likelihood    Sum of Squares    R-squared  |
+| (1)  Constant term only     -138.35810   .1140408949D+03     .0000000  |
+| (2)  Group effects only     -120.52864   .7673414457D+02     .3271348  |
+| (3)  X - variables only       61.77016   .1335442193D+01     .9882898  |
+| (4)  X and group effects      70.98337   .1088199385D+01     .9904578  |
+|                                                                        |
+|                                Hypothesis Tests                        |
+|               Likelihood Ratio Test                F Tests             |
+|          Chi-squared   d.f.  Prob.         F    num. denom. Prob value |
+| (2) vs (1)    35.659     14     .00117     2.605   14    75     .00404 |
+| (3) vs (1)   400.257      3     .00000  2419.341    3    86     .00000 |
+| (4) vs (1)   418.683     17     .00000   439.614   17    72     .00000 |
+| (4) vs (2)   383.024      3     .00000  1668.355    3    72     .00000 |
+| (4) vs (3)    18.426     14     .18804     1.168   14    72     .31782 |
++------------------------------------------------------------------------+
+SSQRD   =  .15113880346050360D-01
+F       =  .11684756160023560D+01
+Result  =  .18316069375600010D+01
+*/
+?-----------------------------------------------------------------------
+? Firm and Time Effects
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Period = t
+        ; Panel ; Fixed Effects ; Output = 2 $
+Calc    ; eeu = sumsqdev 
+        ; list ; ssqrd
+               ; F = ((eer - eeu)/20)/(eeu/67) 
+               ; Ftb(.95,20,67) $
+/*
++-----------------------------------------------------------------------+
+| Least Squares with Group Dummy Variables and Period Effects           |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =  24, Deg.Fr.=     66 |
+| Residuals:  Sum of squares= .1742088068    , Std.Dev.=         .05138 |
+| Fit:        R-squared=  .998449, Adjusted R-squared =          .99791 |
+| Model test: F[ 23,     66] = 1847.57,    Prob value =          .00000 |
+| Diagnostic: Log-L =    153.4245, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -5.701, Akaike Info. Crt.=     -2.876 |
+| Estd. Autocorrelation of e(i,t)     .492487                           |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .8172488392      .31850925E-01   25.659   .0000 -1.1743092
+ LOGF      .1686107443      .16347803        1.031   .3052  12.770359
+ LF       -.8828121095      .26173699       -3.373   .0011  .56046016
+ Constant  12.66687333      2.0810682        6.087   .0000
+
+       Estimated Fixed Effects
+       Group        Coefficient       Standard Error       t-ratio
+            1            .12833               .05383       2.38395
+            2            .06549               .04559       1.43666
+            3           -.18947               .01826     -10.37535
+            4            .13425               .02143       6.26538
+            5           -.09265               .04365      -2.12273
+            6           -.04595               .04867       -.94411
+       Estimated Fixed Effects
+       Period       Coefficient       Standard Error       t-ratio
+            1           -.37402               .22447      -1.66627
+            2           -.31932               .21770      -1.46680
+            3           -.27669               .21450      -1.28994
+            4           -.22304               .20235      -1.10224
+            5           -.15393               .10112      -1.52216
+            6           -.10809               .05248      -2.05967
+            7           -.07686               .03736      -2.05744
+            8           -.02073               .02392       -.86653
+            9            .04722               .03402       1.38795
+           10            .09173               .09494        .96618
+           11            .20731               .17448       1.18815
+           12            .28547               .20547       1.38934
+           13            .30138               .19423       1.55162
+           14            .30047               .17972       1.67188
+           15            .31911               .17254       1.84946
++------------------------------------------------------------------------+
+|                Test Statistics for the Classical Model                 |
+|                                                                        |
+|        Model            Log-Likelihood    Sum of Squares    R-squared  |
+| (1)  Constant term only     -138.35810   .1140408949D+03     .0000000  |
+| (2)  Group effects only      -90.48802   .3936107526D+02     .6548512  |
+| (3)  X - variables only       61.77016   .1335442193D+01     .9882898  |
+| (4)  X and group effects     130.08770   .2926127513D+00     .9974341  |
+| (5)  X ind.&time effects     152.74779   .1768483342D+00     .9984493  |
+|                                                                        |
+|                                Hypothesis Tests                        |
+|               Likelihood Ratio Test                F Tests             |
+|          Chi-squared   d.f.  Prob.         F    num. denom. Prob value |
+| (2) vs (1)    95.740      5     .00000    31.875    5    84     .00000 |
+| (3) vs (1)   400.257      3     .00000  2419.341    3    86     .00000 |
+| (4) vs (1)   536.892      8     .00000  3935.923    8    81     .00000 |
+| (4) vs (2)   441.151      3     .00000  3604.930    3    81     .00000 |
+| (4) vs (3)   136.635      5     .00000    57.734    5    81     .00000 |
+| (5) vs (4)    45.320     14     .00004     3.133   14    67     .00085 |
+| (5) vs (3)   181.955     20     .00000    21.947   20    67     .00000 |
++------------------------------------------------------------------------+
+    SSQRD   =  .36125031024485010D-02
+    F       =  .11938914546569830D+02
+    Result  =  .17292065212300000D+01
+*/
+
+/*======================================================================
+Example 14.3.  Testing for Random Effects
+Uses same data as Example 14.1
+*/======================================================================
+?
+? There is a built-in test for this, but it is also easy to compute
+? from scratch.
+?
+Namelist ; X = logq,logf,lf $
+Regress  ; Lhs = logc ; Rhs = one,X ; Res = e $
+Matrix   ; ebar = Gxbr(e,i) $
+Calc     ; List 
+         ; Npd = Max(T) 
+         ; Ng = Max(i)
+         ; LM = (Npd*Ng)/(2*(Npd-1)) * (Npd^2 * ebar’ebar/e’e - 1)^2 $
+/*
+    NPD     =  .15000000000000000D+02
+    NG      =  .60000000000000000D+01
+    LM      =  .33485036222298630D+03
+*/
+
+/*======================================================================
+Example 14.4.  Random Effects Models
+Uses same data as Example 14.1
+*/======================================================================
+?-----------------------------------------------------------------------
+? 1.  Least squares with no effects.  Restricted sum of squares has all
+?     constants constrained to be equal.
+? -----------------------------------------------------------------------
+Namelist ; X = logq,logf,lf $
+Regress ; Lhs = logc ; Rhs = one,X $
+Calc    ; list ; ssqrd $
+/*
++-----------------------------------------------------------------------+
+| OLS Without Group Dummy Variables                                     |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =   4, Deg.Fr.=     86 |
+| Residuals:  Sum of squares= 1.335442193    , Std.Dev.=         .12461 |
+| Fit:        R-squared=  .988290, Adjusted R-squared =          .98788 |
+| Model test: F[  3,     86] = 2419.34,    Prob value =          .00000 |
+| Diagnostic: Log-L =     61.7702, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -4.122, Akaike Info. Crt.=     -1.284 |
+| Panel Data Analysis of LOGC       [ONE way]                           |
+|           Unconditional ANOVA (No regressors)                         |
+| Source      Variation        Deg. Free.     Mean Square               |
+| Between       37.3068               14.         2.66477               |
+| Residual      76.7341               75.         1.02312               |
+| Total         114.041               89.         1.28136               |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  9.516921859      .22924451       41.514   .0000
+ LOGQ      .8827385540      .13254516E-01   66.599   .0000 -1.1743092
+ LOGF      .4539770541      .20304180E-01   22.359   .0000  12.770359
+ LF       -1.627510341      .34530204       -4.713   .0000  .56046016
+ SSQRD   =  .15528397604431940D-01
+*/
+
+?-----------------------------------------------------------------------
+? 2. Fixed Effects Models, with heteroscedasticity corrected 
+?    asymptotic covariance matrix.  
+?-----------------------------------------------------------------------
+?
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel ; Fixed Effects $
+Calc    ; List ; ssqrd $
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel ; Fixed ; Het $
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel ; Fixed ; Het = G $
+/*
++-----------------------------------------------------------------------+
+| Least Squares with Group Dummy Variables                              |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =   9, Deg.Fr.=     81 |
+| Residuals:  Sum of squares= .2926127513    , Std.Dev.=         .06010 |
+| Fit:        R-squared=  .997434, Adjusted R-squared =          .99718 |
+| Model test: F[  8,     81] = 3935.92,    Prob value =          .00000 |
+| Diagnostic: Log-L =    130.0877, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -5.528, Akaike Info. Crt.=     -2.691 |
+| Estd. Autocorrelation of e(i,t)     .516200                           |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9192931104      .29889750E-01   30.756   .0000 -1.1743092
+ LOGF      .4174883826      .15198961E-01   27.468   .0000  12.770359
+ LF       -1.070404704      .20168647       -5.307   .0000  .56046016
+ SSQRD   =  .36125031024485010D-02
++-----------------------------------------------------------------------+
+| White/Hetero. (1) corrected covariance matrix used.                   |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9192931104      .19105811E-01   48.116   .0000 -1.1743092
+ LOGF      .4174883826      .13532691E-01   30.850   .0000  12.770359
+ LF       -1.070404704      .21662022       -4.941   .0000  .56046016
++-----------------------------------------------------------------------+
+| White/Hetero. (2) corrected covariance matrix used.                   |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9192931104      .27977958E-01   32.858   .0000 -1.1743092
+ LOGF      .4174883826      .13801945E-01   30.249   .0000  12.770359
+ LF       -1.070404704      .20372501       -5.254   .0000  .56046016
+*/
+
+?-----------------------------------------------------------------------
+? 3. Fixed Effects Models, with autocorrelation. Must be computed
+?    after uncorrected fixed effects model estimates RHO.  
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel ; Fixed Effects $
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel 
+        ; Fixed Effects ; Ar1$
+Calc    ; List ; ssqrd ; ssqrd/(1-Rho^2) $
+/*
++-----------------------------------------------------------------------+
+| Least Squares with Group Dummy Variables                              |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   6.572684944    , S.D.=   .5296754547     |
+| Model size: Observations =      84, Parameters =   9, Deg.Fr.=     75 |
+| Residuals:  Sum of squares= .1475196791    , Std.Dev.=         .04435 |
+| Fit:        R-squared=  .993665, Adjusted R-squared =          .99299 |
+| Model test: F[  8,     75] = 1470.48,    Prob value =          .00000 |
+| Diagnostic: Log-L =    147.2828, Restricted(b=0) Log-L =     -65.3066 |
+|             LogAmemiyaPrCrt.=   -6.129, Akaike Info. Crt.=     -3.292 |
+| Estd. Autocorrelation of e(i,t)     .516200                           |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9280379106      .33111566E-01   28.028   .0000 -.50121574
+ LOGF      .3919718815      .16910783E-01   23.179   .0000  6.2910182
+ LF       -1.219320549      .20262070       -6.018   .0000  .27768940
+    SSQRD   =  .19669290544567400D-02
+    Result  =  .26814286944733110D-02
+*/
+
+?-----------------------------------------------------------------------
+? 4. Random Effects Models, Firm Efects Only
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel $
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Panel ; Ar1$
+Calc    ; List ; ssqrd ; ssqrd/(1-Rho^2) $
+/*
+            +--------------------------------------------------+
+            | Random Effects Model: v(i,t) = e(i,t) + u(i)     |
+            | Estimates:  Var[e]              =   .361250D-02  |
+            |             Var[u]              =   .155963D-01  |
+            |             Corr[v(i,t),v(i,s)] =   .811935      |
+            | Lagrange Multiplier Test vs. Model (3) =  334.85 |
+            | ( 1 df, prob value =  .000000)                   |
+            | (High values of LM favor FEM/REM over CR model.) |
+            | Fixed vs. Random Effects (Hausman)     =    3.26 |
+            | ( 3 df, prob value =  .353428)                   |
+            | (High (low) values of H favor FEM (REM).)        |
+            | Reestimated using GLS coefficients:              |
+            | Estimates:  Var[e]              =   .362107D-02  |
+            |             Var[u]              =   .398286D-01  |
+            |             Sum of Squares          .149540D+01  |
+            |             R-squared               .988290D+00  |
+            +--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9066810293      .25587383E-01   35.435   .0000 -1.1743092
+ LOGF      .4227782698      .14004238E-01   30.189   .0000  12.770359
+ LF       -1.064498999      .19977739       -5.328   .0000  .56046016
+ Constant  9.627907465      .20985587       45.879   .0000
+*/
+?-----------------------------------------------------------------------
+? 5. Random Effects Models, Firm Efects Only, Autocorrelation
+?-----------------------------------------------------------------------
+/*
+            +--------------------------------------------------+
+            | Random Effects Model: v(i,t) = e(i,t) + u(i)     |
+            | Estimates:  Var[e]              =   .197555D-02  |
+            |             Var[u]              =   .555767D-02  |
+            |             Corr[v(i,t),v(i,s)] =   .737755      |
+            | Lagrange Multiplier Test vs. Model (3) =  191.79 |
+            | ( 1 df, prob value =  .000000)                   |
+            | (High values of LM favor FEM/REM over CR model.) |
+            | Fixed vs. Random Effects (Hausman)     =    1.84 |
+            | ( 3 df, prob value =  .605721)                   |
+            | (High (low) values of H favor FEM (REM).)        |
+            | Reestimated using GLS coefficients:              |
+            | Estimates:  Var[e]              =   .197863D-02  |
+            |             Var[u]              =   .104781D-01  |
+            |             Sum of Squares          .445741D+00  |
+            |             R-squared               .982825D+00  |
+            +--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9166101477      .29150377E-01   31.444   .0000 -.51042614
+ LOGF      .3967135048      .16037150E-01   24.737   .0000  6.3870666
+ LF       -1.210303730      .20081795       -6.027   .0000  .28191470
+ Constant  10.07089013      .25974962       38.772   .0000
+*/
+
+?-----------------------------------------------------------------------
+? 6. Fixed Effects, Firm and Time Effects
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Period = t
+        ; Panel ; Fixed Effects ; Output = 2 $
+Calc    ; list ; ssqrd $
+/*
++-----------------------------------------------------------------------+
+| Least Squares with Group Dummy Variables and Period Effects           |
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LOGC     Mean=   13.36560930    , S.D.=   1.131971011     |
+| Model size: Observations =      90, Parameters =  24, Deg.Fr.=     66 |
+| Residuals:  Sum of squares= .1742088068    , Std.Dev.=         .05138 |
+| Fit:        R-squared=  .998449, Adjusted R-squared =          .99791 |
+| Model test: F[ 23,     66] = 1847.57,    Prob value =          .00000 |
+| Diagnostic: Log-L =    153.4245, Restricted(b=0) Log-L =    -138.3581 |
+|             LogAmemiyaPrCrt.=   -5.701, Akaike Info. Crt.=     -2.876 |
+| Estd. Autocorrelation of e(i,t)     .492487                           |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .8172488392      .31850925E-01   25.659   .0000 -1.1743092
+ LOGF      .1686107443      .16347803        1.031   .3052  12.770359
+ LF       -.8828121095      .26173699       -3.373   .0011  .56046016
+ Constant  12.66687333      2.0810682        6.087   .0000
+ SSQRD   =  .36125031024485010D-02
+*/
+?-----------------------------------------------------------------------
+? 7. Random Effects, Firm and Time Effects
+?-----------------------------------------------------------------------
+Regress ; Lhs = logc ; Rhs = X ; Str=i ; Period = t ; Panel $
+/*
+            +----------------------------------------------------------+
+            | Random Effects Model: v(i,t) = e(i,t) + u(i) + w(t)      |
+            | Estimates:  Var[e]              =   .263953D-02          |
+            |             Var[u]              =   .156612D-01          |
+            |             Corr[v(i,t),v(i,s)] =   .855769              |
+            |             Var[w]              =   .683176D-04          |
+            |             Corr[v(i,t),v(j,t)] =   .025230              |
+            | Lagrange Multiplier Test vs. Model (3) =  336.40         |
+            | ( 2 df, prob value =  .000000)                           |
+            | (High values of LM favor FEM/REM over CR model.)         |
+            | Fixed vs. Random Effects (Hausman)     =   15.20         |
+            | ( 3 df, prob value =  .001651)                           |
+            | (High (low) values of H favor FEM (REM).)                |
+            | Reestimated using GLS coefficients:                      |
+            | Estimates:  Var[e]              =   .295931D-02          |
+            |             Var[u]              =   .389897D-01          |
+            |             Var[w]              =   .960524D-03          |
+            |             Sum of Squares          .146941D+01          |
+            |             R-squared               .988290D+00          |
+            +----------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ LOGQ      .9023731401      .23065973E-01   39.121   .0000 -1.1743092
+ LOGF      .4241784764      .12645906E-01   33.543   .0000  12.770359
+ LF       -1.053130145      .17797474       -5.917   .0000  .56046016
+ Constant  9.598594757      .19122296       50.196   .0000
+*/
+
+/*======================================================================
+Example 14.5.  Hausman Test
+Uses same data as Example 14.1
+*/======================================================================
+Namelist ; X = logq,logf,lf $
+Regress  ; Lhs = logc ; Rhs = X ; str=i ; panel ; FixedEffects $
+Matrix   ; bfe = b ; list ; Vfe = Varb $
+Regress  ; Lhs = logc ; Rhs = X ; str=i ; panel $
+Matrix   ; bre = b(1:3) ; list ; Vre = Part(varb,1,3,1,3) $
+Matrix   ; d = bfe-bre ; Vd = Vfe - Vre 
+         ; List ; Hausman = d’<Vd>d $
+Calc     ; List ; Ctb(.95,3) $
+/*
+Matrix VFE      has  3 rows and  3 columns.
+               1             2             3
+        +------------------------------------------
+       1|  .8933972D-03 -.3178122D-03 -.1884195D-02
+       2| -.3178122D-03  .2310084D-03 -.7685462D-03
+       3| -.1884195D-02 -.7685462D-03  .4067743D-01
+
+Matrix VRE      has  3 rows and  3 columns.
+               1             2             3
+        +------------------------------------------
+       1|  .6547142D-03 -.2269996D-03 -.1524203D-02
+       2| -.2269996D-03  .1961187D-03 -.8968263D-03
+       3| -.1524203D-02 -.8968263D-03  .3991100D-01
+Matrix HAUSMAN  has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .3258727D+01
+
+Result  =  .78147277654400000D+01
+*/
+
+
+/*======================================================================
+Example 14.6.  Heteroscedasticity Consistent Estimation
+Uses same data as Example 14.1
+*/======================================================================
+Namelist ; X = logq,logf,lf $
+Regress ; Lhs = logc ; Rhs = One,X ; Str=i ; Panel $
+Calc    ; List ; s2 = ssqrd ; Npd = Max(t) $
+Regress ; Lhs = logc ; Rhs = One,X ; Res = e $
+Matrix  ; List 
+        ; ebari = Gxbr(e,i) 
+        ; si = Gsdv(e,i) ; vi = Dirp(si,si) 
+        ; vui = vi - s2 $
+/*
+    S2      =  .36210700500690940D-02
+    NPD     =  .15000000000000000D+02
+Matrix EBARI    has  6 rows and  1 columns.
+               1
+        +--------------
+       1|  .6886891D-01
+       2| -.1387804D-01
+       3| -.1942237D+00
+       4|  .1527257D+00
+       5| -.2158348D-01
+       6|  .8090588D-02
+Matrix SI       has  6 rows and  1 columns.
+               1
+        +--------------
+       1|  .4023408D-01
+       2|  .6688817D-01
+       3|  .5161303D-01
+       4|  .9523568D-01
+       5|  .4816550D-01
+       6|  .6305873D-01
+Matrix VI       has  6 rows and  1 columns.
+               1
+        +--------------
+       1|  .1618782D-02
+       2|  .4474028D-02
+       3|  .2663905D-02
+       4|  .9069834D-02
+       5|  .2319915D-02
+       6|  .3976403D-02
+Matrix VUI      has  6 rows and  1 columns.
+               1
+        +--------------
+       1| -.2002288D-02
+       2|  .8529576D-03
+       3| -.9571652D-03
+       4|  .5448764D-02
+       5| -.1301155D-02
+       6|  .3553329D-03
+ */

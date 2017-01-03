@@ -1,0 +1,30 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module gridloop2__user__routines 
+    interface gridloop2_user_interface 
+        function func1(x,y) result (r) ! in :ext_gridloop:signatures.f:gridloop2:unknown_interface
+            intent(c) func1
+            real*8 intent(c) :: x
+            real*8 intent(c) :: y
+            real*8 intent(c) :: r
+        end function func1
+    end interface gridloop2_user_interface
+end python module gridloop2__user__routines
+python module ext_gridloop ! in 
+    interface  ! in :ext_gridloop
+        subroutine gridloop2(a,xcoor,ycoor,nx,ny,func1) ! in :ext_gridloop:signatures.f
+            intent(c) gridloop2
+            use gridloop2__user__routines
+            real*8 dimension(nx,ny),intent(c,out),depend(nx,ny) :: a
+            real*8 dimension(nx),intent(in) :: xcoor
+            real*8 dimension(ny),intent(in) :: ycoor
+            integer optional,intent(c),check(len(xcoor)>=nx),depend(xcoor) :: nx=len(xcoor)
+            integer optional,intent(c),check(len(ycoor)>=ny),depend(ycoor) :: ny=len(ycoor)
+            external func1
+        end subroutine gridloop2
+    end interface 
+end python module ext_gridloop
+
+! This file was auto-generated with f2py (version:2_3515).
+! See http://cens.ioc.ee/projects/f2py2e/

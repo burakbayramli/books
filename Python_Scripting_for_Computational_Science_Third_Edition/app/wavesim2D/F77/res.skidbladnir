@@ -1,0 +1,966 @@
+original (optimal?) code
+main.f:
+F77WAVE.f:
+main.f:
+F77WAVE.f:
+main.f:
+F77WAVE.f:
+
+
+Running on skidbladnir.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 513.98   g77 -O0 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 60.4     310.54   310.54                            internal_mcount [1]
+ 26.9     448.93   138.39 468618867     0.00     0.00  .umul [6]
+ 10.2     501.53    52.60       81   649.38  2057.74  f77wave_ [5]
+  1.7     510.33     8.80        1  8800.00 200180.00  timeloop_ [3]
+  0.6     513.50     3.17                            _mcount (779)
+  0.0     513.68     0.18        1   180.00   686.50  setic_ [7]
+  0.0     513.81     0.13   251001     0.00     0.00  __exp [9]
+  0.0     513.87     0.06   251001     0.00     0.00  bell_ [8]
+
+g77 -c -pg -O1  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:  32.33   g77 -O1 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 80.3      25.89    25.89       81   319.63   322.70  f77wave_ [4]
+ 13.6      30.28     4.39        1  4390.00 30900.00  timeloop_ [2]
+  4.2      31.62     1.34                            internal_mcount [5]
+  0.9      31.90     0.28  1095246     0.00     0.00  .umul [7]
+  0.7      32.12     0.22   251001     0.00     0.00  __exp [9]
+  0.2      32.18     0.06        1    60.00   340.38  setic_ [6]
+  0.2      32.23     0.05   251001     0.00     0.00  bell_ [8]
+  0.0      32.24     0.01   251001     0.00     0.00  h_ [10]
+
+g77 -c -pg -O2  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:  11.50   g77 -O2 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 61.7       7.04     7.04       81    86.91    86.92  f77wave_ [4]
+ 28.2      10.26     3.22        1  3220.00 10510.00  timeloop_ [2]
+  7.8      11.15     0.89                            internal_mcount [5]
+  1.0      11.26     0.11   251001     0.00     0.00  __exp [7]
+  0.7      11.34     0.08        1    80.00   230.24  setic_ [6]
+  0.3      11.37     0.03   251001     0.00     0.00  bell_ [8]
+  0.2      11.39     0.02   124704     0.00     0.00  .umul [9]
+  0.1      11.40     0.01   251001     0.00     0.00  h_ [10]
+
+g77 -c -pg -O3  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:  11.57   g77 -O3 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 66.8       7.67     7.67       81    94.69    94.70  f77wave_ [4]
+ 27.8      10.86     3.19        1  3190.00 11200.00  timeloop_ [2]
+  2.4      11.14     0.28                            internal_mcount [6]
+  1.7      11.34     0.20   251001     0.00     0.00  __exp [7]
+  0.8      11.43     0.09        1    90.00   290.60  setic_ [5]
+  0.4      11.48     0.05   124704     0.00     0.00  .umul [8]
+  0.1      11.49     0.01        1    10.00    10.00  _geteuid [10]
+  0.0      11.49     0.00      153     0.00     0.00  __udiv64 [417]
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:  11.32   g77 -O3 -ffast-math -funroll-loops original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 68.7       7.72     7.72       81    95.31    95.32  f77wave_ [4]
+ 25.7      10.61     2.89        1  2890.00 11010.00  timeloop_ [2]
+  2.1      10.85     0.24   251001     0.00     0.00  __exp [6]
+  2.0      11.08     0.23                            internal_mcount [7]
+  1.0      11.19     0.11        1   110.00   350.60  setic_ [5]
+  0.4      11.24     0.05   124704     0.00     0.00  .umul [8]
+  0.0      11.24     0.00      153     0.00     0.00  __udiv64 [415]
+  0.0      11.24     0.00      153     0.00     0.00  __urem64 [416]
+
+
+
+Running on skidbladnir.ifi.uio.no: f77 compiler (Sun f77 compiler, v5.2)
+f77 -c -pg -O0  main.f F77WAVE.f
+f77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 318.39   f77 -O0 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 46.2     147.09   147.09 468618867     0.00     0.00  .mul [6]
+ 23.4     221.54    74.45       81   919.14  2416.03  f77wave_ [5]
+ 15.8     271.88    50.34                            _mcount (1027)
+  8.6     299.17    27.29                            oldarc [7]
+  4.1     312.08    12.91        1 12910.00 235110.00  timeloop_ [3]
+  1.8     317.67     5.59                            done [8]
+  0.1     317.94     0.27        1   270.00   975.14  setic_ [9]
+  0.1     318.18     0.24   251001     0.00     0.00  __exp [11]
+
+f77 -c -pg -O1  main.f F77WAVE.f
+f77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 279.50   f77 -O1 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 53.4     149.34   149.34 468618867     0.00     0.00  .mul [6]
+ 17.8     198.98    49.64                            _mcount (1027)
+ 15.0     240.83    41.85       81   516.67  2036.46  f77wave_ [5]
+  9.1     266.30    25.47                            oldarc [7]
+  2.7     273.72     7.42        1  7420.00 198970.00  timeloop_ [3]
+  1.9     279.08     5.36                            done [8]
+  0.1     279.23     0.15        1   150.00   679.96  setic_ [9]
+  0.0     279.36     0.13   251001     0.00     0.00  __exp [11]
+
+f77 -c -pg -fast  main.f F77WAVE.f
+f77 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:   0.04   f77 -fast original (optimal?) code
+Unsuccessful execution of app < input > tmp.out
+
+
+Running on skidbladnir.ifi.uio.no: f95 compiler (Sun f95 compiler, v6.1)
+f95 -c -pg -O0  main.f F77WAVE.f
+f95 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 296.40   f95 -O0 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 43.0     127.48   127.48 468619022     0.00     0.00  .mul [6]
+ 24.9     201.35    73.87       81   911.98  2209.31  f77wave_ [5]
+ 16.5     250.25    48.90                            _mcount (1079)
+  9.0     277.00    26.75                            oldarc [7]
+  4.2     289.52    12.52        1 12520.00 214540.00  timeloop_ [3]
+  2.1     295.68     6.16                            done [8]
+  0.1     296.03     0.35        1   350.00   943.12  setic_ [9]
+  0.1     296.20     0.17   251001     0.00     0.00  __exp [11]
+
+f95 -c -pg -O1  main.f F77WAVE.f
+f95 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 263.67   f95 -O1 original (optimal?) code
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 50.7     133.57   133.57 468619022     0.00     0.00  .mul [6]
+ 18.4     182.10    48.53                            _mcount (1079)
+ 16.0     224.24    42.14       81   520.25  1879.56  f77wave_ [5]
+  9.7     249.85    25.61                            oldarc [7]
+  2.7     256.84     6.99        1  6990.00 183120.00  timeloop_ [3]
+  2.4     263.18     6.34                            done [8]
+  0.1     263.37     0.19   251001     0.00     0.00  __exp [11]
+  0.1     263.54     0.17        1   170.00   706.17  setic_ [9]
+
+f95 -c -pg -fast  main.f F77WAVE.f
+f95 -o app -pg  main.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:   0.01   f95 -fast original (optimal?) code
+Unsuccessful execution of app < input > tmp.out
+formatted I/O
+versions/main_wIO.f:
+F77WAVE.f:
+versions/main_wIO.f:
+F77WAVE.f:
+versions/main_wIO.f:
+F77WAVE.f:
+
+
+Running on skidbladnir.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1990.55   g77 -O0 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 50.6    1007.61  1007.61                            internal_mcount [1]
+  7.7    1160.66   153.05 495725808     0.00     0.00  .umul [12]
+  6.4    1287.83   127.17 20582083     0.01     0.02  _doprnt [4]
+  3.4    1356.19    68.36 20582083     0.00     0.01  __k_double_to_decimal [7]
+  2.9    1413.08    56.89       81   702.35  2174.73  f77wave_ [11]
+  2.1    1454.00    40.92 16433450     0.00     0.00  .div [18]
+  2.1    1494.90    40.90 34488864     0.00     0.00  __multiply_base_two_vector [19]
+  2.0    1534.29    39.39                            x_putc [20]
+
+g77 -c -pg -O1  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1363.94   g77 -O1 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 47.4     646.38   646.38                            internal_mcount [1]
+  8.4     760.57   114.19 20582083     0.01     0.02  _doprnt [4]
+  3.0     801.46    40.89 34488864     0.00     0.00  __multiply_base_two_vector [13]
+  2.9     841.36    39.90                            x_putc [14]
+  2.9     880.93    39.57 16433450     0.00     0.00  .div [15]
+  2.9     919.93    39.00                            .rem [16]
+  2.1     948.39    28.46                            l_g [2]
+  1.9     974.70    26.31  3841929     0.01     0.02  __big_float_times_power [10]
+
+g77 -c -pg -O2  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1403.16   g77 -O2 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 47.5     666.00   666.00                            internal_mcount [1]
+  7.9     776.26   110.26 20582083     0.01     0.02  _doprnt [4]
+  3.1     819.45    43.19 16433450     0.00     0.00  .div [13]
+  3.0     861.94    42.49                            .rem [14]
+  2.9     903.33    41.39 34488864     0.00     0.00  __multiply_base_two_vector [15]
+  2.9     944.25    40.92                            x_putc [16]
+  2.1     973.38    29.13                            l_g [2]
+  1.9     999.79    26.41                            l_put [18]
+
+g77 -c -pg -O3  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1427.85   g77 -O3 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 47.3     675.84   675.84                            internal_mcount [1]
+  8.3     793.71   117.87 20582083     0.01     0.02  _doprnt [4]
+  2.9     835.62    41.91 16433450     0.00     0.00  .div [13]
+  2.8     875.81    40.19 34488864     0.00     0.00  __multiply_base_two_vector [14]
+  2.7     914.51    38.70                            x_putc [15]
+  2.7     952.65    38.14                            .rem [16]
+  2.2     983.82    31.17                            l_put [18]
+  2.2    1014.67    30.85                            l_g [2]
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1381.38   g77 -O3 -ffast-math -funroll-loops formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 47.5     655.87   655.87                            internal_mcount [1]
+  7.8     763.86   107.99 20582083     0.01     0.02  _doprnt [4]
+  3.2     808.68    44.82 34488864     0.00     0.00  __multiply_base_two_vector [13]
+  2.8     847.86    39.18 16433450     0.00     0.00  .div [15]
+  2.8     886.68    38.82                            x_putc [16]
+  2.6     922.60    35.92                            .rem [17]
+  2.2     952.34    29.74                            l_g [2]
+  2.0     979.78    27.44                            l_put [18]
+
+
+
+Running on skidbladnir.ifi.uio.no: f77 compiler (Sun f77 compiler, v5.2)
+f77 -c -pg -O0  versions/main_wIO.f F77WAVE.f
+f77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1514.34   f77 -O0 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 19.4     293.18   293.18                            _mcount (1030)
+ 10.2     447.62   154.44 489201184     0.00     0.00  .mul [15]
+  9.1     584.68   137.06                            oldarc [16]
+  5.0     660.63    75.95 59958281     0.00     0.00  __multiply_base_two_vector [18]
+  4.8     733.43    72.80       81   898.77  2404.34  f77wave_ [13]
+  4.0     793.85    60.42      153   394.90   394.90  .div [24]
+  3.9     852.96    59.11      354   166.98   166.98  .rem [30]
+  2.7     893.24    40.28  5976604     0.01     0.02  __big_float_times_power [17]
+
+f77 -c -pg -O1  versions/main_wIO.f F77WAVE.f
+f77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 1460.38   f77 -O1 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 19.6     286.38   286.38                            _mcount (1030)
+ 10.8     444.02   157.64 489201184     0.00     0.00  .mul [15]
+  9.1     576.47   132.45                            oldarc [16]
+  5.1     650.76    74.29 59958281     0.00     0.00  __multiply_base_two_vector [18]
+  4.1     710.56    59.80      354   168.93   168.93  .rem [25]
+  3.8     766.28    55.72      153   364.18   364.18  .div [31]
+  3.0     810.45    44.17 20061458     0.00     0.03  __wrt_E [8]
+  2.9     852.78    42.33       81   522.59  2059.36  f77wave_ [14]
+
+f77 -c -pg -fast  versions/main_wIO.f F77WAVE.f
+f77 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:   0.03   f77 -fast formatted I/O
+Unsuccessful execution of app < input > tmp.out
+
+
+Running on skidbladnir.ifi.uio.no: f95 compiler (Sun f95 compiler, v6.1)
+f95 -c -pg -O0  versions/main_wIO.f F77WAVE.f
+f95 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 2670.67   f95 -O0 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 38.3    1022.60  1022.60 20582083     0.05     0.07  __f_cvt_real [7]
+ 14.2    1401.52   378.92 1823935506     0.00     0.00  v_cmp [8]
+ 13.3    1756.16   354.64                            _mcount (1081)
+  7.1    1944.80   188.64                            oldarc [9]
+  5.2    2083.92   139.12 489201514     0.00     0.00  .mul [11]
+  4.1    2192.76   108.84 190445017     0.00     0.00  .umul [13]
+  3.5    2286.76    94.00 19515299     0.00     0.01  _doprnt [14]
+  2.8    2360.72    73.96       81   913.09  2269.31  f77wave_ [10]
+
+f95 -c -pg -O1  versions/main_wIO.f F77WAVE.f
+f95 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time: 2638.87   f95 -O1 formatted I/O
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 38.7    1021.74  1021.74 20582083     0.05     0.07  __f_cvt_real [7]
+ 14.9    1416.09   394.35 1823935506     0.00     0.00  v_cmp [8]
+ 14.2    1791.00   374.91                            _mcount (1081)
+  7.6    1992.82   201.82                            oldarc [9]
+  5.3    2132.33   139.51 489201514     0.00     0.00  .mul [11]
+  4.1    2240.52   108.19 190445017     0.00     0.00  .umul [12]
+  3.2    2325.56    85.04 19515299     0.00     0.01  _doprnt [14]
+  1.7    2369.43    43.87       81   541.60  1901.63  f77wave_ [10]
+
+f95 -c -pg -fast  versions/main_wIO.f F77WAVE.f
+f95 -o app -pg  main_wIO.o F77WAVE.o  
+app < input > tmp.out
+CPU-time:   0.05   f95 -fast formatted I/O
+Unsuccessful execution of app < input > tmp.out
+traversing the array rowwise
+main.f:
+versions/F77WAVE_columntraverse.f:
+main.f:
+versions/F77WAVE_columntraverse.f:
+
+
+Running on skidbladnir.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time: 531.99   g77 -O0 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 58.4     310.65   310.65                            internal_mcount [1]
+ 26.2     450.23   139.58 468618867     0.00     0.00  .umul [6]
+ 13.0     519.63    69.40       81   856.79  2277.26  f77wave_ [5]
+  1.6     528.33     8.70        1  8700.00 218390.00  timeloop_ [3]
+  0.5     531.21     2.88                            _mcount (779)
+  0.1     531.51     0.30        1   300.00  1009.05  setic_ [7]
+  0.0     531.72     0.21   251001     0.00     0.00  __exp [9]
+  0.0     531.88     0.16   251001     0.00     0.00  bell_ [8]
+
+g77 -c -pg -O1  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time: 202.43   g77 -O1 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 51.8     104.88   104.88                            internal_mcount [1]
+ 22.7     150.78    45.90 162124542     0.00     0.00  .umul [6]
+ 22.7     196.65    45.87       81   566.30  1132.53  f77wave_ [5]
+  2.1     200.99     4.34        1  4340.00 96470.00  timeloop_ [3]
+  0.5     201.98     0.99                            _mcount (779)
+  0.1     202.20     0.22   251001     0.00     0.00  __exp [9]
+  0.0     202.27     0.07        1    70.00   360.43  setic_ [7]
+  0.0     202.31     0.04   251001     0.00     0.00  bell_ [8]
+
+g77 -c -pg -O2  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time:  31.34   g77 -O2 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 86.0      26.90    26.90       81   332.10   332.10  f77wave_ [4]
+ 10.3      30.11     3.21        1  3210.00 30380.00  timeloop_ [2]
+  2.8      30.98     0.87                            internal_mcount [5]
+  0.5      31.14     0.16   251001     0.00     0.00  __exp [7]
+  0.2      31.19     0.05        1    50.00   250.24  setic_ [6]
+  0.1      31.21     0.02   251001     0.00     0.00  bell_ [8]
+  0.1      31.23     0.02   251001     0.00     0.00  h_ [9]
+  0.1      31.25     0.02   124704     0.00     0.00  .umul [10]
+
+g77 -c -pg -O3  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time:  32.42   g77 -O3 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 88.1      28.48    28.48       81   351.60   351.61  f77wave_ [4]
+ 10.0      31.72     3.24        1  3240.00 32030.00  timeloop_ [2]
+  0.9      32.02     0.30                            internal_mcount [6]
+  0.5      32.19     0.17   251001     0.00     0.00  __exp [7]
+  0.4      32.32     0.13        1   130.00   300.12  setic_ [5]
+  0.0      32.33     0.01   124704     0.00     0.00  .umul [8]
+  0.0      32.34     0.01                            _mcount (779)
+  0.0      32.34     0.00      153     0.00     0.00  __udiv64 [415]
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time:  31.63   g77 -O3 -ffast-math -funroll-loops traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 88.6      27.94    27.94       81   344.94   344.94  f77wave_ [4]
+  9.5      30.93     2.99        1  2990.00 31310.00  timeloop_ [2]
+  0.9      31.20     0.27   251001     0.00     0.00  __exp [6]
+  0.7      31.43     0.23                            internal_mcount [7]
+  0.3      31.51     0.08        1    80.00   350.36  setic_ [5]
+  0.1      31.54     0.03   124704     0.00     0.00  .umul [8]
+  0.0      31.55     0.01                            _mcount (779)
+  0.0      31.55     0.00      153     0.00     0.00  __udiv64 [415]
+
+
+
+Running on skidbladnir.ifi.uio.no: f77 compiler (Sun f77 compiler, v5.2)
+f77 -c -pg -O0  main.f versions/F77WAVE_columntraverse.f
+f77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time: 331.83   f77 -O0 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 44.3     147.05   147.05 468618867     0.00     0.00  .mul [6]
+ 26.6     235.19    88.14       81  1088.15  2584.64  f77wave_ [5]
+ 15.2     285.64    50.45                            _mcount (1027)
+  8.1     312.50    26.86                            oldarc [7]
+  3.8     325.12    12.62        1 12620.00 248550.00  timeloop_ [4]
+  1.8     331.04     5.92                            done [8]
+  0.1     331.34     0.30        1   300.00  1055.05  setic_ [9]
+  0.1     331.57     0.23   251001     0.00     0.00  __exp [11]
+
+f77 -c -pg -O1  main.f versions/F77WAVE_columntraverse.f
+f77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time: 297.83   f77 -O1 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 50.4     150.05   150.05 468618867     0.00     0.00  .mul [6]
+ 19.7     208.59    58.54       81   722.72  2249.74  f77wave_ [5]
+ 16.7     258.41    49.82                            _mcount (1027)
+  8.9     285.06    26.65                            oldarc [7]
+  2.3     292.05     6.99        1  6990.00 216039.64  timeloop_ [4]
+  1.8     297.30     5.25                            done [8]
+  0.1     297.51     0.21   251001     0.00     0.00  __exp [11]
+  0.1     297.68     0.17        1   170.00   771.48  setic_ [9]
+
+f77 -c -pg -fast  main.f versions/F77WAVE_columntraverse.f
+f77 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time:   0.02   f77 -fast traversing the array rowwise
+Unsuccessful execution of app < input > tmp.out
+
+
+Running on skidbladnir.ifi.uio.no: f95 compiler (Sun f95 compiler, v6.1)
+f95 -c -pg -O0  main.f versions/F77WAVE_columntraverse.f
+f95 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time: 310.73   f95 -O0 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 42.1     130.90   130.90 468619022     0.00     0.00  .mul [6]
+ 27.8     217.20    86.30       81  1065.43  2397.57  f77wave_ [5]
+ 15.7     265.84    48.64                            _mcount (1079)
+  8.2     291.28    25.44                            oldarc [7]
+  4.2     304.23    12.95        1 12950.00 230760.00  timeloop_ [3]
+  1.9     310.05     5.82                            done [8]
+  0.1     310.38     0.33        1   330.00   890.45  setic_ [9]
+  0.1     310.57     0.19   251001     0.00     0.00  __exp [11]
+
+f95 -c -pg -O1  main.f versions/F77WAVE_columntraverse.f
+f95 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time: 277.92   f95 -O1 traversing the array rowwise
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 48.1     133.55   133.55 468619022     0.00     0.00  .mul [6]
+ 20.1     189.34    55.79       81   688.77  2047.87  f77wave_ [5]
+ 17.8     238.80    49.46                            _mcount (1079)
+  9.4     265.01    26.21                            oldarc [7]
+  2.6     272.21     7.20        1  7200.00 196970.00  timeloop_ [3]
+  1.9     277.44     5.23                            done [8]
+  0.1     277.65     0.21   251001     0.00     0.00  __exp [11]
+  0.1     277.79     0.14        1   140.00   716.13  smain.f:
+versions/F77WAVE_columntraverse.f:
+etic_ [9]
+
+f95 -c -pg -fast  main.f versions/F77WAVE_columntraverse.f
+f95 -o app -pg  main.o F77WAVE_columntraverse.o  
+app < input > tmp.out
+CPU-time:   0.01   f95 -fast traversing the array rowwise
+Unsuccessful execution of app < input > tmp.out
+lambda array replaced by h(0,0) calls
+main.f:
+versions/F77WAVE_call_h00.f:
+main.f:
+versions/F77WAVE_call_h00.f:
+main.f:
+versions/F77WAVE_call_h00.f:
+
+
+Running on skidbladnir.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 470.41   g77 -O0 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 63.4     298.41   298.41                            internal_mcount [1]
+ 19.6     390.46    92.05 305970219     0.00     0.00  .umul [6]
+  9.6     435.40    44.94       81   554.81  1665.15  f77wave_ [5]
+  4.8     458.09    22.69 162899649     0.00     0.00  h_ [7]
+  1.9     466.95     8.86        1  8860.00 168910.00  timeloop_ [3]
+  0.6     469.93     2.98                            _mcount (779)
+  0.0     470.10     0.17   251001     0.00     0.00  __exp [10]
+  0.0     470.23     0.13        1   130.00   707.01  setic_ [8]
+
+g77 -c -pg -O1  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 149.23   g77 -O1 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 70.4     104.94   104.94                            internal_mcount [1]
+ 18.4     132.36    27.42       81   338.52   471.89  f77wave_ [5]
+  7.1     142.98    10.62 162899649     0.00     0.00  h_ [6]
+  2.9     147.33     4.35        1  4350.00 42940.00  timeloop_ [3]
+  0.8     148.59     1.26                            _mcount (779)
+  0.2     148.83     0.24   730827     0.00     0.00  .umul [9]
+  0.1     149.04     0.21   251001     0.00     0.00  __exp [10]
+  0.0     149.10     0.06        1    60.00   326.86  setic_ [7]
+
+g77 -c -pg -O2  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 138.95   g77 -O2 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 75.5     104.82   104.82                            internal_mcount [1]
+ 13.5     123.50    18.68       81   230.62   355.99  f77wave_ [5]
+  7.3     133.67    10.17 162899649     0.00     0.00  h_ [6]
+  2.3     136.88     3.21        1  3210.00 32430.00  timeloop_ [3]
+  1.2     138.49     1.61                            _mcount (779)
+  0.2     138.70     0.21   251001     0.00     0.00  __exp [8]
+  0.0     138.76     0.06   251001     0.00     0.00  bell_ [9]
+  0.0     138.82     0.06   124218     0.00     0.00  .umul [10]
+
+g77 -c -pg -O3  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 138.75   g77 -O3 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 75.1     104.17   104.17                            internal_mcount [1]
+ 13.6     122.96    18.79       81   231.98   366.55  f77wave_ [5]
+  7.9     133.86    10.90 162648648     0.00     0.00  h_ [6]
+  2.3     137.07     3.21        1  3210.00 33280.00  timeloop_ [3]
+  0.9     138.29     1.22                            _mcount (779)
+  0.2     138.51     0.22   251001     0.00     0.00  __exp [8]
+  0.1     138.61     0.10        1   100.00   320.73  setic_ [7]
+  0.0     138.67     0.06   124218     0.00     0.00  .umul [9]
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 138.56   g77 -O3 -ffast-math -funroll-loops lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 75.0     103.81   103.81                            internal_mcount [1]
+ 14.2     123.47    19.66       81   242.72   366.42  f77wave_ [5]
+  7.2     133.49    10.02 162648648     0.00     0.00  h_ [6]
+  2.1     136.45     2.96        1  2960.00 32970.00  timeloop_ [3]
+  1.2     138.16     1.71                            _mcount (779)
+  0.1     138.35     0.19   251001     0.00     0.00  __exp [8]
+  0.1     138.46     0.11        1   110.00   300.36  setic_ [7]
+  0.0     138.49     0.03   124218     0.00     0.00  .umul [9]
+
+
+
+Running on skidbladnir.ifi.uio.no: f77 compiler (Sun f77 compiler, v5.2)
+f77 -c -pg -O0  main.f versions/F77WAVE_call_h00.f
+f77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 288.02   f77 -O0 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 33.0      94.91    94.91 305970219     0.00     0.00  .mul [6]
+ 24.0     164.16    69.25       81   854.94  2066.52  f77wave_ [5]
+ 17.5     214.44    50.28                            _mcount (1027)
+ 10.0     243.25    28.81 162899649     0.00     0.00  h_ [7]
+  8.9     268.94    25.69                            oldarc [8]
+  4.3     281.32    12.38        1 12380.00 206040.00  timeloop_ [3]
+  2.1     287.27     5.95                            done [9]
+  0.1     287.64     0.37        1   370.00  1045.83  setic_ [10]
+
+f77 -c -pg -O1  main.f versions/F77WAVE_call_h00.f
+f77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 235.30   f77 -O1 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 41.8      98.36    98.36 305970219     0.00     0.00  .mul [6]
+ 21.0     147.75    49.39                            _mcount (1027)
+ 16.7     187.11    39.36       81   485.93  1484.20  f77wave_ [5]
+ 11.2     213.43    26.32                            oldarc [7]
+  3.8     222.41     8.98 162899649     0.00     0.00  h_ [8]
+  3.0     229.40     6.99        1  6990.00 154130.00  timeloop_ [3]
+  2.3     234.79     5.39                            done [9]
+  0.1     235.05     0.26   251001     0.00     0.00  __exp [12]
+
+f77 -c -pg -fast  main.f versions/F77WAVE_call_h00.f
+f77 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time:   0.03   f77 -fast lambda array replaced by h(0,0) calls
+Unsuccessful execution of app < input > tmp.out
+
+
+Running on skidbladnir.ifi.uio.no: f95 compiler (Sun f95 compiler, v6.1)
+f95 -c -pg -O0  main.f versions/F77WAVE_call_h00.f
+f95 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 268.16   f95 -O0 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 31.6      84.77    84.77 305970374     0.00     0.00  .mul [6]
+ 23.9     148.85    64.08       81   791.11  1879.39  f77wave_ [5]
+ 18.2     197.54    48.69                            _mcount (1079)
+  9.8     223.77    26.23 162899649     0.00     0.00  h_ [7]
+  9.5     249.12    25.35                            oldarc [8]
+  4.7     261.85    12.73        1 12730.00 188280.00  timeloop_ [3]
+  2.2     267.64     5.79                            done [9]
+  0.1     267.88     0.24        1   240.00   788.58  setic_ [10]
+
+f95 -c -pg -O1  main.f versions/F77WAVE_call_h00.f
+f95 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time: 218.83   f95 -O1 lambda array replaced by h(0,0) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 39.8      87.15    87.15 305970374     0.00     0.00  .mul [6]
+ 22.4     136.21    49.06                            _mcount (1079)
+ 15.7     170.63    34.42       81   424.94  1327.11  f77wave_ [5]
+ 11.5     195.89    25.26                            oldarc [7]
+  4.3     205.28     9.39 162899649     0.00     0.00  h_ [8]
+  3.2     212.35     7.07        1  7070.00 138440.00  timeloop_ [3]
+  2.7     218.34     5.99                            done [9]
+  0.1     218.57     0.23   251001     0.00     0.00  __exp [12]
+
+f95 -c -pg -fast  main.f versions/F77WAVE_call_h00.f
+f95 -o app -pg  main.o F77WAVE_call_h00.o  
+app < input > tmp.out
+CPU-time:   0.03   f95 -fast lambda array replaced by h(0,0) calls
+Unsuccessful execution of app < input > tmp.out
+lambda array replaced by h(x,y) calls
+main.f:
+versions/F77WAVE_call_hxy.f:
+main.f:
+versions/F77WAVE_call_hxy.f:
+main.f:
+versions/F77WAVE_call_hxy.f:
+
+
+Running on skidbladnir.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 504.31   g77 -O0 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 60.1     303.28   303.28                            internal_mcount [1]
+ 18.1     394.58    91.30 305970219     0.00     0.00  .umul [6]
+ 14.8     469.45    74.87       81   924.32  2030.23  f77wave_ [5]
+  4.5     492.33    22.88 162899649     0.00     0.00  h_ [7]
+  1.7     500.81     8.48        1  8480.00 198020.00  timeloop_ [3]
+  0.6     503.72     2.91                            _mcount (779)
+  0.0     503.93     0.21   251001     0.00     0.00  __exp [10]
+  0.0     504.11     0.18        1   180.00   824.84  setic_ [8]
+
+g77 -c -pg -O1  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 161.96   g77 -O1 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 64.8     104.94   104.94                            internal_mcount [1]
+ 24.6     144.74    39.80       81   491.36   629.11  f77wave_ [5]
+  6.8     155.74    11.00 162899649     0.00     0.00  h_ [6]
+  2.6     160.03     4.29        1  4290.00 55630.00  timeloop_ [3]
+  0.8     161.33     1.30                            _mcount (779)
+  0.1     161.54     0.21   730908     0.00     0.00  .umul [9]
+  0.1     161.73     0.19   251001     0.00     0.00  __exp [10]
+  0.1     161.83     0.10   251001     0.00     0.00  bell_ [8]
+
+g77 -c -pg -O2  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 145.47   g77 -O2 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 72.0     104.70   104.70                            internal_mcount [1]
+ 17.3     129.85    25.15       81   310.49   439.85  f77wave_ [5]
+  7.2     140.30    10.45 162899649     0.00     0.00  h_ [6]
+  2.2     143.55     3.25        1  3250.00 39250.00  timeloop_ [3]
+  1.0     145.01     1.46                            _mcount (779)
+  0.2     145.23     0.22   251001     0.00     0.00  __exp [8]
+  0.0     145.30     0.07   326313     0.00     0.00  .umul [9]
+  0.0     145.37     0.07        1    70.00   346.42  setic_ [7]
+
+g77 -c -pg -O3  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 145.39   g77 -O3 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 72.4     105.19   105.19                            internal_mcount [1]
+ 17.9     131.21    26.02       81   321.23   440.09  f77wave_ [5]
+  6.6     140.80     9.59 162648648     0.00     0.00  h_ [6]
+  2.2     143.96     3.16        1  3160.00 39140.00  timeloop_ [3]
+  0.7     144.94     0.98                            _mcount (779)
+  0.2     145.18     0.24   251001     0.00     0.00  __exp [8]
+  0.0     145.25     0.07        1    70.00   310.28  setic_ [7]
+  0.0     145.31     0.06   326313     0.00     0.00  .umul [9]
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 145.52   g77 -O3 -ffast-math -funroll-loops lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 71.7     104.32   104.32                            internal_mcount [1]
+ 18.1     130.58    26.26       81   324.20   451.55  f77wave_ [5]
+  7.0     140.79    10.21 162648648     0.00     0.00  h_ [6]
+  2.0     143.70     2.91        1  2910.00 39860.00  timeloop_ [3]
+  0.9     144.95     1.25                            _mcount (779)
+  0.1     145.12     0.17   326313     0.00     0.00  .umul [9]
+  0.1     145.29     0.17   251001     0.00     0.00  __exp [8]
+  0.1     145.43     0.14        1   140.00   310.78  setic_ [7]
+
+
+
+Running on skidbladnir.ifi.uio.no: f77 compiler (Sun f77 compiler, v5.2)
+f77 -c -pg -O0  main.f versions/F77WAVE_call_hxy.f
+f77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 350.25   f77 -O0 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 27.3      95.60    95.60       81  1180.25  2389.57  f77wave_ [5]
+ 27.2     190.82    95.22 305970219     0.00     0.00  .mul [6]
+ 19.3     258.47    67.65                            _mcount (1027)
+  8.8     289.38    30.91                            oldarc [7]
+  8.1     317.78    28.40 162899649     0.00     0.00  h_ [8]
+  7.5     343.97    26.19        1 26190.00 246080.00  timeloop_ [4]
+  1.6     349.53     5.56                            done [9]
+  0.1     349.88     0.35        1   350.00  1026.21  setic_ [10]
+
+f77 -c -pg -O1  main.f versions/F77WAVE_call_hxy.f
+f77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 256.07   f77 -O1 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 37.9      96.98    96.98 305970219     0.00     0.00  .mul [6]
+ 23.9     158.23    61.25       81   756.17  1746.92  f77wave_ [5]
+ 19.5     208.05    49.82                            _mcount (1027)
+ 10.0     233.61    25.56                            oldarc [7]
+  3.7     242.99     9.38 162899649     0.00     0.00  h_ [8]
+  2.9     250.30     7.31        1  7310.00 175389.46  timeloop_ [4]
+  2.1     255.55     5.25                            done [9]
+  0.1     255.82     0.27   251001     0.00     0.00  __exp [12]
+
+f77 -c -pg -fast  main.f versions/F77WAVE_call_hxy.f
+f77 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time:   0.03   f77 -fast lambda array replaced by h(x,y) calls
+Unsuccessful execution of app < input > tmp.out
+
+
+Running on skidbladnir.ifi.uio.no: f95 compiler (Sun f95 compiler, v6.1)
+f95 -c -pg -O0  main.f versions/F77WAVE_call_hxy.f
+f95 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 316.97   f95 -O0 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 35.3     111.97   111.97       81  1382.35  2444.38  f77wave_ [5]
+ 26.3     195.28    83.31 305970374     0.00     0.00  .mul [6]
+ 16.1     246.34    51.06                            _mcount (1079)
+  8.2     272.46    26.12                            oldarc [7]
+  7.9     297.63    25.17 162899649     0.00     0.00  h_ [8]
+  4.1     310.61    12.98        1 12980.00 234169.76  timeloop_ [4]
+  1.7     316.14     5.53                            done [9]
+  0.1     316.51     0.37   251001     0.00     0.00  __exp [12]
+
+f95 -c -pg -O1  main.f versions/F77WAVE_call_hxy.f
+f95 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time: 249.04   f95 -O1 lambda array replaced by h(x,y) calls
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 34.4      85.53    85.53 305970374     0.00     0.00  .mul [6]
+ 26.1     150.54    65.01       81   802.59  1698.28  f77wave_ [5]
+ 19.7     199.68    49.14                            _mcount (1079)
+ 10.5     225.70    26.02                            oldarc [7]
+  4.0     235.75    10.05 162899649     0.00     0.00  h_ [8]
+  2.8     242.82     7.07        1  7070.00 168114.76  timeloop_ [4]
+  2.3     248.53     5.71                            done [9]
+  0.1     248.72     0.19   251001     0.00     0.00  __exp [12]
+
+f95 -c -pg -fast  main.f versions/F77WAVE_call_hxy.f
+f95 -o app -pg  main.o F77WAVE_call_hxy.o  
+app < input > tmp.out
+CPU-time:   0.04   f95 -fast lambda array replaced by h(x,y) calls
+Unsuccessful execution of app < input > tmp.out
+if-test inside the double loop
+main.f:
+versions/F77WAVE_loop_wiftest.f:
+main.f:
+versions/F77WAVE_loop_wiftest.f:
+main.f:
+versions/F77WAVE_loop_wiftest.f:
+
+
+Running on skidbladnir.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time: 516.62   g77 -O0 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 60.2     310.72   310.72                            internal_mcount [1]
+ 26.8     448.93   138.21 468618867     0.00     0.00  .umul [6]
+ 10.7     504.39    55.46       81   684.69  2091.22  f77wave_ [5]
+  1.7     513.10     8.71        1  8710.00 202790.00  timeloop_ [3]
+  0.6     516.11     3.01                            _mcount (779)
+  0.0     516.31     0.20   251001     0.00     0.00  __exp [9]
+  0.0     516.43     0.12   251001     0.00     0.00  bell_ [8]
+  0.0     516.52     0.09        1    90.00   706.11  setic_ [7]
+
+g77 -c -pg -O1  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time:  33.83   g77 -O1 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 81.4      27.46    27.46       81   339.01   342.96  f77wave_ [4]
+ 12.9      31.80     4.34        1  4340.00 32540.00  timeloop_ [2]
+  3.5      32.98     1.18                            internal_mcount [5]
+  1.1      33.34     0.36  1096542     0.00     0.00  .umul [7]
+  0.6      33.54     0.20   251001     0.00     0.00  __exp [9]
+  0.3      33.65     0.11        1   110.00   380.49  setic_ [6]
+  0.2      33.71     0.06   251001     0.00     0.00  bell_ [8]
+  0.1      33.74     0.03                            _mcount (779)
+
+g77 -c -pg -O2  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time:  17.52   g77 -O2 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 74.8      13.03    13.03       81   160.86   160.87  f77wave_ [4]
+ 18.5      16.25     3.22        1  3220.00 16510.00  timeloop_ [2]
+  5.1      17.14     0.89                            internal_mcount [5]
+  0.5      17.23     0.09   251001     0.00     0.00  __exp [7]
+  0.4      17.30     0.07   251001     0.00     0.00  bell_ [8]
+  0.3      17.36     0.06        1    60.00   240.24  setic_ [6]
+  0.2      17.39     0.03                            _mcount (779)
+  0.1      17.41     0.02   251001     0.00     0.00  h_ [9]
+
+g77 -c -pg -O3  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time:  17.63   g77 -O3 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 77.8      13.65    13.65       81   168.52   168.52  f77wave_ [4]
+ 18.7      16.94     3.29        1  3290.00 17280.00  timeloop_ [2]
+  1.4      17.19     0.25                            internal_mcount [6]
+  1.0      17.37     0.18   251001     0.00     0.00  __exp [7]
+  0.7      17.50     0.13        1   130.00   310.36  setic_ [5]
+  0.2      17.53     0.03   124704     0.00     0.00  .umul [8]
+  0.1      17.54     0.01                            .div [9]
+  0.1      17.55     0.01                            _mcount (779)
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time:  17.31   g77 -O3 -ffast-math -funroll-loops if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 79.4      13.68    13.68       81   168.89   168.89  f77wave_ [4]
+ 17.3      16.67     2.99        1  2990.00 17010.00  timeloop_ [2]
+  1.3      16.89     0.22   251001     0.00     0.00  __exp [7]
+  1.3      17.11     0.22                            internal_mcount [6]
+  0.5      17.19     0.08        1    80.00   300.48  setic_ [5]
+  0.2      17.23     0.04   124704     0.00     0.00  .umul [8]
+  0.1      17.24     0.01        2     5.00     5.00  _findbuf [9]
+  0.0      17.24     0.00      153     0.00     0.00  __udiv64 [418]
+
+
+
+Running on skidbladnir.ifi.uio.no: f77 compiler (Sun f77 compiler, v5.2)
+f77 -c -pg -O0  main.f versions/F77WAVE_loop_wiftest.f
+f77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time: 317.84   f77 -O0 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 45.9     145.88   145.88 468618867     0.00     0.00  .mul [6]
+ 24.6     223.93    78.05       81   963.58  2448.17  f77wave_ [5]
+ 15.2     272.32    48.39                            _mcount (1027)
+  8.2     298.29    25.97                            oldarc [7]
+  4.0     311.07    12.78        1 12780.00 237360.00  timeloop_ [4]
+  1.9     317.13     6.06                            done [8]
+  0.1     317.49     0.36        1   360.00   962.54  setic_ [9]
+  0.1     317.68     0.19   251001     0.00     0.00  __exp [11]
+
+f77 -c -pg -O1  main.f versions/F77WAVE_loop_wiftest.f
+f77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time: 282.70   f77 -O1 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 52.9     149.53   149.53 468618867     0.00     0.00  .mul [6]
+ 17.7     199.60    50.07                            _mcount (1027)
+ 15.5     243.33    43.73       81   539.88  2061.61  f77wave_ [5]
+  9.1     269.14    25.81                            oldarc [7]
+  2.5     276.31     7.17        1  7170.00 200890.00  timeloop_ [3]
+  2.1     282.19     5.88                            done [8]
+  0.1     282.47     0.28   251001     0.00     0.00  __exp [11]
+  0.1     282.62     0.15        1   150.00   780.36  setic_ [9]
+
+f77 -c -pg -fast  main.f versions/F77WAVE_loop_wiftest.f
+f77 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time:   0.04   f77 -fast if-test inside the double loop
+Unsuccessful execution of app < input > tmp.out
+
+
+Running on skidbladnir.ifi.uio.no: f95 compiler (Sun f95 compiler, v6.1)
+f95 -c -pg -O0  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time: 302.31   f95 -O0 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 43.2     130.73   130.73 468619022     0.00     0.00  .mul [6]
+ 25.7     208.46    77.73       81   959.63  2290.04  f77wave_ [5]
+ 16.5     258.45    49.99                            _mcount (1079)
+  8.3     283.44    24.99                            oldarc [7]
+  4.1     295.80    12.36        1 12360.00 221460.00  timeloop_ [3]
+  1.9     301.64     5.84                            done [8]
+  0.1     301.98     0.34   251001     0.00     0.00  __exp [11]
+  0.1     302.16     0.18        1   180.00   920.09  setic_ [9]
+
+f95 -c -pg -O1  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time: 266.51   f95 -O1 if-test inside the double loop
+   %  cumulative    self              self    total          
+ time   seconds   seconds    calls  ms/call  ms/call name    
+ 49.7     132.40   132.40 468619022     0.00     0.00  .mul [6]
+ 18.1     180.63    48.23                            _mcount (1079)
+ 17.7     227.75    47.12       81   581.73  1929.13  f77wave_ [5]
+  9.6     253.20    25.45                            oldarc [7]
+  2.6     260.20     7.00        1  7000.00 186970.00  timeloop_ [3]
+  2.2     266.00     5.80                            done [8]
+  0.1     266.24     0.24   251001     0.00     0.00  __exp [11]
+  0.0     266.35     0.11        1   110.00   733.66  setic_ [9]
+
+f95 -c -pg -fast  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app -pg  main.o F77WAVE_loop_wiftest.o  
+app < input > tmp.out
+CPU-time:   0.03   f95 -fast if-test inside the double loop
+Unsuccessful execution of app < input > tmp.out

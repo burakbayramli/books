@@ -1,0 +1,3298 @@
+Chapter 1.  Introduction
+
+/*==========================================================
+Example 1.1.  Keynes’s Consumption Function
+*/==========================================================
+?
+? Read data
+?
+Read ; Nobs = 10 ; Nvar = 2 ; Names = C,X
+     ; By Variables $
+672.1 696.8 737.1 767.9 762.8 
+779.4 823.1 864.3 903.2 927.6
+
+751.6 779.2 810.3 864.7 857.5
+874.9 906.8 942.9 988.8 1015.7
+?
+? Plot the figure
+?
+Plot ; Lhs = X ; Rhs = C ; Regression Line $
+
+
+
+
+
+/*==========================================================
+Example 1.2.  Income and Education - An Econometric Issue
+*/==========================================================
+?
+? There are no computations in Example 1.2.
+?
+
+Chapter 2.  Matrix Algebra
+
+/*=========================================================
+Section 2.9.2.
+/*=========================================================
+?
+?  The unconstrained solution requires computation
+?  of a - 2Ax = 0, or [x1 x2 x3]' = inv(2*A)a.
+?
+Matrix ; MA = [2,1,3 /
+               1,3,2 /
+               3,2,5 ]
+       ; a  = [5 / 4 / 2 ] $
+Matrix ; list ; x = .5 * <MA> * a $
+Calc  ; List ; fn = a'x - qfr(x,MA) $
+/*
+Matrix X   1
+        +--------------
+       1|  .1125000D+02
+       2|  .1750000D+01
+       3| -.7250000D+01
+FN      =  .24375000000000010D+02
+The constrained solution requires solution of
+           [ -2A  C' ] (x     )    (-a)
+           [   C  0  ] (lambda) =  ( 0)
+       C = [ 1 -1 1 ]
+           [ 1  1 1 ]
+There are simpler ways to get this solution, 
+but the following is complete and explicit.
+*/
+Matrix ; C = [1, -1, 1 /
+              1,  1, 1] $
+Matrix ; MTWOA = -2 * MA ; Minusa = -1 * a $
+Matrix ; Zero  = [0 / 0] ; Zero22 = [0,0/0,0]$
+Matrix ; CT = C' $
+Matrix ; D = [MTWOA , CT /
+              C     , Zero22 ]$
+Matrix ; q = [Minusa / zero ] $
+Matrix ; XL = <D> * q $
+/*
+ Note that the solution for x(2) is not identically zero because of rounding.
+*/
+Matrix ; List ; x = XL(1:3) ; lambda=XL(4:5) $
+Calc  ; List ; fn = a'x - qfr(x,MA) $
+/*
+Matrix X        has  3 rows and  1 columns.
+               1
+        +--------------
+       1|  .1500000D+01
+       2|  .5551115D-15
+       3| -.1500000D+01
+Matrix LAMBDA   has  2 rows and  1 columns.
+               1
+        +--------------
+       1| -.5000000D+00
+       2| -.7500000D+01
+FN      =  .22499999999999980D+01
+
+Chapter 3.  Probability and Distribution Theory
+
+/*=========================================================
+Example 3.1  Poisson Model for a Discrete Outcome.  
+No computations needed.  To illustrate the distribution, try
+Calc ; TBP( lambda) $  For example:  Calc ; TBP(5) $ produces
+/*=========================================================
+
+      Poisson distribution with lambda =  5.0000
+      [Probability of x occurrences, mean occurrences/pd = lambda.]
+      Mean =   5.00000, Standard deviation =   2.23607       x  P(X=x) P(X<=x)
+ P(x) +---------------------------------------------------+ --  ------ -------
+ .200 |                                                   |  0  .00674  .00674
+ .192 +                                                   +  1  .03369  .04043
+ .184 |                                                   |  2  .08422  .12465
+ .176 |        X X                                        |  3  .14037  .26503
+ .168 |        X X                                        |  4  .17547  .44049
+ .160 |        X X                                        |  5  .17547  .61596
+ .152 |        X X -                                      |  6  .14622  .76218
+ .144 +      x X X X                                      +  7  .10444  .86663
+ .136 |      X X X X                                      |  8  .06528  .93191
+ .128 |      X X X X                                      |  9  .03627  .96817
+ .120 |      X X X X                                      | 10  .01813  .98630
+ .112 |      X X X X -                                    | 11  .00824  .99455
+ .104 |      X X X X X                                    | 12  .00343  .99798
+ .096 +      X X X X X                                    + 13  .00132  .99930
+ .088 |    x X X X X X                                    | 14  .00047  .99977
+ .080 |    X X X X X X                                    | 15  .00016  .99993
+ .072 |    X X X X X X -                                  | 16  .00005  .99998
+ .064 |    X X X X X X X                                  | 17  .00001  .99999
+ .056 |    X X X X X X X                                  | 18  .00000 1.00000
+ .048 +    X X X X X X X                                  + 19  .00000 1.00000
+ .040 |  - X X X X X X X x                                | 20  .00000 1.00000
+ .032 |  X X X X X X X X X                                | 21  .00000 1.00000
+ .024 |  X X X X X X X X X -                              | 22  .00000 1.00000
+ .016 |  X X X X X X X X X X -                            | 23  .00000 1.00000
+ .008 |X X X X X X X X X X X X x - - - - - - -            | 24  .00000 1.00000
+ .000 ++---+---+---+---+---+---+---+---+---+---+---+---+--+ 25+ .00000 1.00000
+       0   2   4   6   8  10  12  14  16  18  20  22  24  x
+*/ 
+/*==================================================================
+Example 3.2.  Approximation to the Chi-Squared Distribution
+Computes exact and approximate values of chi-squared probabilities.
+*/==================================================================
+Proc=apxchi(x,d)$
+Calc;z=sqr(2*x)-sqr(2*d-1)
+    ;list
+    ;approx=Phi(z)
+    ;exact=chi(x,d)$
+Endproc
+Exec;proc=apxchi(85,70)$
+/*
+    APPROX  =  .89409039431135510D+00
+    EXACT   =  .89297135030469340D+00
+*/
+/*==================================================================
+Example 3.3.  Linear Transformation of  Normal Variable
+No computations.
+*/==================================================================
+ 
+/*==================================================================
+Example 3.4.  Linear Transformations
+Linear transformation of normally distributed variable.  No
+computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.5.  Regression in an Exponential Distribution
+Conditional distribution for an exponential model. No computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.6.  Poisson Regression
+Poisson Regression.  Linear conditional mean function. No computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.7.  Conditional Variance in a Poisson Model
+Poisson Regression.  Conditional variance function. No computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.8.  Uniform - Exponential Mixture Distibution.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.9.  Covariance in a Mixture Distibution.
+No computations.
+*/
+
+/*==================================================================
+Example 3.10.  Decomposition of Variance.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.11.  Conditional Variance in a Poisson Regression.  
+Simple arithmetic computations.
+*/==================================================================
+
+/*==================================================================
+Example 3.12.  Analysis of Variance in a Poisson Model.
+No computations.
+*/==================================================================
+
+
+Chapter 4.  Statistical Inference
+
+/*==================================================================
+Example 4.1.  Descriptive Statistics for a Random Sample
+*/==================================================================
+Read ; Nobs = 20 ; Nvar = 3 ; Names = I,Y,E$
+     1         20.5      12
+     2         31.5      16 
+     3         47.7      18          
+     4         26.2      16          
+     5         44.0      12          
+     6         8.28      12          
+     7         30.8      16          
+     8         17.2      12          
+     9         19.9      10          
+    10         9.96      12          
+    11         55.8      16  
+    12         25.2      20  
+    13         29.0      12  
+    14         85.5      16   
+    15         15.1      10   
+    16         28.5      18
+    17         21.4      16
+    18         17.7      20
+    19         6.42      12
+    20         84.9      16
+Dstat ; Rhs = Y,E ; All ; Output = 3 $
+Plot ; Lhs = E ; Rhs = Y $
+Descriptive Statistics
+All results based on nonmissing observations.
+===============================================================================
+Variable        Mean         Std.Dev.        Minimum         Maximum      Cases
+===============================================================================
+Y         31.2780000      22.3758337      6.42000000      85.5000000         20
+         Skewness=  1.3343   Kurtosis=  3.8681
+E         14.6000000      3.11870418      10.0000000      20.0000000         20
+         Skewness=   .1649   Kurtosis=  1.7860
+Matrix COV.MAT. has  2 rows and  2 columns.
+         Y             E
+        +----------------------------
+Y       |  .5006779D+03  .2359705D+02
+E       |  .2359705D+02  .9726316D+01
+Correlation Matrix for Listed Variables
+Y        E
+       Y  1.00000   .33815
+       E   .33815  1.00000
+                            
+
+
+
+/*==================================================================
+Example 4.2.  Sampling Distribution of a Sample Mean
+Central limit theorem. Computes a draw from chi-squared 1 by squaring
+a draw from standard normal.  Averages 4 such draws. Repeats
+1000 times, and plots a histogram of the draws.
+*/==================================================================
+Sample ; 1-1000$
+Create ; Means = (1/4)*(
+                  (Rnn(0,1))^2+(Rnn(0,1))^2
+                 +(Rnn(0,1))^2+(Rnn(0,1))^2)$
+Histogram ; Rhs=means ; int=30$ (30 Bars)
+
+        
+
+
+Histogram for MEANS        NOBS=  1000, Too low:     0, Too high:     0
+Bin  Lower limit   Upper limit       Frequency     Cumulative Frequency
+========================================================================
+  0         .026          .175         46 ( .0460)          46( .0460)
+  1         .175          .324         75 ( .0750)         121( .1210)
+  2         .324          .473        103 ( .1030)         224( .2240)
+  3         .473          .623        113 ( .1130)         337( .3370)
+  4         .623          .772        112 ( .1120)         449( .4490)
+  5         .772          .921        100 ( .1000)         549( .5490)
+  6         .921         1.070         77 ( .0770)         626( .6260)
+  7        1.070         1.219         66 ( .0660)         692( .6920)
+  8        1.219         1.368         58 ( .0580)         750( .7500)
+  9        1.368         1.517         47 ( .0470)         797( .7970)
+ 10        1.517         1.667         39 ( .0390)         836( .8360)
+ 11        1.667         1.816         31 ( .0310)         867( .8670)
+ 12        1.816         1.965         28 ( .0280)         895( .8950)
+ 13        1.965         2.114         25 ( .0250)         920( .9200)
+ 14        2.114         2.263         13 ( .0130)         933( .9330)
+ 15        2.263         2.412         17 ( .0170)         950( .9500)
+ 16        2.412         2.562         10 ( .0100)         960( .9600)
+ 17        2.562         2.711         13 ( .0130)         973( .9730)
+ 18        2.711         2.860          3 ( .0030)         976( .9760)
+ 19        2.860         3.009          5 ( .0050)         981( .9810)
+ 20        3.009         3.158          3 ( .0030)         984( .9840)
+ 21        3.158         3.307          4 ( .0040)         988( .9880)
+ 22        3.307         3.457          4 ( .0040)         992( .9920)
+ 23        3.457         3.606          2 ( .0020)         994( .9940)
+ 24        3.606         3.755          3 ( .0030)         997( .9970)
+ 25        3.755         3.904          1 ( .0010)         998( .9980)
+ 26        3.904         4.053          1 ( .0010)         999( .9990)
+ 27        4.053         4.202          0 ( .0000)         999( .9990)
+ 28        4.202         4.352          0 ( .0000)         999( .9990)
+ 29        4.352         4.501          1 ( .0010)        1000(1.0000)
+
+
+/*==================================================================
+Example 4.3.  Sampling Distribution of the Sample Minimum.  
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.4.  Mean Squared Error of the Sample Variance.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.5.  Quadratic Loss Function.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.6.  Likelihood Function for the Exponential Distribution.
+No computations.
+*/==================================================================
+/*===================================================================
+Example 4.7.  Likelihood Function for the Normal Distribution.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.8.  Variance Bound for the Poisson Distribution.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.9.  Information Matrix for the Normal Distribution.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.10.  Convergence of the Sample Minimum in Exponential 
+Sampling.  No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.11.  Estimating a Function of the Mean
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.12.  Probability Limit of a Function of x-bar and s-squared
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.13.  Limiting Distribution of t(n-1)
+The following plots the distribution of t for 2, 10, 40,and infinite 
+degrees of freedom.
+*/==================================================================
+Sample ; 1-101$           Plot and connect 100 segments
+Create ; t=trn(-4,.08)$   Values -4 to +4 in steps of .08
+?
+? This procedure obtains the value of the density over a
+? grid of values contained in variable t, and puts then
+? in a variable passed as fn.
+?
+Proc = tdensity(fn,t,d)$
+Create;fn=Gma((d+1)/2)/Gma(d/2) / sqr(d*pi) *
+                (1+t*t/d)^(-(d+1)/2)$
+Endproc$
+?
+? Compute for 2, 10, 40, infinity. (Last is N(0,1).)
+Execute ; Proc=tdensity(t2,t,2)$
+Execute ; Proc=tdensity(t10,t,10)$
+Execute ; Proc=tdensity(t40,t,40)$
+Create  ; tinf=N01(t)$
+?
+? Now plot the four densities in the same figure.
+Plot    ; lhs=t ;rhs=t2,t10,t40,tinf ; Fill intervals
+        ; Yaxis=Density
+        ; Title=t Densities with Different Degrees of Freedom$
+
+                  
+
+
+/*==================================================================
+Example 4.14.  Asymptotic Distribution of the Mean of an Exponential
+Sample.  
+We generate the plot in the text for the mean of a sample of 16 from 
+exponential with parameter theta=1.  Note, N and Theta are reserved 
+names in LIMDEP, so we use other names 
+*/==================================================================
+Sample ; 1-101$
+Calc   ; thet = 1 ; nobs=16 ; df=2*nobs $
+?
+? Density of the chi-squared variable with 2n degrees of freedom
+? Computed for t = 0 to 50.
+Create ; t = trn(0,.5)
+       ; Exact  = .5^(df/2)/Gma(df/2) * Exp(-.5*t)*(t^(df/2-1)) $
+?
+? For the simple linear transformation from t to Xbar=theta/2n*t,
+? just scale the variable down and the density up.
+?
+Create ; Xbar_n = t*thet/df 
+       ; Exact = Df/thet * Exact $
+? 
+? Asymptotic distribution is normal with mean theta, and
+? standard deviation theta/sqr(n).
+?
+Create ; Asymp = 1/Sqr(thet/nobs) * 
+                 N01((Xbar_n-thet)/Sqr(Thet/Nobs))$
+?
+? Now, just plot two densities.
+?
+Plot   ; Lhs = Xbar_n
+       ; Rhs = Exact,Asymp
+       ; Fill;Endpoints=0,1.75
+       ; Yaxis=Density
+       ; Title=Asymptotic and Exact Distribution$
+
+
+
+
+/*==================================================================
+Example 4.15.  Asymptotic Inefficiency of the Median in Normal 
+Sampling
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.16.  Asymptotic Distribution for a Function of Two Estimates
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.17.  Asymptotic Moments of the Sample Variance
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.18. Poisson Likelihood Function.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.19.  Likelihood for the Normal Distribution.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.20.  Multivariate Normal Mean Vector
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.21. Information Matrix for a Multivariate Normal Distribution
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.22.  Variance Estimators for an MLE
+*/==================================================================
+     Read ; Nobs=20 ; Nvar=3 ; Names=
+     I,         Y,       X  $
+     1         20.5      12
+     2         31.5      16 
+     3         47.7      18          
+     4         26.2      16          
+     5         44.0      12          
+     6         8.28      12          
+     7         30.8      16          
+     8         17.2      12          
+     9         19.9      10          
+    10         9.96      12          
+    11         55.8      16  
+    12         25.2      20  
+    13         29.0      12  
+    14         85.5      16   
+    15         15.1      10   
+    16         28.5      18
+    17         21.4      16
+    18         17.7      20
+    19         6.42      12
+    20         84.9      16
+?
+? 1.  Compute Maximum Likelihood Estimator
+?     Results that will follow are shown.
+?
+Maximize ; Fcn = -log(beta+e)-y/(beta+e)
+         ; Labels = beta
+         ; Start = 0 $
+/*=================================================================
+Note that the standard error shown below is the square root of the
+BHHH estimate which we compute below.  This is the one that LIMDEP
+uses.
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations               20     |
+              | Iterations completed                  2     |
+              | Log likelihood function       -88.43626     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ BETA      15.60272720      10.025547        1.556   .1196
+*/=================================================================
+
+?
+? Compute variance estimators.  Compute as a set of observations
+? sum, then take reciprocals of sums.
+
+Create   ; Hessian  =  1/(beta+e)^2 - 2*y/(beta+e)^3
+         ; EHessian = -1/(beta+e)^2
+         ; BHHH     = (-1/(beta+e) + y/(beta+e)^2)^2$
+Calc;List; V1 = -1/Sum(Hessian)
+         ; V2 = -1/Sum(EHessian)
+         ; V3 =  1/Sum(BHHH)$
+/*=================================================================
+    V1      =  .46163366852196030D+02
+    V2      =  .44254604293881970D+02
+    V3      =  .10051158752168130D+03
+Calculator: Computed   3 scalar results
+*/==================================================================
+
+/*==================================================================
+Example 4.23.  Two Step Estimation.
+No computations, as no data used.  The following shows how to do it.
+*/==================================================================
+? 1.  Set up the data after reading them in.
+Namelist ; X = the list of variables $
+Namelist ; Z = the list of variables $
+Create   ; Y1 = the Poisson variable $
+Create   ; Y2 = the binary variable  $
+? 2  Fit the Poisson model.  LIMDEP has a simple command
+?    for this: Poisson ; Lhs = Y1 ; Rhs = Z $
+?    Note a trick, Gma(y+1)=y!. Lgm(.)=Log(Gma)
+Calc     ; KZ = Col(Z) $
+Matrix   ; Delta0 = Init(KZ,1,0.0) $
+Maximize ; Labels = KZ_Delta  ; Start  = Delta0
+         ; Fcn = ey = Exp(Delta1'Z)  |  -ey+y1*log(ey)-lgm(y1+1)$
+? (Note, B is the full coefficient vector estimated)
+Create   ; ey1 = Exp(b'Z) ; uisqrd  = (y1 - ey1)^2$
+Matrix   ; V1 =  <Z'[uisqrd]Z>$
+?
+? 3.  Fit the logit model.  Once again, there is a simple
+?     command, Logit ; Lhs=Y2 ; Rhs = X2,Ey1 $ But, we'll
+?     do it a little more elaborately.
+?
+Namelist ; X21 = X,Ey $
+Calc     ; K1 = Col(X) $
+Matrix   ; Beta0 = Init(K1,1,0.0)$
+Maximize ; Labels = K1_Beta,Gamma ; Start  = Beta0, 0
+         ; Fcn = P = 1/(1+exp(-Beta0'X1-Gamma*Ey)) |
+                 log( y2*P + (1-y2)*(1-P)) $
+Create   ; Prob = 1/(1+exp(-B'X21)) ; visqrd   = (y2 - Prob)^2 $
+Matrix   ; V2 = <X21'[Visqrd]X21> $
+?
+? 4.  Compute R and C to do the correction to V2
+?
+Create   ; ci = visqrd*Gamma*Ey1
+         ; ri = Sqr(visqrd)*Sqr(visqrd) $
+Matrix   ; C = X21'[ci]Z ; R = X21'[ri]Z
+         ; V2S = C*V1*C' - R*V1*C1 - C*V1*R'
+         ; V2S = V2 + V2 * V2S * V2 
+         ; Stat(b,V2S) $
+
+/*==================================================================
+Example 4.24.  Method of Moments Estimator for N[mu,sigma^2]
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.25.  Mixture of Normal Distributions.
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 4.26. Gamma distribution.  
+Method of moments and MLE.
+*/==================================================================
+     Read ; Nobs=20 ; Nvar=3 ; Names=
+     I,         Y,       X  $
+     1         20.5      12
+     2         31.5      16 
+     3         47.7      18          
+     4         26.2      16          
+     5         44.0      12          
+     6         8.28      12          
+     7         30.8      16          
+     8         17.2      12          
+     9         19.9      10          
+    10         9.96      12          
+    11         55.8      16  
+    12         25.2      20  
+    13         29.0      12  
+    14         85.5      16   
+    15         15.1      10   
+    16         28.5      18
+    17         21.4      16
+    18         17.7      20
+    19         6.42      12
+    20         84.9      16
+?
+?-------------------------------------------------------------
+? First compute moments. With 'i' = variable, then means.
+?-------------------------------------------------------------
+Create ; m1i=y ; m2i=y*y ; mstari=log(y) ; m_1i=1/y$
+Calc   ; list ; m1=xbr(m1i) ; m2=xbr(m2i) ; mstar=xbr(mstari)
+       ; m_1=xbr(m_1i) $
+?-------------------------------------------------------------
+? Starting value for solutions to moment equations.  If
+? P=1, Lambda = 1/y-bar.  Use these as initial guesses.
+?-------------------------------------------------------------
+Calc   ; l0 = 1/m1$
+?-------------------------------------------------------------
+? Maximum likelihood estimation.  Results are shown.
+?-------------------------------------------------------------
+Maximize   ; fcn=p*log(l)-lgm(p)-l*y+(p-1)*log(y)
+           ; labels=p,l ; start = 1,l0$
+/*
+              Normal exit from iterations. Exit status=0.
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Number of observations               20     |
+              | Iterations completed                  6     |
+              | Log likelihood function       -85.37567     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ P         2.410601626      .87682554        2.749   .0060
+ L         .7707018675E-01  .27077098E-01    2.846   .0044
+*/
+?-------------------------------------------------------------
+? Alternative estimators using the method of moments.
+? Just finding solution to two equations, so set sample to 1.
+?-------------------------------------------------------------
+?
+Sample ; 1 $
+?
+?-------------------------------------------------------------
+? Based on m1 and m2.  Note, equations are m1=P/l = 0 and 
+? m2=P(P+1)/l^2 = 0.  But, the solution is the same for 
+? l*m1 - P = 0 and l*l*m2 - P(P+1) = 0.  Also, the solutions
+? are forced by minimizing the sum of squares.  For two
+? equations and two unknowns, this zeros exactly.
+?-------------------------------------------------------------
+?
+Minimize ; fcn = (l*m1 - p)^2 + (l*l*m2 - p*(p+1))^2
+         ; labels = p,l ; Start = 1,l0 $ 
+/*
+              +---------------------------------------------+
+              | Iterations completed                 81     |
+              | Log likelihood function       -.2122069E-14 |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ P         2.056818141      1.0000000        2.057   .0397
+ L         .6575925992E-01  1.0000000         .066   .9476
+*/
+?-------------------------------------------------------------
+? Based on m_1 and m2
+?-------------------------------------------------------------
+?
+Minimize ; fcn = ((p-1)*m_1 - l)^2 + (l*l*m2 - p*(p+1))^2
+         ; labels = p,l ; Start = 1,l0 $ 
+/*
+              +---------------------------------------------+
+              | Number of observations                1     |
+              | Iterations completed                 11     |
+              | Log likelihood function       -.9040069E-09 |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ P         2.607765493      1.0000000        2.608   .0091
+ L         .8044102328E-01  1.0000000         .080   .9359
+*/
+
+?-------------------------------------------------------------
+? Based on m1 and m*
+?-------------------------------------------------------------
+?
+Minimize ; fcn = (l*m1 - P)^2 + (mstar - (psi(p)-log(l)))^2
+         ; labels = p,l ; Start = 1,l0 $ 
+/*
+              +---------------------------------------------+
+              | Number of observations                1     |
+              | Iterations completed                  9     |
+              | Log likelihood function       -.4243523E-12 |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ P         2.410597740      1.0000000        2.411   .0159
+ L         .7707008485E-01  1.0000000         .077   .9386
+*/
+?-------------------------------------------------------------
+? Based on m2 and m*
+?-------------------------------------------------------------
+?
+Minimize ; fcn = (l*l*m2 - P*(P+1))^2 + (mstar - (psi(p)-log(l)))^2
+         ; labels = p,l ; Start = 1,l0 $ 
+/*
+              +---------------------------------------------+
+              | Number of observations                1     |
+              | Iterations completed                 10     |
+              | Log likelihood function       -.1754566E-10 |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ P         2.264470105      1.0000000        2.264   .0235
+ L         .7130398476E-01  1.0000000         .071   .9432
+*/
+?-------------------------------------------------------------
+? Based on m_1 and m*
+?-------------------------------------------------------------
+?
+Mini ; fcn = ((p-1)*m_1 - l)^2 + (mstar - (psi(p)-log(l)))^2
+     ; labels = p,l ; Start = 1,l0 $ 
+/*
+              +---------------------------------------------+
+              | Number of observations                1     |
+              | Iterations completed                 11     |
+              | Log likelihood function       -.2031249E-12 |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ P         3.035841208      1.0000000        3.036   .0024
+ L         .1018203332      1.0000000         .102   .9189
+*/
+?-------------------------------------------------------------
+? Next set of computations is based on the MLEs, which use
+? m1 and m*.  So, we redo the computations of l and P with
+? these two moments.
+?-------------------------------------------------------------
+?
+Sample    ; 1 $
+Minimize  ; fcn = (l*m1 - P)^2 + (mstar - (psi(p)-log(l)))^2
+          ; labels = p,l ; Start = 1,l0 $ 
+?
+?-------------------------------------------------------------
+? Get estimated covariance matrix for moments
+?-------------------------------------------------------------
+Sample ; 1 - 20 $
+Matrix ; list; V = 1/n*Xvcm(m1i,mstari)$
+/*
+Matrix V        has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .2503390D+02  .7155037D+00
+       2|  .7155037D+00  .2387296D-01
+*/
+
+?-------------------------------------------------------------
+? Elements of derivative matrix.
+?-------------------------------------------------------------
+Calc;list ; g11=-1/l;g12=p/l^2;g21=-psp(P);g22=1/l$
+/*
+    G11     = -.12975203049693140D+02
+    G12     =  .40583833808939320D+03
+    G21     = -.51240866266339470D+00
+    G22     =  .12975203049693140D+02
+*/
+?-------------------------------------------------------------
+? G matrix, and covariance matrix.
+?-------------------------------------------------------------
+Matrix  ;G=[g11,g12/g21,g22];Gt=G';list;Var=<G>*V*<Gt>$
+/*
+Matrix VAR      has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .3897375D+00  .1460351D-01
+       2|  .1460351D-01  .6874036D-03
+*/
+?
+?-------------------------------------------------------------
+? Covariance matrix based on Hessian of the log likelihood.
+?-------------------------------------------------------------
+Sample ; 1-20$
+Calc   ; h11=psp(p);h12=-1/l;h21=h12;h22=p/l^2$
+Matrix ; Hessian=[h11,h12/h21,h22];list;1/n*<Hessian>$
+/*
+Matrix Result   has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .5124327D+00  .1638317D-01
+       2|  .1638317D-01  .6469939D-03
+*/
+/*==================================================================
+Example 4.27.  Characterizing normality of a distribution
+No computations, but here is how they could be applied. We use the data from table 4.1
+*/==================================================================
+Read ; Nobs=20 ; Nvar=3 ; Names=
+     I,         Y,       E  $
+     1         20.5      12
+     2         31.5      16 
+     3         47.7      18          
+     4         26.2      16          
+     5         44.0      12          
+     6         8.28      12          
+     7         30.8      16          
+     8         17.2      12          
+     9         19.9      10          
+    10         9.96      12          
+    11         55.8      16  
+    12         25.2      20  
+    13         29.0      12  
+    14         85.5      16   
+    15         15.1      10   
+    16         28.5      18
+    17         21.4      16
+    18         17.7      20
+    19         6.42      12
+    20         84.9      16
+Create ; d = y - Xbr(y)
+       ; m2 = d^2 ; m3 = d^3 ; m4 = d^4 ; m5 = d^5
+       ; m6 = d^6 ; m7 = d^7 ; m8 = d^8$
+Calc   ; mu2 = Xbr(m2) ; mu3 = Xbr(m3) ; mu4 = Xbr(m4) 
+       ; mu5 = Xbr(m5) ; mu6 = Xbr(m6) ; mu7 = Xbr(m7) 
+       ; mu8 = Xbr(m8) $
+Calc   ; Theta1 = Mu3 / Mu2^(1.5)
+       ; Theta2 = Mu4 / Mu2^2 -3$
+Names  ; M = m2,m3,m4 $
+Matrix ; V = 1/n* XVCM(M) $
+Calc   ; j11 = -1.5 / mu2^2.5 * mu3
+       ; j12 = mu2^(-1.5)
+       ; j21 = -2/mu2^3 * mu4
+       ; j23 = mu2^(-2) $
+Matrix ; J = [j11,j12,0 / j21,0,j23]
+       ; Vart = J * V * J'
+       ; Theta12 = [Theta1 / Theta2]
+       ; Stat(Theta12,Vart)$
+/*
+Matrix statistical results: Coefficients=TH2       Variance=VART
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ TH2  _ 1  1.368929905      .36055351        3.797   .0001
+ TH2  _ 2  1.071718598      .90811548        1.180   .2379
+*/
+
+/*==================================================================
+Example 4.28.  Confidence Intervals for the Normal Mean.
+For N[mu,sigma^2]
+*/==================================================================
+?
+? Data and sample set up in variable named X.
+?
+Proc = CI(x,sig) $
+Calc ; xbar = Xbr(x)
+     ; sdev = Sdv(x) $
+Calc ; list  ; z = ttb(sig,(n-1))
+             ; Lower = xbar - z*sdev/sqr(n)
+             ; Upper = xbar + z*sdev/sqr(n) $
+Calc ; list  ; c1 = ctb(sig,(n-1))
+             ; c2 = ctb((1-sig),(n-1))
+             ; Lower = sqr(n-1)*sdev/c1
+             ; Upper = sqr(n-1)*sdev/c2 $
+EndProc
+?
+? We now execute our procedure for the income data of the
+? previous examples.
+?
+Exec;proc=ci(y,.95)$
+/*
+    Z       =  .17291328084071510D+01
+    LOWER   =  .22626476765584580D+02
+    UPPER   =  .39929523234415430D+02
+    C1      =  .30143527215110020D+02
+    C2      =  .10117013148930000D+02
+    LOWER   =  .32356531161353670D+01
+    UPPER   =  .96405921717317770D+01
+*/
+
+/*==================================================================
+Example 4.29.  Estimated Confidence Intervals for A Normal Mean.
+No computation required.
+*/==================================================================
+
+/*==================================================================
+Example 4.30.  Confidence Intervals for A Normal Variance
+No computation required.
+*/==================================================================
+
+/*==================================================================
+Example 4.31.  Power Function for a Test about a Mean
+We compute the power function for a test based on the
+results in Example 4.19.  Sampling 25 observations from
+the normal distribution, we obtain xbar=1.63 and s=1.51.
+The test is H0:mu = 1.5.  The hypothesis will be rejected
+if the t-ratio, sqr(n)*(xbar-1.5)/s is > 2.064.
+*/==================================================================
+?
+? The t statistic is shown first.
+?
+Calc list ; tstat=sqr(25)*(1.63-1.5)/.51$
+?
+? Now, compute and plot the power function.
+?
+? A grid of values for mu.  We use .5 to 2.5, steps of .02
+?
+Sample ; 1-100$
+Create ; mu=trn(.5,.02)$
+Create ; pwr=0$
+?
+? We'll use the calc function for the t-table, in a loop
+?
+Proc $
+Sample ; i$
+? In the loop, Prob|t|  > 2.064 if mu = mui equals
+?              Prob|t*| > 2.064 - sqr(n)(mu-1.5)/s
+?
+Calc   ; upper =  2.064-sqr(25)*(mui-1.5)/.51
+       ; lower = -2.064-sqr(25)*(mui-1.5)/.51
+       ; mui=mui+.02
+       ; power = 1-tds(upper,24) + tds(lower,24)$
+? Computed for this one observation, then put in the data.
+Create ; pwr=power$
+endproc
+? Start the loop, then produce 100 values.
+Calc   ; mui=.5$
+Exec   ; i=1,100$
+Sample ; 1-100$
+Plot   ; lhs=mu;rhs=pwr;fill;Title=Power Function for t test$
+
+
+/*==================================================================
+Example 4.32.  Consistent Test About a Mean.
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 4.33.  Testing a Hypothesis about a Mean with a Confidence 
+Interval.
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 4.34.  One Sided Test About a Mean
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 4.35.  Wald Test for a Restriction
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 4.36.  Testing a Hypothesis About a Mean
+No computations done.
+*/==================================================================
+
+Chapter 5.  Computation and Optimization
+
+/*==================================================================
+Example 5.1. Random Number Generator 
+No computations done. For the interested reader, here is a Fortran 
+subroutine that does the computation.  The 'COMMON' is used to make
+the routine remeber the seed between calls.  Many programs use 
+different 'library' programs, such as the IMSL routines.
+C
+C RANDOM NUMBER GENERATOR 
+C 
+       SUBROUTINE RANDOM (X)
+       IMPLICIT   DOUBLE PRECISION  ( A-H, O-Z )
+       COMMON/RNSEED/SEED 
+       RPM =  2147483647.D0
+       RPM2 = 2147483655.D0
+       SEED = MOD( 16807.D0*SEED, RPM )
+       X = SEED / RPM2
+       RETURN
+       END
+*/==================================================================
+
+/*==================================================================
+Example 5.2.  Gibbs Sampler for a Bivariate Distribution
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 5.3.  Monte Carlo Study of the Mean versus
+the Median.  We do this with a procedure with variable
+parameters, and some useful tools from matrix algebra.
+*/==================================================================
+?
+? The entire operation is contained in the procedure
+?
+Proc = MeanMed(r,nr,d)
+?
+? Initialize targets and set ultimate sample size.
+?
+Calc   ; Vmean=0;Vmedian=0$
+Sample ; 1 - nr $
+?
+? Matrix command generates a sample of nr observations
+? from t distribution with d degrees of freedom.
+? Repeat operation R times.
+?
+Do For ; Rep ; ir = 1,r $
+Matrix ; Zc = Rndm(nr,d)  ; Zt = Rndm(nr) ? Std. Normal
+       ; Zc = Dirp(Zc,Zc) ? Squares of standard normals
+       ; i =Init(d,1,1.0) ? Sqrt of sum of squares.
+       ; c = 1/d * Zc * i ; c = Esqr(c) 
+       ; c = Diri(c) ; t = Dirp(c,Zt) $ Sample from t.
+?
+? Move matrix of values to variable so Calc can use.
+
+
+? Then, get Mean, Median, mean square for both.
+Create ; ti = t $
+Calc;  ; Mean = Xbr(ti) ; Median = Med(ti)
+       ; Vmean=Vmean + (1/r)*Mean^2
+       ; Vmedian = Vmedian + (1/r)*Median^2 $
+EndDo  ; Rep $
+EndProc
+?
+? Run Simulation, then report results.
+?
+Exec   ; Proc = MeanMed(100,10,3)$
+Calc   ; List ; 10;3;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,10,6)$
+Calc   ; List ; 10;6;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,10,10)$
+Calc   ; List ; 10;10;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,25,3)$
+Calc   ; List ; 25;3;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,25,6)$
+Calc   ; List ; 25;6;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,25,10)$
+Calc   ; List ; 25;20;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,100,3)$
+Calc   ; List ; 100;3;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,100,6)$
+Calc   ; List ; 100;6;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+Exec   ; Proc = MeanMed(100,100,10)$
+Calc   ; List ; 100;10;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+/*
+--> Calc   ; List ; 10;3;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .10000000000000000D+02
+    Result  =  .30000000000000000D+01
+    VMEAN   =  .22776773705592240D+00
+    VMEDIAN =  .17605331923973410D+00
+    MND     =  .77295108392155140D+00
+--> Calc   ; List ; 10;6;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .10000000000000000D+02
+    Result  =  .60000000000000000D+01
+    VMEAN   =  .19460318324261890D+00
+    VMEDIAN =  .17792811471082130D+00
+    MND     =  .91431245751510570D+00
+--> Calc   ; List ; 10;10;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .10000000000000000D+02
+    Result  =  .10000000000000000D+02
+    VMEAN   =  .13668025146327190D+00
+    VMEDIAN =  .19708691312004350D+00
+    MND     =  .14419560324924030D+01
+--> Calc   ; List ; 25;3;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .25000000000000000D+02
+    Result  =  .30000000000000000D+01
+    VMEAN   =  .94318530651331700D-01
+    VMEDIAN =  .61968114454716990D-01
+    MND     =  .65700890404871950D+00
+--> Calc   ; List ; 25;6;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .25000000000000000D+02
+    Result  =  .60000000000000000D+01
+    VMEAN   =  .51450736989300260D-01
+    VMEDIAN =  .78848948688663210D-01
+    MND     =  .15325134935396690D+01
+--> Calc   ; List ; 25;20;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .25000000000000000D+02
+    Result  =  .20000000000000000D+02
+    VMEAN   =  .53514169743784310D-01
+    VMEDIAN =  .68681800841004060D-01
+    MND     =  .12834320549088120D+01
+--> Calc   ; List ; 100;3;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .10000000000000000D+03
+    Result  =  .30000000000000000D+01
+    VMEAN   =  .29494182014539210D-01
+    VMEDIAN =  .19603646167951140D-01
+    MND     =  .66466146300607670D+00
+--> Calc   ; List ; 100;6;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .10000000000000000D+03
+    Result  =  .60000000000000000D+01
+    VMEAN   =  .14990919512419500D-01
+    VMEDIAN =  .18084504512921710D-01
+    MND     =  .12063639257044430D+01
+--> Calc   ; List ; 100;10;Vmean ; Vmedian ; Mnd= VMedian/VMean $
+    Result  =  .10000000000000000D+03
+    Result  =  .10000000000000000D+02
+    VMEAN   =  .11726483356199100D-01
+    VMEDIAN =  .17747666776421600D-01
+    MND     =  .15134688070860960D+01
+*/
+
+/*==================================================================
+Example 5.4.  Probabilities for a Discrete Choice Model
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 5.5.  The Bivariate Normal CDF
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 5.6.  Fractional Moments of the Truncated Normal
+Distribution.
+*/==================================================================
+? This can be done elegantly using Geweke's method of Simulating a 
+? truncated distribution.  When computation is cheap, brute force will 
+? suffice. Here, we estimate the expected value of z^.45 given 
+? z > 0 when the underlying distribution is normal with
+? mean -.35 and standard deviation 1.179.
+Rows   ; 10000 $
+Create ; z = Rnn(-.35,1.179) $
+Reject ; z <= 0 $
+Create ; zp = z^.45 $
+Dstat  ; Rhs = zp $
+/*
+The resulting subsample has 3867 observations, enough to estimate the
+mean of a distribution with fair precision.  
+Descriptive Statistics
+===============================================================================
+Variable   Mean         Std.Dev.     Minimum         Maximum      Cases
+-------------------------------------------------------------------------------
+ZP        .837394245  .338424255   .350684226E-01  1.78732350       3867
+*/
+/*==================================================================
+Example 5.7.  Mean of a Lognormal Distribution.
+*/==================================================================
+?
+? We sample 10,000 observations from the chi-squared 1
+? distribution, then average the values of
+? exp(.5*(x - (log(x))^2 * sqr(x).  Note, true value = 1.648
+?
+Rows   ; 10000 $
+Create ; x = (Rnn(0,1))^2 ; q = exp(.5*(x - (log(x))^2) * sqr(x) $
+Calc   ; List ; Xbr(q) $
+/*
+Result  =  .15718250473903100D+01
+*/
+
+/*==================================================================
+Example 5.8.  Consumer Choice
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 5.9.  Concentrated log likelihood function
+No computations.
+*/==================================================================
+
+/*==================================================================
+Example 5.10.  Function of One Parameter
+*/==================================================================
+? Iterative solution to finding the maximum of f(t) = log(t)-.1*t*t
+?
+Proc=Iterate$
+Calc ; List ; f = log(t) - .1*t*t ; f1 = 1/t - .2*t ; f2 = -1/t^2 - .2
+            ; t  = t - f1/f2 $
+EndProc
+Calc ; t = 5 $
+Exec ; n = 5 $
+/* 
+    F       = -.89056208756589970D+00
+    F1      = -.80000000000000000D+00
+    F2      = -.24000000000000000D+00
+    T       =  .16666666666666670D+01
+    F       =  .23304784598821290D+00
+    F1      =  .26666666666666640D+00
+    F2      = -.55999999999999980D+00
+    T       =  .21428571428571430D+01
+    F       =  .30295637857750900D+00
+    F1      =  .38095238095238070D-01
+    F2      = -.41777777777777780D+00
+    T       =  .22340425531914890D+01
+    F       =  .30471813550042990D+00
+    F1      =  .81053698074978750D-03
+    F2      = -.40036281179138330D+00
+    T       =  .22360670593565920D+01
+    F       =  .30471895621688160D+00
+    F1      =  .36725735436116130D-06
+    F2      = -.40000016424254940D+00
+    T       =  .22360679774996010D+01
+Maximum repetitions of PROC
+*/
+/*==================================================================
+Example 5.11.  Function of Two Parameters - The Gamma Distribution
+*/==================================================================
+Proc = GammaMin(Method,r0,beta0)
+Sample ; 1 $
+Maximize ; fcn = r*log(beta)-lgm(r)-3*beta+r-1
+         ; labels = r,beta
+         ; Start = r0,beta0
+         ; Alg = Method ; Output = 3 $
+EndProc
+Exec ; Proc = GammaMin(DFP,4,1)$
+Exec ; Proc = GammaMin(Newton,4,1)$
+Exec ; Proc = GammaMin(DFP,8,3)$
+Exec ; Proc = GammaMin(Newton,8,3)$
+Exec ; Proc = GammaMin(DFP,2,7)$
+Exec ; Proc = GammaMin(Newton,2,7)$
+/*
+Results are as reported in the text. One example, the first trial with 
+the two different methods follows, with the third on using Netwon.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+First trial with DFP
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--> Exec ; Proc = GammaMin(DFP,4,1)$
+Nonlinear Estimation of Model Parameters
+Method=D/F/P ; Maximum iterations=100
+Convergence criteria:gtHg   .1000D-05 chg.F   .0000D+00 max|dB|  
+.0000D+00
+Nodes for quadrature: Laguerre=40;Hermite=20.
+Replications for GHK simulator= 100
+Start values:   .40000D+01   .10000D+01
+1st derivs.     .25612D+00  -.10000D+01
+Parameters:     .40000D+01   .10000D+01
+Itr  1 F=  .1792D+01 gtHg=  .1032D+01 chg.F=  .1792D+01 max|db|= 
+.1000D+01
+1st derivs.    -.50064D-01   .46474D-01
+Parameters:     .39165D+01   .13260D+01
+Itr  2 F=  .1644D+01 gtHg=  .6831D-01 chg.F=  .1475D+00 max|db|= 
+.3505D-01
+1st derivs.    -.24433D-01  -.27472D-01
+Parameters:     .39422D+01   .13022D+01
+Itr  3 F=  .1643D+01 gtHg=  .3676D-01 chg.F=  .1191D-02 max|db|= 
+.2110D-01
+1st derivs.    -.45950D-01   .40884D-01
+Parameters:     .39805D+01   .13452D+01
+Itr  4 F=  .1642D+01 gtHg=  .6151D-01 chg.F=  .1045D-02 max|db|= 
+.3039D-01
+1st derivs.    -.45950D-01   .40884D-01
+Parameters:     .39805D+01   .13452D+01
+Itr  1 F=  .1642D+01 gtHg=  .6151D-01 chg.F=  .1642D+01 max|db|= 
+.3039D-01
+1st derivs.    -.22873D-01  -.25705D-01
+Parameters:     .40047D+01   .13236D+01
+Itr  2 F=  .1641D+01 gtHg=  .3003D-01 chg.F=  .1003D-02 max|db|= 
+.7429D-02
+1st derivs.    -.29678D-02   .80328D-02
+Parameters:     .52166D+01   .17435D+01
+Itr  3 F=  .1623D+01 gtHg=  .5550D-02 chg.F=  .1762D-01 max|db|= 
+.2087D-02
+1st derivs.     .28664D-04  -.74510D-04
+Parameters:     .52315D+01   .17438D+01
+Itr  4 F=  .1623D+01 gtHg=  .6290D-04 chg.F=  .2087D-04 max|db|= 
+.3484D-04
+1st derivs.    -.38532D-07   .94779D-06
+Parameters:     .52313D+01   .17438D+01
+Itr  5 F=  .1623D+01 gtHg=  .1848D-05 chg.F=  .1989D-08 max|db|= 
+.2322D-05
+1st derivs.    -.20931D-07   .56667D-07
+Parameters:     .52313D+01   .17438D+01
+Itr  6 F=  .1623D+01 gtHg=  .4556D-07 chg.F=  .2325D-11 max|db|= 
+.2005D-07
+                        * Converged
+Normal exit from iterations. Exit status=0.
+
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations                1     |
+              | Iterations completed                  6     |
+              | Log likelihood function       -1.623390     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ R         5.231320409      1.0000000        5.231   .0000
+ BETA      1.743773508      1.0000000        1.744   .0812
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+First trial with Newton
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--> Exec ; Proc = GammaMin(Newton,4,1)$
+Nonlinear Estimation of Model Parameters
+Method=NEWTON; Maximum iterations=100
+Convergence criteria:gtHg   .1000D-05 chg.F   .0000D+00 max|dB|  
+.0000D+00
+Nodes for quadrature: Laguerre=40;Hermite=20.
+Replications for GHK simulator= 100
+Start values:   .40000D+01   .10000D+01
+1st derivs.     .25612D+00  -.10000D+01
+Parameters:     .40000D+01   .10000D+01
+Itr  1 F=  .1792D+01 gtHg=  .5012D+00 chg.F=  .1792D+01 max|db|= 
+.2030D+00
+1st derivs.     .16474D-01  -.16874D+00
+Parameters:     .38120D+01   .12030D+01
+Itr  2 F=  .1653D+01 gtHg=  .2167D+00 chg.F=  .1386D+00 max|db|= 
+.3112D+00
+1st derivs.     .40035D-02  -.40076D-01
+Parameters:     .47952D+01   .15773D+01
+Itr  3 F=  .1626D+01 gtHg=  .6674D-01 chg.F=  .2742D-01 max|db|= 
+.9545D-01
+1st derivs.     .35301D-03  -.35036D-02
+Parameters:     .51898D+01   .17279D+01
+Itr  4 F=  .1623D+01 gtHg=  .6367D-02 chg.F=  .2360D-02 max|db|= 
+.9095D-02
+1st derivs.     .28057D-05  -.32759D-04
+Parameters:     .52309D+01   .17436D+01
+Itr  5 F=  .1623D+01 gtHg=  .6331D-04 chg.F=  .2041D-04 max|db|= 
+.9067D-04
+1st derivs.    -.42699D-08  -.14918D-07
+Parameters:     .52313D+01   .17438D+01
+Itr  6 F=  .1623D+01 gtHg=  .6725D-07 chg.F=  .2004D-08 max|db|= 
+.9583D-07
+                        * Converged
+Normal exit from iterations. Exit status=0.
+
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations                1     |
+              | Iterations completed                  6     |
+              | Log likelihood function       -1.623390     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ R         5.231320038      7.1712051         .729   .4657
+ BETA      1.743773343      2.5089255         .695   .4870
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Last trial with Newton
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Nonlinear Estimation of Model Parameters
+Method=NEWTON; Maximum iterations=100
+Convergence criteria:gtHg   .1000D-05 chg.F   .0000D+00 max|dB|  
+.0000D+00
+Nodes for quadrature: Laguerre=40;Hermite=20.
+Replications for GHK simulator= 100
+Start values:   .20000D+01   .70000D+01
+1st derivs.    -.25231D+01   .27143D+01
+Parameters:     .20000D+01   .70000D+01
+Itr  1 F=  .1611D+02 gtHg=  .2298D+02 chg.F=  .1611D+02 max|db|= 
+.3441D+02
+Obs.=     1 Cannot compute function:
+Note: Iterations, fn not computable at crnt. trial estimate
+Cannot compute function at current values. Exit status=4.
+
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations                1     |
+              | Iterations completed                  1     |
+              | Log likelihood function        .0000000     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ R        -47.82221823      1.0000000      -47.822   .0000
+ BETA     -233.8689728      1.0000000     -233.869   .0000
+*/
+
+
+/*==================================================================
+Example 5.12.  A Concentrated log likelihood function
+*/==================================================================
+?
+? We plot the concentrated log likelihood, which suggests
+? where the solution is.  Then, we maximize it, and compute
+? the other parameter residually.  The full maximization
+? over both parameters produces the same result.
+?
+Sample   ; 1 $
+Fplot    ; Fcn = r*log(r/3) - lgm(r) - 1
+         ; Start = 1
+         ; Plot(r)
+         ; Labels = r
+         ; Pts = 100
+         ; Limits = .05,10 $
+
+     
+
+Maximize ; Fcn = r*log(r/3) - lgm(r) - 1
+         ; labels = r
+         ; start = 1 $
+/*
+Note: DFP and BFGS usually take more than 4 or 5
+iterations to converge.  If this problem was not
+structured for quick convergence, you might want
+to examine results closely. If convergence is too
+early, tighten convergence with, e.g., ;TLG=1.D-9.
+Normal exit from iterations. Exit status=0.
+
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations                1     |
+              | Iterations completed                  2     |
+              | Log likelihood function       -1.623390     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ R         5.231326303      1.0000000        5.231   .0000
+*/
+Calc     ; List    ; Beta = r/3 $
+Maximize ; Fcn = r*log(bt)-lgm(r)-3*bt+r-1
+         ; Labels = r,bt
+         ; Start = 4,1 $
+/*
+    BETA    =  .17437754344134900D+01
+Normal exit from iterations. Exit status=0.
+
+              +---------------------------------------------+
+              | User Defined Optimization                   |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable             Function     |
+              | Weighting variable                  ONE     |
+              | Number of observations                1     |
+              | Iterations completed                  6     |
+              | Log likelihood function       -1.623390     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ R         5.231320513      1.0000000        5.231   .0000
+ BT        1.743773510      1.0000000        1.744   .0812
+*/
+
+/*==================================================================
+Example 5.13  Maximum Likelihood Estimation
+Program Code for Estimation of Harvey's Model
+The data set for this model is 100 observations from Greene (1992)
+Variables are: 
+Exp  = Average monthly credit card expenditure
+Age = Age in years+ 12ths of a year
+Income = Income, divided by 10,000
+OwnRent =  individual owns (1) or rents (0) home
+SelfEmpl =  self employed (1=yes, 0=no)
+*/==================================================================
+?
+? Initial Data Setup.  Used for all examples
+?
+Read ; Nobs = 100 ; Nvar = 7 ; Names = 
+Derogs,Card,Age,Income,Exp,OwnRent,SelfEmpl $
+   0  1 38  4.52   124.98   1  0
+   0  1 33  2.42     9.85   0  0
+   0  1 34  4.50    15.00   1  0
+   0  1 31  2.54   137.87   0  0
+   0  1 32  9.79   546.50   1  0
+   0  1 23  2.50    92.00   0  0
+   0  1 28  3.96    40.83   0  0
+   0  1 29  2.37   150.79   1  0
+   0  1 37  3.80   777.82   1  0
+   0  1 28  3.20    52.58   0  0
+   0  1 31  3.95   256.66   1  0
+   0  0 42  1.98     0.00   1  0
+   0  0 30  1.73     0.00   1  0
+   0  1 29  2.45    78.87   1  0
+   0  1 35  1.91    42.62   1  0
+   0  1 41  3.20   335.43   1  0
+   0  1 40  4.00   248.72   1  0
+   7  0 30  3.00     0.00   1  0
+   0  1 40 10.00   548.03   1  1
+   3  0 46  3.40     0.00   0  0
+   0  1 35  2.35    43.34   1  0
+   1  0 25  1.88     0.00   0  0
+   0  1 34  2.00   218.52   1  0
+   1  1 36  4.00   170.64   0  0
+   0  1 43  5.14    37.58   1  0
+   0  1 30  4.51   502.20   0  0
+   0  0 22  3.84     0.00   0  1
+   0  1 22  1.50    73.18   0  0
+   0  0 34  2.50     0.00   1  0
+   0  1 40  5.50  1532.77   1  0
+   0  1 22  2.03    42.69   0  0
+   1  1 29  3.20   417.83   0  0
+   1  0 25  3.15     0.00   1  0
+   0  1 21  2.47   552.72   1  0
+   0  1 24  3.00   222.54   0  0
+   0  1 43  3.54   541.30   1  0
+   0  0 43  2.28     0.00   0  0
+   0  1 37  5.70   568.77   1  0
+   0  1 27  3.50   344.47   0  0
+   0  1 28  4.60   405.35   1  0
+   0  1 26  3.00   310.94   1  0
+   0  1 23  2.59    53.65   0  0
+   0  1 30  1.51    63.92   0  0
+   0  1 30  1.85   165.85   0  0
+   0  1 38  2.60     9.58   0  0
+   0  0 28  1.80     0.00   0  1
+   0  1 36  2.00   319.49   0  0
+   0  0 38  3.26     0.00   0  0
+   0  1 26  2.35    83.08   0  0
+   0  1 28  7.00   644.83   1  0
+   0  0 50  3.60     0.00   0  0
+   0  1 24  2.00    93.20   0  0
+   0  1 21  1.70   105.04   0  0
+   0  1 24  2.80    34.13   0  0
+   0  1 26  2.40    41.19   0  0
+   1  1 33  3.00   169.89   0  0
+   0  1 34  4.80  1898.03   0  0
+   0  1 33  3.18   810.39   0  0
+   0  0 45  1.80     0.00   0  0
+   0  1 21  1.50    32.78   0  0
+   2  1 25  3.00    95.80   0  0
+   0  1 27  2.28    27.78   0  0
+   0  1 26  2.80   215.07   0  0
+   0  1 22  2.70    79.51   0  0
+   3  0 27  4.90     0.00   1  0
+   0  0 26  2.50     0.00   0  1
+   0  1 41  6.00   306.03   0  1
+   0  1 42  3.90   104.54   0  0
+   0  0 22  5.10     0.00   0  0
+   0  1 25  3.07   642.47   0  0
+   0  1 31  2.46   308.05   1  0
+   0  1 27  2.00   186.35   0  0
+   0  1 33  3.25    56.15   0  0
+   0  1 37  2.72   129.37   0  0
+   0  1 27  2.20    93.11   0  0
+   1  0 24  4.10     0.00   0  0
+   0  1 24  3.75   292.66   0  0
+   0  1 25  2.88    98.46   0  0
+   0  1 36  3.05   258.55   0  0
+   0  1 33  2.55   101.68   0  0
+   0  0 33  4.00     0.00   0  0
+   1  1 55  2.64    65.25   1  0
+   0  1 20  1.65   108.61   0  0
+   0  1 29  2.40    49.56   0  0
+   3  0 40  3.71     0.00   0  0
+   0  1 41  7.24   235.57   1  0
+   0  0 41  4.39     0.00   1  0
+   0  0 35  3.30     0.00   1  0
+   0  0 24  2.30     0.00   0  0
+   1  0 54  4.18     0.00   0  0
+   2  0 34  2.49     0.00   0  0
+   0  0 45  2.81     0.00   1  0
+   0  1 43  2.40    68.38   0  0
+   4  0 35  1.50     0.00   0  0
+   2  0 36  8.40     0.00   0  0
+   0  1 22  1.56     0.00   0  0
+   1  1 33  6.00   474.15   1  0
+   1  1 25  3.60   234.05   0  0
+   0  1 26  5.00   451.20   1  0
+   0  1 46  5.50   251.52   1  0
+Create   ; y = Exp $
+Reject   ; Exp = 0 $
+?
+? Define variables in scedastic function
+?
+Namelist ; Z = One,Age,Income,OwnRent,SelfEmpl$
+?
+? Variables in deviations from means, hi used later.
+?
+Create   ; y = y - Xbr(y) ; hi = log(y^2) $
+?
+? matrices that only need compute once, start values also.
+?
+Matrix   ; ZZI = <Z'Z> ; gamma0 = ZZI * Z'hi ; H = 2*ZZI$
+Calc     ; c0 = gamma0(1)+1.2704 ; K = Col(Z) 
+         ; s20 = y'y/n ; delta = 1 ; iter=0 $
+Create   ; vi0 = (y^2 / s20 - 1) $
+Matrix   ; Gamma0(1) = c0 
+         ; Gamma     = Gamma0 $
+?
+? Computations in the iteration.
+?
+Procedure
+Create   ; vari = exp(Z'Gamma) 
+         ; vi = y^2 / vari - 1 
+         ; logli = -.5*(log(2*pi) + log(vari) + y^2/vari) $
+?
+? This is the iteration.
+?
+Matrix   ; g  = .5 * Z'vi ; update = H*g ; Gamma = Gamma + update $
+?
+? Display progress to solution
+?
+Calc     ; list ; Iter = Iter+1 ; LoglU = Sum(logli) 
+         ; delta = g'update $
+EndProc
+?
+? Do the estimation, with exit rule checked by the program
+?
+Execute  ; While  delta > .00001 $
+?
+? Display all results.
+?
+Matrix   ; Stat (Gamma,H) $
+/*
+    ITER    =  .10000000000000000D+01
+    LOGLU   = -.51488159157020980D+03
+    DELTA   =  .50216892265715530D+02
+    ITER    =  .20000000000000000D+01
+    LOGLU   = -.50632062784012100D+03
+    DELTA   =  .10110878618370730D+02
+    ITER    =  .30000000000000000D+01
+    LOGLU   = -.50133108852306380D+03
+    DELTA   =  .11384997784439750D+01
+    ITER    =  .40000000000000000D+01
+    LOGLU   = -.50075807000005030D+03
+    DELTA   =  .54612572364539240D-01
+    ITER    =  .50000000000000000D+01
+    LOGLU   = -.50074068923265340D+03
+    DELTA   =  .10654967586285280D-01
+    ITER    =  .60000000000000000D+01
+    LOGLU   = -.50073784718162780D+03
+    DELTA   =  .26491951233769230D-02
+    ITER    =  .70000000000000000D+01
+    LOGLU   = -.50073714244356620D+03
+    DELTA   =  .66467890235364090D-03
+    ITER    =  .80000000000000000D+01
+    LOGLU   = -.50073696346889480D+03
+    DELTA   =  .16586568129915330D-03
+    ITER    =  .90000000000000000D+01
+    LOGLU   = -.50073691849030420D+03
+    DELTA   =  .41471330270019660D-04
+    ITER    =  .10000000000000000D+02
+    LOGLU   = -.50073690712118170D+03
+    DELTA   =  .10359793062824090D-04
+    ITER    =  .11000000000000000D+02
+    LOGLU   = -.50073690425106620D+03
+    DELTA   =  .25907113319667200D-05
+ DELTA>.00001
+Matrix statistical results: Coefficients=GAMMA     Variance=H
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ GAMMA_ 1  8.485631925      .83489674       10.164   .0000
+ GAMMA_ 2  .2030078669E-01  .27025653E-01     .751   .4526
+ GAMMA_ 3  .6713184878      .13026077        5.154   .0000
+ GAMMA_ 4 -.6084003442      .42520045       -1.431   .1525
+ GAMMA_ 5 -4.620293694      1.1792600       -3.918   .0001
+*/
+?
+? Estimate of sigma-squared, plus a standard error for it.
+?
+Calc;List; Sigmasq = Exp(Gamma(1)) 
+         ; SE = Sigmasq * Sqr(H(1,1)) $
+/*
+    SIGMASQ =  .48446579597521760D+04
+    SE      =  .40447891203908600D+04
+*/
+?
+? Test the hypothesis that coefficients are zero.
+? 1.  Likelihood ratio test
+? 2.  Wald test
+? 3.  LM test requires some computation
+?
+Calc     ; list ; LogLR = -n/2*(1 + log(2*pi) + log(y'y/n))
+         ; LRTest = -2*(LogLR - LogLU) $
+Matrix   ; Alpha = Gamma(2:K) ; Valpha = Part(H,2,K,2,K)
+         ; List ; WaldTest = Alpha ' <VAlpha> Alpha $
+Matrix   ; list ; LMTest = .5* vi0'Z * <Z'Z> * Z'vi0 $
+/*
+    LOGLR   = -.51653837177479360D+03
+    LRTEST  =  .31602935047454820D+02
+Matrix WALDTEST has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .3332298D+02
+
+Matrix LMTEST   has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .3262055D+02
+*/
+?
+? Compute 3 different asymptotic covariance matrices
+?
+Create   ; hi=y*y/exp(Z'gamma)
+         ; vi=((hi-1)/2)^2$
+Matrix   ; List
+         ; Hessian = 2*<Z'[hi]Z>
+         ; EHessian= 2*<Z'Z>
+         ; BHHH    = <Z'[vi]Z> $
+/*
+Matrix HESSIAN  has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .6249186D+00 -.2021446D-01  .1305190D-02  .7334084D-01  .1124411D+00
+       2| -.2021446D-01  .9593834D-03 -.2513101D-02 -.3702593D-02  .8412266D-02
+       3|  .1305190D-02 -.2513101D-02  .2384767D-01 -.3461803D-02 -.1212877D+00
+       4|  .7334084D-01 -.3702593D-02 -.3461803D-02  .1461350D+00 -.1586299D-01
+       5|  .1124411D+00  .8412266D-02 -.1212877D+00 -.1586299D-01  .1701592D+01
+
+Matrix EHESSIAN has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .6970526D+00 -.1965523D-01 -.3255282D-01  .1312624D+00  .2937755D+00
+       2| -.1965523D-01  .7303859D-03 -.4736367D-03 -.3852661D-02 -.4209978D-02
+       3| -.3255282D-01 -.4736367D-03  .1696787D-01 -.2386884D-01 -.7207342D-01
+       4|  .1312624D+00 -.3852661D-02 -.2386884D-01  .1807954D+00  .1253234D+00
+       5|  .2937755D+00 -.4209978D-02 -.7207342D-01  .1253234D+00  .1390654D+01
+
+Matrix BHHH     has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .1071198D+01 -.3381672D-01  .1772900D-01  .5956687D-01  .1267734D+00
+       2| -.3381672D-01  .1584545D-02 -.4230208D-02 -.3443973D-02  .5204941D-02
+       3|  .1772900D-01 -.4230208D-02  .2782876D-01  .5289991D-02 -.7167319D-01
+       4|  .5956687D-01 -.3443973D-02  .5289991D-02  .1003494D+00 -.1257290D-01
+       5|  .1267734D+00  .5204941D-02 -.7167319D-01 -.1257290D-01  .4409877D+01
+
+*/
+
+Chapter 6.  The Classical Multiple Linear Regression
+                 Model - Specification and Estimation
+
+/*==================================================================
+Example 6.1.  Keynes's Consumption Function
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.2.  Income and Education
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.3.  The U.S. Gasoline Market
+No computations done.  Data discussed in this example listed below.
+*/==================================================================
+Read ; Nobs = 36 ; Nvar = 11 ; Names = 
+Year,  G,      Pg,    Y,   Pnc,   Puc,   Ppt,   Pd,    Pn,    Ps,   Pop $
+1960  129.7   .925  6036  1.045   .836   .810   .444   .331   .302  180.7
+1961  131.3   .914  6113  1.045   .869   .846   .448   .335   .307  183.7
+1962  137.1   .919  6271  1.041   .948   .874   .457   .338   .314  186.5
+1963  141.6   .918  6378  1.035   .960   .885   .463   .343   .320  189.2
+1964  148.8   .914  6727  1.032  1.001   .901   .470   .347   .325  191.9
+1965  155.9   .949  7027  1.009   .994   .919   .471   .353   .332  194.3
+1966  164.9   .970  7280   .991   .970   .952   .475   .366   .342  196.6
+1967  171.0  1.000  7513  1.000  1.000  1.000   .483   .375   .353  198.7
+1968  183.4  1.014  7728  1.028  1.028  1.046   .501   .390   .368  200.7
+1969  195.8  1.047  7891  1.044  1.031  1.127   .514   .409   .386  202.7
+1970  207.4  1.056  8134  1.076  1.043  1.285   .527   .427   .407  205.1
+1971  218.3  1.063  8322  1.120  1.102  1.377   .547   .442   .431  207.7
+1972  226.8  1.076  8562  1.110  1.105  1.434   .555   .458   .451  209.9
+1973  237.9  1.181  9042  1.111  1.176  1.448   .566   .497   .474  211.9
+1974  225.8  1.599  8867  1.175  1.226  1.480   .604   .572   .513  213.9
+1975  232.4  1.708  8944  1.276  1.464  1.586   .659   .615   .556  216.0
+1976  241.7  1.779  9175  1.357  1.679  1.742   .695   .638   .598  218.0
+1977  249.2  1.882  9381  1.429  1.828  1.824   .727   .671   .648  220.2
+1978  261.3  1.963  9735  1.538  1.865  1.878   .769   .719   .698  222.6
+1979  248.9  2.656  9829  1.660  2.010  2.003   .821   .800   .756  225.1
+1980  226.8  3.691  9722  1.793  2.081  2.516   .892   .894   .839  227.7
+1981  225.6  4.109  9769  1.902  2.569  3.120   .957   .969   .926  230.0
+1982  228.8  3.894  9725  1.976  2.964  3.460  1.000  1.000  1.000  232.2
+1983  239.6  3.764  9930  2.026  3.297  3.626  1.041  1.021  1.062  234.3
+1984  244.7  3.707 10421  2.085  3.757  3.852  1.038  1.050  1.117  236.3
+1985  245.8  3.738 10563  2.152  3.797  4.028  1.045  1.075  1.173  238.5
+1986  269.4  2.921 10780  2.240  3.632  4.264  1.053  1.069  1.224  240.7
+1987  276.8  3.038 10859  2.321  3.776  4.413  1.085  1.111  1.271  242.8
+1988  279.9  3.065 11186  2.368  3.939  4.494  1.105  1.152  1.336  245.0
+1989  284.1  3.353 11300  2.414  4.019  4.719  1.129  1.213  1.408  247.3
+1990  282.0  3.834 11389  2.451  3.926  5.197  1.144  1.285  1.482  249.9
+1991  271.8  3.766 11272  2.538  3.942  5.427  1.167  1.332  1.557  252.6
+1992  280.2  3.751 11466  2.528  4.113  5.518  1.184  1.358  1.625  255.4
+1993  286.7  3.713 11476  2.663  4.470  6.086  1.200  1.379  1.684  258.1
+1994  290.2  3.732 11636  2.754  4.730  6.268  1.225  1.396  1.734  260.7
+1995  297.8  3.789 11934  2.815  5.224  6.410  1.239  1.419  1.786  263.2
+Create ; lg = Log(100*G/Pop) ; li = Log(Y) ; lpg= Log(Pg)
+       ; lpnc = Log(Pnc)     ; lpuc = log(Puc) $
+
+/*==================================================================
+Example 6.4.  The Logistic Model
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.5.  The Translog Model
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.6.  Short Rank
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.7.  Least Squares in the Two Variable Model
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.8.  Investment Equation
+*/==================================================================
+/*
+? These are the original raw data that appear in the
+? example.  As noted, if the original data are read
+? in, transformed, then used for the regression, you
+? get slightly different answers from those in the
+? text, which are based on Table 6.2, which contains
+? the transformed data after rounding.
+?
+Read ; Nobs = 15 ; Nvar = 5 ; Names = 
+         Year,    GNP,    Invest,    CPI,    Interest$ 
+         1968   873.4     133.3     82.54     5.16 
+         1969   944.0     149.3     86.79     5.87 
+         1970   992.7     144.2     91.45     5.95 
+         1971  1077.6     166.4     96.01     4.88 
+         1972  1185.9     195.0    100.00     4.50 
+         1973  1326.4     229.8    105.75     6.44 
+         1974  1434.2     228.7    115.08     7.83 
+         1975  1549.2     206.1    125.79     6.25 
+         1976  1718.0     257.9    132.34     5.50 
+         1977  1918.3     324.1    140.05     5.46 
+         1978  2163.9     386.6    150.42     7.46 
+         1979  2417.8     423.0    163.42    10.28 
+         1980  2633.1     402.3    178.64    11.77 
+         1981  2937.7     471.5    195.51    13.42 
+         1982  3057.5     421.9    207.23    11.02 
+Create ; Y = Invest / CPI) / 10
+       ; T = Year - 1967
+       ; G = (GNP / CPI) / 10
+       ; If(Year = 1968) P = 100*(CPI - 79.06)/79.06
+       ; If(Year > 1968) P = 100*(CPI - CPI[-1])/CPI[-1]
+       ; R = Interest $
+*/
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+0.161  1 1.058  5.16 4.40
+0.172  2 1.088  5.87 5.15
+0.158  3 1.086  5.95 5.37
+0.173  4 1.122  4.88 4.99
+0.195  5 1.186  4.50 4.16
+0.217  6 1.254  6.44 5.75
+0.199  7 1.246  7.83 8.82
+0.163  8 1.232  6.25 9.31
+0.195  9 1.298  5.50 5.21
+0.231 10 1.370  5.46 5.83
+0.257 11 1.439  7.46 7.40
+0.259 12 1.479 10.28 8.64
+0.225 13 1.474 11.77 9.31
+0.241 14 1.503 13.42 9.44
+0.204 15 1.475 11.02 5.99
+?
+? Regression of Y on a constant, T, and G
+?
+Calc ; List ; Yb = Xbr(Y)
+            ; Tb = Xbr(T)
+            ; Gb = Xbr(G) $
+/*
+    YB      =  .20333333333333340D+00
+    TB      =  .80000000000000000D+01
+    GB      =  .12873333333333330D+01
+*/
+Create      ; dy = y - yb ; dt = t - tb  ; dg = g - gb $
+Calc ; List ; sty = dy'dt ; sgg = dg'dg  ; sgy = dg'dy
+            ; stt = dt'dt ; stg = dt'dg  ; syy = dy'dy $
+/*
+    STY     =  .16040000000000000D+01
+    SGG     =  .35960933333333340D+00
+    SGY     =  .66196333333333340D-01
+    STT     =  .28000000000000000D+03
+    STG     =  .98200000000000000D+01
+    SYY     =  .16353333333333330D-01
+*/
+Calc ; List ; b2 = (sty*sgg - sgy*stg) / (stt*sgg - stg^2)
+            ; b3 = (sgy*stt - sty*stg) / (stt*sgg - stg^2)
+            ; b1 = yb - b2*tb - b3*gb $
+/*
+    B2      = -.17198439094956700D-01
+    B3      =  .65372331431648270D+00
+    B1      = -.50063896720376510D+00
+*/
+Calc ; List ; byg = sgy/sgg ; byt = sty/stt ; btg = stg/sgg
+            ; rsqgt = stg^2 / (sgg*stt)
+            ; byg_t = byg/(1-rsqgt) - (byt*btg)/(1-rsqgt) $
+/*
+    BYG     =  .18407846292458110D+00
+    BYT     =  .57285714285714280D-02
+    BTG     =  .27307411376048820D+02
+    RSQGT   =  .95770992754571180D+00
+    BYG_T   =  .65372331431648250D+00
+*/
+Namelist    ; X = One,T,G,R,P $
+Matrix;List ; XX = X'X
+            ; Xy = X'y
+            ; bb = <X'X>*X'y $
+/*
+Matrix XX       has  5 rows and  5 columns.
+               1             2             3             4             5
+ +----------------------------------------------------------------------
+1|  .1500000D+02  .1200000D+03  .1931000D+02  .1117900D+03  .9977000D+02
+2|  .1200000D+03  .1240000D+04  .1643000D+03  .1035930D+04  .8756000D+03
+3|  .1931000D+02  .1643000D+03  .2521802D+02  .1489838D+03  .1312163D+03
+4|  .1117900D+03  .1035930D+04  .1489838D+03  .9438557D+03  .7990186D+03
+5|  .9977000D+02  .8756000D+03  .1312163D+03  .7990186D+03  .7166685D+03
+Matrix XY       has  5 rows and  1 columns.
+               1
+        +--------------
+       1|  .3050000D+01
+       2|  .2600400D+02
+       3|  .3992563D+01
+       4|  .2352069D+02
+       5|  .2073158D+02
+Matrix BB       has  5 rows and  1 columns.
+               1
+        +--------------
+       1| -.5090708D+00
+       2| -.1658039D-01
+       3|  .6703834D+00
+       4| -.2325928D-02
+       5| -.9401070D-04
+*/
+
+/*==================================================================
+Example 6.9.  Deviations from Means - Regression ona Constant.
+We illustrate this with the first regression in Example 6.8.
+*/==================================================================
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+0.161  1 1.058  5.16 4.40
+0.172  2 1.088  5.87 5.15
+0.158  3 1.086  5.95 5.37
+0.173  4 1.122  4.88 4.99
+0.195  5 1.186  4.50 4.16
+0.217  6 1.254  6.44 5.75
+0.199  7 1.246  7.83 8.82
+0.163  8 1.232  6.25 9.31
+0.195  9 1.298  5.50 5.21
+0.231 10 1.370  5.46 5.83
+0.257 11 1.439  7.46 7.40
+0.259 12 1.479 10.28 8.64
+0.225 13 1.474 11.77 9.31
+0.241 14 1.503 13.42 9.44
+0.204 15 1.475 11.02 5.99
+?
+? Create deviations from means. (Not the most efficient
+? way to do this, but it works fine.)
+?
+Calc ; List ; Yb = Xbr(Y)
+            ; Tb = Xbr(T)
+            ; Gb = Xbr(G) $
+Create      ; dy = y - yb
+            ; dt = t - tb
+            ; dg = g - gb $
+?
+? Two regressions.  (Only coefficients are shown)
+? 1.  Including constant term.
+Regress     ; Lhs = Y ; Rhs = One,T,G $
+/*
+Constant -.5006389672    
+T        -.1719843909E-01
+G         .6537233143    
+*/
+?
+? 2.  Deviations, without constant term.  Same results.
+Regress     ; Lhs = dy ; Rhs = dt,dg $
+/*
+DT       -.1719843909E-01
+DG        .6537233143    
+*/
+?
+? What if Y is not transformed?  No problem. Y need not
+? be transformed.
+?
+Regress     ; Lhs = Y ; Rhs = dt,dg $
+/*
+DT       -.1719843909E-01
+DG        .6537233143    
+*/
+
+
+
+
+/*==================================================================
+Example 6.10.  Partial Correlations
+*/==================================================================
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+<... Data are the same as in the previous example. ...>
+?
+? Simple Correlations
+?
+Calc ; List ; Cor(Y,T) ; Cor(Y,G) ; Cor(Y,R) ; Cor(Y,P) $
+/*
+    Result  =  .74958727214560710D+00
+    Result  =  .86320771284687750D+00
+    Result  =  .58713497756276230D+00
+    Result  =  .47771172812588810D+00
+*/
+?
+? Partial Correlations
+? We have to compute a set of residual vectors.
+? 1.  Time
+Silent   $
+Regress ; Lhs = T ; Rhs = One,G,R,P ; Res = Tstar$
+Regress ; Lhs = Y ; Rhs = One,G,R,P ; Res = Ystar$
+NoSilent $
+Calc    ; List ; Cor(Ystar,Tstar) $
+/*
+    Result  = -.93600196919123690D+00
+*/
+? 2.  GNP
+Silent   $
+Regress ; Lhs = G ; Rhs = One,T,R,P ; Res = Gstar$
+Regress ; Lhs = Y ; Rhs = One,T,R,P ; Res = Ystar$
+NoSilent $
+Calc    ; List ; Cor(Ystar,Gstar) $
+/*
+    Result  =  .96795712668804980D+00
+*/
+? 3.  Interest
+Silent   $
+Regress ; Lhs = R ; Rhs = One,T,G,P ; Res = Rstar$
+Regress ; Lhs = Y ; Rhs = One,T,G,P ; Res = Ystar$
+NoSilent $
+Calc    ; List ; Cor(Ystar,Rstar) $
+/*
+    Result  = -.51666471908205260D+00
+*/
+? 4.  Inflation
+Silent   $
+Regress ; Lhs = P ; Rhs = One,T,G,R ; Res = Pstar$
+Regress ; Lhs = Y ; Rhs = One,T,G,R ; Res = Ystar$
+NoSilent $
+Calc    ; List ; Cor(Ystar,Pstar) $
+/*
+    Result  = -.22057138371905460D-01
+*/
+
+/*==================================================================
+Example 6.11.  Fit of a Consumption Function
+*/==================================================================
+Read ; Nobs = 11 ; Nvar = 3 ; Names = Year,X,C $
+1940   241  226   
+1941   280  240   
+1942   319  235   
+1943   331  245   
+1944   345  255   
+1945   340  265
+1946   332  295
+1947   320  300
+1948   339  305
+1949   338  315
+1950   371  325
+Sample ; 1 - 11 $
+Calc ; List ; yb = Xbr(C)
+            ; xb = Xbr(X)
+            ; Sxx = (N-1)*Var(X)
+            ; Syy = (N-1)*Var(C)
+            ; Sxy = (N-1)*Cov(X,C)
+            ; SST = Syy
+            ; slope = Sxy/Sxx
+            ; SSR = slope^2 * Sxx
+            ; SSE = SST - SSR
+            ; Rsq = slope^2 * Sxx / SST $
+/*
+    YB      =  .27327272727272730D+03
+    XB      =  .32327272727272730D+03
+    SXX     =  .12300181818181820D+05
+    SYY     =  .12618181818181820D+05
+    SXY     =  .84231818181818160D+04
+    SST     =  .12618181818181820D+05
+    SLOPE   =  .68480140722236160D+00
+    SSR     =  .57682067623807180D+04
+    SSE     =  .68499750558011020D+04
+    RSQ     =  .45713454168723260D+00
+*/
+Sample ; 1,2,7-11$
+Calc   ; ... exactly as above $
+/*
+    YB      =  .28657142857142860D+03
+    XB      =  .31728571428571430D+03
+    SXX     =  .11219428571428570D+05
+    SYY     =  .87137142857142860D+04
+    SXY     =  .95708571428571430D+04
+    SST     =  .87137142857142860D+04
+    SLOPE   =  .85306101660385040D+00
+    SSR     =  .81645251240559370D+04
+    SSE     =  .54918916165834890D+03
+    RSQ     =  .93697416008249000D+00
+*/
+
+/*====================================================
+Example 6.12.  Analysis of Variance for an Investment Equation
+*/====================================================
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+0.161  1 1.058  5.16 4.40
+0.172  2 1.088  5.87 5.15
+0.158  3 1.086  5.95 5.37
+0.173  4 1.122  4.88 4.99
+0.195  5 1.186  4.50 4.16
+0.217  6 1.254  6.44 5.75
+0.199  7 1.246  7.83 8.82
+0.163  8 1.232  6.25 9.31
+0.195  9 1.298  5.50 5.21
+0.231 10 1.370  5.46 5.83
+0.257 11 1.439  7.46 7.40
+0.259 12 1.479 10.28 8.64
+0.225 13 1.474 11.77 9.31
+0.241 14 1.503 13.42 9.44
+0.204 15 1.475 11.02 5.99
+?
+Sample;1-15$
+Namelist ; X = One,T,G,R,P $
+Calc     ; Yb = Xbr(y) $
+Matrix   ; bb = <X'X> * X'y
+         ; Xy = X'y $
+Calc ; List ; RegSS = bb'Xy - n*Yb^2
+            ; TotSS = y'y   - n*Yb^2
+            ; ResSS = TotSS - RegSS 
+            ; DFReg = Col(X) - 1
+            ; DFRes = n - Col(X)
+            ; DFTot = n - 1
+            ; MSReg = RegSS / DFReg
+            ; MSRes = ResSS / DFRes
+            ; MSTot = TotSS / DFTot
+            ; Rsq   = 1 - ResSS/TotSS $
+/*
+    REGSS   =  .15902521532841770D-01
+    TOTSS   =  .16353333333333110D-01
+    RESSS   =  .45081180049133530D-03
+    DFREG   =  .40000000000000000D+01
+    DFRES   =  .10000000000000000D+02
+    DFTOT   =  .14000000000000000D+02
+    MSREG   =  .39756303832104430D-02
+    MSRES   =  .45081180049133530D-04
+    MSTOT   =  .11680952380952220D-02
+    RSQ     =  .97243303299074560D+00
+*/
+
+/*==================================================================
+Example 6.13.  Sampling Variance in the Two Variable Regression Model
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.14.  Investment Equation
+*/==================================================================
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+0.161  1 1.058  5.16 4.40
+0.172  2 1.088  5.87 5.15
+0.158  3 1.086  5.95 5.37
+0.173  4 1.122  4.88 4.99
+0.195  5 1.186  4.50 4.16
+0.217  6 1.254  6.44 5.75
+0.199  7 1.246  7.83 8.82
+0.163  8 1.232  6.25 9.31
+0.195  9 1.298  5.50 5.21
+0.231 10 1.370  5.46 5.83
+0.257 11 1.439  7.46 7.40
+0.259 12 1.479 10.28 8.64
+0.225 13 1.474 11.77 9.31
+0.241 14 1.503 13.42 9.44
+0.204 15 1.475 11.02 5.99
+?
+? Standard Regression Results
+?
+Namelist  ; X = One,T,G,R,P $
+Matrix    ; bb = <X'X> * X'y
+          ; ee = y'y - bb' * X'X * bb $
+Calc ;List; s2 = ee/(n - Col(X)) $
+Matrix    ; List ; Var = s2 * <X'X>
+                 ; Stat (bb,Var) $
+/*
+    S2      =  .45081180048978100D-04
+Matrix VAR      has  5 rows and  5 columns.
+         1             2             3             4             5
+       
+ +----------------------------------------------------------------------
+1|  .3039062D-02  .1023405D-03 -.3010234D-02  .5599212D-05 -.3207697D-05
+2|  .1023405D-03  .3887842D-05 -.1017688D-03 -.2884571D-06 -.4257379D-07
+3| -.3010234D-02 -.1017688D-03  .3024694D-02 -.7278842D-05 -.2278947D-05
+4|  .5599212D-05 -.2884571D-06 -.7278842D-05  .1485638D-05 -.7507108D-06
+5| -.3207697D-05 -.4257379D-07 -.2278947D-05 -.7507108D-06  .1815703D-05
+
+Matrix statistical results: Coefficients=BB        Variance=VAR
++---------+--------------+----------------+--------+---------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] |
++---------+--------------+----------------+--------+---------+
+ BB   _ 1 -.5090707909      .55127690E-01   -9.234   .0000
+ BB   _ 2 -.1658039448E-01  .19717611E-02   -8.409   .0000
+ BB   _ 3  .6703834376      .54997215E-01   12.189   .0000
+ BB   _ 4 -.2325928344E-02  .12188677E-02   -1.908   .0564
+ BB   _ 5 -.9401070242E-04  .13474804E-02    -.070   .9444
+*/
+
+/*==================================================================
+Example 6.15.  Confidence Interval for the Income
+               Elasticity of Demand for Gasoline.
+*/==================================================================
+Read ; Nobs = 36 ; Nvar = 11 
+     ; Names = 
+Year,  G,      Pg,    Y,   Pnc,   Puc,   Ppt,   Pd,    Pn,    Ps,   Pop $
+<... Data appear in Example 6.3 ...>
+?
+Create   ; lg = Log(100*G/Pop)
+         ; li = Log(Y)
+         ; lpg= Log(Pg)
+         ; lpnc = Log(Pnc)
+         ; lpuc = log(Puc) $
+Namelist ; X = One,lpg,li,lpnc,lpuc $
+Regress  ; Lhs = lg ; Rhs = X $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -7.736670352      .67489471      -11.464   .0000
+ LPG      -.5909513203E-01  .32484958E-01   -1.819   .0786  .67409433
+ LI        1.373399117      .75627675E-01   18.160   .0000  9.1109277
+ LPNC     -.1267966682      .12699351        -.998   .3258  .44319821
+ LPUC     -.1187084716      .81337098E-01   -1.459   .1545  .66361224
+*/
+Wald ; Fn1 = B_li - 1 $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .3733991166      .75627675E-01    4.937   .0000
+*/
+
+/*==================================================================
+Example 6.16.  Confidence Interval for a Linear Combination of Coefficients - The Oaxaca
+                         Decomposition
+This shows the application to the gasoline demand model of Example 6.15 for the 
+pre- and post-1973 embargo.  Regression results appear in Example 7.8 and Table 7.3.
+*/==================================================================
+Read ; Nobs = 36 ; Nvar = 11 
+     ; Names = 
+Year,  G,      Pg,    Y,   Pnc,   Puc,   Ppt,   Pd,    Pn,    Ps,   Pop $
+<... Data appear in Example 6.3 ...>
+?
+Create ; lg = Log(100*G/Pop)
+       ; li = Log(Y)
+       ; lpg= Log(Pg)
+       ; lpnc = Log(Pnc)
+       ; lpuc = log(Puc) $
+Namelist ; X = One,lpg,li,lpnc,lpuc $
+?
+? Set first period = post embargo and collect results.
+?
+Include  ; New ; Year > 1973 $ (Post embargo)
+Regress  ; Lhs = LG ; Rhs = X $
+Matrix   ; Bpost = b ; Vpost = Varb ; Xpost = Mean(X) $
+Calc     ; Npost = N ; Ybarpost=ybar$
+?
+? Set second period = pre embargo. Get same results.
+?
+Include  ; New ; Year <= 1973 $ (Pre embargo)
+Regress  ; Lhs = LG  ; Rhs = X $
+Matrix   ; Bpre = b  ; Vpre = Varb ; Xpre = Mean(X) $
+Calc     ; Npre = N  ; Ybarpre=Ybar$
+?
+? Begin comparison. Change in coefficients and
+? covariance matrix for change in coefficients.
+?
+Matrix   ; Db = Bpost - Bpre ; Vd = Vpost + Vpre $
+?
+?  First part of decomposition
+Calc;List; Change = Ybarpost - YbarPre    
+         ; delta  = Xpost'Db              
+         ; sdelta = Sqr(Qfr(Xpost,Vd))    
+         ; tstar  = ttb(.975,(Npost+Npre-2*Kreg))
+         ; Lower  = Delta-tstar*sdelta    
+         ; Upper  = Delta+tstar*sdelta $    
+/*
+    CHANGE  =  .22023478727896160D+00
+    DELTA   = -.40244123581929490D+00
+    SDELTA  =  .17556711898756920D+00
+    TSTAR   =  .20555294386434850D+01
+    LOWER   = -.76332461735606690D+00
+    UPPER   = -.41557854282522900D-01
+*/
+Matrix   ; Dx=Xpost-Xpre$
+?
+?  Second part of decomposition
+Calc;list; Gamma  = Dx'Bpost              
+         ; sgamma = Sqr(Qfr(Dx,Vpre))     
+         ; tstar  = ttb(.975,Npre)   
+         ; lower  = gamma-tstar*sgamma    
+         ; upper  = gamma+tstar*sgamma $    
+/*
+    GAMMA   =  .10455654817832680D-01
+    SGAMMA  =  .17548083885496660D+00
+    TSTAR   =  .21447866879179390D+01
+    LOWER   = -.36591331234297270D+00
+    UPPER   =  .38682462197863800D+00
+*/
+
+/*==================================================================
+Example 6.17.  Confidence Interval for sigma squared.
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 6.18.  F Test for the Investment Equation
+*/==================================================================
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+<... Data appear in Example 6.14 ...>
+Namelist ; X = One,T,G,R,P $
+?
+? Test the hypothesis that the last four coefficients
+? are zero.  There are many ways to do this.
+?
+Regress     ; Lhs = y ; Rhs = X $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = Y        Mean=   .2033333333    , S.D.=   .3417740830E-01 |
+| Model size: Observations =      15, Parameters =   5, Deg.Fr.=     10 |
+| Residuals:  Sum of squares= .4508118005E-03, Std.Dev.=         .00671 |
+| Fit:        R-squared=  .972433, Adjusted R-squared =          .96141 |
+| Model test: F[  4,     10] =   88.19,    Prob value =          .00000 |
+| Diagnostic: Log-L =     56.8098, Restricted(b=0) Log-L =      29.8762 |
+|             LogAmemiyaPrCrt.=   -9.719, Akaike Info. Crt.=     -6.908 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -.5090707909      .55127690E-01   -9.234   .0000
+ T        -.1658039448E-01  .19717611E-02   -8.409   .0000  8.0000000
+ G         .6703834376      .54997215E-01   12.189   .0000  1.2873333
+ R        -.2325928344E-02  .12188677E-02   -1.908   .0854  7.4526667
+ P        -.9401070242E-04  .13474804E-02    -.070   .9458  6.6513333
+*/
+Calc ; List ; F = (Rsqrd/(Col(X)-1)) / ((1-Rsqrd)/(n-Col(X))) $
+/*
+    F       =  .88188250148830110D+02
+*/
+Regress ; Lhs = y ; Rhs = X 
+        ; Cls: b(2)=0, b(3)=0, b(4)=0, b(5)=0 $
+/*
++-----------------------------------------------------------------------+
+| Linearly restricted regression                                        |
+| Dep. var. = Y        Mean=   .2033333333    , S.D.=   .3417740830E-01 |
+| Model size: Observations =      15, Parameters =   1, Deg.Fr.=     14 |
+| Residuals:  Sum of squares= .1635333333E-01, Std.Dev.=         .03418 |
+| Fit:        R-squared=  .000000, Adjusted R-squared =          .00000 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Diagnostic: Log-L =     29.8762, Restricted(b=0) Log-L =      29.8762 |
+|             LogAmemiyaPrCrt.=   -6.688, Akaike Info. Crt.=     -3.850 |
+| Note, when restrictions are imposed, R-squared can be less than zero. |
+| F[ 4,    10] for the restrictions =     88.1883, Prob =   .0000       |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .2033333333      .88245689E-02   23.042   .0000
+ T        -.3122502257E-16  .42828688E-09     .000  1.0000  8.0000000
+ G         .5551115123E-15........(Fixed Parameter)........ 1.2873333
+ R         .0000000000    ........(Fixed Parameter)........ 7.4526667
+ P        -.5407458335E-17........(Fixed Parameter)........ 6.6513333
+*/
+/*==================================================================
+Example 6.19.  Multicollinearity in the Longley Data
+*/==================================================================
+Read ; Nobs = 16 ; Nvar = 5 ; names =
+ Employ,  Price,     GNP,   Armed,   Year$
+  60323    83.0    234289   1590     1947
+  61122    88.5    259426   1456     1948
+  60171    88.2    258054   1616     1949    
+  61187    89.5    284599   1650     1950
+  63221    96.2    328975   3099     1951
+  63639    98.1    346999   3594     1952
+  64989    99.0    365385   3547     1953
+  63761   100.0    363112   3350     1954
+  66019   101.2    397469   3048     1955
+  67857   104.6    419180   2857     1956
+  68169   108.4    442769   2798     1957
+  66513   110.8    444546   2637     1958
+  68655   112.6    482704   2552     1959
+  69564   114.2    502601   2514     1960
+  69331   115.7    518173   2572     1961
+  70551   116.9    554894   2827     1962
+Namelist ; X = One,Year,Price,GNP,Armed $
+Regress  ; Lhs = Employ ; Rhs = X $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1169087.526      835902.44        1.399   .1895
+ YEAR     -576.4643034      433.48748       -1.330   .2105  1954.5000
+ PRICE    -19.76807082      138.89276        -.142   .8894  101.68125
+ GNP       .6439397420E-01  .19951886E-01    3.227   .0081  387698.44
+ ARMED    -.1014525302E-01  .30856947        -.033   .9744  2606.6875
+*/
+Sample   ; 1 - 15 $
+Regress  ; Lhs = Employ ; Rhs = X $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1459415.068      714182.87        2.043   .0682
+ YEAR     -721.7561307      369.98492       -1.951   .0796  1954.0000
+ PRICE    -181.1229587      135.52491       -1.336   .2110  100.66667
+ GNP       .9106777595E-01  .20260779E-01    4.495   .0012  376552.07
+ ARMED    -.7493704667E-01  .26112716        -.287   .7800  2592.0000
+*/
+
+Chapter 7.  Inference and Prediction
+
+/*==================================================================
+Example 7.1, 7.2, 7.3, 7.4, 7.17, 7.18.  Investment Equation
+*/==================================================================
+Read ; Nobs = 15 ; Nvar = 5 ; Names = Y,T,G,R,P $
+0.161  1 1.058  5.16 4.40
+0.172  2 1.088  5.87 5.15
+0.158  3 1.086  5.95 5.37
+0.173  4 1.122  4.88 4.99
+0.195  5 1.186  4.50 4.16
+0.217  6 1.254  6.44 5.75
+0.199  7 1.246  7.83 8.82
+0.163  8 1.232  6.25 9.31
+0.195  9 1.298  5.50 5.21
+0.231 10 1.370  5.46 5.83
+0.257 11 1.439  7.46 7.40
+0.259 12 1.479 10.28 8.64
+0.225 13 1.474 11.77 9.31
+0.241 14 1.503 13.42 9.44
+0.204 15 1.475 11.02 5.99
+? ----------------------------------------------------------------------
+? Example 7.1.  Linear Combination of Coefficients
+? ----------------------------------------------------------------------
+Regress ; Lhs = y ; Rhs = One,T,G,R,P $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -.5090707909      .55127690E-01   -9.234   .0000
+ T        -.1658039448E-01  .19717611E-02   -8.409   .0000  8.0000000
+ G         .6703834376      .54997215E-01   12.189   .0000  1.2873333
+ R        -.2325928344E-02  .12188677E-02   -1.908   .0854  7.4526667
+ P        -.9401070242E-04  .13474804E-02    -.070   .9458  6.6513333
+*/
+Calc    ; List ;se = sqr(Varb(4,4)+Varb(5,5)+2*Varb(4,5))  
+               ;tstat = (b(4)+b(5)) /
+                 sqr(Varb(4,4)+Varb(5,5)+2*Varb(4,5)) $
+/*
+    SE      =  .13416111045265850D-02
+    TSTAT   = -.18037559755411260D+01
+*/
+? ----------------------------------------------------------------------
+? Example 7.2.  Reparameterizing a Restriction
+? ----------------------------------------------------------------------
+Create ; RealRate = R - P $
+Regress; Lhs = y ; Rhs = One,T,G,RealRate,P $
+/*
+ Constant -.5090707909      .55127690E-01   -9.234   .0000
+ T        -.1658039448E-01  .19717611E-02   -8.409   .0000  8.0000000
+ G         .6703834376      .54997215E-01   12.189   .0000  1.2873333
+ REALRATE -.2325928344E-02  .12188677E-02   -1.908   .0854  .80133333
+ P        -.2419939047E-02  .13416111E-02   -1.804   .1014  6.6513333
+*/
+
+? ----------------------------------------------------------------------
+? Example 7.3.  Restricted Investment Equation
+? ----------------------------------------------------------------------
+Namelist ; X = One,T,G,R,P $
+Matrix   ; XX = X'X
+         ; Xy = X'y
+         ; bb = <X'X>* X'y $
+Calc     ; ss = (y'y - bb'Xy)/(n-Col(X)) $
+Matrix   ; Vb = ss * <X'X> $
+Matrix   ; RR = [0,1,0,0,0 / 0,0,1,0,0 / 0,0,0,1,1]
+         ; q  = [0 / 1 / 0] 
+         ; Rb_q = RR*bb - q
+         ; Vrb  = RR * Vb * RR' 
+  ; List ; F = 1/3 * Rb_q ' * <Vrb> * Rb_q $
+/*
+Matrix F        has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .1266349D+04
+*/
+? ----------------------------------------------------------------------
+? Example 7.4.  Joint Confidence Region
+? This takes a little creativity.  We use a routine written for LIMDEP.
+? ----------------------------------------------------------------------
+ PROC = CONFREGN (Beta,Varbeta,COEF1,COEF2)  $
+ CALC    ; S11=VARBeta(COEF1,COEF1) 
+         ; S22=VARBeta(COEF2,COEF2) 
+         ; S12=VARBeta(COEF1,COEF2)
+         ; U = Sqr(S22 - S12*S12/S11)
+         ; F=Ftb(.95,2,(N-KREG))  
+         ; Gg = Sqr(2*F*S11)
+         ; MIN= -.995*Gg  ; MAX= -MIN ; DELTA=(MAX-MIN)/1000 $
+ SAMPLE  ; 1 - 999 $
+ CREATE  ; B1=Trn(MIN,DELTA) 
+         ; Qq=U*Sqr(2*F-B1*B1/S11)
+         ; Tvalue=Rnn(0,1) 
+         ; If(Tvalue>0)B2=Beta(COEF2) + B1*S12/S11+Qq
+         ;   (Else)    B2=Beta(COEF2) + B1*S12/S11-Qq 
+         ;             B1=B1+Beta(COEF1) $
+ SAMPLE  ; 1000$
+ CREATE  ; B1=Beta(COEF1) ; B2=Beta(COEF2) $
+ SAMPLE  ; 1-1000$
+ CALC    ; UCB2=Beta(COEF2)+1.96*Sqr(S22) 
+         ; LCB2=Beta(COEF2)-1.96*Sqr(S22)
+         ; UCB1=Beta(COEF1)+1.96*Sqr(S11) 
+         ; LCB1=Beta(COEF1)-1.96*Sqr(S11)
+         ; TOP = 1.1 * Max(B2) ; BOT =  .9 * Min(B2)
+         ; LFT =  .9 * Min(B1) ; RT  = 1.1 * Max(B1) $
+ PLOT    ; Lhs=B1 ; Rhs=B2 ; Bars=UCB2,LCB2 ; Spikes=UCB1,LCB1
+         ; Limits = BOT,TOP ; Endpoints = LFT,RT $
+ ENDPROC
+Exec ; Proc = ConfRegn(bb,Vb,2,3) $ 
+
+
+
+? ----------------------------------------------------------------------
+? Example 7.17.  Forecast for Investment
+? ----------------------------------------------------------------------
+Matrix     ; x0 = [1/16/1.5/10/4] $
+Calc ;List ; y0 = x0 ' bb
+           ; s0 = sqr(ss + qfr(x0,Vb)) 
+           ; upper = y0 + 2.228 * s0
+           ; lower = y0 - 2.228 * s0 $
+/*
+    Y0      =  .20758272743002830D+00
+    S0      =  .10232227264123570D-01
+    UPPER   =  .23038012977449560D+00
+    LOWER   =  .18478532508556100D+00
+*/
+? ----------------------------------------------------------------------
+? Example 7.18.  Forecasting Performance
+? ----------------------------------------------------------------------
+Proc = ForeCast(X,y) $
+Matrix ; beta = <X'X> * X'y $
+Create ; yfit = X'beta 
+       ; res  = y - yfit
+       ; res2 = res^2
+       ; ares = sqr(res2)
+       ; yy   = y*y
+       ; dy = 0 ; if(_obsno > 1)dy = y - y[-1] 
+       ; dyf= 0 ; if(_obsno > 1)dyf= yfit - y[-1] 
+       ; ddy  = (dy - dyf)^2
+       ; dy2  = dy^2 $
+Calc ; List ; Rmse = Sqr(Xbr(res2))
+            ; Mae  = Xbr(ares)
+            ; U    = Sqr( Xbr(res2) / Xbr(yy) )
+            ; Ud   = Sqr( Xbr(ddy) / Xbr(dy2) ) $
+EndProc
+Sample    ; 1 - 15 $
+Namelist  ; XGnp    = One,G,T,R,P $
+Exec      ; Proc    = Forecast(XGNP,y) $
+    RMSE    =  .54821638093911870D-02
+    MAE     =  .42261699509099190D-02
+    U       =  .26612863766215620D-01
+    UD      =  .19727440685625440D+00
+Create    ; YFGNP   = Yfit $
+Namelist  ; XNoGNP  = One,T,R,P $
+Exec      ; Proc    = Forecast(XNoGNP,y) $
+    RMSE    =  .21831243091395650D-01
+    MAE     =  .16901540599976300D-01
+    U       =  .10597857313989480D+00
+    UD      =  .89560407224967610D+00
+Create    ; YFNoGNP = Yfit $
+Date      ; 1968 $
+Period    ; 1968-1982 $
+Plot      ; Rhs = Y,YFGNP,YFNOGNP $
+
+        
+/*==================================================================
+Example 7.2.  Reparameterizing a Restriction
+Results are contained in Ex7_1.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.3.  Restricted Investment Equation
+Results are contained in Ex7_1.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.4.  Joint Confidence Region
+Results are contained in Ex7_1.lim
+*/==================================================================
+ 
+/*==================================================================
+Examples 7.5, 7.6, 7.7.  Production Functions
+*/==================================================================
+Read ; Nobs = 27 ; Nvar = 4 ; Names = 1 $
+       Obs          ValueAdd      Labor    Capital   
+        1            657.29      162.31      279.99
+        2            935.93      214.43      542.50
+        3           1110.65      186.44      721.51
+        4           1200.89      245.83     1167.68
+        5           1052.68      211.40      811.77
+        6           3406.02      690.61     4558.02
+        7           2427.89      452.79     3069.91
+        8           4257.46      714.20     5585.01
+        9           1625.19      320.54     1618.75
+       10           1272.05      253.17     1562.08
+       11           1004.45      236.44      662.04
+       12            598.87      140.73      875.37
+       13            853.10      145.04     1696.98
+       14           1165.63      240.27     1078.79
+       15           1917.55      536.73     2109.34
+       16           9849.17     1564.83    13989.55
+       17           1088.27      214.62      884.24
+       18           8095.63     1083.10     9119.70
+       19           3175.39      521.74     5686.99
+       20           1653.38      304.85     1701.06
+       21           5159.31      835.69     5206.36
+       22           3378.40      284.00     3288.72
+       23            592.85      150.77      357.32
+       24           1601.98      259.91     2031.93
+       25           2065.85      497.60     2492.98
+       26           2293.87      275.20     1711.74
+       27            745.67      137.00      768.59
+?
+? Set up loglinear production function
+?
+Create ; lq = Log(Valueadd) ; ll = Log(Labor) ; lk = Log(capital) $
+? ----------------------------------------------------------------------
+? Example 7.5.  Labor Elasticity Equal to 1
+? ----------------------------------------------------------------------
+Regress ; Lhs = lq ; Rhs = one,ll,lk $
+Calc    ; List ; F = (b(2)-1)^2 / Varb(2,2) $
+/*
+    F       =  .99347992790907430D+01
+*/
+? ----------------------------------------------------------------------
+? Example 7.6.  Constant Returns to Scale
+? ----------------------------------------------------------------------
+Calc    ; List ; F = (b(2)+b(3)-1)^2 / 
+                     (Varb(2,2)+Varb(3,3)+2*Varb(2,3))$
+/*
+    F       =  .11575416204059710D+00
+*/
+?
+? An alternative approach
+?
+Wald    ; Fn1 = b_ll + b_lk - 1 $
+/*
+               +-----------------------------------------------+
+               | WALD procedure. Estimates and standard errors |
+               | for nonlinear functions and joint test of     |
+               | nonlinear restrictions.                       |
+               | Wald Statistic             =       .11575     |
+               | Prob. from Chi-squared[ 1] =       .73369     |
+               +-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1) -.2129049454E-01  .62577389E-01    -.340   .7337
+*/
+? ----------------------------------------------------------------------
+? Example 7.7.  Translog Function
+? ----------------------------------------------------------------------
+?
+Calc    ; Rsqr = Rsqrd $
+Create  ; lll=.5*ll*ll ; lkk = .5*lk*lk ; lllk = ll*lk $
+Regress ; Lhs = lq ; Rhs = One,ll,lk,lll,lkk,lllk $
+Calc    ; List ; F = ((Rsqrd - Rsqr)/3)/((1-Rsqrd)/(n-kreg))$
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .9441968543      2.9107537         .324   .7489
+ LL        3.613638942      1.5480727        2.334   .0296  5.7636521
+ LK       -1.893112914      1.0162611       -1.863   .0765  7.4459224
+ LLL      -.9640522102      .70738483       -1.363   .1874  16.817193
+ LKK       .8529466466E-01  .29260898         .291   .7735  28.172489
+ LLLK      .3123870410      .43892721         .712   .4845  43.463191
+
+ F       =  .17677551205521390D+01
+*/
+
+/*==================================================================
+Example 7.6.  Constant Returns to Scale
+Results are contained in Ex7_5.lim
+*/==================================================================
+
+/*==================================================================
+Example 7.7.  Translog Production Function
+Results are contained in Ex7_5.lim
+*/==================================================================
+
+/*==================================================================
+Examples 7.8 to 7.13.  The U.S. Gasoline Market
+*/==================================================================
+Read ; Nobs = 36 ; Nvar = 11 
+     ; Names = 
+Year,  G,      Pg,    Y,   Pnc,   Puc,   Ppt,   Pd,    Pn,    Ps,   Pop $
+<... Data appear in Example 6.3 ...>
+Create ; lg = Log(100*G/Pop)
+       ; li = Log(Y)
+       ; lpg= Log(Pg)
+       ; lpnc = Log(Pnc)
+       ; lpuc = log(Puc) $
+? ----------------------------------------------------------------------
+? Example 7.8.  Separate Regressions
+? ----------------------------------------------------------------------
+Namelist ; X = One,li,lpg,lpnc,lpuc,year $
+Sample ; 1 - 36 $
+Regress; Lhs = lg ; Rhs = X $
+Calc   ; ee = sumsqdev $
+Sample ; 1 - 14 $
+Regress; Lhs = lg ; Rhs = X $
+Calc   ; ee0 = sumsqdev $
+Sample ; 15 - 36 $
+Regress; Lhs = lg ; Rhs = X $
+Calc   ; ee1 = sumsqdev $
+Calc   ; List ; F = ((ee - ee0 - ee1)/6) / ((ee0+ee1)/24) $
+/*
+    F       =  .14958007848150170D+02
+*/
+? ----------------------------------------------------------------------
+? Example 7.9.  Change Only in the Constant Term
+? ----------------------------------------------------------------------
+Sample ; 1 - 36 $
+Create ; Pre = Year <= 1973 ; Post = 1 - Pre $
+Regress; Lhs = lg ; Rhs = Pre,Post,li,lpg,lpnc,lpuc,Year $
+Calc   ; List ; F = ((Sumsqdev - ee0 - ee1)/5) / ((ee0+ee1)/24) $
+/*
+F       =  .11099431388516700D+02
+*/
+? ----------------------------------------------------------------------
+? Example 7.10.  Separate Subset of Coefficients
+? ----------------------------------------------------------------------
+Create ; Prei = Pre*li ; Prep = Pre*lpg
+       ; Posti= Post*li; Postp= Post*lpg $
+Regress; Lhs = lg ; Rhs = Pre,Prei,Prep,Post,Posti,Postp,lpnc,lpuc,Year $
+Calc   ; List ; F = ((Sumsqdev - ee0 - ee1)/3) / ((ee0+ee1)/24) $
+/*
+    F       =  .40864779992470740D+01
+*/
+? ----------------------------------------------------------------------
+? Example 7.11.  Inadaquate Degrees of Freedom
+? ----------------------------------------------------------------------
+Sample ; 1-14,17-20,23-36$
+Regress; Lhs = lg ; Rhs = X $
+Calc   ; List ; F = ((ee-sumsqdev)/4) / (sumsqdev/26) $
+/*
+    F       =  .18165999605094310D+01
+*/
+
+
+? ----------------------------------------------------------------------
+? Example 7.12.  Wald Test for Structural Change
+? ----------------------------------------------------------------------
+Sample  ; 1 - 14 $
+Regress ; Lhs = lg ; Rhs = X $
+Matrix  ; b1 = b ; V1 = Varb $
+Sample  ; 15-36 $
+Regress ; Lhs = lg ; Rhs = X $
+Matrix  ; b2 = b ; V2 = Varb $
+Matrix  ; d = b1 - b2 ; V = V1 + V2 
+        ; List ; WaldTest = d'*<V>*d $
+/*
+Matrix WALDTEST has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .1286673D+03
+*/
+? ----------------------------------------------------------------------
+? Example 7.13.  Tests of Model Stability
+? ----------------------------------------------------------------------
+Sample    ; 1 - 36 $
+Regress   ; Lhs = lg ; Rhs = X ; Res = et ; Cusum $
+
+            
+
+
+Create    ; vt=et*et-sumsqdev/n$
+Calc      ; K = Col(X) + 1 ; Nobs = n $
+Matrix    ; ff=init(k,k,0)
+          ; st=[k|0] 
+          ; ss=ff$
+Procedure
+Sample    ; Obs $
+Calc      ; ut = vt(obs) 
+          ; rt = et(obs) $
+Matrix    ; ft = rt*x' 
+          ; ft = [ut/ft]
+          ; ff = ff+ft*ft'
+          ; st = st+ft
+          ; ss=ss+st*st' $
+Endproc
+Execute   ; obs=1,nobs$
+Matrix    ; H=1/nobs * <ff>*ss ; list ; trce(H)$
+/*
+Matrix Result   has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .1724912D+01
+*/
+/*==================================================================
+Example 7.9.  Change only in the Constant Term
+Results are contained in Ex7_8.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.10.  Separate Subset of Coefficients
+Results are contained in Ex7_8.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.11.  Inadequate Degrees of Freedom
+Results are contained in Ex7_8.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.12.  Wald Test for Structural Change
+Results are contained in Ex7_8.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.13.  Tests of Model Stability
+Results are contained in Ex7_8.lim
+*/==================================================================
+ 
+/*==================================================================
+Examples 7.14, 7.15, and 7.16.  Testing Procedures
+*/==================================================================
+Read ; Nobs=36 ; Nvar=3 ; Names=1$
+Year    Y       C
+1950   791.8   733.2   
+1951   819.0   748.7   
+1952   844.3   771.4   
+1953   880.0   802.5   
+1954   894.0   822.7   
+1955   944.5   873.8   
+1956   989.4   899.8   
+1957  1012.1   919.7   
+1958  1028.8   932.9   
+1959  1067.2   979.4   
+1960  1091.1  1005.1   
+1961  1123.2  1025.2   
+1962  1170.2  1069.0   
+1963  1207.3  1108.4   
+1964  1291.0  1170.6   
+1965  1365.7  1236.4   
+1966  1431.3  1298.9   
+1967  1493.2  1337.7   
+1968  1551.3  1405.9   
+1969  1599.8  1456.7   
+1970  1688.1  1492.0   
+1971  1728.4  1538.8   
+1972  1797.4  1621.9   
+1973  1916.3  1689.6   
+1974  1896.6  1674.0
+1975  1931.7  1711.9
+1976  2001.0  1803.9
+1977  2066.6  1883.8
+1978  2167.4  1961.0
+1979  2216.2  2004.4
+1980  2214.3  2000.4
+1981  2248.6  2024.2
+1982  2261.5  2050.7
+1983  2334.6  2145.9
+1984  2468.4  2239.9
+1985  2509.0  2312.6
+Create    ; If(_obsno>1) | y1=y[-1] ; c1=c[-1]$
+Sample    ; 2-36$
+? ----------------------------------------------------------------------
+? Example 7.14.  Long Run Marginal Propensity to Consume
+? ----------------------------------------------------------------------
+Regress ; Lhs = C ; Rhs = One,Y,C1  $
+Calc    ; List ; beta = b(2) ; gamma = b(3) 
+        ; lrmpc = beta/(1 - gamma)
+        ; db = 1/(1-gamma)
+        ; dc = beta / (1 - gamma)^2
+        ; vmpc = db^2*Varb(2,2) + dc^2*Varb(3,3)+2*db*dc*Varb(2,3) 
+        ; z = (lrmpc - 1)/sqr(vmpc)$
+Calc    ; List
+        ; q = beta+gamma-1
+        ; vq = Varb(2,2)+Varb(3,3)+2*Varb(2,3)
+        ; tstat = q / sqr(vq) $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = C        Mean=   1429.137143    , S.D.=   482.0019313     |
+| Model size: Observations =      35, Parameters =   3, Deg.Fr.=     32 |
+| Residuals:  Sum of squares= 10061.99778    , Std.Dev.=       17.73238 |
+| Fit:        R-squared=  .998726, Adjusted R-squared =          .99865 |
+| Model test: F[  2,     32] =12544.65,    Prob value =          .00000 |
+| Diagnostic: Log-L =   -148.7334, Restricted(b=0) Log-L =    -265.3838 |
+|             LogAmemiyaPrCrt.=    5.833, Akaike Info. Crt.=      8.670 |
+| Autocorrel: Durbin-Watson Statistic =   1.01420,   Rho =       .49290 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  10.01301883      9.4508045        1.059   .2973
+ Y         .6460707377      .10419071        6.201   .0000  1578.5571
+ C1        .2884835617      .11857655        2.433   .0207  1384.0114
+    BETA    =  .64607073767042220D+00
+    GAMMA   =  .28848356165467560D+00
+    LRMPC   =  .90801941157241540D+00
+    DB      =  .14054489061778560D+01
+    DC      =  .12761748887827120D+01
+    VMPC    =  .89754212050797980D-04
+    Z       = -.97088717493105980D+01
+    Q       = -.65445700674902190D-01
+    VQ      =  .24366353329137450D-03
+    TSTAT   = -.41926233909608440D+01
+*/
+? ----------------------------------------------------------------------
+? Example 7.15.  J Test for a Consumption Function
+? ----------------------------------------------------------------------
+Regress ; Lhs = C ; Rhs = One,Y,C1 ; Keep = H1F $
+Regress ; Lhs = C ; Rhs = One,Y,Y1,H1F $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -24.76331080      11.713175       -2.114   .0426
+ Y        -.9520512117      .43386539       -2.194   .0358  1578.5571
+ Y1       -.4806759314      .14607719       -3.291   .0025  1529.4943
+ H1F       2.583348143      .60065461        4.301   .0002  1429.1371
+*/
+Regress ; Lhs = C ; Rhs = One,Y,Y1 ; Keep = H0F $
+Regress ; Lhs = C ; Rhs = One,Y,C1,H0F $
+/*
+ Constant  217.2852599      63.530023        3.420   .0018
+ Y         19.35413532      5.6861024        3.404   .0019  1578.5571
+ C1        .7452534734      .17327898        4.301   .0002  1384.0114
+ H0F      -21.25142164      6.4582970       -3.291   .0025  1429.1371
+*/
+? ----------------------------------------------------------------------
+? Example 7.16.  Cox Test for a Consumption Function
+? ----------------------------------------------------------------------
+Namelist  ; X=one,y,y1; Z=one,y,c1 $
+?
+? This is a general procedure for the Cox Test. Just define the
+? variables to be X and Z in two namelists.
+?
+Proc=CoxTest(Xvars,Zvars,yvar) $
+Regress   ; Lhs=yvar  ; Rhs = Xvars ; Keep = Xb$
+Calc      ; List      ; s2x=sumsqdev/n$
+Regress   ; Lhs=yvar  ; Rhs = Zvars ; Keep = Zd$
+Calc      ; List      ; s2z=sumsqdev/n$  
+Regress   ; Lhs=xb    ; Rhs = Zvars ; res=mzxb$
+Calc      ; List      ; bxmzxb=sumsqdev$  
+Regress   ; Lhs=mzxb  ; Rhs = Xvars$
+Calc      ; List      ; bxmmmxb=sumsqdev$  
+Calc      ; List      ; s2zx=s2x+bxmzxb/n$
+Calc      ; List      ; c01=(n/2)*log(s2z/s2zx)$
+Calc      ; List      ; v01=s2x*bxmmmxb/s2zx^2$   
+Calc      ; List      ; q=c01/Sqr(v01)$
+EndProc
+?
+? First test.  Then just reverse roles of X and Z.
+?
+Exec;Proc=CoxTest(X,Z,c) $ 
+Exec;Proc=CoxTest(Z,X,c) $
+/*
+    C01     = -.29548426754289190D+01
+    V01     =  .10869014982846900D-01
+    Q       = -.28342572680460310D+02
+    C01     =  .18235321357659550D+01
+    V01     =  .13091404924804580D+01
+    Q       =  .15937503501103000D+01
+*/
+
+
+/*==================================================================
+Example 7.15.  J Test for a Consumption Function
+Results are contained in Ex7_14.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.16.  Cox Test for a Consumption Function
+Results are contained in Ex7_14.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.17.  Forecast for Investment
+Results are contained in Ex7_1.lim
+*/==================================================================
+ 
+/*==================================================================
+Example 7.18.  Forecasting Performance
+Results are contained in Ex7_1.lim
+*/==================================================================
+ 
+
+
+
+
+Chapter 8.  Functional Form, Nonlinearity, and
+                 Specification
+
+/*==================================================================
+Example 8.1.  Wartime Consumption
+*/==================================================================
+Read ; Nobs = 11 ; Nvar = 3 ; Names = 1 $
+Year    X    C
+1940   241  226   
+1941   280  240   
+1942   319  235   
+1943   331  245   
+1944   345  255   
+1945   340  265
+1946   332  295
+1947   320  300
+1948   339  305
+1949   338  315
+1950   371  325
+Create ; W = (Year >1941) * (Year < 1946) $
+Regress ; Lhs = C ; Rhs = One,X $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = C        Mean=   273.2727273    , S.D.=   35.52208020     |
+| Model size: Observations =      11, Parameters =   2, Deg.Fr.=      9 |
+| Residuals:  Sum of squares= 6849.975056    , Std.Dev.=       27.58819 |
+| Fit:        R-squared=  .457135, Adjusted R-squared =          .39682 |
+| Model test: F[  1,      9] =    7.58,    Prob value =          .02237 |
+| Diagnostic: Log-L =    -50.9959, Restricted(b=0) Log-L =     -54.3558 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  51.89510872      80.843975         .642   .5369
+ X         .6848014072      .24875251        2.753   .0224  323.27273
+*/
+Regress ; Lhs = C ; Rhs = One,X,W $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = C        Mean=   273.2727273    , S.D.=   35.52208020     |
+| Model size: Observations =      11, Parameters =   3, Deg.Fr.=      8 |
+| Residuals:  Sum of squares= 676.4561515    , Std.Dev.=        9.19549 |
+| Fit:        R-squared=  .946390, Adjusted R-squared =          .93299 |
+| Model test: F[  2,      8] =   70.61,    Prob value =          .00001 |
+| Diagnostic: Log-L =    -38.2627, Restricted(b=0) Log-L =     -54.3558 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  14.49540274      27.299480         .531   .6099
+ X         .8575111125      .85340539E-01   10.048   .0000  323.27273
+ W        -50.68973653      5.9323733       -8.545   .0000  .36363636
+*/
+/*==================================================================
+Example 8.2.  Analysis of Variance
+*/==================================================================
+Read ; Nobs = 20 ; Nvar = 11 ; Names = 1 $
+Type TA TB TC TD TE Y6064  Y6579 Y7074 Y7579  Num
+ 1    1  0  0  0  0   1     0     0     0      0
+ 1    1  0  0  0  0   0     1     0     0      4
+ 1    1  0  0  0  0   0     0     1     0     18
+ 1    1  0  0  0  0   0     0     0     1     11 
+ 2    0  1  0  0  0   1     0     0     0     29 
+ 2    0  1  0  0  0   0     1     0     0     53
+ 2    0  1  0  0  0   0     0     1     0     44
+ 2    0  1  0  0  0   0     0     0     1     18
+ 3    0  0  1  0  0   1     0     0     0      1   
+ 3    0  0  1  0  0   0     1     0     0      1
+ 3    0  0  1  0  0   0     0     1     0      2
+ 3    0  0  1  0  0   0     0     0     1      1
+ 4    0  0  0  1  0   1     0     0     0      0
+ 4    0  0  0  1  0   0     1     0     0      0
+ 4    0  0  0  1  0   0     0     1     0     11
+ 4    0  0  0  1  0   0     0     0     1      4
+ 5    0  0  0  0  1   1     0     0     0      0
+ 5    0  0  0  0  1   0     1     0     0      7
+ 5    0  0  0  0  1   0     0     1     0     12
+ 5    0  0  0  0  1   0     0     0     1      1
+Regress ; Lhs = Num ; Rhs = One,Tb,TC,TD,TE,Y6579,Y7074,Y7579 $
+Regress ; Lhs = Num ; Rhs = One,            Y6579,Y7074,Y7579 $
+Regress ; Lhs = Num ; Rhs = One,Tb,TC,TD,TE                   $
+Regress ; Lhs = Num ; Rhs = One                               $
+/*
+ Constant  3.400000000      4.6936127         .724   .4827
+ TB        27.75000000      5.2476185        5.288   .0002  .20000000
+ TC       -7.000000000      5.2476185       -1.334   .2070  .20000000
+ TD       -4.500000000      5.2476185        -.858   .4080  .20000000
+ TE       -3.250000000      5.2476185        -.619   .5473  .20000000
+ Y6579     7.000000000      4.6936127        1.491   .1617  .25000000
+ Y7074     11.40000000      4.6936127        2.429   .0318  .25000000
+ Y7579     1.000000000      4.6936127         .213   .8349  .25000000
+ Residuals:  Sum of squares= 660.9000000    , Std.Dev.=        7.42125
+ Fit:        R-squared=  .848228, Adjusted R-squared =          .75969
+
+ Constant  6.000000000      7.0046413         .857   .4043
+ Y6579     7.000000000      9.9060588         .707   .4900  .25000000
+ Y7074     11.40000000      9.9060588        1.151   .2667  .25000000
+ Y7579     1.000000000      9.9060588         .101   .9208  .25000000
+ Residuals:  Sum of squares= 3925.200000    , Std.Dev.=       15.66285
+ Fit:        R-squared=  .098598, Adjusted R-squared =         -.07041
+
+ Constant  8.250000000      4.2627260        1.935   .0720
+ TB        27.75000000      6.0284050        4.603   .0003  .20000000
+ TC       -7.000000000      6.0284050       -1.161   .2637  .20000000
+ TD       -4.500000000      6.0284050        -.746   .4669  .20000000
+ TE       -3.250000000      6.0284050        -.539   .5977  .20000000
+ Residuals:  Sum of squares= 1090.250000    , Std.Dev.=        8.52545
+ Fit:        R-squared=  .749630, Adjusted R-squared =          .68286
+
+ Constant  10.85000000      3.3851650        3.205   .0047
+ Residuals:  Sum of squares= 4354.550000    , Std.Dev.=       15.13892
+ Fit:        R-squared=  .000000, Adjusted R-squared =          .00000
+/*==================================================================
+Example 8.3. Nonlinear Cost Function
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 8.4. Intrinsically Linear Regression
+*/==================================================================
+Read ; Nobs=20 ; Nvar=3 ; Names = 1 $
+     I         Y         X  
+     1         20.5      12
+     2         31.5      16 
+     3         47.7      18          
+     4         26.2      16          
+     5         44.0      12          
+     6         8.28      12          
+     7         30.8      16          
+     8         17.2      12          
+     9         19.9      10          
+    10         9.96      12          
+    11         55.8      16  
+    12         25.2      20  
+    13         29.0      12  
+    14         85.5      16   
+    15         15.1      10   
+    16         28.5      18
+    17         21.4      16
+    18         17.7      20
+    19         6.42      12
+    20         84.9      16
+? 
+Regress ; Lhs = Y ; Rhs = One,X ; PrintVC$
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = Y        Mean=   31.27800000    , S.D.=   22.37583367     |
+| Model size: Observations =      20, Parameters =   2, Deg.Fr.=     18 |
+| Residuals:  Sum of squares= 8425.151595    , Std.Dev.=       21.63479 |
+| Fit:        R-squared=  .114343, Adjusted R-squared =          .06514 |
+| Model test: F[  1,     18] =    2.32,    Prob value =          .14478 |
+| Diagnostic: Log-L =    -88.8112, Restricted(b=0) Log-L =     -90.0255 |
+|             LogAmemiyaPrCrt.=    6.244, Akaike Info. Crt.=      9.081 |
+| Autocorrel: Durbin-Watson Statistic =   1.98091,   Rho =       .00955 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -4.143116883      23.733895        -.175   .8634
+ X         2.426103896      1.5914816        1.524   .1448  14.600000
+Matrix Cov.Mat. has  2 rows and  2 columns.
+               1             2
+        +----------------------------
+       1|  .5632978D+03 -.3697908D+02
+       2| -.3697908D+02  .2532814D+01
+*/
+
+Wald    ; Fn1 = b_one/b_x$
+/*
+               +-----------------------------------------------+
+               | WALD procedure. Estimates and standard errors |
+               | for nonlinear functions and joint test of     |
+               | nonlinear restrictions.                       |
+               | Wald Statistic             =       .03863     |
+               | Prob. from Chi-squared[ 1] =       .84419     |
+               +-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1) -1.707724426      8.6890014        -.197   .8442
+*/
+Calc    ; List ; g1 = 1/b(2) ; g2 = -b(1)/(b(2))^2
+               ; beta = b(1)/b(2)
+               ; v = g1^2*varb(1,1)+g2^2*varb(2,2)+2*g1*g2*varb(1,2)
+               ; se = sqr(v) $
+/*
+    G1      =  .41218350195385680D+00
+    G2      =  .70389583423435310D+00
+    BETA    = -.17077244258872660D+01
+    V       =  .75498746069805050D+02
+    SE      =  .86890014426172740D+01
+*/
+Nlsq    ; Lhs = Y ; Fcn = br*r + r*x ; Labels = Br,r ; start=0,0 ;dfc$
+/*
++-----------------------------------------------------------------------+
+| User Defined Optimization                                             |
+| Nonlinear   least squares regression    Weighting variable = none     |
+| Number of iterations completed =   8                                  |
+| Dep. var. = Y        Mean=   31.27800000    , S.D.=   22.37583367     |
+| Model size: Observations =      20, Parameters =   2, Deg.Fr.=     18 |
+| Residuals:  Sum of squares= 8425.151595    , Std.Dev.=       21.63479 |
+| Fit:        R-squared=  .114343, Adjusted R-squared =          .06514 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  1,     18] =    2.32,    Prob value =          .14478 |
+| Diagnostic: Log-L =    -88.8112, Restricted(b=0) Log-L =     -90.0255 |
+|             LogAmemiyaPrCrt.=    6.244, Akaike Info. Crt.=      9.081 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BR       -1.707724426      8.6890014        -.197   .8442
+ R         2.426103896      1.5914816        1.524   .1274
+  */
+/*==================================================================
+Example 8.5. CES Production Function
+No computations done.
+*/==================================================================
+/*==================================================================
+Example 8.6.  Omitted Variables
+*/==================================================================
+Read ; Nobs = 36 ; Nvar = 11 
+     ; Names = 
+Year,  G,      Pg,    Y,   Pnc,   Puc,   Ppt,   Pd,    Pn,    Ps,   Pop $
+1960  129.7   .925  6036  1.045   .836   .810   .444   .331   .302  180.7
+1961  131.3   .914  6113  1.045   .869   .846   .448   .335   .307  183.7
+1962  137.1   .919  6271  1.041   .948   .874   .457   .338   .314  186.5
+1963  141.6   .918  6378  1.035   .960   .885   .463   .343   .320  189.2
+1964  148.8   .914  6727  1.032  1.001   .901   .470   .347   .325  191.9
+1965  155.9   .949  7027  1.009   .994   .919   .471   .353   .332  194.3
+1966  164.9   .970  7280   .991   .970   .952   .475   .366   .342  196.6
+1967  171.0  1.000  7513  1.000  1.000  1.000   .483   .375   .353  198.7
+1968  183.4  1.014  7728  1.028  1.028  1.046   .501   .390   .368  200.7
+1969  195.8  1.047  7891  1.044  1.031  1.127   .514   .409   .386  202.7
+1970  207.4  1.056  8134  1.076  1.043  1.285   .527   .427   .407  205.1
+1971  218.3  1.063  8322  1.120  1.102  1.377   .547   .442   .431  207.7
+1972  226.8  1.076  8562  1.110  1.105  1.434   .555   .458   .451  209.9
+1973  237.9  1.181  9042  1.111  1.176  1.448   .566   .497   .474  211.9
+1974  225.8  1.599  8867  1.175  1.226  1.480   .604   .572   .513  213.9
+1975  232.4  1.708  8944  1.276  1.464  1.586   .659   .615   .556  216.0
+1976  241.7  1.779  9175  1.357  1.679  1.742   .695   .638   .598  218.0
+1977  249.2  1.882  9381  1.429  1.828  1.824   .727   .671   .648  220.2
+1978  261.3  1.963  9735  1.538  1.865  1.878   .769   .719   .698  222.6
+1979  248.9  2.656  9829  1.660  2.010  2.003   .821   .800   .756  225.1
+1980  226.8  3.691  9722  1.793  2.081  2.516   .892   .894   .839  227.7
+1981  225.6  4.109  9769  1.902  2.569  3.120   .957   .969   .926  230.0
+1982  228.8  3.894  9725  1.976  2.964  3.460  1.000  1.000  1.000  232.2
+1983  239.6  3.764  9930  2.026  3.297  3.626  1.041  1.021  1.062  234.3
+1984  244.7  3.707 10421  2.085  3.757  3.852  1.038  1.050  1.117  236.3
+1985  245.8  3.738 10563  2.152  3.797  4.028  1.045  1.075  1.173  238.5
+1986  269.4  2.921 10780  2.240  3.632  4.264  1.053  1.069  1.224  240.7
+1987  276.8  3.038 10859  2.321  3.776  4.413  1.085  1.111  1.271  242.8
+1988  279.9  3.065 11186  2.368  3.939  4.494  1.105  1.152  1.336  245.0
+1989  284.1  3.353 11300  2.414  4.019  4.719  1.129  1.213  1.408  247.3
+1990  282.0  3.834 11389  2.451  3.926  5.197  1.144  1.285  1.482  249.9
+1991  271.8  3.766 11272  2.538  3.942  5.427  1.167  1.332  1.557  252.6
+1992  280.2  3.751 11466  2.528  4.113  5.518  1.184  1.358  1.625  255.4
+1993  286.7  3.713 11476  2.663  4.470  6.086  1.200  1.379  1.684  258.1
+1994  290.2  3.732 11636  2.754  4.730  6.268  1.225  1.396  1.734  260.7
+1995  297.8  3.789 11934  2.815  5.224  6.410  1.239  1.419  1.786  263.2
+Create ; G = G/POP $
+
+? Simple plot, from Chapter 7
+
+Plot   ; Lhs = G ; Rhs = PG ; Grid ; Regression 
+       ; Title=Effect of Omitted Variables $
+
+        
+? Regressions to produce residuals, then new plot.
+
+Regress; Lhs = G ; Rhs = One,Y ; Res = RG $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = G        Mean=   1.006903428    , S.D.=   .1407758311     |
+| Model size: Observations =      36, Parameters =   2, Deg.Fr.=     34 |
+| Residuals:  Sum of squares= .1750497338    , Std.Dev.=         .07175 |
+| Fit:        R-squared=  .747630, Adjusted R-squared =          .74021 |
+| Model test: F[  1,     34] =  100.72,    Prob value =          .00000 |
+| Diagnostic: Log-L =     44.7899, Restricted(b=0) Log-L =      20.0064 |
+|             LogAmemiyaPrCrt.=   -5.215, Akaike Info. Crt.=     -2.377 |
+| Autocorrel: Durbin-Watson Statistic =    .20727,   Rho =       .89636 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .3777829868      .63816376E-01    5.920   .0000
+ Y         .6813927273E-04  .67894281E-05   10.036   .0000  9232.8611
+*/
+
+/*==================================================================
+Example 8.7. Mean Squared Error Test (Hypothetical)
+No computations done.
+*/==================================================================
+
+/*==================================================================
+Example 8.8. Restricting a Coefficient to be Positive
+No computations done.
+*/==================================================================
+Regress; Lhs = PG; Rhs = ONe,Y ; Res = RPG $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = PG       Mean=   2.316611111    , S.D.=   1.251734620     |
+| Model size: Observations =      36, Parameters =   2, Deg.Fr.=     34 |
+| Residuals:  Sum of squares= 12.62286128    , Std.Dev.=         .60931 |
+| Fit:        R-squared=  .769821, Adjusted R-squared =          .76305 |
+| Model test: F[  1,     34] =  113.71,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -32.2176, Restricted(b=0) Log-L =     -58.6578 |
+|             LogAmemiyaPrCrt.=    -.937, Akaike Info. Crt.=      1.901 |
+| Autocorrel: Durbin-Watson Statistic =    .29590,   Rho =       .85205 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -3.359742724      .54191393       -6.200   .0000
+ Y         .6147990061E-03  .57654256E-04   10.664   .0000  9232.8611
+*/
+Plot   ; Lhs = RG; Rhs = RPG; Grid ; Regression
+       ; Title=Effect of Omitted Variables $
+
+        
+
+
+
+

@@ -1,0 +1,227 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb}
+
+\newcommand{\lecnum}{AGM-04}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Data and probabilities }}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/15 15:37:56 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+  
+  \begin{itemize}
+  \item Variables and values
+  \item Contingency tables
+  \item Joint probability distributions
+  \item Maximum likelihood estimation
+  \item Saturated models
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Fictitious health data}
+  
+\begin{verbatim}
+Bronchitis | Cancer  | Smoking   | 
+---------- | ------- | --------- | ----
+absent     | absent  | nonsmoker |   35
+absent     | absent  | smoker    |   18
+absent     | present | nonsmoker |    0
+absent     | present | smoker    |    2
+present    | absent  | nonsmoker |   15
+present    | absent  | smoker    |   27
+present    | present | nonsmoker |    0
+present    | present | smoker    |   03
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A primitive database}
+
+  \texttt{cancer.dat} has 3 sections:
+
+  \begin{enumerate}
+    \item \texttt{Cancer} is a \emph{variable}, with two
+      \emph{values}: \texttt{present} and \texttt{absent}. Similarly
+      \texttt{Bronchitis} and \texttt{Smoking} are variables.
+    \item A field header
+    \item The data has a count for each of the 8 possible cases. A
+      less compact possibility is to repeat e.g.\ the line
+      \texttt{absent,absent,nonsmoker} 35 times!
+    \end{enumerate}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A contingency table}
+  
+Doing:
+\begin{verbatim}
+>>> from gPy.Examples import cancer_table
+>>> cancer_table()
+\end{verbatim}
+
+  \begin{itemize}
+  \item \dots produces a \emph{contingency
+      table} with 8 \emph{cells}.
+  \item This is really a flattened version of a three-dimensional
+    object: one dimension for each variable.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{From data to probability}
+  
+  \begin{itemize}
+  \item A contingency table tells us what has been observed in the
+    past: it contains data.
+  \item One simple way to create a \emph{probability distribution}
+    from data (effectively a prediction of what's likely in the
+    future) is to find the sum of all counts (100 in this case) and
+    divide the count for each cell by this total.
+  \item This produces a \emph{joint probability distribution}.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Contingency table}
+  
+\begin{verbatim}
+Bronchitis | Cancer  | Smoker    |
+---------- | ------- | --------- | ----
+absent     | absent  | nonsmoker |      3
+absent     | absent  | smoker    |      0
+absent     | present | nonsmoker |     27
+absent     | present | smoker    |     15
+present    | absent  | nonsmoker |      2
+present    | absent  | smoker    |      0
+present    | present | nonsmoker |     18
+present    | present | smoker    |     35
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Joint probability distribution}
+
+\begin{verbatim}
+Bronchitis | Cancer  | Smoker    |
+---------- | ------- | --------- | --------
+absent     | absent  | nonsmoker | 0.030000
+absent     | absent  | smoker    | 0.000000
+absent     | present | nonsmoker | 0.270000
+absent     | present | smoker    | 0.150000
+present    | absent  | nonsmoker | 0.020000
+present    | absent  | smoker    | 0.000000
+present    | present | nonsmoker | 0.180000
+present    | present | smoker    | 0.350000
+\end{verbatim}
+
+\end{titledslide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Joint probability distribution}
+  
+  \begin{itemize}
+  \item It is a \emph{distribution} because a `probability mass' of 1
+    has been \emph{distributed} over the 8 cells.
+  \item It is a \emph{probability} distribution because each
+    individual number is a probability.
+  \item It is a \emph{joint} probability distribution because each
+    probability corresponds to a joint instantantiation of the 3 variables.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Maximum likelihood estimation (1)}
+  
+  \begin{itemize}
+  \item We have just seen an example of \emph{maximum likelihood
+      estimation (MLE)}.
+  \item It is \emph{estimation} since the distribution it produces is
+    an estimate of some unknown true distribution.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Maximum likelihood estimation (2)}
+  \begin{itemize}
+  \item Putting aside the joint structure of our distribution, our MLE
+    distribution defines a probability distribution with 8 possible
+    outcomes, like throwing a (biassed) 8-sided dice.
+  \item Given a fixed data size, say 100, it defines a
+    \emph{multinomial distribution} over all possible datasets of that
+    size. For example, it gives the probability for our original data
+    as $\approx 7.510472\times 10^{-5}$.
+  \item Adopting a multinomial distribution is tantamount to assuming
+    that each datapoint is independently `drawn' from our probability
+    distribution.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{The calculation}
+    
+Just for the record
+
+\begin{eqnarray*}
+\lefteqn{P(3,0,27,15,2,0,18,35)} && \\
+& = &   \frac{100!}{3!,0!,27!,15!,2!,0!,18!,35!} \times  \\
+&& 0.03^{3} 0^{0} 0.27^{27} \times \\
+&& 0.15^{15} 0.02^{2} 0^{0} \times \\
+&& 0.18^{18} 0.35^{35} \\
+&\approx & 7.510472\times 10^{-5}
+\end{eqnarray*}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Maximum likelihood estimation (3)}
+  
+  \begin{itemize}
+  \item The probability of observed data (according to some
+    distribution) is known as the \emph{likelihood} of that data. Here
+    \emph{likelihood} is being used in a specific technical sense.
+  \item Our MLE distribution is the distribution that maximises the
+    likelihood of the data (just trust me). Hence the name.
+  \item It is a reasonable way of estimating distributions,
+    particularly when there is lots of data.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A saturated model}
+  
+  \begin{itemize}
+  \item A \emph{probabilistic model} imposes structural constraints on
+    what the `true' probability distribution is.
+  \item A graphical model is just one type of probabilistic model.
+  \item Formally, a model is just a set of probability
+    distributions.
+  \item A \emph{saturated model} is a special case where there are no constraints.
+  \item So formally it is the set of all possible probability
+    distributions for a given collection of variables.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{MLE for a saturated model}
+  
+  \begin{itemize}
+  \item Let there be $n$ datapoints in total, and $n(i)$ which fall
+    into cell $i$.
+  \item The MLE distribution is defined by a probability for each cell.
+  \item Let $p(i)$ be the unknown true probability for cell $i$.
+  \item MLE gives us $\hat{p}(i) = n(i)/n$ as the estimate for $p(i)$
+    for all values of $i$.
+  \end{itemize}
+
+\end{titledslide}
+
+\end{document}

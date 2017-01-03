@@ -1,0 +1,60 @@
+model smoke1;
+const
+ I = 1760,     # number of subjects
+ N = 8730; 	# data points
+var
+ y[N],      # smoking at index ij
+ a[I],     # subject effect
+ wave[N],  # wave of occasion j, subj i
+ sex[I],   # sex
+ parsmk[I], # parental smoking
+ off[I+1],  # offset to demarcate individual subjects
+ b.mwave,    # male wave coefficient, given susceptible
+ b.fwave,    # female wave coefficient, given susceptible
+ b.sex,    # sex coefficient, given susceptible
+ b.parsmk,   # parental smoking coefficient, given susceptible
+ eta[I],     # logit for "susceptible"
+ S[I], # group-1: 0="never-smoker", 1="susceptible"
+ group[I], # group: 1="never-smoker", 2="sometime smoker"
+ ep[2,N],  # mean of bernoulli outcome given covariates (0 if group=1)
+ tau,      # precison of random effects
+ sigma,    # s.d. (1/sqrt(tau))
+ mu,       # mean logit smoking overall
+ g.sex,    # sex coefficient for susceptibility
+ g.parsmk,   # parental smoking coefficient for susceptibility
+ g.mu,	   # mean logit for susceptibility
+ prob.s;  # mean susceptibility
+
+data wave,y in "..\smoke2a.dat",
+sex,parsmk in "..\smoke2b.dat",
+off in "..\smoke2c.dat";
+inits in "smokem.in";
+
+{
+ for (i in 1:I) {
+  group[i] <- S[i]+1;
+  S[i] ~ dbin(eta[i],1);
+  logit(eta[i]) <- g.mu + g.sex*sex[i] + g.parsmk*parsmk[i];
+  for (j in off[i]+1:off[i+1]) {
+    y[j] ~ dbin(ep[group[i],j],1);
+    ep[1,j] <- 0;
+    logit(ep[2,j]) <-  a[i]+b.sex*sex[i]+b.parsmk*parsmk[i]+
+		b.mwave*(1-sex[i])*(wave[j]-1)+b.fwave*sex[i]*(wave[j]-1);
+  }
+  a[i] ~ dnorm(mu, tau);
+ }
+
+# Priors:
+ b.mwave ~ dnorm(0.0, 1.0E-6);
+ b.fwave ~ dnorm(0.0, 1.0E-6);
+ b.sex ~ dnorm(0.0, 1.0E-6);
+ b.parsmk ~ dnorm(0.0, 1.0E-6);
+ mu ~ dnorm(0.0, 1.0E-6);
+ prob.s <- exp(g.mu)/(1+exp(g.mu)); # population mean "susceptibility"
+ tau ~ dgamma(.001,.001);
+ sigma <- 1/sqrt(tau);
+ g.sex ~ dnorm(0.0, 1.0);
+ g.parsmk ~ dnorm(0.0, 1.0);
+ g.mu ~ dnorm(-1.0, 1.0);
+}
+

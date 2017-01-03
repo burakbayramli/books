@@ -1,0 +1,174 @@
+/*
+
+demoFTest.jsl
+02apr2001
+
+Purpose
+Demonstrate how changes in the data affect F ratios and associated p-values.
+
+Author
+Gerry Hobbs (concept) (West Virginia University)
+Wen Hu (prototype)
+Mark Bailey (implementation)
+
+Contact
+mark.bailey@sas.com
+
+Usage
+Simply run this script by any one of these methods:
+
+	Edit > Run Script
+	Control-R
+	Click "Run Script" button in tool bar
+
+The demoFTest data table is required and opened automatically if it is located in the same directory as the script.
+
+Future Improvement Ideas
+Optimize Open() to work with any location and file path.
+Add means diamonds to graph.
+Generalize to any continuous by nominal or ordinal comparison.
+
+*/
+
+Clear Globals();
+
+dt = Current Data Table();
+
+dlg = Column Dialog(
+	yCol = Col List(
+		"Y, Response",
+		Min Col(1),
+		Max Col(1),
+		Data Type(Numeric)
+	),
+	xCol = Col List(
+		"X, Factor",
+		Min Col(1),
+		Max Col(1)
+	),
+	"Choose variables for one-way ANOVA"
+);
+
+If( dlg["Button"] == -1, Throw( "User cancelled" ) );
+Remove From( dlg ); Eval List( dlg );
+
+dt << Sort(
+	By( xCol[1], yCol[1] ),
+	Order( Ascending ),
+	Replace Table
+);
+
+y = yCol[1] << Get Values;
+Summarize(
+	group = By( Column( xCol[1] ) ),
+	n = Count
+);
+types = J( N Row( y ), 1, 0 );
+For( g = 1, g <= N Items(group), g++,
+	r = dt << Get Rows Where( Column( xCol[1] )[] == group[g] );
+	types[r] = g;
+);
+
+// remove missing values.
+r = dt << Get Rows Where( Is Missing( yCol[1][] ) );
+For( i = N Row(r), i > 0, i--,
+	y[r[i],0] = [];
+	types[r[i],0] = [];
+);
+
+g = types; // copy used in graph to constrain x values after drag.
+
+n Groups = N Items( group );
+xMin = 0;
+xMax = n Groups + 1;
+yMin = Mean(y) - 6*Std Dev(y);
+yMax = Mean(y) + 6*Std Dev(y);
+
+New Window( "Changing P-values",
+	H List Box(
+		Outline Box( "Oneway ANOVA",
+			Graph Box(
+				Frame Size( 600, 400 ),
+				X Scale( xMin, xMax ),
+				Y Scale( yMin, yMax ),
+				X Name( Char(xCol[1]) ),
+				Y Name( Char(yCol[1]) ),
+				Double Buffer,
+
+				x = J( N Row( y ), 1, 1 ) || Design Nom( types );	// design matrix
+				a = (x`*x || x`*y) |/ (y`*x || y`*y);			// augmented analysis matrix
+
+				ss Tot = Sweep( a, [1] )[nGroups+1,nGroups+1];	// intercept only
+				df Tot = N Row( y ) - 1;
+				ms Tot = ss Tot / df Tot;
+
+				ans = Sweep( a, 1::ngroups );				// full model
+				ss Error = ans[nGroups+1,nGroups+1];
+				df Model = n Groups - 1;
+				df Error = df Tot - df Model;
+				ms Error = ss Error / df Error;
+
+				ss Model = ss Tot - ss Error;
+				ms Model = ss Model / df Model;
+
+				F ratio = ms Model / ms Error;
+				p Value = 1 - F Distribution( Abs( F ratio ), df Model, df Error );
+
+				Line Style(1);
+				Pen Color(5);
+				For( cons = 0; i = 1, i < n Groups, i++,
+					H Line( i-0.25, i+0.25, ans[1,nGroups+1] + ans[i+1,nGroups+1] );
+					cons += ans[i+1,nGroups+1];
+				);
+				H Line( i-0.25, i+0.25, ans[1,nGroups+1] - cons );
+		
+				Line Style(0);
+				Pen Color(0);
+				H Line( ans[1,nGroups+1] );
+
+				Drag Marker( g, y, g = types );
+
+				tx = xMin + (xMax - xMin) / 20;
+				ty = yMin + Round( 0.9 * (yMax - yMin) );
+				Text Size(16);
+				Text Color(4);
+				Text( {tx,ty}, "Mean ", Round( ans[1,nGroups+1], 2 ) );
+				ty -= Round( (yMax - yMin) / 25 );
+				Text( {tx,ty}, "F ratio ", Round(F ratio, 2) );
+				ty -= Round( (yMax - yMin) / 25 );
+				Text( {tx,ty}, "P>F ", Round( p Value, 4 ) );
+			)
+		),
+		Outline Box( "Legend",
+			Table Box(
+				Number Col Box( Char(xCol[1]), 1::ngroups ),
+				String Col Box( "Value", group )
+			)
+		)
+	)
+);
+
+/*
+Revision History (date, change, person)
+02apr2001, created, Wen Hu (West Virginia University
+17apr2001, adopted JSL Style Guide, incorporate JSL idioms, Mark Bailey
+25oct2002, generalize for any ANOVA situation, Sweep, group lines, Mark Bailey
+*/
+
+/*
+Disclaimer by 
+SAS Institute Inc. 
+
+License Agreement for Corrective Code or 
+Additional Functionality 
+
+SAS INSTITUTE INC. IS PROVIDING YOU WITH THE COMPUTER SOFTWARE CODE INCLUDED WITH THIS AGREEMENT ("CODE") ON AN "AS IS" BASIS, AND AUTHORIZES YOU TO USE THE CODE SUBJECT TO THE TERMS HEREOF.  BY USING THE CODE, YOU AGREE TO THESE TERMS.  YOUR USE OF THE CODE IS AT YOUR OWN RISK.  SAS INSTITUTE INC. MAKES NO REPRESENTATION OR WARRANTY, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT AND TITLE, WITH RESPECT TO THE CODE. 
+
+The Code is intended to be used solely as part of a product ("Software") you currently have licensed from SAS or one of its subsidiaries or authorized agents ("SAS"). The Code is designed to either correct an error in the Software or to add functionality to the Software, but has not necessarily been tested.  Accordingly, SAS makes no representation or warranty that the Code will operate error-free.  SAS is under no obligation to maintain or support the Code.
+
+Neither SAS nor its licensors shall be liable to you or any third party for any general, special, direct, indirect, consequential, incidental or other damages whatsoever arising out of or related to your use or inability to use the Code, even if SAS has been advised of the possibility of such damages.
+
+Except as otherwise provided above, the Code is governed by the same agreement that governs the Software.  If you do not have an existing agreement with SAS governing the Software, you may not use the Code. 
+
+(SAS and all other SAS Institute Inc. product or service names are registered trademarks or trademarks of SAS Institute Inc. in the USA and other countries. ® indicates USA registration. Other brand and product names are registered trademarks or trademarks of their respective companies.)
+*/

@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+"""Regression script in src/py/examples/pde."""
+
+import scitools.Regression as Regression
+import os, glob, sys
+
+test = Regression.TestRunNumerics('tests.v')
+
+app = 'wave1D_func1.py'
+test.run(app, options="""test_solver1  4 "'scalar'" """)
+test.run(app, options="""test_solver1  4 "'vectorized'" """)
+test.run(app, options="""test_solver1c 4 "'vectorized'" """)
+test.run(app, options="""test_solver2  4 0""")
+test.run(app, options="""test_solver3 "'vectorized'" """)
+test.run(app, options="""test_solver_plug 0 "'vectorized'" 1500""")
+
+app = 'wave1D_func2.py'  
+test.run(app, options="""test_radial_waves 0 '"vectorized"' """)
+
+app = 'wave1D_class.py'  
+test.run(app, options="""test_WaveEq1_plug 0 '"vectorized"' """)
+
+app = 'wave2D_func1.py'  
+test.run(app, options="""test_verify""")
+
+# approximate treatment of floating-point numbers:
+test.approx(Regression.defaultfilter)
+

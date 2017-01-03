@@ -1,0 +1,417 @@
+
+<!-- WRITTEN WITH VIM 5 http://www.vim.org/ -->
+<HTML>
+<HEAD>
+
+<STYLE>
+<!--
+A {text-decoration: none}
+A:hover {text-decoration: none; color: #FF6666 }  
+BODY,TD,P,B {font-family: arial, helvetica, sans-serif}
+H1, H2, H3, H4, H5, H6 {font-family: arial, helvetica, sans-serif}
+PRE, TT {font-family: courier, sans-serif}
+
+
+    .osdn-foottext {
+color: #cccccc;
+       font-family: verdana, arial, sans-serif;
+       font-size: 12px;
+       text-decoration: none;
+       text-align: center;}
+-->
+</STYLE>
+
+<TITLE>Geocrawler.com - numpy-discussion - [Numpy-discussion] segfault in PyArray_FromDims</TITLE> 
+
+<script language="javascript">
+<!--
+brokenLayers = (navigator.appName.substring(0,8) == 'Netscape' && parseFloat(navigator.appVersion) <= 4.01);
+WebTV = (navigator.appName.indexOf('WebTV Plus') != -1);
+// -->
+</script>
+
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" LINK="#0000CD" TOPMARGIN="0" BOTTOMMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0" VLINK="#777799" ALINK="#FF6666" TEXT="#000000" BACKGROUND="/img/geocrawler-bg.gif">
+
+
+<!-- OSDN navbar -->
+
+<style type="text/css">
+<!--
+.osdn-search {
+font-size: 10px;
+font-family: verdana, arial, sans-serif;
+}
+.osdn-button {
+margin-top: 1px;
+margin-bottom: 1px;
+}
+select.osdn-search {
+text-align: center;
+}
+.osdn-navtext {
+color: #777;
+font-family: verdana, arial, sans-serif;
+font-size: 10px;
+}
+small.osdn-navtext {
+color: #777;
+font-family: verdana, arial, sans-serif;
+font-size: 10px;
+}
+.osdn-foottext {
+color: #666666; 
+font-family: verdana, arial, sans-serif; 
+font-size: 12px;
+text-align: center;
+} 
+-->
+</style>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+<form action="http://www.osdn.com/osdnsearch.pl" method="GET">
+<tr bgcolor="#999999">
+<td colspan="5"><img src="http://images.osdn.com/blank.gif" width="1" height="1" alt=""></td>
+</tr>
+<tr bgcolor="#eeeeee">
+<td nowrap class="osdn-navtext"><small class="osdn-navtext">&nbsp;&nbsp;<a href="http://www.osdn.com" class="osdn-navtext" title="The Open Source Development Network"><b>OSDN:</b></a>&nbsp;
+ <script LANGUAGE="JavaScript">
+   url = new Array(4);
+   title = new Array(4);
+   url[0] = "tools.devchannel.org";
+   url[1] = "hardware.devchannel.org";
+   url[2] = "hpc.devchannel.org";
+   url[3] = "webservices.devchannel.org";
+
+   title[0] = "Development Tools";
+   title[1] = "Hardware";
+   title[2] = "High Performance";
+   title[3] = "Webservices";
+   index = Math.floor(Math.random() * url.length);
+   document.write("<A HREF=\"http:\/\/");
+   document.write(url[index]);
+   document.write("\" class=\"osdn-navtext\" style=\"text-decoration:none\"><font>" + title[index] + "<\/FONT><\/A> - ");
+   </SCRIPT>
+   <noscript>
+   <a HREF="http://devchannel.org/" class="osdn-navtext" style="text-decoration:none"><font >DevChannel</font></a> -
+   </noscript>
+
+		<a href="http://www.osdn.com/newsletters/" class="osdn-navtext" style="text-decoration:none"><font >Newsletters</font></a> - 
+		<a href="http://www.thinkgeek.com" class="osdn-navtext" style="text-decoration:none"><font>Shop</font></a>
+
+		&nbsp;</small>
+
+		</td>
+<td align="right" valign="middle" width="100%" class="osdn-navtext"><small class="osdn-navtext"><b>SEARCH:</b>&nbsp;</small></td>
+<td align="right" valign="middle" nowrap class="osdn-navtext"><small>
+<select name="site" class="osdn-search">
+<option value="all" SELECTED>All OSDN Sites</option>
+<option value="">-----------</option>
+<option value="Freshmeat">freshmeat</option>
+<option value="Linux.com">Linux.com</option>
+<option value="LinuxGram">LinuxGram</option>
+<option value="NewsForge">NewsForge</option>
+<option value="OSDN">OSDN.com</option>
+<option value="OSDN PriceCompare">OSDN PriceCompare</option>
+<option value="Slashcode">Slashcode</option>
+<option value="Slashdot">Slashdot</option>
+<option value="SourceForge.net">SourceForge.net</option>
+</select></small></td>
+<td nowrap valign="middle" class="osdn-navtext"><small class="osdn-navtext">&nbsp;<input type="text" name="query" size="12" class="osdn-search">&nbsp;</small></td>
+<td nowrap width="35"><input type="image" border="0" name="Submit" value="GO" src="http://images.osdn.com/go.gif" alt="Go" width="30" height="20" align="middle" class="osdn-button"></td>
+</tr>
+<tr bgcolor="#999999">
+<td colspan="5"><img src="http://images.osdn.com/blank.gif" width="1" height="1" alt=""></td>
+</tr>
+</form>
+</table>
+
+
+<!-- end OSDN navbar --> 
+    
+<TABLE cellpadding="5" cellspacing="5" border="0" width="100%" align="center">
+	<TR>
+		<TD align="left"><IMG src="/img/geocrawler-title.gif" alt="Geocrawler" width="239" height="61"></TD>
+
+		<!-- BANNER start -->
+		<TD align="center">
+<!-- begin banner ad -->
+<table border=0 cellpadding=0><tr><td>
+<script language="javascript">
+<!--
+if (! brokenLayers) {
+  document.write('<ilayer id="adilayer1" width="468" height="60" visibility="hide"></ilayer>');
+  document.write('<nolayer>');
+}
+document.write('<iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="468" height="60" src="http://geoads.osdn.com/1.html">');
+if (! WebTV) {
+  document.write('<a href="http://geoads.osdn.com/cgi-bin/ad_default.pl?click&position=1">');
+  document.write('<img src="http://geoads.osdn.com/cgi-bin/ad_default.pl?display&position=1" width="468" height="60" border="0"></a>');
+}
+document.write('</iframe>');
+if (! brokenLayers) 
+  document.write('</nolayer>');
+// -->
+</script>
+<noscript>
+<a href="http://geoads.osdn.com/cgi-bin/ad_default.pl?click&position=1"><img src="http://geoads.osdn.com/cgi-bin/ad_default.pl?display&position=1" width="468" height="60" border="0"></a>
+</noscript>
+</td></tr></table>
+<!-- end banner ad -->
+</TD>
+		<!-- BANNER end -->
+	</TR>
+</TABLE>
+
+<TABLE cellspacing="0" cellpadding="0" width="100%" border="0">
+	<TR valign="middle" bgcolor="#666699">
+		<TD colspan="2"><IMG src="/img/pixel.gif" width="1" height="1" alt=""></TD>
+	</TR>
+
+	<TR valign="middle" bgcolor="#e8e2ef">
+		<TD height="20">
+			<FONT color="#000000" face="Arial, Helvetica" size="2">&nbsp;&nbsp; 
+			<A href="/"><FONT color="#000000"><B>Home</B></FONT></A> | 
+			<A href="/privacy/"><FONT color="#000000"><B>Privacy Statement</B></FONT></A> | 
+			<A href="/about/"><FONT color="#000000"><B>About</B></FONT></A>
+		</TD>
+
+		<TD align="right" valign="bottom">
+					</TD>
+	</TR>
+
+	<TR valign="middle" bgcolor="#666699">
+		<TD colspan="2"><IMG src="/img/pixel.gif" width="1" height="3" alt=""></TD>
+	</TR>
+</TABLE>
+
+<BASE HREF="http://www.geocrawler.com">
+
+
+<TABLE BORDER=0 WIDTH="96%" ALIGN="center" CELLSPACING="2" CELLPADDING="2">
+
+	<TR>
+
+
+		<TD HEIGHT="90%" VALIGN=TOP>
+			<FONT FACE="ARIAL,HELVETICA" SIZE=2>
+
+
+<TABLE WIDTH="100%" CELLPADDING=3>
+	<TR>
+		<TD>
+			<FONT FACE="ARIAL,HELVETICA" SIZE=2>
+			<A HREF="/lists/3/"><IMG SRC="/img/ofolder.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;Mailing Lists</A><BR>
+			&nbsp; &nbsp; <A HREF="/lists/3/SourceForge/"><IMG SRC="/img/ofolder.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;SourceForge</A><BR>
+			&nbsp; &nbsp; &nbsp; &nbsp; <A HREF="/lists/3/SourceForge/1329/0/"><IMG SRC="/img/ofolder.png" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;<B>numpy-discussion - </B></A><BR>
+		</TD><TD ROWSPAN=2 BGCOLOR="#EFEFEF" NOWRAP><B>Archive</B><BR>			<A HREF="/archives/3/1329/2002/"><IMG SRC="/img/cfolder.png" HEIGHT=13 WIDTH=15 BORDER=0>&nbsp;2002 (615 msgs)</A><BR>
+			<A HREF="/archives/3/1329/2001/"><IMG SRC="/img/cfolder.png" HEIGHT=13 WIDTH=15 BORDER=0>&nbsp;2001 (582 msgs)</A><BR>
+			<A HREF="/archives/3/1329/2000/"><IMG SRC="/img/cfolder.png" HEIGHT=13 WIDTH=15 BORDER=0>&nbsp;2000 (379 msgs)</A><BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD ALIGN=LEFT>
+		                
+		</TD>
+	</TR>
+			</FORM>
+</TABLE>
+
+<H3>Thread: <A HREF="/mail/thread.php3?subject=%5BNumpy-discussion%5D+segfault+in+PyArray_FromDims&list=1329">[Numpy-discussion] segfault in PyArray_FromDims</A></H3><P>
+			<B><A HREF="/mail/msg_raw.php3?msg_id=6084045">Print</A><table cellspacing="0" cellpadding="2" width="100%">
+			<tr><td align=CENTER bgcolor="#666699">
+			<TABLE WIDTH="100%" CELLPADDING="2" CELLSPACING="0" BGCOLOR="#FFFFFF">
+			<TR BGCOLOR="#666699"><TD><FONT COLOR="#FFFFFF">Message: 6084045</TD></TR>
+			<TR><TD><PRE>FROM: David M. Cooke<BR>DATE: 07/01/2001&nbsp;19:38:43<BR>SUBJECT: RE:  [Numpy-discussion] segfault in PyArray_FromDims<P>&nbsp;<P><PRE><FONT FACE="COURIER">At some point, Juerg Tschirren &lt;&lt;EMAIL: PROTECTED&gt;&gt; wrote:
+
+&gt; I did some experimenting with the NumPy C API. I wrote two functions.
+&gt; One for processing a NumPy array in C++ and the other one for
+&gt; generating a NumPy array in C++. The processing function work perfectly
+&gt; fine. But in the array-generating function I get a segmentation fault
+&gt; whenever I call PyArray_FromDims. I used swig for generating the wrapper
+&gt; functions.
+&gt; 
+&gt; The two src-files (numPyExt.i and numPyExt.cc):
+
+[code snipped]
+
+&gt; Compiled with:
+&gt;   g++ -c  -I/usr/local/include/python2.0 -I/usr/local/lib/python2.0/site-packages
+-O2 numPyExt.cc
+&gt;   swig -python -c++ numPyExt.i
+&gt;   g++ -c -O2 numPyExt_wrap.c -DOS_LINUX -DHAVE_CONFIG_H -I. -I/usr/local/include/python2.0
+-I/usr/local/lib/python2.0/site-packages -I/usr/local/lib/python2.0/config
+&gt;   g++ -W1,--heap,50000,--stack,100000 -O2 -shared numPyExt.o numPyExt_wrap.o
+-lstdc++ -o numPyExt.so
+&gt; 
+
+This problem was discussed in April on this list, see
+<A href="http://www.geocrawler.com/mail/thread.php3?subject=%5BNumpy-discussion%5D+Numeric+on+OS+X+-+Anyone+get+it+to+work+%3F&list=1329" target="_NEW">http://www.geocrawler.com/mail/thread.php3?subject=%5BNumpy-discussion%5D+Numeric+on+OS+X+-+Anyone+get+it+to+work+%3F&list=1329</A>
+
+I banged my head against this for hours a few weeks ago until I found
+the above. The problem is that PyArray_FromDims (and all other
+PyArray_*) are not functions -- they're macros, defined like this:
+
+#define PyArray_FromDims \
+  (*(PyArray_FromDims_RET (*)PyArray_FromDims_PROTO) \
+   PyArray_API[PyArray_FromDims_NUM])
+
+This means that all the PyArray_* functions are done through a lookup
+table PyArray_API, which is initialized by import_array(). By default,
+PyArray_API is defined in arrayobject.h as 'static void
+**PyArray_API', meaning that it is not accessible outside of the
+translation unit (i.e. file) that includes it.
+
+The relevant part of Numeric/arrayobject.h is this:
+
+#if defined(PY_ARRAY_UNIQUE_SYMBOL)
+#define PyArray_API PY_ARRAY_UNIQUE_SYMBOL
+#endif
+
+/* C API address pointer */ 
+#if defined(NO_IMPORT) || defined(NO_IMPORT_ARRAY)
+extern void **PyArray_API;
+#else
+#if defined(PY_ARRAY_UNIQUE_SYMBOL)
+void **PyArray_API;
+#else
+static void **PyArray_API;
+#endif
+#endif
+
+So, one way to get the behaviour you want is 
+1) in the file where import_array is called, #define
+PY_ARRAY_UNIQUE_SYMBOL to be something like Py_Array_API_myext. (Make
+it unique because it will be exported as part of the .so file.) before
+including Numeric/arrayobject.h
+2) in the other files, #define NO_IMPORT_ARRAY before including Numeric/arrayobject.h
+
+Another way is to have your main file (say, main.c) call functions in the other
+files, passing the value of PyArray_API defined there, so that the
+other files can set theirs to that value.
+
+Hope this helps.
+
+-- 
+|&gt;|\/|&lt;
+/--------------------------------------------------------------------------\
+|David M. Cooke
+|&lt;EMAIL: PROTECTED&gt;
+
+_______________________________________________
+Numpy-discussion mailing list
+&lt;EMAIL: PROTECTED&gt;
+<A href="http://lists.sourceforge.net/lists/listinfo/numpy-discussion" target="_NEW">http://lists.sourceforge.net/lists/listinfo/numpy-discussion</A>
+
+
+
+		</PRE></TD></TR></TABLE></TD></TR></TABLE>
+<P>
+		</TD>
+		<TD width=165 valign=top>
+<center>
+
+
+<iframe src="http://gcads.osdn.com/2.html" height="600" width="160" 
+frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="no">
+<a 
+href="http://gcads.osdn.com/cgi-bin/ad_default.pl?click&position=2"><img 
+src="http://gcads.osdn.com/cgi-bin/ad_default.pl?display&position=2" 
+border=0 alt=""></a>
+</iframe>
+<br>
+<br>
+<br>
+<table WIDTH="100%" BORDER="0"><tr>
+<td BGCOLOR="#666699"><table WIDTH="100%" BORDER="0"><tr>
+<td BGCOLOR="#666699"><font COLOR="#FFFFFF"><b>Sponsored Content
+</b></td></tr><tr>
+<td>
+<!-- AD POSITION 7 --> <iframe src="//gcads.osdn.com/7.html" height="200" width="165" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="no">
+<a href="http://sfads.osdn.com/cgi-bin/ad_default.pl?click&position=7"><img src="//sfads.osdn.com/cgi-bin/ad_default.pl?display&position=7" border=0></a>
+</iframe>
+<!-- end ad position7 -->
+</td></tr></table></td></tr></table>
+
+</TD>
+	</TR>
+</TABLE>
+
+<P>
+<!-- start OSDN Footer -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr bgcolor="#999999">
+<td><img src="http://sourceforge.net/images/blank.gif" width="1" height="1" alt=""></td>
+</tr>
+<tr align="center" valign="middle">
+<td height="50" class="osdn-foottext">&copy; Copyright 2002 - <a href="http://www.osdn.com/" class="legallink">OSDN</a> Open Source Development Network, All Rights Reserved<br>
+<a href="http://geocrawler.com/about/" class="legallink">About Geocrawler</a>&nbsp;&#149;&nbsp;
+<a href="http://www.osdn.com/about.shtml"  class="legallink">About OSDN</a>
+geo&nbsp;&#149;&nbsp;
+<a href="http://www.osdn.com/privacy.shtml" class="legallink">Privacy Statement</a>
+&nbsp;&#149;&nbsp;
+<a href="http://www.osdn.com/terms.shtml" class="legallink">Terms of Use</a> &nbsp;&#149;&nbsp; 
+<a href="http://www.osdn.com/advertise" class="legallink">Advertise</a> &nbsp;&#149;&nbsp; 
+
+<a href="http://selfserve.osdn.com/introduction.html" class="legallink">Self Serve Ad System</a> &nbsp;&#149;&nbsp; 
+
+
+
+<a href="http://sourceforge.net/docman/display_doc.php?docid=7632&group_id=1" class="legallink">Contact Us</a></td>
+</tr>
+<tr bgcolor="#999999">
+<td><img src="http://sourceforge.net/images/blank.gif" width="1" height="1" alt=""></td>
+</tr>
+</table>
+<!-- end OSDN Footer -->
+<P>	
+<CENTER>
+	<!-- BANNER start -->
+	
+<!-- begin banner ad -->
+<table border=0 cellpadding=0><tr><td>
+<script language="javascript">
+<!--
+if (! brokenLayers) {
+  document.write('<ilayer id="adilayer2" width="472" height="64" visibility="hide"></ilayer>');
+  document.write('<nolayer>');
+}
+document.write('<iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="472" height="64" src="http://geoads.osdn.com/5.html">');
+if (! WebTV) {
+  document.write('<a href="http://geoads.osdn.com/cgi-bin/ad_default.pl?click&position=5">');
+  document.write('<img src="http://geoads.osdn.com/cgi-bin/ad_default.pl?display&position=5" width="472" height="64" border="0"></a>');
+}
+document.write('</iframe>');
+if (! brokenLayers) 
+  document.write('</nolayer>');
+// -->
+</script>
+<noscript>
+<a href="http://geoads.osdn.com/cgi-bin/ad_default.pl?click&position=5"><img src="http://geoads.osdn.com/cgi-bin/ad_default.pl?display&position=5" width="472" height="64" border="0"></a>
+</noscript>
+</td></tr></table>
+<!-- end banner ad -->
+	<!-- BANNER end -->
+</CENTER>
+<script language="javascript1.2">
+<!--
+function osdn_resize() {
+  if (innerWidth != origWidth || innerHeight != origHeight) {
+  for(var i=1;i<3;i++) 
+    document.layers['adlayer'+i].moveToAbsolute(document.layers['adilayer'+i].pageX,document.layers['adilayer'+i].pageY);
+  }
+}
+if ((!brokenLayers) && document.layers) {
+  origWidth = innerWidth;
+  origHeight = innerHeight;
+  onResize=osdn_resize;
+}
+if (! brokenLayers) { document.write('<layer id="adlayer1" src="http://geoads.osdn.com/1.html" visibility=\'hide\' onLoad="moveToAbsolute(adilayer1.pageX,adilayer1.pageY); clip.height=60; clip.width=468; visibility=\'show\';"></layer>'); }
+if (! brokenLayers) { document.write('<layer id="adlayer2" src="http://geoads.osdn.com/5.html" visibility=\'hide\' onLoad="moveToAbsolute(adilayer2.pageX,adilayer2.pageY); clip.height=64; clip.width=472; visibility=\'show\';"></layer>'); }
+// -->
+</script>
+
+</BODY>
+</HTML>
+<!-- end page -->

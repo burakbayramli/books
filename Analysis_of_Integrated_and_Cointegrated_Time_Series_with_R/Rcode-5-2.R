@@ -1,0 +1,8 @@
+library(urca)
+data(nporg)
+wg.n <- log(na.omit(nporg[, "wg.n"]))
+za.wg.n <- ur.za(wg.n, model = "intercept", lag = 7)
+plot(za.wg.n)
+wg.r <- log(na.omit(nporg[, "wg.r"]))
+za.wg.r <- ur.za(wg.r, model = "both", lag = 8)
+plot(za.wg.r)

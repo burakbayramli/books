@@ -1,0 +1,10 @@
+function newpot=convertGaussianCanonicalToGaussianMoment(pot)   
+C=inv(pot.table.invcovariance);
+b=pot.table.invmean;
+mu = C*b;
+newpot.table.covariance=C;
+newpot.table.mean=mu;
+newpot.table.logprefactor=pot.table.logprefactor-0.5*b'*mu-0.5*logdet(2*pi*pot.table.invcovariance);
+newpot.table.type='GaussianMoment';
+newpot.variables=pot.variables;
+newpot.table.dim=pot.table.dim;

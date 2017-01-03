@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+"""Regression script in src/py/mixed/hw/C++/swig-hw"""
+
+from scitools.Regression import TestRun
+import os, glob, sys
+
+test = TestRun("tests.v", removepath=os.environ['scripting'])
+
+test.silentrun("./clean.sh", options="")
+test.run("./make_module_1.sh")
+test.run("./hwa.py", options="1.2 -1.2")
+test.silentrun("./clean.sh", options="")
+test.run("./make_module_2.sh")
+test.run("./hwa.py", options="1.2 -1.2")
+test.silentrun("./clean.sh", options="")
+

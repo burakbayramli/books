@@ -1,0 +1,1066 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Models.SFR</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        <a href="gPy.Models-module.html">Module&nbsp;Models</a> ::
+        Class&nbsp;SFR
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Models.SFR-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SFR</h1><p class="nomargin-top"><span class="codelink"><a href="gPy.Models-pysrc.html#SFR">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+      object --+                
+               |                
+<a href="gPy.Variables.Domain-class.html">Variables.Domain</a> --+            
+                   |            
+ <a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a> --+        
+                       |        
+                   <a href="gPy.Models._AbsM-class.html" onclick="show_private();">_AbsM</a> --+    
+                           |    
+                          <a href="gPy.Models.FR-class.html">FR</a> --+
+                               |
+                              <strong class="uidshort">SFR</strong>
+</pre>
+
+<dl><dt>Known Subclasses:</dt>
+<dd>
+      <ul class="subclass-list">
+<li><a href="gPy.Models.BN-class.html">BN</a></li><li>, <a href="gPy.Models.RFR-class.html">RFR</a></li>  </ul>
+</dd></dl>
+
+<hr />
+<p>Factored representations of probability distributions (associated 
+  hypergraph is simple)</p>
+  <p>Probability distributions represented by a set of factors. The 
+  distribution is equal to the product of these factors. Each factor is a 
+  <a href="gPy.Parameters.Factor-class.html" 
+  class="link">Parameters.Factor</a>.</p>
+  <p>No two factors have the same variables. If factors were (A,B), (A,B), 
+  (B,C) then would NOT be simple.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">factors</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">domain</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">new_domain_variables</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">must_be_new</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">check</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Initialise a hierarchical model</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Iterator</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#__iter__" class="summary-sig-name">__iter__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an iterator over the factors in the model</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.__iter__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#_add_factor" class="summary-sig-name" onclick="show_private();">_add_factor</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">factor</span>)</span><br />
+      Multiply a simple hierarchical model by a factor</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR._add_factor">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#_add_factor_to_dict" class="summary-sig-name" onclick="show_private();">_add_factor_to_dict</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>,
+        <span class="summary-sig-arg">factor</span>)</span><br />
+      Add a factor to the _factors dictionary</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR._add_factor_to_dict">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#_put_factor_to_dict" class="summary-sig-name" onclick="show_private();">_put_factor_to_dict</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>,
+        <span class="summary-sig-arg">factor</span>)</span><br />
+      Add a factor to the _factors dictionary</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR._add_factor_to_dict">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Same type as <code>self</code></span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#copy" class="summary-sig-name">copy</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">copy_domain</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Return a deep copy of a hierarchical model</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.copy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type"><a href="gPy.Parameters.Factor-class.html" 
+      class="link">Parameters.Factor</a> object</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#factor" class="summary-sig-name">factor</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>)</span><br />
+      Return the factor produced by multiplying all factors with variables 
+      <code>hyperedge</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.factor">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#factors" class="summary-sig-name">factors</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a list of the factors in the model</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.factors">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#factors_containing_variable" class="summary-sig-name">factors_containing_variable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variable</span>)</span><br />
+      Return a list of factors containing <code>variable</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.factors_containing_variable">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Boolean</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#is_simple" class="summary-sig-name">is_simple</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Whether the model is simple</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.is_simple">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#items" class="summary-sig-name">items</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return sequence of <code>factor.variables(),factor</code> pairs for 
+      each factor in the model.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.items">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#simplify" class="summary-sig-name">simplify</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Simplify the model</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.simplify">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type"><a href="gPy.Parameters.Factor-class.html" 
+      class="link">Parameters.Factor</a> object</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Models.SFR-class.html#some_factor" class="summary-sig-name">some_factor</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">hyperedge</span>)</span><br />
+      Return an arbitrary factor with variables <code>hyperedge</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Models-pysrc.html#SFR.some_factor">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Models._AbsM-class.html" onclick="show_private();">_AbsM</a></code></b>:
+      <code><a href="gPy.Models._AbsM-class.html#__div__">__div__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__getitem__">__getitem__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__idiv__">__idiv__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__imul__">__imul__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__len__">__len__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__mul__">__mul__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__repr__">__repr__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__setitem__">__setitem__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#__str__">__str__</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#add_ident">add_ident</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#condition">condition</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#cpt">cpt</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#eliminate_variable">eliminate_variable</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#gui_display">gui_display</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#hypergraph">hypergraph</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#inc_from_rawdata">inc_from_rawdata</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#interaction_graph">interaction_graph</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#make_decomposable">make_decomposable</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#marginal">marginal</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#marginal_factor">marginal_factor</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#marginalise_away">marginalise_away</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#markov_blanket">markov_blanket</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#num_factors_containing_variable">num_factors_containing_variable</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#red">red</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#reduced">reduced</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#remove">remove</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#sumout">sumout</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#variable_elimination">variable_elimination</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#variable_elimination_trace">variable_elimination_trace</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#z">z</a></code>,
+      <code><a href="gPy.Models._AbsM-class.html#zero">zero</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Models._AbsM-class.html" onclick="show_private();">_AbsM</a></code></b> (private):
+      <code><a href="gPy.Models._AbsM-class.html#_check_condition" onclick="show_private();">_check_condition</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#__add__">__add__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__iadd__">__iadd__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__isub__">__isub__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rdiv__">__rdiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rmul__">__rmul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__sub__">__sub__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#inst2index">inst2index</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#insts">insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#marginalise_onto">marginalise_onto</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#q">q</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#uses_default_domain">uses_default_domain</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#variables">variables</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#varvalues">varvalues</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_decode_inst" onclick="show_private();">_decode_inst</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_get_result_variables" onclick="show_private();">_get_result_variables</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_insts" onclick="show_private();">_insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_pointwise_op" onclick="show_private();">_pointwise_op</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b>:
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variable">add_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables">add_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables_from_rawdata">add_domain_variables_from_rawdata</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variable">change_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variables">change_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#common_domain">common_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#known_variable">known_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#numvals">numvals</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#values">values</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== STATIC METHODS ==================== -->
+<a name="section-StaticMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Static Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-StaticMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#clear_default_domain">clear_default_domain</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#print_default_domain">print_default_domain</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#set_default_domain">set_default_domain</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_default_domain" onclick="show_private();">_default_domain</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Dictionary</span>
+    </td><td class="summary">
+        <a name="_factors"></a><span class="summary-name">_factors</span><br />
+      A mapping from each distinct hyperedge in the associated hypergraph 
+      to a list of factors having the variables of the hyperedge.
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type"><a href="gPy.Hypergraphs.Hypergraph-class.html" 
+      class="link">Hypergraph</a> object</span>
+    </td><td class="summary">
+        <a href="gPy.Models.SFR-class.html#_hypergraph" class="summary-name" onclick="show_private();">_hypergraph</a><br />
+      The hypergraph associated with the model.
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_variables" onclick="show_private();">_variables</a></code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b> (private):
+      <code><a href="gPy.Variables.Domain-class.html#_domain" onclick="show_private();">_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#_instd" onclick="show_private();">_instd</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#_numvals" onclick="show_private();">_numvals</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">factors</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">domain</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">new_domain_variables</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">must_be_new</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">check</span>=<span class="sig-default">False</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Initialise a hierarchical model</p>
+  <p>Each factor has its domain expanded to be the domain of the model, if 
+  necessary.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>factors</code></strong> - The factors in the hierarchical model. (Alternatively an existing
+          object of class <a href="gPy.Models.FR-class.html" 
+          class="link">FR</a> (or its subclasses), in which case 
+          <code>self</code> has identical attributes.)</li>
+        <li><strong class="pname"><code>domain</code></strong> - A domain for the model. If None and all <code>factors</code> have
+          the same domain then this domain is used. If None and all 
+          <code>factors</code> do not have the same domain then the 
+          internal default domain is used.</li>
+        <li><strong class="pname"><code>new_domain_variables</code></strong> - A dictionary containing a mapping from any new variables to their
+          values. <code>domain</code> is updated with these values</li>
+        <li><strong class="pname"><code>must_be_new</code></strong> - Whether domain variables in <code>new_domain_variables</code> 
+          have to be new</li>
+        <li><strong class="pname"><code>check</code></strong> - Whether to check that all variables exist in <code>domain</code></li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="gPy.Variables.VariableError-class.html">VariableError</a></strong></code> - If a variable in <code>new_domain_variables</code> already exists 
+        with values different from its values in 
+        <code>new_domain_variables</code>; Or if <code>must_be_new</code> 
+        is set and the variable already exists. Or if <code>check</code> is
+        set and a variable in <code>variables</code> is not in the domain</li>
+    </ul></dd>
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__iter__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__iter__</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.__iter__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an iterator over the factors in the model</p>
+  <p>To allow <code>for factor in model: ...</code> constructions.</p>
+  <dl class="fields">
+    <dt>Returns: Iterator</dt>
+        <dd>An iterator over the factors in the model</dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#__iter__">_AbsM.__iter__</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_add_factor"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_add_factor</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">factor</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR._add_factor">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Multiply a simple hierarchical model by a factor</p>
+  <p>If a factor with the same variables already exists, then this existing
+  factor is multiplied by <code>factor</code> to maintain simplicity.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>factor</code></strong> (<a href="gPy.Parameters.Factor-class.html" 
+          class="link">Factor</a>) - The factor to be multiplied in</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#_add_factor" onclick="show_private();">_AbsM._add_factor</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_add_factor_to_dict"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_add_factor_to_dict</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>,
+        <span class="sig-arg">factor</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR._add_factor_to_dict">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Add a factor to the _factors dictionary</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hyperedge</code></strong> (Frozenset) - The hyperedge for the factor</li>
+        <li><strong class="pname"><code>factor</code></strong> (<a href="gPy.Parameters.Factor-class.html" 
+          class="link">Factor</a>) - The factor to be added</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#_add_factor_to_dict" onclick="show_private();">_AbsM._add_factor_to_dict</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_put_factor_to_dict"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_put_factor_to_dict</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>,
+        <span class="sig-arg">factor</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR._add_factor_to_dict">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Add a factor to the _factors dictionary</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hyperedge</code></strong> (Frozenset) - The hyperedge for the factor</li>
+        <li><strong class="pname"><code>factor</code></strong> (<a href="gPy.Parameters.Factor-class.html" 
+          class="link">Factor</a>) - The factor to be added</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#_put_factor_to_dict" onclick="show_private();">_AbsM._put_factor_to_dict</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="copy"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">copy_domain</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.copy">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a deep copy of a hierarchical model</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>copy_domain</code></strong> (Boolean) - If true <code>self</code>'s domain is copied, otherwise the copy 
+          shares <code>self</code>'s domain</li>
+    </ul></dd>
+    <dt>Returns: Same type as <code>self</code></dt>
+        <dd>A copy of <code>self</code></dd>
+    <dt>Overrides:
+        <a href="gPy.Variables.Domain-class.html#copy">Variables.Domain.copy</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="factor"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">factor</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.factor">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the factor produced by multiplying all factors with variables 
+  <code>hyperedge</code></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hyperedge</code></strong> - Set of variables</li>
+    </ul></dd>
+    <dt>Returns: <a href="gPy.Parameters.Factor-class.html" 
+      class="link">Parameters.Factor</a> object</dt>
+        <dd>Product of all factors with variables <code>hyperedge</code></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - if no factor has <code>hyperedge</code> as variables.</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#factor">_AbsM.factor</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="factors"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">factors</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.factors">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a list of the factors in the model</p>
+  <dl class="fields">
+    <dt>Returns: List</dt>
+        <dd>A list of the factors in the model</dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#factors">_AbsM.factors</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="factors_containing_variable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">factors_containing_variable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variable</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.factors_containing_variable">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a list of factors containing <code>variable</code></p>
+  <p>If non-simple, then a list of lists of factors is returned</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>variable</code></strong> - A variable</li>
+    </ul></dd>
+    <dt>Returns: List</dt>
+        <dd>A list of factors containing <code>variable</code></dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#factors_containing_variable">_AbsM.factors_containing_variable</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="is_simple"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">is_simple</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.is_simple">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Whether the model is simple</p>
+  <dl class="fields">
+    <dt>Returns: Boolean</dt>
+        <dd>Whether the model is simple</dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#is_simple">_AbsM.is_simple</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="items"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">items</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.items">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return sequence of <code>factor.variables(),factor</code> pairs for 
+  each factor in the model.</p>
+  <dl class="fields">
+    <dt>Returns: List</dt>
+        <dd>Sequence of <code>factor.variables(),factor</code> pairs for each
+          factor in the model</dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#items">_AbsM.items</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="simplify"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">simplify</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.simplify">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Simplify the model</p>
+  <p>so that there are no factors with the same variable sets</p>
+  <dl class="fields">
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#simplify">_AbsM.simplify</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="some_factor"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">some_factor</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">hyperedge</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#SFR.some_factor">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an arbitrary factor with variables <code>hyperedge</code></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>hyperedge</code></strong> - Variable set</li>
+    </ul></dd>
+    <dt>Returns: <a href="gPy.Parameters.Factor-class.html" 
+      class="link">Parameters.Factor</a> object</dt>
+        <dd>Factor</dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If no factor with <code>hyperedge</code> as varaibles exists</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Models._AbsM-class.html#some_factor">_AbsM.some_factor</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="_hypergraph"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">_hypergraph</h3>
+  The hypergraph associated with the model. There is exactly one hyperedge 
+  for each factor. The hyperedge for a given factor is just the set of that
+  factor's variables (implemented as a frozenset). If the hypergraph is 
+  non-simple, then hyperedges can be repeated.
+  <dl class="fields">
+    <dt>Type:</dt>
+      <dd><a href="gPy.Hypergraphs.Hypergraph-class.html" 
+      class="link">Hypergraph</a> object</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Sep 19 13:59:01 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+L_READ.ME
+ASCII-file accompanying the MATLAB M-files for the LAMBDA-method
+for GPS double difference ambiguity resolution.
+
+Development of the LAMBDA method
+--------------------------------
+The LAMBDA method was introduced at the IAG General Meeting in 1993 [1]
+and has from then on been further developed and implemented [2]
+at the Delft Geodetic Computing Centre at the Delft University of 
+Technology, the Netherlands.
+
+[1] Teunissen P.J.G. (1993). Least-squares estimation of the integer
+GPS ambiguities. Invited lecture. Section IV Theory and Methodology.
+General Meeting of the International Association of Geodesy. Beijing,
+China. August 1993. Also available in: publications of the Delft Geodetic
+Computing Centre, LGR-series no. 6, 16 pp.
+
+[2] Jonge P.J. de and C.C.J.M. Tiberius (1996). The LAMBDA method for
+integer ambiguity estimation: implementation aspects. Publication of the
+Delft Geodetic Computing Centre, LGR-series no. 12, 49 pp.
+
+For a brief description of the method, for up-to-date information on
+the implementation and a bibliography, refer to the homepage of the LGR
+on Internet:  http::/www.geo.tudelft.nl/mgp/
+The information can be found under 'Precise GPS positioning' and 
+reference [2] is available as PostScript file.
+
+Purpose of the method
+---------------------
+The LAMBDA method solves the integer minimization problem:
+min_a ||\hat{a} - a||_{Q_{\hat{a}}^{-1}}^2  with a in Z^n.
+Based on the real valued least-squares estimate \hat{a} for the vector of
+(integer) parameters, the minimization is solved by a discrete search 
+over an ellipsoidal region (in the R^n space), defined by the covariance
+matrix. The gridpoint that has least distance to the real estimate
+(in the metric of the covariance matrix) represents the INTEGER
+LEAST SQUARES ESTIMATE \check{a}.
+
+The acronym stands for Least squares AMBiguity Decorrelation Adjustment.
+The method is used for estimating the integer GPS double difference
+ambiguities.
+
+The LAMBDA method in MATLAB
+---------------------------
+The LAMBDA method envisages an efficient solving of the minimization
+problem, by first decorrelating the ambiguities, and a minimum storage,
+by employing a so-called depth-first search.
+
+The current implementation can be optimized, but for explanatory reasons
+it was decided to stay close to the existing description.
+
+..................
+
+Brief outline of the method
+---------------------------
+The function lambda should be provided with \hat{a} and Q_{\hat{a}},
+respectively the vector with estimates for the GPS double difference
+ambiguities from the float solution and the corresponding variance 
+covariance matrix. The output is \check{a}, the integer least squares 
+estimate for the vector of ambiguities.
+
+Prominent feature of the method is that the ambiguities are decorrelated
+prior to the search over the ellipsoidal region. The decorrelation
+is materialized in the Z-transformation-matrix and it maps the vector
+containing the n original integer ambiguities a to a vector of new integer
+ambiguities z.
+
+The procedure to compute the integer estimate reads:
+- triangular decomposition of the variance covariance matrix
+- construct and apply (implicitly) the decorrelating Z-transformation
+- invert the (updated) triangular decomposition
+- determine an appropriate size for the search ellipsoid
+- find the best candidate (gridpoint) inside the ambiguity search
+  ellipsoid
+- back transformation, to get the integer estimate for the vector of 
+  original double difference ambiguities
+
+
+December 6, 1996
+

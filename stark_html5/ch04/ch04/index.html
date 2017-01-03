@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <title>Kilo</title>
+        <link type="text/css" rel="stylesheet" media="screen" href="jqtouch/jqtouch.css">
+        <link type="text/css" rel="stylesheet" media="screen" href="themes/jqt/theme.css">
+        <script type="text/javascript" src="jqtouch/jquery.js"></script>
+        <script type="text/javascript" src="jqtouch/jqtouch.js"></script>
+        <script type="text/javascript">
+            var jQT = $.jQTouch({
+                icon: 'kilo.png',
+                statusBar: 'black'
+            });
+        </script>
+    </head>
+    <body>
+        <div id="home">
+            <div class="toolbar">
+                <h1>Kilo</h1>
+                <a class="button flip" href="#settings">Settings</a>
+            </div>
+            <ul class="edgetoedge">
+                <li class="arrow"><a href="#dates">Dates</a></li>
+                <li class="arrow"><a href="#about">About</a></li>
+            </ul>
+        </div>
+        <div id="about">
+            <div class="toolbar">
+                <h1>About</h1>
+                <a class="button back" href="#">Back</a>
+            </div>
+            <div>
+                <p>Kilo gives you easy access to your food diary.</p>
+            </div>
+        </div>
+        <div id="dates">
+            <div class="toolbar">
+                <h1>Dates</h1>
+                <a class="button back" href="#">Back</a>
+            </div>
+            <ul class="edgetoedge">
+                <li class="arrow"><a id="0" href="#date">Today</a></li>
+                <li class="arrow"><a id="1" href="#date">Yesterday</a></li>
+                <li class="arrow"><a id="2" href="#date">2 Days Ago</a></li>
+                <li class="arrow"><a id="3" href="#date">3 Days Ago</a></li>
+                <li class="arrow"><a id="4" href="#date">4 Days Ago</a></li>
+                <li class="arrow"><a id="5" href="#date">5 Days Ago</a></li>
+            </ul>
+        </div>
+        <div id="date">
+            <div class="toolbar">
+                <h1>Date</h1>
+                <a class="button back" href="#">Back</a>
+                <a class="button slideup" href="#createEntry">+</a>
+            </div>
+            <ul class="edgetoedge">
+                <li id="entryTemplate" class="entry" style="display:none">
+                    <span class="label">Label</span>
+                    <span class="calories">000</span>
+                    <span class="delete">Delete</span>
+                </li>
+            </ul>
+        </div>
+        <div id="createEntry">
+            <div class="toolbar">
+                <h1>New Entry</h1>
+                <a class="button cancel" href="#">Cancel</a>
+            </div>
+            <form method="post">
+                <ul class="rounded">
+                    <li><input type="text" placeholder="Food" name="food" id="food" autocapitalize="off" autocorrect="off" autocomplete="off" /></li>
+                    <li><input type="text" placeholder="Calories" name="calories" id="calories" autocapitalize="off" autocorrect="off" autocomplete="off" /></li>
+                    <li><input type="submit" class="submit" name="action" value="Save Entry" /></li>
+                </ul>
+            </form>
+        </div>
+        <div id="settings">
+            <div class="toolbar">
+                <h1>Settings</h1>
+                <a class="button cancel" href="#">Cancel</a>
+            </div>
+            <form method="post">
+                <ul class="rounded">
+                    <li><input placeholder="Age" type="text" name="age" id="age" /></li>
+                    <li><input placeholder="Weight" type="text" name="weight" id="weight" /></li>
+                    <li><input placeholder="Budget" type="text" name="budget" id="budget" /></li>
+                    <li><input type="submit" class="submit" name="action" value="Save Changes" /></li>
+                </ul>
+            </form>
+        </div>
+    </body>
+</html>

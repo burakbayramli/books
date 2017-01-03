@@ -1,0 +1,336 @@
+\documentclass[landscape]{slides}
+
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-10}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\jt}{\ensuremath{{\cal T}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Probability propagation in join forests}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/16 10:37:10 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+    \begin{itemize}
+    \item Probability propagation in join forests
+    \item Constructing decomposable hypergraphs from non-decomposable ones
+    \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{What's wrong with variable elimination}
+  
+  \begin{itemize}
+  \item Typically, we want marginal distributions for \emph{all}
+    uninstantiated variables.
+  \item We could run variable elimination from scratch for each of them.
+  \item But, whatever the elimination ordering, we would end up
+    repeating a lot of computational work.
+  \item There has to be a better way \dots
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Running variable elimination in a join forest}
+
+  \begin{itemize}
+  \item Recall the cluster tree representation of the execution of the
+    variable elimination algorithm. Cue \verb+cluster_tree+ from \texttt{gPy.Examples}
+  \item A join forest is essentially a cluster tree with redundancy
+    removed, so, unsurprisingly, we can run variable elimination `in a
+    join forest'.
+  \item But what does that mean precisely?
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Graham's algorithm}
+  
+  \begin{itemize}
+  \item Recall Graham's algorithm: it is `structural' variable
+    elimination and is used to build a join tree.
+  \item Consider running variable elimination with an elimination
+    ordering which can be used to run Graham's algorithm (ie is a zero
+    fill-in on the associated graph).
+  \item Assume further that the ordering is such that, when we
+    eliminate an `isolated' variable (ie it's in only one clique) we
+    also eliminate all other isolated variables in that clique, if
+    any.
+  \item It's easy to see that this still gives us a zero fill-in.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Initialisation: situating factors}
+  
+  \begin{itemize}
+  \item Since our distribution is decomposable, there is a one-one
+    mapping between the initial factors and the nodes (ie cliques) in
+    the join forest.
+  \item It is useful to think of each factor as being located at its
+    corresponding clique.
+  \item gPy specifics: all factored distributions have a dictionary
+    \verb+_factors+ mapping hyperedges to factors. If the distribution
+    is decomposable these hyperedges are also identified with the join
+    forest nodes.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Absorbing messages}
+  
+  \begin{itemize}
+  \item Once all the isolated vertices in a clique have been summed
+    out a new factor is created (unless the clique contained only
+    isolated vertices).
+  \item Call such factors \emph{messages}.
+  \item Rather than adding messages as a new factor in the factored
+    distribution, we will immediately multiply them into an existing
+    factor.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Absorbing messages (ctd)}
+
+  \begin{itemize}
+  \item Decomposability guarantees that there is always a `receiving'
+    factor which includes all the variables of the message.
+  \item This corresponds to the `deleting a redundant hyperedge' step
+    of Graham's algorithm.
+  \item Since the join forest can be built from running Graham's
+    algorithm, the `sending' and `receiving' cliques will be directly
+    connected in the join forest.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Retaining the join forest}
+  
+  \begin{itemize}
+  \item Rather than actually delete a factor once it has produced 
+    a message, we can just treat it `as if it were deleted'.
+  \item So to run variable elimination in a join \emph{tree} each
+    clique except the last `sends a message' to its neighbour.
+  \item The last clique is the `root' clique: once it has collected
+    all its messages it contains the marginal distribution for the
+    variables it contains.
+  \item (The generalisation to join \emph{forests} is not very
+    interesting.)
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Towards probability propagation}
+  
+  \begin{itemize}
+  \item Suppose we have run variable elimination in a join tree as
+    just described.
+  \item Consider a clique $C_2$ neighbouring the root clique $C_1$. $C_2$
+    has not received a message from the root $C_1$, but has received
+    all the other messages it would have received had it (rather than
+    $C_1$) been the root.
+  \item If $C_1$ \emph{were} to send it a message now it would be the
+    wrong message since $C_1$ `includes' (by way of multiplication)
+    the message sent to it from $C_2$, which it would not have
+    received were $C_2$ the root.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Storing messages}
+  
+  \begin{itemize}
+  \item If we \emph{store} the message $m_{C_{2} \rightarrow C_{1}}$
+    that $C_2$ sends to $C_1$, then $C_1$ can send the right message
+    back to $C_2$ even after receiving $m_{C_{2} \rightarrow C_{1}}$
+  \item It just \emph{divides} the `normal' message (produced by
+    marginalisation) by $m_{C_{2} \rightarrow C_{1}}$ thus cancelling
+    out the effect of previously receiving it.
+  \item Then $C_2$ will end up with exactly the same factor it would
+    have had had it been the original root.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Probability propagation}
+
+  \begin{itemize}
+  \item This argument can then be extended to apply to \emph{all}
+    cliques in the join forest
+  \item Storing messages is the key to the \emph{probability
+      propagation} algorithm in a join forest.
+  \item It's best to imagine the messages being stored `in' the lines
+    connecting neighbouring cliques in the join forest.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Introducing separators}
+  
+  \begin{itemize}
+  \item Having (hopefully) convinced you that join forests are the
+    right structure for `parallel' variable elimination, let's
+    introduce a more elegant characterisation of what's going on.
+  \item A \emph{separator} between two neighbouring cliques in a join
+    tree is just the intersection of the variables in the 2 cliques.
+  \item The variables of a message constitute a separator.
+  \item We can associate factors with separators, just as we associate
+    factors with the cliques
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A new factorisation}
+  
+Let $p$ be a decomposable distribution, so
+\[
+p = \prod_{C \in \cal C} f_{C}
+\]
+where the $\cal C$ are cliques, the vertices of a join forest.
+
+Let $\cal S$ be the separators of a join forest, and set $1_{S}$ to be
+a table of ones for each $S \in \cal S$. We can then write:
+\[
+p = \frac{\prod_{C \in \cal C} f_{C}}
+{\prod_{S \in \cal S} 1_{S}}
+\]
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sending messages}
+  
+  \begin{itemize}
+  \item Suppose $C_1$ sends a message $m_{C_{1} \rightarrow C_{2}}$ to
+    $C_2$ and their separator is $S$.
+  \item To effect the probability propagation algorithm, the factor
+    for $C_2$ gets multiplied by $m_{C_{1} \rightarrow C_{2}} /
+    f_{S}$ \dots
+  \item \dots and so does the factor for $S$.
+  \item So \emph{sending a message does not alter the distribution}.
+  \item We have a loop invariant.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{It's really very simple}
+  
+\begin{verbatim}
+def send_message(self,frm,to):
+  """Send a message from a clique to a neighbouring clique"""
+  message = self._factors[frm].sumout(frm - to)
+  edge = frozenset([frm,to])
+  self._factors[to] *= (message/self._separators[edge])
+  self._separators[edge] = message   # simple optimisation
+\end{verbatim}
+
+\verb+self._separators[edge]+ is a table of ones initially.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Message scheduling}
+  
+  \begin{itemize}
+  \item Once each clique has received all its messages it will contain
+    the marginal distribution for its variables.
+  \item We just need to ensure that all messages in both directions
+    are passed.
+  \item One option is (1) to choose an arbitrary root, (2) send all
+    messages towards this root (the \emph{upward pass}) and then (3)
+    send all messages in the direction away from the root (the
+    \emph{downward pass}).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Perfect sequences}
+  
+  \begin{itemize}
+  \item A \emph{perfect sequence} is an ordering of the cliques in a
+    join tree where the first clique is a root, and such that if
+    $C_{i}$ is nearer this root than $C_{j}$ then $C_{i} < C_{j}$.
+  \item Note: This is not the actual definition. Can be extended to
+    join forests.
+  \item We can use a perfect sequence to schedule messages.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Join forest calibration}
+  
+\begin{verbatim}
+def calibrate(self):
+  """Alter a JFM so that the factors associated with both cliques and
+  separators are the appropriate marginal distributions
+  """
+  perfect_sequence = self._hypergraph.perfect_sequence()
+  self.send_messages(perfect_sequence[:])
+  perfect_sequence.reverse()
+  self.send_messages(perfect_sequence)
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Why `calibration'?}
+  
+  The hypergraph $\{ \{E,L,T\}, \{A, T\}, \{E,X\}, \{B,E,L\},
+  \{B,L,S\}, \{B,D,E\} \}$ is decomposable (honest!)
+
+Before calibration:
+\[
+P(A,B,D,E,L,S,T,X) = \frac{
+  f_{ELT} \times f_{AT} \times f_{EX} \times f_{BEL} \times f_{BLS}
+  \times f_{BDE}
+}
+{
+  1_{T}\times 1_{E}\times 1_{EL}\times 1_{BL}\times 1_{BE}
+}
+\]
+After calibration:
+\begin{eqnarray*}
+\lefteqn{P(A,B,D,E,L,S,T,X)} && \\
+& = & \frac{
+  P(E,L,T) P(A,T) P(E,X) P(B,E,L) P(B,L,S) P(B,D,E)
+}
+{
+  P(T)  P(E) P(E,L) P(B,L) P(B,E)
+}
+\end{eqnarray*}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Help! my distribution does not have a decomposable
+  hypergraph}
+  
+  \begin{itemize}
+  \item Then: make it so!
+  \item Find a (hopefully) small fill-in for the interaction graph.
+  \item Or do something equivalent directly on the hypergraph.
+  \item Map each original factor to a clique which includes its
+    variables (alway possible).
+  \item The factor for each clique in the new hypergraph is a product
+    (possibly empty) of those factors mapped to it.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

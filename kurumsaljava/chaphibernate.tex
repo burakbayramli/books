@@ -1,0 +1,1709 @@
+\movetooddpage
+
+\chapter{Hibernate} \label{hibernate}
+
+\thischapterhas{
+\item Hibernate projesini kuruluþu, dizin yapýsý, Ant build.xml
+\item Öðe ve kolon eþlemesi
+\item Nesneler arasý iliþkiler
+\item Sorgulama
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\versal{T}\textsc{artýþmasýz,} veri tabanýna eriþim, yâni bir kaydý eklemek,
+silmek, güncellemek gibi iþlemler, kurumsal uygulamalarýn en önemli bölümünü
+teþkil eder. Yaygýn bilinen bir istatistiðe göre, bir kurumsal uygulamanýn
+veriye eriþiminde harcanan zaman, uygulamanýn tamamýnda harcanan zamana oranla
+\%80 kadar bir zaman teþkil etmektedir. Bu oran, çok büyük bir rakamdýr ve
+kurumsal uygulamalarda veriye eriþimin önemine iþaret eder.
+
+Java dünyasýnda veriye eriþim için en temel yöntem, JDBC (Java Database
+Connectivity) adý verilen bir kütüphane üzerindendir. JDBC, Java ile veri
+tabanlarýna eriþim için piyasaya çýkan ilk çözümdür. Çok temel olmasý sebebiyle,
+JDBC'nin programcýya yapmasýný izin verdiði iþlemler veri tabanýna yakýn ve SQL
+ile direk alâkalýdýr: Sorgu iþletmek, sorgulardan gelen sonuçlarý
+listeleyebilmek, depolanmýþ iþlemleri (stored procedure) çalýþtýrabilmek
+gibi. Veriye eriþim teknolojileri klasmanýnda JDBC, DB ve uygulama arasýnda {\em
+çok ince bir tabakadýr} denebilir. Veri, uygulamaya ``tablolar kümesi'' olarak
+gözükür ve bu tablolar kümesi üzerindeki iþlemler ile veri eklenir, güncellenir
+ve ya silinir.
+
+\section{Faydalar}
+
+Kýyasla nesnesel programcýlar, veriyi nesneler topluluðu olarak görmeye
+alýþkýndýrlar. Nesnesel tasarýmý takip eden bir programcý için veri, bir nesne
+içinde tutulabilen, iþlenebilen, deðiþtirilebilen ve Java temel tipleri
+üzerinden geri verilebilen bir kavram olmalýdýr. Nesnesel dillerin izole etme
+(encapsulation) gibi özellikleri, bu tür kodlama stilini ayrýca özendirmekte,
+idare edilir hâle getirmektedir.
+
+Kod temizliði açýsýndan da nesne odaklý veri idaresinin daha makbul olduðu
+açýktýr. Uygulamamýzýn hem veri hem görsel tabakasýnda veriyi alýþýk olduðumuz
+kodlama ve taþýyýcý birimler üzerinden görmek isteriz. Bu birimler, içinde get
+ve set içeren basit Java nesneleri olacaktýr. Bu basit Java nesne türüne yeni
+literatürde POJO adý da verilmektedir. POJO kelimesinin açýlýmý \textbf{P}lain
+\textbf{O}ld \textbf{J}ava \textbf{O}bject (Basit Java Nesneleri) olarak
+bilinir. Örnek bir POJO aþaðýda gösteriliyor.
+
+\begin{lstlisting}[language=Java,frame=none]
+public class Car {
+
+    public Car() { }
+
+    String licensePlate;
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String newLicensePlate) {
+        this.licensePlate = newLicensePlate;
+    }
+
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String newDescription) {
+        this.description = newDescription;
+    }
+}
+\end{lstlisting}
+
+\PVerb!Car! nesnesi bir arabayý temsil etmektedir, ve veri olarak içinde
+\PVerb!licensePlate! (plaka) ve \PVerb!description! (târif) öðelerini
+taþýmaktadýr. Araba nesnesi, pür bir Java nesnesi olduðu için, her türlü Java
+iþlemine tâbi olabilir; Bir listeye eklenebilir, öðeleri dinamik olarak
+sorgulanabilir, hatta baþka bir JVM'e bile gönderilebilir. Yapýlacak iþlemler
+Java programýný yazan programcýnýn hayali ile sýnýrlýdýr.
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{1.2}{
+  \includegraphics{./images/mapping_er_obj_garage_car.eps}
+  }
+}
+\caption{Ýki Nesne ve Tablo Ýçeren bir Eþleme}
+\end{figure}
+
+Hibernate gibi teknolojilerin amacý, kurumsal programcýlarýn veriye eriþim
+iþlemlerini tamamen POJO'lar üzerinden yapmalarýna imkan vermeleridir. Bir
+POJO'nun veri tabanýna nasýl eþlenmesi gerektiðini eþleme (mapping) dosyasý
+üzerinden anlayabilen Hibernate, bu noktadan sonra tüm gerekli SQL komutlarýný
+dinamik olarak arka planda kendisi üretebilecektir. Yâni bir tablo üzerinde JDBC
+ile yaptýðýmýz \PVerb!SELECT, UPDATE, INSERT, DELETE! iþlemlerinin tümü, tek bir
+eþleme dosyasý ile Hibernate tarafýndan otomatik olarak yapýlacaktýr. Aþaðýda
+araba nesnemizi veri tabaný tablosuna eþleyen bir Hibernate dosyasýný görüyoruz.
+\begin{lstlisting}[language=Java,frame=none]
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <class name="Car" table="car">
+    <id name="licensePlate" column="license_plate">
+      <generator class="assigned"/>
+    </id>
+    <property name="description" column="description"/>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+Eþleme dosyasýndaki \PVerb!Car! nesnesi, veri tabanýndaki \PVerb!car! tablosuna
+eþlenmektedir, ve tablonun her kolonunun hangi nesne öðesine eþlenmesi gerektiði
+teker teker belirtilmiþtir. Bundan sonra bir \PVerb!Car!'ý veri tabanýna
+eklemek, þu Hibernate komutlarýndan ibarettir.
+
+\begin{lstlisting}[language=Java, frame=none]
+Car car = new Car();
+car.setLicensePlate(``52 THU 34'');
+car.setDescription(``araba taným 1'')
+Session s = HibernateSession.openSession();
+s.save(car);
+\end{lstlisting}
+
+Silmek için \PVerb!s.delete(car)!, güncellemek (ya da eklemek) için
+\PVerb!s.saveOrUpdate(car)! kullanabiliriz. 
+
+Gördüðümüz gibi, her tablo için dört SQL komutu yazmak yerine tek bir eþleme
+dosyasý üzerinden Hibernate veri eriþiminin faydalarý açýktýr. Kural \#1
+baðlamýnda Hibernate veri eriþimi daha kýsa bir dille gerçekleþtirilmiþtir, ve
+gene Kural \#1 baðlamýnda bir Hibernate eþleme dosyasý daha rahat bakýlabilir
+bir koddur. Eðer, ileri bir zamanda \PVerb!car! tablo isminin deðiþmesi gerekse,
+SQL þartlarýnda tüm \PVerb!SELECT, UPDATE, INSERT, DELETE! komutlarýndaki tablo
+isminin deðiþtirilmesi gerekecekti. Ya da, eðer bir kolon ismi deðiþse, o kolonu
+kullanan tüm SQL'lerin deðiþmesi gerekecekti; Fakat Hibernate kullanýyorsak,
+deðiþen kolonun sadece {\em nesne eþlemesini} deðiþtirerek, Hibernate üzerinden
+veriye eriþen iþlem kodlarda tek bir satýr deðiþtirmemiz gerekmez.
+
+Bu bölümün geri kalanýnda, kuruluþ ve ana Hibernate kavramlarýný
+iþleyeceðiz. Eðer bu kavramlarý atlayýp, direk Hibernate'in nasýl kullanýldýðýný
+öðrenmek istiyorsanýz, tavsiyemiz \ref{hibernate:install:session} ve
+\ref{hibernate:transaction} bölümlerine göz gezdirip, \ref{hibernate:crud}
+bölümüne atlamanýzdýr.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kurmak}
+
+Hibernate üzerinden eriþmek istediðimiz her nesne (POJO) için bir eþleme dosyasý
+yazýlmalýdýr. Fakat proje bazýnda, sadece bir kez yapýlmasý gereken ayarlar
+þunlardýr. Ýlk önce, \PVerb!hibernate.cfg.xml!
+gerekecek. \PVerb!hibernate.cfg.xml!  dosyasý, Hibernate'e
+
+\begin{itemize}
+\item Veri tabanýna nasýl eriþeceðini
+\item Hangi önbellek paketini kullanacaðýný
+\item Önbellekleme yönteminin ne olacaðýný
+\item Hangi veri tabaný baðlantý havuzu (connection pool) kullanacaðýný
+\end{itemize}
+söyler. Ayar dosyasýnýn \PVerb!CLASSPATH!'teki bir dizin içinde, ya da
+\PVerb!CLASSPATH!'teki bir \PVerb!jar!ýn en üst seviyesinde olmasý
+gereklidir. Buna uygun \PVerb!jar! paketlemesi yapan örnek bir Ant
+\PVerb!build.xml! script'ini, \PVerb!SimpleHibernate! projesinde bulabilirsiniz.
+
+Altta \PVerb!Car! için hazýrlanmýþ örnek bir \PVerb!hibernate.cfg.xml! dosyasýný
+gösteriyoruz.
+
+\begin{lstlisting}[label=hibernate:cfg,numbers=left,numberstyle=\tiny,language=XML,caption=hibernate.cfg.xml]
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+  <session-factory name="foo">
+
+    <property name="hibernate.connection.driver_class">
+      org.gjt.mm.mysql.Driver
+    </property>
+    <property name="hibernate.connection.url">
+      jdbc:mysql://localhost:3306/cars
+    </property>
+    <property name="hibernate.connection.username">user</property>
+    <property name="hibernate.connection.password">pass</property>
+    <property name="hibernate.connection.provider_class">
+      org.hibernate.connection.C3P0ConnectionProvider
+    </property>
+    <property name="hibernate.c3p0.min_size">
+      5
+    </property>
+    <property name="hibernate.c3p0.max_size">
+      10
+    </property>
+    <property name="hibernate.c3p0.idle_test_period">
+      60
+    </property>
+    <property name="dialect">org.hibernate.dialect.MySQLDialect
+    </property>
+    <property name="hibernate.cache.provider_class">
+      org.hibernate.cache.OSCacheProvider
+    </property>
+
+    <mapping resource="org/mycompany/kitapdemo/pojo/Car.hbm.xml"/>
+    <class-cache
+        class="org.mycompany.kitapdemo.pojo.Car"
+        region="Simple"
+        usage="read-write"/>
+
+  </session-factory>
+
+</hibernate-configuration>
+\end{lstlisting}
+Satýr satýr açýklama:
+
+\begin{itemize}
+\item \textbf{10, 13}: 10. satýrda verilen deðer, Hibernate tarafýndan hangi
+  JDBC sürücüsünün kullanýldýðýný belirtiyor. Örnekte kullanýlan deðer,
+  \PVerb!org.gjt.mm.mysql.Driver! adlý MySQL sürücüsüdür. Sürücü parametresi,
+  direk JDBC'ye geçilen parametrelerden biridir (evet Hibernate kendi iþleyiþi
+  için, arka planda JDBC kullanýyor). MySQL sürücüsünün veri tabanýna eriþimi
+  için gerekli bilgiler 13. satýrda verilmiþ; Meselâ hangi makinaki hangi veri
+  tabaný bilgisi.
+\item \textbf{15, 16}: Tabana baðlanmak için gerekli kullanýcý ismi ve
+  þifre.
+\item \textbf{18}: Veri tabaný baðlantý havuzu (connection pool) paketi. Örnekte
+  seçilen paket, C3P0 adlý pakettir. Havuzlar hakkýnda detaylarý
+  \ref{hibernate:install:connpool} bölümünde bulabilirsiniz.
+\item \textbf{20 - 28}: Baðlantý havuzu için gerekli parametreler (havuzun
+  olabilecek en az, ve en çok büyüklüðü).
+\item \textbf{29 - 32}: Hangi veri tabaný için, nasýl SQL üretilmesi gerektiði de
+  burada belirtiliyor. Sürücü seçmek (MySQL, Oracle, vs), Hibernate'in nasýl SQL
+  üretmesini belirlemek için yeterli deðildir. \PVerb!dialect! parametresi ile,
+  üretilen SQL'in hangi taban için olduðu kesin olarak Hibernate'e bildirmelidir.
+\item \textbf{34}: Uygulamamýzýn kullanacaðý POJO'larýn listesi \PVerb!mapping
+  resource! ile Hibernate'e bildiriyoruz. Örneðimizde bir tane POJO
+  tanýmlýyoruz: \PVerb!Car!. Hibernate, \PVerb!mapping resource!'da belirtilen
+  \PVerb!hbm.xml! dosyasýný \PVerb!CLASSPATH!'te bulacak, eþleme tanýmlarýný
+  iþleyecek ve POJO üzerinden SQL üretmeye hazýr hâle getirecektir.
+\item \textbf{35 - 38}: Önbellek ayarlarý. (Bu konunun detaylarý
+  \ref{hibernate:install:cache} bölümünde gösterilecektir).
+\end{itemize}
+
+\subsection{Baðlantý Havuzlarý (Connection Pools)} \label{hibernate:install:connpool}
+
+Bir bilgi iþlem uygulamasýnýn yapabileceði en pahalý iþlemlerden biri veri
+tabanýndan bir baðlantý (connection) almaktýr. Özellikle uygulamanýz Oracle gibi
+ciddi bir taban üzerinde çalýþýyor ve bu tabanýn kontrolü güvenliðe çok önem
+veren bir admin'in de elinde ise, baðlantý alma sýrasýnda birçok iþlemden
+(hafýza hazýrlama, vs. gibi) geçileceði için, baðlantý alma iþlemi kurumsal
+uygulamalarda en pahalý ve yavaþ iþlemlerden biri hâline gelmektedir.
+
+Bu yüzden, sistemin cevaplama zamanýný (response time) hýzlandýrmayý amaçlayan
+kurumsal programcýlar her iþlem (transaction) baþýnda sürekli yeni bir baðlantý
+açýp, iþlem sonunda bu baðlantýyý kapatan kodlar yazmaktan kaçýnýrlar. Bunun
+yerine, baðlantýlar uygulama baþýnda bir kez açýlýr ve bir tür {\em baðlantý
+önbelleðinde} tutularak uygulamanýn iþleyiþi boyunca açýk tutulurlar. Baðlantý
+önbellekleri, bir nevi havuzdur; Baðlantýlar açýlýp kapanmazlar, sadece bu ortak
+havuzdan alýnýp geri verilirler. Bu havuzun belli sayýda baðlantý içeren bir
+havuz olmasý özellikle önemlidir, çünkü her taban, ayný anda, sadece belli
+sayýda baðlantýya servis verebilir, ve optimal baðlantý sayýsýnýn üstünde servis
+vermenin veri tabanýnýzýn performans açýsýndan kötü sonuçlarý olacaktýr.
+
+Piyasada Java/JDBC odaklý birçok havuz ürünü mevcuttur. DBCP, Proxool, C3P0 adlý
+açýk yazýlým projeleri bu ürünlerden sadece birkaçýdýr. Bahsedilen projelerin
+her biri, Hibernate tarafýndan kullanýlabilen
+(\PVerb!hibernate.connection.provider_class! parametresi ile) projelerdir.
+
+\subsection{Önbellek} \label{hibernate:install:cache}
+
+Bir bilgi iþlem uygulamasý, eðer bir veri birimini tabandan {\em yazdýðýndan}
+daha fazla {\em okuyorsa}, o veri birimi tabandan servislemek yerine hafýzadan
+servislemek daha hýzlý olacaktýr. Önbellekleme (caching) tekniðinin altýnda
+yatan fikir özet olarak budur. Bir bilgi iþlem uygulamasýnýn \%80 kadar
+zamanýnýn veri tabanýnda geçtiðini düþünürsek, disk'e ne kadar az gidersek veri
+eriþimini (ve bilahere uygulamanýn bütününü) o kadar hýzlandýrmýþ oluruz.
+
+Önbellek kullanýmý, tek kullanýcýlý ve çok kullanýcýlý ortamlarda büyük
+performans iyileþtirmeleri getirebilir. Tek kullanýcýlý ortamda, ayný veriye
+birkaç kez eriþen (ayný) kullanýcý, birinci kullanýmdan sonra ayný veriye tekrar
+eriþtiðinde o veriyi önbellekten çok hýzlý bir þekilde alabilmiþ olur. Çok
+kullanýcýlý ortamda (ayný JVM'in birçok eþzamanlý kullanýcýya hizmet verdiði
+þartlarda) önbellek kullanýmý daha da avantajlýdýr; Kullanýcý A'nýn önbelleðe
+getirmesini tetiklediði bir nesneyi, kullanýcý B olduðu gibi hafýzadan
+kullanabilecektir.
+
+Hibernate, kontrolü altýndaki tüm nesneleri programcýya hiçbir ek külfet
+getirmeden programcýnýn istediði herhangi bir önbellek paketi üzerinde tutmasýna
+izin vermektedir. Bu þimdiye kadar yalýn JDBC teknikleri ile elimizde olmayan
+müthiþ bir esnekliktir. Düþünün: Daha önce \PVerb!HashMap! ya da elle yazýlan
+bir yapý üzerinde olan önbellekleme, artýk, Hibernate'e verilen tek bir
+parametre sayesinde otomatik olarak yapýlýyor olacaktýr.
+
+Hibernate öncesi elimizle yapmamýz gereken külfetli iþlemler, pseudo kod olarak
+altta gösterilmiþtir:
+
+\begin{lstlisting}[language=Java, frame=none]
+def araba_yükle(licensePlate : String)
+  begin
+     Car tablosunda licensePlate kimlikli veriye eriþ.
+     Bu veri, hafýzadaki HashMap'te mevcut mu?
+     begin
+        Evet ise, hafýzadakini döndür.
+        Hayir ise,
+         Tabandan yükle
+         HashMap'e yaz
+        Geri döndür
+     end
+  end
+end
+
+def araba_sil(licensePlate : String)
+begin
+   Veri HashMap'te mevcut mu?
+   begin
+       Evet, hafizadakini sil, sonra tabandan sil
+       Hayir, tabandan sil
+   end
+end
+\end{lstlisting}
+
+Hibernate, kontrolü altýnda olan nesnelerin nasýl ve ne zaman önbellekleceðini
+önbellek paketlerine direk söyleyebilir, çünkü tabandan okuma, silme, yazma ve
+güncelleme iþlemlerinin tümü zaten Hibernate üzerinden yapýlan
+iþlemlerdir. Hibernate, bu noktalara çengellenmiþ olan önbellek kodlarý
+sayesinde bir önbellek paketini programcýya hiçbir ek külfet getirmeden idare
+edebilir. Yukarýda pseudo kod olarak gösterilen eylemlerin tamamý Hibernate için
+gereksiz hâle gelmiþtir (Kural \#2).
+
+Ayrýca Hibernate, tek JVM'de iþleyen türden önbellekleri kullanabildiði gibi,
+{\em birden fazla JVM} üzerinde çalýþan ve birbirini að üzerinden
+güncelleyebilen {\em daðýtýk önbellek} ürünlerini de kullanabilir. Daðýtýk
+önbellekler, að üzerinden birbirini senkronize edebilen ürünlerdir. Önbellek
+kullanýmý ve daðýtýk önbellek konularýný \ref{perf:opt:cache} bölümde daha
+detaylý olarak göreceðiz.
+
+\subsection{Örnek Proje Dizin Yapýsý}
+
+Bir Hibernate projesinde gereken minimal dosyalar ve dizin yapýsý altta
+belirtilmiþtir.
+
+\begin{lstlisting}[frame=none]
++- SimpleHibernate
+| +- build
+| +- lib
+| | +- activation.jar
+| | +- ant-antlr-1.6.2.jar
+| | +- antlr-2.7.4.jar
+| | +- c3p0-0.8.4.5.jar
+| | +- c3p0.license.txt
+| | +- cglib-full-2.0.2.jar
+| | +- commons-collections.jar
+| | .. ....
+| | +- jaxen-1.1-beta-4.jar
+| | +- junit-3.8.1.jar
+| | +- log4j-1.2.9.jar
+| | +- mysql-connector-java-3.0.16-ga-bin.jar
+| | +- oscache-2.1.jar
+| | +- xalan.jar
+| | +- xml-apis.jar
+| +- resources
+| | +- hibernate.cfg.xml
+| | +- log4j.properties
+| | +- oscache.properties
+| +- src
+| | +- java
+| | | +- org
+| | | | +- mycompany
+| | | | | +- kitapdemo
+| | | | | | +- dao
+| | | | | | | +- SimpleCarTest.java
+| | | | | | +- pojo
+| | | | | | | +- Car.hbm.xml
+| | | | | | | +- Car.java
+| | | | | | +- service
+| | | | | | | +- HibernateSession.java
+| | | | | | +- util
+| | | | | | | +- AllTest.java
+| | | | | | | +- ClassPathFile.java
+| | | | | | | +- TestUtil.java
+| | +- sql
+| | | +- sample_data.sql
+| | | +- tables_mysql.sql
+| +- build.properties
+| +- build.xml
+\end{lstlisting}
+Bu dizinler ve içerikleri, \PVerb!SimpleHibernate! projesinde
+bulunabilir. Þimdi, bu dizinde bulunan birimleri görelim.
+
+\subsection{Hibernate Session} \label{hibernate:install:session}
+
+Hibernate ile veriye eriþmek için, öncelikle bir \PVerb!org.hibernate.Session!
+yaratýp bu nesne üzerinde \PVerb!openSession! metotunu çaðýrmak ve bir Hibernate
+oturumu baþlatmak gerekir. Örnek kodlarda görülen \PVerb!HibernateSession!
+class'ý, içinde bir Hibernate \PVerb!SessionFactory! barýndýran yardýmcý bir
+nesnedir. Bu yardýmcý nesne örnek proje için yazýlmýþ ve hazýr olan bir koddur
+ve projenize olduðu gibi eklenebilir.
+
+Bir \PVerb!org.hibernate.Session! almak ve açmak (openSession) için
+\PVerb!HibernateSession! nesnesindeki \PVerb!static! çaðrýlarý
+kullanabilirsiniz. \PVerb!HibernateSession! class'ýnýn tüm metotlarý
+\PVerb!static! metotlardýr, bu yüzden \PVerb!HibernateSession!'ýn bir nevi
+Singleton nesnesi olduðu söylenebilir. Demek ki bir JVM içinde sadece bir aktif
+\PVerb!HibernateSession!  olabilir. \PVerb!HibernateSession!'daki static blok,
+\PVerb!HibernateSession! kullanýlýr kullanýlmaz hemen çaðrýlacaðý için
+\PVerb!hibernate.cfg.xml! dosyalarý okunmaya baþlar, ve referans edilen tüm
+\PVerb!hbm.xml! dosyalarý takip edilerek gereken eþlemeler hafýzaya alýnýr,
+iþlenir, kontrol edilir ve önbellekte tutulur.
+
+Static blok içinde yapýlan diðer önemli bir iþlem, baðlantý havuzu için `en az
+gereken baðlantý (minimum connection count)' sayýsý kadar baðlantýnýn hemen
+açýlmasýdýr. Baðlantý havuzlarýný anlattýðýmýz \ref{hibernate:install:connpool}
+bölümünde baðlantý açmanýn bir kurumsal uygulamada yapýlabilecek en yavaþ
+iþlemlerden biri olduðunu açýklamýþtýk. Bu sebeple, \PVerb!HibernateSession!'a
+eriþen {\em ilk kod parçasýnýn} kullanýcýya dönük bir kod parçasý olmamasý iyi
+olur. Niye? Çünkü, bir kullanýcýnýn istediði basit bir sayfa/ekran için, 100
+tane taban baðlantýsýnýn açýlmasýný beklediðini düþünün! Bu çok yavaþ bir sayfa
+yüklemesi olacaktýr! Tabii ki ayný sayfa ikinci kez istendiðinde, cevap çok
+çabuk dönecektir (gereken tüm baðlantýlar artýk açýlmýþtýr), fakat o ilk yavaþ
+sayfa yüklemesi ile kullanýcýnýn aðzýnda kötü bir tat býrakmamak gerekir. Bu
+nedenle \PVerb!HibernateSession!'a eriþen ilk kod parçasýnýn kullanýcýya dönük
+kodlardan ayrý, sadece {\em uygulama baþlarken} çaðrýlacak {\em ayrý} bir kod
+parçasýndan olmasýna özen gösterin.
+
+Uygulamanýn geri kalan kýsmýnda, \PVerb!HibernateSession! üzerinden aldýðýnýz
+\PVerb!Session! nesnesi ile istediðiniz veri tabaný iþlemini
+gerçekleþtirebilirsiniz. Tek nesne yükleme, yazma, silme, ve sorgulama
+metotlarýnýn hepsi \PVerb!Session! üzerinde bulunmaktadýr.
+
+Ýþimiz bittikten sonra ise, \PVerb!HibernateSession.closeSession! kullanarak
+\PVerb!Session!'ý kapatmamýz gerekir, çünkü JDBC taban baðlantýsýný muhafaza
+eden nesne \PVerb!Session! nesnesidir; \PVerb!close! çaðrýsý ile veri taban
+baðlantýsýnýn baðlantý havuzuna dönmesini tetiklemiþ oluruz. Eðer uygulama
+içinde hiç \PVerb!close! çaðrýsý yapmamýþ olsaydýk, uygulamamýz bir süre sonra
+havuzdaki tüm baðlantýlarý bitirecek ve uygulama iþleyiþine devam edemez hâle
+gelecektir.
+
+\subsection{Hibernate Transaction} \label{hibernate:transaction}
+
+Veri tabanýnda okuma, yazma, silme iþlemleri yapan bir kod parçasý, iþine
+muhakkak \PVerb!beginTransaction()! ile baþlamalý ve \PVerb!commitTransaction()!
+ile iþini bitmelidir. Özetle Hibernate ile her yaptýðýnýz her iþlemi alttaki kod
+bloðuyla sarmanýz yararlý olur.
+
+\begin{lstlisting}[language=Java,frame=none]
+try {
+    Session s = HibernateSession.openSession();
+    HibernateSession.beginTransaction();
+
+    // ...
+    // Hibernate iþlemleri
+    // ...
+
+    HibernateSession.commitTransaction();
+
+} finally {
+    HibernateSession.closeSession();
+}
+\end{lstlisting}
+Kapanýþ \PVerb!closeSession! iþleminin \PVerb!finally! içinde konmasý önemlidir,
+çünkü Hibernate operasyonunuz sýrasýnda exception atýlsa da, atýlmasa da
+\PVerb!closeSession! çaðrýsýnýn yapýlmasý böylece garanti olacaktýr.
+
+\PVerb!Transaction! alâkalý çaðrýlarýn \PVerb!HibernateSession! vasýtasý ile
+yapýldýðýna dikkat ediniz. Diðer bazý Hibernate örneklerinde bir
+\PVerb!Transaction! nesnesinin session'dan alýnýp, üzerinde direk olarak
+\PVerb!beginTransaction! ve \PVerb!commit! çaðrýlarýnýn yapýldýðýný
+görürüz. Biz, iki sebeple bunu yapmayarak, tüm \PVerb!Session! ve
+\PVerb!Transaction! alâkalý iþlemleri \PVerb!HibernateSession! üzerine aldýk, çünkü
+
+\begin{enumerate}
+  \item \PVerb!Session! ve \PVerb!Transaction! ile alakalý tüm iþlemlerin tek
+  bir yerde, tek bir class üzerinden olmasý (kod idaresi ve temizliði
+  açýsýndan).
+  \item \PVerb!Session! ve \PVerb!Transaction!'ýn sadece bir thread'e baðlý
+  olmasýný saðlamak
+\end{enumerate}
+
+\PVerb!Session! ve \PVerb!Transaction!'ý niye bir thread'e baðlamak istedik?
+Çünkü içinde Hibernate iþlemleri olan metotlarýn birbirini zincirleme çaðýrmasý
+gerektiðinde, her yeni çaðrýnýn yeni bir transaction ve session baþlatmasýný
+engellemek istiyoruz. Bunun sebebi, kurumsal uygulamalarýn \%99'unda bir metot
+diðer metotu çaðýrýnca, her iki metotun da ayný transaction altýnda olmasýnýn
+çok yaygýn olmasýdýr. Örnek olarak, meselâ bir bankada iki hesabý arasýnda para
+transferi yapan bir kullanýcýnýn \PVerb!transferMoney! adlý bir çaðrý yaptýðýný
+düþünün:
+
+\begin{lstlisting}[language=Java, frame=none]
+AccountService service = ...
+service.transferMoney(100, `22993002',`3399499'
+\end{lstlisting}
+Gereken class tanýmlarý þöyle olsun:
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AccountService {
+    public void transferMoney(double howMuch,
+                              String accountFrom,
+                              String accountTo) {
+       Account fromAccount = ...
+       Account toAccount = ...
+       fromAccount.subtract(howMuch);
+       toAccount.add(howMuch);
+    }
+}
+
+public class Account {
+  public void subtract(double howMuch) { .. }
+  public void add(double howmuch) { .. }
+}
+\end{lstlisting}
+Bu kod'da görüldüðü gibi, bir hesaptan para eksiltmek ve yeni hesaba para
+eklemek {\em ayný transaction altýnda} olmalýdýr. Aksi takdirde \PVerb!subtract!
+(eksiltme) iþleminden sonra servis makinasýnýn fiþi çekilmiþ olsa, ekleme
+yapýlmadan sistem çökmüþ olacaðý için para kaybolmuþ olurdu! Bu yüzden
+\PVerb!transferMoney! ile baþlayan metot zincirinin tamamý ayný transaction
+altýnda olmalýdýr. Böylece bu transaction altýndaki tüm iþlemlerin ya hepsi {\em
+baþarýsýz} olur, ya da hepsi ayný anda {\em baþarýlý} olur.
+
+Ýþte bu yüzden metot zinciri ile transaction sürekliliðini birbirine
+baðlamalýyýz. Bunu yapmanýn en basit yolu ise, o anda iþlemde olan thread ile
+(\PVerb!Thread.currentThread()!)  transaction'ý birbirine baðlamaktýr. Bunu
+\PVerb!HibernateSession! içinde \PVerb!ThreadLocal! kodlama kalýbýný kullanarak
+\cite[Sf. 301]{hibernatebook} yapabiliriz. Bu kalýp, o anki thread, Hibernate
+\PVerb!Session! ve \PVerb!Transaction!  arasýnda bir baðlantý
+kurmaktadýr. Böylece zincirleme birbirine çaðrý yapan metotlar ayný
+\PVerb!Thread! içinde olacaðý için, ayný \PVerb!Transaction! ve \PVerb!Session!
+kullanýlabilmiþ oluruz.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Kimlik Ýdaresi][KÝMLÝK ÝDARESÝ]{Kimlik Ýdaresi}
+
+Ýliþkisel veri tabanlarýnda bir satýrý tekil (unique) olarak belirleyebilmek
+için, anahtar görevini görecek ``bir ve ya daha fazla'' kolon tanýmlamasý
+gerekir. Bu kolon(lar)a, iliþkisel (relational) veri tabaný dünyasýnda asal
+anahtar (primary key) adý veriliyor. Tek bir satýrý bulmak için SQL ile sorgu
+yaparken \PVerb!WHERE! kýsmýnda kullandýðýmýz filtreleme kolonlarý, asal
+anahtar kolonlarýdýr.
+
+Hibernate, bir tablodaki tek bir satýrý tek bir nesneye eþlemek ister. Tablodaki
+her kolon da, bir POJO üzerindeki öðe (attribute) ile eþlenecektir. Bu eþleme,
+eþleme dosyasýnda \PVerb!property! kelimesi ile gerçekleþtirilir. Fakat, asal
+anahtarý oluþturan kolon ve onun eþlendiði nesne öðesi, ayrý bir þekilde
+Hibernate'e bildirilmelidir. Çünkü Hibernate, bu öðeyi, diðerlerinden ayrý bir
+þekilde, nesneyi bulma, tanýmlamak için kullanýlacak, yâni nesnenin tekilliðini
+belirten bir öðe olacak kullanacaktýr. Bu öðe, komut eþleme dosyasýnda
+\PVerb!<id>! ile belirtilir. \PVerb!Car! örneðimizi ele alýrsak:
+
+\begin{lstlisting}[language=Java, frame=none]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <class name="Car" table="car">
+    <id name="licensePlate" column="license_plate">
+      <generator class="assigned"/>
+    </id>
+    <property name="description" column="description"/>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+Gösterilen \PVerb!Car! nesnesinde tekil anahtar, \PVerb!licensePlate! öðesidir,
+onun eþlendiði kolon ise \PVerb!license_plate!  kolonudur. \PVerb!<id
+name="licensePlate"..>!  komutunu kullanarak, Hibernate'e \PVerb!Car! nesnesinin
+tekilliðini \PVerb!licensePlate! öðesi olduðunu bildirmiþ olduk. Bu öðe,
+\PVerb!Car! nesnesini veri tabanýndan yüklerken \PVerb!get! komutuna anahtar
+olarak verilecek öðe olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+Car car = (Car) s.get(Car.class, "34 TTD 2202");
+\end{lstlisting}
+
+\subsection{Birden Fazla Kolon Anahtar Ýse}
+Bazen bir tablodaki asal anahtar tek kolon deðil, birden fazla kolon
+olabilir. Bu durumda (SQL dünyasýnda) bir satýrý tekil olarak bulabilmek için
+asal anahtarý oluþturan tüm anahtarlarý \PVerb!WHERE! komutuna veririz.
+
+Hibernate dünyasýnda, bir nesneyi bulmak için birden fazla öðe kimlik olarak
+gerektiðinde, eþleme dosyasýnýn anahtar belirtilen bölümünde \PVerb!<id>! yerine
+\PVerb!<composite-id>! komutunu kullanmak gerekecektir. \PVerb!Person! örnek
+class'ýnda bu tekniði görelim:
+
+\begin{lstlisting}[language=XML,caption=Person.hbm.xml]
+<class name="Person" table="person">
+  <composite-id name="id" class="Person\$Id">
+    <key-property name="firstName"/>
+    <key-property name="lastName"/>
+  </composite-id>
+  ....
+  </class>
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,caption=Person.java]
+package org.mycompany.kitapdemo.pojo;
+
+public class Person {
+
+    public Person() { }
+
+    Id id;
+
+    public Id getId() {
+        return id;
+    }
+
+    public void setId(Id newId) {
+        this.id = newId;
+    }
+
+    /**
+     * Inline Id class
+     *
+     */
+    public static class Id implements Serializable {
+
+        public Id(String firstName, String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        public Id() {}
+
+        String firstName;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String newFirstName) {
+            this.firstName = newFirstName;
+        }
+
+        String lastName;
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String newLastName) {
+            this.lastName = newLastName;
+        }
+    }
+
+    // diðer öðeler ve onlarýn get/set
+    // çaðrýlarý buraya
+    // ...
+
+}
+\end{lstlisting}
+Örneðimizde \PVerb!Person! asal anahtarý, \PVerb!firstName! (isim) ve
+\PVerb!lastName! (soyisim) ikilisinden oluþmaktadýr. Hibernate'e bu ikiliyi
+bir asal anahtar olarak vermemiz için, \PVerb!firstName! ve \PVerb!lastName!'i
+içeren \PVerb!Id! isminde yeni bir \textbf{iç class} (inner class) yaratmamýz
+gerekti. Bu class, daha sonra \PVerb!composite-id! komutuna parametre olarak
+geçilmiþtir.
+
+\begin{quote}
+\textbf{Not}: Kod idaresi açýsýndan, \PVerb!Id! class'ýný \PVerb!Person! içine
+koyarak bir iç class hâline getirdik, ama \PVerb!Id!, apayrý bir class olarak
+kendi \PVerb!.java! dosyasýnda da olabilirdi. Kodun düzenli olmasý bakýmýndan
+\PVerb!Person! ile alâkalý her þeyin tek yerde olmasýný istediðimiz için, bu
+kodlama þekilde daha faydalý bulduk.
+\end{quote}
+
+Eðer bir \PVerb!Person! nesnesini \PVerb!get! ile yüklemek istiyorsak, bir iç
+class \PVerb!Id! nesnesi yaratmalý ve nesneyi parametre olarak \PVerb!get!
+komutuna geçmeliyiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+Session session = HibernateSession.openSession();
+Person.Id id = new Person.Id(``ahmet'', ``yýlmaz'');
+Person p = (Person) session.get(Person.class, id);
+...
+\end{lstlisting}
+
+\subsection{Anahtar Üretimi}
+Anahtarlar konusunda diðer önemli bir husus, anahtar ``atama sorumluluðun'' kimde
+olduðudur. Bazý uygulamalarda asal anahtar, verinin kendi içinden doðal olarak
+çýkar. Meselâ veri operatörleri \PVerb!person! tablosuna veri eklerken, kiþi
+isim ve soyadýna gireceklerdir, ve bunu yaparken bir asal anahtarý da otomatik
+olarak eklemiþ olacaklardýr. Çünkü \PVerb!person! için asal anahtar,
+\PVerb!firstName! ve \PVerb!lastName! kolonlarýnýn bir kombinasyonudur.
+
+Fakat bazý durumlarda asal anahtar verinin içinden çýkmayabilir. Bu þartlarda
+her satýrý tekil olarak kimlikleyebilmek için bir asal anahtar {\em üretmek}
+gerekecektir.
+
+Anahtar üretimi (ya da üretilmemesi gerektiðini) Hibernate'e \PVerb!<id>!
+etiketi altýnda \PVerb!<generator! \PVerb!class=".."/>! komutu ile
+tanýmlýyoruz. Eðer bir anahtar verinin içinden doðal olarak çýkýyorsa, hiçbir
+anahtar üretim eyleminin yapýlmamasý gerektiði Hibernate'e \PVerb!<generator
+class="assigned"/>! ile bildirilir. Eðer ID'nin üretilmesi gerekiyorsa, en basit
+yöntem olarak \PVerb!<generator class="increment"/>! kullanýlýr. Bu yöntem,
+\PVerb!Integer!  bazýndaki bir ID öðesinin (ve kolonunun) her yeni deðerini bir
+öncekinden bir fazla olarak hesaplar ve tabana otomatik olarak
+yazar. \PVerb!Increment! ile tanýmlanan nesne öðesinin \PVerb!java.lang.Integer!
+olmasý gerektiðini bir daha vurgulayalým.
+
+Eðer id üretimini veri tabanýna býrakmak istiyorsanýz, Hibernate de
+\PVerb!<generator class="native"/>! kullanabilirsiniz. Bu seçim ile, meselâ MySQL
+üzerinde auto-increment id üretim yöntemi, Oracle üzerinde ise sequence ile id
+üretimi yöntemi kullanýlacaktýr\footnote{Hibernate native tekniði kullanýlýnca
+akýlda tutulmasý gereken önemli bir nokta, Hibernate 2.0 versiyonunda native
+kullanýmýyla beraber unsaved-value=``0'' tanýmýnýn id etiketi içinde
+kullanýlmasýdýr. Hibernate 3.0 ile bu tanýmýn yapýlmasý gerekli deðildir; Zaten
+Kitabýmýz Hibernate 3.0 versiyonu baz alýnarak yazýlmýþtýr}.
+
+ID üretmek için diðer yöntemler de mevcuttur. Bu ek metotlarý Hibernate sitesi
+\url{www.hibernate.org} adresinden, ya da Hibernate yaratýcýlarýnýn kitabýndan
+\cite{hibernatebook} bulabilirsiniz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Dört Ýþlem][DÖRT ÝÞLEM]{Dört Ýþlem} \label{hibernate:crud}
+
+Hibernate'i kurup, \PVerb!HibernateSession! üzerinden veri tabanýna eriþmeyi
+hallettikten sonra, artýk dört iþlem ile tek bir nesneyi eklemeye, okumaya,
+deðiþtirip yazmaya ve gerekirse silmeye hazýrýz. Bu iþlemlere veri tabaný
+dünyasýnda CRUD (\textbf{CR}eate \textbf{U}pdate \textbf{D}elete) iþlemleri ismi
+verilmektedir. Her ne kadar önceki bölümlerde Hibernate ile dört iþlem kýsmen
+anlatýlmýþ olsa da, toplu bir özeti bu bölümde vermeye çalýþacaðýz.
+
+Elimizde bir kimlik deðeri var ve bu kimlik ile bir nesneyi bulup hafýzaya
+getirmek istiyorsak, bunu yapmak için \PVerb!Session! üzerinden \PVerb!get!
+komutunu kullanýrýz.
+
+\begin{lstlisting}[language=Java, frame=none]
+Car car = (Car) s.get(Car.class, "34 TTD 2202");
+\end{lstlisting}
+Bir nesneyi bulup yükledikten sonra, onun üzerinde veri deðiþikliklerini,
+nesnenin \PVerb!set! metotlarýný çaðýrarak gerçekleþtirebiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+...
+car.setDescription(``yeni araba'');
+\end{lstlisting}
+Fakat bu deðiþiklikler hâla veri tabanýna yansýmýþ deðildir. Bu son aþamayý da
+tamamlamak için, \PVerb!s.saveOrUpdate! metotunu çaðýrmamýz gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+...
+s.saveOrUpdate(car);
+\end{lstlisting}
+Deðiþik bir senaryo, bir nesneyi yüklemeden, yeni bir nesneyi sýfýrdan yaratýp
+bu nesneyi veri tabanýna ekleme senaryosudur. Bu senaryo için, \PVerb!new Car()!
+kullanarak yeni nesneyi yaratýp, üzerinde ayný \PVerb!saveOrUpdate! çaðrýsýný
+yapmamýz gerekir. \PVerb!saveOrUpdate! metotu akýllý bir metottur; Kendisine
+verilen \PVerb!car! nesnesinin içine (verisine) bakarak, bu nesnenin yeni mi,
+yoksa eskinin güncellenmiþ hâli mi olup olmadýðýný anlama yeteneðine
+sahiptir. Böylece ayný \PVerb!saveOrUpdate! çaðrýsý ile hem güncelleme hem
+ekleme iþlemini yapabiliyoruz, ve bu çaðrýyý yapan uygulama kodlarýmýzýn
+nesnenin yeni mi eski mi olduðunu bilmesi gerekmiyor.
+
+Bir nesneyi (ve o nesnenin eþlenmiþ olduðu veri satýrýný) veri tabanýndan silmek
+için, \PVerb!Session! üzerinde \PVerb!delete! çaðrýsý yapýlýr. Bu çaðrýdan önce,
+\PVerb!get! ile nesnenin yüklenmiþ olmasý gerekmektedir (tabii perde arkasýnda
+Hibernate gereken \PVerb!SELECT! iþlemini sonraya býrakarak ekstra
+\PVerb!SELECT!'ten bizi kurtarýr). Bu kullaným þöyledir:
+
+\begin{lstlisting}[language=Java, frame=none]
+Car car = (Car) s.get(Car.class, "34 TTD 2202");
+s.delete(car);
+\end{lstlisting}
+Tabii bu iþlemlerden önce ve sonra \PVerb!HibernateSession! yardýmcý nesnesi
+üzerinden session alýp, bir transaction baþlatýp bitirmeyi hatýrlamamýz
+gerekiyor (bkz. \ref{hibernate:transaction}). Ancak bir transaction commit
+edildikten sonra yaptýðýmýz deðiþiklikler veri tabanýna yansýyacaktýr.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Nesneler Arasý Ýliþkiler][NESNELER ARASI ÝLÝÞKÝLER]{Nesneler Arasý Ýliþkiler}
+
+Hibernate gibi bir Nesne-Ýliþkisel Eþleme (Object Relational Mapping -
+\textbf{ORM}) aracýnýn belki de en önemli faydalarýndan biri, iki tablo
+arasýndaki yabancý anahtarlar (foreign keys) üzerinden kurulmuþ bir iliþkiyi,
+direk nesnesel bir iliþki þekline dönüþtürebilmesidir. Bunu yapabilmek için,
+doðal olarak, eþleme dosyasýnda gerekli ayarlarý programcý verecektir. Fakat bu
+komutlar verildikten sonra Hibernate, arka planda bir tablodan ötekine, yâni bir
+nesneden iliþkili olduðu diðer nesneye atlamamýzý saðlayacak SQL komutlarýný
+otomatik olarak üretecektir! Programcýya, Java seviyesinde sadece
+\PVerb!nesne.getOtherObjectList()! gibi bir çaðrý yapmak kalacaktýr.
+
+Ýki nesne (ya da tablo) arasýnda, nicelik (cardinality) açýsýndan deðiþik 3 tür
+iliþki olabilir. Tek nesne A'nýn tek nesne B ile birebir, tek nesne A'nýn birçok
+B nesnesi ile bireçok, ve birçok A nesnesinin birçok B nesnesi arasýnda çokaçok
+iliþkileri. Bu iliþki çeþitlerini ve Hibernate eþleme dosyasýnda nasýl temsil
+edileceklerini teker teker görelim.
+
+
+\subsection{Bire Bir (One to One) Ýliþki}
+
+Veri tabanýnda tek bir satýrýn diðer tek bir satýra iþaret etmesi, bire bir
+türünden bir iliþkidir. Hibernate bu þekilde bir iliþkiyi, \PVerb!<many-to-one>!
+etiketi ile destekler.
+
+Bire bir iliþkisi, veri tabaný seviyesinde bir ya da daha fazla kolon üzerinden
+gerçekleþtirilebilir. Eðer iþaret `edilen' tabloyu tekil olarak belirlemek için
+birden fazla kolon gerekiyorsa, iþaret eden taraf asal anahtarý oluþturan bu
+kolonlarýn hepsini kendi üzerinde taþýmak zorundadýr. Meselâ, asal anahtarý
+\PVerb!name!  ve \PVerb!person_lastname!'den oluþan \PVerb!person! tablosuna
+iþaret eden herhangi bir POJO eþleme tanýmý, þunlarý içermek zorundadýr. 
+
+\begin{lstlisting}[language=Java, frame=none]
+<many-to-one name="person" class="Person" not-null="true">
+  <column name="name"/>
+  <column name="person_lastname"/>
+</many-to-one>
+\end{lstlisting}
+POJO class'ý içinde, \PVerb!person! iliþkisine tekabül eden \PVerb!get! ve
+\PVerb!set! metotlarýný eklemeliyiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+..  
+Person person;
+
+public Person getPerson() {
+    return person;
+}
+
+public void setPerson(Person newPerson) {
+    this.person = newPerson;
+}
+..
+\end{lstlisting}
+Bu iliþki örneðini \PVerb!HibernateComposite! projesinde bulabilirsiniz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.4}{
+  \includegraphics{./images/person_car_birebir.eps}
+  }
+}
+\caption{Person Car Bire Bir Ýliþkisi}
+\end{figure}
+
+
+\subsection{Bire Çok (One to Many) Ýliþki}
+Kurumsal uygumalarda en çok lâzým olan iliþki türü, bire çok türden
+iliþkidir. Örnek olarak gerçek hayattan iki nesneyi alalým: \PVerb!Garage!
+(garaj) ve \PVerb!Car! (araba). Diyelim ki bir garajda birçok araba
+durabilir. \PVerb!Garage! ve \PVerb!Car! arasýndaki bu türden bir nicelik
+iliþkisine, bire çok türden iliþki diyoruz. Bu iliþkide, tek \PVerb!Garage!
+nesnesi (\PVerb!garage!  tablosundaki tek bir satýr) birçok \PVerb!car! nesnesi
+ile (\PVerb!car!'da birçok satýr) arasýnda bir iliþki olacaktýr. Veri tabanýnda
+bu iliþkiyi kurmanýn yolu, bire çok iliþkinin \textbf{çok} tarafýna,
+\textbf{bir} tarafýndaki asal anahtarý alýp, yabancý anahtar olarak
+yerleþtirmektir. Bu yapýlýnca, meselâ \PVerb!garage.id = 1!  filtresi ile, 1
+no'lu \PVerb!Garage!  ile iliþkide olan tüm \PVerb!car! kolonlarýný bulmak
+mümkündür.
+\begin{lstlisting}[language=Java, frame=none]
+select * from car where garage_id = 1
+\end{lstlisting}
+ile iliþkideki tüm arabalar bulunabilir.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{0.4}{
+    \includegraphics{./images/garage_car_bire_cok.eps}
+    }
+  }
+  \caption{\label{hibernate:iliskiler:garagecarbirecok} Garage ve Car Bire Çok
+  Ýliþkisi}
+\end{figure}
+
+\subsubsection{Ayarlar}
+
+Hibernate'e bire çok türünden iliþkiyi yansýtmak için eþleme dosyasýnda
+\textbf{bir} tarafýnda \PVerb!<set>! komutu kullanýyoruz. Ýçinde araba
+nesnelerini tutacak olan bir \PVerb!java.util.Set! listesini de, \PVerb!Garage!
+kodu üzerine yeni bir öðe olarak ekleyeceðiz. Örnek \PVerb!Garage.hbm.xml! ve
+\PVerb!Car.hbm.xml!  dosyalarýný altta gösteriyoruz.
+
+\begin{lstlisting}[language=XML,caption=Garage.hbm.xml]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+
+  <class name="Garage" table="garage">
+    <id name="garageId" column="id">
+      <generator class="increment"/>
+    </id>
+    ...
+    <set name="cars"
+         inverse="true"
+         cascade="save-update, all-delete-orphan">
+      <key>
+        <column name="garage_id"/>
+      </key>
+      <one-to-many class="Car"/>
+    </set>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,caption=Car.hbm.xml]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+
+  <class name="Car" table="car">
+    <id name="licensePlate" column="license_plate">
+      <generator class="assigned"/>
+    </id>
+    ...
+    <many-to-one name="garage"
+                 column="garage_id"
+		 class="Garage"
+		 not-null="true"/>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+Java kodlarý da þöyle olacaktýr.
+
+\begin{lstlisting}[language=Java,frame=none]
+public class Garage   {
+    ...
+    Set cars;
+
+    public Set getCars() {
+        return cars;
+    }
+
+    public void setCars(Set newCars) {
+        this.cars = newCars;
+    }
+    ..
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,frame=none]
+public class Car {
+    ..
+    Garage garage;
+
+    public Garage getGarage() {
+        return garage;
+    }
+
+    public void setGarage(Garage newGarage) {
+        this.garage = newGarage;
+    }
+    ..
+}
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Not}: Hibernate eþleme ve Java seviyesindeki tip uyumlarý çok katý olarak
+kontrol edilir; Meselâ eþlemede \PVerb!<set>! kullanýp POJO üzerinde
+\PVerb!java.util.List! kullansaydýnýz (ki bu yanlýþ olurdu), Hibernate
+uygulamanýz baþladýðýnda bu hatayý bulacaktýr.
+\end{quote}
+
+Artýk bu eþleme üzerinden bir nesneden diðerine pür Java çaðrýlarý kullanarak
+geçebiliriz.
+\begin{lstlisting}[language=Java, frame=none]
+Set cars = garage.getCars();
+\end{lstlisting}
+
+
+\subsubsection{Cascade}
+
+\PVerb!<set>! tanýmý parçasý olan \PVerb!cascade="all-delete-orphan"!, bire çok
+iliþkiyi daha da güçlendirecek bir tanýmdýr. Cascade kelimesi Ýngilizce'de
+``olaylarýn önce birinin, sonra ötekisi olacak þekilde, sýrayla olmasý''
+anlamýna gelir. \PVerb!all-delete-orphan! iþleminin cascade þeklinde olmasýnýn
+istenmesi demek, iliþkinin \textbf{bir} tarafýndaki nesne {\em silindiði} zaman
+(\PVerb!delete!), bu silme iþleminin \PVerb!<set>! içindeki tüm nesnelere etki
+etmesi, yani iliþkide olan {\em diðer nesnelerin de silinmesi} anlamýna
+gelir. Bu çok güçlü bir iliþkidir, ve gerçek dünya uygulamalarýnýn veri
+modellerindeki her bire çok iliþki için uygun deðildir. Sadece örnek amaçlý
+olarak \PVerb!Garage!  ile \PVerb!Car!  arasýnda böyle bir iliþki kurduk, yoksa,
+{\em normâl} fiziksel dünya þartlarýnda bir \PVerb!garaj! silinince içindeki
+arabalarýn silinmesi yanlýþ olurdu.
+
+\PVerb!Cascade! için kullanýlmýþ diðer seçenek \PVerb!save-update!,
+\PVerb!Garage!'da alýnan listeye \PVerb!garage.getCars().add(car)! ile yeni bir
+nesne eklenir eklenmez, bu eklemenin veri tabanýna yansýtýlmasýný saðlar;
+Böylece yeni \PVerb!Car! nesnesi üzerinde ayrýca bir
+\PVerb!session.save! çaðrýsý yapýlmasýna gerek kalmaz.
+
+\subsubsection{Eklemek}
+
+Ýki nesne arasýnda bire çok iliþki kurulduðu zaman, eðer çok tarafýndaki
+nesnelerden tabana bir tane daha eklemek istersek, bunu bir tarafýndaki nesneden
+çok tarafý nesnesinin listesini alýp, o liste üzerinde ekleme yapmakla
+halletmemiz gerekiyor. Ayrýca, yeni eklenen nesne üzerinde, geriye, bir
+tarafýndaki nesneye iþaret eden referansa doðru referansý set etmeliyiz. Bir
+\PVerb!Car! eklemek için alttaki örnek kodlar kullanýlacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+HibernateSession.beginTransaction();
+Garage garage = (Garage) s.get(Garage.class, new Integer(1));
+
+Car car = new Car();
+car.setLicensePlate("falanfilan");
+car.setDescription("falanfilan");
+
+garage.getCars().add(car);
+car.setGarage(garage);
+
+HibernateSession.commitTransaction();
+\end{lstlisting}
+Fakat üzerine ekleme yaptýðýmýz \PVerb!java.util.Set!, temel Java tiplerinden
+biridir, o zaman üzerine ekleme yaptýðýmýz anda Hibernate'in bu ekleme
+iþleminden nasýl haberi olmaktadýr? CGLIB sayesinde: Bir eþleme dosyasý ile
+POJO'larýmýzý Hibernate'e tanýttýðýmýzda, bu POJO'lar üstünde kullanýlan
+\PVerb!java.util.Set! kodlarý CGLIB tarafýndan deðiþime uðratýlmaktadýr, ve
+böylece deðiþmiþ bu nesnelerde olan her deðiþimden Hibernate de haberdar
+olmaktadýr. O zaman bu deðiþtirilmiþ listeye yeni bir POJO eklenince, Hibernate,
+bu iþlemi yeni bir veri satýrý eklenmesi ve iliþki kolonlarýnýn güncellenmesi
+isteði gibi algýlayabilecektir.
+
+\subsection{Çoka Çok (Many to Many) Ýliþki} \label{hibernate:rels:manytomany}
+
+Bire çok örneðinde, garaj ve araba arasýnda çokluðu sadece bir tarafa gelecek
+þekilde koymuþtuk. Bu veri tasarýmýna göre, bir araba {\em sadece bir} garaj
+altýnda olabiliyordu. Eðer bu kýsýtlamayý kaldýrýp, ayný arabanýn fazla garaj
+altýnda olabilmesine izin vermek istiyorsak (her ne kadar fiziksel dünyaya pek
+uymasa da), o zaman çoka çok türünden bir iliþkiye gitmemiz gerekiyor.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{0.4}{
+    \includegraphics{./images/garage_car_coka_cok.eps}
+    }
+  }
+  \caption{\label{hibernate:iliskiler:garagecarcokacok} Garage, Car ve Çoka Çok
+  Ýliþkisi}
+\end{figure}
+
+Veri tasarýmý açýsýndan çoka çok iliþkilere üçüncü bir baðlantý tablosu (link
+table) gerekir. Ýliþkide olmasý istenilen iki tablodaki iki satýrýn kimlik
+no'larý baðlantý tablosuna yeni bir satýr olarak \textbf{beraber} yazýlýnca,
+iki satýr iliþkilendirilmiþ olur. Baðlantý tablosu, sadece iki kimlik kolonu
+içeren çok basit bir tablodur. 
+
+Hibernate'e çoka çok iliþki içeren bir þemayý kabul ettirmek oldukça kolaydýr,
+çünkü \PVerb!<set>! iliþkinin kendisine de bir tablo ismi verilebilir. Bu tablo
+ismi, Hibernate tarafýndan herhangi bir nesneye deðil, \PVerb!<set>!
+iliþkisinin {\em kendisine ait} bir tablo olarak algýlanacaktýr. Ýstediðimiz
+baðlantý tablosu ismini burada verebiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <class name="Garage" table="garage">
+    ...
+    <set name="cars"
+         table="garage_car"
+         lazy="true"
+         cascade="save-update">
+      <key>
+        <column name="garage_id"/>
+      </key>
+      <many-to-many class="Car" column="license_plate"/>
+    </set>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+Tablo \PVerb!garage_car! tablosu, iliþki tablosu olarak görev yapan tablodur.
+
+Kullaným olarak, iki nesne arasýnda ekstra bir iliþki tablosunun olmamasý hiçbir
+þeyi deðiþtirmeyecektir (ve bu kod temizliði açýsýndan çok iyidir).  Çoka çok
+iliþki üzerinden \textbf{çok} tarafýndaki listeyi almak, ya da çok tarafýna yeni
+bir nesne eklemek, bireçok tekniðindeki ile aynýdýr.
+
+Çoka çok iliþki örnek kodlarý \PVerb!HibernateManyToMany!  kodlarý içinde
+bulunabilir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.4}{
+  \includegraphics{./images/cardinality.eps}
+  }
+}
+\caption{Ýliþki Türleri ve Veri Tabaný}
+\end{figure}
+
+
+\subsection{Sýralanmýþ Set Almak}
+
+Eðer \PVerb!Set! ile alýnan araba listesini sýralý bir þekilde almak istersek,
+\PVerb!<set>! komutunun içinde \PVerb!order-by! ek komutunu
+kullanabiliriz. Meselâ \PVerb!Garage!'dan aldýðýmýz \PVerb!Car! listesinin araba
+plaka kolonuna göre sýralanmasýný istiyorsak, alttaki tanýmý kullanabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <class name="Garage" table="garage">
+    ...
+    <set name="cars"
+     ...
+     order-by="license_plate asc">
+     ...
+   </set>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+Liste sýralanýrken, yukarýdan aþaðýya doðru indikçe \PVerb!license_plate!'in
+artmasýný (a'dan z'ye doðru) istiyorsak \PVerb!asc!, azalmasýný istiyorsak
+\PVerb!desc! komutunu kullanmalýyýz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sorgular}
+
+Kurumsal uygulamamýzýn veriye eriþim ihtiyaçlarý bazen tek bir nesneden
+baþlayarak o nesnenin iliþkilerinin gezildiði türden, bazen de (istenilen sonucu
+almak için tüm parametrelerin elde olduðu durumda) tek sorgu ile iþin
+bitirilebileceði türden olabilir.
+
+Nesne gezmek yönteminde, \PVerb!get! ile yüklenen tek nesneden diðer nesnelere
+atlanarak istenen veriye eriþilmesi saðlanýr. Bu tür veriye eriþimi görsel
+arayüzü olan uygulamalarda oldukça sýk olarak kullanýlýr, çünkü kullanýcý, her
+sayfada sadece belli ölçüde veriye bakabilir, ve yeni sayfalar istendikçe
+sonraki sayfalarda o önceki verilerle ilintili diðer verilere geçilmesi
+gerekir. Bu yöntemde, Hibernate üzerinden nesne dünyasýna \PVerb!get! yapýlan
+bir giriþten sonra bire bir, bire çok, çoka çok ve iliþkiler gezilerek gereken
+verilerin alýnmasý (kullanýcýnýn ihtiyacýna göre) halledilebilir.
+
+Parametre bazlý bilgi toplama tekniðinde ise, istenilen veriye ulaþmak için
+gereken tüm parametreler elde vardýr, ve bu parametreler üzerinden uygulanan bir
+sorgu ile sonucun direk alýnabilmesi beklenir.
+
+SQL dünyasýnda, parametreli direk eriþimi yapmanýn yolu, lazým olan tüm
+tablolarý \PVerb!JOIN! komutu ile birleþtirmek, ve gereken satýrlarý
+\PVerb!WHERE!  içindeki filtreleme tanýmlarý ile çekip çýkartmaktýr. Bu tür
+kullanýmlarda tek bir Hibernate \PVerb!get! komutu ile çetrefil filtreleme
+gerektiren parametreleri kullanamayacaðýmýza göre, Hibernate'in sorgulama
+tekniklerini tanýmamýz gerekiyor.
+
+Hibernate, SQL'e çok benzeyen bir çeþit sorgulama dilini destekler. Ayrýca
+Hibernate, sürüm 3.0'dan itibaren direk SQL iþletip sonuçlarý POJO listesi
+olarak döndürebilme özelliðine de sahiptir, fakat birazdan göreceðiniz gibi HQL
+dili Hibernate'in zaten elinde olan eþleme bilgilerini kullanarak SQL'dan çok
+daha esnek sorgular yapmamýzý saðlamaktadýr (SQL ile sorgulayýp cevaplarý
+POJO'lar olarak almayý daha sonra \ref{hibernate:queries:sql} bölümünde
+göreceðiz).
+
+\subsection{Basit Bir Sorgu}
+Tabandaki tüm \PVerb!garage! satýrlarýný almamýzý saðlayacak bir HQL sorgusu
+yazalým. Kod idaresi açýsýndan, her sorguyu bir DAO nesnesine koymamýz uygun
+olur. Her POJO için bir DAO yazabiliriz. \PVerb!Garage! POJO'su için böyle bir
+class altta gösteriliyor.
+
+\begin{lstlisting}[language=Java,caption=GarageDAO.java]
+package org.mycompany.kitapdemo.dao;
+
+import java.sql.*;
+import org.mycompany.kitapdemo.util.*;
+import org.mycompany.kitapdemo.pojo.*;
+import org.mycompany.kitapdemo.service.*;
+import org.hibernate.*;
+import org.hibernate.cfg.*;
+import java.util.*;
+
+public class GarageDAO   {
+
+    public GarageDAO() {
+        HibernateSession.beginTransaction();
+    }
+
+    public List getAll() {
+        Query query = null;
+        Session s = HibernateSession.openSession();
+        query = s.createQuery("select garage from Garage garage");
+        return query.list();
+    }
+
+}
+\end{lstlisting}
+Örnek sorgu olarak kullanýlan \PVerb!from Garage! HQL sorgusundan gelen sonuç,
+bir \PVerb!List!  nesnesi olarak \PVerb!getAll!'dan geri dönülmüþtür.  Eðer
+sorgunuzdan tek bir satýr sonuç geleceðinden eminseniz, \PVerb!Query!
+nesnesinden \PVerb!list()! almak yerine \PVerb!uniqueResult()! çaðrýsýný
+yapabilirsiniz. Bu çaðrý, bir liste yerine, tek bir nesne almanýzý
+saðlayacaktýr; Böylece sonuca eriþmek için \PVerb!list.get(0)! gibi ek bir çaðrý
+yapmanýza gerek kalmaz.
+
+\subsection{Join Ýçeren Sorgular}
+
+Diyelim ki, sorgudan istediðimiz daha karýþýk bir istek þöyle olsun; Kolon
+\PVerb!description! üzerinde ``örnek description 1'' metnini içeren arabalarýn
+{\em garajlarýnýn} bir listesini isteyelim. Bu sorgu için SQL dünyasýnda bir
+\PVerb!JOIN! ile \PVerb!garage! ve \PVerb!car! tablosu birleþtirilir, kartezyen
+birleþimi üzerinden \PVerb!garage_id!'si uyanlar ve \PVerb!car! tablosu
+üzerindeki \PVerb!description! kolonunda ``örnek description 1'' metnini
+taþýyanlar filtrelenirdi.
+
+Ama HQL dilinde kartezyen birleþimini yapmak için teker teker kolon belirtmeye
+gerek yoktur. Zaten elimizde \PVerb!Garage! nesnesinden \PVerb!Car!  nesnesine
+gitmemizi saðlayacak bir Hibernate iliþki tanýmý vardýr. Bu iliþki tanýmý
+Hibernate tarafýndan \PVerb!garage! ve \PVerb!car!'ý birleþtirmek için zaten
+kullanýlmaktaydý, ve HQL, ayný iliþki ismini hem tek {\em nesneden gezmek} hem
+de {\em bir sorguda birleþtirim} için kullanabilir. O zaman \PVerb!cars!
+iliþkisi üzerinden bir sorgu þöyle olur:
+
+\begin{lstlisting}[language=Java, frame=none]
+public List getGaragesForCars(String description) {
+    Session s = HibernateSession.openSession();
+    Query query = s.createQuery(
+                                "select garage from Garage garage " +
+                                "left join garage.cars car " +
+                                "where car.description = :description "
+                                );
+    query.setString("description", description);
+    return query.list();
+}
+\end{lstlisting}
+Sorguda \PVerb!join garage.cars! adlý Hibernate \PVerb!<set>! iliþkisinin ismini
+kullanarak, Hibernate'in eþleme dosyalarýndan daha önce de tanýdýðý iki tabloyu
+birleþtirmiþ olduk. Kural \#1'e uygun olarak SQL ile kullanacaðýzdan daha kýsa
+bir dil kullanýyoruz: Bu teknik iki tablo arasýndaki baðlantý kuran anahtarlar
+birden fazla olunca daha da yararlýdýr. Böyle bir durumda SQL dili tüm iliþki
+kolonlarýnýn kullanýlmasýný gerektirecekti ve dil kullanýmý iyice
+uzayacaktý. Kýyasla HQL için yeni kolonlarýn hiçbir etkisi olmayacaktýr, hâlâ
+ayný {\em tek} kelime ile (iliþki ismi) tablolarý birleþtirebiliyor oluruz.
+
+Parametre bazlý filtrelemeyi gerçekleþtirmek için, \PVerb!garage.cars!
+iliþkisinin yeni ismi olan \PVerb!car! üzerinden \PVerb!description!'a eriþiriz
+ve filtreleme þartýmýzý belirtiriz. En son olarak sonuçlarý \PVerb!query.list()!
+ile Hibernate'den alýrýz.
+
+\subsection{Sorgular ve Ýsimli Parametreler}
+
+HQL dilinin JDBC ile SQL yapmaya bir üstün tarafý daha vardýr, o da, sorgulara
+geçilen parametrelerin {\em isimli parametreler} (named parameter)
+olabilmesidir. Meselâ üstteki örnekte \PVerb!description! adlý öðenin deðerini
+ismiyle vermiþ olduk, altta gördüðümüz gibi:
+
+\begin{lstlisting}[language=Java, frame=none]
+query.setString("description", "ornek description 1");
+\end{lstlisting}
+Kýyasla, JDBC kullanýlýrken bir \PVerb!PreparedStatement!  hazýrlanýr ve bu
+nesneye geçilen sorgu içinde parametrelerin yeri boþ býrakýlarak `?'  karakteri
+ile gerçek parametre deðerlerinin sonradan geleceði belirtilir. Bu
+parametrelerin deðerleri `?' iþaretinin \textbf{sýrasýna} göre bir numarayla
+belirtilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+statement.setString(1,``deðer'');
+statement.setInt(2,200);
+\end{lstlisting}
+JDBC teknolojisinin bu tekniðinin kod idaresi bakýmýndan kötü bir yaklaþým
+olduðu açýktýr, çünkü bir süre geçtikten sonra koda bakan programcý için 1,2,3
+gibi numaralar bir anlam ifade etmez (Kural \#4). Bu numaralarýn hangi
+parametreye ait olduðunu anlamak için sorguya tekrar bakmak ve soru iþaretlerini
+teker teker {\em saymak} gerekecektir. Daha kötü bir senaryoda, yeni programcý,
+sorgudaki parametrelerin sýrasýný bir þekilde deðiþtirir ve \PVerb!set!
+komutlarýný güncellemeyi unutursa, uygulamamýza birdenbire yeni bir hata (bug)
+eklenmiþ olacaktýr. Kural \#1: Her zaman bakým külfeti en az olacak metotu
+seçiniz. Bu açýdan HQL'in parametre geçiþ yöntemi tercih edilir olmaktadýr.
+
+\subsection{Guruplama Teknikleri}
+
+Kurumsal uygulamalarda kullanýlan sorgulama dillerinin olmazsa olmaz özelliði
+guruplama özelliðidir (SQL dilinde sýkça kullandýðýmýz \PVerb!SUM!, \PVerb!AVG!,
+\PVerb!MAX! ve \PVerb!GROUP BY! gibi komutlar, bu tür guruplama
+fonksiyonlarýdýr). HQL, aynen SQL gibi, guruplamayý desteklemektedir. Meselâ
+alttaki gibi bir \PVerb!Person! eþlemesi olduðunu farz edelim, ve bu eþleme
+üzerinden bazý guruplama tekniklerini görelim.
+
+\begin{lstlisting}[language=Java, frame=none]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <import class="org.mycompany.kitapdemo.dao.Summary"/>
+  <class name="Person" table="person">
+    <id name="lastName" column="lastname">
+      <generator class="assigned"/>
+    </id>
+    <property name="name" column="name"/>
+    <property name="age" column="age"/>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+Eðer tüm \PVerb!PERSON.AGE! toplamlarýný almak istersek
+
+\begin{lstlisting}[language=Java, frame=none]
+Session s = HibernateSession.openSession();
+String hql = ``select sum(person.age) from Person person'';
+Integer ageSum = (Integer)(s.createQuery(hql)).uniqueResult();
+\end{lstlisting}
+sorgusunu kullanabiliriz. En üst deðer (maximum) bulmak için, \PVerb!max!
+kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+Session s = HibernateSession.openSession();
+String hql = ``select max(person.age) from Person person'';
+Integer ageSum = (Integer)(s.createQuery(hql)).uniqueResult();
+\end{lstlisting}
+
+\subsection{SQL ile Sorgulamak}\label{hibernate:queries:sql}
+
+Hibernate ile sorgulamak için, HQL yerine direk SQL de kullanabilirsiniz. Bizim
+tavsiyemiz, çoðu zaman daha güçlü ve kýsa olan HQL dilini kullanmanýz
+yönündedir. Sadece ve sadece bazý durumlarda üretilen SQL'in yerine elle SQL
+yazmak isterseniz, Hibernate'in \PVerb!createSQLQuery! ve \PVerb!addEntity!
+komutlarý ile direk SQL iþletebilirsiniz.
+
+Hibernate üzerinden SQL iþletince geriye dönecek deðerler JDBC \PVerb!Resultset!
+yerine \PVerb!List! içinde POJO'lar olarak alabiliriz. Bunu yapmak için SQL'e
+tek eklemeniz gereken, dondürülecek tablo ismi etrafýnda \PVerb!{ }! iþaretleri
+ve \PVerb!SQLQuery! nesnesi üzerinde \PVerb!addEntity! çaðrýsýdýr. Meselâ,
+
+\begin{lstlisting}[language=Java, frame=none]
+select garage.* from Garage garage 
+where garage.description like '%garage%'
+\end{lstlisting}
+gibi bir SQL, þuna dönüþecektir:
+
+\begin{lstlisting}[language=SQL, frame=none]
+Query query = s.createSQLQuery(
+                            "select {garage.*} from Garage garage " +
+                            "where garage.description like '%garage%' "
+                            )
+    .addEntity("garage", Garage.class);
+\end{lstlisting}
+Görüldüðü gibi \PVerb!garage! tablosunun tüm kolonlarýný döndürmek istiyoruz,
+bunun için \PVerb!garage.*! ibaresini kullandýk. Bu normal SQL'dir. Buna ek
+olarak, \PVerb!garage.*! etrafýna \PVerb!{ }! ekleyerek, geri dönen deðerlerin
+Hibernate POJO'larý olduðunu bildirmiþ oluyoruz. Ayrýca \PVerb!createSQLQuery!
+çaðrýsýndan geri gelen \PVerb!SQLQuery! nesnesi üzerinde hangi POJO'yu geri
+almak istediðimizi belirtmemiz gerekiyor. Bu belirtildikten sonra Hibernate,
+JDBC'den gelen \PVerb!Resultset! üzerindeki kolonlarý zaten elinde olan eþleme
+dosyalarý üzerinden dönüþtürerek, biz nesnesel programcýlarýn sevdiði bir nesne
+listesi olarak sonucu almamýzý saðlayacaktýr.
+
+\subsection{Deðiþik Nesnelerden Tek Sonuç Listesi}
+
+Þimdiye kadar gördüðümüz sorgulama tekniklerinde, sonucu sadece Hibernate
+tarafýndan eþlenmiþ bir nesne ya da nesneler için almayý gördük. Fakat bazen
+uygulamamýzda farklý nesnelerden gelen öðeleri Hibernate'te eþlenmemiþ bir
+birimin listesi olarak sunmamýz gerekebilir. SQL ile bunu
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT t1.kolon1, t2.kolon1, t3.kolon1, ... FROM TABLO1 t1, TABLO2 t2, ...
+\end{lstlisting}
+þeklinde bir kullaným ile yapýyoruz. Sonuç listesinin içindeki kolonlar oradan,
+buradan toplanýyor. Acaba HQL, aynen SQL gibi farklý nesnelerden (tablolardan)
+toplanmýþ öðeleri (kolonlarý) tek bir sonuç listesi olarak sunamaz mýydý?
+
+Evet bunu yapmak mümkündür. SQL'e benzer bir þekilde,
+
+\begin{lstlisting}[language=Java, frame=none]
+select garage.description, car.description, person.age
+from Garage garage
+left join garage.cars car
+left join garage.cars.person person
+where ...
+\end{lstlisting}
+gibi bir kullaným, bize bir \PVerb!java.util.List! içinde \PVerb!Object[]!
+nesneleri döndürecektir. \PVerb!Object[]! içindeki her eleman, HQL
+\PVerb!select! listesinde belirtilen öðe isimlerinden bir tanesi olacaktýr.
+
+\subsubsection{Daha Ýyisi}
+
+Fakat \PVerb!Object[]! üzerinden indis kullanarak eriþim, hatýrlamasý ve bakýmý
+zor bir yöntemdir. Bu sebeple daha idare edilir bir yöntem olarak bir ``ara
+nesne'' kullanma yöntemi tercih edilir. Geçici ara nesne kullanýmýnda, kurucu
+metotu sadece bizim beklediðimiz öðeleri alan bir ``ara class'' yazýlýr. Örneðimiz
+için bu class ismi \PVerb!Summary! olsun.
+
+\begin{lstlisting}[language=Java, caption=Summary.java]
+package org.mycompany.kitapdemo.dao;
+
+public class Summary   {
+
+    public Summary(String garageDesc, String carDesc, Integer age) {
+        this.garageDesc = garageDesc;
+        this.carDesc = carDesc;
+        this.age = age;
+    }
+
+    String garageDesc;
+
+    public String getGarageDesc() {
+        return garageDesc;
+    }
+
+    public void setGarageDesc(String newGarageDesc) {
+        this.garageDesc = newGarageDesc;
+    }
+
+    String carDesc;
+
+    public String getCarDesc() {
+        return carDesc;
+    }
+
+    public void setCarDesc(String newCarDesc) {
+        this.carDesc = newCarDesc;
+    }
+
+    Integer age;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer newAge) {
+        this.age = newAge;
+    }
+}
+\end{lstlisting}
+Bu ara nesneyi kullanan HQL sorgumuz þu þekilde deðiþecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+select new Summary(garage.description, car.description, person.age)
+from Garage garage
+left join garage.cars car
+left join garage.cars.person person
+...
+\end{lstlisting}
+Böylece sorgudan geri gelen \PVerb!java.util.List! içinde \PVerb!Object[]!
+yerine, \PVerb!java.util.List! içinde \PVerb!Summary! nesneleri alýnabilecektir.
+
+
+\subsubsection{Import}
+
+\PVerb!Summary! Hibernate tarafýndan eþlenen bir class olmadýðý için, HQL'in bu
+class'ý {\em görmesi} için eþleme dosyasýna {\em dahil edilmesi}
+gerekecek. Dahil etme (import) iþlemini, SELECT listenizde referans edilen
+herhangi bir class'ýn \PVerb!hbm.xml! dosyasýnda
+
+\begin{lstlisting}[language=Java, frame=none]
+<hibernate-mapping  ...
+  <import class="org.mycompany.kitapdemo.dao.Summary"/>
+  <class name=....>
+\end{lstlisting}
+gibi bir kullaným ile yapabilirsiniz. Örnek kod için \PVerb!HibernateQueries!
+projesine bakýnýz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Otomatik Þema Üretimi}
+
+Eðer geliþtirme amaçlý olarak, uygulama her baþladýðýnda uygulama tarafýndan
+Hibernate eþleme dosyalarý baz alýnarak veri tabanýnda bir þema üretilsin
+istiyorsak, o zaman \PVerb!hibernate.cfg.xml! dosyasýnda
+
+\begin{lstlisting}[language=Java, frame=none]
+<property name="hibernate.hbm2ddl.auto">update</property>
+\end{lstlisting}
+ibaresini kullanmak yeterlidir. Hibernate'in eþleme dosyalarýndan þema
+üretebilmesi þaþýrtýcý gelebilir; Fakat biraz düþünülürse, Hibernate'in bu iþi
+yapmak için elinde tüm bilgilerin bulunduðu anlaþýlacaktýr. Geliþtirme amaçlý
+olarak bu üretimin uygulama her baþlatýldýðýnda yapýlmasý bazý uygulamalar için
+kullanýþlýdýr. Fakat sonuç ortamýndaki (production) tablolarýný her baþlangýçta
+kaybetmek istemeyen (ya da hangi tablo ekleme komutlarýnýn üretildiðini
+kontrolden geçirmek isteyen) çoðu kurumsal uygulama için bu özellik pek yararlý
+olmayacaktýr.
+
+Eðer veri þemasýnýn direk veri tabanýna verilmesi yerine bir metin dosyasýna
+yazýlmasý daha uygun ise, Hibernate (\PVerb!DROP TABLE!, \PVerb!CREATE TABLE!
+komutlarýný içeren bir script üretme yeteneðine de sahiptir. Bunun için komut
+satýrýndan \PVerb!SchemaExport! adlý Hibernate class'ýný kullanabiliriz
+(class'ýn kodlarý \PVerb!hibernate3.jar! içindedir). Kullaným için;
+
+\begin{lstlisting}[language=Java, frame=none]
+java -Dhibernate.dialect=net.sf.hibernate.dialect.OracleDialect -cp \
+/lib/cglib-full-2.0.2.jar;HIBERNATE_LIB/lib/odmg-3.0.jar;\
+HIBERNATE_LIB/eg;HIBERNATE_LIB/lib/jboss-common.jar;\
+HIBERNATE_LIB/lib/commons-collections-2.1.1.jar;\
+HIBERNATE_LIB/lib/xerces-2.4.0.jar;HIBERNATE_LIB/lib/xml-apis.jar;\
+c:/archive/kod/kitapkod/Struts/StrutsHibAdv/build/WEB-INF/classes;\
+HIBERNATE_LIB/lib/dom4j-1.4.jar;HIBERNATE_LIB/hibernate3.jar;\
+HIBERNATE_LIB/lib/log4j-1.2.8.jar;\
+HIBERNATE_LIB/lib/commons-logging-1.0.4.jar \
+org.hibernate.tool.hbm2ddl.SchemaExport  --output=schema.sql --text \
+HIBERNATE_LIB/eg/org/hibernate/auction/AuctionItem.hbm.xml \
+HIBERNATE_LIB/eg/org/hibernate/auction/Bid.hbm.xml \
+HIBERNATE_LIB/eg/org/hibernate/auction/User.hbm.xml
+\end{lstlisting}
+\begin{itemize}
+   \item Hangi dialect'i kullanýldýðý \PVerb!-D! parametresi ile verilmelidir.
+   
+   \item Classpath, \PVerb!-cp! seçeneði ile tüm gereken Hibernate jar'larý
+   içermelidir.
+   
+   \item Þema üretimi için baz alýnacak tüm \PVerb!hbm.xml! dosyalarý, ``en
+   sonda'' ve aralarýnda boþluk olacak sekilde sýralanmalýdýr. Örnek kullanýmda
+   Hibernate daðýtým dizini altýnda yer alan örnek kodlarýn eþleme dosyalarý
+   kullanýlmýþtýr. Eþleme dosyalarýnýn olduðu dizinler izafi (relative) olarak
+   deðil, kesin (full) olarak verilmelidir. 
+   
+   \item Þema DDL çýktý dosyasýný \PVerb!--output! seçeneði ile belirtebiliriz.
+   
+   \item \PVerb!--text! secenegi ile sadece dosyaya yazýlmasýný istediðimizi
+   belirtebiliyoruz.
+\end{itemize}
+Eðer \PVerb!SchemaExport! yerine \PVerb!SchemaUpdate! kullanýrsak, bu komut bir
+önceki þema ve ``mevcut eþleme dosyalarý üzerinden üretilecek olan þema''
+arasýndaki farký bularak, sadece o farklar için gerekli
+\PVerb!ALTER TABLE! komutlarýný bir metin dosyasýnda üretecektir. Bu dosya
+teknik lider tarafýndan kontrol edilip belki bir test þema üzerinde denendikten
+sonra sonuç ortamýna gönderilebilir, çünkü ekleme amaçlý \PVerb!ALTER! komutlarý
+mevcut diðer kolonlarýn içindeki veriye zarar vermeyecektir. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Middlegen}
+
+Bir projenin baþýnda, eðer projenin kullanabileceði bir veri taban þemasý mevcut
+deðil ise, bu þemayý tanýmlamak projenin görevidir. Fakat bazen, bir þema zaten
+{\em mevcuttur} ve uygulamamýzýn mevcut þemayý kullanmasý gerekiyordur. Hiç
+sorun deðil: Mevcut tablolar için Hibernate eþleme dosyalarýný, ve POJO kodlarýný
+elle yazarýz ve Hibernate üzerinden þemaya eriþmeye baþlarýz.
+
+Fakat eðer mevcut þemada bulunan tablo sayýsý çok fazla ise, her tablo için bir
+POJO'yu elle yazmak külfetli bir iþlem olabilir. Programcýya bu konuda rahatlýk
+saðlamak için, Middlegen adý verilen bir araç saðlanmýþtýr. Middlegen ile,
+þemanýza baðlanýp POJO kodlarýný ve eþleme \PVerb!hbm.xml! dosyalarýný otomatik
+olarak ürettirebilirsiniz. Middlegen (üretim amacýyla) bir þema içinde aþaðýdaki
+kalemlere bakar.
+
+\begin{itemize}
+   \item Kolon, tablo isimleri
+   \item Kolon tipleri
+   \item Tablolar arasýndaki yabancý anahtar iliþkileri (foreign key
+   constraints)
+\end{itemize}
+
+Yâni Middlegen kod üretmek için þema ``meta verisini'' kullanýr. Öðe tipleri
+için, kolon tipine en yakýn Java tiplerini kullanýlmaya çalýþýlýr: Meselâ
+\PVerb!VARCHAR! kolon için \PVerb!java.lang.String!  kullanmak gibi. Ayrýca
+Middlegen, yabancý anahtar iliþkilerini, POJO'lar arasý \PVerb!<many-to-one>!,
+\PVerb!<set>! gibi iliþkilere çevirmeye uðraþacaktýr.
+
+Bu üretim yapýldýktan sonra, üretilen kodlarý projenize kopyalayarak, üstüne
+gereken eklemeleri yapýp devam edebilirsiniz.
+
+\subsection{Felsefi Tavsiye}
+
+Kod üretim tekniðini, eðer gerekiyorsa, sadece bir kez ve ``bir baþlangýç
+noktasý oluþturmasý'' amacý ile kullanmalýyýz. Hibernate eþleme dili, herhangi
+bir üretim teknolojisinin üretebileceðinden çok daha güçlüdür. Hibernate eþleme
+yapýsýnda envai türden iliþkilendirme yöntemi olduðu gibi, performans amaçlý
+optimizasyonlar, kýsým kýsým yükleme (batch fetching), sonradan yükleme (lazy
+loading) gibi birçok ayarlar vardýr. Tüm bu ayarlarý sadece veri tabanýna
+bakarak üretmek neredeyse imkansýzdýr.
+
+Ayrýca Middlegen ile kod üretim tavsiyemiz, Kural \#5 ihlâli olarak
+algýlanmamalýdýr. POJO ve eþleme dosya üretimini sadece ``bir þema mevcut olduðu
+zamanlar için'' tavsiye ediyoruz. Ayrýca üretimin verdiði eþleme dosyalarý final
+deðildir, sadece bir {\em tahminden} ibarettir. Üretilen kod projeniz için uygun
+olmayabilir. Sadece bir baþlangýç noktasý oluþturmasý açýsýndan önemlidir, ve en
+azýndan düz, ``bir kolon bir öðe'' þeklindeki eþlemeleri yapmasý açýsýndan
+faydalý olacaktýr.
+
+\subsection{Kullanmak}
+
+Middlegen için en son sürüm \PVerb!Middlegen-Hibernate-r5! sürümüdür. Bu sürüm
+tarafýmýzdan Hibernate 3.0'a uyumlu hâle getirilerek yeni bir sürüm
+oluþturulmuþtur. Kitap kodlarý (Ek \ref{install} içinde anlatýldýðý gibi)
+bulabileceðiniz bu proje, \PVerb!kitap-tools-middlegen-x.x.zip! dosyasýndaki
+\PVerb!Middlegen-Hib-r5-mycompany! projesidir. Internet'te bulunan versiyon
+yerine, bu versiyonu kullanýnýz.
+
+\PVerb!Middlegen-Hib-r5-mycompany! projesi, \PVerb!localhost!'ta çalýþan ve bir
+MySQL üzerinde tutulan \PVerb!cars! adlý veri tabanýný kullanmak üzere
+hazýrlanmýþtýr. Eðer deðiþik bir taban kullanmak istiyorsanýz, öncelikle
+\PVerb!build.xml! içindeki taban ayar dosyasý ismini deðiþtirin.
+
+\begin{lstlisting}[language=Java, frame=none]
+<!DOCTYPE project [
+<!ENTITY database SYSTEM "file:./config/database/mysql.xml">
+]>
+\end{lstlisting}
+Eðer \PVerb!mysql.xml! yerine \PVerb!oracle.xml! koyarsanýz,
+\PVerb!config/database/oracle.xml! ayar dosyasý kullanýlacaktýr. Tüm mevcut
+taban ayar dosyalarý için \PVerb!config/database! altýna bakabilirsiniz.
+
+Ayar dosyalarýnýn ``içinde'' hangi taban, hangi kullanýcý ve þifre kullanýldýðý
+gibi ayarlar vardýr. Meselâ MySQL için taban ismini deðiþtirmek isterseniz,
+\PVerb!config/database/mysql.xml! içinde bu deðiþiklikleri
+yapabilirsiniz. Alttaki ayarlar, \PVerb!localhost! üzerindeki \PVerb!cars! veri
+tabanýna kullanýcý \PVerb!root! ve boþ þifre ile baðlanmak için hazýrlanmýþtýr. 
+
+\begin{lstlisting}[language=Java, frame=none]
+<property name="database.script.file"
+          value="\${src.dir}/sql/\${name}-mysql.sql"/>
+<property name="database.driver.file"
+          value="\${lib.dir}/mysql-connector-java-3.0.9-stable-bin.jar"/>
+<property name="database.driver.classpath"
+          value="\${database.driver.file}"/>
+<property name="database.driver"
+          value="com.mysql.jdbc.Driver"/>
+<property name="database.url"
+          value="jdbc:mysql://localhost/cars"/>
+<property name="database.userid"
+          value="root"/>
+<property name="database.password"
+          value=""/>
+<property name="database.schema"
+          value=""/>
+<property name="database.catalog"
+          value=""/>
+<property name="jboss.datasource.mapping"
+          value="mySQL"/>
+\end{lstlisting}
+
+Üretilecek kodlarýn gideceði dizini ve POJO'larýn paket ismini belirlemek için,
+\PVerb!build.properties! içindeki \PVerb!pojo.package! deðiþkenine paket ismi
+veriniz. Örneklerimizde bu isim, \PVerb!org.mycompany.kitapdemo.pojo! ismi
+olmuþtur.
+
+\subsection{Test Þema}
+
+Þimdi \PVerb!StrutsHibAdv! projesine girerek, \PVerb!src/sql/tables_mysql.sql!
+dosyasýný MySQL tabanýnýz üzerinde iþletin. Bu þema içinde, yabancý anahtarlar
+ve kolon iliþkileri detaylý bir þekilde hazýrlanmýþtýr, ve Middlegen bu
+iliþkileri takip ederek kod üretimini yapabilecektir. Bu þema, altta
+gösterilmiþtir.
+
+\begin{lstlisting}[language=Java, frame=none]
+DROP TABLE IF EXISTS garage;
+CREATE TABLE garage (
+  id numeric(30) not null,
+  description varchar(30) ,
+  PRIMARY KEY(id),
+  INDEX (id)
+) TYPE = InnoDB;
+
+DROP TABLE IF EXISTS car;
+CREATE TABLE car (
+  version int(10) not null,
+  license_plate varchar(30) ,
+  description varchar(30) ,
+  available int(1) ,
+  car_size varchar(1) ,
+  garage_id numeric(30),
+  PRIMARY KEY(license_plate),
+  INDEX (license_plate),
+  INDEX (garage_id),
+  FOREIGN KEY (garage_id) REFERENCES garage(id)
+) TYPE = InnoDB;
+\end{lstlisting}
+
+Niye \PVerb!TYPE = MyISAM! yerine \PVerb!TYPE = InnoDB! kullanýlmýþtýr? Çünkü
+MySQL tabanlarýnda, kolonlararasý iliþki (foreign key constraint) kurmak
+\PVerb!MyISAM! depolama tipinde mümkün deðildir. Bu konu detaylarý için
+\ref{db:relation:table:integrity} bölümüne baþvurabilirsiniz.
+
+Þema hazýrlandýktan ve Middlegen ayarlarý tamamlandýktan sonra komut satýrýnda
+(\PVerb!Middlegen-Hib-r5-mycompany! dizininde) \PVerb!ant! komutunu
+iþletebilirsiniz. Bu komut sonucunda, \ref{hibernate:middlegen} þeklindeki gibi
+bir ekran ortaya çýkacaktýr.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.5}{
+  \includegraphics{./images/middlegen.eps}
+  }
+}
+\caption{\label{hibernate:middlegen} Middlegen Ekraný}
+\end{figure}
+
+Bu ekranda \PVerb!Car! ve \PVerb!Garage! nesnelerinin ve nesneler arasýndaki
+iliþkilerin tabandaki kolonlararasý iliþkiden hareketle algýlanarak
+gösterilmiþ olacaktýr.
+
+Ekrandaki her nesne, ve o nesnedeki her öðe ``týklanabilir'' durumdadýr. Bir
+týklama ile, o nesne ya da öðe hakkýndaki detaylarý ekranýn altýnda
+görebilirsiniz. Eðer bu detaylarda beðenmediðiniz bir durum varsa, deðiþikliði
+görsel araç üzerinden yapmanýz mümkündür. Ýki POJO arasýndaki {\em iliþki yönünü
+bile} bu görsel araçtan deðiþtirmeniz mümkündür: \PVerb!SHIFT! ve mouse'un sol
+düðmesine ile iliþki üzerine týklarsanýz, iliþki yön deðiþtirecektir.
+
+Ýstediðiniz tüm deðiþiklikler tamamlandýktan (ya da, herþey uygun gözüküyorsa,
+hiçbir deðiþiklik yapmadan) sonra, ekranýn sol üst köþesindeki ``Generate''
+düðmesine basarak final kodu üretebilirsiniz. Üretilen kod nereye gider? Eðer
+\PVerb!pojo.package! deðiþkeni için \PVerb!org.mycompany.kitapdemo.pojo!
+tanýmlandý ise, eþleme dosyalarý,
+\PVerb!build/gen-src/org/mycompany/kitapdemo/pojo! altýna atýlacaktýr.
+
+Son olarak, POJO Java kodlarýný üretmek için 
+
+\begin{lstlisting}[language=Java, frame=none]
+ant hbm2java
+\end{lstlisting}
+komutunu kullanýn. Bu iþlem, aynen eþleme dosyasý üretiminde olduðu gibi
+\PVerb!build/gen-src/org/mycompany/kitapdemo/pojo! altýnda java dosyalarýný
+yaratýr. Üretim bittikten sonra bu dizin altýnda \PVerb!Car.java! ve
+\PVerb!Garage.java! adýndaki Java dosyalarýný bulabilirsiniz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Özet][ÖZET]{Özet}
+
+Bu bölümde, veri nesneleri POJO'lar ile veri tabanýndaki tablolalarý birbirine
+baðlayan, bize SQL'e benzer bir dil ile sorgu yapmamýzý saðlayan, ve sonuçlarý
+POJO listeleri olarak dönebilen Hibernate teknolojisini iþledik. Hibernate, her
+tablo için dört iþlem olarak bilinen \PVerb!INSERT!, \PVerb!DELETE!,
+\PVerb!UPDATE!, \PVerb!SELECT! komutlarýný üreterek bizi büyük kod yazma
+külfetinden kurtarmaktadýr. Ayrýca, hiç ek kod yazmadan ticari ya da açýk
+yazýlým önbellek paketlerine entegre olabilmesi sayesinde, Hibernate,
+önbelleklemeyi programcý tarafýndan elle yapýlan bir iþlem olmaktan
+çýkarmaktadýr. Tablolar arasý her türlü iliþkinin Hibernate dünyasýnda nesnesel
+karþýlýklarý vardýr; Veri tabanýnda bire bir, bire çok, çoka çok türünden tüm
+iliþkiler, nesne dünyasýnda bir nesneden diðerine sanki herþey hafýzada oluyormuþ
+gibi takip edilebilmektedir. Nesnesel programcýlýk dünyasýnda bu iþleme `nesne
+haritasýný gezmek (traversing the object graph)' denir.
+
+Her nesne için yapýlan öðesi/kolon eþlemesi haricindeki tüm Hibernate ayarlarý,
+\PVerb!hibernate.cfg.xml! adlý dosyadan verilir: Önbellek, veri tabaný baðlantý
+havuzunu eþleme dosyalarýnýn yerleri programcý tarafýndan burada
+tanýmlanmalýdýr.
+
+Hibernate, SQL benzeri, ama daha esnek ve güçlü olan HQL adlý bir sorgu dilini
+destekler. Bu sorgularýn sonuçlarý, nesne listeleri olarak Hibernate tarafýndan
+anýnda çevirilerek programcýya sunulur.
+
+Middlegen, mevcut þemalardan Hibernate eþleme dosyasý ve POJO kodlarý üretmek
+için kullanýlýr.
+
+Son olarak, Hibernate'in iþleyiþini hýzlandýrmak, ölçeklemek için,
+\ref{perf:opt:hibernatestart}, \ref{perf:opt:hibernatecache},
+\ref{perf:opt:hibernatelazy}, ve \ref{perf:opt:hibernatefetch} bölümlerine,
+Hibernate kodlarýmýzý JUnit ile birim testlerinden geçirmek için ise,
+\ref{testing:unit:hibernate} bölümüne bakabiliriz.
+

@@ -1,0 +1,32 @@
+# Parameter expansion: flight simulator example
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- mu + g[treatment[i]] + d[airport[i]]
+  }
+  mu ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:n.treatment){
+    g.raw[j] ~ dnorm (mu.g.raw, tau.g.raw)
+    g[j] <- xi.g*(g.raw[j] - mean(g.raw[]))
+  }
+  xi.g ~ dunif (0, 100)
+  mu.g.raw ~ dnorm (0, .0001)
+  tau.g.raw <- pow(sigma.g.raw, -2)
+  sigma.g.raw ~ dunif (0, 100)
+  sigma.g <- xi.g*sigma.g.raw
+
+  for (k in 1:n.airport){
+    d.raw[k] ~ dnorm (mu.d.raw, tau.d.raw)
+    d[k] <- xi.d*(d.raw[k] - mean(d.raw[]))
+  }
+  xi.d ~ dnorm (0, .0001)
+  mu.d.raw ~ dnorm (0, .0001)
+  tau.d.raw <- pow(sigma.d.raw, -2)
+  sigma.d.raw ~ dunif (0, 100)
+  sigma.d <- abs(xi.d)*sigma.d.raw
+}
+

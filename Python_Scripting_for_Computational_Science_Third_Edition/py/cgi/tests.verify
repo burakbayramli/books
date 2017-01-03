@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import *
+
+test = TestRun('tests.v')
+
+f = open('tmp.sh', 'w')
+f.write("""
+export QUERY_STRING='r=3.14'
+python hw1.py.cgi
+echo 'should be 0.00159265291649'
+""")
+f.close()
+os.chmod('tmp.sh', 0755)  # executable for all
+test.run('tmp.sh')
+
+f = open('tmp.sh', 'w')
+f.write("""
+export QUERY_STRING=''
+python hw2.py.cgi
+export QUERY_STRING='r=3.14'
+python hw2.py.cgi
+echo 'should be 0.00159265291649'
+""")
+f.close()
+os.chmod('tmp.sh', 0755)  # executable for all
+test.run('tmp.sh')
+
+f = open('tmp.sh', 'w')
+f.write("""
+export QUERY_STRING=''
+python simviz1.py.cgi
+export QUERY_STRING='m=10&func=siny'
+python simviz1.py.cgi
+""")
+f.close()
+os.chmod('tmp.sh', 0755)  # executable for all
+test.run('tmp.sh')
+
+f = open('tmp.sh', 'w')
+f.write("""
+export QUERY_STRING=''
+python simviz1w.py.cgi
+export QUERY_STRING='m=10&func=siny'
+python simviz1w.py.cgi
+""")
+f.close()
+os.chmod('tmp.sh', 0755)  # executable for all
+test.run('tmp.sh')
+
+# note that <IMG SRC="tmp_... tag contains random numbers
+# that will differ between runs, therefore we remove these lines:
+from subst import subst
+subst(r'<IMG SRC="tmp_.*/tmp_.*\.png">', '', 'tests.v', )
+
+

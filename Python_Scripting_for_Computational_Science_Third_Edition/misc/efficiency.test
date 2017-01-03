@@ -1,0 +1,578 @@
+original (optimal?) code
+
+
+Running on basunus.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:  42.94   g77 -O0 original (optimal?) code
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 89.17     38.14    38.14       80   476.75   476.75  f77wave_
+ 10.47     42.62     4.48        1  4480.00 42770.00  timeloop_
+  0.28     42.74     0.12        1   120.00   150.00  setic_
+  0.05     42.76     0.02   251001     0.00     0.00  bell_
+  0.02     42.77     0.01   251001     0.00     0.00  h_
+  0.00     42.77     0.00        1     0.00 42770.00  MAIN__
+
+g77 -c -pg -O1  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.67   g77 -O1 original (optimal?) code
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 73.09      5.46     5.46       80    68.25    68.25  f77wave_
+ 25.70      7.38     1.92        1  1920.00  7470.00  timeloop_
+  1.20      7.47     0.09        1    90.00    90.00  setic_
+  0.00      7.47     0.00   251001     0.00     0.00  bell_
+  0.00      7.47     0.00   251001     0.00     0.00  h_
+  0.00      7.47     0.00        1     0.00  7470.00  MAIN__
+
+g77 -c -pg -O2  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   5.62   g77 -O2 original (optimal?) code
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 65.43      3.54     3.54       80    44.25    44.25  f77wave_
+ 33.27      5.34     1.80        1  1800.00  5410.00  timeloop_
+  1.11      5.40     0.06        1    60.00    70.00  setic_
+  0.18      5.41     0.01   251001     0.00     0.00  h_
+  0.00      5.41     0.00   251001     0.00     0.00  bell_
+  0.00      5.41     0.00        1     0.00  5410.00  MAIN__
+
+g77 -c -pg -O3  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   5.55   g77 -O3 original (optimal?) code
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 66.30      3.58     3.58       80    44.75    44.75  f77wave_
+ 32.78      5.35     1.77        1  1770.00  5400.00  timeloop_
+  0.93      5.40     0.05        1    50.00    50.00  setic_
+  0.00      5.40     0.00        1     0.00  5400.00  MAIN__
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f F77WAVE.f
+g77 -o app -pg  main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   5.41   g77 -O3 -ffast-math -funroll-loops original (optimal?) code
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 67.55      3.58     3.58       80    44.75    44.75  f77wave_
+ 30.94      5.22     1.64        1  1640.00  5300.00  timeloop_
+  1.51      5.30     0.08        1    80.00    80.00  setic_
+  0.00      5.30     0.00        1     0.00  5300.00  MAIN__
+
+
+
+Running on basunus.ifi.uio.no: f95 compiler (Fujitsu Fortran compiler, v1.0)
+f95 -c -O0  main.f F77WAVE.f
+f95 -o app  -static main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:  15.27   f95 -O0 original (optimal?) code
+app was not compiled in gprof mode (-pg?)
+f95 -c -O1  main.f F77WAVE.f
+f95 -o app  -static main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   6.04   f95 -O1 original (optimal?) code
+app was not compiled in gprof mode (-pg?)
+f95 -c -O2  main.f F77WAVE.f
+f95 -o app  -static main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   6.02   f95 -O2 original (optimal?) code
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3  main.f F77WAVE.f
+f95 -o app  -static main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:   6.02   f95 -O3 original (optimal?) code
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3 -Kloop -KPENTIUM_PRO -x -  main.f F77WAVE.f
+f95 -o app  -static main.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time:  19.45   f95 -O3 -Kloop -KPENTIUM_PRO -x - original (optimal?) code
+app was not compiled in gprof mode (-pg?)
+formatted I/O
+
+
+Running on basunus.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 272.90   g77 -O0 formatted I/O
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 42.52     38.14    38.14       80   476.75   476.75  f77wave_
+ 18.25     54.51    16.37                             x_putc
+ 15.84     68.72    14.21                             f__icvt
+  5.13     73.32     4.60        1  4600.00 44740.00  timeloop_
+  4.67     77.51     4.19                             l_write
+  3.61     80.75     3.24                             f__putbuf
+  2.60     83.08     2.33                             c_le
+  2.16     85.02     1.94                             s_wsle
+
+g77 -c -pg -O1  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 229.95   g77 -O1 formatted I/O
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 29.25     15.53    15.53                             x_putc
+ 25.95     29.31    13.78                             f__icvt
+ 10.19     34.72     5.41       80    67.62    67.62  f77wave_
+  7.98     38.96     4.24                             l_write
+  7.25     42.81     3.85                             f__putbuf
+  4.93     45.43     2.62                             c_le
+  3.75     47.42     1.99        1  1990.00  9310.00  timeloop_
+  3.75     49.41     1.99                             s_wsle
+
+g77 -c -pg -O2  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 238.32   g77 -O2 formatted I/O
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 28.69     15.66    15.66                             x_putc
+ 26.09     29.90    14.24                             f__icvt
+ 10.35     35.55     5.65                             l_write
+  6.58     39.14     3.59       80    44.88    44.88  f77wave_
+  6.19     42.52     3.38                             c_le
+  6.06     45.83     3.31                             f__putbuf
+  5.94     49.07     3.24                             s_wsle
+  3.28     50.86     1.79        1  1790.00  6840.00  timeloop_
+
+g77 -c -pg -O3  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 234.90   g77 -O3 formatted I/O
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 28.72     15.40    15.40                             x_putc
+ 26.55     29.64    14.24                             f__icvt
+  8.37     34.13     4.49                             l_write
+  7.05     37.91     3.78       80    47.25    47.25  f77wave_
+  6.08     41.17     3.26                             f__putbuf
+  5.76     44.26     3.09                             s_wsle
+  5.09     46.99     2.73                             c_le
+  3.69     48.97     1.98       81    24.44    24.44  dump_
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  versions/main_wIO.f F77WAVE.f
+g77 -o app -pg  main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 236.01   g77 -O3 -ffast-math -funroll-loops formatted I/O
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 28.74     15.72    15.72                             x_putc
+ 26.48     30.20    14.48                             f__icvt
+  9.22     35.24     5.04                             l_write
+  6.67     38.89     3.65       80    45.62    45.62  f77wave_
+  6.22     42.29     3.40                             s_wsle
+  6.00     45.57     3.28                             c_le
+  5.47     48.56     2.99                             f__putbuf
+  3.29     50.36     1.80       81    22.22    22.22  dump_
+
+
+
+Running on basunus.ifi.uio.no: f95 compiler (Fujitsu Fortran compiler, v1.0)
+f95 -c -O0  versions/main_wIO.f F77WAVE.f
+f95 -o app  -static main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 255.97   f95 -O0 formatted I/O
+app was not compiled in gprof mode (-pg?)
+f95 -c -O1  versions/main_wIO.f F77WAVE.f
+f95 -o app  -static main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 252.47   f95 -O1 formatted I/O
+app was not compiled in gprof mode (-pg?)
+f95 -c -O2  versions/main_wIO.f F77WAVE.f
+f95 -o app  -static main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 252.40   f95 -O2 formatted I/O
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3  versions/main_wIO.f F77WAVE.f
+f95 -o app  -static main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 252.51   f95 -O3 formatted I/O
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3 -Kloop -KPENTIUM_PRO -x -  versions/main_wIO.f F77WAVE.f
+f95 -o app  -static main_wIO.o F77WAVE.o   -lf2c
+app < input > tmp.out
+CPU-time: 243.93   f95 -O3 -Kloop -KPENTIUM_PRO -x - formatted I/O
+app was not compiled in gprof mode (-pg?)
+traversing the array rowwise
+
+
+Running on basunus.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:  43.50   g77 -O0 traversing the array rowwise
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 89.10     38.60    38.60       80   482.50   482.50  f77wave_
+ 10.57     43.18     4.58        1  4580.00 43320.00  timeloop_
+  0.25     43.29     0.11        1   110.00   140.00  setic_
+  0.07     43.32     0.03   251001     0.00     0.00  bell_
+  0.00     43.32     0.00   251001     0.00     0.00  h_
+  0.00     43.32     0.00        1     0.00 43320.00  MAIN__
+
+g77 -c -pg -O1  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   8.26   g77 -O1 traversing the array rowwise
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 75.12      6.07     6.07       80    75.88    75.88  f77wave_
+ 23.51      7.97     1.90        1  1900.00  8080.00  timeloop_
+  0.87      8.04     0.07        1    70.00   110.00  setic_
+  0.37      8.07     0.03   251001     0.00     0.00  bell_
+  0.12      8.08     0.01   251001     0.00     0.00  h_
+  0.00      8.08     0.00        1     0.00  8080.00  MAIN__
+
+g77 -c -pg -O2  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.37   g77 -O2 traversing the array rowwise
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 74.23      5.30     5.30       80    66.25    66.25  f77wave_
+ 25.07      7.09     1.79        1  1790.00  7130.00  timeloop_
+  0.42      7.12     0.03        1    30.00    40.00  setic_
+  0.14      7.13     0.01   251001     0.00     0.00  bell_
+  0.14      7.14     0.01                             c_le
+  0.00      7.14     0.00   251001     0.00     0.00  h_
+  0.00      7.14     0.00        1     0.00  7130.00  MAIN__
+
+g77 -c -pg -O3  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.30   g77 -O3 traversing the array rowwise
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 74.09      5.32     5.32       80    66.50    66.50  f77wave_
+ 24.65      7.09     1.77        1  1770.00  7170.00  timeloop_
+  1.11      7.17     0.08        1    80.00    80.00  setic_
+  0.14      7.18     0.01                             s_wsle
+  0.00      7.18     0.00        1     0.00  7170.00  MAIN__
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_columntraverse.f
+g77 -o app -pg  main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.22   g77 -O3 -ffast-math -funroll-loops traversing the array rowwise
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 76.24      5.39     5.39       80    67.38    67.38  f77wave_
+ 23.34      7.04     1.65        1  1650.00  7070.00  timeloop_
+  0.42      7.07     0.03        1    30.00    30.00  setic_
+  0.00      7.07     0.00        1     0.00  7070.00  MAIN__
+
+
+
+Running on basunus.ifi.uio.no: f95 compiler (Fujitsu Fortran compiler, v1.0)
+f95 -c -O0  main.f versions/F77WAVE_columntraverse.f
+f95 -o app  -static main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:  15.97   f95 -O0 traversing the array rowwise
+app was not compiled in gprof mode (-pg?)
+f95 -c -O1  main.f versions/F77WAVE_columntraverse.f
+f95 -o app  -static main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.27   f95 -O1 traversing the array rowwise
+app was not compiled in gprof mode (-pg?)
+f95 -c -O2  main.f versions/F77WAVE_columntraverse.f
+f95 -o app  -static main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.27   f95 -O2 traversing the array rowwise
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3  main.f versions/F77WAVE_columntraverse.f
+f95 -o app  -static main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:   7.31   f95 -O3 traversing the array rowwise
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3 -Kloop -KPENTIUM_PRO -x -  main.f versions/F77WAVE_columntraverse.f
+f95 -o app  -static main.o F77WAVE_columntraverse.o   -lf2c
+app < input > tmp.out
+CPU-time:  19.58   f95 -O3 -Kloop -KPENTIUM_PRO -x - traversing the array rowwise
+app was not compiled in gprof mode (-pg?)
+lambda array replaced by h(0,0) calls
+
+
+Running on basunus.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  49.10   g77 -O0 lambda array replaced by h(0,0) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 64.79     18.64    18.64       80   233.00   302.27  f77wave_
+ 19.29     24.19     5.55 160891641     0.00     0.00  h_
+ 15.54     28.66     4.47        1  4470.00 28770.00  timeloop_
+  0.28     28.74     0.08        1    80.00   118.66  setic_
+  0.10     28.77     0.03   251001     0.00     0.00  bell_
+  0.00     28.77     0.00        1     0.00 28770.00  MAIN__
+
+g77 -c -pg -O1  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  37.56   g77 -O1 lambda array replaced by h(0,0) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 76.95     13.22    13.22       80   165.25   187.84  f77wave_
+ 11.93     15.27     2.05        1  2050.00 17180.00  timeloop_
+ 10.54     17.08     1.81 160891641     0.00     0.00  h_
+  0.52     17.17     0.09        1    90.00   102.82  setic_
+  0.06     17.18     0.01   251001     0.00     0.00  bell_
+  0.00     17.18     0.00        1     0.00 17180.00  MAIN__
+
+g77 -c -pg -O2  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  37.91   g77 -O2 lambda array replaced by h(0,0) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 75.36     12.66    12.66       80   158.25   184.83  f77wave_
+ 12.68     14.79     2.13 160891641     0.00     0.00  h_
+ 11.67     16.75     1.96        1  1960.00 16800.00  timeloop_
+  0.24     16.79     0.04        1    40.00    53.32  setic_
+  0.06     16.80     0.01   251001     0.00     0.00  bell_
+  0.00     16.80     0.00        1     0.00 16800.00  MAIN__
+
+g77 -c -pg -O3  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  37.85   g77 -O3 lambda array replaced by h(0,0) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 75.12     12.44    12.44       80   155.50   182.88  f77wave_
+ 13.22     14.63     2.19 160640640     0.00     0.00  h_
+ 11.41     16.52     1.89        1  1890.00 16560.00  timeloop_
+  0.24     16.56     0.04        1    40.00    40.00  setic_
+  0.00     16.56     0.00        1     0.00 16560.00  MAIN__
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_call_h00.f
+g77 -o app -pg  main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  37.59   g77 -O3 -ffast-math -funroll-loops lambda array replaced by h(0,0) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 76.01     12.83    12.83       80   160.38   188.00  f77wave_
+ 13.09     15.04     2.21 160640640     0.00     0.00  h_
+ 10.60     16.83     1.79        1  1790.00 16880.00  timeloop_
+  0.30     16.88     0.05        1    50.00    50.00  setic_
+  0.00     16.88     0.00        1     0.00 16880.00  MAIN__
+
+
+
+Running on basunus.ifi.uio.no: f95 compiler (Fujitsu Fortran compiler, v1.0)
+f95 -c -O0  main.f versions/F77WAVE_call_h00.f
+f95 -o app  -static main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  30.55   f95 -O0 lambda array replaced by h(0,0) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O1  main.f versions/F77WAVE_call_h00.f
+f95 -o app  -static main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  12.33   f95 -O1 lambda array replaced by h(0,0) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O2  main.f versions/F77WAVE_call_h00.f
+f95 -o app  -static main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  12.33   f95 -O2 lambda array replaced by h(0,0) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3  main.f versions/F77WAVE_call_h00.f
+f95 -o app  -static main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  12.32   f95 -O3 lambda array replaced by h(0,0) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3 -Kloop -KPENTIUM_PRO -x -  main.f versions/F77WAVE_call_h00.f
+f95 -o app  -static main.o F77WAVE_call_h00.o   -lf2c
+app < input > tmp.out
+CPU-time:  22.18   f95 -O3 -Kloop -KPENTIUM_PRO -x - lambda array replaced by h(0,0) calls
+app was not compiled in gprof mode (-pg?)
+lambda array replaced by h(x,y) calls
+
+
+Running on basunus.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  56.54   g77 -O0 lambda array replaced by h(x,y) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 69.15     25.53    25.53       80   319.12   404.12  f77wave_
+ 18.45     32.34     6.81 160891641     0.00     0.00  h_
+ 12.13     36.82     4.48        1  4480.00 36920.00  timeloop_
+  0.14     36.87     0.05   251001     0.00     0.00  bell_
+  0.14     36.92     0.05        1    50.00   110.62  setic_
+  0.00     36.92     0.00        1     0.00 36920.00  MAIN__
+
+g77 -c -pg -O1  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  41.33   g77 -O1 lambda array replaced by h(x,y) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 77.95     16.76    16.76       80   209.50   240.45  f77wave_
+ 11.53     19.24     2.48 160891641     0.00     0.00  h_
+  9.81     21.35     2.11        1  2110.00 21500.00  timeloop_
+  0.47     21.45     0.10        1   100.00   153.87  setic_
+  0.23     21.50     0.05   251001     0.00     0.00  bell_
+  0.00     21.50     0.00        1     0.00 21500.00  MAIN__
+
+g77 -c -pg -O2  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  42.88   g77 -O2 lambda array replaced by h(x,y) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 79.82     18.24    18.24       80   228.00   260.70  f77wave_
+ 11.47     20.86     2.62 160891641     0.00     0.00  h_
+  8.40     22.78     1.92        1  1920.00 22850.00  timeloop_
+  0.22     22.83     0.05        1    50.00    74.09  setic_
+  0.09     22.85     0.02   251001     0.00     0.00  bell_
+  0.00     22.85     0.00        1     0.00 22850.00  MAIN__
+
+g77 -c -pg -O3  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  42.78   g77 -O3 lambda array replaced by h(x,y) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 81.40     18.34    18.34       80   229.25   257.25  f77wave_
+  9.94     20.58     2.24 160640640     0.00     0.00  h_
+  8.57     22.51     1.93        1  1930.00 22530.00  timeloop_
+  0.09     22.53     0.02        1    20.00    20.00  setic_
+  0.00     22.53     0.00        1     0.00 22530.00  MAIN__
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_call_hxy.f
+g77 -o app -pg  main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  41.97   g77 -O3 -ffast-math -funroll-loops lambda array replaced by h(x,y) calls
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 80.65     18.30    18.30       80   228.75   260.50  f77wave_
+ 11.19     20.84     2.54 160640640     0.00     0.00  h_
+  7.98     22.65     1.81        1  1810.00 22690.00  timeloop_
+  0.18     22.69     0.04        1    40.00    40.00  setic_
+  0.00     22.69     0.00        1     0.00 22690.00  MAIN__
+
+
+
+Running on basunus.ifi.uio.no: f95 compiler (Fujitsu Fortran compiler, v1.0)
+f95 -c -O0  main.f versions/F77WAVE_call_hxy.f
+f95 -o app  -static main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  32.39   f95 -O0 lambda array replaced by h(x,y) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O1  main.f versions/F77WAVE_call_hxy.f
+f95 -o app  -static main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  12.31   f95 -O1 lambda array replaced by h(x,y) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O2  main.f versions/F77WAVE_call_hxy.f
+f95 -o app  -static main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  12.30   f95 -O2 lambda array replaced by h(x,y) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3  main.f versions/F77WAVE_call_hxy.f
+f95 -o app  -static main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  12.32   f95 -O3 lambda array replaced by h(x,y) calls
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3 -Kloop -KPENTIUM_PRO -x -  main.f versions/F77WAVE_call_hxy.f
+f95 -o app  -static main.o F77WAVE_call_hxy.o   -lf2c
+app < input > tmp.out
+CPU-time:  17.64   f95 -O3 -Kloop -KPENTIUM_PRO -x - lambda array replaced by h(x,y) calls
+app was not compiled in gprof mode (-pg?)
+if-test inside the main loop
+
+
+Running on basunus.ifi.uio.no: g77 compiler (GNU f77 compiler, v2.95.4)
+g77 -c -pg -O0  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:  45.37   g77 -O0 if-test inside the main loop
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 89.63     40.52    40.52       80   506.50   506.50  f77wave_
+ 10.00     45.04     4.52        1  4520.00 45210.00  timeloop_
+  0.24     45.15     0.11        1   110.00   170.00  setic_
+  0.07     45.18     0.03   251001     0.00     0.00  bell_
+  0.07     45.21     0.03   251001     0.00     0.00  h_
+  0.00     45.21     0.00        1     0.00 45210.00  MAIN__
+
+g77 -c -pg -O1  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:  11.66   g77 -O1 if-test inside the main loop
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 81.27      9.33     9.33       80   116.62   116.62  f77wave_
+ 17.94     11.39     2.06        1  2060.00 11480.00  timeloop_
+  0.70     11.47     0.08        1    80.00    90.00  setic_
+  0.09     11.48     0.01   251001     0.00     0.00  bell_
+  0.00     11.48     0.00   251001     0.00     0.00  h_
+  0.00     11.48     0.00        1     0.00 11480.00  MAIN__
+
+g77 -c -pg -O2  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:   9.92   g77 -O2 if-test inside the main loop
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 78.89      7.66     7.66       80    95.75    95.75  f77wave_
+ 20.39      9.64     1.98        1  1980.00  9710.00  timeloop_
+  0.41      9.68     0.04        1    40.00    70.00  setic_
+  0.31      9.71     0.03   251001     0.00     0.00  bell_
+  0.00      9.71     0.00   251001     0.00     0.00  h_
+  0.00      9.71     0.00        1     0.00  9710.00  MAIN__
+
+g77 -c -pg -O3  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:   9.87   g77 -O3 if-test inside the main loop
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 79.34      7.72     7.72       80    96.50    96.50  f77wave_
+ 20.14      9.68     1.96        1  1960.00  9730.00  timeloop_
+  0.51      9.73     0.05        1    50.00    50.00  setic_
+  0.00      9.73     0.00        1     0.00  9730.00  MAIN__
+
+g77 -c -pg -O3 -ffast-math -funroll-loops  main.f versions/F77WAVE_loop_wiftest.f
+g77 -o app -pg  main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:   9.67   g77 -O3 -ffast-math -funroll-loops if-test inside the main loop
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 80.02      7.65     7.65       80    95.62    95.62  f77wave_
+ 19.14      9.48     1.83        1  1830.00  9560.00  timeloop_
+  0.84      9.56     0.08        1    80.00    80.00  setic_
+  0.00      9.56     0.00        1     0.00  9560.00  MAIN__
+
+
+
+Running on basunus.ifi.uio.no: f95 compiler (Fujitsu Fortran compiler, v1.0)
+f95 -c -O0  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app  -static main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:  15.84   f95 -O0 if-test inside the main loop
+app was not compiled in gprof mode (-pg?)
+f95 -c -O1  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app  -static main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:   9.47   f95 -O1 if-test inside the main loop
+app was not compiled in gprof mode (-pg?)
+f95 -c -O2  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app  -static main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:   9.52   f95 -O2 if-test inside the main loop
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app  -static main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:   9.45   f95 -O3 if-test inside the main loop
+app was not compiled in gprof mode (-pg?)
+f95 -c -O3 -Kloop -KPENTIUM_PRO -x -  main.f versions/F77WAVE_loop_wiftest.f
+f95 -o app  -static main.o F77WAVE_loop_wiftest.o   -lf2c
+app < input > tmp.out
+CPU-time:  29.58   f95 -O3 -Kloop -KPENTIUM_PRO -x - if-test inside the main loop
+app was not compiled in gprof mode (-pg?)

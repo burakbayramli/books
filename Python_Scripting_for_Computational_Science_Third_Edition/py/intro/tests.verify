@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('hw.py', options='1.2')
+
+test.run('datatrans1.py', options='.datatrans_infile tmp1file')
+test.append('tmp1file')
+test.run('datatrans2.py', options='.datatrans_infile tmp2file')
+test.append('tmp2file')
+test.run('datatrans3a.py', options='.datatrans_infile tmp3afile')
+test.append('tmp3afile')
+test.run('datatrans3b.py', options='.datatrans_infile tmp3bfile')
+test.append('tmp3bfile')
+
+test.run('convert1.py', options='.convert_infile1')
+test.append('tmp-measurements.dat')
+test.append('tmp-model1.dat')
+test.append('tmp-model2.dat')
+
+test.run('convert2.py', options='.convert_infile1')
+test.append('tmp-measurements.dat')
+test.append('tmp-model1.dat')
+test.append('tmp-model2.dat')
+
+test.run('simviz1.py',  options='-A 5.0 -tstop 2 -case tmp4')
+test.append(os.path.join('tmp4','tmp4.i'))
+test.append(os.path.join('tmp4','tmp4.gnuplot'))
+test.append(os.path.join('tmp4','tmp4.ps'), maxlines=30)
+
+print 'loop4simviz..'
+test.run('loop4simviz2.py',  options='c 5 30 10 -yaxis -0.7 0.7 -A 5.0 -tstop 2 -case tmp4 -noscreenplot')
+test.append('tmp_c_runs.html')
+
+print 'NumPy test..'
+test.run('NumPy_basics.py')
+print 'the rest...'
+test.run('leastsquares.py')
+test.run('SciPy.py', options='vectorization')
+test.run('SciPy.py', options='Oscillator 0.05')
+test.run('SciPy.py', options='integrate')
+test.run('ScientificPython.py')
+
+test.run('commontasks.py')

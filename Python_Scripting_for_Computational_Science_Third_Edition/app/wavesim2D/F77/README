@@ -1,0 +1,47 @@
+This directory contains an F77 simulator for solving the 2D wave equation.
+The purpose of this simulator is to play around with various F77 constructs
+in the source code and measure the impact on the efficiency.
+
+There are two basic source code files:
+
+  main.f      -  containing most of the functions
+  F77WAVE.fcp -  containing the "heart" of the solver, i.e., the finite
+                 difference scheme
+
+The main.f.orig and F77WAVE.fcp.orig files are backup copies which should
+be copied to main.f and F77WAVE.fcp before edits are made.
+
+The F77WAVE.fcp code is written with C preprocessor macros (this makes
+the implementation much simpler!) and can be transformed to standard F77 code 
+by the script fccp.py (found in this directory):
+
+  fccp.py F77WAVE.fcp
+
+The files main.f and F77WAVE.f are then to be compiled and linked. 
+See make.sh for an example.
+
+The doc subdirectory contains a description of the mathematical and numerical
+problem associated with this code, in addition to some exercises regarding
+optimization of the code and high-performance computing aspects.
+
+Different code versions corresponding to the exercises in the 
+doc/waveproblem.ps document are found in the subdirectory versions.
+The purpose of the different "inferior" versions of the code in the
+versions subdirectory is to test various high-performance computing aspects:
+
+   * file writing versus pure number crunching, 
+   * row-wise versus column-wise traversal of arrays, 
+   * representing variable coefficients by arrays versus calling functions,
+   * the effect of if-tests inside long do-loops.
+
+The script runall.sh runs all tests on a platform by calling up compile.py
+for each test. The compile.py script contains a list of compilers 
+and corresponding compiler flags of interest. Read the Python code to
+see how new compilers and flags and platforms can be easily added.
+
+(The autoedit.py file performs the same tests by automatic editing of
+the main.f.orig and F77WAVE.fcp.orig files. However, the compile.py
+script is much more advanced than autoedit.py wrt. testing compiler flags etc.)
+
+In Verify/test1.py there is a test problem with graphics (requires the
+plotmtv package).

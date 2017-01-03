@@ -1,0 +1,10 @@
+library(urca)
+set.seed(123456)
+e1 <- rnorm(100)
+e2 <- rnorm(100)
+x <- cumsum(e1)
+y <- -0.4*x + e2
+simdat <- cbind(y, x)
+jo.results <- summary(ca.jo(simdat))
+class(jo.results)
+slotNames(jo.results)

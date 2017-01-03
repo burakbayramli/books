@@ -1,0 +1,823 @@
+-----------------------------------------------------------------------------------------
+       log:  C:\bdm2s2\data\May2002\output\Bdm2S2_ch9_hobbes.log
+  log type:  text
+ opened on:   5 Nov 2002, 14:47:21
+
+. gen cl=7-CL;
+(15600 missing values generated)
+
+. regr demaut W;
+
+      Source |       SS       df       MS              Number of obs =   13787
+-------------+------------------------------           F(  1, 13785) =23645.15
+       Model |  1080.49117     1  1080.49117           Prob > F      =  0.0000
+    Residual |  629.920716 13785  .045696098           R-squared     =  0.6317
+-------------+------------------------------           Adj R-squared =  0.6317
+       Total |  1710.41189 13786  .124068757           Root MSE      =  .21377
+
+------------------------------------------------------------------------------
+      demaut |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   .8645353   .0056223   153.77   0.000     .8535149    .8755557
+       _cons |   .0315135   .0031904     9.88   0.000     .0252599    .0377671
+------------------------------------------------------------------------------
+
+.  predict demres, residual;
+(5893 missing values generated)
+
+.  label var demres "Residual democracy not accounted for by W";
+
+. gen TaxYN=(TAXGDP~=.);
+
+.  replace TaxYN=. if year>1990|year<1970;
+(15447 real changes made, 15447 to missing)
+
+. gen pr=7-PR;
+(15600 missing values generated)
+
+.  regr pr W s ;
+
+      Source |       SS       df       MS              Number of obs =    4006
+-------------+------------------------------           F(  2,  4003) = 4426.45
+       Model |  13516.1795     2  6758.08975           Prob > F      =  0.0000
+    Residual |  6111.58385  4003   1.5267509           R-squared     =  0.6886
+-------------+------------------------------           Adj R-squared =  0.6885
+       Total |  19627.7634  4005  4.90081482           Root MSE      =  1.2356
+
+------------------------------------------------------------------------------
+          pr |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   6.166533   .0758981    81.25   0.000     6.017731    6.315336
+           s |  -.5693782   .0682658    -8.34   0.000    -.7032172   -.4355392
+       _cons |  -.2103706    .051646    -4.07   0.000    -.3116255   -.1091157
+------------------------------------------------------------------------------
+
+.  predict prres,residual;
+(15674 missing values generated)
+
+. egen nasty=rank(cl) if year>1971 & year~=.;
+(15600 missing values generated)
+
+. des CL LifeExp Death lgdpWB CL_WAR Revolutions Guerilla IS_WAR  ;
+
+              storage  display     value
+variable name   type   format      label      variable label
+-------------------------------------------------------------------------------
+CL              byte   %9.0g                  Freedom House: Civil Liberties
+                                                Index 
+LifeExp         float  %9.0g                  WBDI:Life expectancy at birth,
+                                                total (years)
+Deathrate       float  %9.0g                  WBDI:Death rate, crude (per
+                                                1,000 people)
+lgdpWB          float  %9.0g                  log GDP pc: WBDI 2001
+CL_WAR          byte   %9.0g                  CIVIL War (1/0)
+Revolutions     byte   %8.0g                  BANKS: illegal or forced chg.
+                                                in top gov. elite, or attempt
+                                                gain independence
+Guerilla        byte   %9.0g                  BANKS: Guerilla warfare-- aimed
+                                                at overthrow of regime  
+IS_WAR          byte   %9.0g                  COW: Interstate War (1/0)
+
+.  egen mnasty=max(nasty) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace nasty=(nasty/mnasty)*100;
+(4080 real changes made)
+
+. egen short=rank(Deathrate) if year>1971 & year~=.;
+(16690 missing values generated)
+
+. egen mshort=max(short) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace short=(short/mshort)*100;
+(2990 real changes made)
+
+. replace short=-1*(short-100);
+(2990 real changes made)
+
+. egen poor=rank(lgdpWB) if year>1971 & year~=.;
+(15666 missing values generated)
+
+. egen mpoor=max(poor) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace poor=((poor)/(mpoor))*100;
+(4014 real changes made)
+
+. gen cw1=CL_WAR;
+(18735 missing values generated)
+
+. replace cw1=0 if CL_WAR==.;
+(18735 real changes made)
+
+. egen cw2=rank(cw1) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen mcw2=max(cw2) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen mincw2=min(cw2) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace cw1=((cw2-mincw2)/(mcw2-mincw2))*100;
+(14380 real changes made, 13906 to missing)
+
+. gen rev=Revolutions;
+(11280 missing values generated)
+
+. replace rev=0 if Revolutions==.;
+(11280 real changes made)
+
+. egen rev1=rank(rev) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen mrev1=max(rev1) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen minrev1=min(rev1) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace rev=((rev1-minrev1)/(mrev1-minrev1))*100;
+(14634 real changes made, 13906 to missing)
+
+. replace IS_WAR=0 if IS_WAR==. & year<=1997;
+(18497 real changes made)
+
+. egen cow=rank(IS_WAR) if year>1971 & year~=.;
+(14453 missing values generated)
+
+. egen mcow=max(cow) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen mincow=min(cow) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace cow=((cow-mincow)/(mcow-mincow))*100;
+(5227 real changes made)
+
+. gen brute1=cow+rev+cw1;
+(14453 missing values generated)
+
+. egen brute=rank(brute1) if year>1971 & year~=.;
+(14453 missing values generated)
+
+. egen mbrute=max(brute) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen minbrute=min(brute) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace brute=((brute-minbrute)/(mbrute-minbrute))*100;
+(5227 real changes made)
+
+. replace brute=-1*(brute-100);
+(5227 real changes made)
+
+. drop mnasty mpoor mbrute brute1 mshort;
+
+. gen immigrep=immig~=.;
+
+.  replace immigrep=. if year>1993;
+(1321 real changes made, 1321 to missing)
+
+.  label var immigrep "Immigration data available (0/1)";
+
+. gen IMM=immig/WB_pop;
+(19067 missing values generated)
+
+.  label var IMM "immigration/population by country year";
+
+. gen alone=immigrep*immig if year>1971 & year~=.;
+(19315 missing values generated)
+
+. replace alone=0 if immigrep==0 & year>1971 & year~=.;
+(4090 real changes made)
+
+. egen solitary=rank(alone) if year>1971 & year~=.;
+(15225 missing values generated)
+
+. egen msolitary=max(solitary) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen minsolitary=min(solitary) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace solitary=((solitary-minsolitary)/(msolitary-minsolitary))*100 if year>1971 & ye
+> ar~=.;
+(4455 real changes made)
+
+. /*Alternatives for solitary ??? Radios newspapers*/
+> 
+> des Radios Newspapers;
+
+              storage  display     value
+variable name   type   format      label      variable label
+-------------------------------------------------------------------------------
+Radios          long   %12.0g                 BANKS: Radios Per Capita
+                                                1815-1999 
+Newspapers      str5   %5s                    BANKS: Daily Newspaper
+                                                Circulation Per Capita
+                                                1919-1999 Scaling: 0.0001
+
+.  egen soliRad=rank(Radios) if year>1971 & year~=.;
+(15056 missing values generated)
+
+. egen msoliRad=max(soliRad) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. egen minsoliRad=min(soliRad) if year>1971 & year~=.;
+(13906 missing values generated)
+
+. replace soliRad=((soliRad-minsoliRad)/(msoliRad-minsoliRad))*100 if year>1971 & year~=.
+> ;
+(4624 real changes made)
+
+. corr soliRad solitary;
+(obs=3532)
+
+             |  soliRad solitary
+-------------+------------------
+     soliRad |   1.0000
+    solitary |   0.3615   1.0000
+
+
+.  gen sol1=(soliRad+solitary)/2;
+(16148 missing values generated)
+
+. gen Hobbes=(poor+nasty+short+brute+solitary)/5;
+(18209 missing values generated)
+
+. label var Hobbes "Hobbes Index: Life is Nasty, Brutish, Solitary and Short";
+
+. gen parl=1 if Parl_Pres==1;
+(18993 missing values generated)
+
+. replace parl=0 if Parl_Pres~=1;
+(18993 real changes made)
+
+. replace parl=. if Parl_Pres==.;
+(15836 real changes made, 15836 to missing)
+
+. gen mixed=1 if Parl_Pres==2;
+(19591 missing values generated)
+
+. replace mixed=0 if Parl_Pres~=2;
+(19591 real changes made)
+
+. replace mixed=. if Parl_Pres==.;
+(15836 real changes made, 15836 to missing)
+
+. gen pres=1 if Parl_Pres==3;
+(19558 missing values generated)
+
+. replace pres=0 if Parl_Pres~=3;
+(19558 real changes made)
+
+. replace pres=. if Parl_Pres==.;
+(15836 real changes made, 15836 to missing)
+
+. xtreg Hobbes W s , fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1457
+Group variable (i) : regyr                      Number of groups   =       132
+
+R-sq:  within  = 0.3721                         Obs per group: min =         1
+       between = 0.6209                                        avg =      11.0
+       overall = 0.5518                                        max =        41
+
+                                                F(2,1323)          =    392.02
+corr(u_i, Xb)  = 0.3896                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   42.51306   1.605223    26.48   0.000       39.364    45.66212
+           s |  -8.665392   1.353477    -6.40   0.000    -11.32059   -6.010198
+       _cons |   33.89243    1.13959    29.74   0.000     31.65683    36.12803
+-------------+----------------------------------------------------------------
+     sigma_u |  9.3672316
+     sigma_e |  12.514217
+         rho |  .35909471   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(131, 1323) =     4.09           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB , fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1457
+Group variable (i) : regyr                      Number of groups   =       132
+
+R-sq:  within  = 0.3761                         Obs per group: min =         1
+       between = 0.5992                                        avg =      11.0
+       overall = 0.5460                                        max =        41
+
+                                                F(3,1322)          =    265.65
+corr(u_i, Xb)  = 0.3841                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   41.99796   1.610437    26.08   0.000     38.83867    45.15725
+           s |   -8.49403   1.350944    -6.29   0.000    -11.14426   -5.843802
+     lpop_WB |  -.6560195   .2251911    -2.91   0.004     -1.09779   -.2142487
+       _cons |   44.56924   3.837148    11.62   0.000     37.04168    52.09681
+-------------+----------------------------------------------------------------
+     sigma_u |  9.6851376
+     sigma_e |  12.478959
+         rho |  .37591984   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(131, 1322) =     4.17           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB demres parl mixed pres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1127
+Group variable (i) : regyr                      Number of groups   =       106
+
+R-sq:  within  = 0.4981                         Obs per group: min =         1
+       between = 0.8177                                        avg =      10.6
+       overall = 0.6840                                        max =        36
+
+                                                F(7,1014)          =    143.78
+corr(u_i, Xb)  = 0.4524                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |     25.171   2.129672    11.82   0.000     20.99193    29.35007
+           s |   1.046664    1.59905     0.65   0.513    -2.091162     4.18449
+     lpop_WB |  -.2794257   .2362106    -1.18   0.237    -.7429431    .1840918
+      demres |    11.4766   2.062567     5.56   0.000     7.429214    15.52399
+        parl |   13.43433    1.26924    10.58   0.000      10.9437    15.92497
+       mixed |   4.198057   2.089013     2.01   0.045     .0987731    8.297341
+        pres |   15.30165   1.914552     7.99   0.000     11.54471    19.05858
+       _cons |   37.24793   4.080977     9.13   0.000      29.2398    45.25605
+-------------+----------------------------------------------------------------
+     sigma_u |  7.2577637
+     sigma_e |  11.016279
+         rho |   .3026723   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(105, 1014) =     3.37           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB demres parl mixed pres, fe i(ccode);
+
+Fixed-effects (within) regression               Number of obs      =      1127
+Group variable (i) : ccode                      Number of groups   =       110
+
+R-sq:  within  = 0.1499                         Obs per group: min =         1
+       between = 0.6353                                        avg =      10.2
+       overall = 0.6014                                        max =        19
+
+                                                F(7,1010)          =     25.44
+corr(u_i, Xb)  = 0.6363                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |    9.28505   1.702964     5.45   0.000     5.943299     12.6268
+           s |   4.838253   1.024434     4.72   0.000      2.82799    6.848517
+     lpop_WB |   .8331808    1.67701     0.50   0.619    -2.457642    4.124004
+      demres |   5.037949   2.160393     2.33   0.020     .7985763    9.277321
+        parl |   5.259396    1.82991     2.87   0.004     1.668536    8.850256
+       mixed |   6.646086   2.856407     2.33   0.020     1.040914    12.25126
+        pres |  -.3867408   6.331828    -0.06   0.951    -12.81178     12.0383
+       _cons |   29.61625   26.69789     1.11   0.268    -22.77343    82.00592
+-------------+----------------------------------------------------------------
+     sigma_u |  16.262231
+     sigma_e |  5.8168201
+         rho |  .88657091   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(109, 1010) =    35.74           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB WB_growth , fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1445
+Group variable (i) : regyr                      Number of groups   =       132
+
+R-sq:  within  = 0.3769                         Obs per group: min =         1
+       between = 0.5988                                        avg =      10.9
+       overall = 0.5516                                        max =        41
+
+                                                F(4,1309)          =    197.96
+corr(u_i, Xb)  = 0.3992                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   41.49186   1.616176    25.67   0.000     38.32128    44.66244
+           s |  -7.999075   1.353722    -5.91   0.000    -10.65478   -5.343374
+     lpop_WB |  -.6419468   .2255828    -2.85   0.005     -1.08449   -.1994035
+   WB_growth |   .0968171   .0645624     1.50   0.134      -.02984    .2234742
+       _cons |   44.09117    3.84849    11.46   0.000     36.54128    51.64105
+-------------+----------------------------------------------------------------
+     sigma_u |  9.6967545
+     sigma_e |  12.411169
+         rho |  .37904325   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(131, 1309) =     4.03           Prob > F = 0.0000
+
+. xtreg Hobbes W s demres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1419
+Group variable (i) : regyr                      Number of groups   =       131
+
+R-sq:  within  = 0.3867                         Obs per group: min =         1
+       between = 0.5994                                        avg =      10.8
+       overall = 0.5693                                        max =        38
+
+                                                F(3,1285)          =    270.04
+corr(u_i, Xb)  = 0.3774                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   39.03057   1.757504    22.21   0.000     35.58268    42.47846
+           s |  -5.908309   1.476517    -4.00   0.000    -8.804958    -3.01166
+      demres |   12.67356   1.993316     6.36   0.000     8.763045    16.58407
+       _cons |   33.87753    1.16935    28.97   0.000     31.58349    36.17158
+-------------+----------------------------------------------------------------
+     sigma_u |  9.3917856
+     sigma_e |  12.206759
+         rho |  .37184524   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(130, 1285) =     4.02           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB demres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1419
+Group variable (i) : regyr                      Number of groups   =       131
+
+R-sq:  within  = 0.3920                         Obs per group: min =         1
+       between = 0.5724                                        avg =      10.8
+       overall = 0.5630                                        max =        38
+
+                                                F(4,1284)          =    206.98
+corr(u_i, Xb)  = 0.3712                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   38.37882   1.761204    21.79   0.000     34.92366    41.83397
+           s |  -5.643428   1.472743    -3.83   0.000    -8.532675   -2.754181
+     lpop_WB |  -.7435704   .2211831    -3.36   0.001     -1.17749   -.3096505
+      demres |   12.84316   1.986014     6.47   0.000     8.946973    16.73935
+       _cons |   45.96516   3.779525    12.16   0.000     38.55043    53.37988
+-------------+----------------------------------------------------------------
+     sigma_u |  9.7386077
+     sigma_e |  12.158122
+         rho |  .39083623   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(130, 1284) =     4.13           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB WB_growth demres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1408
+Group variable (i) : regyr                      Number of groups   =       131
+
+R-sq:  within  = 0.3926                         Obs per group: min =         1
+       between = 0.5768                                        avg =      10.7
+       overall = 0.5694                                        max =        38
+
+                                                F(5,1272)          =    164.42
+corr(u_i, Xb)  = 0.3860                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   38.20017   1.763506    21.66   0.000     34.74047    41.65987
+           s |  -5.284282   1.476318    -3.58   0.000    -8.180568   -2.387996
+     lpop_WB |  -.7154932   .2219515    -3.22   0.001    -1.150924   -.2800618
+   WB_growth |   .0782587    .064363     1.22   0.224    -.0480106    .2045281
+      demres |   12.66876   1.987286     6.37   0.000     8.770044    16.56748
+       _cons |   45.17628   3.796308    11.90   0.000     37.72857      52.624
+-------------+----------------------------------------------------------------
+     sigma_u |  9.7111179
+     sigma_e |  12.113389
+         rho |  .39124548   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(130, 1272) =     3.95           Prob > F = 0.0000
+
+. xtreg Hobbes W s demres parl mixed pres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1127
+Group variable (i) : regyr                      Number of groups   =       106
+
+R-sq:  within  = 0.4974                         Obs per group: min =         1
+       between = 0.8241                                        avg =      10.6
+       overall = 0.6864                                        max =        36
+
+                                                F(6,1015)          =    167.44
+corr(u_i, Xb)  = 0.4501                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   25.30493   2.127079    11.90   0.000     21.13096    29.47891
+           s |   1.037201   1.599345     0.65   0.517    -2.101199    4.175602
+      demres |   11.42805   2.062565     5.54   0.000     7.380676    15.47543
+        parl |    13.6084    1.26093    10.79   0.000     11.13407    16.08273
+       mixed |   4.807303    2.02493     2.37   0.018     .8337749    8.780831
+        pres |   15.22879   1.913937     7.96   0.000     11.47306    18.98451
+       _cons |   32.61946    1.16024    28.11   0.000     30.34272    34.89621
+-------------+----------------------------------------------------------------
+     sigma_u |  7.1061621
+     sigma_e |  11.018446
+         rho |  .29375481   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(105, 1015) =     3.42           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB WB_growth demres parl mixed pres , fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1122
+Group variable (i) : regyr                      Number of groups   =       106
+
+R-sq:  within  = 0.5014                         Obs per group: min =         1
+       between = 0.8149                                        avg =      10.6
+       overall = 0.6886                                        max =        36
+
+                                                F(8,1008)          =    126.72
+corr(u_i, Xb)  = 0.4510                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   25.35693   2.121751    11.95   0.000     21.19338    29.52049
+           s |   1.041693    1.59329     0.65   0.513    -2.084853    4.168239
+     lpop_WB |  -.2516674   .2351762    -1.07   0.285    -.7131584    .2098237
+   WB_growth |   .1174819   .0779409     1.51   0.132    -.0354632     .270427
+      demres |   11.23949   2.055149     5.47   0.000     7.206631    15.27235
+        parl |   13.56725   1.269456    10.69   0.000     11.07617    16.05833
+       mixed |   4.254066   2.081496     2.04   0.041     .1695048    8.338628
+        pres |   15.36559   1.907561     8.06   0.000     11.62234    19.10884
+       _cons |   36.33194   4.068957     8.93   0.000     28.34734    44.31653
+-------------+----------------------------------------------------------------
+     sigma_u |  7.2117338
+     sigma_e |  10.958235
+         rho |  .30221682   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(105, 1008) =     3.23           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB WB_growth demres parl mixed pres TaxYN, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1122
+Group variable (i) : regyr                      Number of groups   =       106
+
+R-sq:  within  = 0.5140                         Obs per group: min =         1
+       between = 0.8169                                        avg =      10.6
+       overall = 0.6938                                        max =        36
+
+                                                F(9,1007)          =    118.31
+corr(u_i, Xb)  = 0.4585                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   23.58307   2.124674    11.10   0.000     19.41377    27.75236
+           s |   1.230904    1.57436     0.78   0.434    -1.858497    4.320306
+     lpop_WB |  -.2219958   .2323903    -0.96   0.340    -.6780205    .2340288
+   WB_growth |   .1054965   .0770294     1.37   0.171      -.04566    .2566529
+      demres |   10.70872   2.032836     5.27   0.000     6.719639     14.6978
+        parl |   12.92312    1.26038    10.25   0.000     10.44985    15.39639
+       mixed |   4.294164   2.056207     2.09   0.037     .2592219    8.329106
+        pres |   14.71429   1.888703     7.79   0.000     11.00805    18.42054
+       TaxYN |   4.453985   .8741434     5.10   0.000     2.738633    6.169336
+       _cons |   33.81013    4.04985     8.35   0.000     25.86302    41.75724
+-------------+----------------------------------------------------------------
+     sigma_u |  7.1164549
+     sigma_e |  10.825022
+         rho |  .30176624   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(105, 1007) =     3.30           Prob > F = 0.0000
+
+. xtreg Hobbes W s lpop_WB WB_growth demres parl mixed pres TaxYN prres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1122
+Group variable (i) : regyr                      Number of groups   =       106
+
+R-sq:  within  = 0.5413                         Obs per group: min =         1
+       between = 0.8413                                        avg =      10.6
+       overall = 0.7217                                        max =        36
+
+                                                F(10,1006)         =    118.71
+corr(u_i, Xb)  = 0.5075                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   29.73438   2.212718    13.44   0.000     25.39231    34.07646
+           s |  -2.371326   1.599414    -1.48   0.138    -5.509897    .7672446
+     lpop_WB |  -.2539499   .2259133    -1.12   0.261    -.6972652    .1893654
+   WB_growth |   .1133926   .0748769     1.51   0.130    -.0335402    .2603255
+      demres |  -4.436708   2.780615    -1.60   0.111    -9.893177    1.019761
+        parl |   11.78476   1.233842     9.55   0.000     9.363561    14.20596
+       mixed |   3.672795   2.000176     1.84   0.067    -.2522004    7.597791
+        pres |   13.56405    1.84176     7.36   0.000     9.949921    17.17818
+       TaxYN |   3.282282   .8630152     3.80   0.000     1.588765    4.975798
+       prres |   3.729876   .4818252     7.74   0.000     2.784378    4.675373
+       _cons |    33.7282   3.936333     8.57   0.000     26.00384    41.45256
+-------------+----------------------------------------------------------------
+     sigma_u |  6.9030157
+     sigma_e |  10.521561
+         rho |  .30091672   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(105, 1006) =     2.84           Prob > F = 0.0000
+
+. tsset ccode year;
+       panel variable:  ccode, 2 to 990
+        time variable:  year, 1763 to 2000, but with gaps
+
+.  gen L3W=L3.W;
+(726 missing values generated)
+
+.  gen L3S=L3.S;
+(7639 missing values generated)
+
+. tsset, clear;
+
+. xtreg Hobbes dw30 L3W L3S WB_growth demres parl mixed pres TaxYN prres, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1118
+Group variable (i) : regyr                      Number of groups   =       106
+
+R-sq:  within  = 0.5459                         Obs per group: min =         1
+       between = 0.8527                                        avg =      10.5
+       overall = 0.7246                                        max =        36
+
+                                                F(10,1002)         =    120.43
+corr(u_i, Xb)  = 0.4987                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        dw30 |   28.05508   2.372195    11.83   0.000     23.40004    32.71012
+         L3W |     31.898   2.200519    14.50   0.000     27.57985    36.21616
+         L3S |  -4.458811   1.467358    -3.04   0.002    -7.338258   -1.579365
+   WB_growth |   .0808535   .0753168     1.07   0.283    -.0669431    .2286502
+      demres |  -5.065984   2.618537    -1.93   0.053    -10.20443    .0724616
+        parl |   11.60143   1.256944     9.23   0.000     9.134883    14.06797
+       mixed |   3.838084    1.96189     1.96   0.051    -.0117988    7.687968
+        pres |   13.03482   1.863886     6.99   0.000     9.377255    16.69239
+       TaxYN |   3.172319    .867985     3.65   0.000     1.469042    4.875596
+       prres |   3.625597    .461509     7.86   0.000     2.719962    4.531232
+       _cons |   30.34223   1.206121    25.16   0.000     27.97542    32.70905
+-------------+----------------------------------------------------------------
+     sigma_u |  6.7038337
+     sigma_e |  10.478304
+         rho |  .29043868   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(105, 1002) =     2.90           Prob > F = 0.0000
+
+. reg open W S;
+
+      Source |       SS       df       MS              Number of obs =    4353
+-------------+------------------------------           F(  2,  4350) =   47.27
+       Model |  156055.665     2  78027.8324           Prob > F      =  0.0000
+    Residual |  7180142.38  4350  1650.60744           R-squared     =  0.0213
+-------------+------------------------------           Adj R-squared =  0.0208
+       Total |  7336198.05  4352  1685.70727           Root MSE      =  40.628
+
+------------------------------------------------------------------------------
+        open |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   23.33962   2.470809     9.45   0.000     18.49557    28.18366
+           S |  -9.064695   2.210718    -4.10   0.000    -13.39883   -4.730563
+       _cons |   54.31017   1.603758    33.86   0.000     51.16599    57.45435
+------------------------------------------------------------------------------
+
+.  predict openres, residual;
+(15327 missing values generated)
+
+.  reg bhkavg W S;
+
+      Source |       SS       df       MS              Number of obs =    1951
+-------------+------------------------------           F(  2,  1948) =  484.66
+       Model |  5909.73553     2  2954.86776           Prob > F      =  0.0000
+    Residual |  11876.4155  1948  6.09672252           R-squared     =  0.3323
+-------------+------------------------------           Adj R-squared =  0.3316
+       Total |   17786.151  1950  9.12110307           Root MSE      =  2.4692
+
+------------------------------------------------------------------------------
+      bhkavg |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   5.910149   .2196513    26.91   0.000     5.479373    6.340925
+           S |  -1.060008   .2014795    -5.26   0.000    -1.455147   -.6648704
+       _cons |   2.484798   .1420324    17.49   0.000     2.206247     2.76335
+------------------------------------------------------------------------------
+
+.  predict laboredr, residual;
+(17729 missing values generated)
+
+. xtreg Hobbes W s lpop_WB WB_growth demres parl mixed pres TaxYN prres openres laboredr,
+>  fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =       576
+Group variable (i) : regyr                      Number of groups   =        76
+
+R-sq:  within  = 0.6072                         Obs per group: min =         1
+       between = 0.9258                                        avg =       7.6
+       overall = 0.7620                                        max =        18
+
+                                                F(12,488)          =     62.86
+corr(u_i, Xb)  = 0.2775                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      Hobbes |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |    33.7185   3.116822    10.82   0.000     27.59445    39.84254
+           s |  -3.763412    2.31986    -1.62   0.105    -8.321559    .7947352
+     lpop_WB |   .5224073   .3799193     1.38   0.170    -.2240722    1.268887
+   WB_growth |   .0500851     .10879     0.46   0.645    -.1636695    .2638396
+      demres |  -6.752849   3.707219    -1.82   0.069    -14.03693    .5312319
+        parl |   10.80851   1.641922     6.58   0.000       7.5824    14.03462
+       mixed |   5.133145   2.643009     1.94   0.053    -.0599367    10.32623
+        pres |   16.00798   2.175565     7.36   0.000     11.73335    20.28261
+       TaxYN |   2.780596   1.298158     2.14   0.033     .2299265    5.331266
+       prres |   3.392963   .7701587     4.41   0.000     1.879727    4.906199
+     openres |   .0355652   .0107653     3.30   0.001     .0144132    .0567172
+    laboredr |   1.749807   .1973497     8.87   0.000     1.362048    2.137567
+       _cons |   21.84702   6.456687     3.38   0.001     9.160687    34.53336
+-------------+----------------------------------------------------------------
+     sigma_u |  4.4946441
+     sigma_e |   9.768601
+         rho |  .17471488   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(75, 488) =     0.96             Prob > F = 0.5654
+
+. xtreg exchprem ELF60 , fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      1343
+Group variable (i) : regyr                      Number of groups   =       168
+
+R-sq:  within  = 0.0079                         Obs per group: min =         2
+       between = 0.1857                                        avg =       8.0
+       overall = 0.0181                                        max =        17
+
+                                                F(1,1174)          =      9.32
+corr(u_i, Xb)  = 0.0459                         Prob > F           =    0.0023
+
+------------------------------------------------------------------------------
+    exchprem |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       ELF60 |   .2033353   .0665921     3.05   0.002     .0726824    .3339881
+       _cons |   .2163152   .0309193     7.00   0.000      .155652    .2769785
+-------------+----------------------------------------------------------------
+     sigma_u |  .16907045
+     sigma_e |  .51510081
+         rho |  .09725583   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(167, 1174) =     1.00           Prob > F = 0.5025
+
+. xtreg ELF60 W demaut , fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      3436
+Group variable (i) : regyr                      Number of groups   =       240
+
+R-sq:  within  = 0.0013                         Obs per group: min =         2
+       between = 0.1594                                        avg =      14.3
+       overall = 0.0889                                        max =        37
+
+                                                F(2,3194)          =      2.16
+corr(u_i, Xb)  = 0.4157                         Prob > F           =    0.1158
+
+------------------------------------------------------------------------------
+       ELF60 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |  -.0287919   .0252557    -1.14   0.254    -.0783108    .0207271
+      demaut |  -.0040515   .0216589    -0.19   0.852    -.0465183    .0384152
+       _cons |   .4189689   .0104327    40.16   0.000     .3985135    .4394243
+-------------+----------------------------------------------------------------
+     sigma_u |  .17441408
+     sigma_e |  .23509479
+         rho |  .35500445   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(239, 3194) =     7.23           Prob > F = 0.0000
+
+. xtreg ELF60 WoverS demaut, fe i(regyr);
+
+Fixed-effects (within) regression               Number of obs      =      3410
+Group variable (i) : regyr                      Number of groups   =       240
+
+R-sq:  within  = 0.0018                         Obs per group: min =         1
+       between = 0.1735                                        avg =      14.2
+       overall = 0.0871                                        max =        37
+
+                                                F(2,3168)          =      2.87
+corr(u_i, Xb)  = 0.4054                         Prob > F           =    0.0570
+
+------------------------------------------------------------------------------
+       ELF60 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      WoverS |  -.0408187   .0253149    -1.61   0.107    -.0904539    .0088165
+      demaut |   .0031197   .0214999     0.15   0.885    -.0390355    .0452749
+       _cons |   .4255348    .010683    39.83   0.000     .4045886    .4464811
+-------------+----------------------------------------------------------------
+     sigma_u |  .17249185
+     sigma_e |  .23524825
+         rho |  .34964895   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(239, 3168) =     6.98           Prob > F = 0.0000
+
+. log close;
+       log:  C:\bdm2s2\data\May2002\output\Bdm2S2_ch9_hobbes.log
+  log type:  text
+ closed on:   5 Nov 2002, 14:47:51
+-----------------------------------------------------------------------------------------

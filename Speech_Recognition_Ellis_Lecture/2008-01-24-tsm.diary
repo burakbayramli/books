@@ -1,0 +1,36 @@
+% 2008-01-24-tsm.diary
+% Time-scale modification examples
+% see http://www.ee.columbia.edu/~dpwe/e6820/matlab/ for the functions used.
+% 2008-01-24 dpwe@ee.columbia.edu
+
+% Load example soundfile
+[d,sr]=wavread('mpgr1_sx419-8k.wav');
+soundsc(d,sr)
+
+% Simply 'slow it down'
+soundsc(resample(d,3,2),sr)
+
+% Check usage options for time-domain time-scale modification
+help solafs
+
+% Make a longer version
+dsl = solafs(d',.67,400,200,100);
+soundsc(dsl,sr)
+
+% Compare to SOLAFS with a narrow constraint on window adjustment
+dsl2 = solafs(d',.67,400,200,5);
+soundsc(dsl2,sr)
+
+% Check usage of STFT-based TSM
+help pvoc
+
+% Stretch the spectrogram, correct the phase
+dpv = pvoc(d,0.67,256);
+soundsc(dpv,sr)
+
+% What if we do this on a wideband spectrogram (short window)?
+dpv2 = pvoc(d,0.67, 64);
+soundsc(dpv2,sr)
+% It lowers the pitch, but not like slowing down...
+soundsc(resample(d,3,2),sr)
+

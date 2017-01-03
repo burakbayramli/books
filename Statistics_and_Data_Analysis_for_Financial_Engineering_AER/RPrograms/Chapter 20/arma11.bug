@@ -1,0 +1,15 @@
+model{
+for (i in 1:N){ a[i] ~ dnorm(0,tau) }
+mu[1] <- a[1] + M
+for(i in 2:N){
+mu[i] <- a[i] + theta*a[i-1] + phi*y[i-1]
+}
+for (i in 1:N){
+y[i] ~ dnorm(mu[i],10000)
+}
+theta ~ dnorm(0,.00001)
+phi ~ dnorm(0,.00001)
+tau ~ dgamma(0.01,0.01)
+sigma <- 1/sqrt(tau)
+M ~ dnorm(0,.001)
+}

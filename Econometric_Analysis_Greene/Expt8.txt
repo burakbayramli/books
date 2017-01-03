@@ -1,0 +1,600 @@
+﻿Chapter 19. Models with Discrete Dependent Variables
+
+/*=================================================================
+Example 19.1.  Probability Models
+*/=================================================================
+Read ; Nobs = 32 ; nvar = 5 ; Names = 1 $
+OBS      GPA      TUCE     PSI      GRADE 
+  1      2.66      20      0        0  
+  2      2.89      22      0        0  
+  3      3.28      24      0        0  
+  4      2.92      12      0        0  
+  5      4.00      21      0        1  
+  6      2.86      17      0        0  
+  7      2.76      17      0        0  
+  8      2.87      21      0        0  
+  9      3.03      25      0        0  
+ 10      3.92      29      0        1  
+ 11      2.63      20      0        0  
+ 12      3.32      23      0        0  
+ 13      3.57      23      0        0  
+ 14      3.26      25      0        1  
+ 15      3.53      26      0        0  
+ 16      2.74      19      0        0  
+ 17      2.75      25      0        0  
+ 18      2.83      19      0        0  
+ 19      3.12      23      1        0  
+ 20      3.16      25      1        1  
+ 21      2.06      22      1        0  
+ 22      3.62      28      1        1  
+ 23      2.89      14      1        0  
+ 24      3.51      26      1        0  
+ 25      3.54      24      1        1  
+ 26      2.83      27      1        1  
+ 27      3.39      17      1        1  
+ 28      2.67      24      1        0  
+ 29      3.65      21      1        1  
+ 30      4.00      23      1        1  
+ 31      3.10      21      1        0  
+ 32      2.39      19      1        1  
+?
+Namelist ; X = One,GPA,TUCE,PSI $
+Matrix   ; xbar = mean(x) $
+Regress  ; Lhs = Grade ; Rhs = X $
+Calc     ; List ; Scale = 1.0 $
+Matrix   ; List ; ME = Scale * b $
+Probit   ; Lhs = Grade ; Rhs = X ; Marginal Effects $
+Calc     ; List ; Scale = N01(b’xbar) $
+Matrix   ; List ; ME = Scale * b $
+Logit    ; Lhs = Grade ; Rhs = X ; marginal Effects $
+Calc     ; List ; Scale = LGD(b’xbar) $
+Matrix   ; List ; ME = Scale * b $
+Create   ; d0 = 1-Grade ; d1 = Grade $
+Maximize ; Fcn = -d0*exp(b1’x) + d1*log(1-exp(-exp(b1’x)))
+         ; Labels = b1,b2,b3,b4
+         ; Start = b $
+Calc     ; List ; Scale = exp(-exp(b’xbar))*exp(b’xbar) $
+Matrix   ; List ; ME = Scale * b $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = GRADE    Mean=   .3437500000    , S.D.=   .4825587044     |
+| Model size: Observations =      32, Parameters =   4, Deg.Fr.=     28 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -1.498017120      .52388862       -2.859   .0079
+ GPA       .4638516793      .16195635        2.864   .0078  3.1171875
+ TUCE      .1049512224E-01  .19482854E-01     .539   .5944  21.937500
+ PSI       .3785547879      .13917274        2.720   .0111  .43750000
+ SCALE   =  .10000000000000000D+01
+ Matrix ME       has  4 rows and  1 columns.
+        +--------------
+       1| -.1498017D+01
+       2|  .4638517D+00
+       3|  .1049512D-01
+       4|  .3785548D+00
++---------------------------------------------+
+| Binomial Probit Model                       |
+| Number of observations               32     |
+| Iterations completed                  6     |
+| Log likelihood function       -12.81880     |
+| Restricted log likelihood     -20.59173     |
+| Chi-squared                    15.54585     |
+| Degrees of freedom                    3     |
+| Significance level             .1404896E-02 |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Index function for probability
+ Constant -7.452319647      2.5424723       -2.931   .0034
+ GPA       1.625810039      .69388249        2.343   .0191  3.1171875
+ TUCE      .5172894549E-01  .83890261E-01     .617   .5375  21.937500
+ PSI       1.426332342      .59503790        2.397   .0165  .43750000
++-------------------------------------------+
+| Partial derivatives of E[y] = F[*]   with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Index function for probability
+ Constant -2.444733653      .75885194       -3.222   .0013
+ GPA       .5333470255      .23246407        2.294   .0218  3.1171875
+ TUCE      .1696968191E-01  .27119788E-01     .626   .5315  21.937500
+ PSI       .4679083617      .18764238        2.494   .0126  .43750000
+SCALE   =  .32805002591068580D+00
+Matrix ME       has  4 rows and  1 columns.
+        +--------------
+       1| -.2444734D+01
+       2|  .5333470D+00
+       3|  .1696968D-01
+       4|  .4679084D+00
++---------------------------------------------+
+| Multinomial Logit Model                     |
+| Dependent variable                GRADE     |
+| Number of observations               32     |
+| Iterations completed                  6     |
+| Log likelihood function       -12.88963     |
+| Restricted log likelihood     -20.59173     |
+| Chi-squared                    15.40419     |
+| Degrees of freedom                    3     |
+| Significance level             .1501878E-02 |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Characteristics in numerator of Prob[Y = 1]
+ Constant -13.02134648      4.9313241       -2.641   .0083
+ GPA       2.826112525      1.2629411        2.238   .0252  3.1171875
+ TUCE      .9515765670E-01  .14155420         .672   .5014  21.937500
+ PSI       2.378687596      1.0645642        2.234   .0255  .43750000
++-------------------------------------------+
+| Partial derivatives of probabilities with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Observations used for means are All Obs.  |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Marginal effects on Prob[Y = 1]
+ Constant -2.459760743      .81771031       -3.008   .0026
+ GPA       .5338588183      .23703797        2.252   .0243  3.1171875
+ TUCE      .1797548884E-01  .26236909E-01     .685   .4933  21.937500
+ PSI       .4493392735      .19676264        2.284   .0224  .43750000
+SCALE   =  .18890218048721940D+00
+Matrix ME       has  4 rows and  1 columns.
+        +--------------
+       1| -.2459761D+01
+       2|  .5338588D+00
+       3|  .1797549D-01
+       4|  .4493393D+00
++---------------------------------------------+
+| User Defined Optimization                   |
+| Number of observations               32     |
+| Iterations completed                 10     |
+| Log likelihood function       -13.00800     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1       -10.03142629      3.4448183       -2.912   .0036
+ B2        2.293553481      .99127580        2.314   .0207
+ B3        .4115615961E-01  .12327466         .334   .7385
+ B4        1.562276316      .85886363        1.819   .0689
+ SCALE   =  .20817920176287030D+00
+ Matrix ME       has  4 rows and  1 columns.
+        +--------------
+       1| -.2088334D+01
+       2|  .4774701D+00
+       3|  .8567856D-02
+       4|  .3252334D+00
+
+/*=================================================================
+Example 19.2.  Plotting Marginal Effects
+*/=================================================================
+Probit ; Lhs = Grade ; Rhs = X $
+Sample ; 1 - 100 $
+?
+? Computes points to plot
+?
+Create ; GPAi = Trn(2,.02)
+       ; YesPSI  = PHI(b(1) + b(2)*GPAi     + b(3)*xbr(Tuce) + b(4))
+       ; NOPSI   = PHI(b(1) + b(2)*GPAi     + b(3)*xbr(Tuce)       ) $
+?
+? Values of probability at means
+?
+Calc   ; MeanYes = PHI(b(1) + b(2)*xbr(GPA) + b(3)*xbr(Tuce) + b(4)) 
+       ; MeanNo  = PHI(b(1) + b(2)*xbr(GPA) + b(3)*xbr(Tuce)       )
+       ; MeanGPA = Xbr(GPA) $
+?
+? Plot figure
+?
+Plot   ; Lhs = GPAi
+       ; Rhs = YESPSI, NOPSI
+       ; Bars= MEANYes,MEANNo
+       ; Spikes = MeanGPA
+       ; Limits = 0,1 ; EndPoints = 2,4 ; Fill ; Yaxis=P[Grd=1] 
+       ; Title=Effect of PSI on Probabilities $
+?
+? Restore sample before subsequent examples.
+?
+Sample ; 1 - 32 $
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*=================================================================
+Example 19.3.  Structural Equations for  Probit Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 19.4.  Estimates of Logit and Probit Models
+*/=================================================================
+?
+? First pass, use preprogrammed routine for marginal effects.  
+? These results all appear in Example 19.2.  Compute some results.
+?
+Matrix ; xbar = Mean(X) $
+Calc   ; K = Col(X) $
+Probit ; Lhs = Grade ; Rhs = X ; Marginal Effects $
+Matrix ; bp = b ; Vp = Varb $
+Calc   ; bxp = bp’xbar ; Pp = Phi(bxp) ; fp = N01(bxp) $
+Logit  ; Lhs = Grade ; Rhs = X ; Marginal Effects $
+Matrix ; bl = b ; Vl = Varb $
+Calc   ; bxl = bl’xbar ; Pl = Lgp(bxl) ; fl = Lgd(bxl) $
+Calc   ; ql = 1-2*Pl $
+?
+? Compute marginal effects at the means using the formal results
+? For the moment, ignore the fact that the 4th variable in X is a
+? dummy variable.
+? Probit
+Matrix ; gamma = fp*bp ; G = Iden(K) - bxp*bp*xbar’ ; G = fp*G
+       ; Vgamma= G * Vp * G’ ; Stat(gamma,Vgamma) $
+? Logit
+Matrix ; gamma = fl*bl ; G = Iden(K) + ql*bl*xbar’  ; G = fl*G
+       ; Vgamma= G * Vl * G’ ; Stat(gamma,Vgamma) $
+?
+? Marginal effect for a binary variable.  We do this directly,
+? then use the WALD comand.  Note that direct computation with
+? analytic derivatives is almost exactly the same as the WALD
+? result with numerical derivatives, and both are extremely close
+? to the naive approach above which ignores the fact the the
+? variable is binary.
+? Probit
+Matrix ; xbar0 = xbar ; xbar0(4)=0 $
+Matrix ; xbar1 = xbar ; xbar1(4)=1 $
+Calc   ; MEp = Phi(bp’xbar1) - Phi(bp’xbar0) 
+       ; f1   =N01(bp’xbar1) ; f0=-N01(bp’xbar0) $
+Matrix ; g1=f1*xbar1 ; g0=f0*xbar0   ; g10=[g1/g0]
+       ; I2=Iden(2)  ; V=Kron(I2,Vp) ; VME = g10’V*g10 $
+Calc   ; List ; MEp ; Sqr(VME) $
+Wald   ; Fn1=Phi(b1’xbar1) - Phi(b1’xbar0)
+       ; Start = bp ; Var = Vp ; Labels=b1,b2,b3,b4 $
+? Logit
+Calc   ; MEl = Lgp(bl'xbar1) - Lgp(bl'xbar0) 
+       ; f1   =Lgd(bl'xbar1) ; f0=-Lgd(bl'xbar0) $
+Matrix ; g1=f1*xbar1 ; g0=f0*xbar0   ; g10=[g1/g0]
+       ; I2=Iden(2)  ; V=Kron(I2,Vl) ; VME = g10'V*g10 $
+Calc   ; List ; MEl ; Sqr(VME) $
+Wald   ; Fn1=Lgp(b1'xbar1) - Lgp(b1'xbar0)
+       ; Start = bl ; Var = Vl ; Labels=b1,b2,b3,b4 $
+/*
+
+
+        
+Probit marginal effects produced by the PROBIT command
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -2.444733653      .75885194       -3.222   .0013
+ GPA       .5333470255      .23246407        2.294   .0218  3.1171875
+ TUCE      .1696968191E-01  .27119788E-01     .626   .5315  21.937500
+ PSI       .4679083617      .18764238        2.494   .0126  .43750000
+Matrix statistical results: Coefficients=GAMMA     Variance=VGAMMA
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ GAMMA_ 1 -2.444733653      .75885194       -3.222   .0013
+ GAMMA_ 2  .5333470255      .23246407        2.294   .0218
+ GAMMA_ 3  .1696968191E-01  .27119788E-01     .626   .5315
+ GAMMA_ 4  .4679083617      .18764238        2.494   .0126
+ MEP     =  .46442598470126690D+00
+ Result  =  .17015293171558110D+00
++-----------------------------------------------+
+| WALD procedure. Estimates and standard errors |
+| for nonlinear functions                       |
++-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .4644259847      .17028073        2.727   .0064
+
+Logit marginal effects produced by the LOGIT command
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -2.459760743      .81771031       -3.008   .0026
+ GPA       .5338588183      .23703797        2.252   .0243  3.1171875
+ TUCE      .1797548884E-01  .26236909E-01     .685   .4933  21.937500
+ PSI       .4493392735      .19676264        2.284   .0224  .43750000
+Matrix statistical results: Coefficients=GAMMA     Variance=VGAMMA
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ GAMMA_ 1 -2.459760743      .81771031       -3.008   .0026
+ GAMMA_ 2  .5338588183      .23703797        2.252   .0243
+ GAMMA_ 3  .1797548884E-01  .26236909E-01     .685   .4933
+ GAMMA_ 4  .4493392735      .19676264        2.284   .0224
+ MEL     =  .45649839991675790D+00
+ Result  =  .18188153855068880D+00
++-----------------------------------------------+
+| WALD procedure. Estimates and standard errors |
+| for nonlinear functions                       |
++-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .4564983999      .18105372        2.521   .0117
+*/
+/*=================================================================
+Example 19.5.  Wald Test for a Subset of Coefficients
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 19.6.  Restricted Log Likelihoods and a Chow-type
+               Test for Probit Models
+*/=================================================================
+?
+? Test whether PSI=1 and 0 divides the sample into different probit
+? models.
+?
+Sample ; 1 - 32 $
+Probit ; Lhs = Grade ; Rhs = One,GPA,TUCE $
+Calc   ; L10 = Logl $
+Include; New ; PSI = 1 $
+Probit ; Lhs = Grade ; Rhs = One,GPA,TUCE $
+Calc   ; L1  = Logl $
+Include; New ; PSI = 0 $
+Probit ; Lhs = Grade ; Rhs = One,GPA,TUCE $
+Calc   ; L0 = Logl $
+Calc   ; List ; L10 ; L1 ; L0 
+              ; LRTest = 2*(L1+L0-L10)
+              ; Ctb(.95,3) $
+/*
+|=== Pooled ============================================================|
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -6.034326531      2.1210343       -2.845   .0044
+ GPA       1.409575141      .63546771        2.218   .0265  3.1171875
+ TUCE      .5266746003E-01  .75552974E-01     .697   .4857  21.937500
+|=== PSI = 1============================================================|
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -3.870035107      2.8617290       -1.352   .1763
+ GPA       1.102961296      .78464845        1.406   .1598  3.1378571
+ TUCE      .2761610433E-01  .98490512E-01     .280   .7792  22.428571
+|===PSI = 0=============================================================|
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -14.90758306      9.8569123       -1.512   .1304
+ GPA       3.092024736      1.8135908        1.705   .0882  3.1011111
+ TUCE      .1535285643      .27087829         .567   .5709  21.555556
+    L10     = -.16152157328431760D+02
+    L1      = -.82172423029537920D+01
+    L0      = -.36612276368288500D+01
+    LRTEST  =  .85473747772982410D+01
+    Result  =  .78147277654400000D+01
+*/
+/*=================================================================
+Example 19.7.  Probit Model with Groupwise Heteroscedasticity
+*/=================================================================
+? No need to program; we just use the built-in procedure
+Sample ; 1 - 32 $
+? Restricted Model, homoscedastic
+Probit ; Lhs = Grade ; Rhs = X ; Marginal Effects$
+Calc   ; Lr  = Logl $
+?
+? LM test. Compute full model at restricted values. No iterations.
+?
+Probit ; Lhs = Grade ; Rhs = X ; Rh2 = Psi ; Het ; Start=b,0 ; Maxit=0 $
+Calc   ; List ; LMTest = LMSTAT $
+Probit ; Lhs = Grade ; Rhs = X ; Rh2 = Psi ; Het ; Par ; MarginalEffects $
+Calc   ; Lu  = Logl $
+Calc   ; List ; LRTest = 2*(Lu - Lr) $
+Calc   ; List ; WaldTest = (b(5))^2/varb(5,5)  $
+/*
++---------------------------------------------+
+| Binomial Probit Model                       |
+| Restricted log likelihood     -20.59173     |
+| Log likelihood function       -12.81880     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -7.452319647      2.5424723       -2.931   .0034
+ GPA       1.625810039      .69388249        2.343   .0191  3.1171875
+ TUCE      .5172894549E-01  .83890261E-01     .617   .5375  21.937500
+ PSI       1.426332342      .59503790        2.397   .0165  .43750000
+ Partial derivatives of E[y] = F[*]   
+ GPA       .5333470255      .23246407        2.294   .0218  3.1171875
+ TUCE      .1696968191E-01  .27119788E-01     .626   .5315  21.937500
+ PSI       .4679083617      .18764238        2.494   .0126  .43750000
++---------------------------------------------+
+| Iterations completed                  1     |
+| LM Stat. at start values       4.086181     |
+| LM statistic kept as scalar    LMSTAT       |
++---------------------------------------------+
+| Binomial Probit Model, heteroscedastic      |
+| Log likelihood function       -11.89585     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -14.28904915      17.015554        -.840   .4010
+ GPA       3.121550555      3.2140951         .971   .3314  3.1171875
+ TUCE      .1237516165      .35386813         .350   .7266  21.937500
+ PSI       2.343220859      2.3421153        1.000   .3171  .43750000
+          Variance function
+ PSI       1.093371488      1.3540594         .807   .4194  .43750000
+ Partial derivatives of E[y] = F
+ GPA       .6786282685      .43618572        1.556   .1197  3.1171875
+ TUCE      .2690372741E-01  .57651589E-01     .467   .6407  21.937500
+ PSI       .7040071459      .37163541        1.894   .0582  .43750000
+
+ LRTEST  =  .18459040507145450D+01
+ WALDTEST=  .65201873686420550D+00
+*/
+/*=================================================================
+Example 19.8.  Prediction with a Probit Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 19.9.  Fixed Effects in a Logit Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 19.10.  The Maximum Score Estimator
+*/=================================================================
+Probit ; Lhs = Grade ; Rhs = X $
+MScore ; Lhs = Grade ; Rhs = X $
+/*
++---------------------------------------------+
+| Binomial Probit Model                       |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -7.452319647      2.5424723       -2.931   .0034
+ GPA       1.625810039      .69388249        2.343   .0191  3.1171875
+ TUCE      .5172894549E-01  .83890261E-01     .617   .5375  21.937500
+ PSI       1.426332342      .59503790        2.397   .0165  .43750000
+          Predicted
+Actual      0    1  |  Total
+  0        18    3  |     21
+  1         3    8  |     11
+Total      21   11  |     32
++----------------------------------------------------------------------+
+| Maximum Score Estimates of Linear Quantile                           |
+| Regression Model from Binary Response Data                           |
+| Quantile                .500      Number of Parameters =     4       |
+| Observations input   =    32      Maximum Iterations   =   500       |
+| End Game Iterations  =   100      Bootstrap Estimates  =    20       |
+| Normal exit after  100 iterations.                                   |
+| Score functions:     Naive   At theta(0)      Maximum                |
+|            Raw      .31250       .31250        .62500                |
+|     Normalized      .65625       .65625        .81250                |
+| Estimated MSEs from  20 bootstrap samples                            |
++----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -.8928565107      .68287204       -1.308   .1910
+ GPA       .1050498370      .45235084         .232   .8164  3.1171875
+ TUCE      .5995779004E-02  .80781967E-01     .074   .9408  21.937500
+ PSI       .4378765050      .30807068        1.421   .1552  .43750000
+Frequencies of actual & predicted outcomes
+        Predicted
+Actual      0    1  |  Total
+  0        19    2  |     21
+  1         4    7  |     11
+Total      23    9  |     32
+*/
+
+
+
+/*=================================================================
+Example 19.11.  Nonparametric Regression
+*/=================================================================
+Sample ; 1 - 32 $
+Mscore ; Lhs = Grade ; Rhs = X $
+Npreg  ; Lhs = Grade ; Rhs = X ; Pts = 32 ; Smooth = 1 $
+Create ; Xb=NPREGXB ; F1 = NPREGYF $
+Npreg  ; Lhs = Grade ; Rhs = X ; Pts = 32 ; Smooth = .3 $
+Create ; Fpt3 = NPREGYF $
+Npreg  ; Lhs = Grade ; Rhs = X ; Pts = 32 ; Smooth = .5 $
+Create ; Fpt5 = NPREGYF $
+Plot   ; lhs=xb ; rhs=f10,fpt3,fpt5 ;fill
+       ; Yaxis=NonPFhat
+       ; Title=Nonparametric Regression Function$
+
++-----------------------------------------------+
+| Nonparametric Regression                      |
+| Based on    32 observations and  4 parameters |
+| Smoothing parameter            =       1.0000 |
+| Smoothing parameter            =       .50000 |
+| Smoothing parameter            =       .30000 |
+| Descriptive statistics for xb:                |
+| Mean =   -.24229 Standard dev. =       .22992 |
+| Min. =   -.51416 Max.          =       .10312 |
+| Variables created:    NPREGXB  =        x(i)b |
+| (Obs. 1 -      32)    NPREGYF  =     Fitted Y |
+| Set SAMPLE before analyzing. Use LIST to show |
+| or   Plot ; Lhs = NPREGXB   ; Rhs = NPREGYF $ |
++-----------------------------------------------+
+
+
+/*=================================================================
+Example 19.12.  A Comparison of Binary Choice Estimators
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 19.13.  Gender Economics Course in Liberal Arts Colleges
+No Computations.  (Data not publicly available)
+*/=================================================================
+
+/*=================================================================
+Example 19.14.  Attributes and Characteristics
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 19.15.  Multinomial Logit Model for Occupational Choice
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 19.16.  Conditional Logit Model for Travel Mode Choice
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 19.17.  The Independence of Irrelevant Alternatives
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 19.18.  Nested Logit Model
+*/=================================================================
+?
+? Examples 19.18, 19.19, and 19.30 are based on the CLOGIT data set
+? which is listed in full on the next five pages.  The listing is
+? in three columns, and as such is not suitable directly as input to
+? LIMDEP.  The accompanying program file, Ex19_18.lim, contains the
+? full data set, prepared for input.
+?
+/*=================================================================
+Example 19.19.  A Heteroscedastic Extreme Value Model
+*/=================================================================
+?
+/*=================================================================
+Example 19.20.  Multinomial Choice Models Based on the Normal
+                Distribution
+*/=================================================================
+
+
+
+
+

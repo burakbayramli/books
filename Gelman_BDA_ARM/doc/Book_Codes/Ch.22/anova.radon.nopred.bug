@@ -1,0 +1,19 @@
+# Varying-intercept with no predictors (same as file "anova.radon.nopred.bug")
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]]
+    e.y[i] <- y[i] - y.hat[i]     
+  }
+  s.y <- sd(e.y[])
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+  s.a <- sd(a[])
+  for (j in 1:J){
+    a[j] ~ dnorm (mu.a, tau.a)
+  }
+  mu.a ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+}

@@ -1,0 +1,102 @@
+Unix evolved to be a very productive software development environment
+based on two programming tools of different nature: the system programming
+language C for CPU-critical tasks, often involving non-trivial data structures,
+and the Unix shells for gluing C programs to form new
+applications. With only a handful of basic C programs as
+as building blocks, a user can solve a new problem by writing a tailored
+shell program combining existing
+tools in a simple way. For example, there is
+no basic Unix tool that enables browsing a sorted list of the disk usage in
+the directories of a user,
+ but it it is trivial to
+combine three C programs, du for summarizing disk usage,
+sort for sorting lines of text, and less for browsing text files,
+together with the pipe functionality of Unix shells,
+to build the desired tool as a one-line shell instruction:
+
+du $HOME | sort -rn | less
+
+In this way, we glue three programs that are in principle completely
+independent of each other. This is the power of Unix in a nutshell.
+
+A particular Unix shell, like Bourne shell  for instance,
+provides the the language for gluing applications, and a program written
+in a shell is referred to as a script.
+Although the Unix shells have many useful high-level features that
+contribute to keep the size of scripts small, the shells are
+are primitive programming languages, at least when viewed by modern
+programmers. 
+C is a low-level language, often claimed to be designed for the
+machine and not humans. However, low-level system programming
+languages like C and Fortran 77 were introduced as alternatives to
+assembly languages and have been successful for making
+fast code, yet with a reasonable abstraction level.
+The need for programming tools that increase the human productivity
+led to a development of more powerful languages, both for system
+programming and for scripting.
+
+On Windows machines efficient program development also evolved as
+a combination of a system programming language, C++, and a
+scripting language, VisualBasic. C++ is a richer 
+(and much more complicated) language than C
+and supports working with high-level abstractions through 
+concepts like object-oriented and generic programming. VisualBasic is
+is also a richer scripting language than Unix shells.
+For tasks related to Internet programming, Java is taking over as
+the preferred system programming language, with JavaScript as
+a some kind of scripting companion in Web pages.
+During the '90s,
+several powerful scripting languages have emerged and developed to
+a mature state.
+
+System Programming versus Scripting
+
+System programming languages, like Fortran, C, C++, and Java, are
+frequently used to build large programs with complicated data structures
+and algorithms from scratch. These languages give nearly complete control
+of memory usage and CPU-critical program segments, but the amount of
+details at the code level is also huge.
+
+Scripting languages are designed to glue applications
+written in system programming languages and offer for this purpose
+rich interfaces to operating system functionality, file handling, and text
+processing. Running a program, grabbing and modifying its output, and
+directing data to another program are central tasks when gluing applications,
+and these tasks are easier to accomplish in scripting languages  than
+than in system programming languages.
+However, modern scripting languages can more than glue existing components.
+
+The powerful
+scripting languages, of which Perl, Python, and Tcl are examples,
+support numerous higher-level constructs and data structures that enable
+you to write programs that are significantly shorter than programs
+with corresponding functionality written in Fortran, C, C++, or Java.
+In other words, each single statement in a scripting language 
+performs (on average)
+much more work than a single statement in a system programming language.
+Ousterhout's article refers to several examples
+where the code-size ratio and the implementation-time ratio between
+system programming languages and Tcl vary from 2 to 60, in
+favor of Tcl.
+
+
+Scripts are first compiled to hardware-independent byte-code and then
+the byte-code is interpreted. System programming
+languages, with the exception of Java,
+are are compiled in the sense that all code is nailed down to
+hardware-dependent machine instructions before the program is executed.
+Furthermore, the high-level structure of scripts disables the programmer's
+low-level control of how data structures and algorithms behave
+with respect to efficiency. 
+The result 
+is that scripting languages are significantly slower than
+Fortran, C, and C++.
+However, for a wide range of tasks, scripting languages are
+efficient enough on today's computers.
+For text processing they are usually
+faster than system programming languages, because the high-level
+constructs call up highly optimized C code that is difficult
+to beat when writing your own C code.
+Scripting languages like Perl, Python, and Tcl have efficient support
+for migrating CPU-critical code segments to C or C++. This feature
+can often resolve bottlenecks, especially in numerical computing.

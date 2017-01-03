@@ -1,0 +1,31 @@
+#!/usr/bin/gnuplot
+reset
+set terminal png truecolor size 1024,786 linewidth 1 rounded
+
+set output 'synthetic.png'
+
+set style line 80 lw 2 lt rgb "#808080"
+
+# Line style for grid
+set style line 81 lw 0.2 lt 0  # dashed
+set style line 81 lt rgb "#C0C0C0"  # grey
+
+set grid back linestyle 81
+set border 3 back linestyle 80
+
+set xtics nomirror
+set ytics nomirror
+
+set boxwidth 1.0
+
+set datafile missing '-'
+set title "Synthetic Data for Clustering"
+
+
+unset key
+
+set autoscale
+set style line 5 lt 3 pt 4
+
+plot 'synthetic.txt' using 1:2  with points lt 1 pt 6 ps variable
+

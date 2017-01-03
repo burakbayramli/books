@@ -1,0 +1,164 @@
+% Demos for pattern classification lecture
+% 2008-02-07 Dan Ellis dpwe@ee.columbia.edu
+
+% Load data
+load fmtO.txt
+load fmtU.txt
+load fmtA.txt
+% Build 2-dimensional data set [F1, F2]
+dat = [fmtO(:,[1 2]);fmtU(:,[1 2]);fmtA(:,[1 2])];
+size(dat)
+%ans =
+%   150     2
+% 50 examples of each
+
+% Single gaussian example
+% Since a Gaussian is defined by its mean and covariance, 
+% fitting a single Gaussian to a dataset is simply a matter of 
+% calculating the sample mean and covariance, and using the
+% Gaussian they define
+mu = mean(fmtU(:,[1 2]));
+vu = cov(fmtU(:,[1 2]));
+mo = mean(fmtO(:,[1 2]));
+vo = cov(fmtO(:,[1 2]));
+ma = mean(fmtA(:,[1 2]));
+va = cov(fmtA(:,[1 2]));
+% To plot the 1 sigma 'radius' of the Gaussian, do the inverse 
+% mapping from Euclidean space...
+circ = [cos([0:20]'/10*pi),sin([0:20]'/10*pi)];
+[u,s,v] = svd(inv(vo));
+circo = v'*inv(sqrt(s))*circ';
+% Plot on top of data scatter
+plot(fmtU(:,1),fmtU(:,2),'.r',fmtO(:,1),fmtO(:,2),'.b',fmtA(:,1),fmtA(:,2),'.g');
+hold on
+plot(mo(1)+circo(1,:),mo(2)+circo(2,:),'b')
+hold off
+% Can also do the reverse i.e. map data points to space where Gauss is 
+% a unit circle
+im = sqrt(s)*v;
+mU = (im*fmtU(:,[1 2])')';
+mO = (im*fmtO(:,[1 2])')';
+mA = (im*fmtA(:,[1 2])')';
+mmo = (im*mo')';
+plot(mU(:,1),mU(:,2),'.r',mO(:,1),mO(:,2),'.b',mA(:,1),mA(:,2),'.g');
+hold on
+plot(mmo(1)+circ(:,1),mmo(2)+circ(:,2),'b')
+
+% However, back to normal space
+hold off
+plot(fmtU(:,1),fmtU(:,2),'.r',fmtO(:,1),fmtO(:,2),'.b',fmtA(:,1),fmtA(:,2),'.g');
+% Easier to use gmmplot (with a single gauss) to get circle
+gmmplot(mu,vu,[],[1 2],1,'r')
+gmmplot(ma,va,[],[1 2],1,'g')
+gmmplot(mo,vo,[],[1 2],1,'b')
+% Decision boundary is when Gaussians (scaled by priors) are equal
+% Use gmmgridsamp to evaluate over a grid
+[ggA,xx,yy] = gmmgridsamp(ma,va,1,[200 1100 600 1600],60);
+[ggO,xx,yy] = gmmgridsamp(mo,vo,1,[200 1100 600 1600],60);
+[ggU,xx,yy] = gmmgridsamp(mu,vu,1,[200 1100 600 1600],60);
+hold on
+contour(xx,yy,ggO-max(ggA,ggU),[0 0])
+contour(xx,yy,ggA-max(ggO,ggU),[0 0])
+contour(xx,yy,ggU-max(ggO,ggA),[0 0])
+% Reasonable boundary, not particularly optimal for training data
+% Add surfaces
+caxis([0 100])
+surf(xx,yy,ggU,0*ones(size(ggU)))
+surf(xx,yy,ggO,50*ones(size(ggO)))
+surf(xx,yy,ggA,90*ones(size(ggA)))
+
+% Note: making covariances uniform and equal would turn this into linear decision boundaries
+hold off
+vv = [2000,0;0,2000];
+plot(fmtU(:,1),fmtU(:,2),'.r',fmtO(:,1),fmtO(:,2),'.b',fmtA(:,1),fmtA(:,2),'.g');
+gmmplot(mu,vv,[],[1 2],1,'r')
+gmmplot(mo,vv,[],[1 2],1,'b')
+gmmplot(ma,vv,[],[1 2],1,'g')
+[ggU,xx,yy] = gmmgridsamp(mu,vv,1,[200 1100 600 1600],60);
+[ggO,xx,yy] = gmmgridsamp(mo,vv,1,[200 1100 600 1600],60);
+[ggA,xx,yy] = gmmgridsamp(ma,vv,1,[200 1100 600 1600],60);
+hold on
+contour(xx,yy,ggO-max(ggA,ggU),[0 0])
+% Some numerical problems creeping in, but you get the picture
+
+% Gaussian mixture example
+% Can train one GMM on whole data set - a kind of unsupervised clustering
+hold off;
+[gmm,gmv,gmc]=gmmest(dat,3,[],[],50,1);
+% Keep pressing return to step through iterations, see how Gaussians update...
+%Iteration=1 Log data likelihood = -1947.0721 delta=8051.9279
+%Iteration=2 Log data likelihood = -1889.733 delta=57.3391
+%...
+%Iteration=49 Log data likelihood = -1850.7996 delta=0.19012
+%Iteration=50 Log data likelihood = -1850.5923 delta=0.20731
+% Not terrible for our task!
+plot(fmtU(:,1),fmtU(:,2),'.r',fmtO(:,1),fmtO(:,2),'.b',fmtA(:,1),fmtA(:,2),'.g');
+gmmplot(gmm,gmv);
+% But boundary between U and O is pretty chancy - probably diff if we do it again
+[gmm,gmv,gmc]=gmmest(dat,3,[],[],50);
+%Iteration=1 Log data likelihood = -1935.1267 delta=8063.8733
+%Iteration=2 Log data likelihood = -1907.581 delta=27.5458
+%...
+%Iteration=49 Log data likelihood = -1862.8608 delta=0.0036941
+%Iteration=50 Log data likelihood = -1862.8571 delta=0.0036349
+hold off
+plot(fmtU(:,1),fmtU(:,2),'.r',fmtO(:,1),fmtO(:,2),'.b',fmtA(:,1),fmtA(:,2),'.g');
+gmmplot(gmm,gmv);
+% Yuk!
+
+% For our estimate of the bayesian classifier, train GMMs for each class
+[gmmU,gmvU,gmcU]=gmmest(fmtU(:,[1 2]),3,[],[],50);
+%Iteration=1 Log data likelihood = -569.3872 delta=9429.6128
+%Iteration=2 Log data likelihood = -552.1006 delta=17.2866
+%...
+%Iteration=49 Log data likelihood = -547.4049 delta=0.0011051
+%Iteration=50 Log data likelihood = -547.4039 delta=0.0010106
+
+[gmmO,gmvO,gmcO]=gmmest(fmtO(:,[1 2]),3,[],[],50);
+%Iteration=1 Log data likelihood = -570.195 delta=9428.805
+%Iteration=2 Log data likelihood = -548.5755 delta=21.6195
+%...
+%Iteration=49 Log data likelihood = -525.7043 delta=2.9913e-09
+%Iteration=50 Log data likelihood = -525.7043 delta=1.8032e-09
+
+[gmmA,gmvA,gmcA]=gmmest(fmtA(:,[1 2]),3,[],[],50);
+%Iteration=1 Log data likelihood = -626.5629 delta=9372.4371
+%Iteration=2 Log data likelihood = -599.119 delta=27.4439
+%...
+%Iteration=49 Log data likelihood = -588.5126 delta=0.34033
+%Iteration=50 Log data likelihood = -588.341 delta=0.17157
+
+plot(fmtU(:,1),fmtU(:,2),'.r',fmtO(:,1),fmtO(:,2),'.b',fmtA(:,1),fmtA(:,2),'.g');
+gmmplot(gmmU,gmvU,[],[1 2],1,'r');
+gmmplot(gmmO,gmvO,[],[1 2],1,'b');
+gmmplot(gmmA,gmvA,[],[1 2],1,'g');
+% Sample surfaces
+[gmsU,xx,yy] = gmmgridsamp(gmmU,gmvU,gmcU,[200 1100 600 1600],60);
+[gmsO,xx,yy] = gmmgridsamp(gmmO,gmvO,gmcO,[200 1100 600 1600],60);
+[gmsA,xx,yy] = gmmgridsamp(gmmA,gmvA,gmcA,[200 1100 600 1600],60);
+% Decision boundaries
+hold on
+contour(xx,yy,gmsO-max(gmsA,gmsU),[0 0])
+contour(xx,yy,gmsA-max(gmsO,gmsU),[0 0])
+% Freaky!
+% Add surfaces
+caxis([0 100])
+surf(xx,yy,gmsO)
+surf(xx,yy,gmsA)
+surf(xx,yy,gmsU)
+% Note: integral under surfaces is 1 (modulo grid density)
+[sum(sum(gmsU)),sum(sum(gmsO)),sum(sum(gmsA))]
+%ans =
+%    0.0039    0.0039    0.0038
+
+% dx is 900/60 = 15 and dy = 1000/60 = 16.67 so integral is 1/(15*16.67)
+1/(15*16.67)
+%ans =
+%    0.0040
+% a little under
+
+
+% Nice GMM demos using Netlab:
+% (download from http://www.ncrg.aston.ac.uk/netlab/index.php)
+addpath('netlab');  % or where ever you have installed it
+demgmm1;  % visualizing progression of EM re-estimation

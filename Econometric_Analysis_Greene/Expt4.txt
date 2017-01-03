@@ -1,0 +1,1785 @@
+﻿Chapter 15. Systems of Regression Equations
+
+/*=================================================================
+Example 15.1.  Grunfeld's Investment Data
+*/=================================================================
+Read ; Nobs = 100 ; Nvar = 5 ; Names = 1 $
+  Year  Firm      I         F         C     
+  1935  1    317.60   3078.50      2.80
+  1936  1    391.80   4661.70     52.60
+  1937  1    410.60   5387.10    156.90
+  1938  1    257.70   2792.20    209.20
+  1939  1    330.80   4313.20    203.40
+  1940  1    461.20   4643.90    207.20
+  1941  1    512.00   4551.20    255.20
+  1942  1    448.00   3244.10    303.70
+  1943  1    499.60   4053.70    264.10
+  1944  1    547.50   4379.30    201.60
+  1945  1    561.20   4840.90    265.00
+  1946  1    688.10   4900.90    402.20
+  1947  1    568.90   3526.50    761.50
+  1948  1    529.20   3254.70    922.40
+  1949  1    555.10   3700.20   1020.10
+  1950  1    642.90   3755.60   1099.00
+  1951  1    755.90   4833.00   1207.70
+  1952  1    891.20   4924.90   1430.50
+  1953  1   1304.40   6241.70   1777.30
+  1954  1   1486.70   5593.60   2226.30
+  1935  2     40.29    417.50     10.50
+  1936  2     72.76    837.80     10.20
+  1937  2     66.26    883.90     34.70
+  1938  2     51.60    437.90     51.80
+  1939  2     52.41    679.70     64.30
+  1940  2     69.41    727.80     67.10
+  1941  2     68.35    643.60     75.20
+  1942  2     46.80    410.90     71.40
+  1943  2     47.40    588.40     67.10
+  1944  2     59.57    698.40     60.50
+  1945  2     88.78    846.40     54.60
+  1946  2     74.12    893.80     84.80
+  1947  2     62.68    579.00     96.80
+  1948  2     89.36    694.60    110.20
+  1949  2     78.98    590.30    147.40
+  1950  2    100.66    693.50    163.20
+  1951  2    160.62    809.00    203.50
+  1952  2    145.00    727.00    290.60
+  1953  2    174.93   1001.50    346.10
+  1954  2    172.49    703.20    414.90
+  1935  3     33.10   1170.60     97.80
+  1936  3     45.00   2015.80    104.40
+  1937  3     77.20   2803.30    118.00
+  1938  3     44.60   2039.70    156.20
+  1939  3     48.10   2256.20    172.60
+  1940  3     74.40   2132.20    186.60
+  1941  3    113.00   1834.10    220.90
+  1942  3     91.90   1588.00    287.80
+  1943  3     61.30   1749.40    319.90
+  1944  3     56.80   1687.20    321.30
+  1945  3     93.60   2007.70    319.60
+  1946  3    159.90   2208.30    346.00
+  1947  3    147.20   1656.70    456.40
+  1948  3    146.30   1604.40    543.40
+  1949  3     98.30   1431.80    618.30
+  1950  3     93.50   1610.50    647.40
+  1951  3    135.20   1819.40    671.30
+  1952  3    157.30   2079.70    726.10
+  1953  3    179.50   2371.60    800.30
+  1954  3    189.60   2759.90    888.90
+  1935  4     12.93    191.50      1.80
+  1936  4     25.90    516.00       .80
+  1937  4     35.05    729.00      7.40
+  1938  4     22.89    560.40     18.10
+  1939  4     18.84    519.90     23.50
+  1940  4     28.57    628.50     26.50
+  1941  4     48.51    537.10     36.20
+  1942  4     43.34    561.20     60.80
+  1943  4     37.02    617.20     84.40
+  1944  4     37.81    626.70     91.20
+  1945  4     39.27    737.20     92.40
+  1946  4     53.46    760.50     86.00
+  1947  4     55.56    581.40    111.10
+  1948  4     49.56    662.30    130.60
+  1949  4     32.04    583.80    141.80
+  1950  4     32.24    635.20    136.70
+  1951  4     54.38    723.80    129.70
+  1952  4     71.78    864.10    145.50
+  1953  4     90.08   1193.50    174.80
+  1954  4     68.60   1188.90    213.50
+  1935  5    209.90   1362.40     53.80
+  1936  5    355.30   1807.10     50.50
+  1937  5    469.90   2676.30    118.10
+  1938  5    262.30   1801.90    260.20
+  1939  5    230.40   1957.30    312.70
+  1940  5    261.60   2202.90    254.20
+  1941  5    472.80   2380.50    261.40
+  1942  5    445.60   2168.60    298.70
+  1943  5    361.60   1985.10    301.80
+  1944  5    288.20   1813.90    279.10
+  1945  5    258.70   1850.20    213.80
+  1946  5    420.30   2067.70    232.60
+  1947  5    420.50   1796.70    264.80
+  1948  5    494.50   1625.80    306.90
+  1949  5    405.10   1667.00    351.10
+  1950  5    418.80   1677.40    357.80
+  1951  5    588.20   2289.50    342.10
+  1952  5    645.20   2159.40    444.20
+  1953  5    641.00   2031.30    623.60
+  1954  5    459.30   2115.50    669.70
+?
+Namelist ; X = One,F,C $
+
+/*=================================================================
+Example 15.2.  Classical Regression and Least Squares
+*/=================================================================
+?
+? Simple least squares regression
+?
+Regress ; Lhs = I ; Rhs = X ; Res = e $
+Calc   ; List 
+       ; Nfirm = 5 ; Nperiod = 20  
+       ; s2hat = sumsqdev/(nfirm*nperiod) $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = I        Mean=   248.9570000    , S.D.=   267.8654462     |
+| Model size: Observations =     100, Parameters =   3, Deg.Fr.=     97 |
+| Residuals:  Sum of squares= 1570883.687    , Std.Dev.=      127.25831 |
+| Fit:        R-squared=  .778856, Adjusted R-squared =          .77430 |
+| Model test: F[  2,     97] =  170.81,    Prob value =          .00000 |
+| Diagnostic: Log-L =   -624.9928, Restricted(b=0) Log-L =    -700.4398 |
+|             LogAmemiyaPrCrt.=    9.722, Akaike Info. Crt.=     12.560 |
+| Autocorrel: Durbin-Watson Statistic =    .35995,   Rho =       .82002 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -48.02973763      21.480165       -2.236   .0276
+ F         .1050854108      .11377830E-01    9.236   .0000  1922.2230
+ C         .3053655452      .43507814E-01    7.019   .0000  311.06700
+    NFIRM   =  .50000000000000000D+01
+    NPERIOD =  .20000000000000000D+02
+    S2HAT   =  .15708836868581870D+05
+*/
+
+/*=================================================================
+Example 15.3.  Testing and Estimation with Groupwise 
+               Heteroscedasticity
+*/=================================================================
+?------------------------------------------------------------------
+? Testing for groupwise heteroscedasticity
+? First obtain OLS residuals.  (Regression results in Example 15.2)
+?------------------------------------------------------------------
+Regress ; Lhs = I ; Rhs = X ; Res = e $
+?------------------------------------------------------------------
+? Lagrange multiplier statistic
+?
+  Create ; esq = e*e $
+  Calc   ; List ; s2 = e’e/(Nfirm*Nperiod) $
+/*
+  S2HAT   =  .15708836868581870D+05
+*/
+? Group specific variances based on least squares coefficients
+? Then compute statistic
+?
+Matrix ; s2i = Gxbr(esq,firm) 
+Calc   ; vi = 1/s2 * s2i - 1  
+       ; LM  = (Nperiod/2)* vi’vi  
+       ; List; Ctb(.95,4) $
+/*
+Matrix S2I      has  5 rows and  1 columns.
+        +--------------
+       1|  .9410908D+04
+       2|  .7558508D+03
+       3|  .3428849D+05
+       4|  .6334237D+03
+       5|  .3345551D+05
+LM      =  .46629783728753650D+02
+Result  =  .94877290383399850D+01
+*/
+? White’s test
+?
+Create  ; FF = F*F ; CC = C*C ; FC = F*C $
+Regress ; Lhs = esq ; Rhs = X,FF,CC,FC $
+Calc    ; List ; Rsqrd ; White = Nfirm*Nperiod*Rsqrd ; Ctb(.95,5) $
+/*
+    RSQRD   =  .36853667086878680D+00
+    WHITE   =  .36853667086878680D+02
+    Result  =  .11070497756249990D+02
+*/
+? Likelihood ratio statistic
+? We would do this later, so at this point, we just compute it
+?
+Create ; D2=(Firm=2) ; D3 =(Firm=3) ; D4=(Firm=4) ; D5=(Firm=5) $
+Regress; Lhs = i ; Rhs = X 
+Calc   ; List ; LoglR = Logl $
+/*
+    LOGLR   = -.62499278454313890D+03
+*/
+Hreg   ; Lhs = i ; Rhs = X ; Rh2 = D1,D3,D4,D5 $
+Calc   ; List ; LoglU = LogL ; LR = -2*(LogLR - LogLU) $
+/*
+    LOGLU   = -.56453548456485810D+03
+    LR      =  .12091459995656170D+03
+*/
+?------------------------------------------------------------------
+? Least squares with corrected covariance matrices
+?------------------------------------------------------------------
+Regress ; Lhs = i ; Rhs = X ; Res = e $
+Regress ; Lhs = i ; Rhs = X ; Het $
+Create  ; esq = e*e $
+Matrix  ; List ; s2i = Gxbr(esq,firm) $
+Create  ; Wgt = s2i(firm) $
+Matrix  ; Beck = <X’X> * X’[Wgt]X * <X’X>
+Matrix  ; Stat(b,Beck) $
+/*
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -48.02973763      21.480165       -2.236   .0276
+ F         .1050854108      .11377830E-01    9.236   .0000  1922.2230
+ C         .3053655452      .43507814E-01    7.019   .0000  311.06700
++---------+--------------+----------------+--------+---------+----------+
+| Results Corrected for heteroskedasticity White Estimator              |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -48.02973763      15.016673       -3.198   .0019
+ F         .1050854108      .91463746E-02   11.489   .0000  1922.2230
+ C         .3053655452      .59105263E-01    5.166   .0000  311.06700
++---------+--------------+----------------+--------+---------+----------+
+| Results Corrected for heteroskedasticity                              |
++-----------------------------------------------------------------------+
+Matrix statistical results: Coefficients=B         Variance=BECK
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B    _ 1 -48.02973763      14.203666       -3.382   .0007
+ B    _ 2  .1050854108      .90625216E-02   11.596   .0000
+ B    _ 3  .3053655452      .40946815E-01    7.458   .0000
+
+Matrix S2I      has  5 rows and  1 columns.
+               1
+        +--------------
+       1|  .9410908D+04
+       2|  .7558508D+03
+       3|  .3428849D+05
+       4|  .6334237D+03
+       5|  .3345551D+05
+
+*/
+?------------------------------------------------------------------
+? Estimation with groupwise heteroscedasticity
+? There is a built in routine that makes this trivial (we used it 
+? above).  But, we will program this one from scratch, as it is 
+? quite simple.  These three steps are assumed to be taken in order.
+?------------------------------------------------------------------
+? This routine does the GLS regression given the vector of group
+? specific variances.  It then recomputes and shows the variances.
+? Input is the X matrix, y variable, Group indicator.
+?
+Proc = HetReg(X,y,v,group,newv) $
+Create ; vari = v(group) ; wgti = 1/vari $
+Matrix ; Vfgls = <X’[wgti]X> ; bfgls = Vfgls * X’[wgti]y $
+Create ; e2fgls = (y - X’bfgls)^2 $
+Matrix ; Stat(bfgls,Vfgls) ; List ; newv = Gxbr(e2fgls,group) $
+EndProc
+?
+? Get FGLS estimates using s2i computed immediately above by OLS .
+?
+Exec   ; Proc = HetReg(X,i,s2i,firm,news2i) $
+/*
+Matrix statistical results: Coefficients=BFGLS     Variance=VFGLS
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BFGLS_ 1 -36.25370338      6.1243634       -5.920   .0000
+ BFGLS_ 2  .9499051332E-01  .74089758E-02   12.821   .0000
+ BFGLS_ 3  .3378128507      .30225398E-01   11.176   .0000
+Matrix NEWS2I has  5 rows and  1 columns.
+        +--------------
+       1|  .8612147D+04
+       2|  .4091902D+03
+       3|  .3656324D+05
+       4|  .7779749D+03
+       5|  .3290283D+05
+*/
+? Wald tests, standard and modified.  The standard test uses OLS estimate
+? of the common sigma-squared.  Residuals e were computed earlier.
+?
+Calc   ; s2 = e’e/(Nfirm*Nperiod) $
+Proc=WaldHR(X,y,group,s2i,s2)$
+Matrix ; list ; vinv = s2 * Diri(s2i) - 1 $
+Calc   ; List ; Wald = Nperiod/2 * vinv'vinv $
+Create ; ufgls   = e2fgls - s2i(group) 
+       ; ufgls2  = ufgls^2$
+Matrix ; list ; Vi = {1/(Nperiod-1)}* Gxbr(ufgls2,firm)
+              ; Vi = Diag(Vi)
+              ; di = s2i-s2
+              ; Mwald = di'<Vi>di $
+EndProc 
+Exec ; proc = WaldHR(X,i,firm,news2i,s2)$
+/*
+WALD    =  .17676251662853610D+05
+Matrix MWALD    has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .1468135D+05
+*/
+ 
+
+
+?------------------------------------------------------------------
+? To obtain maximum likelihood estimates, we can just iterate the 
+? procedure above, relying on Oberhover and Kmenta.  The procedure 
+? must be modified to update the variance vector.  We also add a 
+? display of the convergence check - when variances stop changing.
+?------------------------------------------------------------------
+Regress ; Lhs = i ; Rhs = X ; Res = e $
+Calc    ; List ; LogLR = LogL $
+/*
+    LOGLR   = -.62499278454313890D+03
+*/
+Create  ; esq = e*e $
+Matrix  ; s2i = Gxbr(esq,Firm) $
+Proc=MLHetReg(X,y,v,group,newv) $
+Label  ; 20 $
+Create ; vari = v(group) ; wgti = 1/vari $
+Matrix ; Vfgls = <X'[wgti]X> ; bfgls = Vfgls * X'[wgti]y $
+Create ; e2fgls = (y - X'bfgls)^2 $
+Matrix ; newv = Gxbr(e2fgls,group) $
+Calc   ; list ; delta = v 'v  + newv'newv - 2*v'newv $
+Matrix ; v = newv $
+GoTo   ; 20 ; Delta > .00000001 $
+EndProc
+Calc ; delta=1 $
+Exec ; proc = MLhetReg(X,i,s2i,firm,news2i) $
+Matrix ; Stat(bfgls,Vfgls) ; List ; news2i $
+Matrix ; logs2 = Loge(s2i) ; uno = Init(Nfirm,1,1) $
+Calc   ; List 
+       ; LogLU = -Nfirm*Nperiod/2*(1 + log(2*pi) + uno’logs2/nfirm) $
+       ; LRTest = -2*(LogLR - LOGLU) $
+/*
+    DELTA   =  .62590200427875520D+07
+    DELTA   =  .65511941265754700D+07
+    DELTA   =  .20804502204418180D+07
+    DELTA   =  .33717997443389890D+06
+    DELTA   =  .33333884671211240D+05
+    DELTA   =  .26472294273376470D+04
+    DELTA   =  .19648467063903810D+03
+    DELTA   =  .14483796119689940D+02
+    DELTA   =  .10795631408691410D+01
+    DELTA   =  .81503868103027340D-01
+    DELTA   =  .62170028686523440D-02
+    DELTA   =  .47779083251953130D-03
+    DELTA   =  .37193298339843750D-04
+    DELTA   =  .28610229492187500D-05
+    DELTA   =  .95367431640625000D-06
+    DELTA   =  .95367431640625000D-06
+    DELTA   =  .00000000000000000D+00
+Matrix statistical results: Coefficients=BFGLS     Variance=VFGLS
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BFGLS_ 1 -23.25817462      4.8151728       -4.830   .0000
+ BFGLS_ 2  .9434995195E-01  .62834136E-02   15.016   .0000
+ BFGLS_ 3  .3337014665      .22038964E-01   15.141   .0000
+LOGLU   = -.56453548787848950D+03
+LRTEST  =  .12091459332929890D+03
+*/
+/*=================================================================
+Example 15.4.  Testing and Estimation with Groupwise 
+               Heteroscedasticity and Cross Sectional Correlation
+*/=================================================================
+?
+? There is a single built-in procedure that does all of this, the
+? TSCS command.  We’ll use it later. But, for this data set, it is
+? also easy to program the computations directly. We’ll do this to
+? illustrate the computations.  First, correlations of residuals.
+?
+Calc      ; Nfirm = Max(firm) ; Nperiod = Max(t) $
+?
+? This procedure takes a column vector of nT residuals and computes
+? a correlation matrix from them, n by n.
+Proc=Corr(ve,nf,nt) $
+Matrix    ; em=mvec( ve,nf,nt) ; em = em'
+          ; ebar = 1/nt * em'1 ; ebar=ebar' ; uno = init(nt,1,1) 
+          ; ebar=kron(ebar,uno); em=em-ebar $ (deviations)
+Matrix    ; V = 1/Nperiod*em'em
+          ; DV = Diag(V) 
+          ; List ; Rmat = Isqr(DV) * V * Isqr(DV) $
+EndProc
+?
+? First for OLS
+?
+Regress   ; Lhs = i ; Rhs = X ; Res =e$
+Exec      ; Proc=Corr(e,Nfirm,Nperiod)$
+?
+? Get GLS, then repeat
+?
+Create    ; esq = e*e $
+Matrix    ; s2i = Gxbr(esq,firm) $
+Create    ; wgti = 1/s2i(firm) $
+Matrix    ; bfgls = <X'[wgti]X>*X'[wgti]i $
+Create    ; efgls = i - X'bfgls $
+Exec      ; proc=Corr(efgls,nfirm,nperiod) $
+/*
+        +----------------------------------------------------------------------
+       1|  .1000000D+01 -.1852380D+00 -.2591969D+00 -.4688830D+00 -.1545814D-01
+       2| -.1852380D+00  .1000000D+01  .1440353D+00  .1862341D+00  .2217868D+00
+       3| -.2591969D+00  .1440353D+00  .1000000D+01  .8813588D+00 -.1215807D+00
+       4| -.4688830D+00  .1862341D+00  .8813588D+00  .1000000D+01 -.1186488D+00
+       5| -.1545814D-01  .2217868D+00 -.1215807D+00 -.1186488D+00  .1000000D+01
+
+Matrix RMAT     has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .1000000D+01 -.3439365D+00 -.1817524D+00 -.3516182D+00 -.1208000D+00
+       2| -.3439365D+00  .1000000D+01  .2827749D+00  .3434752D+00  .1673549D+00
+       3| -.1817524D+00  .2827749D+00  .1000000D+01  .8995338D+00 -.1508231D+00
+       4| -.3516182D+00  .3434752D+00  .8995338D+00  .1000000D+01 -.8536935D-01
+       5| -.1208000D+00  .1673549D+00 -.1508231D+00 -.8536935D-01  .1000000D+01
+*/
+?
+? Testing for a diagonal Sigma.  
+? We need 3 sets of estimates for these tests: OLS, Groupwise
+? heteroscedasticity, and ML with Full sigma. The following 
+? gets all 3 coefficients, logLs and residuals using the
+? major programmed procedures.  We will return to the matrix
+? algebra approach later for GLS.  We compute maximum likelihood
+? estimates for all three specifications.
+?
+? 1.  Linear regression, homoscedastic, no correlation
+?
+Regress; Lhs = i ; Rhs = X ; Res = eo $
+Matrix ; bo = b $
+Calc   ; List ; loglo = logl $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = I        Mean=   248.9570000    , S.D.=   267.8654462     |
+| Model size: Observations =     100, Parameters =   3, Deg.Fr.=     97 |
+| Residuals:  Sum of squares= 1570883.687    , Std.Dev.=      127.25831 |
+| Fit:        R-squared=  .778856, Adjusted R-squared =          .77430 |
+| Model test: F[  2,     97] =  170.81,    Prob value =          .00000 |
+| Diagnostic: Log-L =   -624.9928, Restricted(b=0) Log-L =    -700.4398 |
+|             LogAmemiyaPrCrt.=    9.722, Akaike Info. Crt.=     12.560 |
+| Autocorrel: Durbin-Watson Statistic =    .35995,   Rho =       .82002 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -48.02973763      21.480165       -2.236   .0276
+ F         .1050854108      .11377830E-01    9.236   .0000  1922.2230
+ C         .3053655452      .43507814E-01    7.019   .0000  311.06700
+ LOGLO   = -.62499278454313890D+03
+*/
+? 2.  Groupwise heteroscedastic
+Create ; D2=firm=2 ; D3=firm=3 ; D4=firm=4 ; D5=Firm=5 $
+Hreg   ; Lhs = i ; Rhs = X ; Rh2 = D2,D3,D4,D5 ; Res = eh $
+Matrix ; bh = b $
+Calc   ; List ; loglh = Logl $
+/*
+              +---------------------------------------------+
+              | Multiplicative Heteroskedastic Regr. Model  |
+              | Maximum Likelihood Estimates                |
+              | Dependent variable                    I     |
+              | Weighting variable                  ONE     |
+              | Number of observations              100     |
+              | Iterations completed                 22     |
+              | Log likelihood function       -564.5355     |
+              | Restricted log likelihood     -624.9928     |
+              | Chi-squared                    120.9146     |
+              | Degrees of freedom                    4     |
+              | Significance level             .0000000     |
+              +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Regression (mean) function
+ Constant -23.25855004      4.8151918       -4.830   .0000
+ F         .9434991252E-01  .62834189E-02   15.016   .0000  1922.2230
+ C         .3337022939      .22039121E-01   15.141   .0000  311.06700
+          Variance function (log-linear)
+ Sigma     93.04742539      14.712090        6.325   .0000
+ D2       -3.896931022      .44721360       -8.714   .0000  .20000000
+ D3        1.535678914      .44721360        3.434   .0006  .20000000
+ D4       -1.942561663      .44721360       -4.344   .0000  .20000000
+ D5        1.236884093      .44721360        2.766   .0057  .20000000
+ LOGLH   = -.56453548456485810D+03
+*/
+? 3.  Groupwise heteroscedastic and cross grpoup correlated
+?
+Tscs   ; Lhs = i ; Rhs = X ; Pds = Nperiod ; Res = et $
+Matrix ; bt = b ; V = Part(Sigma,1,5,1,5)
+                ; logdet=logd(V)$ 
+Calc   ; list 
+       ; loglt = -nfirm*nperiod/2*(1+log(2*pi)+logdet/nfirm) $
+/*
+             +--------------------------------------------------+
+             | Groupwise Regression Models                      |
+             | Estimator =                  MLE by Iterated GLS |
+             | Groupwise Het. and Correlated       (S2)         |
+             | Nonautocorrelated disturbances      (R0)         |
+             | Test statistics against the correlation          |
+             | Deg.Fr. =   10 C*(.95) =  18.31 C*(.99) =  23.21 |
+             | Test statistics against the correlation          |
+             | Likelihood ratio    statistic      =     88.5256 |
+             | Log-likelihood function =            -520.272695 |
+             +--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  11.50238832      2.4699654        4.657   .0000
+ F         .5192085034E-01  .42739327E-02   12.148   .0000
+ C         .3190879957      .15723905E-01   20.293   .0000
+Log-likelihood functions for estimated models
+    +--------------------+
+    : Log-L   Parameters : 
+S0  :   -624.993     4   : <--------- OLS
+S1  :   -564.535     8   : <--------- Groupwise heteroscedastic
+S2  :   -520.273    18   : <--------- Cross group correlation
+    +--------------------+
+    LOGLT   = -.52027269550976920D+03
+?
+? LR test for diagonal sigma, then for scalar sigma
+?
+Calc   ; List ; LR = -2*(loglh - loglt)
+              ; DF = Nfirm*(Nfirm-1)/2
+              ; ctb(.95,DF) 
+              ; LR = -2*(loglo - loglt)
+              ; DF = Nfirm*(Nfirm+1)/2 - 1
+              ; ctb(.95,DF) $
+/*
+    LR      =  .88525578110177780D+02  <----- Groupwise heteroscedastic
+    DF      =  .10000000000000000D+02
+    Result  =  .18307038055350020D+02
+    LR      =  .20944017806673950D+03  <----- Scalar VC (OLS)
+    DF      =  .14000000000000000D+02
+    Result  =  .23684791307170030D+02
+*/
+?
+? LM test for diagonal sigma
+?
+Calc   ; nt = nfirm * nperiod $
+Matrix ; meh = Mvec(eh,nfirm,nperiod) ; meh=meh'
+       ; ebar = 1/nperiod * meh'1 ; ebar=ebar' ; uno = init(nperiod,1,1) 
+       ; ebar=kron(ebar,uno); meh=meh-ebar $ (deviations)
+Matrix ; V = 1/Nperiod*meh'meh
+       ; DV = Diag(V) 
+       ; List ; Rmat = Isqr(DV) * V * Isqr(DV) $
+Matrix ; Rmat2 = Dirp(Rmat,Rmat)
+       ; Rmat2 = Rmat2 - Iden(Nfirm)
+       ; uno   = Init(nfirm,1,.5)
+       ; List ; LM = nperiod*uno'Rmat2*uno $
+Matrix RMAT     has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .1000000D+01  .8906432D+00  .8436773D+00  .8843980D+00  .6305300D+00
+       2|  .8906432D+00  .1000000D+01  .7850437D+00  .8199351D+00  .7247403D+00
+       3|  .8436773D+00  .7850437D+00  .1000000D+01  .9226896D+00  .7643978D+00
+       4|  .8843980D+00  .8199351D+00  .9226896D+00  .1000000D+01  .8200157D+00
+       5|  .6305300D+00  .7247403D+00  .7643978D+00  .8200157D+00  .1000000D+01
+Matrix LM       has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .6606686D+02
+?
+? Estimates of model with heteroscedasticity and correlation.
+? We compute the FGLS estimates using matrix algebra, then let
+? the built-in program compute the MLE.
+? 1.  Classical model
+Regress ; Lhs = i ; Rhs = X ; Res = e $
+/*
+These results appear above
+*/
+? 2.  FGLS for correlated disturbances
+Matrix  ; meh = Mvec(e,Nfirm,Nperiod); meh=meh'
+        ; V = 1/Nperiod * meh'meh 
+        ; IT = Iden(Nperiod)
+        ; V = Kron(V,IT)
+        ; Vfgls = <X'<V>X> ; bfgls = Vfgls * X'<V>i 
+        ; Stat (bfgls,Vfgls) $
+/*
+Matrix statistical results: Coefficients=BFGLS     Variance=VFGLS
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BFGLS_ 1 -38.36127721      5.3448709       -7.177   .0000
+ BFGLS_ 2  .9618944505E-01  .54751563E-02   17.568   .0000
+ BFGLS_ 3  .3095320622      .17985085E-01   17.210   .0000
+*/
+? 3.  Maximum likelihood for correlated disturbances
+Tscs    ; Lhs = i ; Rhs = X ; Pds = 20 ; MLE ; Res = eml$
+/*
+             +--------------------------------------------------+
+             | Groupwise Regression Models                      |
+             | Estimator =                  MLE by Iterated GLS |
+             | Groupwise Het. and Correlated       (S2)         |
+             | Nonautocorrelated disturbances      (R0)         |
+             | Test statistics against the correlation          |
+             | Deg.Fr. =   10 C*(.95) =  18.31 C*(.99) =  23.21 |
+             | Test statistics against the correlation          |
+             | Likelihood ratio    statistic      =     88.5256 |
+             | Log-likelihood function =            -520.272695 |
+             +--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  11.50238832      2.4699654        4.657   .0000
+ F         .5192085034E-01  .42739327E-02   12.148   .0000
+ C         .3190879957      .15723905E-01   20.293   .0000
+*/
+? Compute variances and correlations.  Use more program tricks.
+Matrix  ; meh = Mvec(ef,Nfirm,Nperiod); meh=meh'
+        ; List ; V = 1/Nperiod * meh'meh $
+/*
+Matrix V        has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .4046439D+05 -.2087012D+03 -.2457998D+05 -.5691272D+04  .3284091D+05
+       2| -.2087012D+03  .1656743D+03 -.5968510D+02  .1010513D+02  .4834731D+03
+       3| -.2457998D+05 -.5968510D+02  .2149609D+05  .4955445D+04 -.2791468D+05
+       4| -.5691272D+04  .1010513D+02  .4955445D+04  .1220558D+04 -.5935385D+04
+       5|  .3284091D+05  .4834731D+03 -.2791468D+05 -.5935385D+04  .4860731D+05
+*/
+Create  ; D1=0 $
+Namelist; D = D1,D2,D3,D4,D5 $
+Sample  ; 1 - Nperiod $
+Create  ; D = Meh $
+Matrix  ; List ; Xcor(D) $
+Sample  ; 1 – 100 $
+/*
+Correlation Matrix for Listed Variables
+
+               D1       D2       D3       D4       D5
+      D1  1.00000  -.22518  -.28694  -.46691  -.01507
+      D2  -.22518  1.00000   .10488   .16610   .24530
+      D3  -.28694   .10488  1.00000   .88505  -.13902
+      D4  -.46691   .16610   .88505  1.00000  -.10059
+      D5  -.01507   .24530  -.13902  -.10059  1.00000
+
+*/
+
+
+
+
+
+/*=================================================================
+Example 15.5.  Models with Autocorrelation
+*/=================================================================
+?
+? This extension produces a large amount of computation.  We let
+? LIMDEP do the work, as it is already programmed.
+? These estimators are not iterated – does not produce MLE because
+? of the problem of the first observation.
+Tscs ; Lhs = i ; Rhs = X ; Pds = Nperiod ; AR1 ; Res = ear1$
+/*
++--------------------------------------------------+
+| Homoskedastic Regression            (S0)         |
+| Group specific autocorrelation      (R2)         |
+| Autocorrelation coefficients:                    |
+|  .478 -.251  .301  .578  .576                    |
+| Pooled OLS residual variance (SS/nT)   7376.1900 |
+| Test statistics for homoscedasticity:            |
+| Deg.Fr. =    4 C*(.95) =   9.49 C*(.99) =  13.28 |
++--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -40.14627721      17.134883       -2.343   .0191
+ F         .9454669966E-01  .10998587E-01    8.596   .0000
+ C         .3042601355      .42352462E-01    7.184   .0000
+ +--------------------------------------------------+
+| Groupwise Het. Regression           (S1)         |
+| Group specific autocorrelation      (R2)         |
+| Autocorrelation coefficients:                    |
+|  .478 -.251  .301  .578  .576                    |
+| Test statistics for homoscedasticity:            |
+| Deg.Fr. =    4 C*(.95) =   9.49 C*(.99) =  13.28 |
+| Wald                statistic      =   8718.6355 |
+| Likelihood ratio    statistic      =     97.2177 |
+| Test statistics against the correlation          |
+| Lagrange multiplier statistic      =     42.6069 |
++--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -23.81058815      7.6937942       -3.095   .0020
+ F         .8605236132E-01  .95992823E-02    8.964   .0000
+ C         .3321471206      .35485083E-01    9.360   .0000
++--------------------------------------------------+
+| Groupwise Het. and Correlated       (S2)         |
+| Group specific autocorrelation      (R2)         |
+| Autocorrelation coefficients:                    |
+|  .478 -.251  .301  .578  .576                    |
+| Test statistics against the correlation          |
+| Deg.Fr. =   10 C*(.95) =  18.31 C*(.99) =  23.21 |
+| Test statistics against the correlation          |
++--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -15.42434757      4.5952187       -3.357   .0008
+ F         .7522097616E-01  .57097182E-02   13.174   .0000
+ C         .3380684164      .14205476E-01   23.798   .0000
+*/
+
+Matrix ; List ; Sigma $
+/*
+Matrix Result   has  6 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .8453640D+04  .1577584D+03 -.6596486D+04 -.8727218D+03  .2614212D+04
+       2|  .1577584D+03  .2701503D+03 -.1173098D+04 -.5069697D+02  .1312668D+04
+       3| -.6596486D+04 -.1173098D+04  .1607318D+05  .1893528D+04 -.7676288D+04
+       4| -.8727218D+03 -.5069697D+02  .1893528D+04  .3496791D+03 -.2006537D+03
+       5|  .2614212D+04  .1312668D+04 -.7676288D+04 -.2006537D+03  .1299417D+05
+       6|  .4775506D+00 -.2511981D+00  .3005992D+00  .5782376D+00  .5759444D+00
+*/
+Matrix ; V = Part(Sigma,1,5,1,5) ; V = Diag(V) ; H = Vecd(V)
+       ; R = Part(Sigma,6,6,1,5) ; R = Init(1,5,1.0) - Dirp(R,R)
+       ; R = Diag(R) ; V = R*V 
+       ; V = Vecd(V) ; R = Vecd(R) ; List ; V = V' ; H = H' $
+/*
+Matrix V        has  1 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .6525749D+04  .2531037D+03  .1462081D+05  .2327608D+03  .8683846D+04
+
+Matrix H        has  1 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .8453640D+04  .2701503D+03  .1607318D+05  .3496791D+03  .1299417D+05
+*/
+? Get correlations of residuals
+?
+Matrix  ; meh = Mvec(ear1,Nfirm,Nperiod); meh=meh' $
+Create  ; D1=0 $
+Namelist; DA = D1,D2,D3,D4,D5 $
+Sample  ; 1 - Nperiod $
+Create  ; DA = Meh $
+Matrix  ; List ; Xcor(DA) $
+
+Correlation Matrix for Listed Variables
+
+               D1       D2       D3       D4       D5
+      D1  1.00000  -.34911  -.24792  -.35581  -.07157
+      D2  -.34911  1.00000   .15832   .24587   .24396
+      D3  -.24792   .15832  1.00000   .89470  -.17585
+      D4  -.35581   .24587   .89470  1.00000  -.03971
+      D5  -.07157   .24396  -.17585  -.03971  1.00000
+*/
+/*=================================================================
+Example 15.6.  A Random Coefficients Model for Investment
+*/=================================================================
+?
+? Individual OLS results and the two weighted averages
+?
+Matrix  ; bbar = Init(3,1,0.) 
+        ; btilde = Init(3,1,0.)
+        ; Vtilde = Init(3,3,0.) $
+Proc $
+Include ; New ; firm = group $
+Regress ; Lhs = i ; Rhs = X $
+Matrix  ; bbar = bbar + 1/nfirm * b
+        ; Vtilde = Vtilde + <Varb>
+        ; btilde = btilde + <Varb>*b $
+Matrix  ; bi = b' ; Vi = Diag(Varb) ; Vi = Sqrt(Vi) 
+        ; Vi = Vecd(Vi) ; Vi = Vi'
+        ; List ; Result = [bi/vi] $
+EndProc
+Exec   ; Group = 1,5 $
+Matrix ; List ; bbar = bbar’
+              ; btilde = btilde’ * <Vtilde> $
+Sample  ; 1 – 100 $
+/*
+                1             2             3
+        +------------------------------------------
+       1| -.1497825D+03  .1192808D+00  .3714448D+00
+       2|  .1058421D+03  .2583417D-01  .3707282D-01
+        +------------------------------------------
+       1| -.6189961D+01  .7794782D-01  .3157182D+00
+       2|  .1350648D+02  .1997330D-01  .2881317D-01
+        +------------------------------------------
+       1| -.9956306D+01  .2655119D-01  .1516939D+00
+       2|  .3137425D+02  .1556610D-01  .2570408D-01
+        +------------------------------------------
+       1| -.5093902D+00  .5289413D-01  .9240649D-01
+       2|  .8015289D+01  .1570650D-01  .5609897D-01
+        +------------------------------------------
+       1| -.3036853D+02  .1565708D+00  .4238657D+00
+       2|  .1570477D+03  .7888567D-01  .1552162D+00
+       Matrix BBAR     has  1 rows and  3 columns.
+        +------------------------------------------
+       1| -.3936133D+02  .8664896D-01  .2710258D+00
+       Matrix BTILDE   has  1 rows and  3 columns.
+        +------------------------------------------
+       1| -.2057078D+01  .5357167D-01  .2113642D+00
+
+*/
+? FGLS RCM estimates
+?
+Regress ; Lhs = i ; Rhs = X ; Pds = Nperiod ; RCM ; All ; Output = 1 $
+Tscs    ; Lhs = i ; Rhs = X ; Pds = Nperiod ; Model=S2,R0$
+/*
+            +------------------------------------------------+
+            | Random Coefficients Model                      |
+            | Number of groups                 =         5   |
+            | Full sample statistics based on GLS:           |
+            | Mean of dependent variable       =  248.9570   |
+            | Std. Dev. of dependent variable  =  267.8654   |
+            | Residual standard deviation      =  136.6915   |
+            | R squared                        =     .7449   |
+            | Chi-squared for homogeneity test =    603.99   |
+            | Degrees of freedom               =        12   |
+            | Probability value for chi-squared=   .000000   |
+            | X means below are var. weighted OLS slopes.    |
+            | Heterosc. e(i,t). s(i) based on b(i,ols)       |
+            +------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ CONSTANT -23.58361843      34.555476        -.682   .4949 -2.0570778
+ F         .8076463274E-01  .25082856E-01    3.220   .0013  .53571674E-01
+ C         .2839885202      .67789855E-01    4.189   .0000  .21136416
+             +--------------------------------------------------+
+             | Groupwise Regression Models                      |
+             | Estimator =                  2 Step GLS          |
+             | Groupwise Het. and Correlated       (S2)         |
+             | Nonautocorrelated disturbances      (R0)         |
+             | Test statistics against the correlation          |
+             | Deg.Fr. =   10 C*(.95) =  18.31 C*(.99) =  23.21 |
+             | Test statistics against the correlation          |
+             | Likelihood ratio    statistic      =     70.0274 |
+             | Log-likelihood function =            -533.279300 |
+             +--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -28.24669393      4.8882380       -5.779   .0000
+ F         .8910090806E-01  .50722626E-02   17.566   .0000
+ C         .3340150281      .16712537E-01   19.986   .0000
+*/
+/*=================================================================
+Example 15.7.  Predictions for Random Coefficients Estimates
+*/=================================================================
+?
+? No new commands needed.  The predictions are part of the listed
+? results generated by the Regress command above.  The ;OUTPUT=1
+? requests the predictions.
+/*
+           +------------------------------------------------+
+            | Group specific coefficient estimates           |
+            | Prediction for group  1   GROUP001             |
+            | Number of Observations  =           20.0       |
+            | Group Mean of LHS       =      608.02000       |
+            | Group Std. Dev. of LHS  =      309.57463       |
+            | Fit Measures for the Estimators                |
+            | (When not OLS, Rsqrd = 1-ee/yy may be < 0!)    |
+            | Estimator    Sum of Squares    R-squared       |
+            | OLS           143205.877411      .921354       |
+            | GLS           445431.561308      .755377       |
+            | Prediction    148462.926347      .918467       |
+            +------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -71.62930276      52.281631       -1.370   .1707
+ F         .1027848068      .51738412E-01    1.987   .0470  4333.8450
+ C         .3678493144      .14167590        2.596   .0094  648.43500
+            +------------------------------------------------+
+            | Group specific coefficient estimates           |
+            | Prediction for group  2   GROUP002             |
+            | Number of Observations  =           20.0       |
+            | Group Mean of LHS       =       86.12350       |
+            | Group Std. Dev. of LHS  =       42.72556       |
+            | Fit Measures for the Estimators                |
+            | (When not OLS, Rsqrd = 1-ee/yy may be < 0!)    |
+            | Estimator    Sum of Squares    R-squared       |
+            | OLS             2997.444362      .913578       |
+            | GLS            10659.991388      .692654       |
+            | Prediction      3018.144717      .912982       |
+            +------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -9.819347284      62.695200        -.157   .8755
+ F         .8423601873E-01  .51146118E-01    1.647   .0996  693.21000
+ C         .3092166896      .14196989        2.178   .0294  121.24500
+
+            +------------------------------------------------+
+            | Group specific coefficient estimates           |
+            | Prediction for group  3   GROUP003             |
+            | Number of Observations  =           20.0       |
+            | Group Mean of LHS       =      102.29000       |
+            | Group Std. Dev. of LHS  =       48.58450       |
+            | Fit Measures for the Estimators                |
+            | (When not OLS, Rsqrd = 1-ee/yy may be < 0!)    |
+            | Estimator    Sum of Squares    R-squared       |
+            | OLS            13216.587770      .705307       |
+            | GLS           464947.632192    -9.367045       |
+            | Prediction     13224.646228      .705127       |
+            +------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -12.03268753      60.771892        -.198   .8430
+ F         .2793844128E-01  .51576339E-01     .542   .5880  1941.3250
+ C         .1508282049      .14209069        1.061   .2885  400.16000
+            +------------------------------------------------+
+            | Group specific coefficient estimates           |
+            | Prediction for group  4   GROUP004             |
+            | Number of Observations  =           20.0       |
+            | Group Mean of LHS       =       42.89150       |
+            | Group Std. Dev. of LHS  =       19.11019       |
+            | Fit Measures for the Estimators                |
+            | (When not OLS, Rsqrd = 1-ee/yy may be < 0!)    |
+            | Estimator    Sum of Squares    R-squared       |
+            | OLS             1773.233930      .744446       |
+            | GLS            10185.684206     -.467934       |
+            | Prediction      1853.481708      .732881       |
+            +------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  3.269520950      62.785770         .052   .9585
+ F         .4110890739E-01  .51698745E-01     .795   .4265  670.91000
+ C         .1407172262      .14073601        1.000   .3174  85.640000
+            +------------------------------------------------+
+            | Group specific coefficient estimates           |
+            | Prediction for group  5   GROUP005             |
+            | Number of Observations  =           20.0       |
+            | Group Mean of LHS       =      405.46000       |
+            | Group Std. Dev. of LHS  =      129.35190       |
+            | Fit Measures for the Estimators                |
+            | (When not OLS, Rsqrd = 1-ee/yy may be < 0!)    |
+            | Estimator    Sum of Squares    R-squared       |
+            | OLS           177928.313637      .440312       |
+            | GLS           881176.782055    -1.771812       |
+            | Prediction    179173.969986      .436394       |
+            +------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -27.70627551      44.857219        -.618   .5368
+ F         .1477549895      .49187200E-01    3.004   .0027  1971.8250
+ C         .4513311661      .13119431        3.440   .0006  299.85500
+*/
+
+/*=================================================================
+Example 15.8.  Testing for Random Coefficients
+*/=================================================================
+Sample  ; 1 – 100 $
+Proc $
+Matrix  ; chisq = [0] ; bt = btilde’$
+Include ; New ; firm = group $
+Regress ; Lhs = i ; Rhs = X $
+Matrix  ; di = b – bt
+        ; chisq = chisq + di’<Varb>di $
+EndProc
+Exec   ; Group = 1,5 $
+Matrix ; List ; Chisq
+              ; DF = Col(X) * (Nfirm-1)
+              ; Ctb(.95,DF) $
+/*
+    CHISQ   =  .11292634629447980D+03
+    DF      =  .12000000000000000D+02
+    Result  =  .21026069819690030D+02
+*/
+
+/*=================================================================
+Example 15.9.  FGLS Estimates of a Seemingly Unrelated Regressions
+               Model
+*/=================================================================
+? First obtain pooled FGLS estimates using TSCS approach and cor-
+? relations of FGLS residuals. GM by OLS, then switch over to 
+? SUR model.
+?
+Sample   ; 1 - 100 $
+TSCS     ; Lhs = i ; Rhs = X ; Pds = Nperiod ; Model = S2,R0 ; Res = ef $
+Matrix   ; mef = Mvec(ef,nfirm,nperiod) ; mef = mef'  $
+Create   ; d1=0;d2=0;d3=0;d4=0;d5=0 $
+Sample   ; 1-20 $
+Namelist ; Dfgls = d1,d2,d3,d4,d5 $
+Create   ; Dfgls = Mef $
+Matrix   ; List ; Xcor(Dfgls) $
+/*
+             +--------------------------------------------------+
+             | Groupwise Regression Models                      |
+             | Estimator =                  2 Step GLS          |
+             +--------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -28.24669393      4.8882380       -5.779   .0000
+ F         .8910090806E-01  .50722626E-02   17.566   .0000
+ C         .3340150281      .16712537E-01   19.986   .0000
+             D1       D2       D3       D4       D5
+      D1  1.00000  -.34475  -.22325  -.37605  -.09240
+      D2  -.34475  1.00000   .22015   .29070   .20076
+      D3  -.22325   .22015  1.00000   .89731  -.15869
+      D4  -.37605   .29070   .89731  1.00000  -.07575
+      D5  -.09240   .20076  -.15869  -.07575  1.00000
+*/
+?
+? GM by OLS
+?
+Sample ; 1 - 20 $
+Regress ; Lhs = i ; Rhs = X $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = I        Mean=   608.0200000    , S.D.=   309.5746277     |
+| Model size: Observations =      20, Parameters =   3, Deg.Fr.=     17 |
+| Residuals:  Sum of squares= 143205.8774    , Std.Dev.=       91.78167 |
+| Fit:        R-squared=  .921354, Adjusted R-squared =          .91210 |
+| Model test: F[  2,     17] =   99.58,    Prob value =          .00000 |
+| Diagnostic: Log-L =   -117.1418, Restricted(b=0) Log-L =    -142.5698 |
+|             LogAmemiyaPrCrt.=    9.179, Akaike Info. Crt.=     12.014 |
+| Autocorrel: Durbin-Watson Statistic =    .93745,   Rho =       .53127 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -149.7824533      105.84212       -1.415   .1751
+ F         .1192808325      .25834169E-01    4.617   .0002  4333.8450
+ C         .3714448073      .37072824E-01   10.019   .0000  648.43500
+*/
+?
+? Need to set up the data differently for the SUR model.
+?
+Sample   ; 1 - 100 $
+Create   ; igm=0;ich=0;ige=0;iwe=0;ius=0
+         ; fgm=0;fch=0;fge=0;fwe=0;fus=0
+         ; cgm=0;cch=0;cge=0;cwe=0;cus=0 $
+Matrix   ; mi = Mvec(i,nfirm,nperiod) ; mi = mi' $
+Matrix   ; mf = Mvec(f,nfirm,nperiod) ; mf = mf' $
+Matrix   ; mc = Mvec(c,nfirm,nperiod) ; mc = mc' $
+Namelist ; Ivars = igm,ich,ige,iwe,ius
+         ; Fvars = fgm,fch,fge,fwe,fus
+         ; Cvars = cgm,cch,cge,cwe,cus $
+Sample   ; 1 - 20 $
+Create   ; Ivars = mi $
+Create   ; Fvars = mf $
+Create   ; Cvars = mc $
+Namelist ; XGM = One,fgm,cgm
+         ; XCH = One,fch,cch
+         ; XGE = One,fge,cge
+         ; XWE = One,fwe,cwe
+         ; XUS = One,fus,cus $
+SURE     ; Lhs = igm,ich,ige,ius,iwe
+         ; Eq1=XGM ; Eq2=XCH ; Eq3=XGE ; Eq4=XUS ; Eq5=XWE
+         ; Maxit = 1 $
+Matrix   ; List ; Sigma $
+/*
+Iteration    0, GLS           =   -463.5217
+Iteration    1, GLS           =   -459.4397
++-----------------------------------------------------------------------+
+| Estimates for equation: IGM                                           |
+| Dep. var. = IGM      Mean=   608.0200000    , S.D.=   309.5746277     |
+| Residuals:  Sum of squares= 122672.7450    , Std.Dev.=       84.94730 |
+| Fit:        R-squared=  .920742, Adjusted R-squared =          .91142 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  2,     17] =   98.74,    Prob value =          .00000 |
+| Diagnostic: Log-L =   -115.5942, Restricted(b=0) Log-L =    -142.5698 |
+| Durbin-Watson Stat.=      .9365        Autocorrelation   =      .5318 |
+| Log-determinant of W    31.7546        Log-likelihood       -459.4397 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -162.3641052      89.459232       -1.815   .0695
+ FGM       .1204930237      .21629128E-01    5.571   .0000  4333.8450
+ CGM       .3827461766      .32768033E-01   11.680   .0000  648.43500
++-----------------------------------------------------------------------+
+| Estimates for equation: ICH                                           |
+| Dep. var. = ICH      Mean=   86.12350000    , S.D.=   42.72555506     |
+| Residuals:  Sum of squares= 2598.436843    , Std.Dev.=       12.36322 |
+| Fit:        R-squared=  .911862, Adjusted R-squared =          .90149 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  2,     17] =   87.94,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -77.0481, Restricted(b=0) Log-L =    -102.9618 |
+| Log-determinant of W    31.7546        Log-likelihood       -459.4397 |
+| Durbin-Watson Stat.=     1.9175        Autocorrelation   =      .0412 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .5043036394      11.512829         .044   .9651
+ FCH       .6954561271E-01  .16897506E-01    4.116   .0000  693.21000
+ CCH       .3085445352      .25863550E-01   11.930   .0000  121.24500
++-----------------------------------------------------------------------+
+| Estimates for equation: IGE                                           |
+| Dep. var. = IGE      Mean=   102.2900000    , S.D.=   48.58449937     |
+| Residuals:  Sum of squares= 11907.74782    , Std.Dev.=       26.46612 |
+| Fit:        R-squared=  .687636, Adjusted R-squared =          .65089 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  2,     17] =   18.71,    Prob value =          .00005 |
+| Diagnostic: Log-L =    -92.2709, Restricted(b=0) Log-L =    -105.5319 |
+| Log-determinant of W    31.7546        Log-likelihood       -459.4397 |
+| Durbin-Watson Stat.=      .9628        Autocorrelation   =      .5186 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -22.43891319      25.518586        -.879   .3792
+ FGE       .3729143220E-01  .12263143E-01    3.041   .0024  1941.3250
+ CGE       .1307829957      .22049738E-01    5.931   .0000  400.16000
+
++-----------------------------------------------------------------------+
+| Estimates for equation: IUS                                           |
+| Dep. var. = IUS      Mean=   405.4600000    , S.D.=   129.3519043     |
+| Residuals:  Sum of squares= 156198.5597    , Std.Dev.=       95.85484 |
+| Fit:        R-squared=  .421959, Adjusted R-squared =          .35395 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  2,     17] =    6.20,    Prob value =          .00948 |
+| Diagnostic: Log-L =   -118.0103, Restricted(b=0) Log-L =    -125.1166 |
+| Log-determinant of W    31.7546        Log-likelihood       -459.4397 |
+| Durbin-Watson Stat.=     1.0180        Autocorrelation   =      .4910 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  85.42325478      111.87742         .764   .4451
+ FUS       .1014782341      .54783695E-01    1.852   .0640  1971.8250
+ CUS       .3999914170      .12779459        3.130   .0017  299.85500
++-----------------------------------------------------------------------+
+| Estimates for equation: IWE                                           |
+| Dep. var. = IWE      Mean=   42.89150000    , S.D.=   19.11018860     |
+| Residuals:  Sum of squares= 1613.511711    , Std.Dev.=        9.74230 |
+| Fit:        R-squared=  .726429, Adjusted R-squared =          .69424 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  2,     17] =   22.57,    Prob value =          .00002 |
+| Diagnostic: Log-L =    -72.2831, Restricted(b=0) Log-L =     -86.8703 |
+| Log-determinant of W    31.7546        Log-likelihood       -459.4397 |
+| Durbin-Watson Stat.=     1.2590        Autocorrelation   =      .3705 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.088876997      6.2588045         .174   .8619
+ FWE       .5700914748E-01  .11362252E-01    5.017   .0000  670.91000
+ CWE       .4150649070E-01  .41201609E-01    1.007   .3137  85.640000
+
+Matrix SIGMA   has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .7216044D+04 -.3137036D+03  .6053365D+03 -.2686517D+04  .1298866D+03
+       2| -.3137036D+03  .1528492D+03  .2047368D+01  .4550895D+03  .1666062D+02
+       3|  .6053365D+03  .2047368D+01  .7004558D+03  .1224405D+04  .2003163D+03
+       4| -.2686517D+04  .4550895D+03  .1224405D+04  .9188151D+04  .6527164D+03
+       5|  .1298866D+03  .1666062D+02  .2003163D+03  .6527164D+03  .9491245D+02
+*/
+?
+? F test for parameter heterogeneity
+?
+Matrix ; I3 = Iden(3) ; Z = Init(3,3,0.) ; MI3 = -1*Iden(3)
+       ; R = [I3,MI3,Z,    Z,  Z /
+              I3,  Z,MI3,  Z,  Z /
+              I3,  Z,  Z,MI3,  Z /
+              I3,  Z,  Z,  Z,MI3 ]
+       ; q = R*b ; Vq = R*Varb*R'
+       ; List ; FStat = 1/12 * q'<Vq>q $
+/*
+Matrix FSTAT    has  1 rows and  1 columns.
+        +--------------
+       1|  .1291694D+03
+*/
+
+?
+? Carry out test by sepcifying restricted regression
+? Note: This carries out the test correctly, but does not actually
+? compute the correct restricted least squares estimator.
+?
+SURE     ; Lhs = igm,ich,ige,ius,iwe
+         ; Eq1=XGM ; Eq2=XCH ; Eq3=XGE ; Eq4=XUS ; Eq5=XWE
+         ; Maxit = 1 
+         ; cls:b(1)-b(4)=0,b(1)-b(7)=0,b(1)-b(10)=0,b(1)-b(13)=0, 
+               b(2)-b(5)=0,b(2)-b(8)=0,b(2)-b(11)=0,b(2)-b(14)=0,
+               b(3)-b(6)=0,b(3)-b(9)=0,b(3)-b(12)=0,b(3)-b(15)=0$
+/*
++-----------------------------------------------------------------------+
+| Estimates for equation: IWE                                           |
+| Wald test: Chi-squared[12] =   1550.0328, Prob =   .0000              |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -14.71208208      1.7747163       -8.290   .0000
+ FWE       .6367998108E-01  .34176648E-02   18.633   .0000  670.91000
+ CWE       .1812500076      .12304415E-01   14.730   .0000  85.640000
+*/
+
+/*=================================================================
+Example 15.10.  FGLS Versus SUR Residuals
+*/=================================================================
+?
+Sample ; 1 - 20 $
+Regress; Lhs = igm ; Rhs = Xgm ; res = egm $
+Regress; Lhs = ich ; Rhs = Xch ; res = ech $
+Regress; Lhs = ige ; Rhs = Xge ; res = ege $
+Regress; Lhs = iwe ; Rhs = Xwe ; res = ewe $
+Regress; Lhs = ius ; Rhs = Xus ; res = eus $
+Matrix ; List ; ROLS = Xcor(egm,ech,ege,ewe,eus) $
+Correlation Matrix for Listed Variables
+              EGM      ECH      EGE      EWE      EUS
+     EGM  1.00000  -.27295   .27929   .15836  -.27841
+     ECH  -.27295  1.00000  -.06792   .11544   .36207
+     EGE   .27929  -.06792  1.00000   .72896   .37323
+     EWE   .15836   .11544   .72896  1.00000   .61499
+     EUS  -.27841   .36207   .37323   .61499  1.00000
+SURE     ; Lhs = igm,ich,ige,ius,iwe
+         ; Eq1=XGM ; Eq2=XCH ; Eq3=XGE ; Eq4=XUS ; Eq5=XWE
+         ; Maxit = 1 
+Matrix  ; bf1=b(1:3);bf2=b(4:6);bf3=b(7:9);bf4=b(10:12);bf5=b(13:15)$
+Create ; ef1=igm-Xgm’bf1
+       ; ef2=ich-Xch’bf2
+       ; ef3=ige-Xge’bf3
+       ; ef4=iwe-Xwe’bf4
+       ; ef5=ius-Xus’bf5 $
+Matrix ; List ; RGLS = Xcor(ef1,ef2,ef3,ef4,ef5) $
+Correlation Matrix for Listed Variables
+     EF1      EF2      EF3      EF4      EF5
+     EF1  1.00000  -.29870   .26925   .00814  -.26189
+     EF2  -.29870  1.00000   .00626   .01514   .26934
+     EF3   .26925   .00626  1.00000   .06778   .42705
+     EF4   .00814   .01514   .06778  1.00000  -.44053
+     EF5  -.26189   .26934   .42705  -.44053  1.00000
+?
+? Lagrange Multiplier Test based on OLS residuals.  To sum the squares
+? of the off diagonal elements, first put zeros on the diagonal.  Then,
+? trace of square gives sum of squares of all elements.  Divide by 2 to
+? take care of double counting.
+?
+Matrix ; MLM = ROLS - IDEN(5) ; MLM = MLM*MLM $
+Calc   ; List ; LM = Nperiod/2 * Trc(MLM) 
+              ; Ctb(.99,(nfirm*(nfirm-1)/2)) $
+/*
+    LM      =  .29060485555441890D+02
+    Result  =  .23209251160820010D+02
+*/
+
+/*=================================================================
+Example 15.11.  ML Estimates of a SUR Model
+*/=================================================================
+?
+? ML estimates are obtained by allowing the procedure to iterate
+? to convergence.
+?
+Sample   ; 1 - 100 $
+Create   ; igm=0;ich=0;ige=0;iwe=0;ius=0
+         ; fgm=0;fch=0;fge=0;fwe=0;fus=0
+         ; cgm=0;cch=0;cge=0;cwe=0;cus=0 $
+Matrix   ; mi = Mvec(i,nfirm,nperiod) ; mi = mi' $
+Matrix   ; mf = Mvec(f,nfirm,nperiod) ; mf = mf' $
+Matrix   ; mc = Mvec(c,nfirm,nperiod) ; mc = mc' $
+Namelist ; Ivars = igm,ich,ige,iwe,ius
+         ; Fvars = fgm,fch,fge,fwe,fus
+         ; Cvars = cgm,cch,cge,cwe,cus $
+Sample   ; 1 - 20 $
+Create   ; Ivars = mi $
+Create   ; Fvars = mf $
+Create   ; Cvars = mc $
+Namelist ; XGM = One,fgm,cgm
+         ; XCH = One,fch,cch
+         ; XGE = One,fge,cge
+         ; XWE = One,fwe,cwe
+         ; XUS = One,fus,cus $
+SURE     ; Lhs = igm,ich,ige,ius,iwe
+         ; Eq1=XGM ; Eq2=XCH ; Eq3=XGE ; Eq4=XUS ; Eq5=XWE
+         ; Maxit = 1 $
+Matrix   ; List ; Sigma $
+
+Iteration    0, GLS           =   -463.5217
+Iteration    1, GLS           =   -459.4397
+Iteration    2, GLS           =   -459.1357
+Iteration    3, GLS           =   -459.0997
+Iteration    4, GLS           =   -459.0936
+Iteration    5, GLS           =   -459.0925
+GLS            has converged.
++-----------------------------------------------------------------------+
+| Estimates for equation: IGM                                           |
+| Durbin-Watson Stat.=      .9383        Autocorrelation   =      .5309 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -173.2176797      84.298124       -2.055   .0399
+ FGM       .1220404351      .20248193E-01    6.027   .0000  4333.8450
+ CGM       .3891420883      .31853734E-01   12.217   .0000  648.43500
++-----------------------------------------------------------------------+
+| Estimates for equation: ICH                                           |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  2.391102028      11.625129         .206   .8370
+ FCH       .6740919305E-01  .17092455E-01    3.944   .0001  693.21000
+ CCH       .3051975031      .26064536E-01   11.709   .0000  121.24500
++-----------------------------------------------------------------------+
+| Estimates for equation: IGE                                           |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -16.66234504      24.960767        -.668   .5044
+ FGE       .3710283977E-01  .11772336E-01    3.152   .0016  1941.3250
+ CGE       .1172622817      .21732911E-01    5.396   .0000  400.16000
++-----------------------------------------------------------------------+
+| Estimates for equation: IUS                                           |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  136.9688969      94.854504        1.444   .1487
+ FUS       .8864869952E-01  .45421534E-01    1.952   .0510  1971.8250
+ CUS       .3124556241      .11795591        2.649   .0081  299.85500
++-----------------------------------------------------------------------+
+| Estimates for equation: IWE                                           |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  4.373114492      6.0182436         .727   .4674
+ FWE       .5397459707E-01  .10302642E-01    5.239   .0000  670.91000
+ CWE       .2693003954E-01  .37075900E-01     .726   .4676  85.640000
+Matrix Result   has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .7307269D+04 -.3305469D+03  .5502720D+03 -.2879089D+04  .1188285D+03
+       2| -.3305469D+03  .1550764D+03  .1142935D+02  .4632117D+03  .1873590D+02
+       3|  .5502720D+03  .1142935D+02  .7412188D+03  .1408133D+04  .2203347D+03
+       4| -.2879089D+04  .4632117D+03  .1408133D+04  .9671446D+04  .7348291D+03
+       5|  .1188285D+03  .1873590D+02  .2203347D+03  .7348291D+03  .1031261D+03
+
+/*=================================================================
+Example 15.12.  Investment Model
+No computations.
+*/=================================================================
+
+/*=================================================================
+Example 15.13.  Likelihood Ratio Test in a SUR Model
+*/=================================================================
+?
+? 1. GET MLE for full SURE model and recover log determinant
+?
+SURE     ; Lhs = igm,ich,ige,ius,iwe
+         ; Eq1=XGM ; Eq2=XCH ; Eq3=XGE ; Eq4=XUS ; Eq5=XWE
+         ; Maxit = 100 $
+Matrix   ; List ; LogDet = Logd(Sigma) $
+/*
+Matrix LOGDET   has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .3171986D+02
+*/
+?
+? 2.  Restricted model is TSCS model with free corelations. Get MLE
+?
+Tscs     ; Lhs = i ; Rhs = X ; Pds = Nperiod ; Model = S2,R0 ; MLE $
+Matrix   ; V = Part(Sigma,1,5,1,5) ; List ; LogDetR=Logd(V) $
+/*
+Matrix LOGDETR  has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .3783788D+02
+*/
+? 3.  Compute log likelihoods, LR statistic, and critical value.
+?
+Calc      ; List ; LoglU = -Nfirm*Nperiod/2*(1+log(2*pi)+logDet/Nfirm)
+                 ; LoglR = -Nfirm*Nperiod/2*(1+log(2*pi)+logDetR/Nfirm)
+                 ; Chisq = -2*LogLR-LogLU) 
+                 ; Ctb(.99,((Nfirm-1)*Col(X)))$
+/*
+    LOGLU   = -.45909250041647690D+03
+    LOGLR   = -.52027269550976920D+03
+    CHISQ   =  .12236039018658460D+03
+    Result  =  .26216967307500020D+02
+*/
+
+/*=================================================================
+Example 15.14.  An Application from Financial Econometrics -
+                The CAPM Model
+No computations.
+*/=================================================================
+/*=================================================================
+Example 15.15.  Autocorrelation in a SUR Model
+*/=================================================================
+SURE     ; Lhs = igm,ich,ige,ius,iwe
+         ; Eq1=XGM ; Eq2=XCH ; Eq3=XGE ; Eq4=XUS ; Eq5=XWE
+         ; Maxit = 1 ; Model = 1 $
++-----------------------------------------------------------------------+
+| Estimates for equation: IGM                                           |
+| Durbin-Watson Stat.=     1.4396        Autocorrelation   =      .2802 |
+| RHO used for GLS          .5313                                       |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -51.33436533      80.617258        -.637   .5243
+ FGM       .9403760635E-01  .17330927E-01    5.426   .0000  4333.8450
+ CGM       .4072352372      .42611024E-01    9.557   .0000  648.43500
++-----------------------------------------------------------------------+
+| Estimates for equation: ICH                                           |
+| Durbin-Watson Stat.=     1.9727        Autocorrelation   =      .0137 |
+| RHO used for GLS          .0080                                       |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -.4540053598      11.856027        -.038   .9695
+ FCH       .6847405793E-01  .17398774E-01    3.936   .0001  693.21000
+ CCH       .3204153362      .25785542E-01   12.426   .0000  121.24500
++-----------------------------------------------------------------------+
+| Estimates for equation: IGE                                           |
+| Durbin-Watson Stat.=     1.2140        Autocorrelation   =      .3930 |
+| RHO used for GLS          .4640                                       |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -24.91380819      25.670652        -.971   .3318
+ FGE       .4271594338E-01  .11335958E-01    3.768   .0002  1941.3250
+ CGE       .1095435439      .30121429E-01    3.637   .0003  400.16000
++-----------------------------------------------------------------------+
+| Estimates for equation: IUS                                           |
+| Durbin-Watson Stat.=     1.3528        Autocorrelation   =      .3236 |
+| RHO used for GLS          .5455                                       |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  14.01600097      96.488418         .145   .8845
+ FUS       .1641474407      .38641329E-01    4.248   .0000  1971.8250
+ CUS       .2005957422      .14276114        1.405   .1600  299.85500
++-----------------------------------------------------------------------+
+| Estimates for equation: IWE                                           |
+| Durbin-Watson Stat.=     1.3790        Autocorrelation   =      .3105 |
+| RHO used for GLS          .2935                                       |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  4.708707973      6.5097903         .723   .4695
+ FWE       .5091142623E-01  .10604759E-01    4.801   .0000  670.91000
+ CWE       .4284561336E-01  .41272782E-01    1.038   .2992  85.640000
+Matrix   ; List ; Sigma $
+/*
+Matrix Result   has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .4794649D+04 -.2198746D+03  .3645674D+03 -.9812764D+03  .7459508D+02
+       2| -.2198746D+03  .1519446D+03  .4359977D+02  .3411512D+03  .1990966D+02
+       3|  .3645674D+03  .4359977D+02  .5372603D+03  .1108630D+04  .1644459D+03
+       4| -.9812764D+03  .3411512D+03  .1108630D+04  .6068581D+04  .5685252D+03
+       5|  .7459508D+02  .1990966D+02  .1644459D+03  .5685252D+03  .8479526D+02
+*/
+? Now, compute covariance matrix for original disturbances
+?
+Matrix ; Ri = [.5313/.0080/.4640/.5455/.2935] 
+       ; RiRj = Init(5,5,1.0) - Ri*Ri'
+       ; RiRj = Diri(RiRj)
+       ; List ; Var = Dirp (Sigma,RiRj) $
+/*
+Matrix VAR      has  5 rows and  5 columns.
+               1             2             3             4             5
+        +----------------------------------------------------------------------
+       1|  .6680386D+04 -.2208132D+03  .4838469D+03 -.1381737D+04  .8837616D+02
+       2| -.2208132D+03  .1519543D+03  .4376222D+02  .3426465D+03  .1995652D+02
+       3|  .4838469D+03  .4376222D+02  .6846662D+03  .1484332D+04  .1903715D+03
+       4| -.1381737D+04  .3426465D+03  .1484332D+04  .8639413D+04  .6768998D+03
+       5|  .8837616D+02  .1995652D+02  .1903715D+03  .6768998D+03  .9278825D+02
+*/
+
+/*=================================================================
+Example 15.16.  Stone’s Expenditure System
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 15.17.  Cobb-Douglas Cost Function
+*/=================================================================
+Read ; Nobs = 20 ; Nvar = 9 ; Names = 1 $
+Firm   Cost  Output  Pk     Pl    Pf     Sk       Sl      Sf
+ 1     .423     39   164   2.30   23.6  0.4137  0.1702  0.4161
+ 2    1.130    130   176   1.82   38.9  0.2779  0.1712  0.6049
+ 3    1.565    197   183   2.19   29.1  0.4151  0.0692  0.5157
+ 4    2.382    338   163   1.85   24.6  0.4799  0.0616  0.4585
+ 5    4.580    484   176   1.75   42.8  0.2828  0.1009  0.6162
+ 6    5.535    719   174   1.70   26.9  0.4946  0.0703  0.4351
+ 7    6.754    984   158   1.76   26.9  0.2435  0.1083  0.6482
+ 8    7.743   1122   162   2.19   29.1  0.3744  0.0977  0.5279
+ 9    8.488   1215   164   2.19   29.1  0.4390  0.0695  0.4915
+10   11.320   2870   167   1.76   10.3  0.5822  0.1333  0.2845
+11   10.879   1649   177   2.32   31.9  0.3991  0.0974  0.5035
+12   12.905   2341   183   2.04   20.7  0.4165  0.0945  0.4890
+13   15.437   2023   163   2.11   24.4  0.3989  0.0808  0.5203
+14   19.035   3202   170   2.30   23.6  0.4974  0.0983  0.4043
+15   21.988   5283   159   2.04   20.7  0.4491  0.0630  0.4879
+16   29.845   4764   195   2.19   29.1  0.3530  0.1328  0.5142
+17   33.354   7886   178   1.61   17.8  0.5835  0.0587  0.3578
+18   40.594   7193   162   2.12   28.6  0.3550  0.0729  0.5721
+19   67.120  11477   151   2.24   26.5  0.3458  0.0670  0.5872
+20  119.939  16719   162   2.30   23.6  0.4340  0.0906  0.4754
+?
+? Data setup. Loglinear models
+?
+Create ; lq=log(output) ; lq2 = lq*lq
+       ; lc=log(cost)   ; lk=log(pk) ; ll=log(pl) ; lf=log(pf) $
+?
+? Least squares, not imposing restriction that bk+bl+bf=1
+?
+Regress; lhs=lc ; Rhs = one,lq,lk,ll,lf $
+Regress; lhs=lc ; Rhs = one,lq,lq2,lk,ll,lf $
+?
+? ML SURE, imposes restriction
+?
+Create ; lc=lc-lf ; lk=lk-lf ; ll=ll-lf $
+Sure   ; Lhs = lc,sk,sl
+       ; Rhs = one,lq,ll,lf
+       ; Labels = b0,bq,bk,bl
+       ; pattern = b0,bq,bk,bl,
+                   bk,0,0,0,
+                   bl,0,0,0 $
+Wald   ; fn1=1-bk-bl ; Start=b ; Var=Varb ; Labels=b0,bq,bk,bl  $
+Sure   ; Lhs = lc,sk,sl
+       ; Rhs = one,lq,lq2,ll,lf
+       ; Labels = b0,bq,bq2,bk,bl
+       ; pattern = b0,bq,bq2,bk,bl,
+                   bk,0,0,0,0,
+                   bl,0,0,0,0 $
+Wald   ; fn1=1-bk-bl ; Start=b ; Var=Varb ; Labels=b0,bq,bk,bl,bf  $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LC       Mean=   2.282543663    , S.D.=   1.398724766     |
+| Model size: Observations =      20, Parameters =   5, Deg.Fr.=     15 |
+| Residuals:  Sum of squares= .2775097730    , Std.Dev.=         .13602 |
+| Fit:        R-squared=  .992534, Adjusted R-squared =          .99054 |
+| Model test: F[  4,     15] =  498.56,    Prob value =          .00000 |
+| Diagnostic: Log-L =     14.3975, Restricted(b=0) Log-L =     -34.5771 |
+|             LogAmemiyaPrCrt.=   -3.767, Akaike Info. Crt.=      -.940 |
+| Autocorrel: Durbin-Watson Statistic =   1.58555,   Rho =       .20722 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -4.175882556      2.6896858       -1.553   .1414
+ LQ        .9028154938      .21635888E-01   41.728   .0000  7.3096840
+ LK       -.3509099345      .51860696        -.677   .5089  5.1301261
+ LL        .3588604772      .27471845        1.306   .2111  .70587541
+ LF        .4344258321      .11747325        3.698   .0021  3.2365287
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = LC       Mean=   2.282543663    , S.D.=   1.398724766     |
+| Model size: Observations =      20, Parameters =   6, Deg.Fr.=     14 |
+| Residuals:  Sum of squares= .2467995300    , Std.Dev.=         .13277 |
+| Fit:        R-squared=  .993361, Adjusted R-squared =          .99099 |
+| Model test: F[  5,     14] =  418.93,    Prob value =          .00000 |
+| Diagnostic: Log-L =     15.5703, Restricted(b=0) Log-L =     -34.5771 |
+|             LogAmemiyaPrCrt.=   -3.776, Akaike Info. Crt.=      -.957 |
+| Autocorrel: Durbin-Watson Statistic =   1.64831,   Rho =       .17585 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant -4.107356204      2.6260384       -1.564   .1401
+ LQ        .6986019036      .15615647        4.474   .0005  7.3096840
+ LQ2       .1511281290E-01  .11450167E-01    1.320   .2081  55.788906
+ LK       -.2370860301      .51352884        -.462   .6514  5.1301261
+ LL        .2358712078      .28389354         .831   .4200  .70587541
+ LF        .4603694543      .11634346        3.957   .0014  3.2365287
++-------------------------------------------------------------------------+
+| Constrained MLE for Multivariate Regression Model                       |
+| First iteration:  0 F=   -9.9936 log|W|=  -7.51427 gtinv(H)g=    1.7212 |
+| Last  iteration:  5 F=   74.4511 log|W|= -15.95874 gtinv(H)g=     .0001 |
+| Number of observations used in estimation =    20                       |
+| Model:    ONE   LQ    LL    LF                                          |
+| LC        B0    BQ    BK    BL                                          |
+| SK        BK                                                            |
+| SL        BL                                                            |
++-------------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B0       -6.969372925      .15682188      -44.441   .0000
+ BQ        .9245741247      .18215422E-01   50.758   .0000
+ BK        .4143856284      .19320827E-01   21.448   .0000
+ BL        .9472428129E-01  .72711459E-02   13.027   .0000
+Matrix SIGMA    has  3 rows and  3 columns.
+               1             2             3
+        +------------------------------------------
+       1|  .1923404D-01  .3960590D-02  .8273365D-03
+       2|  .3960590D-02  .7789824D-02 -.8989518D-03
+       3|  .8273365D-03 -.8989518D-03  .1073789D-02
+
+               +-----------------------------------------------+
+               | WALD procedure. Estimates and standard errors |
+               | for nonlinear functions and joint test of     |
+               | nonlinear restrictions.                       |
+               | Wald Statistic             =    701.69632     |
+               | Prob. from Chi-squared[ 1] =       .00000     |
+               +-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .4908900903      .18531461E-01   26.490   .0000
+
++-------------------------------------------------------------------------+
+| Constrained MLE for Multivariate Regression Model                       |
+| First iteration:  0 F=   -9.9936 log|W|=  -7.51427 gtinv(H)g=    1.7532 |
+| Last  iteration:  6 F=   75.1869 log|W|= -16.03232 gtinv(H)g=     .0001 |
+| Number of observations used in estimation =    20                       |
+| Model:    ONE   LQ    LQ2   LL    LF                                    |
+| LC        B0    BQ    BQ2   BK    BL                                    |
+| SK        BK                                                            |
+| SL        BL                                                            |
++-------------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B0       -6.367355211      .44937811      -14.169   .0000
+ BQ        .7441834328      .13221618        5.629   .0000
+ BQ2       .1283330275E-01  .95383070E-02    1.345   .1785
+ BK        .4141143388      .19310400E-01   21.445   .0000
+ BL        .9470678052E-01  .72686792E-02   13.029   .0000
+
+
+Matrix SIGMA    has  3 rows and  3 columns.
+               1             2             3
+        +------------------------------------------
+       1|  .1724484D-01  .4033045D-02  .3793810D-03
+       2|  .4033045D-02  .7788478D-02 -.8988068D-03
+       3|  .3793810D-03 -.8988068D-03  .1073813D-02
+
+               +-----------------------------------------------+
+               | WALD procedure. Estimates and standard errors |
+               | for nonlinear functions and joint test of     |
+               | nonlinear restrictions.                       |
+               | Wald Statistic             =    735.54112     |
+               | Prob. from Chi-squared[ 1] =       .00000     |
+               +-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .5730523585      .21129578E-01   27.121   .0000
+*/
+
+/*=================================================================
+Example 15.18.  A Cost Function for U.S. Manufacturing
+*/=================================================================
+Read ; Nobs = 25 ; Nvar = 10 ; Names = 1 $
+Year   Cost    K        L      E       M        Pk      Pl      Pe     Pm
+1947  182.373 0.05107 0.24727 0.04253 0.65913 1.00000 1.00000 1.00000 1.00000
+1948  183.161 0.05817 0.27716 0.05127 0.61340 1.00270 1.15457 1.30258 1.05525
+1949  186.533 0.04602 0.25911 0.05075 0.64411 0.74371 1.15584 1.19663 1.06625
+1950  221.710 0.04991 0.24794 0.04606 0.65609 0.92497 1.23535 1.12442 1.12430
+1951  255.945 0.05039 0.25487 0.04482 0.64992 1.04877 1.33784 1.25179 1.21694
+1952  264.699 0.04916 0.26655 0.04460 0.63969 0.99744 1.37949 1.27919 1.19961
+1953  291.160 0.04728 0.26832 0.04369 0.64071 1.00653 1.43458 1.27505 1.19044
+1954  274.457 0.05635 0.27167 0.04787 0.62411 1.08757 1.45362 1.30356 1.20612
+1955  308.908 0.05258 0.26465 0.04517 0.63760 1.10315 1.51120 1.34277 1.23835
+1956  328.286 0.04604 0.26880 0.04576 0.63940 0.99606 1.58186 1.37154 1.29336
+1957  338.633 0.05033 0.27184 0.04820 0.62962 1.06321 1.64641 1.38010 1.30703
+1958  323.318 0.06015 0.27283 0.04836 0.61886 1.15619 1.67389 1.39338 1.32699
+1959  358.435 0.06185 0.27303 0.04563 0.61948 1.30758 1.73430 1.36756 1.30774
+1960  366.251 0.05788 0.27738 0.04585 0.61889 1.25413 1.78280 1.38025 1.33946
+1961  366.162 0.05903 0.27839 0.04640 0.61617 1.26328 1.81977 1.37630 1.34319
+1962  390.668 0.05578 0.28280 0.04530 0.61613 1.26525 1.88531 1.37689 1.34745
+1963  412.188 0.05601 0.27968 0.04470 0.61962 1.32294 1.93379 1.34737 1.33143
+1964  433.768 0.05452 0.28343 0.04392 0.61814 1.32798 2.00998 1.38969 1.35197
+1965  474.969 0.05467 0.27996 0.04114 0.62423 1.40659 2.05539 1.38635 1.37542
+1966  521.291 0.05460 0.28363 0.04014 0.62163 1.45100 2.13441 1.40102 1.41878
+1967  540.941 0.05443 0.28646 0.04074 0.61837 1.38617 2.20616 1.39197 1.42428
+1968  585.447 0.05758 0.28883 0.03971 0.61388 1.49901 2.33869 1.43388 1.43481
+1969  630.450 0.05410 0.29031 0.03963 0.61597 1.44957 2.46412 1.46481 1.53356
+1970  623.466 0.05255 0.29755 0.04348 0.60642 1.32464 2.60532 1.45907 1.54758
+1971  658.235 0.04675 0.28905 0.04479 0.61940 1.20177 2.76025 1.64689 1.54978
+?
+? Initial Data Setup
+?
+Create ; lc=log(cost/pm) ; lk=log(pk/pm) ; ll=log(pl/pm) ; le=log(pe/pm)
+                         ; lkk=lk*lk/2 ; lll=ll*ll/2 ; lee=le*le/2
+                         ; lkl=ll*lk   ; lke=lk*le   ; lle=ll*le $
+Create ; lpk=log(pk) ; lpl=log(pl) ; lpe=log(pe) ; lpm=log(pm) $
+?
+? SURE model, ML with all symmetry and adding up restrictions
+?
+Sure   ; Lhs = k,l,e ; Rhs = One,lk,ll,le
+       ; Labels = bk,bl,be,dkk,dkl,dke,dll,dle,dee
+       ; Pattern = bk,dkk,dkl,dke, bl,dkl,dll,dle, be,dke,dle,dee $
+?
+? Estimate remaining parameters, then gather in matrices for elasticities
+?
+Wald   ; Start = b ; Var = Varb ; Labels = bk,bl,be,dkk,dkl,dke,dll,dle,dee
+       ; fn1 = 1-bk-bl-be       ? This is betam
+       ; fn2 = -dkk-dkl-dke     ? delta km
+       ; fn3 = -dkl-dll-dle     ? delta lm
+       ; fn4 = -dke-dle-dee     ? delta em
+       ; fn5 = -fn2-fn3-fn4 $   ? delta mm
+Calc   ; bm=waldfns(1) ; dkm=waldfns(2) ; dlm=waldfns(3)
+                       ; dem=waldfns(4) ; dmm=waldfns(5)
+       ; bk=b(1) ; bl=b(2) ; be=b(3)
+       ; dkk=b(4) ; dkl=b(5) ; dke=b(6) ; dll=b(7) ; dle=b(8) ; dee=b(9) $
+Matrix ; beta = [bk/bl/be/bm]
+       ; delta= [dkk,dkl,dke,dkm / 
+                 dkl,dll,dle,dlm / 
+                 dke,dle,dee,dem / 
+                 dkm,dlm,dem,dmm] $
+
+? This routine will compute the elasticities of substitution and own
+? price elasticities.  It’s general, and can be executed for any observation.
+?
+Namelist ; X = lpk,lpl,lpe,lpm $ 
+Proc=Elasts(obs) $
+Sample ; obs $
+Matrix ; z = X' 
+       ; Shares = beta + delta*z   
+       ; SiSj = Shares * Shares'  
+       ; SiSj = Diri(SiSj) 
+       ; Si = diag(Shares)
+       ; Elasts = Init(4,4,1.0) + Dirp(SiSj,Delta) - <si>  
+       ; Pelasts = Vecd(Elasts) ; Pelasts = Dirp(Shares,Pelasts) 
+       ; List ; Shares ; Elasts ; Pelasts $ 
+EndProc $
+Exec   ; Proc = Elasts(13) $
+/*
++-------------------------------------------------------------------------+
+| Constrained MLE for Multivariate Regression Model                       |
+| First iteration:  0 F=  199.9798 log|W|= -24.51202 gtinv(H)g=    2.4797 |
+| Last  iteration:  3 F=  344.4674 log|W|= -36.07102 gtinv(H)g=     .0000 |
+| Number of observations used in estimation =    25                       |
+| Model:    ONE   LK    LL    LE                                          |
+| K         BK    DKK   DKL   DKE                                         |
+| L         BL    DKL   DLL   DLE                                         |
+| E         BE    DKE   DLE   DEE                                         |
++-------------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ BK        .5689625149E-01  .13452571E-02   42.294   .0000
+ BL        .2534395714      .20945554E-02  120.999   .0000
+ BE        .4441073799E-01  .85316762E-03   52.054   .0000
+ DKK       .2950563471E-01  .57952610E-02    5.091   .0000
+ DKL      -.5493798306E-04  .38472636E-02    -.014   .9886
+ DKE      -.1065550208E-01  .33878411E-02   -3.145   .0017
+ DLL       .7542454010E-01  .67573065E-02   11.162   .0000
+ DLE      -.4756895831E-02  .23433561E-02   -2.030   .0424
+ DEE       .1837902663E-01  .49857764E-02    3.686   .0002
+ Matrix SIGMA    has  3 rows and  3 columns.
+               1             2             3
+        +------------------------------------------
+       1|  .1005912D-04  .8520210D-05  .4647237D-05
+       2|  .8520210D-05  .2912037D-04  .4182779D-05
+       3|  .4647237D-05  .4182779D-05  .3130335D-05
+
++-----------------------------------------------+
+| WALD procedure. Estimates and standard errors |
+| for nonlinear functions and joint test of     |
+| nonlinear restrictions.                       |
++-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .6452534391      .32994003E-02  195.567   .0000
+ Fncn( 2) -.1879519464E-01  .97098906E-02   -1.936   .0529
+ Fncn( 3) -.7061270629E-01  .10594548E-01   -6.665   .0000
+ Fncn( 4) -.2966628719E-02  .79953601E-02    -.371   .7106
+ Fncn( 5)  .9237452965E-01  .22468890E-01    4.111   .0000
+
+Fitted Shares
+Matrix Result   has  4 rows and  1 columns.
+               1
+        +--------------
+       1|  .5640054D-01
+       2|  .2745194D+00
+       3|  .4389120D-01
+       4|  .6251888D+00
+Elasticities of Substitution
+Matrix Result   has  4 rows and  4 columns.
+               1             2             3             4
+        +--------------------------------------------------------
+       1| -.7454803D+01  .9964517D+00 -.3304406D+01  .4669691D+00
+       2|  .9964517D+00 -.1641885D+01  .6052037D+00  .5885675D+00
+       3| -.3304406D+01  .6052037D+00 -.1224319D+02  .8918879D+00
+       4|  .4669691D+00  .5885675D+00  .8918879D+00 -.3631808D+00
+Demand elasticities
+Matrix Result   has  4 rows and  1 columns.
+               1
+        +--------------
+       1| -.4204549D+00
+       2| -.4507294D+00
+       3| -.5373683D+00
+       4| -.2270566D+00
+

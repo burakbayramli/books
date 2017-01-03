@@ -1,0 +1,260 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb}
+
+\newcommand{\lecnum}{AGM-01}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Module overview}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/15 10:46:04 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The red and the green}
+  
+A simple example of probabilistic reasoning to get you started.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Crime and Punishment in Florida}
+
+
+    Murders in Florida (1973-78)
+
+  \begin{tabular}{ccc} \hline
+& \multicolumn{2}{c}{Sentence} \\ \cline{2-3}
+Murderer & Death & Other \\ \hline
+Black & 59 & 2547 \\
+White & 72 & 2185 \\ \hline
+  \end{tabular}
+
+  
+  \begin{itemize}
+  \item 3.2\% of white murderers get the death sentence
+  \item 2.3\% of black murderers get the death sentence
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Crime and Punishment in Florida\\The Yule-Simpson Paradox}
+  
+  \begin{center}
+\begin{tabular}{cccc} \hline
+&& \multicolumn{2}{c}{Sentence} \\ \cline{3-4}
+Victim & Murderer & Death & Other \\ \hline
+Black & Black & 11 & 2309 \\
+      & White & 0 & 111 \\
+White & Black & 48 & 238 \\ 
+      & White & 72 & 2074 \\ \hline
+  \end{tabular}
+\end{center}
+  \begin{itemize}
+  \item For Black victims, 4.7\% of Black murderers get death vs \\ 0\%
+    for White murderers. 
+  \item For White victims, 16.8\% of Black murderers get death vs \\3.4\%
+    for White murderers. 
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The official (and true) learning outcomes}
+  
+  \begin{itemize}
+  \item Apply appropriate techniques from graphical modelling to
+    handle uncertainty in real-world situations;
+  \item Understand the sources of computational complexity in probabilistic inference;
+  \item Understand the basics of Monte Carlo computation;
+  \item Write Python programs to implement graphical modelling algorithms 
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Time to see a graphical model}
+
+  \begin{itemize}
+  \item Bayesian networks are, by far, the most popular graphical model.
+  \item Netica only runs under Windows\\
+ \verb|g:\apps\netica\netica 1.12\netica.exe|
+  \item A password is required for full functionality.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Resources}
+
+\begin{description}
+\item[Lecture overheads] You're seeing some. Generally brief.  Some
+  slides are just prompts. 
+\item[Scripts] The scripts for the demos and animations will be provided.
+\item[gPy] This is a collection of Python modules from which all
+  scripts import their core functionality.
+\item[People] Let's arrange a suitable time for the AGM surgeries now.
+\end{description}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Draft text book}
+  
+  \begin{itemize}
+  \item \emph{Bayesian Networks and Beyond: Probabilistic Models for
+      Reasoning and Learning} by Daphne Koller \& Nir Friedman
+  \item I have access to the electronic version. You are only allowed
+    hardcopy, purchasable (at cost) from the Departmental Office.
+  \item This is a high-quality, very low cost text.
+  \item The only catch is that you have to provide feedback!
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Another draft text book!}
+  
+  \begin{itemize}
+  \item \emph{Algorithms for Graphical Models} by James Cussens
+  \item This would be the module textbook, but I have only written the
+    first 141 pages.
+  \item It should still be of some use to you, so the current version
+    is available from the module web page.
+  \item It's likely to be updated as the module progresses.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{An actually-completed textbook}
+  
+  \begin{itemize}
+  \item \emph{Probabilistic Networks and Expert Systems} by Cowell,
+    Dawid, Lauritzen and Spiegelhalter
+  \item Excellent book, now available in paperback at a little under
+    \pounds 30.
+  \item The library has 2 on ordinary loan, 2 on 1-week loan and one
+    on short loan (in the `key texts' section).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Why Python?}
+  
+  \begin{itemize}
+  \item This module focuses on the underlying \emph{algorithms} for graphical
+    models.
+  \item On the one hand we don't want to clutter the presentation of
+    the algorithms, on the other we want to avoid vagueness.
+  \item Hence Python: high-level `executable pseudo-code'
+  \item Also has easy graphics (Tkinter).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Practicals}
+
+  Answers to exercises will be provided, but exercises will not be
+  marked. So it is up to you to
+  \begin{enumerate}
+  \item Do the exercises (in practical sessions and in your own time)
+  \item Ensure that you are getting a reasonable number of questions
+    correct
+  \item Check that you understand the answers to exercises
+    \item Seek help (during practicals, during surgeries) if you are
+      having problems.
+    \end{enumerate}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Module web page}
+There is yet more teaching material which you can reach
+via the module page\\
+ \verb|http://www-course.cs.york.ac.uk/agm/|
+
+This is where all the online stuff is, including the code.
+
+Lecture overheads are PDF. A good idea to use acroread to print to a
+PostScript file and then psnup them
+before printing.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Assessment}
+  
+\begin{itemize}
+\item It's open and partly assessed by whether your code passes
+  various \emph{unittests} --- extreme assessment!
+\item `Clarifications' are conducted entirely by email
+\item Submission is electronic
+\item Hand out: Wed/8/Autumn
+\item Hand in: Wed/2/Spring
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\end{document}
+
+2/week. These define the module. Overheads on-line
+\item[Practicals] One 2-hour session per week. Exercises are on the
+web. Not all exercises are computer-based.
+\item[Software] We will use two packages Netica and BUGS, both of
+which come with extensive documentation.
+\item[Algorithm library] Collection of examinable BN algorithms (in Python)
+\item[Books] \emph{An Introduction to Bayesian Networks} and
+\emph{Probabilistic Expert Systems} are both very useful and
+unavailable \dots
+\item[Weekly surgery] 1215-1315, Mondays, Biology S/111
+\end{description}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{(Very) new book}
+  
+  \begin{itemize}
+  \item \emph{Bayesian Networks and Beyond: Probabilistic Models for
+      Reasoning and Learning} by Daphne Koller \& Nir Friedman
+  \item I have access to the electronic version. You are only allowed
+    hardcopy, purchasable (at cost) from the Departmental Office.
+  \item This is a high-quality, very low cost text.
+  \item The only catch is that you have to provide feedback!
+  \end{itemize}
+
+
+
+\end{titledslide}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Weekly organisation}
+ 
+  \begin{itemize}
+  \item Lecture schedule is loose, some will run over their official
+  time, but others are short to compensate.
+\item I have had to reschedule two lectures.
+  \item Practicals are compulsory. The first is in Week 3
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Software}
+
+\begin{itemize}
+\item Netica only runs under Windows NT \\
+  \verb|g:\apps\netica\netica 1.12\netica.exe|
+\item BUGS runs under Linux \\
+  \verb|/usr/local/bin/bugs|\\
+  \verb|http://www.cs.york.ac.uk/support/mrcbugs.html|
+\item WINBUGS runs under Windows NT
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

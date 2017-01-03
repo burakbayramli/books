@@ -1,0 +1,18 @@
+'''SConscript
+'''
+
+Import('RD CH DD KEY BUILD')
+# BUILD forks a command 'python3 source[0] env.args[KEY]'
+# build DD('po_speech') from RD('gutenberg-19355')
+env=Environment()
+env.args = {}
+
+target = (DD('po_speech'),)
+source = ('po_speech.py', RD('gutenberg-19355'), CH('C.cpython-32mu.so'))
+env.args[KEY(target)] = (source[1], target[0])
+env.Command(target, source, BUILD)
+
+#---------------
+# Local Variables:
+# eval: (python-mode)
+# End:

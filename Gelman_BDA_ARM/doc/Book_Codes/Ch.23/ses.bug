@@ -1,0 +1,40 @@
+## Sesame street example 1
+
+model {
+  for (i in 1:n){                       
+    yt[i,1:2] ~ dmnorm (yt.hat[i,],Tau.yt[,])      # data model
+    yt.hat[i,1] <- a[siteset[i]] + b*yt[i,2]
+    yt.hat[i,2] <- g[siteset[i]] + d*z[i]
+  }
+  for (j in 1:J){
+  ag[j,1:2] ~ dmnorm (mu.ag[1:2],Tau.ag[1:2,1:2])
+  a[j] <- ag[j,1]
+  g[j] <- ag[j,2]
+  }
+
+# data level
+  Tau.yt[1:2,1:2] <- inverse(Sigma.yt[,])
+  Sigma.yt[1,1] <- pow(sigma.y,2)
+  sigma.y ~ dunif (0, 100)                  # noninformative prior on sigma.a
+  Sigma.yt[2,2] <- pow(sigma.t,2)
+  sigma.t ~ dunif (0, 100)                  # noninformative prior on sigma.b
+  Sigma.yt[1,2] <- rho.yt*sigma.y*sigma.t  
+  Sigma.yt[2,1] <- Sigma.yt[1,2]            # noninformative prior on rho
+  rho.yt ~ dunif(-1,1)
+  d ~ dnorm (0, .001)
+  b ~ dnorm (0, .001)
+
+# group level
+  Tau.ag[1:2,1:2] <- inverse(Sigma.ag[,])
+  Sigma.ag[1,1] <- pow(sigma.a,2)
+  sigma.a ~ dunif (0, 100)
+  Sigma.ag[2,2] <- pow(sigma.g,2)
+  sigma.g ~ dunif (0, 100)
+  Sigma.ag[1,2] <- rho.ag*sigma.a*sigma.g
+  Sigma.ag[2,1] <- Sigma.ag[1,2]  
+  rho.ag ~ dunif(-1,1)
+  
+  mu.ag[1] ~ dnorm (0, .001)
+  mu.ag[2] ~ dnorm (0, .001)
+}
+

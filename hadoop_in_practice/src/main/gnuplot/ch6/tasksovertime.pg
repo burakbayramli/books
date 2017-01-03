@@ -1,0 +1,36 @@
+#!/usr/bin/gnuplot
+reset
+set terminal png truecolor size 1024,786 linewidth 1 rounded
+
+set output 'tasksovertime.png'
+
+set offset graph 0, graph 0, graph 0.5, graph 0
+
+set style line 80 lw 2 lt rgb "#808080"
+
+# Line style for grid
+set style line 81 lw 0.2 lt 0  # dashed
+set style line 81 lt rgb "#C0C0C0"  # grey
+
+set grid back linestyle 81
+set border 3 back linestyle 80
+
+set xtics nomirror
+set ytics nomirror
+
+set boxwidth 1.0
+
+set key outside right top vertical Left reverse enhanced autotitles columnhead nobox
+set key invert samplen 4 spacing 1 width 0 height 0
+#set style histogram rowstacked title  offset character 0, 0, 0
+set style histogram title  offset character 0, 0, 0
+set datafile missing '-'
+set style data histograms
+set title "Running Tasks Over Time"
+set xlabel "Seconds"
+
+set ylabel "Number of Concurrently Executing Tasks"
+
+set style fill   transparent solid 0.75 noborder
+
+plot 'tasksovertime.dat' using 2, for [i=3:5] '' using i

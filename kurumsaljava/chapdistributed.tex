@@ -1,0 +1,2263 @@
+\movetooddpage
+
+\chapter{Daðýtýk Nesneler} \label{dist}
+
+\thischapterhas{
+  \item Daðýtýk nesne mimarisi
+  \item RMI
+  \item JNDI
+  \item EJB (Session Bean)
+  \item JMS
+}
+
+\versal{U}\textsc{zaktan} nesne çaðýrma teknolojisi, üç seviyeli (three tiered)
+mimarilerin yükseldiði 90 baþlarýnda oldukça popüler bir yaklaþým idi. Üç
+katmanlý mimarilerde, orta katmanda bulunan ve network üzerinden çaðýrýlabilen
+önyüze servis eden ``nesnelere'' Uzak Metot Çaðrýsý (Remote Method Invocation)
+ile baðlanýlýyor, bu nesnelerle bilgi alýþveriþi yapýldýktan sonra kullanýcýya
+dönülüyordu.
+
+Fakat takip eden yýllarda Web ile yükselen Servlet odaklý yeni orta katman
+mimarisi ortadaki iþ mantýðý katmanýný ele geçirerek, kurumsal programcýlarýn
+ilgisini daðýtýk nesnelerden Servlet odaklý teknolojilere çevirmesine sebep
+olmuþtur. Orta katmandaki iþ mantýðý pür Java kodlarý üzerinden, yâni
+\PVerb!import!  ile Servlet tarafýndan ayný JVM/süreç içine dahil edilip
+çaðýrýlabilen türden kodlar olduðu için, artýk network'den çaðýrýlabilen ve
+üzerinde nesnelerin olduðu ayrý bir katmana gerek kalmýyordu. Evet bazý
+mimariler bir {\em dördüncü katman} koyarak halâ Uzaktan Metot Çaðrýsý yapmaya
+devam etmiþlerdir, fakat bu mimariler hem azýnlýkta, hem de optimal olduklarý da
+þüphe götürür bir durumda idiler.
+
+Günümüzde zengin önyüz (rich client) teknolojilerinde hareketlenme gözükmektedir
+ve zengin önyüzler, Java dünyasýnda Swing ile inþa edilirler. Ve, ``zengin
+önyüz'' kelimesini telâfuz eder etmez orta katmanda uzak nesnelerden bahsetmemiz
+gerekir çünkü zengin önyüzün HTML üreten Web orta katmaný ile konuþmasý mümkün
+deðildir. Bu bölümümüzde uzaktaki bir nesneyi network üzerinden çaðýrmanýn
+yollarýný göreceðiz.
+
+Ama ondan önce ``neden orta katman'' sorusuna cevap vermemiz gerekiyor.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Neden Orta Katman}
+
+Orta katman, üç katmanlý bir mimaride önyüz ile veri tabaný arasýnda duran
+seviyedir. Servlet/JSP üzerinden HTML üreten, ya da zengin önyüze servis
+eden uzak nesnelerin olduðu katmanýn ikisi de orta katmana iyi bir örnektir.
+
+Eðer mimarimizde orta katman bulundurmasaydýk, veri eriþimini direk zengin önyüz
+tarafýna koymamýz gerekecekti.  Zengin önyüzün veri tabanýna direk baðlantý
+açmasý demek, her kullanýcýnýn veri tabanýna {\em tek bir} baðlantý açmasý
+demektir, ve kullanýcýnýn tüm veriye eriþim istekleri bu baðlantý üzerinden
+gerçekleþtirilecektir.
+
+Bu yöntemin avantajý, basit yapýsýdýr; Her kullanýcýya verilen baðlantý
+üzerinden istenilen veri eriþim ihtiyacý karþýlanabilir. Dezavantajý, ayný
+þekilde, her kullanýcýya bir baðlantýnýn açýlmasý ve o baðlantýnýn o kullanýcýya
+baðlý kalmasýdýr. Her veri tabanýnýn eþzamalý destekleyebildiði baðlantý sayýsý
+kýsýtlýdýr. O zaman her kullanýcýya bir baðlantý ayýrýrsak, sistemizdeki
+eþzamanlý kullanýcý sayýsý, veri taban baðlantý sayýsý limitini hiçbir zaman
+geçemeyecektir. Meselâ bir Linux makinasýnda kurulmuþ PostgreSQL veri tabanýnýn
+optimal eþzamanlý baðlantý sayýsý 200 olsun. O zaman sistemde ayný anda
+çalýþabilecek kullanýcý sayýsý 200'dür. Bundan daha fazla olamaz.
+
+Bu sayý, tabii ki modern yüksek ölçekli kurumsal sistemler için çok düþük bir
+sayýdýr. Daha fazla kullanýcýyý destekleyebilmek için modern mimarilerde veri
+eriþimi merkezileþtirerek, taban baðlantýlarýný tek bir kiþiye baðlamak yerine,
+merkezi eriþimin kontrolünde bir havuzda tutmak yolu seçilmiþtir. Artýk önyüzün
+kendisi deðil, önyüze servis eden uzak nesneler {\em ihtiyaçlarý olduðu anda}
+baðlantýyý havuzdan alýp, iþleri bitince baðlantýyý havuza hemen vereceklerdir;
+Bu sayede eþzamanlý {\em taban baðlantýsý} kadar {\em eþzamanlý iþlem}
+gerçekleþtirilebilmiþ olur. Zaten ölçekleme kýstasýmýz bu olmalýdýr: Daha fazla
+kullanýcýyý, daha fazla eþzamanlý iþlemi karþýlýyamadan destekleyemeyiz.
+
+Her kullanýcýya tek baðlantý verdiðimiz yaklaþým niye verimsizdir? Bu yaklaþýmda
+kullanýcýnýn düþünme zamaný (think time) sýrasýnda veri taban baðlantýsý hiç
+kullanýlmýyordu, ve bu deðerli kaynaðýn zamaný israf edilmiþ oluyordu. Yeni
+yaklaþýmda baðlantýlar ortaktýr, paylaþýlabilir, ve bir kullanýcý tarafýndan
+kullanýlmadýklarý zaman bir baþkasýnýn kullanabilmesi için havuzda bekliyor
+olurlar. Yeni yaklaþýmda, kullanýcý düþünme zamaný sýrasýnda hiçbir zaman veri
+taban baðlantýsý tek kullanýcýya baðlý tutulmaz.
+
+Orta katmanýn bir diðer faydasý, kodlama disiplini açýsýndan, görsel kodlarý
+iþlem mantýðýndan ayýrmamýz için hatýrlatýcý bir faktör olmasýdýr. Bu ayýrým
+tekniði, yazýlým mühendisliði açýsýndan tavsiye edilen bir yöntemdir, çünkü
+görsel teknolojiyi deðiþtirdiðimiz zaman, iþlem mantýðýnýn ayný kalabilmesini
+isteriz. Özellikle birden fazla çeþit önyüz teknolojisine hizmet vermesi gereken
+sistemlerde, iþlem mantýðýnýn görsel kodlardan ayrý olmasý hayati önem
+taþýmaktadýr. Eðer bu ayrým yapýlmazsa, iþlem mantýðý kodu her önyüz teknolojisi
+için tekrar tekrar yazýlýyor olurdu (Kural \#7 ihlâli). Fiziksel olarak ayrý bir
+orta katman ile çalýþýnca, bu katmana gidecek kodlarýn ayrý olduðu daha bariz
+olmakta, ve yararlý bir yazýlým prensibini mimarimiz üzerinde dolaylý yoldan
+zorlamýþ olmaktayýz.
+
+En son olarak Hibernate, veri tabanýndan okuduðu nesneleri önbellekleme
+özelliðine sahip olduðu için, merkezi bir orta katmanýn gerekliliði bir kez daha
+oraya çýkmaktadýr. Önbellek, bir kullanýcýnýn istediði nesneyi, ikinci
+kullanýcýya önbellekten servis edebildiði için, performans arttýrýcý bir
+faktördür, çünkü veri tabanýna gitme ihtiyacýný azaltýr. Önbelleðin bu þekilde
+kullanýmý için de, iki kullanýcý da ayný merkezi yere gitmek zorundadýr
+(Hibernate ikinci seviye önbelleði \PVerb!SessionFactory!  seviyesinde, her
+JVM'de bir tane olmak üzere tutar). Bu merkezi yer de orta katmandan baþkasý
+deðildir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Genel Mimari][GENEL MÝMARÝ]{Genel Mimari}
+
+Uzak nesneler ile iletiþim kurmanýn Java dünyasýnda birçok deðiþik yöntemi
+vardýr. RMI, EJB (Session Bean) ve JMS üzerinden bu iletiþimi gerçekleþtirmenin
+yollarýný bu bölümde göreceðiz. Ama ondan önce, tüm bu iletiþim teknolojileri
+üzerinden kullanabileceðimiz, teknolojiden baðýmsýz bir uzak nesne mimarisi
+göreceðiz. Bu mimariye, Command mimarisi adýný veriyoruz.
+
+\subsection{Command Mimarisi} \label{dist:command}
+
+Command kalýbý ilk kez Design Patterns kitabýnda \cite[sf. 233]{designpatterns}
+Gamma ve arkadaþlarý tarafýndan ortaya konulmuþtur. Tam tanýmý þöyledir:
+``Command, bir isteði (request), {\em nesne} olarak tanýmlayan ve bize, zengin
+bir parametre listesi olarak gönderebileceðimiz, log'a yazabileceðimiz, queue
+üzerinde kaydedebileceðimiz, kendi hatasýný nasýl düzelteceðini (undo) bilen bir
+birim ile çalýþabileceðimiz bir mimari saðlar''.
+
+Command kalýbýnýn ilk çýkýþ noktasýnýn GUI odaklý hata düzeltme iþlevleri (undo)
+olduðu zannedilmektedir. Bir nesnenin nesne olmasý için alýþveriþ listesi
+metotlarý gerekiyorsa \cite[sf. 111]{ooconstruction}, Command'ýn GUI için
+kullanýlmýþ olmasý anlaþýlabilir; Hata düzeltmek, bir iþlemi yapmayý bilen bir
+nesne üzerinde eklenebilecek faydalý bir alýþveriþ listesi
+(\ref{object:shoppinglist}) iþlevidir. Biz bu bölümde, Command kalýbýný daðýtýk
+nesneler mimarimizi desteklemek için kullanacaðýz
+\cite[sf. 320]{hibernatebook}. Getireceðimiz mimarinin kurallarý ve
+kýsýtlamalarý þunlar olacak.
+
+\begin{enumerate}
+   \item Önyüzden servis tarafýna (orta katman) yapýlan her istek, bir Command
+     nesnesi olmak zorundadýr.
+   \item Her Command kurucu metotu kendisi için gereken parametreleri alýp
+   içinde saklamakla yükümlüdür. Olaðan (default) kurucu metot çaðrýsý,
+   yanlýþlýkla çaðýrýlmamasý için \PVerb!private! tanýmý ile engellenecektir
+   (Kural \#3,\#4)
+   \item Command nesnelerini iþletmek, tek bir iþletici nesnenin sorumluluðu
+   olacaktýr.
+   \item Bir Command'ýn görevi, geriye bir cevap getirmek ise, bu cevap Command
+   nesnesinin içinde tutulacak, ve bu cevap nesnelerine \PVerb!get! eriþimi
+   saðlanacaktýr.
+   \item Command nesneleri, pür Java nesneleri olacak, hiçbir iletiþim
+   teknolojisine (EJB Session Bean, JMS, RMI) baðýmlý yazýlmayacaklardýr.
+\end{enumerate}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.31}{
+  \includegraphics{./images/command.eps}
+  }
+}
+\caption{\label{dist:command} Command Nesne Yapýsý}
+\end{figure}
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/command_net.eps}
+  }
+}
+\caption{\label{dist:commandnet} Network Üzerinden Command Gönderimi}
+\end{figure}
+
+\subsubsection{CommandHandler}
+
+Command mimarisinin daðýtýk mimarilere getirdiði faydalarý nedir? Birincisi,
+servis tarafýna \PVerb!CommandHandler! üzerinden {\em tek bir giriþ noktasý}
+saðlanmasýdýr. Çok yüzlülük (polymorphism) sayesinde, üst seviye \PVerb!Command!
+class'ýndan miras alan (inherit) alt seviye iþ yapýcý Command nesneleri,
+kendilerini sadece \PVerb!Command! arayüzü üzerinden gören bir
+\PVerb!CommandHandler! tarafýndan, {\em merkezi bir yerde} iþletilebiliyor hâle
+gelirler (Þekil~\ref{dist:command}). Bu tek merkez, uzaktan çaðrý teknolojisi
+deðiþtirilmesi gerektiðinde tekrar yazýlacak yegâne noktadýr!  Eðer EJB Session
+Bean'den JMS'e geçiyorsanýz, sadece \PVerb!CommandHandler!'ý JMS ile iþleyecek
+hâle getirebilirsiniz, ve bundan sonra tüm servis tarafý mimariniz JMS'te
+çalýþmaya baþlayacaktýr.
+
+Ayrýca, bu tek giriþ noktasýnda, tüm iþlemler için gerekli olabilecek türden
+``ek iþlemleri'' rahatlýkla yerine getirebiliriz. Meselâ her istek sonucunda
+Hibernate oturumunu kapatmak, bir Command'den gelebilecek hatalarý yakalayýp
+Hibernate transaction'ý geri sarmak (rollback), ya da her Command için bir
+iþletici (worker) Thread baþlatmak gibi ek iþler, bu tek merkezi noktada
+yapýlabilir. Eðer, klasik ``her istek için ayrý bir metot'' yöntemini takip
+ediyor olsaydýk, tüm iþlemlere lâzým olan ek iþlemleri merkezi bir yerde yapmak
+daha zor olurdu. Evet, Spring Framework Interceptor tekniði kullanarak her metot
+için kendi istediðimiz ek kodlarý çengel kod takarak iþletebilirdik, fakat bu
+ek, teknoloji çorbasýna bir teknoloji daha eklemiþ olacak, Spring ayar dosyasýný
+fazla þiþirecek, hem de, zâten paketlenmiþ bir istek (Command) bekleyen JMS
+seçeneði için tamamen gereksiz olacaktý.
+
+\subsubsection{Command Nesneleri}
+
+Command class'larýnýn basit Java nesneleri olduðundan bahsetmiþtik. Bunun
+üstüne, bir Command \PVerb!Serializable! da olmalýdýr, çünkü Command'ler network
+üzerinden gönderilirken içerikleri bozulmadan gidebilmelidirler. Tüm
+Command'lerin \PVerb!Serializable! olmasý için bu arayüzden en üst seviyede
+miras almak gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+public interface Command  extends Serializable {
+    public void execute() throws Exception;
+}
+\end{lstlisting}
+Her özel Command, \PVerb!Command! üst sýnýfýndan miras aldýðý için artýk
+otomatik olarak \PVerb!Serializable! olacaktýr.
+
+Her özel Command'ýn iþlem mantýðý için yapmasý gerekenler, o Command'ýn
+\PVerb!execute!  metotu içinde kodlanýr. Command için gereken parametreler, bir
+kurucu metot üzerinden verilmelidir. Geri dönmesi gereken deðerler ise, Command
+class'ýnýn iç öðeleri olarak tutulmalýdýrlar. Örnek olarak \PVerb!GetCarCommand!
+kodlarýný görelim.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class GetCarCommand implements Command {
+
+    String licensePlate;
+
+    Car car;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public GetCarCommand(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public void execute() throws Exception {
+        Session s = HibernateSession.openSession();
+        HibernateSession.beginTransaction();
+        car = (Car)s.get(Car.class, licensePlate);
+    }
+}
+\end{lstlisting}
+Hibernate transaction'ýn commit edilmesi ve oturumun kapatýlmasý iþlemlerinin
+Command içinde yapýlmýyor olmasý belki dikkatinizi çekmiþtir. Bu iþlemler,
+merkezi bir yerde (\PVerb!CommandHandler!) yapýldýklarý için, ayrýca Command
+içinde tekrarlanmarlýna gerek yoktur.
+
+Bu bölümün geri kalan kýsmýnda, RMI, EJB (Session Bean) ve JMS teknolojilerini
+teker teker tanýyacaðýz. Her teknolojiyi ilk ele aldýðýmýzda, önce bize verdiði
+daðýtýk nesne özelliklerini göreceðiz. Daha sonra, Command mimarisini alýp, bu
+yeni daðýtýk teknoloji üzerinden çalýþmasýný saðlayacaðýz. Bu bölüm bittiðinde,
+elimizde üç deðiþik teknolojiyle çalýþabilecek bir mimari yapýmýz olacak. Bu
+yapý öyledir ki, bir uzaktan çaðýrma teknolojisinden diðerine {\em projenin
+ortasýnda bile} geçebilme þansýný elde edeceksiniz. Bu tür bir esnekliðin, her
+proje için faydalý olacaðýnýz düþünüyoruz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{RMI} \label{dist:rmi}
+
+RMI, Uzak Nesne Çaðrýsý (Remote Method Invocation) Java dünyasýnda ilk uzak
+nesne çaðrý sistemidir. Kullaným açýsýndan en basit ve servis nesneleriniz
+üzerinde en az kýsýt getiren teknoloji RMI'dýr.
+
+Saðladýðý yetenek olarak, RMI ile uzaktaki bir nesneye network üzerinde çaðrý
+yapabilme özelliðine kavuþuyoruz. Önemli bir nokta, bu servis nesnesinin tekil
+nesne (singleton) olacaðýdýr. Yâni RMI birçok baðlanan müþterinin çaðrýlarýný,
+tek bir nesneye yönlendirir. Herkesin ayný objeyi kullanacak olmasý, servis
+tarafýnýn çok thread'e hazýr (thread-safe) olmasýný gerektirir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/rmi.eps}
+  }
+}
+\caption{RMI}
+\end{figure}
+
+Servis tarafýnda metotlarý iþleten Thread'lerin nasýl çalýþacaðý ürün
+geliþtiricisine býrakýlmýþtýr. Bu sebeple projenizde Thread politikasýný
+kendinizin belirlemenizi tavsiye ediyoruz. Her gelen istek için yeni Thread
+baþlatmak, bir Thread politikasý olabilir.
+
+Bir nesneyi RMI üzerinden kullanýma açmak için, bir arayüz (interface) bir de
+gerçekleþtirim (implementation) kodu gerekir. Arayüz bildiðimiz Java
+\PVerb!interface! kelimesi ile tanýmlanan arayüzdür. Gerçekleþtirim bu arayüzü
+alýr, ve her metotun iþler kodunu tanýmlar. RMI için, eski yöntemde,
+\PVerb!rmic! adlý bir komut satýrý programýný arayüz ve gerçek kod üzerinde
+iþleterek, içinde network kodlarý taþýyan ve Stub ve Skeleton olarak bilinen iki
+class üretilmesini gerektiriyordu. Biz, RMI teknolojisini Spring Framework
+üzerinden kullanacaðýz.
+
+\subsection{Spring}
+
+Spring Framework, J2EE kullanýmýný basitleþtirmeyi ve amaçlayan bir altyapý
+projesidir. Spring'den bahsedilirken iki terimi sürekli duyacaksýnýz: Spring
+{\em bir IoC kabýdýr} ve Spring {\em AOP yapmanýza izin verecektir}.
+
+\textbf{AOP}, bildiðimiz gibi, birden fazla obje, tip, metota uygulanabilecek
+kod parçalarýnýn nesnesel bir þekilde deðil de çengel takar gibi koda nesne
+dýþýndan eklemlenebildiði bir programlama þeklidir. Sonradan eklenebilen bu
+kodlara AOP dünyasýnda Aspect deniyor. Klasik örnek loglama örneðidir; Loglama,
+her kodun içine direk konmasý yerine, AOP dünyasýnda bir Log Aspect'i yaratýlýr,
+ve meselâ her metotun baþýnda uygulanabilecek bir Aspect üzerinden dýþ loglama
+kodunun çaðýrýlmasý saðlanýr. Kodunuza sonradan takýlan bu çengelin iþlem anýnda
+çaðrýlmasý, AOP kabýnýn sorumluluðudur, yâni nesnelerinizin iþleyiþi iþlem
+anýnda AOP sistemi tarafýndan izleniyor olacaktýr. Hayal edebileceðiniz gibi
+arka planda müthiþ baytkod cambazlýklarý dönmesi gerekecektir.
+
+\textbf{IoC}, Ýngilizce Inversion of Control kelimelerinin kýsaltýlmýþýdýr, yâni
+Kontrolün Tersine Çevirilmesi anlamýna gelir. Burada anlatýlmak istenen,
+programcýnýn bir nesneyi/kaynaðý gidip bulmasý ya da \PVerb!new! ile yaratmasý
+yerine, o nesnenin/kaynaðýn bir isim ile bir ayar dosyasýnda tanýmlanmasý ve
+Spring'in bu nesneyi o tanýma göre yaratmasý, sonra da bu nesneyi sizin tarif
+ettiðiniz bir referans deðiþkenine set etmesidir. Yâni siz almýyorsunuz, size
+takdim ediliyor. Kontrolün tersine çevirilmesi tanýmý iþte buradan
+gelmektedir. Daha detaya inmek gerekirse (kod baðlamýnda) bahsedilen referans
+deðiþkeni, o referansý kullanacak iþlem mantýðý nesnesinin içinde yer alýr. Bu
+referansa set eden bir metotu programcý yazmýþ olmalýdýr, çünkü Spring, Java
+Reflection kullanarak (ve ayar dosyasýndaki referans ismine göre) belirlenen
+set metotunu çaðýrýr (program baþýnda ve dinamik olarak).
+
+Ayrýca Spring, size sadece baz anlamda AOP ve IoC özellikleri saðlayan bir paket
+deðil, {\em tüm J2EE servislerinin} ve gözde açýk yazýlým paketlerini, {\em IoC
+ve AOP üzerinden kullanmanýzý saðlayan} bir aracý servistir. Spring'i yazan
+programcýlar, hem bir IoC/AOP kabý yazmýþ, hem de ek olarak bu temel kabý
+kullanarak J2EE arayüzleri/servisleriyle Ioc/AOP kabýný teker teker baðlayarak
+bir ek seviye daha ortaya çýkarmýslardýr. Spring'i Spring yapan esas seviye
+budur. Spring, J2EE servislerini IoC/AOP üzerinden sunmaktadýr; Meselâ bir J2EE
+xyz servisi size {\em takdim edilen} bir nesne olacaktýr, ya da, tüm
+nesnelerinize uygulanabilecek {\em J2EE Aspect'leri} olarak karþýnýza
+çýkacaktýr.
+
+\subsection{Basit Bir RMI/Spring Örneði}
+
+RMI servisi için bir Spring sarmalayýcý IoC servisi vardýr. Servis tarafýnda
+\PVerb!RmiServiceExporter!, çaðýran tarafýnda \PVerb!RmiProxyFactoryBean!
+üzerinden basit Java interface'inizi, kodunuzdan tek RMI arayüzü çâðýrmadan
+RMI'a hazýr hâle getirebilirsiniz! Servis tarafýnda:
+
+\begin{lstlisting}[language=Java, caption=ServerInterface.java]
+public interface ServerInterface {
+    public int add(int a, int b);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, caption=ServerImpl.java]
+public class ServerImpl implements ServerInterface {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption=springServer.xml]
+<beans>
+    <bean id="servis" class="org.vs.vs.ServerImpl"/>
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+       <property name="serviceName"><value>AdderService</value></property>
+       <property name="service"><ref bean="servis"/></property>
+       <property name="serviceInterface">
+          <value>org.vs.vs.ServerInterface</value>
+       </property>
+       <property name="registryPort"><value>41199</value></property>
+    </bean>
+</beans>
+\end{lstlisting}
+
+
+Görüldüðü gibi gerçek kod (implementation) \PVerb!ServerImpl! nesnesi Spring'de
+\PVerb!servis! olarak isimlendirilmiþ. Daha sonra bu isim, yani nesne,
+\PVerb!RmiServiceExporter! adlý, \PVerb!rmic! yerine geçecek olan Spring
+büyüsünü yapacak yardýmcý class'a geçilmiþ. Spring bu tanýmlarý kullanarak J2EE
+standartýna uyumlu bir network servisi \PVerb!AdderService!'i yaratacaktýr. Bu
+servis objesi üzerinde gerekli tüm RMI kod üretme iþlemleri yapýlmýþ, ve
+network'den kullanýma hazýr hâle gelmiþtir. Dikkat ederseniz, bütün bunlarý
+yapabilmek için servis tarafý kodumuz içinde tek bir RMI API'ý çaðýrmamýz
+gerekmedi. Ayrýca, normal þartlarda \PVerb!build.xml! içinde gerekecek
+\PVerb!rmic! ile yapýlan Stub/Skeleton üretim iþlemi de artýk tamamen Spring
+tarafýndan yapýlmaktadýr (koþma zamanýnda ama, uygulamanýn baþýnda ve bir kere
+olduðu için hiçbir performans farký hissedilmeyecektir).
+
+Servis tarafýnda bu objeyi aktif hâle getirmek için, baþlangýç sýrasýnda þu
+çaðrýlarý yapabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+ClassPathXmlApplicationContext appContext =
+    new ClassPathXmlApplicationContext(new String[] {"springServer.xml"});
+\end{lstlisting}
+Çaðýran tarafta ise
+
+\begin{lstlisting}[language=XML, caption=springClient.xml]
+<beans>
+    <bean id="remoteServer"
+          class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+       <property name="serviceUrl">
+           <value>rmi://localhost:41199/AdderService</value>
+       </property>
+       <property name="serviceInterface">
+           <value>org.vs.vs.ServerInterface</value>
+       </property>
+    </bean>
+</beans>
+\end{lstlisting}
+Burada görüldüðü gibi, uzaktaki \PVerb!ServerImpl! nesnesini çaðýrmak için
+hiçbir RMI koduna ihtiyaç duymadýk. Normâlde \PVerb!Naming.lookup!  gerektiren
+nesne bulmak iþlemi, sadece Spring tanýmlarý ile \PVerb!RmiProxyFactoryBean!
+üzerinden yapýlmaktadýr. Spring'in network üzerindeki \PVerb!AdderService!'ine
+eriþebilecek bir nesne yaratabilmesi için, ona gereken tüm interface ve network
+eriþim bilgileri \PVerb!springClient.xml! taným dosyasý içinde tanýmlýdýr. Bu
+bilgileri kullanarak servise baðlanacak kod parçasý altta gösterilmiþtir.
+
+\begin{lstlisting}[language=Java, frame=none]
+ClassPathXmlApplicationContext appContext =
+    new ClassPathXmlApplicationContext(new String[] {"springClient.xml"});
+BeanFactory factory = (BeanFactory) appContext;
+AdderService as = factory.getBean(``remoteServer'');
+\end{lstlisting}
+
+Ayar dosyasý \PVerb!springClient.xml! içinde belirtilen port deðerinin
+\PVerb!springServer.xml! içindeki port deðerine uymasý mecburidir. Bu port'lar,
+RMI kayýt (registry) port'udur. Tüm objelerin kayýt edildiði merkezi kayýt
+nesnesinin servis edildiði port adresidir.
+
+\subsection{RMI ve Command Mimarisi} \label{dist:rmi}
+
+Þimdi, bölüm \ref{web}'de tarif edilen ve \PVerb!StrutsHibAdv! kodlarýnda temsil
+edilen arabalar ve garajlar örneðini, RMI ve Command mimarisine
+geçireceðiz. Kodlarýn tamamlanmýþ hâlini \PVerb!CarsRMI! dizini altýnda
+bulabilirsiniz.
+
+Bu bölümün giriþinde, zengin önyüzler sözkonusu olduðunda Command mimarisinin
+orta katmandaki Web kodlarýnýn yerini aldýðýný söylemiþtik. Hem Web, hem servis
+nesneleri birarada olmuyordu. Bu bölümün geri kalanýnda, {\em sadece örnek
+amaçlý olarak}, Web kodlarýmýzý servis nesneleri ile konuþturacaðýz. Bunun
+sebebi, örnek kodlarýmýz için Swing teknolojisine girmek istemeyiþimizdir. Hem
+elde mevcut olan kodlarý kullanmak, hem de pür Struts bazlý kodlara servis nesne
+desteði ekleyince hangi noktalarýn deðiþtiðini görmek için, fiziksel mimari
+açýsýndan optimal olmayaný yapacaðýz. \PVerb!CarsRMI! projemiz, dört katmanlý
+olacak.
+
+Command mimarisini RMI'a geçirirken, uzaktan çaðrýlmaya açmamýz gereken tek
+class \PVerb!CommandHandler! olacak.
+
+\subsubsection{CommandHandler}
+
+\begin{lstlisting}[language=Java, caption=CommandHandler.java]
+public interface CommandHandler   {
+   public Command executeCommand(Command command) throws Exception;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, caption=spring.xml]
+<beans>
+  <bean id="commandHandlerImpl"
+        class="org.mycompany.kitapdemo.service.CommandHandlerImpl" />
+
+  <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+    <property name="serviceName"><value>CommandHandler</value></property>
+    <property name="service"><ref bean="commandHandlerImpl"/></property>
+    <property name="serviceInterface">
+      <value>org.mycompany.kitapdemo.service.CommandHandler</value>
+    </property>
+    <property name="registryPort"><value>3045</value></property>
+  </bean>
+</beans>
+\end{lstlisting}
+\PVerb!CommandHandler! arayüzünü gerçekleþtiren \PVerb!CommandHandlerImpl!
+class'ý üzerinde, \PVerb!executeCommand! aþaðýdaki gibi olacak.
+
+\begin{lstlisting}[language=Java, caption=CommandHandlerImpl.java,numbers=left,numberstyle=\tiny]
+package org.mycompany.kitapdemo.service;
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+
+public class CommandHandlerImpl  implements CommandHandler {
+
+        private Logger logger = Logger.getLogger("appLogger");
+
+        public Command executeCommand(Command command) throws Exception {
+
+           final Command param = (Command)command;
+           final Exception ex[] = {null};
+
+           // her yeni iþlem için bir Thread aç
+           Thread t = new Thread (new Runnable() {
+                   public void run() {
+                       try {
+                           param.execute();
+                           HibernateSession.commitTransaction();
+                       } catch (HibernateException exx) {
+                           HibernateSession.rollbackTransaction();
+                           ex[0] = exx;
+                       } catch (Exception exx) {
+                           HibernateSession.rollbackTransaction();
+                           ex[0] = exx;
+                       } finally {
+                           HibernateSession.closeSession();
+                       }
+                   }
+               });
+           synchronized (this) {
+               t.start();
+               try { t.join(); } catch (Exception e) { }
+               if (ex[0] != null) {
+                   throw ex[0];
+               }
+           }
+
+           return command;
+       }
+}
+\end{lstlisting}
+
+Satýr satýr açýklama:
+
+\begin{itemize}
+\item \textbf{11}: Metota gelen \PVerb!command! referansý, \PVerb!final!
+  olarak tanýmlanmýþ baþka bir referansa transfer edilmelidir. Bunun sebebi,
+  biraz altta bu referansa eriþecek bir iç class (inner class) olmasýdýr. Ýç
+  class deðiþken eriþim kurallarýna göre, dýþarýdan eriþilecek tüm referanslar,
+  \PVerb!final! olarak tanýmlanmalýdýr. Eðer bu yapýlmazsa, alttaki gibi bir
+  hata alýnýr:
+  \PVerb!``local variable command is accessed from within inner class;
+  needs to be declared final''!
+\item \textbf{12}: Command'ý iþletirken ortaya çýkabilecek
+  \PVerb!Exception!'larý iç class'ýn dýþýna taþýyabilmek için, bir
+  \PVerb!Exception! {\em dizini} tanýmlýyoruz. Niye sadece basit bir
+  \PVerb!Exception!  referansý deðil? Çünkü, iç class içinden, dýþarýdaki bir
+  referansa eriþmemiz gerekirse bu referans \PVerb!final! olmalýdýr. Final olan
+  bir referansa \PVerb!=! ile hiçbir þey set edemeyiz! Ama bu engele týkanýp
+  kalmak yerine, bir hack ile iþi çözüyoruz: Ýç class'tan bir referansa set
+  edemesek te, \PVerb!final! olan bir dizin {\em içine} atama yapmak, hâla legal
+  bir harekettir. Biz de \PVerb!Exception! yerine \PVerb!Exception[]!
+  kullanarak problemi çözüyoruz.
+\item \textbf{15,16}: \PVerb!Runnable! arayüzünü gerçekleþtiren bir class'ý
+  anýnda oluþturup, anýnda Thread nesnesine çalýstýrýlmaya hazýr olarak
+  veriyoruz. Bu kullaným, biraz normâl dýþý bir kullanýmdýr, fakat yeni bir
+  Thread tarafýndan iþletilecek kodlarý ayný kod sayfasýnda görebilmek için çok
+  güzel bir tekniktir. Alternatif olarak, ayný kod bloðunu ayrý bir dosyaya ve
+  class'a koyup ve Thread'e bu class'ý verebilirdik, ama bu, kod idaresi için pek
+  faydalý olmazdý.
+\item \textbf{17-20}: Ýlk önce Command iþletilir, ve iþler yolunda gitti ise
+  (hiç Exception atýlmamýþsa) transaction commit edilir.
+\item \textbf{20-23}: Hibernate tarafýndan atýlan bir hata var ise, burada
+  yakalanýr. Bu durumda, transaction geriye sarýlmalý (rollback) ve ele geçen
+  hata \PVerb!ex! dizini üzerine yazýlmalýdýr.
+\item \textbf{23-26}: Burada Hibernate hatasý deðil, daha genel bir hata
+  olmuþtur. Yapýlan hata karþýlama hareketleri yine aynýdýr, burada ayrý bir
+  bölüm olmasýnýn sebebi, ileride deðiþik hata karþýlama iþlemlerini burada
+  yapýlabilecek olmasýdýr. En azýndan her \PVerb!catch! kendi log ifadelerini
+  yazarak, ne tür bir hata meydana çýktýðýný servis tarafý log'larýnda
+  gösterebilir.
+\item \textbf{26-28}: Hata olsa da olmasa da iþleyecek \PVerb!finally! bloðu
+  içinde Hibernate oturumu kapatýlýr.
+\item \textbf{39}: Command iþletildikten sonra {\em geri döndürülür}. Bu çok
+  önemlidir çünkü geriye sonuç döndürmesi gereken Command'ler, sonuç deðerlerini
+  yine kendi üzerlerinde saklayacaklarý için, ayný Command'in geri dönmesi çok
+  önemlidir. Çaðýran tarafta istediði deðerlere eriþmek isteyenler, Command
+  üzerinde \PVerb!get! çaðrýlarý yaparak servis tarafýndan gelen sonuçlara
+  eriþebilirler.
+\end{itemize}
+
+
+\subsubsection{Çaðýran Taraf}
+
+Çaðýran (Web) tarafýnda Spring tanýmý alttaki gibi olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+<beans>
+  <bean id="commandHandler"
+        class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+    <property name="serviceUrl">
+      <value>rmi://localhost:3045/CommandHandler</value>
+    </property>
+    <property name="serviceInterface">
+      <value>org.mycompany.kitapdemo.service.CommandHandler</value>
+    </property>
+  </bean>
+</beans>
+\end{lstlisting}
+Bu taným sayesinde, \PVerb!getBean! kullanarak gereken her yerde
+\PVerb!CommandHandler! referansýný alabiliriz. Eðer bu referansýn alýmýný
+hýzlandýrmak istiyorsak, Struts/Web ortamýnda, bu referansý oturum üzerinde
+sürekli hazýr tutabiliriz, ve gerekince \PVerb!getAttribute! ile oradan alýrýz.
+
+\PVerb!CommandHandler! Referansýný hazýrlamak ve set etmek için bir Servlet
+filtresi yazmamýz gerekiyor. Bu filtre, her Web isteði baþýnda ``oturum üzerinde
+bir \PVerb!CommandHandler! referansý olup olmadýðýný'' kontrol eder. Eðer yoksa,
+\PVerb!factory.getBean! ile bir tane alýr ve oturum üzerine koyar.
+
+\begin{lstlisting}[language=Java, caption=ServiceReferencesFilter.java]
+public class ServiceReferencesFilter implements Filter {
+
+    private Logger logger = Logger.getLogger("appLogger");
+
+    public void init(FilterConfig filterConfig) throws ServletException { }
+
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain) throws IOException,
+                                                   ServletException
+    {
+        HttpSession session = ((HttpServletRequest) request).getSession();
+
+        if (session.getAttribute("commandHandler") == null) {
+            CommandHandler commandHandler =
+	         (CommandHandler)AppStartup.factory.getBean("commandHandler");
+            session.setAttribute("commandHandler", commandHandler);
+        }
+
+        chain.doFilter(request, response);
+    }
+
+    public void destroy() { }
+}
+\end{lstlisting}
+Artýk her Struts Action'i içinden \PVerb!ComnmandHandler!  referansýna
+eriþebiliriz. Struts Action, servis ile iletiþime geçmesi gerekince, gereken
+Command'i \PVerb!new! ile yaratýr, \PVerb!CommandHandler!'a network üzerinde
+gönderir, ve Command'ýn iþletilmesini saðlar.
+
+\begin{lstlisting}[language=Java, caption=ShowCarDetailAction.java]
+public class ShowCarDetailAction extends Action
+{
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        CommandHandler handler =
+           (CommandHandler)request.getSession().getAttribute("commandHandler");
+
+        String licensePlate = request.getParameter("licensePlate");
+
+        GetCarCommand cmdGet = new GetCarCommand(licensePlate);
+        Command resGet = handler.executeCommand(cmdGet);
+        Car car = ((GetCarCommand)resGet).getCar();
+
+        DynaActionForm daf = (DynaActionForm) form;
+        BeanUtils.copyProperties(daf, car);
+        if (car.getGarage() != null &&
+            !car.getGarage().equals(new Integer(0)))
+        {
+            daf.set("garageId", car.getGarage().getGarageId());
+        }
+
+        request.getSession().setAttribute("car", car);
+
+        // ....
+
+        return mapping.findForward("success");
+    }
+}
+\end{lstlisting}
+
+Car nesnesi \PVerb!setAttribute! ile oturum üzerine konduktan sonra, JSP sayfasý
+arabanýn detaylarýný gösterecektir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{JNDI}
+
+Birazdan iþleyeceðimiz EJB ve JMS teknolojilerini kullanmak için, JDNI adlý bir
+teknolojiye ihtiyacýmýz var. JNDI'ý biraz daha yakýndan tanýyalým.
+
+JNDI (Java Naming and Directory Interface) arayüzleri, deðiþik türden dizin
+(directory) ve isimlendirme (naming) servislerine standart bir arayüz saðlar
+\cite[sf. 24]{jmsbook}. Bu açýdan JNDI, JDBC'ye benzer. Aynen JDBC'nin deðiþik
+türden veri tabanlarý ile konuþmamýzý saðladýðý gibi, JNDI da dizin ve
+isimlendirme servisleri olan LDAP, Novel Netware NDS, CORBA Naming Service ve
+þirketlere özel (proprietary) isimlendirme servislerine eriþmemizi yardýmcý
+olur. JBoss içinde de JNDI standart arayüzleri üzerinden eriþebileceðimiz
+JBoss'a özel bir dizin ve isimledirme servisi vardýr.
+
+JNDI üzerinden birçok deðiþik servise eriþebilirsiniz. Bu servisler, bir JMS
+Queue'su, bir Session Bean'i, ya da fiziksel bir yazýcý bile olabilir. Yâni
+JNDI, bir servis ile bir ismi birbirine ilintilendirerek, o servise o isim
+üzerinden eriþebilmenizi saðlar.
+
+RMI bölümünde, uzaktaki bir nesneye eriþmek için JNDI'a konusuna girmemiz
+gerekmedi, çünkü hem servis hem baðlanan tarafý Spring üzerinden
+hallediyorduk. Spring, JDNI iþlemlerini kapalý kapýlar arkasýnda kendisi
+hallettiði için bizim fazladan JNDI iþlemi yapmamýza gerek kalmamýþtý. Fakat,
+görmek üzere olduðumuz EJB ve JMS teknolojileri için JNDI kullanacaðýz, çünkü
+JMS ve EJB teknolojilerini pür hâlde kullanýyoruz (böylesi daha kolay
+olacak). EJB baðlamýnda JDNI'ý, bir Session Bean'i ismiyle bulmak için, JMS için
+ise bir Queue'ya ismini kullanarak eriþebilmek için kullanacaðýz.
+
+JBoss için standart JNDI kodlama kalýbýmýz þöyle olacak:
+
+\begin{lstlisting}[language=Java, frame=none]
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.Hashtable;
+import javax.naming.Context;
+import java.util.Properties;
+import java.util.List;
+
+...
+
+InitialContext ic = null;
+
+Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,
+      "org.jnp.interfaces.NamingContextFactory");
+p.put(Context.URL_PKG_PREFIXES, "jboss.naming:org.jnp.interfaces");
+p.put(Context.PROVIDER_URL, "localhost:1099"); // JNDI port 1099 ise
+try {
+    ic = new InitialContext(p);
+    Object objref = ic.lookup("buraya/jndi/ismi/yazilir");
+    // ...
+    // burada elde edilen referans ile iþlemler yapýlabilir
+} catch (Exception e) {
+    // hata durumunu rapor et
+    e.printStackTrace();
+}
+\end{lstlisting}
+Örnekte kullandýðýmýz JNDI port'u, \PVerb!1099! numaralý port'tur. Fakat bu port
+deðeri bazý JBoss kuruluþlarýnda deðiþik olabilir (paketten çýkan hâli, \PVerb!1099!
+olmak üzere ayarlýdýr). Gerçek JNDI port'unuz deðiþik ise, bu deðiþik deðerin ne
+olduðunu anlamak için JBoss açýlýrken basýlan log mesajlarýna bakmanýz yeterli
+olacaktýr. Örnek bir JBoss log ekraný aþaðýda gösterilmiþtir.
+
+\begin{lstlisting}[language=XML, frame=none]
+16:53:57,287 INFO  [Server] Starting General Purpose Architecture (GPA).
+16:53:58,539 INFO  [ServerInfo] Java version: 1.4.2,Sun Microsystems Inc
+16:53:58,549 INFO  [ServerInfo] Java VM: Java HotSpot(TM) Client VM 1.4.
+n Microsystems Inc.
+16:53:58,549 INFO  [ServerInfo] OS-System: Windows XP 5.1,x86
+16:53:59,250 INFO  [Server] Core system initialized
+16:54:02,395 INFO  [WebService] Using RMI server codebase: http://bio:80
+16:54:03,126 INFO  [NamingService] Started jndi bootstrap jnpPort=1099,
+1098, backlog=50, bindAddress=/0.0.0.0, Client SocketFactory=null, Serve
+Factory=org.jboss.net.sockets.DefaultSocketFactory@ad093076
+16:54:11,338 INFO  [Embedded] Catalina naming disabled
+16:54:12,710 INFO  [Http11Protocol] Initializing Coyote HTTP/1.1 on http
+-8080
+\end{lstlisting}
+Bu mesaj satýrlarý içinde \PVerb!jnpPort! ibaresinin verildiði satýra
+bakýnýz. Eþitliðin saðýndaki deðer, JBoss'un JNDI servisi için kullandýðý port
+deðeridir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{EJB Session Bean} \label{dist:ejb}
+
+EJB teknolojisi, üç deðiþik kýsýmdan meydana gelir.
+
+\begin{itemize}
+   \item Konumlu (Stateful) Session Bean (SFSB)
+   \item Konumsuz (Stateless) Session Bean (SLSB)
+   \item Entity Bean
+\end{itemize}
+
+Bu seçeneklerden Entity Bean teknolojisi, EJB'nin programcýlar tarafýndan en
+tepki çeken ve kabul görmeyen kýsmý olmuþtur. Kalýcýlýk (persistence) problemini
+çözmeye çalýþan Entity Bean'ler, çözdüklerinden daha fazla problemi
+beraberlerinde getirmiþlerdir. Entity Bean teknolojisi, Kural \#1, \#5 ve
+\#6'in çok ciddi þekilde ihlâlleridir.
+
+Fakat, SFSB ve SLSB bileþenleri daðýtýk mimarilere faydalý
+olabilirler. Özellikle, JBoss Uygulama Servisi'nin Session Bean'lere saðladýðý
+çökmeden kurtulma (failover), yük daðýtýmý (load balancing) servisleri
+sayesinde, saðlam ve ölçeklenebilen Session Bean bazlý sistemler kurmak
+mümkündür.
+
+\subsection{Sonuç Dizin Yapýsý}
+
+JBoss üzerinde bir EJB'yi iþletmek için \PVerb!deploy! dizininde kurulmasý
+gereken dizin yapýsý altta gösterilmiþtir.
+
+\begin{lstlisting}[language=Java, frame=none]
++- kitapdemo.ear
+| +- META-INF
+| | +- MANIFEST.MF
+| | +- application.xml
+| | +- jboss-app.xml
+| +- conf
+| | +- log4j.xml
+| +- kitapdemo.sar
+| | +- META-INF
+| | | +- MANIFEST.MF
+| | | +- jboss-service.xml
+| | +- conf
+| | +- activation.jar
+| | ..
+| | +- xml-apis.jar
+| +- hibernate.cfg.xml
+| +- kitapdemo.jar 
+| | +- META-INF
+| | | +- ejb-jar.xml
+| | | +- jboss.xml
+| | | +- MANIFEST.MF
+| | +- org
+| | | +- mycompany
+| | | | +- kitapdemo
+| | | | | +- dao
+| | | | | +- pojo
+| | | | | | +- Car.class
+| | | | | | +- Car.hbm.xml
+| | | | | | +- Garage.class
+| | | | | | +- Garage.hbm.xml
+| | | |	+- service
+| | | |	+- util
+\end{lstlisting}
+Bu yapý, örnek projelerin \PVerb!build.xml!'i tarafýndan otomatik olarak
+kurulacaktýr. 
+
+\subsection{SFSB ve SLSB}
+
+Eðer uzaktan çaðrý yaptýðýmýz Session Bean bir SFSB ise, o Bean'e elimizde bir
+referans olduðu sürece, o Bean muhafaza edilir. SFSB'lerde, aynen \PVerb!new!
+ile yaratýlan Java nesnelerindeki gibi, bir önceki yapýlan çaðrý bir sonrakini
+etkiler çünkü eldeki SFSB, JBoss tarafýndan sabit/ayný tutulur. Kýyasla eðer
+eldeki referans bir S\textbf{L}SB'e iþaret ediyor olsaydý, JBoss Uygulama
+Servisi konumsuz olarak bildiði bu nesneyi iki çaðrý arasýnda deðiþtirebilirdi.
+
+Peki Uygulama Servisi bu SLSB deðiþtirmesini niye yapar? Genellikle elde bir
+SLSB havuzu vardýr ve gelen her yeni istek için havuzdan bir nesne alýnýp çaðrý
+üzerinde yapýlýr ve nesne havuza geri konulur. Önceden yaratýlmýþ ve havuzdan
+servis edilen nesnelerin tekrar bir \PVerb!new! aþamasýndan geçmesi gerekmez, ve
+hazýr olan nesnelerin servis edilmesinin daha hýzlý olduðu savunulduðu için bu
+yapý seçilmiþtir. Havuzdan alma, havuza geri koyma iþlemi, her yeni çaðrýda
+yapýlabilir, çünkü nesneler konumsuzdur; Bir çaðrý, bir sonrakini etkilemez.
+
+Tabii EJB belirtimleri (specification) aslýnda havuzlamadan bahsetmiyor;
+Belirtim sadece, SLSB'ler çaðýrýlýrken ayný nesnenin orada olacaðýna
+güvenilmemesinden bahsetmektedir (SFSB için ise tam tersi geçerlidir). Havuz
+kullanýp kullanmama gibi detaylar, her ticari uygulama paketinin kendi seçimine
+býrakýlmýþtýr.
+
+\subsection{SFSB}
+
+Kodlama açýsýndan bir SFSB için, üç tane class yazýlmasý gerekiyor. Bunlar Home,
+Remote arayüzleri, ve gerçekleþtirim kodlarýdýr. Bu bölümde örnek olarak
+\PVerb!MyTestSession! adýnda bir SFSB yazacaðýz. Bu Bean üzerinde
+\PVerb!increment! ve \PVerb!getCount!  adlý iki metot olacak. \PVerb!Increment!
+metotunu kullanarak SFSB üzerindeki bir sayaç deðeri arttýrabileceðiz,
+\PVerb!getCount! ile mevcut sayýnýn okunmasý mümkün olacak. Bu örneðin çok uygun
+bir Konumlu (stateful) Session Bean örneði olduðunu herhalde anlamýþsýnýzdýr,
+eðer \PVerb!MyTestSession! konumlu deðil konumsuz bir Bean olsaydý,
+arttýrdýðýmýz deðerlerin hatýrlanmasý mümkün olmazdý. Zaten SFSB ve SLSB
+arasýndaki farký anlamak için bu deðiþtirmeyi göstereceðiz.
+
+Kod, alttaki gibi olacak (bitmiþ kodlarý ve Ant \PVerb!build.xml! dosyasýný
+\PVerb!CounterStateful! projesi altýnda bulabilirsiniz):
+
+\begin{lstlisting}[language=Java, frame=none]
+public interface MyTestSession  extends javax.ejb.EJBObject{
+   public void increment() throws java.rmi.RemoteException;
+   public int getCount() throws java.rmi.RemoteException;
+}
+
+public interface MyTestSessionHome extends javax.ejb.EJBHome
+{
+    public MyTestSession create() throws
+    javax.ejb.CreateException,
+         java.rmi.RemoteException;
+}
+
+public class MyTestSessionBean implements SessionBean
+{
+    int counter = 0;
+
+    public void ejbCreate() throws CreateException { }
+
+    public void setSessionContext( SessionContext aContext )
+    throws EJBException {}
+
+    public void ejbActivate() throws EJBException { }
+
+    public void ejbPassivate() throws EJBException { }
+
+    public void ejbRemove() throws EJBException { }
+
+    public void increment(){ counter++; }
+
+    public int getCount(){ System.out.println(counter); return counter; }
+
+}
+
+\end{lstlisting}
+Bu kodlarýn deploy edilmesi için \PVerb!ejb-jar.xml!, \PVerb!jboss.xml!,
+\PVerb!application.xml!, \PVerb!jboss-app.xml! ve \PVerb!jboss-service.xml!
+adýnda beþ dosya gerekmektedir. Tüm bu dosyalara teker teker bakalým
+(\PVerb!jboss-service.xml!'i daha önce \ref{web:config:jbosservice} bölümünde
+iþlemiþtik).
+
+\begin{lstlisting}[language=XML, caption=jboss-app.xml]
+<jboss-app>
+  <module>
+    <service>kitapdemo.sar</service>
+  </module>
+</jboss-app>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption=application.xml]
+<application>
+  <display-name>KitapDemo</display-name>
+  <description>KitapDemo Queue</description>
+  <module>
+    <ejb>kitapdemo.jar</ejb>
+  </module>
+</application>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption=ejb-jar.xml]
+<ejb-jar>
+  <description>Kitapdemo</description>
+  <display-name>Kitapdemo</display-name>
+  <enterprise-beans>
+    <!-- Session Beans -->
+    <session>
+      <display-name>My Test Session Bean</display-name>
+      <ejb-name>test/MyTestSession</ejb-name>
+      <home>org.mycompany.kitapdemo.service.MyTestSessionHome</home>
+      <remote>org.mycompany.kitapdemo.service.MyTestSession</remote>
+      <ejb-class>
+          org.mycompany.kitapdemo.service.MyTestSessionBean
+      </ejb-class>
+      <session-type>Stateful</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+  </enterprise-beans>
+  <assembly-descriptor>
+  </assembly-descriptor>
+</ejb-jar>
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, caption=jboss.xml]
+<jboss>
+   <enterprise-beans>
+      <session>
+         <ejb-name>test/MyTestSession</ejb-name>
+         <jndi-name>ejb/test/MyTestSessionBean</jndi-name>
+      </session>
+   </enterprise-beans>
+   <resource-managers>
+   </resource-managers>
+</jboss>
+\end{lstlisting}
+Görüldüðü gibi \PVerb!application.xml! ve \PVerb!jboss-app.xml! oldukça
+basmakalýp dosyalardýr. Her proje için bir kez yaratýlýrlar, ve hiçbir EJB'ye
+has bir taným içermezler. Bu iki dosyanýn amacý, EJB kodlarýnýn bulunduðu JAR ve
+SAR dosyalarýnýn isimlerini EAR paketine tanýtmaktýr.
+
+Her EJB'ye özel ayarlarýn yapýldýðý yer \PVerb!ejb-jar.xml! dosyasýdýr. Meselâ
+eðer EJB'nin konumsuz olmasýný istersek, yukarýdaki \PVerb!<session-type>!
+etiketi içinde \PVerb!Stateful! yerine \PVerb!Stateless! kelimesini
+kullanabilirdik.
+
+EJB tanýmlamasý hazýrsa, \PVerb!ejb-jar.xml! içindeki Session Bean tanýmýný bir
+JNDI ismine baðlayan yer de \PVerb!jboss.xml! dosyasý olacaktýr. Bu dosyaya
+göre, EJB'mizin JNDI üzerinden bulunabileceði isim
+\PVerb!ejb/test/MyTestSessionBean!  ismi olarak belirtilmiþtir.
+
+Þimdi JNDI üzerinden \PVerb!MyTestSessionBean! EJB'sini bulan ve çaðrý yapan
+baðlantý kodunu görelim.
+
+\begin{lstlisting}[language=Java, caption=Mainline.java]
+public class Mainline {
+
+    public static void main(String[] args) {
+        MyTestSession beanRemote;
+        InitialContext ic = null;
+
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY,
+              "org.jnp.interfaces.NamingContextFactory");
+        p.put(Context.URL_PKG_PREFIXES, "jboss.naming:org.jnp.interfaces");
+        p.put(Context.PROVIDER_URL, "localhost:1099"); // JNDI port.
+        try {
+            ic = new InitialContext(p);
+            Object objref = ic.lookup("ejb/test/MyTestSessionBean");
+            MyTestSessionHome testSessionBean = (MyTestSessionHome)
+                PortableRemoteObject.narrow(objref, MyTestSessionHome.class);
+            beanRemote = testSessionBean.create();
+
+            while (true) {
+                beanRemote.increment();
+                System.out.println("Count is : " + beanRemote.getCount());
+                try {
+                    Thread.currentThread().sleep(1000); // uykuya yat
+                } catch (Exception e) { }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Mainline() { }
+
+}
+\end{lstlisting}
+Test kodumuzda önce JNDI üzerinden \PVerb!MyTestSession! bulunuyor, daha sonra
+bu referans üzerinden, sonsuz bir döngü içinde SFSB üzerindeki sayaç bir
+arttýrýlýp, yeni deðer ekrana basýlýyor. SFSB içindeki servis kodunu
+hatýrlarsanýz, ekrana basma iþlemi hem servis hem de çaðýran tarafýnda
+yapýlmaktadýr. \PVerb!Narrow! ve \PVerb!create!  çaðrýlarý oldukça basmakalýp
+çaðrýlar olduklarý için detaylarýna inmeyeceðiz. Her EJB için ezbere takip
+edilmesi gereken metotlardýr.
+
+\subsubsection{Çaðýran Taraf ve Import}
+
+Bu noktada önemli bir soru, geliþtirme ortamý açýsýndan, çaðýran taraf kodlarýnýn
+\PVerb!MyTestSessionHome! ve \PVerb!MyTestSession! class tanýmlarýna nasýl sahip
+olduðudur. Yâni import'lar için gereken \PVerb!.class!  dosyalarý nereden
+gelmiþtir? Bu sorunun önemi, çaðýran ve çaðýrýlan tarafýn bazen apayrý projeler
+olabilmesi durumunda daha da kuvvetle ortaya çýkacaktýr.
+
+Bu soruna çözüm olarak, servis tarafý kodlarýnýn derlemesi bittikten hemen
+sonra, servis tarafý \PVerb!build.xml!'i içinden, servis tarafý tüm class'larý
+bir \PVerb!jar!'a koyarak, çaðýran projenin \PVerb!lib! dizini içine kopyalamak
+uygundur. Bu kopyalama iþleminin örneðini, \PVerb!CarsEJB/Server!  projesindeki
+\PVerb!build.xml! içinde görebilirsiniz. Gereken class'lar
+\PVerb!CarsEJB/Server!'den, \PVerb!CarsEJB/WebClient/lib! altýna
+kopyalanmaktadýr.
+
+\subsection{EJB ve Command Mimarisi}
+
+SFSB üzerinden Command mimarisi kullanmak için, \ref{dist:command} bölümünde
+bahsedildiði gibi, tek ``EJB'leþtirmemiz'' gereken yer \PVerb!CommandHandler!
+kodu olacaktýr. Bu nokta, servis tarafýna network'den giriþ noktasý olduðu için,
+uzaktan çaðýrýlacak tek noktadýr. Bunun haricinde, eðer RMI bazlý Command
+mimarisini anlattýðýmýz \ref{dist:rmi} bölümündeki Command ve alt sýnýflarýný
+olduðu gibi alýp kullanmak istersek, bunu yapabiliriz, çünkü Command class'larý
+hiçbir teknolojiye baðlý yazýlmamýþtýr!
+
+Þimdi yeni \PVerb!CommandHandler! kodlarýný görelim (EJB'ye geçerken, EJB stili
+isimlendirmeyi takip etmek için bu class'a \PVerb!CommandHandlerBean! ismini
+vereceðiz).
+
+\begin{lstlisting}[language=Java, frame=none]
+public interface CommandHandler extends javax.ejb.EJBObject {
+    public Command executeCommand(Command command)
+        throws java.rmi.RemoteException;
+}
+
+public interface CommandHandlerHome extends javax.ejb.EJBHome
+{
+    public CommandHandler create()
+        throws javax.ejb.CreateException, java.rmi.RemoteException;
+}
+
+public class CommandHandlerBean  implements SessionBean
+{
+    public void ejbCreate() throws CreateException { }
+
+    public void setSessionContext( SessionContext aContext )
+        throws EJBException {}
+
+    public void ejbActivate() throws EJBException { }
+
+    public void ejbPassivate() throws EJBException { }
+
+    public void ejbRemove() throws EJBException { }
+
+    public Command executeCommand(Command command)
+       throws java.rmi.RemoteException {
+
+        final Command param = (Command)command;
+        try {
+            param.execute();
+            HibernateSession.commitTransaction();
+        } catch (HibernateException ex) {
+            HibernateSession.rollbackTransaction();
+            throw new RemoteException("",ex);
+        } catch (Exception ex) {
+            HibernateSession.rollbackTransaction();
+            throw new RemoteException("",ex);
+        } finally {
+            HibernateSession.closeSession();
+        }
+
+        return command;
+    }
+
+}
+
+\end{lstlisting}
+
+Ne kadar basit olduðunu görüyoruz. \PVerb!CommanHandlerBean! dýsarýdan gelen bir
+Command'i alýp üzerinde \PVerb!execute! metotunu çaðýrmakla yükümlüdür. Eðer
+metot baþarýyla iþletilirse Hibernate transaction commit edilecek, olmazsa
+rollback yapýlacaktýr. Her iki durumda da \PVerb!finally! ile Hibernate
+oturumu kapatýlýr.
+
+Yanlýz EJB þartlarýnda RMI'a göre deðiþik, önemli bir nokta mevcuttur. EJB
+þartlarýnda eðer \PVerb!execute! bir hata verir ise, \PVerb!catch!'e gelen
+Exception'ý ``\PVerb!RemoteException! tipinde yeni bir Exception içine koyarak''
+geriye atmamýz gerekmektedir. Yâni RMI þartlarýndaki gibi, meselâ bir
+\PVerb!HibernateException! nesnesini olduðu gibi network üzerinden geri
+atamayýz. Niye?
+
+Bunun sebebi, EJB belirtiminin, bileþenlerin arayüzleri üzerine getirdiði
+sýnýrlamalardýr. EJB 2.1 belirtimine göre, çaðýran tarafa geri atýlabilecek
+hatalar sadece \PVerb!RemoteException! tipinde olabilirler. Bu durum mimarimiz
+üzerinde biraz ``sýnýrlayýcý'' bir durum olabilir, fakat \PVerb!RemoteException!
+içine diðer bir Exception gömmemiz mümkün olduðu için, bize gelen
+\PVerb!HibernateException!  nesnesini \PVerb!RemoteException! içine gömerek geri
+gönderebiliriz (\PVerb!RemoteException! kurucu metotu parametre olarak diðer bir
+Exception nesnesini alabilir, ve bir kez bu þekilde yaratýldýktan sonra içindeki
+nesneyle beraber geriye -çaðýran tarafa- taþýnabilir).
+
+Bir \PVerb!RemoteException! içinde saklanan diðer Exception'a \PVerb!ex.detail!
+çaðrýsý ile eriþebilirsiniz. O zaman çaðýran tarafta örnek bir \PVerb!catch!
+þöyle olacaktýr:
+
+\begin{lstlisting}[language=Java, frame=none]
+try {
+  CommandHandler handler = ...
+  UpdateCarCommand cmd = new UpdateCarCommand(car, garageId);
+  ...
+  handler.executeCommand(cmd);
+
+} catch (java.rmi.RemoteException e) {
+    if (e.detail instanceof java.rmi.RemoteException) {
+       java.rmi.RemoteException ee = (java.rmi.RemoteException)e.detail;
+       if (ee.detail instanceof org.hibernate.StaleObjectStateException) {
+    }
+}
+\end{lstlisting}
+Exception'ýn içine bakarken \PVerb!e.detail.detail! diyerek niye iki seviye
+aþaðý indik?  Çünkü servis tarafýnda bir \PVerb!RemoteException! atýldýðý zaman
+EJB iletiþim kodlarý bir Exception paketlemesi daha yaparak iki
+\PVerb!RemoteException! içiçe koyulmaktadýr. Bu aslýnda pek istenen bir durum
+deðildir ve EJB teknolojisinin eksi hanesinde yazýlmasý gereken bir
+gerçektir. Fakat idare edilebilir ve her þartta yapýlmasý gerekmediði için fazla
+engelleyici bir durum teþkil etmez.
+
+Üstte gösterilen Exception yakalama örneðini \PVerb!CarsEJB/WebClient! projesi
+altýnda \PVerb!CarUpdateAction.java! dosyasýnda bulabilirsiniz.
+
+EJB Command mimarisi hakkýnda verilen detaylar bu kadar olacak. Tüm gereken ayar
+dosyalarý belirtmeye gerek yoktur, çünkü ayarlar birkaç isim deðiþikliði
+yapýldýktan sonra \PVerb!CounterStateful! projesininkiyle aynýdýr. Bitmiþ tüm
+arabalar ve garajlar projesi zaten \PVerb!CarsEJB! altýnda bulunabilir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{JMS}
+
+JMS (Java Messaging Service), nesneler, JVM'ler ya da süreçler arasýnda asenkron
+iletiþimi saðlayan bir Java servisidir. JMS, öncelikle bir standarttýr; Bir
+belirtim (specification) belgesi ile ortaya konmuþtur ve piyasadaki 'JMS uyumlu'
+yazýlým paketleri bu belirtimi gerçekleþtirip, desteklerler. JMS teknolojisinden
+bahsedilirken, yedi ana kavramý sürekli duyacaksýnýz.
+
+\begin{itemize}
+   \item Queue
+   \item Topic
+   \item Subscriber
+   \item Publisher
+   \item Sender
+   \item Receiver
+   \item Message Broker
+\end{itemize}
+
+\subsection{Ana Kavramlar} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Queue ve Topic}
+
+Üzerine bilgi yazýlan ve okunan birimlerdir. Queue ve Topic'in müþterileri
+(gönderen ve gönderilen uçlar) birbirleri ile asenkron iletiþime geçmiþ olurlar,
+yâni, gönderen taraf gönderme iþleminden hemen döner, mesajýn karþý tarafta
+alýnýp alýnmamýþ olduðuna emin olmak onun görevi deðildir. Kýyasla metot çaðrýsý
+yaptýðýmýz ve bu metot geri döndüðü zaman biliriz ki, metot içindeki iþlemler
+tamamlanmýþtýr. Asenkron iletiþimde mesajýn karþý tarafa güvenle ulaþmasýný
+saðlamak Message Broker'ýn görevidir.
+
+Topic'in Queue'dan olan tek farký, Queue dinleyicilerinin (listener) sadece bir
+tanesinin Queue üzerindeki bir mesajý okumasý, Topic'te ise tüm okuyucularýn
+(subscriber) tüm mesajlarý ayný anda almasýdýr. Bir benzetme yapmak gerekirse,
+Queue telefon ise, Topic bir telsizdir. Birinin konuþtuðunu, herkes
+duyabilir. Queue'ya gönderilen mesajlar, sadece ve sadece tek bir kiþi tarafýndan
+okunabilir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.5}{
+  \includegraphics{./images/jmsqueuetopic.eps}
+  }
+}
+\caption{Queue ve Topic}
+\end{figure}
+
+\subsubsection{Sender ve Receiver}
+
+Queue'ya mesaj gönderene gönderici (sender), Topic'e mesaj gönderene yayýncý
+(publisher) ismi verilir.
+
+\subsubsection{Message Broker}
+
+Fiziksel anlamda queue ve topic'leri içinde barýndýran yazýlýma verilen
+isimdir. Ticari ya da açýk yazýlým paketi olarak isminden bahsedilen þey,
+Message Broker'dýr. Piyasadaki örnekleri JBossMQ, ActiveMQ, SonicMQ, MQSeries ve
+WebSphereMQ olarak sayýlabilir. Eðer JMS mantýki (logical) bir kavram ise
+Message Broker fiziksel (physical) bir kavramdýr.
+
+Bu kitapta kullandýðýmýz, ve projeniz için tavsiye ettiðimiz Message Broker,
+JBossMQ ürünüdür. JBoss kurumundan gelen diðer yazýlýmlar gibi, bu yazýlým da
+açýk kaynaktýr. Oldukça hýzlý, projelerde ispatlanmýþ ve kullanýmý basit bir
+Broker ürünüdür. Queue ve Topic ile alâkalý ayarlarý zaten kullanmakta olduðumuz
+\PVerb!jboss-service.xml! ayar dosyasýndan yapýlabilmektedir. Örnek için
+\PVerb!SimpleListenerServer!  projesine bakabilirsiniz.
+
+JMS sahneye çýkmadan önce, revaçta Tibco, MQSeries gibi broker'lar ve bu
+broker'larýn kendi arayüzleri, kendi çaðýrma stilleri vardý. Tibco ve MQSeries
+hâla mevcutturlar, fakat JMS sahneye çýktýktan sonra tüm broker ürünleri JMS
+arayüzünü desteklemeyi seçtmiþlerdir. Artýk Tibco ve MQSeries ürünleri JMS
+üzerinden kullanýlabilir durumdadýr.
+
+\subsection{JBossMQ ile Queue ve Topic Oluþturmak} \label{dist:jms:jbossmq}
+
+Statik (duraðan) Queue ya da Topic oluþturmak için, \PVerb!jboss-service.xml!
+ayar dosyasýnda bir MBean tanýmý yapabiliriz. Dinamik (iþlem anýnda) yaratýlan
+Queue ve Topic'leri, tavsiye etmediðimiz bir kullaným olduðu için, bu kitapta
+iþlemeyeceðiz.
+
+JBoss evreninde çalýþan her idare edilebilir nesne bir MBean'dir; Statik bir
+Queue ve Topic de MBean olarak tanýmlanýrlar. MBean tekniði sayesinde, idare
+edilen nesnelerin baþlangýç deðerlerini MBean teknolojisi üzerinden set etmek
+mümkün olmaktadýr. Mesela aþaðýda, \PVerb!kitapDemoQueue! adýnda bir Queue'nun
+MBean üzerinden baþlatýldiðýný ve ayarlarýnýn yapýldýðýný görüyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<mbean code="org.jboss.mq.server.jmx.Queue"
+       name="jboss.mq.destination:service=Queue,name=kitapQueue">
+  <depends optional-attribute-name="DestinationManager">
+     jboss.mq:service=DestinationManager
+  </depends>
+  <attribute name="MessageCounterHistoryDayLimit">-1</attribute>
+</mbean>
+\end{lstlisting}
+Bir MBean'in baþlangýç deðerleri \PVerb!<attribute name>! etiketi ile set
+edilebilir. Queue üzerindeki öðelerden biri olan
+\PVerb!MessageCounterHistoryDayLimit!, bir Queue'ya gönderilen mesajlarýn {\em
+sayaç deðerinin} ne kadar uzun süre muhafaza edileceðini tanýmlayan bir
+ayardýr. Eksi deðerler, sonsuza kadar anlamýna gelir, artý deðerler verilen gün
+deðeri kadar sayaçýn tutulmasýný saðlayacaktýr. Bu öðe ve diðer öðeler hakkýnda
+referans bilgisi için, \cite[sf. 238]{jbossadmin}'e baþvurabilirsiniz.
+
+Üstte görülen ayarlar, JBossMQ'da bir Queue oluþturmak için yeterlidir. Topic
+yaratmak için, aþaðýdaki gibi MBean tanýmý yeterli olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+<mbean code="org.jboss.mq.server.jmx.Topic"
+	 name="jboss.mq.destination:service=Topic,name=kitapTopic">
+  <depends optional-attribute-name="DestinationManager">
+     jboss.mq:service=DestinationManager
+  </depends>
+  <depends optional-attribute-name="SecurityManager">
+     jboss.mq:service=SecurityManager
+  </depends>
+</mbean>
+\end{lstlisting}
+Topic MBean ayarlarý için \cite[sf. 239]{jbossadmin}'e baþvurunuz. Ayar dosyasý
+\PVerb!jboss-service.xml!'in, geliþtirme dizin yapýsý içinde hangi dizinde
+tutulduðunu, ve \PVerb!build.xml! ile nasýl paketlendiðini görmek için,
+\PVerb!SimpleListenerServer! örnek projesine baþvurabilirsiniz.
+
+\subsection{Listener ile Mesaj Okumak} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Statik olarak oluþturduðumuz Queue ve Topic'den mesaj okuma tekniklerine
+bakalým. Önce, listener yöntemiyle okumayý iþleyeceðiz.
+
+\subsubsection{Queue Listener}
+
+Listener yönteminde bir listener, \PVerb!MessageListener! arayüzünden miras alýr
+ve bir Queue üzerinde dinleyici nesne olarak set edilebilir. Bu yapýldýktan
+sonra, eðer dinlenen queue'ya bir mesaj gelirse, o mesaj bir
+\PVerb!javax.jms.Message!  olarak listener nesnesinin \PVerb!onMessage! metotuna
+düþecektir. Dinleyici nesneler, {\em sen beni arama, ben seni ararým} mantýðý
+ile iþlerler. Örnek bir dinleyiciyi aþaðýda görmekteyiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+import javax.jms.*;
+import javax.naming.Context;
+import java.util.Properties;
+import javax.naming.InitialContext;
+
+public class KitapQueueListener implements MessageListener {
+
+    public KitapQueueListener() throws Exception {
+
+        QueueConnectionFactory qFactory = null;
+
+        InitialContext jndi = null;
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY,
+              "org.jnp.interfaces.NamingContextFactory");
+        p.put(Context.PROVIDER_URL, "jnp://localhost:1099"); // JNDI port
+        InitialContext ctx = new InitialContext(p);
+
+        QueueConnectionFactory qcf = (QueueConnectionFactory)
+            ctx.lookup("ConnectionFactory");
+        QueueConnection qc = qcf.createQueueConnection();
+        Queue queue = (Queue) ctx.lookup("queue/kitapQueue");
+        QueueSession queueSession =
+            qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        QueueReceiver qReceiver = queueSession.createReceiver(queue);
+        qReceiver.setMessageListener(this);
+        System.out.println("Listening on queue ..........");
+        qc.start();
+    }
+
+    public void onMessage(javax.jms.Message message) {
+        System.out.println(""+message);
+        logger.debug(""+message);
+    }
+}
+\end{lstlisting}
+
+Örnek kodun \PVerb!QueueReceiver! yaratýlýncaya kadar olan kýsmý JDNI üzerinden
+queue'nun bulunmasý, queue baðlantýsý ve session açýlmasý gibi basmakalýp
+iþlemleri içermektedir. En son aþama ise listener nesnesinin, receiver üzerinde,
+kendisini (\PVerb!this!), \PVerb!setMessageListener!  kullanarak bir dinleyici
+olarak set etmesidir. Tabii bu iþlem, asýl dinleme iþlemini baþlatmak için
+yeterli deðildir. Dinleme sürecini baþlatmak için, \PVerb!QueueConnection!
+üzerinde \PVerb!start! çaðrýsý yapýlarak okuma iþlemi fiilen baþlatýlmalýdýr.
+
+Son olarak {\em listener kodunun kendisini} tetiklemek için, JBoss içindeki
+\PVerb!AppStartup! ya da herhangi bir \PVerb!main! iþlevini
+kullanabilirsiniz. Bu çaðrý çok basit olacaktýr. Mesela komut satýrýndan
+baþlatýlabilecek türden bir tetikleyici þöyle olabilir:
+
+\begin{lstlisting}[language=Java, frame=none]
+public class QListener {
+    public static void main(String[] args) throws Exception {
+        KitapQueueListener k = new KitapQueueListener();
+    }
+}
+\end{lstlisting}
+
+\PVerb!SimpleListenerServer! projesinin \PVerb!build.xml!'inde yukarýdaki
+class'ý baþlatabilen \PVerb!qlistener! adýnda bir Ant task'i bulacaksýnýz, yâni,
+komut satýrýnda \PVerb!ant qlistener! yazýlýnca yukarýdaki \PVerb!main!'i
+çaðýrýlmýþ olacak. Ýlginç bir nokta: Bu tetiklemeyi yaptýktan sonra, komut
+satýrýnýn geri gelmediðini farkedeceksiniz. Bu bloklanmanýn sebebi,
+\PVerb!start! çaðrýsý bir dinleyici thread baþlatmasýdýr, ve bu thread bitmeden,
+ant java komut çaðrýsý geri dönmez. Bu güzel, çünkü test amaçlý bir
+\PVerb!main!'den beklediðimiz de zaten budur.
+
+\subsubsection{Topic Listener}
+
+Queue dinleme yöntemine neredeyse týpatýp benzeyen topic dinleme iþlemi, aynen
+queue için olduðu gibi \PVerb!MessageListener! arayüzünden miras alýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+import javax.ejb.MessageDrivenBean;
+import javax.jms.*;
+import javax.naming.Context;
+import org.apache.log4j.Logger;
+import java.util.Properties;
+import javax.naming.InitialContext;
+
+public class KitapTopicListener implements MessageListener {
+
+    public KitapTopicListener() throws Exception {
+
+        TopicConnectionFactory qFactory = null;
+
+        InitialContext jndi = null;
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY,
+              "org.jnp.interfaces.NamingContextFactory");
+        p.put(Context.PROVIDER_URL, "jnp://localhost:1099"); // JNDI port
+        InitialContext ctx = new InitialContext(p);
+
+        TopicConnectionFactory qcf = (TopicConnectionFactory)
+            ctx.lookup("ConnectionFactory");
+        TopicConnection qc = qcf.createTopicConnection();
+        Topic topic = (Topic) ctx.lookup("topic/kitapTopic");
+        TopicSession topicSession =
+            qc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        TopicSubscriber tSubscriber = topicSession.createSubscriber(topic);
+        tSubscriber.setMessageListener(this);
+        System.out.println("Listening on topic ..........");
+        qc.start();
+    }
+
+    public void onMessage(javax.jms.Message message) {
+        System.out.println(""+message);
+        logger.debug(""+message);
+    }
+}
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Not}: Queue kodlamasýndan topic kodlamasýna geçerken güzel bir
+hatýrlatýcý kural þudur: Bir queue kod çaðrý kalýbýný alýp, \PVerb!queue!
+kelimesi yerine \PVerb!topic!, \PVerb!send! yerine \PVerb!publish!,
+\PVerb!receive! yerine \PVerb!subscribe!  kelimesini koyarsanýz, queue iþlem
+diziniz, topic iþlem dizisine dönmüþ olacaktýr!
+\end{quote}
+
+Yukarýdaki kodlama kalýbýnýn queue okuma kodlamasýna çok benzediði
+gözüküyor. Yazma ve okuma baðlamýnda çok benzeyen queue ve topic arasýndaki ana
+fark, bir mesajý okurken o mesajý {\em kaç kiþinin aldýðý} ile alâkalýdýr. Eðer
+üstteki gibi bir dinleyiciden birkaç tane olsa (deðiþik komut satýrý
+pencerelerinden), topic'e bir mesaj geldiðinde {\em tüm dinleyiciler} bu
+mesajý alacaktýr.
+
+Tetikleyici kod, queue örneðine benzer olarak, alttaki gibi olacaktýr:
+
+\begin{lstlisting}[language=Java, frame=none]
+public class TListener {
+    public static void main(String[] args) throws Exception {
+        KitapTopicListener k = new KitapTopicListener();
+    }
+}
+\end{lstlisting}
+Bu kod herhangi bir baþlangýç kod bloðundan (meselâ \PVerb!AppStartup! içinden)
+çaðýrýlabilir.
+
+\subsection{Blok Eden Okuma} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Listener yöntemi, {\em sen beni arama, ben seni ararým} tekniði ile
+çalýþmaktadýr. JMS altyapý kodlarý, dinleyici üzerindeki \PVerb!onMessage!
+yöntemini her yeni mesaj geldiðinde çaðýrmakla yükümlüdür, böylece iþlem mantýðý
+kodlarýnýz hiçbir çaðrý üzerinde blok etmemiþ olur. Dinleyici tekniðini kullanan
+kodlar bu sebeple asenkron olarak addedilebilir; Dinleyen taraftaki program
+iþleyiþi aslýnda kimsenin \PVerb!onMessage! çaðýrmasýný beklemeden devam
+etmektedir.
+
+Fakat, bazý programlarýn {\em senkron} bir þekilde, yeni bir mesajýn gelmesini
+{\em beklemeye} ihtiyaçlarý vardýr. Bu þekildeki programlar için, blok eden
+türden \PVerb!receive! adlý bir çaðrýsý kullanýlýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+eQueueReceiver qReceiver = queueSession.createReceiver(queue);
+qc.start();
+TextMessage message = (TextMessage)qReceiver.receive();
+\end{lstlisting}
+Blok eden bu teknikle, \PVerb!receive! çaðrýsý yapýldýðý anda Java programýnýzýn
+iþleyiþi beklemeye girer. Ta ki okunan queue üzerinde yeni bir mesaj gelinceye
+kadar, bu bekleyiþ sürer, fakat yeni bir mesaj gelince, \PVerb!receive!  metotu
+geri döner. Metot çaðrýsýndan geri gelen deðer, queue'ya (ya da topic) yeni
+gelen mesaj nesnesi olacaktýr. Yukarýdaki örnekte bu yeni mesaj,
+\PVerb!javax.jms.TextMessage! nesnesine cast edilmiþtir.
+
+
+\subsection{Message Driven Bean Ýle Okumak} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Listener tekniklerinden farklý olan bir okuma þekli, Message Driven Bean (MDB)
+kullanarak, queue ya da topic'lerden mesaj okumaktýr. MDB teknolojisi, aslýnda
+EJB ve MessageListener tekniklerinin bir birleþimidir. MDB üzerinde, aynen bir
+listener'da olduðu gibi, bir \PVerb!onMessage! metotu tanýmlanýr, ama ayný
+zamanda bir MDB bir EJB'dir, çünkü üzerinde \PVerb!ejbCreate!, \PVerb!ejbRemove!
+gibi iþlevlerin tanýmlanmasý gerekmektedir.
+
+Ýþlevsellik açýsýndan da MDB hem EJB hem Listener gibi davranýr. MDB, aslýnda
+bir konumsuz (stateless) EJB olduðu için bir havuzda tutulabilir. MDB'yi
+konrolünde iþletmekte olan kap (container), dinlenen queue'ya gelen {\em her
+mesaj için} havuzdan bir MDB alýr, ve o MDB'nin \PVerb!onMessage! metotuna yeni
+gelen mesajý aktarýr. Mesaj MDB tarafýndan iþledikten sonra, MDB havuza geri
+verilir.
+
+MDB teknolojisinin tek dezavantajý, mesaj filtreleme tanýmlarýnýn (filtreleme
+tekniði detaylarý için \ref{dist:jms:filter} bölümüne bakýnýz) sadece ayar
+anýnda (XML ile) yapýlabilmesidir. Ne yazýk ki, çoðu asenkron kurumsal
+uygulamanýn bu ayar deðiþikliðine iþlem anýnda ihtiyacý vardýr.
+
+\subsubsection{Tanýmlar}
+
+MDB ayný zamanda bir EJB de olduðu için, derleme ve paketleme sistemi ayný
+\ref{dist:ejb} bölümündeki EJB gibi {\em EAR içinde SAR} yöntemi olacak. Hattâ
+\PVerb!build.xml! dosyalarýnýn her iki proje için de ayný olduðunu
+görebilirsiniz.
+
+Her MDB için, üç dosyada ayar yapýlmasý gerekiyor:
+
+\begin{itemize}
+   \item Queue ya da Topic tanýmý (\PVerb!jboss-service.xml)!
+   \item MDB (\PVerb!ejb-jar.xml!)
+   \item MDB'nin hangi Queue ya da Topic'i okuduðu (\PVerb!jboss.xml!)
+\end{itemize}
+
+\begin{lstlisting}[language=Java, caption=jboss-service.xml]
+<server>
+  <mbean code="org.jboss.mq.server.jmx.Queue"
+         name="jboss.mq.destination:service=Queue,name=kitapServerQueue">
+    <depends optional-attribute-name="DestinationManager">
+       jboss.mq:service=DestinationManager
+    </depends>
+    <attribute name="MessageCounterHistoryDayLimit">-1</attribute>
+  </mbean>
+  ..
+  <!-- Log4J alakalý tanýmlar atlandý -->
+</server>
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, caption=ejb-jar.xml]
+<ejb-jar >
+  <description>KitapDemo</description>
+  <display-name>KitapDemo</display-name>
+  <enterprise-beans>
+    <!-- Message Driven Beans -->
+    <message-driven >
+      <description></description>
+      <ejb-name>SampleMDB</ejb-name>
+      <ejb-class>org.mycompany.kitapdemo.mdb.SampleMDB</ejb-class>
+      <transaction-type>Container</transaction-type>
+      <acknowledge-mode>Auto-acknowledge</acknowledge-mode>
+      <message-driven-destination>
+        <destination-type>javax.jms.Queue</destination-type>
+      </message-driven-destination>
+    </message-driven>
+  </enterprise-beans>
+</ejb-jar>
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Java, caption=jboss.xml]
+<jboss>
+  <enterprise-beans>
+    <message-driven>
+      <ejb-name>SampleMDB</ejb-name>
+      <destination-jndi-name>
+         queue/kitapServerQueue
+      </destination-jndi-name>
+    </message-driven>
+  </enterprise-beans>
+</jboss>
+\end{lstlisting}
+Bu ayarlara göre, \PVerb!SampleMDB! adlý MDB, \PVerb!kitapServerQueue! adlý
+queue'ya gelen mesajlarý bekleyecektir. MDB'nin tanýmý \PVerb!ejb-jar.xml!
+dosyasýnda \PVerb!<message-driven>! etiketi altýnda yapýlmýþtýr. Bu etiket
+altýnda bir alt etiket olan \PVerb!<destination-type>! etiketi altýnda ise,
+queue'mu yoksa topic'mi dinleneceði belirtilebilir. Queue tanýmýnýn kendisi
+\ref{dist:jms:jbossmq} bölümünde anlatýldýðý gibi, \PVerb!jboss-service.xml! içinde
+yapýlmýþtýr. Queue ile MDB arasýndaki baðlantý da \PVerb!jboss.xml! üzerinde
+\PVerb!<ejb-name>!'i bir \PVerb!<destionation-jndi-name>!'e baðlamak suretiyle
+gerçekleþtirilmiþtir.
+
+Burada tarif edilen örnek kodlarý, \PVerb!SimpleMdbServer! projesi altýnda
+bulabilirsiniz.
+
+\subsection{Mesaj Göndermek} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bir queue ya da topic'e mesaj göndermek için, öncelikle o queue ya da topic
+nesnesini JNDI ile bulmamýz gerekiyor. Daha sonra, queue baðlantýsý, queue
+oturumu ve en son olarak queue göndericisi yaratýlarak, mesajýn kendisi
+gönderilebilecektir. Aþaðýda queue mesaj gönderim tekniðini görüyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,
+      "org.jnp.interfaces.NamingContextFactory");
+p.put(Context.PROVIDER_URL, "jnp://localhost:1099"); // JNDI port 1099
+InitialContext ctx = new InitialContext(p);
+
+QueueConnectionFactory qcf =
+            (QueueConnectionFactory)ctx.lookup("ConnectionFactory");
+QueueConnection qc = qcf.createQueueConnection();
+Queue queue = (Queue) ctx.lookup("queue/kitapQueue");
+QueueSession queueSession =
+            qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+QueueSender queueSender = queueSession.createSender(queue);
+
+TextMessage textMessage = queueSession.createTextMessage();
+textMessage.setText("merhaba dunya");
+queueSender.send(textMessage);
+\end{lstlisting}
+Topic'e mesaj gönderme iþlemi, queue'ya mesaj göndermeye oldukça benzer. Hattâ
+daha önce ortaya attýðýmýz hatýrlatýcý kuralý kullanabiliriz: Queue örneðindeki
+\PVerb!queue! kelimesi yerine \PVerb!topic!, \PVerb!send! yerine
+\PVerb!publish!, \PVerb!receive!  yerine \PVerb!subscribe! kullanýrsak, alttaki
+örneðe gelmiþ oluruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+// Context'i al (üstteki gibi)
+// ..
+TopicConnectionFactory qcf =
+    (TopicConnectionFactory)ctx.lookup("ConnectionFactory");
+TopicConnection qc = qcf.createTopicConnection();
+Topic topic = (Topic) ctx.lookup("topic/kitapTopic");
+TopicSession topicSession = qc.createTopicSession(false,
+                                                  Session.AUTO_ACKNOWLEDGE);
+TopicPublisher topicPublisher = topicSession.createPublisher(topic);
+
+TextMessage textMessage = topicSession.createTextMessage();
+textMessage.setText("merhaba dunya");
+topicPublisher.publish(textMessage);
+\end{lstlisting}
+
+\subsubsection{ObjectMessage Göndermek}
+\PVerb!javax.jms.TextMessage! ile gönderebileceðimiz mesajlar ne yazýk ki
+sýnýrlýdýr. Kurumsal Java programlarý için, genellikle, \PVerb!Serializable!
+arayüzünden miras alan kompleks bir Java nesnesini göndermek gerekecektir. Bu
+tür bir nesneyi yollamak için, \PVerb!javax.jms.TextMessage! yerine
+\PVerb!javax.jms.ObjectMessage! tipini kullanmanýz gerekir.
+
+Yeni (boþ) bir \PVerb!ObjectMessage!, \PVerb!queueSession! üzerinden
+\PVerb!createObjectMessage! çaðrýsý ile yaratýlýr (\PVerb!new! ile kendimiz
+yaratamayýz). Boþ bir mesaj aldýktan sonra, göndermek istediðiniz kopmleks Java
+nesnesini \PVerb!setObject! ile \PVerb!ObjectMessage! {\em üzerinde} set
+etmemiz gerekiyor. Gerisi, bildiðimiz \PVerb!send! çaðrýsýndan ibarettir.
+
+\begin{lstlisting}[language=Java, frame=none]
+ComplexObject obj = ...
+ObjectMessage objectMessage = queueSession.createObjectMessage();
+objectMessage.setObject(obj);
+queueSender.send(objectMessage);
+\end{lstlisting}
+Okuyan tarafta, \PVerb!javax.jms.Message! nesnesini alýnca
+\PVerb!ObjectMessage!'a cast etmemiz gerekir. Mesaj {\em içindeki}
+\PVerb!ComplextObject!'e eriþmemiz için ise, \PVerb!ObjectMessage!  üzerinde
+\PVerb!getObject! çaðrýsý yapmamýz gerekir. \PVerb!ObjectMessage!  üzerinde
+\PVerb!getObject! çaðrýlmasý, bu tekniði ilk görenler için kafa karýþtýrýcý
+olmaktadýr, çünkü ``elimde zaten bir object var, niye bir daha \PVerb!getObject!
+çaðýrýyorum'' düþüncesi ortaya çýkar. Burada \PVerb!TextMessage!'a bir paralel
+çizmek gerekir; \PVerb!TextMessage!'ýn da üzerinde de \PVerb!getText! çaðrýsý
+yapmaktayýz.
+
+\subsubsection{Kalýcý ve Uçucu Mesajlar}
+
+Bir JMS mesajý gönderirken eðer hiçbir ek parametre tanýmlamazsanýz, olaðan
+(default) olarak mesajýnýz {\em kalýcý} mesaj olarak gönderilecektir. Kalýcý
+mesaj kullanýmý, eðer Message Broker çökse bile, mesajlarýn kaybolmasýný
+engeller. Arka planda Message Broker, kalýcý mesajlarýn kaybolmamasý için, bir
+veri tabaný ya da düz dosyaya her mesajý yazmaktadýr. Yâni eðer kalýcý mesaj
+gönderiyorsanýz, her mesajýnýz bir þekilde disk'e yazýlýyor olacaktýr.
+
+Kabul edilmesi gerekir ki, her mesajýn disk'e yazýlmasýnýn bir performans bedeli
+olacaktýr. Eðer mesajlarýnýzýn daha hýzlý gönderilmesini istiyorsanýz,
+mesajlarýnýzý {\em uçucu} olarak ta göndermeniz mümkündür. Uçucu mesaj göndermek
+için, \PVerb!send! çaðrýsýna bazý ek parametreler vermemiz gerekir. Bu ek
+parametre \PVerb!DeliveryMode.NON_PERSISTENT! parametresi olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+queueSender.send(textMessage,
+                 DeliveryMode.NON_PERSISTENT,
+                 Message.DEFAULT_PRIORITY,
+                 0);
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Dikkat}: Yapýlan en yaygýn JMS hatalarýndan biri, \PVerb!DeliveryMode!
+deðiþkenini {\em mesaj} üzerinde set etmektir. Bu çaðrýnýn gönderim iþlemi üzerinde
+hiçbir etkisi yoktur (niye hala JMS arayüzlerinden depracate edilmediði, ayrý
+bir konudur).
+\end{quote}
+
+Topic üzerinden uçucu mesaj göndermek ise, queue mantýðýna benzer olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+topicPublisher.publish(textMessage,
+                       DeliveryMode.NON_PERSISTENT,
+                       Message.DEFAULT_PRIORITY,
+                       0);
+\end{lstlisting}
+
+Kalýcý ve uçucu mesajlar arasýndaki farký görmek istiyorsak, JBossMQ'nun ve
+queue'larýmýzýn çalýþtýðý makinaya \PVerb!http://host:8080/jmx-console!
+url'inden baðlanýp, JmxConsole uygulamasýný çalýþtýrabiliriz. JmxConsole
+programý, web arayüzü üzerinden çalýþan ve bir JBoss servisi içindeki tüm
+MBean'leri ve içeriklerini listeleyebilen bir bakým programýdýr. Biz daha önce
+queue tanýmlamak için \PVerb!jboss-service.xml! içinde bir queue MBean'i
+tanýmladýðýmýz için, JmxConsole'dan bu queue'yu ve içeriðini
+görebiliriz. JmxConsole url'ine gidince tarayýcýnýzdan queue'larýn listelendiði
+bölüme gidin. Þekil \ref{dist:jms:jmxconsole} bunun bir örneðini gösteriyor.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.4}{
+  \includegraphics{./images/jmxconsole.eps}
+  }
+}
+\caption{\label{dist:jms:jmxconsole} JmxConsole'dan Queue Ýçeriðini Görmek}
+\end{figure}
+
+Listeden içeriðini görmek istediðiniz queue'ya týklayýn (meselâ
+\PVerb!kitapQueue!), ve \PVerb!java.util.List listMessage()! yazan bölüme
+giderek \PVerb!Invoke! düðmesine týklayýn. Yeni gelen sayfada queue'nuzun
+içeriðini göreceksiniz. Test için, üzerinde hiçbir dinleyici olmayan bir
+queue'ya kalýcý mesajlar yollayýp JBoss'u kapatýp açýn, ve JmxConsole üzerinden
+mesajlarý halâ orada olup olmadýðýný kontrol edin. Ayný iþlemi, uçucu mesajlar
+ýcin de yapýn.
+
+\subsubsection{Öncelik}
+
+Metot \PVerb!send!'in parametre listesinde gördüðümüz parametrelerden biri,
+öncelik parametresidir (priority). Bu parametre, hangi mesajýn ne kadar önce
+hedefine ulaþacaðýný belirler. Kurumsal uygulamalarda, olaðan öncelik deðeri
+(default priority) yeterlidir.
+
+\subsubsection{Zamanlý Mesajlar}
+
+Eðer bir mesaj yerine ulaþmadan belli bir süre sonra zamanýnýn geçmesini
+(expire) istiyorsak, \PVerb!send!'e verilen son parametre olan
+\PVerb!timeToLive!  parametresinde bunu belirtebiliriz. Bu parametre, sadece
+belli bir zaman için geçerli veriler için uygun bir parametredir (meselâ borsada
+bir hissenin anlýk deðeri gibi -en son deðer 10 saniye sonra geçersiz olmasýný
+istiyorsak, vs-). Eðer \PVerb!timeToLive! için \PVerb!0! verilmiþ ise, mesaj
+zamana baðlý geçersiz olmayacaktýr.
+
+\subsection{Filtrelemek} \label{dist:jms:filter} %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bir queue ya da topic'e gönderilen mesajlarýn içinden sadece ilgilendiðimiz ve
+bir kýstasa uyan bazýlarýný seçmek istiyorsak, message selector üzerinden
+filtreleme tekniðinin kullanmamýz gerekmektedir.
+
+Filtreleme yapmak için, JMS mesajýnda bulunan, üzerinden filtre yapabileceðimiz
+bir parametre gerekmektedir. Bu parametreye `mesaj parametresi' ismi
+veriyoruz. Mesaj parametresi set etmek için belli bazý JMS arayüzleri
+vardýr. Her tip için, deðiþik bir parametre set çaðrýsý yapmak gerekiyor, tüm
+listeyi altta veriyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public void setStringProperty(String name, String value);
+public void setIntProperty(String name, int value);
+public void setBooleanProperty(String name, boolean value);
+public void setDoubleProperty(String name, double value);
+public void setFloatProperty(String name, float value);
+public void setByteProperty(String name, byte value);
+public void setLongProperty(String name, long value);
+public void setShortProperty(String name, short value);
+public void setObjectProperty(String name, Object value);
+\end{lstlisting}
+O zaman, gönderen taraf bir mesaj parametresi set etmek isterse, þu þekilde
+deðiþtirilmesi gerekecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+ComplexObject obj = ...
+ObjectMessage objectMessage = queueSession.createObjectMessage();
+objectMessage.setObject(obj);
+objectMessage.setStringProperty("param1", ``123456789'');
+queueSender.send(objectMessage);
+\end{lstlisting}
+Burada, diðer gönderme iþlemlerine ek olarak, \PVerb!setStringProperty! ile
+\PVerb!String! tipinde bir mesaj parametresi set ettik. Artýk \PVerb!param1!
+üzerinden çalýþacak bir filre yaratabiliriz. Filtreleri, hem listener hem de
+\PVerb!receive! teknikleri üzerinden kullanmak mümkündür. Her þart için filtre
+yaratmayý altta görelim.
+
+\subsubsection{Listener ve Filtre}
+Meselâ \PVerb!setStringProperty! ile set edilen, \PVerb!param1! adlý parametre
+üzerinden iþleyen, ve queue üzerinde bekleyen bir {\em listener} üzerinden
+filtre oluþturmak için
+
+\begin{lstlisting}[language=Java, frame=none]
+QueueReceiver qReceiver;
+qReceiver = queueSession.createReceiver(queue,
+                                        ``param1 = `123456789''');
+\end{lstlisting}
+Ayný þekilde, ama bu sefer topic üzerinde beklemek için,
+
+\begin{lstlisting}[language=Java, frame=none]
+TopicSubscriber tSubscriber;
+tSubscriber = topicSession.createSubscriber(topic,
+                                            ``param1 = `123456789''',
+                                            false);
+\end{lstlisting}
+Bu çaðrýlar yapýldýktan sonra, \PVerb!onMessage!'e gelen nesneler, artýk sadece
+ve sadece filtre þartlarýna uyan \PVerb!javax.jms.Message! nesneleri olacaktýr.
+
+\subsubsection{Receive ve Filtre}
+
+Bir queue üzerinden, blok eden \PVerb!receive! üzerinden filtre ile mesaj almak
+için, þunlarý yapmak gerekir:
+
+\begin{lstlisting}[language=Java, frame=none]
+QueueReceiver qReceiver;
+qReceiver = queueSession.createReceiver(queue,
+                                        ``param1 = `123456789''');
+qc.start();
+javax.jms.Message message = qReceiver.receive();
+\end{lstlisting}
+Topic için
+
+\begin{lstlisting}[language=Java, frame=none]
+TopicSubscriber tSubscriber;
+tSubscriber = topicSession.createSubscriber(topic,
+                                            ``param1 = `123456789''',
+                                            false);
+qc.start();
+javax.jms.Message message = tSubscriber.receive();
+\end{lstlisting}
+Yâni, bir receiver ya da subscriber yaratmak, dinleyici kodlamasý ile neredeyse
+aynýdýr, iki fark ile: Blok eden yöntemde \PVerb!setMessageListener! ile
+dinleyici set edilmez, ikincisi, mesaj alma iþlemi \PVerb!receive! metotu
+çaðýrýlarak, receiver/subscriber referansý üzerinden direk olarak yapýlýr.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[JMS ve Command Mimarisi][JMS VE COMMAND MÝMARÝSÝ]{JMS ve Command Mimarisi}
+
+Uzaktan Metot Çaðrýsý yöntemleri olan RMI ve EJB teknolojileri ile, Command
+mimarimizin ne kadar rahat gerçekleþtirilebildiðini gördük. Command nesneleri
+\PVerb!Serializable! nesneler olduklarý için network üzerinden rahatlýkla
+gönderilebiliyor, ve ulaþtýklarý noktada \PVerb!CommandHandler! tarafýndan
+iþletilebiliyordu.
+
+Eðer bu mimariyi asenkron bir yapýya çevirmek istersek, queue kavramýný Command
+mimarimize bir þekilde dahil etmemiz gerekecek. Tahmin edilebileceði üzere, daha
+önce bir \PVerb!execute! metot çaðrýsýna parametre olan Command'ler, artýk
+queue'lar üzerinden gidip gelen nesneler olacaklar.
+
+Command iþleyen CommandHandler ise, artýk bir RMI ya da EJB nesnesi deðil, bir
+JMS {\em dinleyicisi} olacaktýr. Bu kavram deðiþikliðini iyice belirginleþtirmek
+için, iþleyici nesnenin ismini \PVerb!CommandListener! olarak deðiþtireceðiz.
+
+\subsection{Fiziksel Yapý} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+JMS bazlý mimarilerde gündeme gelen ilk sorulardan biri, {\em kaç tane queue
+kullanalým} sorusudur. Bizce bu soruya cevap, basitlik, kýsalýk ve bakým
+rahatlýðý baðlamýnda {\em mümkün olabildiðince az} olmalýdýr. Nasýl olsa bir
+queue'ya birden fazla gönderici mesaj gönderebilir ve bir queue'dan birden fazla
+okuyucu mesaj okuyabileceði için, queue sayýsýnda yapýlan bir azaltma programýn
+doðru iþleyiþi açýsýndan bir yan etkiye sebebiyet vermez. Þekil
+\ref{dist:jms:queue} üzerinde çift queue ile kurulmuþ bir Command yapýsý
+görüyoruz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.4}{
+  \includegraphics{./images/mimari.eps}
+  }
+}
+\caption{\label{dist:jms:queue} JMS Üzerinden Command Mimarisi}
+\end{figure}
+
+Bu yapýda, istekleri göndermek için bir queue, cevaplarýn geri gönderilmesi için
+baþka bir queue ayýrýlmýþtýr. \PVerb!CommandListener!, istek queue'su üzerinden
+dinleyici olarak set edilmiþtir, ve bu queue'ya yazýlan her Command'i anýnda
+alýp, üzerinde \PVerb!execute! iþlemini çaðýracak ve cevabý (yâni ayný
+Command'i) ikinci queue'ya yazacaktýr. Web tarafýndaki JVM birden fazla
+kullanýcýyý idare edebileceði için herhangi bir anda, eþzamanlý birçok
+kullanýcýnýn istek Command'leri istek queue'su üzerinde dizilmiþ olur.
+\PVerb!CommandListener! bu istekleri teker teker, o queue'da olan sýrasýyla iþler.
+
+Bu yapýya alternatif olarak, meselâ, her mesaj gönderilirken bir geçici queue
+yaratmak, bu cevap queue'sunu JMS mesajýnýn içine ``cevabý buraya yaz'' babýnda
+eklemek, ve cevabý o geçici queue'ya almak düþünülebilir. Fakat bu seçeneðin
+performans olarak kötü yan etkileri olacaktýr: Her mesaj için yeni queue yaratýp
+yoketmek, sistemin bütününü yavaþlatýr.
+
+Çift queue mimarisinin diðer bir faydalý tarafý, sistemin ne kadar yüklü
+olduðunu sadece iki queue'da {\em kaç tane mesaj birikmiþ} olduðuna bakarak
+anlayabilecek olmamýzdýr. Eðer queue'larda, özellikle cevap queue'sunda fazla
+mesaj birikmiþ ise, \PVerb!CommandListener! tarafýnýn yükü kaldýramadýðýný
+anlar, ve birden fazla iþleyici JVM devreye sokabiliriz. Bunun için hiçbir
+ekstra ayarlama yapmamýz gerekmeyecektir. Ayný queue üzerindeki her okuyucu bir
+mesajý okurken, diðerlerinin önüne geçmez. JMS okuyucu kurallarýna göre bir
+mesajý alan onu {\em kapmýþ} addedilir, ve o mesajýn iþleyicisi o olur. Bu JMS
+özelliði, yük daðýtýmý açýsýnda biçilmiþ kaftandýr.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.35}{
+  \includegraphics{./images/mimari-olcek.eps}
+  }
+}
+\caption{\label{dist:jms:scale} JMS Bazlý Mimariyi Ölçeklemek}
+\end{figure}
+
+\subsection{Kullanýcýlarý Ayýrt Etmek} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Þekil \ref{dist:jms:queue} ve \ref{dist:jms:scale} üzerinde gördüðümüz yapýya
+bir daha bakalým: Eðer hiçbir ek iþlem yapmazsak, bu mimari çalýþacak mýdýr?
+Hayýr, yapmamýz gereken bir ek iþlem daha kaldý: Web tarafýna gelen cevap
+mesajlarýný, sadece ve sadece o isteði göndermiþ olan kullanýcýya
+göndermek. Eðer bunu yapmazsak, birçok kullanýcýyý idare etmek için yazýlmýþ Web
+tarafý, birçok kullanýcýnýn mesajýný ayný queue'ya koyacak, ve birçok
+kullanýcýnýn cevaplarýný baþka bir queue'da birikmiþ ve karýþýk olarak almaya
+çalýþacaktýr. Ýþlem doðruluðu olarak bu problemlere yolaçacaktýr.
+
+Peki her kullanýcýya sadece ilgilendiði mesajlarý nasýl verebiliriz?
+\ref{dist:jms:filter} bölümünde iþlediðimiz filtreleme tekniðini hatýrlayýn:
+Eðer her kullanýcýya özel bir kimlik no'su bulabilirsek, bu kimlik deðerini her
+mesaj üzerine {\em mesaj parametresi} olarak set edebiliriz, ve
+\PVerb!CommandListener! geri gelecek cevap üzerine ayný parametreyi tekrar
+koyar. Web tarafýndaki dinleyiciye de, bu mesaj parametresi üzerinden filtreleme
+yaparsa, böylece her kullanýcýnýn sadece kendisi için olan cevap mesajlarýný
+almasýný saðlamýþ oluruz.
+
+Web mimarisinde, her kullanýcýya özel bir kimlik bulmak çok basittir. Bu kimlik,
+\PVerb!sessionId! deðiþkeninden baþkasý deðildir. Bir Struts Action içinde
+\PVerb!sessionId!'yi almak için \PVerb!request.getSession().getId()! çaðrýsýný
+yapmak, ve mesaj üzerine bu kimliði \PVerb!setStringProperty! çaðrýsý ile koymak
+yeterli olacaktýr.
+
+Eðer çaðýran taraf bir zengin kullanýcý ise (meselâ Swing), o zaman her baðlanan
+kullanýcýnýn {\em ayrý bir JVM'i} var demektir. Böyle bir yapýda Message Broker
+da {\em ayrý ve tek} bir JVM içinde çalýþýyor olacaktýr. O zaman mesaj
+ayrýþtýrma problemini þöyle çözeriz: Zengin önyüz ortamýnda \PVerb!sessionId!
+yoktur, ama her kullanýcý için bir rasgele kimlik üreterek mesaj üzerinde set
+etmek çok kolaydýr. Rasgele kimlik üretmek için
+
+\begin{lstlisting}[language=Java, frame=none]
+java.util.Random generator = new java.util.Random();
+int id = generator.nextInt(1000); // 1000'den küçük id'ler üret
+\end{lstlisting}
+çaðrýsý kullanýlabilir.
+
+
+\subsection{Kodlar}
+
+JMS üzerinden Command mimarisinin kodlarýna gelelim (bu kodlarýn tamamlanmýþ
+hâlini, \PVerb!CarJMS! projesi içinde bulabilirsiniz).
+
+Ýlk önce iki queue'yu tanýmlayalým. Ýstek Command'lerinin konduðu queue ismi,
+\PVerb!kitapWebQueue!, cevap Command'lerinin okunduðu queue ise
+\PVerb!kitapServerQueue! olsun.
+
+\subsubsection{Queue Tanýmlarý}
+
+\begin{lstlisting}[language=XML, caption=jboss-service.xml]
+<server>
+  ...
+  <mbean code="org.jboss.mq.server.jmx.Queue"
+	 name="jboss.mq.destination:service=Queue,name=kitapServerQueue">
+    <depends optional-attribute-name="DestinationManager">
+        jboss.mq:service=DestinationManager
+    </depends>
+    <attribute name="MessageCounterHistoryDayLimit">-1</attribute>
+  </mbean>
+  <mbean code="org.jboss.mq.server.jmx.Queue"
+	 name="jboss.mq.destination:service=Queue,name=kitapWebQueue">
+    <depends optional-attribute-name="DestinationManager">
+        jboss.mq:service=DestinationManager
+    </depends>
+    <attribute name="MessageCounterHistoryDayLimit">-1</attribute>
+  </mbean>
+</server>
+\end{lstlisting}
+Bu queue'larý {\em Web tarafýnda} tanýmladýk (yâni üstteki
+\PVerb!jboss-service.xml! dosyasý \PVerb!CarsJMS/WebClient! altýnda), çünkü, yük
+daðýtým amaçlý birden fazla iþleyici (dinleyici) JVM baþlatýrsak, yeni
+dinleyicilerin (iþleyicilerin) ayný queue'lara, yâni ayný JVM'e gitmesi
+lazýmdýr. Eðer queue'lar servis tarafýnda olsa idi, her baþlatýlan iþleyici JVM,
+yeni queue'lar baþlatmýþ olurdu ve bu uygun olmazdý.
+
+Alternatif fiziksel yapý olarak, ayrý bir JVM baþlatarak Message Broker'ý bu
+ayrý JVM'de tutmayý seçebilirsiniz. Biz basitlik ve idare edilebilirlik
+açýsýndan queue'larý Web tarafýna koymayý seçtik. Þekil
+\ref{dist:jms:queue:alternative} üzerinde bu alternatif fiziksel yapýyý
+görüyorsunuz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.35}{
+  \includegraphics{./images/mimari-alternatif.eps}
+  }
+}
+\caption{\label{dist:jms:queue:alternative} Message Broker Ayrý JVM Üzerinde}
+\end{figure}
+
+\subsubsection{Baðlantý, Oturum, Gönderici}
+
+Command'leri göndermekle yükümlü Web tarafýnda, gönderilen ve okunan iki queue
+için birer JMS baðlantýsý, JMS oturumu, JMS gönderici ve JMS okuyucusu
+yaratmamýz gerekiyor. Her kullanýcý için bu iþlemi bir kez yapmamýz yeterli,
+yâni her mesaj için bu iþlemlerin tekrar tekrar yapýlmasýna gerek yok. Bu
+sebeple, gereken JMS referanslarýný bir kez yaratýp, her kullancýya ait web
+oturumu üzerinde deðiþkenler olarak tutabiliriz. Böylece, gerekince bu nesnelere
+eriþmek çok hýzlý olacaktýr. JMS referanslarýna ilk ihtiyaç duyulduðu anda
+otomatik olarak yaratabilecek \PVerb!ServiceReferencesFilter! adýnda bir filtre
+içinde bu iþlemleri yapabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class ServiceReferencesFilter implements Filter {
+
+  private Logger logger = Logger.getLogger("appLogger");
+
+  public void init(FilterConfig filterConfig) throws ServletException {
+  }
+
+  public void doFilter(ServletRequest request,
+                       ServletResponse response,
+                       FilterChain chain) throws IOException,
+                                                 ServletException
+  {
+      HttpSession session = ((HttpServletRequest) request).getSession();
+
+      try {
+          if (session.getAttribute("senderSession") == null ||
+              session.getAttribute("sender") == null) {
+
+              QueueConnectionFactory qFactory = null;
+
+              // ...
+              // Context'i al
+              // ..
+
+              QueueConnectionFactory qcf =
+                  (QueueConnectionFactory)ctx.lookup("ConnectionFactory");
+              QueueConnection qc = qcf.createQueueConnection();
+              Queue queueServer =
+                  (Queue) ctx.lookup("queue/kitapServerQueue");
+              QueueSession queueSession =
+                  qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+              QueueSender sender = queueSession.createSender(queueServer);
+
+              session.setAttribute("sender", sender);
+              session.setAttribute("senderSession", queueSession);
+              session.setAttribute("senderQueueConnection", qc);
+              logger.info("Sender and Session Created");
+          }
+
+
+          if (session.getAttribute("receiverSession") == null ||
+              session.getAttribute("receiver") == null) {
+
+              // ...
+              // Context'i al
+              // ..
+
+              QueueConnectionFactory qcf =
+                  (QueueConnectionFactory)ctx.lookup("ConnectionFactory");
+              QueueConnection qc = qcf.createQueueConnection();
+              Queue queue = (Queue) ctx.lookup("queue/kitapWebQueue");
+              QueueSession queueSession =
+                  qc.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+              String filter =
+                    "sessionId = '" +
+                    ((HttpServletRequest)request).getSession().getId() +
+                    "'";
+              QueueReceiver receiver = queueSession.createReceiver(queue,
+                                                                   filter);
+
+              session.setAttribute("receiverSession", queueSession);
+              session.setAttribute("receiver", receiver);
+              session.setAttribute("receiverQueueConnection", qc);
+          }
+
+      } catch (Exception e) {
+          e.printStackTrace();
+          logger.error("",e);
+      } // end of try-catch
+
+      chain.doFilter(request, response);
+  }
+
+  public void destroy() { }
+}
+\end{lstlisting}
+Her kullanýcýnýn mesajlarýný ayýrtedebilmek için filtre kullanacaðýmýzdan
+bahsetmiþtik. Okuyucu nesneyi yaratýrken, bu filtreyi de yukarýda yaratmýþ
+olduðumuzu görüyorsunuz.
+
+
+\subsubsection{JmsHelper}
+Web tarafýnda iþimiz neredeyse bitti. Struts Action'lar içinde Command yaratýp
+queue üzerine koymak ve cevabý okuma iþlemlerinin kodlamasýný kolaylaþtýrmak
+için, bir yardýmcý metot yazmaktan baþka bir iþ kalmadý. Bu
+metotu,\PVerb!JmsHelper! adýnda bir nesne içine koyalým, ve çaðrýyý
+\PVerb!static! olarak tanýmlayalým. Bu yardýmcý çaðrýya \PVerb!sendCommand! ismi
+verilecek, ve parametre olarak bir command alýp, geriye cevap Command'ini geri
+getirmekten baþka bir görevi olmayacak.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class JmsHelper   {
+
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public JmsHelper() {  }
+
+    public static Command sendCommand(HttpServletRequest request,
+                                      Command command) {
+        Command resCmd = null;
+
+        try {
+            HttpSession session = ((HttpServletRequest) request).getSession();
+            QueueSender queueSender =
+                (QueueSender)session.getAttribute("sender");
+            QueueSession queueSession =
+                (QueueSession)session.getAttribute("senderSession");
+
+            QueueReceiver queueReceiver =
+                (QueueReceiver)session.getAttribute("receiver");
+            QueueSession receiverSession =
+                (QueueSession)session.getAttribute("receiverSession");
+            QueueConnection receiverQueueConnection =
+                (QueueConnection)session.getAttribute("receiverQueueConnection");
+
+            ObjectMessage objectMessage = queueSession.createObjectMessage();
+            objectMessage.setObject(command);
+
+            objectMessage.setStringProperty("sessionId",
+            request.getSession().getId());
+            queueSender.send(objectMessage, DeliveryMode.NON_PERSISTENT, 4, 0);
+
+            receiverQueueConnection.start();
+            ObjectMessage resObj = (ObjectMessage)queueReceiver.receive();
+            resCmd = (Command)resObj.getObject();
+
+        } catch (Exception e) {
+            logger.error("",e);
+        } // end of try-catch
+
+        return resCmd;
+    }
+}
+\end{lstlisting}
+Yardýmcý metotun içeriðine bakarsak, parametreden olarak gelen Command
+nesnesinin \PVerb!setObject! ile bir \PVerb!ObjectMessage! üzerinde set
+edildiðini görüyoruz. Daha sonra JMS \PVerb!send! ile Command gönderilmekte, ve
+hemen arkasýndan cevap senkron olarak \PVerb!receive! çaðrýsý üzerinden
+beklenmektedir. Gönderilen mesaj üzerine bir \PVerb!sessionId! parametresi
+konulmasýný tabii ki unutmadýk, ve zaten okuyucu nesnemizde ayný
+\PVerb!sessionId! üzerinden filtreleyecek þekilde yazýlmýþtý.
+
+\subsubsection{Hatalar}
+
+JMS Command mimarisi mesaj gönderen ve gönderilen taraflarý birbirinden koparýp
+asenkron hâline getirdiði için, servis tarafýnda exception atýldiðý zaman bu
+hatanýn bir þekilde mesaj gönderen tarafýna aktarýlmasý gerekir. Bu aktarým, EJB
+ya da RMI örneðinde olduðu gibi metot çaðrýsýnýn bir parçasý olamaz, çünkü JMS
+Command mimarisinde {\em metot çaðrýsý yoktur}. O zaman bir hatayý nasýl
+bildireceðiz?
+
+Exception'ý Command nesnesinin içine gömebiliriz. \PVerb!Command! üst sýnýfýndan
+miras alan bir \PVerb!ExceptionCommand! sýnýfý yazarýz, ve tüm Command
+class'larý \PVerb!Command! yerine \PVerb!ExceptionCommand! sýnýfýndan miras
+alýr.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{1}{
+  \includegraphics{./images/exceptioncommand.eps}
+  }
+}
+\caption{Hata Taþýyýcý Command}
+\end{figure}
+
+
+\begin{lstlisting}[language=Java, frame=none]
+public abstract class ExceptionCommand implements Command {
+
+    Throwable exception;
+
+    public Throwable getException() {
+        return exception;
+    }
+
+    public void setException(Throwable newException) {
+        this.exception = newException;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AddCarCommand extends ExceptionCommand { .. }
+\end{lstlisting}
+\PVerb!ExceptionCommand! üzerinde bir \PVerb!Throwable! referansý olduðunu
+görüyoruz (her \PVerb!Exception!  ayný zamanda bir \PVerb!Throwable!
+tipidir). Artýk servis tarafýnda bir hata alýndýðý zaman,
+\PVerb!CommandListener!  bu hatayý cevap Command'i içine gömerek cevap
+queue'suna yazarak gönderen tarafa geri verebilecektir.
+
+Baðlanan taraf eðer bir hatanýn varlýðýný kontrol etmek istiyorsa, cevap
+queue'sundan aldýðý Command nesnesinin içine \PVerb!getException! ile bakarak,
+hata tipini \PVerb!instanceof! ile kontrol eder, ve \PVerb!try catch! mantýðýnýn
+bir benzerini gerçekleþtirebilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+UpdateCarCommand cmd = new UpdateCarCommand(car, garageId);
+UpdateCarCommand resCmd =
+      (UpdateCarCommand)JmsHelper.sendCommand(request, cmd);
+
+if (resCmd.getException()
+    instanceof
+    org.hibernate.StaleObjectStateException)
+{
+    String id = (String)daf.get("licensePlate");
+    ...
+}
+\end{lstlisting}
+
+\subsubsection{CommandListener}
+
+\PVerb!CommandListener! bir JMS dinleyicisi ve Command iþleyicisidir. Ýstek
+queue'su (\PVerb!kitapWebQueue!) üzerine gelen her mesaj
+\PVerb!CommandListener!'ýn \PVerb!onMessage! metotuna düþer. Bu mesaj içinde bir
+Command nesnesi olacaktýr. Bu nesne alýndýktan sonra, üzerinde \PVerb!execute!
+çaðýrýlýr. Eðer bir hata olmuþ ise, exception yakalanarak command'in üzerine
+yazýlýr. Cevap için yeni bir \PVerb!ObjectMessage! oluþturulur, ama istek için
+gelen ayný Command, cevap olarak \PVerb!ObjectMessage! üzerinde konur. Bu
+Command, cevap queue'su üzerinden \PVerb!send! ile gönderilir.
+
+Bitmiþ kodlarý, \PVerb!CarJMS/Server! projesi altýnda bulabilirsiniz.
+
+\begin{lstlisting}[language=Java, caption=CommandListener.java]
+public class CommandListener implements MessageListener {
+
+    private Logger logger = Logger.getLogger("appLogger");
+
+    QueueSender sender = null;
+    QueueSession queueSessionS = null;
+    Queue queueS = null;;
+
+    public CommandListener() throws Exception {
+
+        QueueConnectionFactory qFactory = null;
+
+        // ...
+        // Context'i al
+        // ..
+
+        QueueConnectionFactory qcf =
+            (QueueConnectionFactory)ctx.lookup("ConnectionFactory");
+        QueueConnection qc = qcf.createQueueConnection();
+        Queue queue = (Queue) ctx.lookup("queue/kitapServerQueue");
+        QueueSession queueSession = qc.createQueueSession(false,
+	                                                  Session.AUTO_ACKNOWLEDGE);
+
+        QueueReceiver qReceiver = queueSession.createReceiver(queue);
+        qReceiver.setMessageListener(this);
+        System.out.println("Listening on command queue ..........");
+        qc.start();
+
+        // bir de cevaplarýn yazýlacaðý queue'ya session aç
+        queueS = (Queue) ctx.lookup("queue/kitapWebQueue");
+        queueSessionS = qc.createQueueSession(false,
+                                              Session.AUTO_ACKNOWLEDGE);
+        this.sender = queueSessionS.createSender(queueS);
+        System.out.println("Ready to send ..........");
+    }
+
+    public void onMessage(javax.jms.Message message) {
+
+        ExceptionCommand command = null;
+        ObjectMessage sendObjectMessage = null;
+        try {
+            ObjectMessage objectMessage = (ObjectMessage)message;
+            command = (ExceptionCommand) objectMessage.getObject();
+
+            sendObjectMessage = queueSessionS.createObjectMessage();
+            sendObjectMessage.setStringProperty
+                                   ("sessionId",
+                                    message.getStringProperty("sessionId"));
+            command.execute();
+            HibernateSession.commitTransaction();
+        } catch (HibernateException ex) {
+            HibernateSession.rollbackTransaction();
+            if (logger.isDebugEnabled()) logger.debug("rolled back");
+            command.setException(ex);
+            logger.error("hibernate exception",ex);
+        } catch (Exception ex) {
+            HibernateSession.rollbackTransaction();
+            command.setException(ex);
+            logger.error("exception",ex);
+        } finally {
+            HibernateSession.closeSession();
+            if (logger.isDebugEnabled()) logger.debug("session closed");
+        }
+
+        try {
+            // command'i mesaj üzerine koy
+            sendObjectMessage.setObject(command);
+
+            // cevap queue'su üzerinden geriye yolla
+            sender.send(sendObjectMessage,
+	                DeliveryMode.NON_PERSISTENT,
+                        Message.DEFAULT_PRIORITY,
+                        0);
+        } catch (JMSException ex) {
+            logger.error("",ex);
+        }
+    }
+}
+\end{lstlisting}
+

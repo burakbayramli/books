@@ -1,0 +1,18 @@
+(TeX-add-style-hook "lect15"
+ (lambda ()
+    (LaTeX-add-environments
+     '("titledslide" 1))
+    (TeX-add-symbols
+     '("slidehead" 1)
+     "lecnum"
+     "betafn"
+     "dirchfn"
+     "hg")
+    (TeX-run-style-hooks
+     "graphicx"
+     "pdftex"
+     "latex2e"
+     "slides10"
+     "slides"
+     "landscape")))
+

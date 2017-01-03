@@ -1,0 +1,157 @@
+Class hierarchy
+===============
+
+In this assignment we will look at multiple inheritance and general
+object-orientated programming.
+
+Our aim is to construct two main classes, 'Reader' and 'Plotter'. The 'Reader' class
+is supposed to read data for the arrays 'x' and 'y' from a file, and the 'Plotter'
+class will be used for plotting these 2-dimensional data.
+
+We wish to support mutiple file formats and different plotters. For instance,
+we would like to be able to read plain text files as well as binary files for
+large amount of data, as plain text files are considerably larger in
+size. Therefore, 'Reader' and 'Plotter' will be base classes where only code
+common for all (or some) of its derived classes is present. 
+
+
+Part 1: Reader.
+===============
+
+The base class 'Reader' should inherit the class 'object'. Further, it should
+include a constructor and the two functions 'readdata' and 'data'. The constructor
+should take a filename as argument, and set a class attribute reflecting this
+filename before calling the 'readdata' function. 'readdata' implements the file
+reading for the particular file format. For the base class 'Reader' this
+function should raise a 'NotImplementedError', as the base class never should be
+called directly. The function 'data' should simply return the arrays 'x' and
+'y'. This means that only the function 'readdata' needs to be implemented for most
+derived classes. Your task is to implement the class 'AciiReader', 'BinaryReader',
+'ZipReader', and 'WebReader'.
+
+
+Part 2: AsciiReader and BinaryReader.
+=============================================
+
+'AsciiReader' should assume a file with lines, each line containing a 'x'
+value and a 'y' value, respectively, seperated by a whitespace.
+
+'BinaryReader' should use the function 'fromfile' from 'numpy', where 'x' and 'y' are
+stored consecutively. This will read both arrays as a single array, where the
+length is that of 'x' and 'y' combined (i.e. twice the length of either 'x' or 'y').
+
+
+Part 3: ZipReader and WebReader.
+================================
+
+'ZipReader' should use the intrinsic Python module 'gzip'. Since there is little
+point in compressing binary files, we assume that the compressed files are
+normal ASCII files, hence this class should be derived from
+'AsciiReader'. Instead of using a normal file object ('open'), we use 'gzip'. This
+would mean duplicating many lines of code (reading and parsing the lines in
+the file) that is already done in 'AsciiReader'. Therefore, we should extend the
+code in 'AsciiReader' slightly, specifically by adding a keyword argument to the
+'readdata' function. The default value should be 'None', indicating that
+'AsciiReader' should create a file handler of its own. If it is not 'None', we
+assume that the argument is a file handler, and use it directly. This means
+that we can use a 'gzip' file handler in the 'readdata' function for 'ZipReader',
+and call 'readdata' in 'AsciiReader' with this file handler as argument.
+
+'WebReader' should be able to read all other three formats. However, inheriting
+'BinaryReader' and 'ZipReader' is sufficient, as 'ZipReader' already inherites
+'AsciiReader'. As there is no easy way to distinguish a binary file from a plain
+ASCII one, we introduce an additional keyword argument to the constructor of
+'WebReader'. After setting a class attribute for this variable, we need to call
+the constructor from 'Reader' explicitely. If this argument is 'True', we assume
+that we are dealing with binary file. If it is 'False', we know that we are
+dealing with either a plain ASCII file or one that is compressed. We test for
+the latter by checking whether the file extension is '.gz' or not. Based on
+this information we should be able to create an instance of the correct
+class. We use the intrinsic Python module 'urllib' to download the file. When
+using 'urllib.urlretrieve', the first element of the returned object contains
+the absolute location of the file on our system.
+
+Part 4: Plotter and EasyvizPlotter.
+===================================
+
+The base class 'Plotter' should contain a constructor and a function 'plot'. The
+constructor should have a keyword argument 'reader', default set to 'None'. All
+'Plotter' classes need a 'Reader' instance for getting the data to be
+plotted. This 'Reader' instance can either be given as argument to the
+constructor, or directly to the 'plot' function. The constructor should verify
+that the given argument, if any, indeed is an instance of 'Reader', before
+setting it as class attribute. The function 'plot' should collect the data from
+the reader, and call the plot function for the backend. Assuming the class
+variable 'backend' is defined in the derived classes, and that the function for
+plotting for a backend also is called 'plot', we can have the following default
+plot function:
+
+def plot(self, reader=None):
+    if reader:
+        self.reader = reader
+    assert self.reader is not None
+    data = self.reader.data()
+    self.backend.plot(data[0], data[1]) 
+
+Let us look at the implementation of one of the derived classes,
+'EasyvizPlotter'. It only has a constructor:
+
+def __init__(self, reader=None):
+    Plotter.__init__(self, reader)
+    from scitools import easyviz
+    self.backend = easyviz
+
+We call the constructor from the base class to avoid code duplication.
+Although this constructor only consists of a few lines of code, calling it
+means we don't have to duplicate changes made to the API. Notice that we set
+the class attribute 'backend' to the imported module.
+
+
+Part 5: MatplotlibPlotter.
+==========================
+
+Instead of importing 'easyviz' from 'scitools' as we did for 'EasyvizPlotter', we
+now have to import 'pylab'. With 'pylab', nothing is plotted before we
+explicitetly call 'pylab.show()', so we have to implement a 'plot' function for
+this derived class. It should simply call the 'plot' function from the base
+class before calling 'self.backend.plot()'
+
+Part 6: GnuplotPlotter.
+=======================
+
+The constructor for 'GnuplotPlotter' is similar to the last two. But the
+interface for plotting with this backend is so different from the previous
+two, that we have to implement a function 'plot' that doesn't use the 'plot'
+function from the base class at all. Therefore, there is going to be some code
+duplication. Just as in the 'plot' function in the base class, we have to
+check if the 'reader' argument is defined, and if so, set the 'reader' class
+attribute. Further, we should check that the reader is defined (is not
+'None'). Finally, we should create a 'Gnuplot' instance and a 'Data' instance,
+and calling the former instance with the latter as argument:
+
+be = self.backend
+gp = be.Gnuplot(persist=1)
+gp.plot(be.Data(data[0], data[1], with_='lines'))
+
+
+Part 7: Test your code.
+=======================
+
+The following test code should now work, given the necessary Python modules
+are installed (numpy, scitools, pylab, Gnuplot):
+
+def _test():
+    readers = []
+    readers.append(AsciiReader('test.txt'))
+    readers.append(BinaryReader('test.bin'))
+    readers.append(ZipReader('test.txt.gz'))
+    readers.append(WebReader('http://folk.uio.no/ilmarw/tmp/test.txt'))
+    readers.append(WebReader('http://folk.uio.no/ilmarw/tmp/test.bin', True))
+    readers.append(WebReader('http://folk.uio.no/ilmarw/tmp/test.txt.gz'))
+    for reader in readers:
+        for plotter in Plotter.__subclasses__():
+            p = plotter(reader)
+            p.plot()
+        
+if __name__ == "__main__":
+    _test()

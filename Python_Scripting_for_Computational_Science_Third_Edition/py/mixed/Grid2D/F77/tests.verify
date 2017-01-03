@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+"""Regression script in src/py/mixed/Grid2D/F77"""
+
+from scitools.Regression import TestRun
+import os, glob, sys
+
+test = TestRun("tests.v", removepath=os.environ['scripting'])
+
+test.silentrun("./clean.sh", options="")
+test.run("./make_F77_app.sh")
+test.run("./tmp.app")
+
+test.silentrun("./clean.sh", options="")
+test.run("./make_module_1.sh")
+test.run("../Grid2Deff.py", options="verify1")
+test.run("../Grid2Deff.py", options="verify2")
+test.run("../Grid2Deff.py", options="exceptions1")
+test.append("tmp1/ext_gridloop.pyf")
+test.silentrun("./clean.sh")
+

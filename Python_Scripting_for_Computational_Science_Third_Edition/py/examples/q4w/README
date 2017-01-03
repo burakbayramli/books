@@ -1,0 +1,77 @@
+q4w : questionnaire for the web
+===============================
+
+Define questions and answers, associated with a questionnaire, in a plain 
+text file. Scripts can then parse the file and generate an interactive 
+web page.
+
+Key files:
+----------
+
+example1.q4w       - an example demonstrating the features of the
+                     questionnaire
+q4w-generate.py    - translate input file (ex. example1.q4w) into
+                     HTML web form (example1.html)
+q4w.cgi            - CGI script that reads the webform and stores the data
+q4w-statistics.cgi - CGI script that displays the statistics of the
+                     collected data
+
+How to make a questionnaire:
+----------------------------
+
+ 1. Make (say) myquiz.q4w file somewhere with questions and answers
+
+ 2. run::
+
+       $scripting/src/cgi/q4w/q4w-generate.py myquiz.q4w language.no
+
+    (if you want the Web pages in Norwegian, for English drop the second arg.
+    or replace it by language.en - other language files can easily be made!)
+
+ 3. cd myquiz/  - everything is there. 
+
+ 4. Move myquiz/ to the right place on the right machine. Run chmod.files
+    to make sure that files have the right writing permissions.
+
+
+Troubleshooting:
+----------------
+
+Run the CGI scripts from the command line to test that they work
+(just type their names!)
+If not, the hardcoded path to python might be wrong. Try to use
+either 
+#!/usr/bin/python
+or
+#!/usr/local/bin/python
+or another official python interpreter (the server might fail to
+start your local python interpreter)
+
+Common problem: Parts of the question is written as ordinary text
+and the answer part is not properly lined up.
+Cause: The question is not a single line. Recall that all questions
+and answers must be on one single line! Fix the .q4w file and regenerate
+til forms.
+
+----------------
+
+How to translate Web form into native language: 
+(assume that example1.q4w is the input file)
+1. Change "Submit" and "Reset" into suitable terms in example1.q4w
+2. Change two expressions in q4w.cgi:
+   "The following answers were recorded:" and
+   "No answer was given"
+3. Change two expressions in q4w-statistics.cgi:
+   "Statistics of a webform"
+   "average = "
+
+F.ex.:
+perl -pi.old~~ -e 's/Submit/Send evaluering/g;' example1.html
+perl -pi.old~~ -e 's/Reset/Nullstill evaluering/g;' example1.html
+perl -pi.old~~ -e 's/The following answers were recorded/Følgende svar er registrert/g;' q4w.cgi
+perl -pi.old~~ -e 's/No answer was given/Intet svar er registrert/g;' q4w.cgi
+Better: dictionary translate with the English expressions as keys stored in a
+file language with various other languages in comments
+
+How to avoid that users can read the statistics:
+1. Remove the link at the end of the q4w.cgi file.

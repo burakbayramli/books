@@ -1,0 +1,40 @@
+<coordinator-app name="http-download"
+    frequency="${coord:days(1)}"
+    start="2011-11-18T00:00Z"
+    end="2016-11-29T00:00Z"
+    timezone="UTC"
+    xmlns="uri:oozie:coordinator:0.1">
+
+  <controls>
+    <concurrency>1</concurrency>
+  </controls>
+
+  <action>
+    <workflow>
+      <app-path>${nameNode}/user/${coord:user()}/http-download</app-path>
+      <configuration>
+        <property>
+          <name>jobTracker</name>
+          <value>${jobTracker}</value>
+        </property>
+        <property>
+          <name>nameNode</name>
+          <value>${nameNode}</value>
+        </property>
+        <property>
+          <name>queueName</name>
+          <value>${queueName}</value>
+        </property>
+        <property>
+          <name>inputData</name>
+          <value>${nameNode}/user/${coord:user()}/http-download/input-urls.txt</value>
+        </property>
+        <property>
+          <name>outputData</name>
+          <value>${nameNode}/user/${coord:user()}/http-download/output/${coord:formatTime(coord:nominalTime(), "yyyy/MM/dd")}</value>
+        </property>
+      </configuration>
+    </workflow>
+  </action>
+</coordinator-app>
+

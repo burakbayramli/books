@@ -1,0 +1,148 @@
+# Parameter expansion: flight simulator example
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- mu + g[treatment[i]] + d[airport[i]]
+  }
+  mu ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:n.treatment){
+    g.raw[j] ~ dnorm (mu.g.raw, tau.g.raw)
+    g[j] <- xi.g*(g.raw[j] - mean(g.raw[]))
+  }
+  xi.g ~ dunif (0, 100)
+  mu.g.raw ~ dnorm (0, .0001)
+  tau.g.raw <- pow(sigma.g.raw, -2)
+  sigma.g.raw ~ dunif (0, 100)
+  sigma.g <- xi.g*sigma.g.raw
+
+  for (k in 1:n.airport){
+    d.raw[k] ~ dnorm (mu.d.raw, tau.d.raw)
+    d[k] <- xi.d*(d.raw[k] - mean(d.raw[]))
+  }
+  xi.d ~ dnorm (0, .0001)
+  mu.d.raw ~ dnorm (0, .0001)
+  tau.d.raw <- pow(sigma.d.raw, -2)
+  sigma.d.raw ~ dunif (0, 100)
+  sigma.d <- abs(xi.d)*sigma.d.raw
+}
+
+#############################################################################
+
+# Parameter expansion: survey responses example
+
+model {
+  for (i in 1:n){
+    y[i] ~ dbin (p.bound[i], 1)
+    p.bound[i] <- max(0, min(1, p[i]))
+    logit(p[i]) <- Xbeta[i]
+    Xbeta[i] <- b.0 + b.female*female[i] + b.black*black[i] +
+      b.female.black*female[i]*black[i] +
+      b.age[age[i]] + b.edu[edu[i]] + b.age.edu[age[i],edu[i]] +
+      b.state[state[i]]
+  }
+  b.0 ~ dnorm (0, .0001)
+  b.female ~ dnorm (0, .0001)
+  b.black ~ dnorm (0, .0001)
+  b.female.black ~ dnorm (0, .0001)
+  
+  mu ~ dnorm (0, .0001)
+  mu.adj <- b.0 + mean(b.age[]) + mean(b.edu[]) + mean(b.age.edu[,]) +
+     mean(b.state[])
+
+  for (j in 1:n.age){
+    b.age[j] <- xi.age*(b.age.raw[j] - mean(b.age.raw[]))
+    b.age.raw[j] ~ dnorm (0, tau.age.raw)
+  }
+  for (j in 1:n.edu){
+    b.edu[j] <- xi.edu*(b.edu.raw[j] - mean(b.edu.raw[]))
+    b.edu.raw[j] ~ dnorm (0, tau.edu.raw)
+  }
+  for (j in 1:n.age){
+    for (k in 1:n.edu){
+    b.age.edu[j,k] ~ dnorm(mu.age.edu, tau.age.edu)
+    b.age.edu.adj[j,k] <- b.age.edu[j,k] - mean(b.age.edu[,])
+    }
+  }
+  for (j in 1:n.state){
+    b.state[j] <- xi.state*(b.state.raw[j] - mean(b.state.raw[])
+    b.state.raw[j] ~ dnorm (b.state.hat[j], tau.state.raw)
+    b.state.raw.hat[j] <- b.region.raw[region[j]] + b.v.prev.raw*v.prev[j]
+  }
+  b.v.prev.raw <- xi.state*b.v.prev
+  b.v.prev.raw ~ dnorm(0, .0001)
+  for (j in 1:n.region){
+  b.region[j] <- xi.state*b.region.raw[j])
+  b.region.raw[j] ~ dnorm (0, tau.region.raw)
+  }
+  tau.age.raw <- pow(sigma.age.raw, -2)
+  tau.edu.raw <- pow(sigma.edu.raw, -2)
+  tau.age.edu.raw <- pow(sigma.age.edu.raw, -2)
+  tau.state.raw <- pow(sigma.state.raw, -2)
+  tau.region.raw <- pow(sigma.region.raw, -2)
+
+  sigma.age.raw ~ dunif (0, 100)
+  sigma.edu.raw ~ dunif (0, 100)
+  sigma.age.edu.raw ~ dunif (0, 100)
+  sigma.state.raw ~ dunif (0, 100)
+  sigma.region.raw ~ dunif (0, 100)
+
+  xi.age ~ dunif (0, 100)
+  xi.edu ~ dunif (0, 100)
+  xi.age.edu ~ dunif (0, 100)
+  xi.state ~ dunif (0, 100)
+
+  sigma.age <- xi.age*sigma.age.raw
+  sigma.edu <- xi.edu*sigma.edu.raw
+  sigma.age.edu <- xi.age.edu*sigma.age.edu.raw
+  sigma.state <- xi.state*sigma.state.raw
+  sigma.region <- xi.state*sigma.region.raw     # not "xi.region"
+}
+
+#############################################################################
+
+# Parameter expansion: item response theory
+
+model {
+  for (i in 1:n){
+    y[i] ~ dbin (p.bound[i], 1)
+    p.bound[i] <- max(0, min(1, p[i]))
+    logit(p[i]) <- g[k[i]]*(a[j[i]] - b[k[i]])
+    Xbeta[i] <- b.0 + b.female*female[i] + b.black*black[i] +
+      b.female.black*female[i]*black[i] +
+      b.age[age[i]] + b.edu[edu[i]] + b.age.edu[age[i],edu[i]] +
+      b.state[state[i]]
+  }
+  shift <- mean(a[])
+  scale <- sd(a[])
+  for (j in 1:J){
+    a.raw[j] ~ dnorm (mu.a.raw, tau.a.raw)
+    a[j] <- (a.raw[j] - shift)/scale
+  }
+  mu.a.raw ~ dnorm (0, .0001)
+  tau.a.raw <- pow(sigma.a.raw, -2)
+  sigma.a.raw ~ dunif (0, 100)
+  for (k in 1:K){
+    b.raw[k] ~ dnorm (b.hat.raw[j], tau.b.raw)
+    b.hat.raw[j] <- b.0.raw + d.raw*x[j]
+    b[k] <- (b.raw[k] - shift)/scale
+    g.raw[k] ~ dnorm (mu.g.raw, tau.g.raw)
+    g[k] <- g.raw[k]*scale
+  }  
+  b.0.raw ~ dnorm (0, .0001)
+  mu.g.raw ~ dnorm (0, .0001)
+  tau.b.raw <- pow(sigma.b.raw, -2)
+  tau.g.raw <- pow(sigma.g.raw, -2)
+  sigma.b.raw ~ dunif (0, 100)
+  sigma.g.raw ~ dunif (0, 100)
+
+  d.raw ~ dnorm (0, .0001) I(0,)
+  d <- d.raw*scale
+}
+
+
+
+

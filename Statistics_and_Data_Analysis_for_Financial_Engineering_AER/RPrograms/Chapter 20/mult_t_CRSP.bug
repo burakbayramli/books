@@ -1,0 +1,9 @@
+model{
+for(i in 1:N)
+{
+y[i,1:m] ~ dmt(mu[],tau[,],df_likelihood)
+}
+mu[1:m] ~ dmt(mu0[],Prec_mu[,],df_prior)
+tau[1:m,1:m] ~  dwish(Prec_tau[,],df_wishart)
+lambda[1:m,1:m] <- inverse(tau[,])
+}

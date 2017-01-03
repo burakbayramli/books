@@ -1,0 +1,50 @@
+
+    VisitAsia    
+  No_Visit  Visit
+-----------------
+      0.99   0.01
+
+VisitAsia |    Tuberculosis  
+          |   Absent  Present
+--------- | -----------------
+No_Visit  |     0.99     0.01
+Visit     |     0.95     0.05
+
+      Smoking      
+  NonSmoker  Smoker
+-------------------
+       0.50    0.50
+
+Smoking   |       Cancer     
+          |   Absent  Present
+--------- | -----------------
+NonSmoker |     0.99     0.01
+Smoker    |     0.90     0.10
+
+Cancer  | Tuberculosis |     TbOrCa   
+        |              |   False  True
+------- | ------------ | -------------
+Absent  | Absent       |    1.00  0.00
+Absent  | Present      |    0.00  1.00
+Present | Absent       |    0.00  1.00
+Present | Present      |    0.00  1.00
+
+TbOrCa |        XRay       
+       |   Abnormal  Normal
+------ | ------------------
+False  |       0.05    0.95
+True   |       0.98    0.02
+
+Smoking   |     Bronchitis   
+          |   Absent  Present
+--------- | -----------------
+NonSmoker |     0.70     0.30
+Smoker    |     0.40     0.60
+
+Bronchitis | TbOrCa |      Dyspnea     
+           |        |   Absent  Present
+---------- | ------ | -----------------
+Absent     | False  |     0.90     0.10
+Absent     | True   |     0.30     0.70
+Present    | False  |     0.20     0.80
+Present    | True   |     0.10     0.90

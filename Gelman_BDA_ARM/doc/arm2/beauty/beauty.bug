@@ -1,0 +1,18 @@
+# model for course evaluations, beauty, and courses
+
+model {
+  for (i in 1:n){
+    eval[i] ~ dnorm (eval.hat[i], tau.eval)
+    eval.hat[i] <- beta.0 + beta.beauty*beauty[i] + alpha[course.id[i]+1]
+  }
+  beta.0 ~ dnorm (0, .0001)
+  beta.beauty ~ dnorm (0, .0001)
+  tau.eval <- pow(sigma.eval, -2)
+  sigma.eval ~ dunif (0, 100)
+  
+  for (j in 1:J){
+    alpha[j] ~ dnorm (0, tau.alpha)
+  }
+  tau.alpha <- pow(sigma.alpha, -2)
+  sigma.alpha ~ dunif (0, 100) 
+}

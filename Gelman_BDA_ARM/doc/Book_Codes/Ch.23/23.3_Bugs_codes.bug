@@ -1,0 +1,24 @@
+## Analysis of an educational-subsidy program 
+
+model {
+  for (i in 1:n){
+    y[i] ~ dbin (p.bound[i], 1)
+    p.bound[i] <- max(0, min(1, p[i]))
+    logit(p[i]) <- Xbeta[i]
+    Xbeta[i] <- a[village[i]] + b.1*enroll97[i] + b.2*work97[i] +
+           b.3*poor[i] + b.4*male[i] + b.5*age97[i]
+  }
+  b.1 ~ dnorm (0, .0001)
+  b.2 ~ dnorm (0, .0001)
+  b.3 ~ dnorm (0, .0001)
+  b.4 ~ dnorm (0, .0001)
+  b.5 ~ dnorm (0, .0001)
+  for (j in 1:J){
+    a[j] ~ dnorm(a.hat[j], tau.a)
+    a.hat[j] <- g.0 + g.1*program[j]
+  }
+  g.0 ~ dnorm (0, .0001)
+  g.1 ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+}

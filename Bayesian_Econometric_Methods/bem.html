@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css"> 
+<!-- 
+body  {
+	margin: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+	font-family: Garamond;
+	font-size: 110%;
+	background-color: #FFFFFF;
+	padding-top: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0%;
+	left: 10%;
+}
+.twoColLiqLt #container {
+	width: 100%;  /* this will create a container 80% of the browser width */
+	background: #FFFFFF;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	left: 2%;
+	height: 100%;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+	border-bottom-color: #FFFFFF;
+	border-left-color: #FFFFFF;
+	padding-left: 0px;
+} 
+
+/* Tips for sidebar1:
+1. since we are working in percentages, it's best not to use padding on the sidebar. It will be added to the width for standards compliant browsers creating an unknown actual width. 
+2. Space between the side of the div and the elements within it can be created by placing a left and right margin on those elements as seen in the ".twoColLiqLt #sidebar1 p" rule.
+3. Since Explorer calculates widths after the parent element is rendered, you may occasionally run into unexplained bugs with percentage-based columns. If you need more predictable results, you may choose to change to pixel sized columns.
+*/
+.twoColLiqLt #sidebar1 {
+	float: left;
+	width: 25%;
+	background-color: #AED7FF;
+	background-position: 100% 100%;
+	height: 100%;
+	border-right-width: thin;
+	border-bottom-width: thin;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #000000;
+	border-bottom-color: #000000;
+	border-top-width: thin;
+	border-top-style: solid;
+	border-top-color: #000000;
+	padding-top: 15px;
+	padding-right: 0px;
+	padding-bottom: 15px;
+	padding-left: 15px;
+}
+.twoColLiqLt #sidebar1 h3, .twoColLiqLt #sidebar1 p {
+	margin-left: 10px; /* the left and right margin should be given to every element that will be placed in the side columns */
+	margin-right: 10px;
+	height: 100px;
+}
+
+/* Tips for mainContent:
+1. the space between the mainContent and sidebar1 is created with the left margin on the mainContent div.  No matter how much content the sidebar1 div contains, the column space will remain. You can remove this left margin if you want the #mainContent div's text to fill the #sidebar1 space when the content in #sidebar1 ends.
+2. to avoid float drop at a supported minimum 800 x 600 resolution, elements within the mainContent div should be 430px or smaller (this includes images).
+3. in the Internet Explorer Conditional Comment below, the zoom property is used to give the mainContent "hasLayout." This avoids several IE-specific bugs.
+*/
+.twoColLiqLt #mainContent {
+	margin-top: 0;
+	margin-right: 0px;
+	margin-bottom: 0;
+	margin-left: 0%;
+	left: 25%;
+	width: 0%;
+	height: 0%;
+	padding-top: 0%;
+	padding-right: 0%;
+	padding-bottom: 0%;
+	padding-left: 9%;
+} 
+
+/* Miscellaneous classes for reuse */
+.fltrt { /* this class can be used to float an element right in your page. The floated element must precede the element it should be next to on the page. */
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { /* this class can be used to float an element left in your page */
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { /* this class should be placed on a div or break element and should be the final element before the close of a container that should fully contain a float */
+	clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+--> 
+</style>
+<!--[if IE]>
+<style type="text/css"> 
+/* place css fixes for all versions of IE in this conditional comment */
+.twoColLiqLt #sidebar1 { padding-top: 30px; }
+.twoColLiqLt #mainContent { zoom: 1; padding-top: 15px; }
+/* the above proprietary zoom property gives IE the hasLayout it needs to avoid several bugs */
+</style>
+<![endif]-->
+<script src="SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
+<link href="SpryAssets/SpryMenuBarVertical.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+.style1 {
+	font-size: xx-large
+}
+.style2 {
+	font-family: Georgia, "Times New Roman", Times, serif
+}
+.style3 {
+	font-size: xx-large;
+	color: #1102C4;
+	font-style: italic;
+}
+-->
+</style>
+</head>
+
+<body class="twoColLiqLt">
+
+<div id="container">
+  <div id="sidebar1">
+    <h3 class="style2"><img src="bookpic_001.jpg" width="150" height="207" /></h3>
+    <p class="style2">&nbsp;</p>
+    <h3 class="style2">Links Plus Chapter-Specific Data and Programs:</h3>
+    <ul id="MenuBar1" class="MenuBarVertical">
+      <li><a href="corrections.pdf">Errata</a></li>
+      <li><a href="toc2.html">Table of Contents</a></li>
+      <li><a href="Links.html">Links to Other Bayesian Books</a></li>
+      <li><a class="MenuBarItemSubmenu" href="#"><strong>Chapter 11:</strong> Basics of Bayesian Computation</a>
+          <ul>
+            <li><a href="gendat.m"><strong>11.2:</strong> Drawing from Standard Distributions</a></li>
+            <li><a href="#" class="MenuBarItemSubmenu"><strong>11.3</strong>: Monte Carlo Integration in a Regression Problem</a>
+                <ul>
+                  <li><a href="ch11q3a.m">Generating Data Set (MATLAB)</a></li>
+                  <li><a href="ch11q3.m">Parts (b) - (d)</a></li>
+                  <li><a href="ch11q3e.m">Parts (e) and (f)</a></li>
+              </ul>
+            </li>
+            <li><a href="ch11q4.m"><strong>11.4:</strong> Importance Sampling</a></li>
+            <li><a href="ch11q5.m"><strong>11.5</strong>: Importance Sampling: Prior Sensitivity</a></li>
+            <li><a href="ch11q7.m"><strong>11.7:</strong> Gibbs Sampling from Bivariate Normal</a></li>
+            <li><a href="gibbs_sur_000.m"><strong>11.10:</strong> Gibbs Sampling in a SUR Model</a></li>
+            <li><a href="reg_changepoint.m"><strong>11.11</strong>: Unknown Change Point</a></li>
+            <li><a href="#" class="MenuBarItemSubmenu"><strong>11.12</strong>: Count Model with Unknown Change Point</a>
+                <ul>
+                  <li><a href="coaldata.txt">Coal Disaster Data</a></li>
+                  <li><a href="count_changepoint.m">MATLAB Code</a></li>
+              </ul>
+            </li>
+            <li><a href="diagnostics.m"><strong>11.13</strong>: Error Diagnostics</a></li>
+            <li><a href="#" class="MenuBarItemSubmenu"><strong>11.15</strong> Gibbs in a Regression model with inequality Constraints</a>
+                <ul>
+                  <li><a href="raw_cigdata.txt">Production Function Data</a></li>
+                  <li><a href="clean_prodfun.m">Program to Clean Data (Execute First)</a></li>
+                  <li><a href="manufact_gibbs.m">Program to Fit UNCONSTRAINED</a></li>
+                  <li><a href="manufact_diminish_000.m">Program to Fit Constrained</a></li>
+              </ul>
+            </li>
+            <li><a href="#" class="MenuBarItemSubmenu"><strong>11.16</strong>: Checking for Errors: Geweke (2004)</a>
+                <ul>
+                  <li><a href="num_variance.m">A Program to Calculate numerical variances</a></li>
+                  <li><a href="sim_check.m">Program to test equality of means</a></li>
+              </ul>
+            </li>
+            <li><a href="ch11q13.m"><strong>11.18:</strong> Metropolis-Hastings Algorithm #2</a></li>
+            <li><a href="acceptreject.m"><strong>11.22:</strong> Using Acceptance/Rejection Sampling #1</a></li>
+            <li><a href="#"><strong>11.24:</strong> Using Acceptance / Rejection Sampling #2</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 12:</strong> Hierarchical Models</a>
+        <ul>
+          <li><a href="#" class="MenuBarItemSubmenu"><strong>12.4</strong>: Rat Growth Model #3</a>
+              <ul>
+                <li><a href="rats.raw.txt">The Data Set</a></li>
+                <li><a href="rats_gibbs.m">Gibbs Sampler for Fitting Model</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu"><strong>12.6:</strong> Hierarchical Re-Centering: Gelfand, Sahu and Carlin (1995)</a>
+              <ul>
+                <li><a href="centered_parm.m">Centered: Monte-Carlo Integration</a></li>
+                <li><a href="centered_parm_gibbs.m">Centered: Gibbs Sampler</a></li>
+                <li><a href="uncentered_parm.m">Uncentered: Monte-Carlo</a></li>
+                <li><a href="uncentered_parm_gibbs.m">Uncentered: Gibbs</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu"><strong>12.7:</strong> A Hierarchical/ Smoothness Prior Approach to Nonparametric Regression </a>
+            <ul>
+              <li><a href="gen_nonpdata.m">Program for Generating Data (Execute First)</a></li>
+              <li><a href="nonparm_ex.m">Gibbs Sampling (Adjust line 30 to change eta)</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 13:</strong> The Linear Regression Model with General Covariance Matrix</a>
+        <ul>
+          <li><a href="#" class="MenuBarItemSubmenu"><strong>13:2</strong>: Heteroskedasticity of Known Form</a>
+              <ul>
+                <li><a href="HPRICE.TXT">House Price Data Set</a></li>
+                <li><a href="ch13q2_000.m">Gibbs Sampling Program</a></li>
+                <li><a href="ch13q2w.m">Supporting m-file needed to run program</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu"><strong>13:3</strong> Heteroscedastiticy of Unknwn Form: Student-t Errors</a>
+            <ul>
+              <li><a href="HPRICE.TXT">House Price Data Set</a></li>
+              <li><a href="ch13q3_000.m">Gibbs Sampling Program</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu"><strong>13:4:</strong> Autocorrelated Errors</a>
+            <ul>
+              <li><a href="YANKEES.TXT">Baseball Data Set</a></li>
+              <li><a href="ch13q4_000.m">Gibbs Sampling Code</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 14:</strong> Latent Variable Models</a>
+        <ul>
+          <li><a href="gen_probitdat.m">14.2: Parameter Identification in Probit</a></li>
+          <li><a href="#" class="MenuBarItemSubmenu">14.3: Probit Model: Application</a>
+            <ul>
+              <li><a href="AFFDATA2.txt">Affair Data (Fair, 1978)</a></li>
+              <li><a href="clean_affdata.m">MATLAB File to Clean &amp; Fit Data</a></li>
+            </ul>
+          </li>
+          <li><a href="ord_prob.m">14.5: Ordered Probit #1</a></li>
+          <li><a href="ord_prob2.m">14.6: Ordered Probit #2 (NOTE: Run Program for 14.5 first!) </a></li>
+          <li><a href="mnprobit3.m">14.7: Multinomial Probit</a></li>
+          <li><a href="#" class="MenuBarItemSubmenu">14.9: A Tobit with 2-Sided Censoring</a>
+            <ul>
+              <li><a href="tobit_data.txt">The Data Set</a></li>
+              <li><a href="tobit_gibbs_000.m">MATLAB Program for Fitting Model</a></li>
+            </ul>
+          </li>
+          <li><a href="gen_tobit.m">14.12: A Model of Potential Outcomes #2</a></li>
+          <li><a href="#" class="MenuBarItemSubmenu">14.13: Ordered Treatment, Ordered Outcome Model</a>
+            <ul>
+              <li><a href="healthdata.txt">Raw Data</a></li>
+              <li><a href="readme_health.txt">Data README File</a></li>
+              <li><a href="clean_healthdata.m">MATLAB File to Clean Data</a></li>
+              <li><a href="ord_treat_gen.m">MATLAB File to Fit Model (Must clean data first)</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu">14.14: Bayesian Analysis of Stochastic Frontier Model</a>
+            <ul>
+              <li><a href="ch14q13dgp.m">MATLAB File to Generate Data</a></li>
+              <li><a href="ch14q13.m">MATLAB File to Fit Generated Data</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu">14.15: Posterior Simulation in Two-Part Model</a>
+            <ul>
+              <li><a href="twopart.m">MATLAB Code with Generated Data</a></li>
+              <li><a href="tradedata.txt">Trade Data Set</a></li>
+              <li><a href="twopart_trade.m">Fitting the Trade Data</a></li>
+            </ul>
+          </li>
+          <li><a href="missdata.m">14.19: Missing Data #2</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 15:</strong> Mixture Models</a>
+        <ul>
+          <li><a href="#" class="MenuBarItemSubmenu">15.4: Experiments with 2 Component Normal Mixtures</a>
+            <ul>
+              <li><a href="lognorm_mix_000.m">Lognormal Experiment</a></li>
+              <li><a href="chi3_mix.m">Chi-Square Exoeriment</a></li>
+              <li><a href="bimod_mix.m">Two-Component Exoeriment</a></li>
+            </ul>
+          </li>
+          <li><a href="#" class="MenuBarItemSubmenu">15.6: Response Delays</a>
+            <ul>
+              <li><a href="responses.txt">Data Set</a></li>
+              <li><a href="schiz.m">Gibbs Algorithm for Fitting Model</a></li>
+            </ul>
+          </li>
+          <li><a href="runmix.m">15.7: Are my Students Randomly Guessing?</a></li>
+          <li><a href="#" class="MenuBarItemSubmenu">15.8: A Skewed Regression Model</a>
+            <ul>
+              <li><a href="plot_skew.m">Plotting Various Densities</a></li>
+              <li><a href="wages.raw">Wage Data</a></li>
+              <li><a href="skew_normal.m">Matlab Program for Fitting Skewed Model</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 16:</strong> Bayesian Model Averaging and Selection</a>
+        <ul>
+          <li><a href="#" class="MenuBarItemSubmenu">16.3: BMA: Application to Economic Growth</a>
+            <ul>
+              <li><a href="GROWTH.DAT">The Data set</a></li>
+              <li><a href="ch16q3.m">Gibbs Algorithm: <strong>NOTE:</strong> Change  line 5 to &quot;load growth.txt&quot; instead of &quot;load growth.dat</a></li>
+            </ul>
+          </li>
+          <li><a href="ssvs.m">16.4: Stochastic Search Variable Selection</a></li>
+          <li><a href="smithkohn.m">16.5: A Variable Selection / Model Averaging Approach to Nonparametric Regression: Smith and Kohn (1996) </a></li>
+          <li><a href="mlcalc.m">16.9: Calculating Marginal Likelihoods with Generated Data</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 17: </strong>Some Stationary Time Series models</a>
+        <ul>
+          <li><a href="realgdp.txt">GDP Data (Needed for 17.1-17. NOTE: Title may need to be changed to run programs below)</a></li>
+          <li><a href="ch17q1.m">17.1: Using the AR(p) Model</a></li>
+          <li><a href="#" class="MenuBarItemSubmenu">17.2: The Threshold Autoregressive (TAR) Model</a>
+            <ul>
+              <li><a href="ch17q2b.m">Part b</a></li>
+              <li><a href="ch17q2c.m">Part c</a></li>
+            </ul>
+          </li>
+          <li><a href="ch17q3b.m">17.3: Extensions of Basic TAR Model #1 (Part b)</a></li>
+          <li><a href="ch17q4b.m">17.4: Extension of Basic TAR #2 (Part b)</a></li>
+          <li><a href="#" class="MenuBarItemSubmenu">17.5: Autoregressive Conditional Heteroscedasticity (ARCH)</a>
+            <ul>
+              <li><a href="NYSE.TXT">NYSE Data</a></li>
+              <li><a href="ch17q5.m">MATLAB File for fitting ARCH Model</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#" class="MenuBarItemSubmenu"><strong>Chapter 18:</strong> Some Nonstationary Time Series Models</a>
+        <ul>
+          <li><a href="ch18q2.m"><strong>18.2</strong>: Sims and Uhlig (1991) </a></li>
+        </ul>
+      </li>
+    </ul>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+  <!-- end #sidebar1 --></div>
+  <h3 align="left" class="style3"><u>Bayesian Econometric Methods</u> </h3>
+  <blockquote>
+    <blockquote>
+      <p align="left" class="style1">Preliminary Stuff: </p>
+    </blockquote>
+  </blockquote>
+  <p align="left"><u><strong>Step #1: </strong></u> There are several m-files that we know are called upon in order to  implement some of the exercises in the various chapters. Many of these  have been written by us, though some may overlap with those perviously  found in Jim LeSage's website, <a href="http://www.spatial-econometrics.com">LeSage's MATLAB m-files</a>.  (Many of these can be found under the &quot;view functions&quot; link). The  miscellanous m-files that you will need in order to excecute the  chapter-specfic programs can be obtained from the three links below:  </p>
+  <p align="left"><a href="Misc_files.zip" align="left">Miscellaneous m-files#1,</a></p>
+  <p align="left"><a href="misc2.zip">Miscellaneous m-files #2.</a></p>
+  <p align="left"><a href="morestuff.zip" align="left">Miscellaneous m-files #3</a></p>
+  <div align="center">
+    <blockquote>
+      <blockquote>
+        <blockquote>
+          <blockquote>
+            <p>&nbsp;</p>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </div>
+  <p align="left"><strong><u>IMPORTANT NOTE #1:</u></strong> You can save the downloaded files in the &quot;work&quot; folder within the  MATLAB directory. Alternatively, you could save them to a different  folder and then add the location of that folder to MATLAB's PATH. </p>
+  <p align="left"> </p>
+  <p align="left"><strong><u>IMPORTANT NOTE #2</u>: </strong>It  has been called to our attention that some of the programs included  below did not work when executed. This seems to be related to the  updating of some of the files on Jim LeSage's website (see above), so  that our existing code is not directly compatible with the newest  version of these files. It is our recommendation, therefore, <em>that  you first only download the m-files in the three links above in order  to execute the chapter-specific programs listed below. </em>If you do  visit and download files from LeSage's website, either do not overwrite  the files provided in the three links above, or recognize that if you  do overwrite these files, some &quot;re-tooling&quot; may be necessary in order  to get the programs below to work. If difficulties still exist, please  contact us. </p>
+  <p align="left"><u><strong>Step #3</strong></u>: <strong>Links to M-files for Exercises by Book Chapte</strong>r:</p>
+  <p align="left"><strong>NOTE:</strong> When clicking on the various exercises located in the navigation bar to the left, the MATLAB m-files MAY  automatically load into your MATLAB editor if you have MATLAB installed  on your computer. (If given the option, choose &quot;open with the default  application.&quot;) Otherwise, the files may open as text files in the browser. If this is the case, choose to save the file in the desired location and then view/ edit / execute the program after  loading MATLAB. <em>Finally, if you encounter an error when running a  program, the most likely source of the error is that you have not  downloaded all of the necessary m-files</em>. Please see the three  links above to obtain these supporting files. Contact us if problems  persist or an error in the code is suspected. </p>
+  <p align="left"><br />
+    Finally, <em>note that we make no claims regarding the efficiency of the code provided</em>. Our primary goal with these m-files is to provide (hopefully) <br />
+    error-free code that is reasonably transparent and well-documented.  Those researchers who are interested in implementing the posterior  simulators can then understand what is involved with the programs and  refine them as necessary or desired. </p>
+  <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
+<!-- end #container --></div>
+<script type="text/javascript">
+<!--
+var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgRight:"SpryAssets/SpryMenuBarRightHover.gif"});
+//-->
+</script>
+</body>
+</html>

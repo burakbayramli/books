@@ -1,0 +1,275 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>AGM Practical 02</title>
+</head>
+<body>
+<h1>Algorithms for Graphical Models (AGM)</h1>
+<h2>Practical 02: Factored distributions, graphs and hypergraphs</h2>
+
+
+<hr />
+
+<ol>
+  <li><a href="#The_hypergraph">The hypergraph of a factored distribution</a></li>
+ <li><a href="#graphs">Graphs from hypergraphs</a></li>
+ <li><a href="#cliques">Hypergraphs from graphs</a></li>
+ <li><a href="#factors">Factor algebra</a></li>
+ <li><a href="#ci">Conditional independence</a></li>
+ <li><a href="#cc">Looking for loops</a></li>
+</ol>
+<hr />
+<h4><a id="The_hypergraph"></a>The hypergraph of a factored distribution</h4>
+<p>
+Start up the python interpreter.
+You will be displaying a factored distribution so first create a
+      scrolled frame object in which to display it:</p>
+<pre>
+>>> from Tkinter import Tk
+>>> root = Tk()
+>>> from gPy.Utils import scrolled_frame
+>>> sf = scrolled_frame(root)
+</pre>
+<p>
+We will use the 'Asia' Bayesian network (BN) as our factored
+distribution. The factors of a BN are of a special sort: conditional
+probability tables (CPTs), but here we want to treat them as normal
+factors. This can be effected in gPy by multiplying each by 1. Don't
+      forget to indent the line inside the for loop.
+    </p>
+<pre>
+>>> from gPy.Examples import asia
+>>> for cpt in asia:
+...  cpt *= 1
+...
+>>>
+</pre>
+<p>Now take a look at the distribution.</p>
+<pre>
+>>> asia.gui_display(sf)
+</pre>
+<p>OK, your first task is write down the hypergraph associated with
+      this factored distribution. Recall that a hypergraph is a set of
+      hyperedges, and each hyperedge is a set of vertices. Here each
+      vertex is the name of a random variable. Once you think you have
+      it right, check you have the right
+    answer.</p>
+<pre>
+>>> print asia.hypergraph()
+</pre>
+<p>Is this hypergraph reduced? Once you have decided check your
+      answer.</p>
+<pre>
+>>> asia.hypergraph().is_reduced()
+</pre>
+<p>Now work out the reduction (reduced version) of this
+      hypergraph. (If it is already reduced then the reduction is the
+      same as the original hypegraph.) Check your answer.</p>
+<pre>
+>>> hg = asia.hypergraph()
+>>> hg.red()
+>>> print hg
+</pre>
+<p>
+If you want to understand how the red method works do:</p>
+<pre>
+>>> help(hg.red)
+</pre>
+<p>Don't kill your Python session, it will save you time to keep it around
+    for the next question ...</p>
+<hr />
+
+<h4><a id="graphs"></a>Graphs from hypergraphs</h4>
+ 
+<p>I'm assuming you have a Python session with the objects from the
+last question. Firstly make a (new) copy of the 'Asia' hypergraph.</p>
+<pre>
+>>> asia_hg = asia.hypergraph()
+</pre>
+<p>Since <code>asia_hg</code> is a <em>copy</em> of the hypergraph
+associated with 'Asia' we can alter it without altering the
+<code>asia</code> object. To reassure yourself that this is the case
+look at the documentation for the <code>hypergraph</code> method. (Hit
+    'q' to quit the help.)</p>
+<pre>
+>>> help(asia.hypergraph)
+</pre>
+<p>Write down the 2-section of the 'Asia' hypergraph. Now check your
+answer. If you want to rearrange the graph's vertices in
+      the GUI: just move them by dragging with the left mouse button.</p>
+<pre>
+>>> print asia_hg.two_section()
+>>> asia_hg.two_section().gui_display(sf)
+</pre>
+<p>Now remove a hyperedge from the hypergraph:</p>
+<pre>
+>>> asia_hg.remove_hyperedge(['Cancer', 'TbOrCa', 'Tuberculosis'])
+</pre>
+<p>What is the graph of the (altered) hypergraph? Check your answer with:</p>
+<pre>
+>>> asia_hg.two_section().gui_display(sf)
+</pre>
+
+<hr />
+
+<h4><a id="cliques"></a>Hypergraphs from graphs</h4>
+
+<p>First we need a graph. Save the
+following 4 lines of Python source to a file <code>stuff.py</code> in
+your working directory.</p>
+<pre>
+from Tkinter import Tk
+from gPy.Graphs import UGraph
+root = Tk()
+gr = UGraph('abcdef')
+</pre>
+    <p>Restart a new Python session. Grab all the objects defined in
+    <code>stuff.py</code> and start up gPy's rudimentary graph
+    editor.</p>
+<pre>
+>>> from stuff import *
+>>> gr.gui_edit(root)
+</pre>
+<p>To <em>select</em> a node or edge click the mouse's left button
+while the cursor is over the object. To draw an edge to a selected
+node place the cursor above another node and click the right
+button. Clicking the left button when over empty space provides the
+opportunity to add a vertex. (Just hit the generated "OK" button, if
+you do this by mistake.)  Draw yourself some graph and click "Done"
+when finished.</p>
+<p> Work out the clique hypergraph of your graph and check your answer
+      by doing</p>
+<pre>
+>>> print gr.hypergraph()
+</pre>
+<p>
+We haven't covered an algorithm for pulling out cliques, but if your
+    graphs are not too big you should be able to do it 'by
+    eye'. Repeat this exercise for a few graphs that you create.</p>
+
+<hr />
+
+<h4><a id="factors"></a>Factor algebra</h4>
+
+    <p>
+      OK, this is a rather tedious exercise, but since factor
+      multiplication and marginalisation are so central you have to do
+      it by hand at least once. Firstly, for multiplication do the
+      following:
+    </p>
+<pre>
+>>> from gPy.Examples import asia
+>>> f1 =  asia['Bronchitis'] * asia['Cancer']
+>>> f2 = asia['Bronchitis'] * 1
+>>> print f1
+>>> print f2
+</pre>
+    <p>
+      Now compute the product of <code>f1</code> and <code>f2</code>
+      by hand. (OK, you can use a calculator to do the
+      multiplications.) Check your answer with:</p>
+<pre>
+>>> from gPy.Demos import *
+>>> prod_gui(f1,f2)
+</pre>
+    <p>
+      Now for marginalisation. Do:</p>
+    <pre>
+>>> f = f1*f2
+>>> marginalise_gui(f)
+</pre>
+    <p>
+      Compute by hand the factor which results from marginalising away
+      the variable <code>Cancer</code>. Check your answer by selecting
+      the <code>Cancer</code> variable by clicking it with the left
+      mouse button and then 'pressing' the <code>Sum out
+	selected</code> button.</p>
+<hr />
+
+<h4><a id="ci"></a>Conditional independence</h4>
+
+    <p>
+      Grab a graph to play with and display it:</p>
+<pre>
+>>> from gPy.Examples import asia
+>>> gr = asia.adg().moralise()
+>>> from Tkinter import Tk
+>>> gr.gui_display(Tk())
+</pre>
+    <p>
+      Let <i>P</i> be some probability distribution which factorises
+      according to this graph. Work out which of the following
+      (conditional) independence statements must be true about P.
+    </p>
+    <ol>
+      <li>
+	VisitAsia is independent of Bronchitis conditional on
+	Tuberculosis
+      </li>
+      <li>
+	VisitAsia is independent of Bronchitis
+      </li>
+      <li>
+	Dyspnea is independent of Smoking conditional on TbOrCa and Bronchitis
+      </li>
+      <li>
+	Dyspnea is independent of Smoking conditional on Bronchitis
+      </li>
+    </ol>
+    <p>
+      Check your answers using <a
+	href="../../gPy/Doc/API/gPy.Hypergraphs.Incidence-class.html#reachable">reachable</a> or <a href="../../gPy/Doc/API/gPy.Hypergraphs.Incidence-class.html#separates">separates</a>
+      </p>
+
+<hr />
+
+<h4><a id="cc"></a>Looking for loops</h4>
+
+    <p>
+      This question is harder than the others.
+    </p>
+
+    <p>
+      A loop (or cycle) is a path in an undirected graph from a vertex
+      back to itself. Write a Python module defining a class MyUGraph
+      which extends gPy's UGraph with one extra method which checks to
+      see if a given vertex is part of a cycle. Naturally you will
+      need to check the gPy API documentation to see which methods are
+      available from UGraph, the neighbours method will definitely be
+      useful. I haven't yet written a solution, but I'm pretty sure
+      Python's set builtin type will come in useful. Your module will
+      look like this:
+    </p>
+
+    <pre>    
+from gPy.Graphs import UGraph
+
+class MyUGraph(UGraph):
+
+    def in_loop(self,vertex):
+      .....
+    </pre>
+
+<p><a href="loop.py">One way of doing it</a></p>
+
+<hr />
+
+   <p>
+<!-- hhmts start -->
+Last modified: Mon Nov 10 15:56:19 GMT 2008
+<!-- hhmts end -->
+    </p>
+    
+    <p>
+      <a href="http://validator.w3.org/check?uri=referer"><img
+          src="../../valid-xhtml11"
+          alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+    </p>
+
+
+
+</body>
+</html>

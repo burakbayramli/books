@@ -1,0 +1,40 @@
+use_forecast_scale_estimates: True
+use_forecast_weight_estimates: True
+use_instrument_weight_estimates: True
+trading_rules:
+  ewmac16:
+     function: systems.provided.example.rules.ewmac_forecast_with_defaults_no_vol
+     data:
+         - "rawdata.get_daily_prices"
+         - "rawdata.daily_returns_volatility"
+     other_args: 
+         Lfast: 16
+         Lslow: 64
+  ewmac32:
+     function: systems.provided.example.rules.ewmac_forecast_with_defaults_no_vol
+     data:
+         - "rawdata.get_daily_prices"
+         - "rawdata.daily_returns_volatility"
+     other_args: 
+         Lfast: 32
+         Lslow: 128
+  carry:
+     function: systems.provided.futures_chapter15.rules.carry
+     data:
+         - "rawdata.daily_annualised_roll"
+         - "rawdata.daily_returns_volatility"
+     other_args:
+         smooth_days: 90
+
+forecast_cap: 20.0
+rule_variations:
+     EDOLLAR: ['ewmac16','ewmac32', 'carry']
+     US10: ['ewmac16','ewmac32', 'carry']
+percentage_vol_target: 20.0
+notional_trading_capital: 100000
+base_currency: "GBP"
+#instruments: ['EDOLLAR','US10','EUROSTX','V2X','MXP','CORN']
+instruments: ['EDOLLAR','US10']
+instrument_weights:
+    EDOLLAR: 0.5
+    US10: 0.5
