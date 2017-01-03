@@ -1,0 +1,9 @@
+model{
+for(i in 1:N)
+{
+y[i,1:m] ~ dmnorm(mu[],tau[,])
+}
+mu[1:m] ~ dmnorm(mu0[],S2[,])
+tau[1:m,1:m] ~  dwish(S3[,],df)
+}
+

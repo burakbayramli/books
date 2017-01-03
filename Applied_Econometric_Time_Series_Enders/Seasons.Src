@@ -1,0 +1,128 @@
+procedure transform y
+type series y
+
+menu 'Select the Transformation'
+choice 'Logarithmic'
+{
+sta(noprint,fractiles) y
+   if %minimum > 0. {
+     com a$ = 'L' + %label(y)
+     set %s(a$) = log(y)
+   }
+  if %minimum.le.0
+    mes(style=alert) "I CAN TAKE THE LOG OF POSITIVE NUMBERS ONLY"
+}
+
+choice 'First Difference'
+{
+com a$ = 'D' + %label(y)
+set %s(a$) = y - y{1}
+}
+
+choice 'Growth Rate'
+{
+com a$ = 'G' + %label(y)
+set %s(a$) = y/y{1} - 1
+}
+end menu
+
+graph(header='Time Path of ' + a$) 1 ; # %s(a$)
+
+end transform
+*********************
+proc estimate depvar s_
+type series depvar
+type integer s_
+local integer span
+local series time t2 t3 fitted
+
+dec vector[int] reglist
+compute reglist=||constant||
+
+if s_.eq.1 {
+inquire(seasonal) span
+seasons seasons
+enter(varying) reglist ; # reglist seasons{0 to -span+2}
+}
+
+set time = t ; set t2 = t*t ; set t3 = t*t*t
+
+Menu 'Select the degree of the Polynomial'
+ choice 'NO trend '
+ {
+   com b$ = 'No Time Trend'
+ }
+ choice ' Linear trend'
+ {
+   enter(varying) reglist ; # reglist time
+   com b$ = 'Linear Time Trend'
+ }
+ choice ' Quadratic trend'
+ {
+   enter(varying) reglist ; # reglist time t2
+   com b$ = 'Quadratic Time Trend'
+ }
+ choice ' Cubic trend '
+ {
+  enter(varying) reglist ; # reglist time t2 t3
+  com b$ = 'Cubic Time Trend'
+ }
+end menu
+
+compute a$ = %l(depvar)
+lin depvar ;# reglist
+prj fitted
+
+gra(header='Trend Estimate of ' + a$,subheader=b$,key = below,patterns, $
+klabel=||'Fitted','Actual'||) 2  ; # fitted ; # depvar
+
+end estimate
+******
+procedure seasons
+local integer depvar s_
+usermenu(action=define,title='Trends')   $
+1>>'Transform a Variable'  $				;* New Choice
+2>>'Select a Variable to Estimate' $
+3>>'Estimate the Trend' $
+4>>'Estimate the Trend and Seasonals' $
+5>>'Done'
+
+usermenu(action=modify,enable=no) 3
+usermenu(action=modify,enable=no) 4
+
+loop
+usermenu
+if %menuchoice.eq.1 {
+  	 select(series,status=cancel) depvar
+	 if cancel.eq.1
+	   @transform depvar
+}
+if %menuchoice.eq. 2 {
+        select(series,status=cancel) depvar
+	if cancel.eq.1 {
+	compute a$ = %l(depvar)
+	gra(header= 'Time Path of ' + a$) 1
+	# depvar
+	usermenu(action=modify,enable=yes) 3
+	usermenu(action=modify,enable=yes) 4
+	}
+	}
+if %menuchoice.eq.3 {
+	com s_ = 0
+	@estimate depvar s_
+}
+if %menuchoice.eq.4	{
+	com s_ = 1
+	@estimate depvar s_
+}
+
+if %menuchoice.eq.5
+	break
+
+endloop
+usermenubreak(action=remove)
+end seasons
+
+
+
+

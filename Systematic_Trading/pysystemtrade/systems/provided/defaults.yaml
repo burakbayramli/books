@@ -1,0 +1,174 @@
+# YAML
+#
+# Raw data
+#
+volatility_calculation:
+  func: "syscore.algos.robust_vol_calc"
+  days: 35
+  min_periods: 10
+  vol_abs_min: 0.0000000001 
+  vol_floor: True
+  floor_min_quant: 0.05
+  floor_min_periods: 100
+  floor_days: 500
+#
+# forecast capping and scaling
+# fixed values
+#
+forecast_scalar: 1.0
+#
+# with varying stuff
+#
+#
+use_forecast_scale_estimates: False
+#
+forecast_scalar_estimate:
+   pool_instruments: True
+   func: "syscore.algos.forecast_scalar"
+   window: 250000
+   min_periods: 500
+   backfill: True
+#
+# capping
+forecast_cap: 20.0
+average_absolute_forecast: 10.0
+#
+#
+# forecast combination
+#
+forecast_div_multiplier: 1.0
+#
+#
+forecast_correlation_estimate:
+   pool_instruments: True
+   func: syscore.correlations.CorrelationEstimator
+   frequency: "W"
+   date_method: "expanding"
+   using_exponent: True
+   ew_lookback: 500
+   min_periods: 20      
+   cleaning: True
+   rollyears: 20
+   floor_at_zero: True
+#
+forecast_div_mult_estimate:
+   func: syscore.divmultipliers.diversification_multiplier_from_list
+   ewma_span: 125   
+   dm_max: 2.5
+#
+use_forecast_weight_estimates: False
+#
+forecast_cost_estimates:
+   use_pooled_costs: False
+   use_pooled_turnover: True
+#
+forecast_weight_ewma_span: 125
+forecast_weight_estimate:
+   func: syscore.optimisation.GenericOptimiser
+   method: shrinkage
+   pool_gross_returns: True
+   equalise_gross: False
+   cost_multiplier: 0.0
+   apply_cost_weight: True
+   ceiling_cost_SR: 0.13
+   frequency: "W"
+   date_method: "expanding"
+   rollyears: 20
+   cleaning: True
+   equalise_SR: False
+   ann_target_SR: 0.5
+   equalise_vols: True
+   shrinkage_SR: 0.90
+   shrinkage_corr: 0.50
+   monte_runs: 100
+   bootstrap_length: 50
+   correlation_estimate:
+     func: syscore.correlations.correlation_single_period
+     using_exponent: False
+     ew_lookback: 500
+     min_periods: 20      
+     floor_at_zero: True
+   mean_estimate:
+     func: syscore.algos.mean_estimator
+     using_exponent: False
+     ew_lookback: 500
+     min_periods: 20      
+   vol_estimate:
+     func: syscore.algos.vol_estimator
+     using_exponent: False
+     ew_lookback: 500
+     min_periods: 20      
+#
+# Capital correction
+#
+percentage_vol_target: 16.0
+notional_trading_capital: 1000000
+base_currency: "USD"
+capital_multiplier:
+   func: syscore.capital.fixed_capital
+#
+# Portfolio creation
+#
+instrument_div_multiplier: 1.0
+#
+instrument_correlation_estimate:
+   func: syscore.correlations.CorrelationEstimator
+   frequency: "W"
+   date_method: "expanding"
+   using_exponent: True
+   ew_lookback: 500
+   min_periods: 20      
+   cleaning: True
+   rollyears: 20
+   floor_at_zero: True
+#
+instrument_div_mult_estimate:
+   func: syscore.divmultipliers.diversification_multiplier_from_list
+   ewma_span: 125
+   dm_max: 2.5
+#
+use_instrument_weight_estimates: False
+#
+instrument_weight_ewma_span: 125
+instrument_weight_estimate:
+   func: syscore.optimisation.GenericOptimiser
+   method: shrinkage
+   frequency: "W"
+   equalise_gross: False
+   cost_multiplier: 0.0
+   apply_cost_weight: False
+   date_method: "expanding"
+   rollyears: 20
+   cleaning: True
+   equalise_SR: True
+   ann_target_SR: 0.5
+   equalise_vols: True
+   shrinkage_mean: 1.00
+   shrinkage_corr: 0.50
+   monte_runs: 100
+   bootstrap_length: 50
+   correlation_estimate:
+     func: syscore.correlations.correlation_single_period
+     using_exponent: False
+     ew_lookback: 500
+     min_periods: 20      
+     floor_at_zero: True
+   mean_estimate:
+     func: syscore.algos.mean_estimator
+     using_exponent: False
+     ew_lookback: 500
+     min_periods: 20      
+   vol_estimate:
+     func: syscore.algos.vol_estimator
+     using_exponent: False
+     ew_lookback: 500
+     min_periods: 20      
+#
+# buffering / position inertia
+buffer_method: position
+buffer_size: 0.10
+buffer_trade_to_edge: False
+# costs and accounting
+use_SR_costs: True
+#
+

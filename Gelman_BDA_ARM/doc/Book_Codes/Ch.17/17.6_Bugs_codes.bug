@@ -1,0 +1,30 @@
+
+## Multilevel ordered categorical regression 
+
+model {
+  for (i in 1:n){
+    y[i] ~ dcat (P[i,])
+    P[i,1] <- 1 - Q[i,1]
+    for (i.cut in 2:n.cut){
+      P[i,i.cut] <- Q[i,i.cut-1] - Q[i,i.cut] 
+    }
+    P[i,n.cut+1] <- Q[i,i.cut]
+    for (i.cut in 1:n.cut){
+      logit(Q[i,i.cut]) <- z[i,i.cut]
+      Z[i,i.cut] <- (x[i] - C[player[i],i.cut])/s[player[i]]
+    }
+  }
+  for (i.player in 1:n.player){
+    C[i.player,1] ~ dnorm (mu.c[1], tau.c[1])I(0,C[i.player,2])
+    C[i.player,2] ~ dnorm (mu.c[2], tau.c[1])I(C[i.player,1],100)
+    s[i.player] ~ dlnorm (mu.log.s, tau.log.s)I(1,100)
+  }
+  for (i.cut in 1:n.cut){
+    mu.c[i.cut] ~ dnorm (0, 1.E-6)
+    tau.c[i.cut] <- pow(sigma.c[i.cut], -2)
+    sigma.c[i.cut] ~ dunif (0, 100)
+  }
+  mu.log.s ~ dnorm (0, .0001)
+  tau.log.s <- pow(sigma.log.s, -2)
+  sigma.log.s ~ dunif (0, 100)
+}

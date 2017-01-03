@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('fdmgrid.py')
+test.run('htmlsubst.py')
+test.run('intervalre.py')
+test.run('introre.py')
+test.run('realre.py')
+
+test.run('swap1.py')
+test.append('.test1.c.tmp')
+test.run('swap2.py')
+test.append('.test1.c.tmp')
+test.run('swap3.py')
+test.append('.test1.c.tmp')
+
+
+

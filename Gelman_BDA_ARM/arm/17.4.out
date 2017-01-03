@@ -1,0 +1,304 @@
+-*- mode: compilation; default-directory: "~/kod/mcmc/arm/" -*-
+Compilation started at Fri Nov  5 19:10:50
+
+R -f 17.4.R
+
+R version 2.11.1 (2010-05-31)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## Read the data & define variables
+> # Data are at http://www.stat.columbia.edu/~gelman/arm/examples/election88
+> 
+> # Set up the data for the election88 example
+> 
+> # Load in data for region indicators
+> # Use "state", an R data file (type ?state from the R command window for info)
+> #
+> # Regions:  1=northeast, 2=south, 3=north central, 4=west, 5=d.c.
+> # We have to insert d.c. (it is the 9th "state" in alphabetical order)
+> 
+> #library("R2WinBUGS")
+> library(R2jags) 
+Loading required package: coda
+Loading required package: lattice
+Loading required package: R2WinBUGS
+Loading required package: rjags
+module basemod loaded
+module bugs loaded
+
+Attaching package: 'R2jags'
+
+The following object(s) are masked from 'package:coda':
+
+    traceplot
+
+> library ("arm")
+Loading required package: MASS
+Loading required package: Matrix
+
+Attaching package: 'Matrix'
+
+The following object(s) are masked from 'package:base':
+
+    det
+
+Loading required package: lme4
+
+Attaching package: 'lme4'
+
+The following object(s) are masked from 'package:coda':
+
+    HPDinterval
+
+The following object(s) are masked from 'package:stats':
+
+    AIC
+
+Loading required package: abind
+Loading required package: car
+Loading required package: nnet
+Loading required package: survival
+Loading required package: splines
+
+arm (Version 1.3-07, built: 2010-10-24)
+Working directory is /home/burak/kod/mcmc/arm 
+Loading required package: foreign
+
+Attaching package: 'arm'
+
+The following object(s) are masked from 'package:R2jags':
+
+    traceplot
+
+The following object(s) are masked from 'package:coda':
+
+    traceplot
+
+> data (state)                  # "state" is an R data file
+> state.abbr <- c (state.abb[1:8], "DC", state.abb[9:50])
+> dc <- 9
+> not.dc <- c(1:8,10:51)
+> region <- c(3,4,4,3,4,4,1,1,5,3,3,4,4,2,2,2,2,3,3,1,1,1,2,2,3,2,4,2,4,1,1,4,1,3,2,2,3,4,1,1,3,2,3,3,4,1,3,4,1,2,4)
+> 
+> # Load in data from the CBS polls in 1988
+> # Data are at http://www.stat.columbia.edu/~gelman/arm/examples/election88
+> library (foreign)
+> polls <- read.dta ("../doc/gelman/ARM_Data/election88/polls.dta")
+> attach.all (polls)
+The following object(s) are masked from 'package:MASS':
+
+    survey
+> 
+> # Select just the data from the last survey (#9158)
+> table (survey)                # look at the survey id's
+survey
+ 9152  9153  9154  9155 9156a 9156b  9157  9158 
+ 1611  1653  1833  1943   684  1478  2149  2193 
+> ok <- survey==9158            # define the condition
+> polls.subset <- polls[ok,]    # select the subset of interest
+> attach.all (polls.subset)     # attach the subset
+The following object(s) are masked from 'attach.all (position 3)':
+
+    age, black, bush, edu, female, org, state, survey, weight, year
+The following object(s) are masked from 'package:MASS':
+
+    survey
+> write.table (polls.subset, "polls.subset.dat")
+> 
+> print (polls.subset[1:5,])
+         org year survey bush state edu age female black weight
+11352 cbsnyt    7   9158   NA     7   3   1      1     0    923
+11353 cbsnyt    7   9158    1    39   4   2      1     0    558
+11354 cbsnyt    7   9158    0    31   2   4      1     0    448
+11355 cbsnyt    7   9158    0     7   3   1      1     0    923
+11356 cbsnyt    7   9158    1    33   2   2      1     0    403
+> 
+> # define other data summaries
+> y <- bush                  # 1 if support bush, 0 if support dukakis
+> n <- length(y)             # of survey respondents
+> n.age <- max(age)          # of age categories
+> n.edu <- max(edu)          # of education categories
+> n.state <- max(state)      # of states
+> n.region <- max(region)    # of regions
+> 
+> # compute unweighted and weighted averages for the U.S.
+> ok <- !is.na(y)                                    # remove the undecideds
+> cat ("national mean of raw data:", round (mean(y[ok]==1), 3), "\n")
+national mean of raw data: 0.558 
+> cat ("national weighted mean of raw data:",
++      round (sum((weight*y)[ok])/sum(weight[ok]), 3), "\n")
+national weighted mean of raw data: 0.543 
+> 
+> # compute weighted averages for the states
+> raw.weighted <- rep (NA, n.state)
+> names (raw.weighted) <- state.abbr
+> for (i in 1:n.state){
++   ok <- !is.na(y) & state==i
++   raw.weighted[i] <- sum ((weight*y)[ok])/sum(weight[ok])
++ }
+> 
+> # load in 1988 election data as a validation check
+> election88 <- read.dta ("../doc/gelman/ARM_Data/election88/election88.dta")
+> outcome <- election88$electionresult
+> 
+> # load in 1988 census data
+> census <- read.dta ("../doc/gelman/ARM_Data/election88/census88.dta")
+> 
+> # also include a measure of previous vote as a state-level predictor
+> presvote <- read.dta ("../doc/gelman/ARM_Data/election88/presvote.dta")
+> attach (presvote)
+> v.prev <- presvote$g76_84pr
+> not.dc <- c(1:8,10:51)
+> candidate.effects <- read.table ("../doc/gelman/ARM_Data/election88/candidate_effects.dat", header=T)
+> v.prev[not.dc] <- v.prev[not.dc] +
++  (candidate.effects$X76 + candidate.effects$X80 + candidate.effects$X84)/3
+> # Data are at http://www.stat.columbia.edu/~gelman/arm/examples/election88
+> 
+> 
+> data <- list ("n", "n.age", "n.edu", "n.state", "n.region",
++  "y", "female", "black", "age", "edu", "state", "region", "v.prev")
+> 
+> election.inits <- function (){
++  list(b.0=rnorm(1), b.female=rnorm(1), b.black=rnorm(1), b.female.black=rnorm(1),
++   b.age=rnorm(n.age), b.edu=rnorm(n.edu), b.age.edu=array(rnorm(n.age*n.edu), 
++   c(n.age,n.edu)), b.state=rnorm(n.state), b.v.prev=rnorm(1), 
++   b.region=rnorm(n.region), sigma.age=runif(1), sigma.edu=runif(1), 
++   sigma.age.edu=runif(1), sigma.state=runif(1), sigma.region=runif(1))
++ }
+> params <- c ("b.0", "b.female", "b.black", "b.female.black",
++    "b.age", "b.edu", "b.age.edu", "b.state",  "b.v.prev", "b.region",
++    "sigma.age", "sigma.edu", "sigma.age.edu", "sigma.state", "sigma.region")
+>  
+> #election.ch17 <- bugs (data, election.inits, params, "election.bug", n.chains=3, n.iter=1000)
+> load.module("glm")
+module glm loaded
+> election.ch17 <- jags (data, election.inits, params, "election.bug", n.chains=3, n.iter=10000, n.thin=10)
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+   Graph Size: 17866
+
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> print (election.ch17)
+Inference for Bugs model at "election.bug", fit using jags,
+ 3 chains, each with 10000 iterations (first 5000 discarded), n.thin = 10
+ n.sims = 1500 iterations saved
+                 mean   sd   2.5%    25%    50%    75%  97.5% Rhat n.eff
+b.0              -4.0  0.8   -5.5   -4.5   -4.0   -3.5   -2.5  1.0    56
+b.age[1]          0.1  0.2   -0.2    0.0    0.0    0.1    0.5  1.1  1400
+b.age[2]         -0.1  0.2   -0.4   -0.1    0.0    0.0    0.3  1.1  1500
+b.age[3]          0.0  0.2   -0.3    0.0    0.0    0.1    0.5  1.1   870
+b.age[4]          0.0  0.2   -0.4   -0.1    0.0    0.0    0.3  1.1  1000
+b.age.edu[1,1]    0.0  0.2   -0.4   -0.1    0.0    0.0    0.2  1.0  1300
+b.age.edu[2,1]    0.1  0.2   -0.2    0.0    0.0    0.2    0.4  1.0   360
+b.age.edu[3,1]    0.0  0.1   -0.2    0.0    0.0    0.1    0.3  1.0  1400
+b.age.edu[4,1]   -0.2  0.2   -0.7   -0.3   -0.1    0.0    0.1  1.0  1500
+b.age.edu[1,2]    0.1  0.1   -0.1    0.0    0.0    0.1    0.4  1.0  1500
+b.age.edu[2,2]   -0.1  0.1   -0.4   -0.2   -0.1    0.0    0.1  1.0  1500
+b.age.edu[3,2]    0.0  0.1   -0.2    0.0    0.0    0.1    0.3  1.0  1500
+b.age.edu[4,2]    0.0  0.1   -0.3   -0.1    0.0    0.0    0.2  1.0  1500
+b.age.edu[1,3]    0.1  0.1   -0.2    0.0    0.0    0.1    0.4  1.0  1500
+b.age.edu[2,3]    0.0  0.1   -0.3   -0.1    0.0    0.1    0.2  1.0  1500
+b.age.edu[3,3]    0.0  0.1   -0.2    0.0    0.0    0.1    0.3  1.0  1500
+b.age.edu[4,3]    0.1  0.2   -0.2    0.0    0.0    0.1    0.4  1.0  1500
+b.age.edu[1,4]    0.0  0.1   -0.3   -0.1    0.0    0.1    0.3  1.0  1500
+b.age.edu[2,4]    0.0  0.1   -0.3   -0.1    0.0    0.0    0.2  1.0  1500
+b.age.edu[3,4]    0.0  0.1   -0.3   -0.1    0.0    0.1    0.3  1.0  1500
+b.age.edu[4,4]    0.1  0.1   -0.2    0.0    0.0    0.1    0.4  1.0  1500
+b.black          -1.7  0.3   -2.3   -1.9   -1.7   -1.4   -1.0  1.0   650
+b.edu[1]         -0.2  0.2   -0.7   -0.3   -0.1    0.0    0.3  1.0   590
+b.edu[2]          0.0  0.2   -0.4   -0.1    0.0    0.0    0.4  1.0  1500
+b.edu[3]          0.1  0.2   -0.2    0.0    0.1    0.3    0.7  1.0  1500
+b.edu[4]          0.0  0.2   -0.4   -0.1    0.0    0.1    0.4  1.0  1500
+b.female         -0.1  0.1   -0.3   -0.2   -0.1    0.0    0.1  1.0  1500
+b.female.black   -0.2  0.4   -1.0   -0.5   -0.2    0.1    0.7  1.0  1500
+b.region[1]       0.0  0.3   -0.5   -0.2    0.0    0.1    0.7  1.1   130
+b.region[2]       0.0  0.3   -0.4   -0.1    0.0    0.1    0.7  1.1   240
+b.region[3]       0.3  0.3   -0.1    0.2    0.3    0.5    1.2  1.1   310
+b.region[4]      -0.1  0.3   -0.5   -0.2   -0.1    0.0    0.7  1.1   140
+b.region[5]       0.0  0.5   -1.0   -0.1    0.0    0.2    1.2  1.0   250
+b.state[1]        4.9  0.7    3.5    4.5    4.8    5.4    6.4  1.1    38
+b.state[2]        4.8  0.8    3.2    4.3    4.8    5.4    6.5  1.1    45
+b.state[3]        4.8  0.8    3.1    4.3    4.7    5.3    6.3  1.1    38
+b.state[4]        4.5  0.7    3.0    4.0    4.5    4.9    6.0  1.0    74
+b.state[5]        4.2  0.7    2.9    3.8    4.2    4.7    5.7  1.1    37
+b.state[6]        4.4  0.8    3.0    4.0    4.4    4.9    5.9  1.1    45
+b.state[7]        4.4  0.8    2.9    4.0    4.4    5.0    6.0  1.1    39
+b.state[8]        4.1  0.7    2.6    3.6    4.0    4.6    5.6  1.1    52
+b.state[9]        1.2  0.6    0.0    1.0    1.2    1.5    2.5  1.0   260
+b.state[10]       4.8  0.7    3.3    4.3    5.0    5.3    6.3  1.0    98
+b.state[11]       4.5  0.7    3.1    4.1    4.4    5.0    6.0  1.1    44
+b.state[12]       4.0  0.7    2.6    3.6    3.9    4.4    5.4  1.1    44
+b.state[13]       5.0  0.9    3.3    4.5    4.9    5.5    6.6  1.1    54
+b.state[14]       4.1  0.7    2.7    3.7    4.1    4.6    5.5  1.1    59
+b.state[15]       4.6  0.8    3.1    4.1    4.5    5.1    6.1  1.1    42
+b.state[16]       4.0  0.7    2.6    3.5    4.0    4.4    5.4  1.0    72
+b.state[17]       4.8  0.8    3.2    4.3    4.7    5.3    6.4  1.1    43
+b.state[18]       4.5  0.7    3.1    4.1    4.4    5.0    6.0  1.1    50
+b.state[19]       4.8  0.7    3.3    4.4    4.8    5.3    6.3  1.0    63
+b.state[20]       4.2  0.8    2.7    3.8    4.1    4.7    5.7  1.1    47
+b.state[21]       3.8  0.7    2.4    3.3    3.8    4.2    5.2  1.1    57
+b.state[22]       3.8  0.7    2.4    3.3    3.7    4.2    5.1  1.1    51
+b.state[23]       4.2  0.7    2.8    3.8    4.2    4.7    5.7  1.1    53
+b.state[24]       3.9  0.7    2.4    3.4    3.9    4.3    5.3  1.1    55
+b.state[25]       5.0  0.8    3.5    4.5    4.8    5.5    6.5  1.1    48
+b.state[26]       4.2  0.7    2.8    3.7    4.1    4.7    5.6  1.1    54
+b.state[27]       4.4  0.8    2.8    3.9    4.3    4.8    5.9  1.1    45
+b.state[28]       5.1  0.8    3.3    4.6    5.1    5.6    6.7  1.1    58
+b.state[29]       4.7  0.8    3.1    4.2    4.6    5.2    6.2  1.1    47
+b.state[30]       4.9  0.9    3.2    4.4    4.8    5.5    6.6  1.1    46
+b.state[31]       4.4  0.8    2.9    3.9    4.4    4.9    5.9  1.1    45
+b.state[32]       4.2  0.7    2.7    3.7    4.1    4.7    5.6  1.1    48
+b.state[33]       4.0  0.7    2.5    3.5    3.9    4.4    5.4  1.1    56
+b.state[34]       4.9  0.7    3.4    4.4    4.8    5.4    6.4  1.1    48
+b.state[35]       4.7  0.8    3.1    4.3    4.7    5.3    6.3  1.1    57
+b.state[36]       4.5  0.7    3.1    4.1    4.4    5.0    6.0  1.1    32
+b.state[37]       5.0  0.8    3.5    4.5    5.0    5.5    6.6  1.0    60
+b.state[38]       4.1  0.7    2.6    3.6    4.0    4.5    5.5  1.1    55
+b.state[39]       4.1  0.7    2.7    3.7    4.1    4.6    5.6  1.1    38
+b.state[40]       3.7  0.7    2.3    3.3    3.6    4.2    5.1  1.1    49
+b.state[41]       4.9  0.7    3.4    4.4    4.8    5.4    6.4  1.1    46
+b.state[42]       4.6  0.8    3.0    4.1    4.6    5.1    6.1  1.1    57
+b.state[43]       4.9  0.7    3.4    4.4    4.8    5.4    6.4  1.1    34
+b.state[44]       4.8  0.7    3.3    4.3    4.9    5.2    6.2  1.0    72
+b.state[45]       5.4  0.9    3.7    4.9    5.3    6.1    7.3  1.1    35
+b.state[46]       4.4  0.8    2.8    3.9    4.3    4.9    5.9  1.1    44
+b.state[47]       5.1  0.8    3.6    4.6    5.0    5.6    6.6  1.1    51
+b.state[48]       4.3  0.7    2.9    3.8    4.2    4.8    5.7  1.1    40
+b.state[49]       4.0  0.7    2.6    3.5    3.9    4.5    5.4  1.1    34
+b.state[50]       4.1  0.7    2.7    3.6    4.1    4.5    5.5  1.1    59
+b.state[51]       4.9  0.8    3.2    4.4    4.8    5.5    6.5  1.1    42
+b.v.prev          7.8  1.3    5.3    7.0    7.7    8.6   10.3  1.1    56
+deviance       2607.9 11.2 2587.8 2599.3 2607.8 2615.9 2629.0  1.1    40
+sigma.age         0.2  0.3    0.0    0.1    0.1    0.3    1.1  1.0   450
+sigma.age.edu     0.1  0.1    0.0    0.1    0.1    0.2    0.4  1.0  1500
+sigma.edu         0.3  0.3    0.0    0.1    0.2    0.4    1.2  1.0  1500
+sigma.region      0.4  0.4    0.1    0.2    0.3    0.5    1.6  1.0  1500
+sigma.state       0.2  0.1    0.0    0.1    0.2    0.3    0.4  1.5    10
+
+For each parameter, n.eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+
+DIC info (using the rule, pD = var(deviance)/2)
+pD = 59.5 and DIC = 2667.4
+DIC is an estimate of expected predictive error (lower deviance is better).
+> 
+> 
+
+Compilation finished at Fri Nov  5 19:28:23

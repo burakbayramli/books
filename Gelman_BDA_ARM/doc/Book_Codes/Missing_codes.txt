@@ -1,0 +1,194 @@
+## Chapter 2
+
+- Section 2.4: could not do figures 2.4-2.6, because the file "nypdstops2.csv" for the police stop example is not on the website
+- Section 2.6: missing graphs for this section
+
+
+## Chapter 4
+
+- Section 4.3: plot 4.2
+- Section 4.4: Log-base-10 model on page 61: the outputs are a bit different (slightly different sample size: 1187 from book,
+               while I have 1192 as in the other regressions)
+- Section 4.5: no data for figure 4.5
+- Section 4.7 graph: I fixed the typos in the code and it seems to work (just could't get the axis scale to be the same)
+
+## Chapter 5
+
+- do you want to include code for plots like 5.2, 5.3, 5.5, 5.6?
+
+## Chapter 6
+
+- Section 6.2: data is not on the website (missing nypdstops2.csv file); besides that, all is typed in, except graph
+               commands, just need to check if all works once the data is in.
+- Section 6.5: Storable votes example: cannot figure out what was done with the data from what is available on the website;
+               besides that, all is typed in, except graph commands, just need to check if all works once the data is in
+               Missing figures 6.3, 6.4, 6.5
+- Section 6.7: slightly different intercepts in the regressionn (pg. 126); 
+               fit1.a: book n=1374, mine n=1379
+               fit1.b: book n=1187, mine n=1192 
+- Section 6.8: figure 6.6, 6.7
+
+## Chapter 7
+
+- Section 7.3: - maybe put all ".asc" files into one zip file so it is easier to download?
+               - Check the code for "predictive sim. for a nonlinear...", since I've changed it because of NaN on y.tilde
+               - "Implementation using functions" doesn't work
+
+- Section 7.4: from "Compund models" onwards (page 150-151), doesn't seem to work well because cannot replicate
+               the graphs
+
+## Chapter 8
+
+- Section 8.2: data is not on the website (final exam scores from midterm); besides that, all is typed in, just need to check
+               if all works once the data is in.
+- Section 8.3: for the roach example, the variables in the data file all have 282 obs (vs. 284 in the book), except
+               for the exposure2 variable, which has 284, so the model does't run.
+
+## Chapter 9
+
+- Section 9.5: Graphs 9.10-9.11
+
+## Chapter 10
+
+- Section 10.1: Graphs 10.3-10.5: (birth weight) data not on website
+- Section 10.3: (birth weight) data is not on the website; besides that, all is typed in, except graph
+                commands, just need to check if all works once the data is in.
+- Section 10.4: ideology data is not on the website (?); besides that, all is typed in, except graph
+                commands, just need to check if all works once the data is in.
+
+## Chapter 11
+
+- Section 11.3: could not figure out which data to use from the files on the website; besides that, all is typed in, 
+                except graph commands, just need to check if all works once the data is in.
+
+## Chapter 12
+
+- Section 12.2: plot figure 12.1 looks a bit different
+- Section 12.6: the y-axis range of plot on Figure 12.6 does not match that on the book
+- Section 12.8: could not identify the election data being used with the setup file (besides that, all is typed in,
+                just need to check if all works once the data is in)
+
+## Chapter 13
+
+- Section 13.1: plots 13.1 & 13.2(a) looks very similar but not identical to the one in the book
+- Section 13.4: figure 13.3 (sim fcn doesn't run, but BUGS version does); 
+                figures 13.4 and 13.7 look different from the book 
+
+- Section 13.5: figure 13.10 earnings example (check lmer specification because some numbers don't match those
+                described in the book; also, BUGS code for the graph doesn't run
+                figure 13.12: couldn't find latin square data
+
+
+## Chapter 14
+
+- Section 14.1: Figure 14.1: in the code you sent me, the model called to plot this is "all.3.sim", which is not in the code nor in the
+                book (or website). From the text I suppose it should be from "M2.bugs" in the code for this section. The intervals in
+                the figure look wider than those in the book.
+                Figure 14.2: the figures I've done look a bit different from the ones in the book. In the book you say you
+                use M3.bugs, but from the codes available, it looks like M2.bugs, which is the one I've used; also, the Bugs
+                code for M3 on the website does not run.
+                Figure 14.3: in the code you sent me, again it makes use of "all.3.sim". The estimates and 50% interval looks similar but the
+                black line doesn't (also, on the code you use g.state, etc, which I suppose are the a.state etc on M2.bugs code)
+                Figure 14.5 and 14.6: in the code you sent me, you call a model "all.est", which I suppose is the lmer model on page 303?? "demographics.weighted"
+                and "raw.weighted", are the complete and no pooling models?
+
+- Section 14.2: Figure 14.7-14.12
+
+- Section 14.3: Figure 14.14
+
+
+## Chapter 15 (there are no R codes in this chapter, just plots from commented models)
+
+- Section 15.1: cannot estimate the police stops model because the data file "nypdstops2.csv" is not on the website
+- Section 15.2: cannot figure out what was done with the data from what is available on the website (storable votes data)
+- Section 15.3: cannot estimate the police stops model because the "social networks" data file is not on the website
+
+
+## Chapter 16
+
+- Section 16.4: figure 16.3
+- Section 16.6: don't forget to change the y.squiggle for y.tilde in the radon.2a.bug file. 
+                I added some things to the R code so that the Bugs code would run: defined u, becaused it was part of the model
+                in the radon.2a.bug file; redefined "radon.inits" to include g.0 & g.1 (that were also in the Bugs code);
+                for the "Prediction using R part, I also modified "radon.parameters" to include g.0 & g.1 in order for
+                a.tilde & y.tilde to work, so that need to be checked (but it looks fine).
+
+## Chapter 17
+
+- Section 17.2: check to see if the Bugs code for the scaled inverse-Wishart model is specified correctly
+                check to see if the Bugs code for the multiple group-level predictors model is specified correctly
+                the Bugs code for the model "simplest varying intercept, varying slope" with uranium as a group level predictor
+                works (wich is the radon.4a.bug file, also in the 17.2_Bugs_codes.bug file). Ckeck the others? If so, I need to 
+                construct the matrices X and U, and now some variables that would be in there.
+ 
+- Section 17.3: created an R file to run the flight simulator example Bugs code (seems to run properly)
+- Section 17.4: created an R file to run the election example Bugs code (seems to run properly)
+- Section 17.5: Bugs code is typed in but cannot run it because the data file "nypdstops2.csv" is not on the website
+- Section 17.6: Bugs code is typed in but cannot run it because the storable votes data file is not on the website
+                typo?: shouldn't it be "big Z" and not "little z" on line 10 of the Bugs code on page 383?
+- Section 17.7: check to see if the Bugs codes for this  section are specified correctly
+
+
+## Chapter 18
+
+- Section 18.2: figures 18.1-18.3
+- Section 18.3: figures 18.5-18.6 - check if code is correct (they look similar to the ones in the book)
+- Section 18.4: figures 18.7
+- Section 18.6: figures 18.9
+- Section 18.7: data file for social networks is not on the website, so cannot run the code for this section (but all is typed in)
+             
+
+## Chapter 19
+
+- Section 19.4: figure 19.2 looks a bit different (it might be because the codes call the parameters "mu.adj" and "eta.adj", and 
+                in the figure of the book it seems to be from the model without the redundant parametrization, since the plot there 
+                displays "mu" and "eta") ; did R code to run the flight simulator & the election example
+- Section 19.5: is there a typo in the item response theory Bugs code (pg 426)?: in the for loop for k in 1:K (line 16), "b.hat.raw"
+                and "d.raw" are indexed by j. Shouldn't it be k?
+                created an R file to run the Bugs code for one of the examples in the section (the flight simulator example; seems to
+                run properly)                               
+- Section 19.6: graphs (figures 19.3 & 19.4)
+
+
+## Chapter 20
+
+- Section 20.1: plots 20.1 & 20.2
+- Section 20.4: plots 20.4
+- Section 20.5: plots 20.5 c and d (check a and b) & 20.6
+
+## Chapter 21
+
+- Section 21.2: figure 21.1
+                Bugs code page 460: is there a typo on line3: should it be u[j] instead of u[2]?
+- Section 21.3: missing "Advanced Placement" data to run Bugs code pg. 464
+                figure 21.2 & 21.3
+- Section 21.4: figure 21.4, 21.5, 21.6 & 21.7
+- Section 21.6: created an R file to run the Bugs code (seems to run properly?) ; missing figure 21.8
+- Section 21.8: Bugs code typed in, but did not run it (did not find the electromagnetic example data)
+                figures 21.10 & 21.11
+
+## Chapter 22
+
+- Section 22.3: the data for figure 22.2 is not on the website; cannot do figure 22.3-22.8 (22.7-22.8 also, the latin square data
+                is not on the website). If I have one file with how to do this anova plots, I can try to do the others
+- Section 22.4: created an R file to run the Bugs code of the examples in the section 
+
+## Chapter 23
+
+- Section 23.1: created an R file to run the Bugs code of the examples in the section ; 
+                check if R file for the electric company Bugs code example is correct (figures 23.1 & 23.2 look fine)
+- Section 23.2: data for figure 23.3 not on the website
+- Section 23.3: Bugs code typed in, but Progresa data not on the website
+- Section 23.4: created an R file to run the Bugs code of the sesame street example (pg. 510)
+                missing Figure 23.4
+
+
+## Chapter 24
+
+- Section 24.2: Bugs code for the dogs example doesn't run (I think I imported the data correctly). So I could't chek it (or
+                the R codes)
+                Figure 24.2, 24.3, 24.4
+
+## Chapter 25
+
+- Section 25.6: figure 25.3

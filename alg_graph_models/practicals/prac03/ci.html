@@ -1,0 +1,57 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>Conditional independence</title>
+  </head>
+<body>
+
+    <ol>
+      <li>
+	The smallest ancestral graph including C, F and D also
+	includes A and B, ie it's like NET1 with E (and all arrows
+	going to E) deleted. No parents need to be married to make the
+	moral graph, so we just drop directions to get the interaction
+	graph. There is no path from F to any variable, so it's
+	indpendent of anything conditional on anything. So clearly
+	it's independent of C conditional on D.
+      </li>
+      <li>
+      The smallest ancestral graph including C, F, D and E is the
+	whole of NET1. Moralising add links between the 3 parents of E
+	(namely B, D and F). This gives us a path C-B-F. This path
+	contains neither D nor E, so we conclude that C is NOT
+	independent of F given D <em>and</em> E.
+      </li>
+      <li>
+	This is a bit of a plod. For each pair, find the smallest
+	ancestral graph containing that pair. Moralise this ancestral
+	graph, and see if you can find <em>any</em> path between the
+	pair. If there is none then they are independent, otherwise,
+	in general, they won't be. Since A is an ancestor of B, C, D
+	and E, it's clear that the smallest ancestral graph for any
+	pair of these will include A, and thus even without adding any
+	lines due to moralisation there will be a path between the
+	pair. So each such pair is not independent. E and F are not
+	independent clearly. Finally, consider the pairs AF, BF, CD,
+	DF. In each case the smallest ancestral graph does not include
+	E, hence F gets disconnected, so it's independent of all of A,
+	B, C and D.
+      </li> 
+      <li>
+	Just form smallest ancestral graphs, moralise them and check
+	to see if there is a path avioding B. You will find that AF,
+	AC, CD, CE, CF, DF are all the pairs of independent variables.
+      </li>
+      <li>
+	A and F are not independent given E. Since E is involved the
+	smallest ancestral graph is like NET1 but with C
+	gone. Moralisation makes links between the parents of E. So in
+	the interaction graph, we have the path A-D-F showing that we
+	cannot conclude that A and F are independent given E.
+      </li>
+    </ol>
+
+</body>

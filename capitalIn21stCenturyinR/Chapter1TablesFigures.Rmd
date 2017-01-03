@@ -1,0 +1,81 @@
+```{r }
+library(ggplot2)
+library(xlsx)
+library(reshape2)
+library(stringr)
+library(plyr)
+library(scales)
+make_df = function(t1){
+  colnames(t1)[1] = "year"
+  t1$World.output = NULL
+  t2 = t1
+  t2$America = t2$America + t2$Europe
+  t2$Africa = t2$America + t2$Africa
+  t2$Asia = t2$Africa + t2$Asia
+  t2$Lower = 0
+  t2 = t2[t2$year > 1500, ]
+  
+  countries = c("Europe", "America", "Africa", "Asia")
+  df = cbind(t2[, c("year")], 0, t2[, "Europe"])
+  df = rbind(df, cbind(t2[, c("year")], t2[, "Europe"], t2[, "America"]))
+  df = rbind(df, cbind(t2[, c("year")], t2[, "America"], t2[, "Africa"]))
+  df = rbind(df, cbind(t2[, c("year")], t2[, "Africa"], t2[, "Asia"]))
+  df = data.frame(df)
+  colnames(df) = c("year", "ymin","ymax")
+  df$Country = rep(countries, 
+                   each=nrow(t2))
+  df$Country = factor(df$Country, levels= countries)
+  return(df)
+}
+```
+
+
+# This code remakes Figure FI.1. 
+
+```{r,dependson="loadCh0",fig.height=4,fig.width=8}
+t1 = read.xlsx("./Piketty2014FiguresTables/Chapter1TablesFigures.xlsx",
+               sheetName="TS1.1a",
+               rowIndex=7:18,colIndex=1:6,header=TRUE)
+df = make_df(t1)
+
+qplot(year,ymin=ymin, ymax= ymax, data=df,geom=c("ribbon"), 
+      fill=Country,
+      xlab="Year", main="Distribution of world output 1700-2012") + scale_fill_manual(values = c("black", "grey80", "white", "grey60")) + theme_bw() + scale_y_continuous(labels = percent)
+```
+
+
+
+```{r,dependson="loadCh0",fig.height=4,fig.width=8}
+t1 = read.xlsx("./Piketty2014FiguresTables/Chapter1TablesFigures.xlsx",
+               sheetName="TS1.2",
+               rowIndex=7:18,colIndex=1:6,header=TRUE)
+df = make_df(t1)
+
+qplot(year,ymin=ymin, ymax= ymax, data=df,geom=c("ribbon"), 
+      fill=Country,
+      xlab="Year",ylab= "Percent", main="Distribution of world population 1700-2012")  + scale_fill_manual(values = c("black", "grey80", "white", "grey60")) +theme_bw() + scale_y_continuous(labels = percent)
+```
+
+
+```{r,dependson="loadCh0",fig.height=4,fig.width=8}
+t1 = read.xlsx("./Piketty2014FiguresTables/Chapter1TablesFigures.xlsx",
+               sheetName="TS1.3",
+               rowIndex=7:18,colIndex=1:8,header=TRUE)
+colnames(t1)[1] = "year"
+t1 = t1[, c("year", "Per.capita.output", "Europe...America", "Asia...Africa")]
+colnames(t1) = c("year", "World", "Europe-America", "Asia-Africa")
+t1 = melt(t1, id.vars="year")
+labs = sort(unique(t1$year))
+t1$year = as.numeric(factor(t1$year, levels = labs))
+
+qplot(year, y= value, data=t1,  xlab="Year",ylab= "Percent", main=c("Global inequality 0-2012: \ndivergence then convergence?")) + 
+  geom_point(aes(shape=variable, colour= variable), size=4) + 
+  geom_line(aes(linetype = variable))  + 
+  scale_y_continuous(labels = percent)+ 
+  scale_fill_manual(values = c("black", "grey80", "white", "grey60")) +
+  scale_linetype_manual(values=c("solid", "solid", "solid")) + 
+  scale_x_continuous(labels= labs, breaks = 1:max(t1$year)) + 
+  scale_shape_manual(values=c(15, 2, 1)) + 
+  scale_colour_manual(values=c("black", "black", "black")) 
+  
+```

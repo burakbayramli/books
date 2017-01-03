@@ -1,0 +1,367 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-12}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\jt}{\ensuremath{{\cal T}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Rejection and importance sampling}}\vfill
+
+\begin{verbatim}
+$Date: 2007/11/19 11:31:20 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+  \begin{itemize}
+  \item Sampling
+    \begin{itemize}
+    \item Forward
+    \item Rejection
+    \item Importance
+    \end{itemize}
+  \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{What's wrong with computing probabilities exactly}
+  
+  \begin{itemize}
+  \item Recall that probability propagation in a join tree is
+    exponential in the size of the biggest clique.
+  \item Sometimes this is just too long to wait.
+  \item We can use \emph{sampling} algorithms to compute probabilities
+    (and more generally \emph{expectations}) approximately.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Approximating expectations by sampling}
+  
+  Approximate 
+  \[
+  \mathbf{E}_{P}(f) = \sum_{\mathbf{x}}
+  P(\mathbf{x})f(\mathbf{x})
+  \]
+  by
+  \[
+  \hat{\mathbf{E}}_{P}(f) = \frac{1}{M}\sum_{m=1}^{M}
+  f(\mathbf{x}_{m})
+  \]
+  where the $\mathbf{x}_m$ are joint instantiations \emph{sampled}
+  from $P$.
+
+  If $f$ is the indicator function for an event, then
+  $\mathbf{E}_{P}(f) = P(\mathrm{event})$.
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sampling: what it is}
+  
+  \begin{itemize}
+  \item Consider a random variable $Lecture$ with 3 values $good, bad,
+    soso$ with probabilities $0.7,0.1$ and $0.2$ respectively.
+  \item A sampler for this distribution is a (randomised) algorithm
+    which outputs $good$ with probability 0.7, $bad$ with probability
+    0.1 and $soso$ with probability 0.2.
+  \item In we draw a large number of samples from this sampler, then
+    with high probability the relative frequency of $good$s will be
+    close to 0.7
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sampling: how to do it}
+
+  \begin{itemize}
+  \item Suppose we have a `random number' generator which outputs
+    numbers in $[0,1)$ according to a uniform distribution over that
+    interval \dots
+  \item \dots then we can sample a value for $Lecture$ by seeing which
+    of these intervals the random number falls in: $[0,0.7),
+    [0.7,0.8)$ or $[0.8,1)$
+  \item In Python the \texttt{random} function in the module
+    \texttt{random} does this.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Randomness and pseudo-randomness}
+  
+\begin{verbatim}
+>> import random
+>>> random.seed(0.2)
+>>> random.random()
+0.39069412806005199
+>>> random.random()
+0.22251136096622171
+>>> random.seed(0.2)
+>>> random.random()
+0.39069412806005199 #hmm, same 'random' number as earlier
+\end{verbatim}
+
+If you don't supply a random seed, Python uses the time of day. Random
+seeds allow you get the same sequence of random(!) numbers many times over.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sampling: why to do it}
+  
+  \begin{itemize}
+  \item Suppose we wished to work out the mean (average) number of
+    throws needed to finish a ``Snakes and Ladders'' game (with a fair
+    die)
+  \item We can, in principle, compute this number---but this would be
+    an unpleasant (and long) task
+  \item Instead we can write a sampler to simulate playing the game
+    (say 500 times); add up the total number of throws for all 500
+    games; divide by 500, and use this as an estimate for the mean.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sampling: for approximate probabilistic inference}
+  
+  \begin{itemize}
+  \item If we can sample from a joint probability distribution then we
+    can use the sample to derive estimates for probabilities which
+    might be too costly to compute exactly.
+  \item Suppose we have a distribution $P$ over variables
+    $X_{1},X_{2},X_{3}$ and we sample $n$ joint instantiations.
+  \item Let $n(X_{1}=x_{1},X_{3}=x_{3})$ be the number of times a
+    joint instantiation with $X_{1}=x_{1},X_{3}=x_{3}$ occurs.
+  \item Then $\hat{P}(X_{1}=x_{1},X_{3}=x_{3}) =
+    (X_{1}=x_{1},X_{3}=x_{3})/n$ is an estimate for
+    $P(X_{1}=x_{1},X_{3}=x_{3})$
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sampling: why it (probably, approximately) works}
+  
+\begin{itemize}
+\item Consider tossing a coin a large number of times, where the
+probability of heads on any toss is $p$. \item
+Let $S_{n}$ be the number of heads that come up after $n$
+tosses. Think of $S_n$ as the number of successes.
+\item The law of large numbers says that the probability that $S_{n}/n$
+differs much from $p$ becomes smaller and smaller as $n$ gets bigger.
+\item In brief, if $\epsilon > 0$, then as $n \rightarrow \infty$
+$
+P\left(\left|\frac{S_{n}}{n} - p\right| < \epsilon \right)
+\rightarrow 1
+$
+\end{itemize}
+\end{titledslide}
+\begin{titledslide}{Simulating coin tosses}
+
+Here's a graph of $S_{n}/n$ against $n$ for three different sequences
+of simulated coin tosses, each of length 200.
+
+Remember that $p=0.5$
+
+\includegraphics[height=0.5\textheight,width=\textwidth]{coin.pdf}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A biassed coin}
+
+I changed $p$ to 0.8 and repeated:
+
+\includegraphics[height=0.6\textheight,width=\textwidth]{bias.pdf}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Sampling from a 2-variable distribution}
+  
+  \begin{itemize}
+  \item Suppose we have the BN $P(A,B) = P(A)P(B|A)$ where both
+    variables are binary.
+  \item To sample from  $P(A,B)$ we first sample from $P(A)$. Suppose
+    we get $A=0$.
+  \item In this case, we then sample from $P(B|A=0)$.
+  \item If we had sampled $A=1$ then in the second step we sample from
+    $P(B|A=1)$.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Forward sampling in Bayesian nets}
+
+  \begin{itemize}
+  \item In a BN (1) we can order parents before
+    children (topological order) and (2) we have CPTs available.
+  \item \emph{If no variables are instantiated} this allows a simple
+    algorithm: \emph{forward sampling}.
+  \item Just sample variables in some fixed topological order, using
+    the previously sampled values of the parents to select the correct
+    distribution to sample from.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Forward sampling in gPy}
+  
+\begin{verbatim}
+def sample(self):
+ inst = self._instskel[:]   # make a list of Nones
+ for i in self._indextuple: # variables in a top. order
+
+  # yank out the parent instantiation ...
+  parent_inst = tuple([inst[j] for j in self._indices[i]])
+
+  # yank out the cond. distn. for variable i ...
+  i_dist = self._dists[i][parent_inst]
+
+  inst[i] = i_dist.sample() # sample a value for variable i
+ return inst
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Using samples}
+  
+Cue \verb+forward_sample_demo+ from \texttt{gPy.Examples}
+
+  \begin{itemize}
+  \item If we keep the entire sample we don't need to decide ahead of
+    time what we want to estimate.
+  \item For example, we can compute conditional probabilities by throwing away
+    instantiations which don't meet the condition.
+  \item Alternatively, we can \emph{reject} such instantiations as
+    soon as we know they don't meet the condition.
+  \end{itemize}
+
+Cue \verb+rejection_sample_demo+ from \texttt{gPy.Examples}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The problem with rejection sampling}
+  
+  \begin{itemize}
+  \item Rejection sampling is inefficient since many samples are
+    thrown away.
+  \item This is particularly so if the `evidence' (the condition) is improbable.
+  \item If the evidence is `near the bottom' of the BN lots of work is
+    done before a sample is rejected.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Alternatives to rejection sampling}
+  
+  \begin{enumerate}
+  \item Construct a new BN which represents the conditional distribution
+    and just use forward sampling (particularly easy if instantiated
+    variables have no parents).
+  \item Importance sampling
+  \item Gibbs sampling
+  \end{enumerate}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{(Unnormalised) Importance sampling}
+
+  Basic idea: If a distribution $P$ is difficult to sample from,
+  sample from a \emph{different} distribution $Q$ and \emph{weight}
+  each sample $\mathbf{x}_m$ by $w(\mathbf{x}_m) =
+  P(\mathbf{x}_{m})/Q(\mathbf{x}_{m})$ to compensate.
+
+  Estimate $\mathbf{E}_{P}(f)$ by $\frac{1}{M}\sum_{m=1}^{M}
+  f(\mathbf{x}_{m})w(\mathbf{x}_{m})$ where the $\mathbf{x}_m$ are
+  sampled from $Q$.
+
+  It works because $
+\mathbf{E}_{P}(f) =   \mathbf{E}_{Q}\left(f\frac{P}{Q}\right)
+$
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Normalised importance sampling}
+  
+  \begin{itemize}
+  \item Unnormalised importance sampling assumes that $P$, the
+    distribution from which we wish to sample, is known.
+  \item Often we just have $P'(\mathbf{x}) = \alpha P(\mathbf{x})$
+    where $\alpha$ is some unknown normalisation constant.
+  \item So can only compute weights $w(\mathbf{x}_m) =
+  P'(\mathbf{x}_{m})/Q(\mathbf{x}_{m})$
+  \end{itemize}
+
+  Estimate $\mathbf{E}_{P}(f)$ by 
+\[\frac{\sum_{m=1}^{M} f(\mathbf{x}_{m})w(\mathbf{x}_{m})}
+{\sum_{m=1}^{M} w(\mathbf{x}_{m})}
+\] where the $\mathbf{x}_m$ are
+  sampled from $Q$.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Likelihood weighting}
+  
+  \begin{itemize}
+  \item Alter forward sampling so that instead of sampling values for
+    instantiated variables (and just hoping the sampled value matches
+    the given one) we \emph{set} the value to the given value.
+  \item The less likely the sampled value would be the set value, the
+    more we have `cheated'.
+  \item Suppose $X$ is set to $x$, then reduce the \emph{weight} of
+    the sample by $P(X=x|Pa(X)=pax)$ where $pax$ is the already
+    sampled value of the parents of $X$.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Likelihood weighting in gPy}
+  
+\begin{verbatim}
+def importance_sample(self):
+  inst = self._instskel[:]
+  weight = 1
+  for i, i_evidence in enumerate(self._cond_index):
+    parent_inst = tuple([inst[j] for j in self._indices[i]]) 
+    if i_evidence is None:
+      inst[i] = self._dists[i][parent_inst].sample()
+    else:
+      inst[i] = i_evidence
+      weight *= self._cpts[i][parent_inst][i_evidence]
+  return inst, weight
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Likelihood weighting is importance sampling}
+  
+  \begin{itemize}
+  \item The \emph{proposal distribution} $Q$ is defined by this BN:
+    \begin{enumerate}
+    \item If $X=x$ in the evidence, make $X$ an orphan and set
+      $Q(X=x)=1$ in its CPT.
+    \item Leave non-evidence variables untouched.
+    \end{enumerate}
+  \item The sampling in the likelihood weighting sampler is then just
+    forward sampling from this \emph{mutilated} BN.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

@@ -1,0 +1,919 @@
+%\documentclass[a4paper,10pt]{article}
+\documentclass{article}
+\usepackage{epsfig,relsize,moreverb,fancyvrb,A4}
+%\addtolength{\textwidth}{1cm}
+
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\beqa}{\begin{eqnarray}}
+\newcommand{\eeqa}{\end{eqnarray}}
+\newcommand{\beqan}{\begin{eqnarray*}}
+\newcommand{\eeqan}{\end{eqnarray*}}
+%
+\newcommand{\ben}{\begin{enumerate}}
+\newcommand{\een}{\end{enumerate}}
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+
+\newcommand{\bfx}{\mathbfx{x}}
+
+\newcommand{\defbox}[1]{
+  \begin{center}
+    \fbox{\parbox{0.9\textwidth}{
+      \begin{center}
+        \begin{minipage}{0.8\textwidth}
+          #1
+        \end{minipage}
+      \end{center} }
+    }
+  \end{center}
+}
+
+
+\newcommand{\labelP}[1]{\label{##1}}
+\newcommand{\ep}{\thinspace . }
+\newcommand{\refeq}[1]{(\ref{#1})}
+\newcommand{\ec}{, }
+
+\newcommand{\mathbfx}[1]{{\mbox{\boldmath $#1$}}}
+\newcommand{\mathbfxg}[1]{{\mbox{\boldmath $#1$}}}
+
+\newcommand{\n}{\mathbfx{n}}
+
+
+
+\newcommand{\emp}[1]{{\smaller\texttt{#1}}}
+
+\newcommand{\algc}[1]{{\sc\footnotesize #1}}
+% newalg is not used
+\newcommand{\newalg}{
+\usepackage{float}
+% declare algorithm float:
+\floatstyle{boxed}
+\newfloat{algorithm}{thp}{loa}
+\floatname{algorithm}{Algorithm}
+\newcommand{\algor}[2]{\begin{algorithm}\caption{##1}
+\begin{tabbing}
+\hspace*{0.5cm}\= \hspace{0.5cm} \= \hspace{0.5cm} \= \hspace{0.5cm} \= \hspace{0.5cm} \= \hspace{0.5cm} 
+\= \kill ##2 \end{tabbing}\end{algorithm}}
+}
+\newcommand{\oldalg}{
+%\newtheorem{algorithm}[theorem]{Algorithm}{\bfseries}{\rm}
+%\newtheorem{algorithm}[chapter]{Algorithm}{\bfseries}{\rm}
+\newtheorem{algorithm}{Algorithm}{\bfseries}{\rm}
+\newcommand{\algor}[2]{\begin{algorithm} \defbox{ \emph{##1}
+\begin{tabbing}
+\hspace*{0.5cm}\= \hspace{0.5cm} \= \hspace{0.5cm} \= \hspace{0.5cm} \= \hspace{0.5cm}
+\= \kill ##2 \end{tabbing} }\end{algorithm}}
+}
+\oldalg
+
+\begin{document}
+
+\author{Hans Petter Langtangen\thanks{Dept.~of Scientific Computing,
+Simula Research Laboratory, and Dept.~of Informatics, University of Oslo.
+\texttt{hpl@simula.no}.}}
+\title{The 2D Wave Equation}
+\date{\today}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+Simulation of physical phenomena often involves
+numerical solution of partial differential equations (PDEs).
+This is particularly the case in mechanics, geophysics, astrophysics,
+and many engineering disciplines,
+as well as in parts of physics, geology, biology, and finance.
+When discussing high-performance computing aspects of numerical
+solution of PDEs, it is convenient to work with a model problem with
+as simple mathematics and numerics as possible, yet with physical
+and large-scale simulation relevance.
+The 2D or 3D standard, linear wave equation constitute such a problem.
+The wave equation is one of the simplest PDEs in physics from
+a mathematical point of view, and it can be solved by the simplest
+numerical methods for PDEs, namely explicit finite difference schemes.
+Fortunately, the resulting simulation code can (especially with
+a proper choice of boundary conditions) contain important constructions
+for exemplifying basic high-performance computing aspects, e.g.,
+\begin{itemize}
+\item large, nested do-loops
+\item if-tests and function calls inside/outside loops
+\item 5- or 7-point stensils and cache problems
+\end{itemize}
+This note describes in detail the description of an appropriate model
+problem to be used as a main example in a high-performance computing course.
+
+
+\begin{quote}
+{\bf NOTE: You do not need to read or understand the mathematics in
+Section~\ref{math} to carry out the exercises. Hence, you
+can jump directly to Section~\ref{F77impl}, which describes a sample
+code in Fortran 77, and then you can start with the exercises
+in Section~\ref{exer}. If you are an experienced programmer, you will
+understand the basics of the exercises and the code without
+understanding the mathematical details behind the code.}
+\end{quote}
+
+
+\section{Problem description}
+\label{math}
+
+\subsection{The mathematical model}
+Wave propagation is a physical process of fundamental importance; just think
+of water waves, sound waves for oral communication, and 
+electromagnetic waves for transmission of light as well as radio and TV
+programs. The simplest mathematical model for waves consists of a
+partial differential equation, to so-called \emph{wave equation},
+\beq
+{\partial^2u\over\partial t^2} = \nabla\cdot [ \lambda \nabla{u} ]
+\label{Wave3D:eq1} \ep \eeq
+This equation for the unknown function $u$
+can describe, for example, water surface waves, electromagnetic
+waves, earthquake waves, waves on a drum, or sound waves in air.
+When it comes to water and earthquake waves, equation \refeq{Wave3D:eq1}
+is actually an approximation to the real-world physics, valid under
+certain assumptions; the water waves need to be long compared to the depth
+of water. This is satisfied for destructive flood waves generated by
+natural hazards such as avalanches, slides, earthquakes.
+
+Understanding the right-hand side of equation \refeq{Wave3D:eq1}
+requires familiarity with vector calculus. We can write out the term
+$\nabla\cdot [\lambda \nabla{u} ]$ explicitly for a two-dimensional
+application of the wave equation, i.e., when $u$ depends on two
+spatial coordinates, $x$ and $y$:
+\beq
+{\partial^2u\over\partial t^2} = 
+{\partial\over\partial x}\left( \lambda(x,y) {\partial u\over\partial x}\right) +
+{\partial\over\partial y}\left( \lambda(x,y) {\partial u\over\partial y}\right)
+\label{Wave2D:eq1} \ep \eeq
+The parameter $\sqrt{\lambda}$ 
+represents the velocity of the waves and depends in general
+on the properties of the medium in which wave the propagation takes place.
+In the case of water waves, $\lambda (x,y) = gH(x,y)$, where $g$ is the
+acceleration of gravity and $H(x,y)$ is the still-water depth.
+The function $u(x,y,t)$ is the elevation of the surface, and $u=0$ corresponds
+to still water. If $H$ is constant, $\lambda$ is constant and can be moved
+outside the spatial derivative. This results in a simpler equation,
+\beq {\partial^2u\over\partial t^2} = \lambda\left( 
+{\partial^2u\over\partial x^2} + {\partial^2u\over\partial y^2}\right)\ep
+\label{Wave2D:cH}
+\eeq
+The right-hand side is the Laplacian of $u$, often denoted by $\nabla^2 u$.
+Hence, an alternative form of \refeq{Wave2D:cH} is
+\[ {\partial^2u\over\partial t^2} = \lambda\nabla^2 u\ep\]
+Some readers might recall this wave equation from other contexts.
+
+Equation \refeq{Wave2D:eq1} is defined in a \emph{domain} $\Omega$, i.e., a
+two-dimensional area in which we want to simulate the wave propagation.
+This can be a harbor or just a part of a big ocean basin.
+The boundary of the domain is often denoted by $\partial\Omega$.
+
+There are an infinite number of solutions to \ref{Wave2D:eq1} unless we
+specify additional conditions. These conditions consists of 
+\emph{boundary conditions} 
+ and \emph{initial conditions}.
+For the water wave application,
+\beq
+{\partial u\over\partial n}\equiv \nabla u\cdot\mathbfx{n} = 0 
+\label{Wave2D:bc}
+\eeq
+is an appropriate boundary condition 
+that we will make use of.
+The vector $\mathbfx{n}$ is an outward unit normal to the boundary $\partial\Omega$.
+The condition \refeq{Wave2D:bc} is to be applied at every point
+on $\partial\Omega$.
+If the boundary is the line $x=0$, $\mathbfx{n}$ is a unit vector along
+the $x$ axis, and $\partial u /\partial n$ simply becomes $\partial u/
+\partial x$. 
+Physically, equation \refeq{Wave2D:bc} tells that waves are perfectly reflected
+from the boundary, which is relevant if the boundary is, e.g.,
+a coastline with steep hills.
+A simpler boundary condition is 
+\beq
+u = 0 \ep
+\eeq
+Initial conditions specify the shape of $u$ at initial time $t=0$ throughout
+the domain $\Omega$:
+\beq
+u(x,y,0)=I(x,y)\ep
+\eeq
+The physical interpretation of this equation is that 
+the shape of the water surface is described by the function
+$I(x,y)$. In addition to this condition, we need to specify
+the time derivative of $u$ at $t=0$ as well. This time derivative is, from a
+physical point of view, the velocity of the water surface at $t=0$.
+For simplicity, we assume that the surface is at rest (zero velocity):
+\beq
+{\partial\over\partial t} u(x,y,0) =0\ep
+\eeq
+The assumption of zero velocity can easily be relaxed.
+
+The partial differential equations with the boundary and initial conditions
+constitute the complete mathematical model for simulating 
+water waves\footnote{The term ``water waves'' refers in this document
+to water waves where the typical wave length is much greater than the
+water depth. If this assumption is violated, the solution to the
+wave equation will be qualitatively wrong.}.
+In particular, we need to specify the depth function $H(x,y)$ and
+the initial surface shape $I(x,y)$ before the simulation can take place.
+
+\subsection{The numerical method}
+\label{sec2num}
+In the old days, clever mathematicians tried to find solutions to
+equations like \refeq{Wave2D:eq1} by paper and pencil.
+This is an extremely challenging task and in general impossible for a
+depth function $H(x,y)$ taken from a sea map.
+Solution in terms of a computer is, however, quite simple.
+A fairly short program is capable of calculating $u(x,y,t)$ with
+sufficient accuracy in seconds or minutes for any choice of $H(x,y)$ and
+initial shape $I(x,y)$.
+
+The numerical solution method to partial differential equations to be
+used here is based on \emph{finite differences}.
+Finite difference methods are quite easy to explain and program if
+the domain $\Omega$ has a rectangular shape, which we will
+assume in the rest of the document. We write
+\[ \Omega = [x_{\min},x_{\max}]\times [y_{\min},y_{\max}] \ep \]
+The finite difference method is based on some fundamental ideas:
+\begin{enumerate}
+\item The domain $\Omega$ is represented by a \emph{grid}, which is
+a rectangular set of points $(x_i,y_j)$:
+\beq
+x_i = x_{\min} + (i-1)\Delta x,\quad y_j = y_{\min} + (j-1)\Delta y,
+\eeq
+for $i=1,\ldots, n_x$, and $j=1,\ldots,n_y$. The points form a rectangular
+array with equal spacings $\Delta x$ and $\Delta y$ between the points,
+see figure~\ref{gridfig} (in this figure, $\Delta x = \Delta y$ but 
+in general we can have $\Delta x \neq \Delta y$).
+The value of $n_x$ and $n_y$ in figure~\ref{gridfig} is 9 and 6,
+respectively. The size the grid spacings is determined by
+\[ \Delta x = {x_{\max} - x_{\min}\over n_x -1},
+\quad \Delta x = {y_{\max} - y_{\min}\over n_y -1}\ep \]
+
+\item Also in time a grid is introduced:
+\[ t_0=0, \ t_1=\Delta t,\ t_2=2\Delta t,\ t_3=3\Delta t,\ldots\]
+or expressed in terms of an index $\ell$: $t_{\ell}=\ell\Delta t$,
+$\ell = 0,1,\ldots$
+
+\item We compute numerical approximations to $u(x_i,y_j,t_{\ell})$,
+i.e., $u$ at the space-time grid points. The approximations are denoted
+by $u_{i,j}^\ell$.
+
+\item The governing partial differential equation \refeq{Wave2D:eq1}
+is supposed to be satisified at all space-time points $(x_i,y_j,t_\ell)$,
+$i=1,\ldots,n_x$, $j=1,\ldots,n_y$, $\ell =0,1,\ldots$.
+This is an approximation as equation \refeq{Wave2D:eq1} in the
+mathematical model is to be fulfilled at all the inifinte number of points
+in $\Omega$ and for all $t>0$.
+
+\item Derivatives in the partial differential equation is replaced by
+following finite difference approximations:
+\beqa
+{\partial^2\over\partial t^2} u(x_i,y_j,t_\ell) 
+&\approx& { u_{i,j}^{\ell -1} -2u_{i,j}^\ell
++ u_{i,j}^{\ell +1}\over\Delta t},\\
+{\partial\over\partial x}\left( \lambda (x_i,y_j)
+{\partial\over\partial x} u(x_i,y_j,t_\ell)\right) &\approx &
+{1\over\Delta x}\left( 
+\lambda_{i+{1\over2},j}{{u}_{i+1,j}^\ell-{u}_{i,j}^\ell\over\Delta x}
+-
+\lambda_{i-{1\over2},j}{{u}_{i,j}^\ell-{u}_{i-1,j}^\ell\over\Delta x}
+\right) ,\\
+{\partial\over\partial y}\left( \lambda (x_i,y_j)
+{\partial\over\partial y} u(x_i,y_j,t_\ell)\right) &\approx &
+{1\over\Delta y}\left( 
+\lambda_{i,j+{1\over2}}{{u}_{i,j+1}^\ell-{u}_{i,j}^\ell\over\Delta y}
+-
+\lambda_{i,j-{1\over2}}{{u}_{i,j}^\ell-{u}_{i,j-1}^\ell\over\Delta y}
+\right) \ep
+\eeqa
+When $\lambda$ is constant, the formulas simplify to (hopefully) well-known
+formulas for the second derivative:
+\[ {\partial^2\over\partial x^2} u(x_i,y_j,t_\ell) \approx
+{u_{i-1,j}^\ell - 2u_{i,j}^\ell + u_{i+1,j}^\ell\over\Delta x^2}\ep
+\]
+\item At each time level we assume that $u$ from previous time levels
+are already computed, i.e., they are known values.
+\end{enumerate}
+
+\begin{figure}
+\centerline{\protect{\psfig{figure=grid.xfig.eps,width=10cm}}}
+  \caption{Example on a two-dimensional grid suitable for finite difference
+           solution of partial differential equations. \label{gridfig}}
+\end{figure}
+Inserting the finite difference  approximations into the
+wave equation results in what we refer to as the finite difference
+equations or simply the discrete equations.
+We make the important observation that there is only one
+term involving time level $\ell + 1$ in the discrete equations. 
+Since we assume that everything on
+the previous time levels $\ell$ and $\ell -1$ are known, there is actually
+only one unknown value, $u_{i,j}^{\ell +1}$. We can solve the discrete
+equations with respect to this value and get something like
+\[ u_{i,j}^{\ell +1} = \hbox{known terms from previous time levels} \]
+This means, algorithmically, that we can just run through all the grid
+points $i=1,\ldots,n_x$, $j=1,\ldots,n_y$, and compute new approximations
+to $u$ from a simple formula. It is common to classify such methods as
+\emph{explicit} schemes.
+For other partial differential equations and other finite difference
+discretizations, new $u$ values at time level
+$\ell +1$ will in general
+be coupled with each other in a linear system of algebraic
+equations (matrix system). This is referred to as an \emph{implicit}
+scheme.
+
+A notation, which is convenient when translating a computational
+algorithm to program statements in a code, is to set
+\[ 
+u^+_{i,j}\equiv u^{\ell+1}_{i,j},\quad
+u_{i,j}\equiv u^{\ell}_{i,j},\quad u^-_{i,j}\equiv
+u^{\ell-1}_{i,j}\ep\]
+We can now write the discrete equations compactly:
+\beq
+u_{i,j}^+ = 2u_{i,j} - u_{i,j} + [\triangle u]_{i,j}
+\label{Wave2D:fd1}
+\eeq
+where
+\beqa
+[\triangle  u]_{i,j} &\equiv&
+  \left({\Delta t\over\Delta x}\right)^2 
+  (\lambda_{i+{1\over2},j}(u_{i+1,j}-u_{i,j}) - 
+     \lambda_{i-{1\over2},j}(u_{i,j}-u_{i-1,j})) + \nonumber\\ && 
+  \left({\Delta t\over\Delta y}\right)^2 
+  (\lambda_{i,j+{1\over2}}(u_{i,j+1}-u_{i,j}) - 
+     \lambda_{i,j-{1\over2}}(u_{i,j}-u_{i,j-1})) \ep
+\label{Wave3D:eq3}
+\eeqa
+Assuming that $u_{i,j}$ and $u_{i,j}^-$ are known for all $(i,j)$ values
+in the grid, equation \refeq{Wave2D:fd1} gives the new $u$ value at
+time level $\ell +1$ at the grid point with index $i$ and $j$.
+
+The ``geometry'' of \refeq{Wave2D:fd1} is interesting to observe: When
+computing a new $u$ value at a spatial point with index $i$ and $j$,
+we make use of previous $u$ values at this point and the four neighboring
+points (west, east, north, and south). This is illustrated in 
+figure~\ref{grid2fig}.
+\begin{figure}
+\centerline{\protect{\psfig{figure=grid2.xfig.eps,width=10cm}}}
+  \caption{A new $u$ value time level $\ell +1$ depends on
+values at previous time levels $\ell$ and $\ell -1$ at the same point and
+values at time level $\ell$ at the nieghboring points to the
+north, south, east, and west.}
+  \label{grid2fig}
+\end{figure}
+This observation, together with the fact that the order in which we
+visit the spatial indices $i$ and $j$ in \refeq{Wave2D:fd1} is
+irrelevant, forms the basis for constructing an algorithm for wave
+simulation on parallel computers.
+
+There is one immediate basic problem with \refeq{Wave2D:fd1}: If we apply
+it to the first time level, $\ell =1$, it will involve $u^-_{i,j}$, i.e.,
+$u$ values at time level $-1$ ($t=-\Delta t$), which are unknown to us.
+The reason why we run into this problem is that we have not applied the
+initial condition $\partial u/\partial t=0$ at $t=0$. A typical finite
+difference approximation to this condition reads
+\[ {\partial\over\partial t} u(x_i,y_j,0) \approx
+{u_{i,j}^1 - u_{i,j}^{-1}\over 2\Delta t} = 0,
+\]
+which implies
+\[ u_{i,j}^{-1} = u_{i,j}^1 \ep\]
+Hence, we can just substitute $u^-_{i,j}$ by $u^+_{i,j}$ in
+\refeq{Wave2D:fd1} at the first time level.
+Alternatively, we can use \refeq{Wave2D:fd1} as it stands, even for the
+first time level, if we just define $u$ at time level -1 to be
+\[ u^{-1}_{i,j} = u_{i,j} +  {1\over 2}[\triangle  u]_{i,j} \ep \]
+Another problem with \refeq{Wave2D:fd1} is that we have not incorporated
+the boundary values. For simplicity, we assume that $u=0$ on the boundaries.
+We can then just use the zero value when \refeq{Wave2D:fd1} involves
+$u$ at a boundary.
+The complete computational recipe is summarized in
+algorithm \ref{Wave3D:algor1}.
+\clearpage
+
+\algor{Explicit scheme for the two-dimensional 
+wave equation with $u=0$ on the boundary.\label{Wave3D:algor1}}{
+define $u^+_{i,j}$ , $u_{i,j}$ and $u^-_{i,j}$ to represent
+$u^{\ell+1}_{i,j}$, $u^{\ell}_{i,j}$ and $u^{\ell-1}_{i,j}$, resp.\\
+define $[\triangle  u]_{i,j}$ as in \refeq{Wave3D:eq3}\\
+define $(i,j)\in\bar{\cal I}$ to be $i=1,\ldots,n_x$, $j=1,\ldots,n_y$\\
+define $(i,j)\in{\cal I}$ to be $i=2,\ldots,n_x-1$, $j=2,\ldots,n_y-1$\\
+set $u_{i,j}=0,\quad (i,j)\in\bar{\cal I}$\\
+\algc{set the initial conditions:}\\
+$u_{i,j} = I(x_i,y_j), \quad (i,j)\in{\cal I}$\\
+\algc{define the value of the artificial quantity} $u^{-}_{i,j}$:\\
+$ u^-_{i,j} = u_{i,j} +  {1\over 2}[\triangle  u]_{i,j},\quad
+(i,j)\in{\cal I}$\\
+$t=0$\\
+while time $t \leq t_{\rm {stop}}$\\
+\> $t \leftarrow t + \Delta t$\\
+\> \algc{update all inner points:}\\
+\> $u_{i,j}^+ = 2u_{i,j} - u^-_{i,j} + [\triangle  u]_{i,j},\quad
+(i,j)\in{\cal I}$\\
+\> \algc{initialize for next step:}\\
+\> $u^-_{i,j}=u_{i,j},\quad u_{i,j}=u^+_{i,j},\quad (i,j)\in{\cal I}$
+}
+
+Notice that we do not explicitly set $u_{i,j}=0$ at the boundary.
+Instead, we set $u_{i,j}=0$ initially and never touch the boundary values.
+
+We remark that if $\lambda$ is constant and
+$\Delta x = \Delta y = h$,
+the numerical scheme simplifies greatly, and
+the Laplace term $\nabla\cdot [ \lambda\nabla{u} ] = \lambda\nabla^2{u}$
+takes the well-known discrete form \index{five-point Laplace operator}
+\beq 
+[\triangle  u]_{i,j} = \lambda\left({\Delta t\over h}\right)^2\left(
+-{u}_{i-1,j} - {u}_{i,j-1} - {u}_{i+1,j} - {u}_{i,j+1} +
+4{u}_{i,j}\right)
+\ep 
+\label{Heat1Dv:eq9}\eeq
+This formula for approximating $\lambda\nabla^2u$ can be graphically
+exposed as in figure \ref{Wave2D:5ptstar}. 
+\begin{figure}
+\centerline{\protect{\psfig{figure=5pt-star.xfig.eps,width=5cm}}}
+\caption{\label{Wave2D:5ptstar}
+Illustration of the finite difference stencil for
+approximating the Laplace operator $\nabla^2 u$ in a regular grid.}
+\end{figure}
+The circles denote the
+points in the grid that are used in the approximation, and the
+numbers reflect the weight of the point in the finite difference formula.
+One often refers to such a graphical representation as a 
+\index{finite difference!five-point stencil}
+{\em finite difference stencil} or a 
+\index{computational molecule}{\em computational molecule}.
+In the more general case when $\lambda$ is not constant, the
+same stencil arises, except that the weights are different.
+
+Algorithm \ref{Wave3D:algor1} assumes that $u=0$ on the boundary.
+We shall now demonstrate how to implement a more complicated boundary
+condition, $\partial u/\partial n =0$, in the scheme.
+The boundary condition is discretized
+by a centered difference at the boundary. For example,
+at the line $i=1$ we then
+require
+\[ {u_{2,j}^\ell - u_{0,j}^\ell\over\Delta x} =0\quad\Rightarrow 
+\quad u_{0,j}^\ell = u_{2,j}^\ell \ep \]
+Notice that this involves
+a fictitious  value $u_{0,j}^\ell$ outside the grid. Using the discrete 
+finite difference equation \refeq{Wave2D:fd1} at
+the same boundary point, with  $u_{0,j}^\ell = u_{2,j}^\ell$ from the
+boundary condition, enables elimination of the fictitious value.
+The $[\triangle  u]_{i,j}$ operator is then modified to
+\beqa && [\triangle  u]_{1,j: i-1\rightarrow i+1} \equiv
+\left({\Delta t\over\Delta x}\right)^2 
+  (\lambda_{1+{1\over2},j}(u_{2,j}-u_{1,j}) - 
+     \lambda_{1-{1\over2},j}(u_{1,j}-u_{2,j})) + \nonumber\\  &&
+  \left({\Delta t\over\Delta y}\right)^2 
+  (\lambda_{1,j+{1\over2}}(u_{1,j+1}-u_{1,j}) - 
+     \lambda_{1,j-{1\over2}}(u_{1,j}-u_{1,j-1})) ,\ j\neq 1,n_y\ep
+\label{Wave3D:eq4}
+\eeqa
+At the boundary $i=n_x$ we would then
+apply the modification $[\triangle  u]_{n_x,j: i+1\rightarrow i-1}$.
+Similarly, for $j=1$ and $j=n_y$ we replace the original
+$[\triangle  u]_{i,j}$ operator by
+$[\triangle  u]_{i,1: j-1\rightarrow j+1}$ and
+$[\triangle  u]_{i,n_y: j+1\rightarrow j-1}$, respectively.
+The corner points of the grid require modification of both indices, for
+example, the $i=j=1$ point leads to
+$[\triangle  u]_{1,1: i-1\rightarrow i+1,j-1\rightarrow j+1}$.
+
+
+Algorithm~\ref{Wave3D:algor2} precisely explains 
+the updating of internal and boundary points in terms of a function
+$\mbox{WAVE}(u^+,u,u^-,a,b,c)$. As a special case, the call
+$\mbox{WAVE}(u^+,u,u^-,1,1,1)$ reproduces the original finite difference
+scheme with modifications due to homogeneous Neumann conditions
+$\partial u /\partial n = 0$.
+
+\algor{Basic finite difference updating formula for the two-dimensional wave equation
+with ${\partial u\over\partial n}=0$ on the boundary.\label{Wave3D:algor2}}{
+define $[\triangle  u]_{i,j}$ as in \refeq{Wave3D:eq3}\\
+define $[\triangle  u]_{1,j: i-1\rightarrow i+1}$,
+$[\triangle  u]_{n_x,j: i+1\rightarrow i-1}$, 
+$[\triangle  u]_{i,1: j-1\rightarrow j+1}$, \\
+\> and
+$[\triangle  u]_{i,n_y: j+1\rightarrow j-1}$ according to \refeq{Wave3D:eq4}\\
+define $(i,j)\in{\cal I}$ to be $i=2,\ldots,n_x-1$, $j=2,\ldots,n_y-1$\\
+define $u^+_{i,j}$ , $u_{i,j}$ and $u^-_{i,j}$ to represent
+$u^{\ell+1}_{i,j}$, $u^{\ell}_{i,j}$ and $u^{\ell-1}_{i,j}$, resp.\\
+function $\mbox{WAVE}(u^+,u,u^-,a,b,c)$:\\
+\>\algc{update all inner points:}\\
+\>  $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j},\quad
+(i,j)\in{\cal I}$\\
+\> \algc{update boundary points:}\\
+\> $i=1$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: i-1\rightarrow i+1},\ j=2,\ldots,n_y-1$\\
+\> $i=n_x$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: i+1\rightarrow i-1},\ j=2,\ldots,n_y-1$\\
+\> $j=1$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: j-1\rightarrow j+1},\ i=2,\ldots,n_x-1$\\
+\> $j=n_y$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: j-1\rightarrow j+1},\ i=2,\ldots,n_x-1$\\
+\> \algc{update corner points on the boundary:}\\
+\> $i=1$, $j=1$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: i-1\rightarrow i+1, j-1\rightarrow j+1}$\\
+\> $i=n_x$, $j=1$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: i+1\rightarrow i-1, j-1\rightarrow j+1}$\\
+\> $i=1$, $j=n_y$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: i-1\rightarrow i+1, j+1\rightarrow j-1}$\\
+\> $i=n_x$, $j=n_y$;
+ $u_{i,j}^+ = 2au_{i,j} - bu^-_{i,j} + c[\triangle  u]_{i,j: i+1\rightarrow i-1, j+1\rightarrow j-1}$
+}
+
+Using the WAVE function from Algorithm~\ref{Wave3D:algor3}, we can
+devise a compact description of all the computational tasks for the
+discrete two-dimensional wave equation with homogenous Neumann conditions. The
+steps are listed in Algorithm~\ref{Wave3D:algor3}.
+\clearpage
+
+\algor{Complete scheme for the two-dimensional wave equation with ${\partial u\over\partial n}=0$ on the boundary.\label{Wave3D:algor3}}{
+define quantities in Algorithm~\ref{Wave3D:algor2}\\
+define $(i,j)\in\bar{\cal I}$ to be $i=1,\ldots,n_x$, $j=1,\ldots,n_y$\\
+set $u_{i,j}=0,\quad (i,j)\in\bar{\cal I}$\\
+\algc{set the initial conditions:}\\
+$u_{i,j} = I(x_i,y_j), \quad (i,j)\in{\cal I}$\\
+\algc{define the value of the artificial quantity} $u^{-}_{i,j}$:\\
+$\mbox{WAVE}(u^-,u,u^-,0.5,0,0.5)$\\
+$t=0$\\
+while time $t \leq t_{\rm {stop}}$\\
+\> $t \leftarrow t + \Delta t$\\
+\> \algc{update all points:}\\
+\> $\mbox{WAVE}(u^+,u,u^-,1,1,1)$\\
+\> \algc{initialize for next step:}\\
+\> $u^-_{i,j}=u_{i,j},\quad u_{i,j}=u^+_{i,j},\quad (i,j)\in{\cal I}$
+}
+
+At this point a newcomer to partial differential equations and finite
+difference schmes might be overwhelmed and confused by all the
+indices and book-keeping in these algorithms.
+Surely, the amount of details is significant, and hands-on work with
+the formulas, either with pencil and paper or in a computer code, is
+necessary to become familiar with the ideas and the notation.
+We should, however, point out that the underlying ideas are quite simple;
+the whole business here is mostly a matter of becoming familiar with
+the index notation. A very good exercise for repeating the material and
+working towards a better understanding is to devise an algorithm for
+the case where $u=0$ at the whole boundary, except the line
+$x=x_{\max}$. Readers who are experienced with finite difference schemes
+will do this in a minute, while newcomers need to carefully go through
+the previous pages and find the right elements that are needed in
+the algorithm for this slightly perturbed problem.
+
+\subsection{Implementation of the algorithm}
+\label{sec2impl}
+The basic operations in algorithm~\ref{Wave3D:algor3} consist of
+running through all grid points,
+\[ i=1,\ldots,n_x,\quad j=1,\ldots,n_y\]
+and computing some formula at each grid point. The formula typically involves
+$u^+_{i,j}$, $u_{i,j}$, and $u^-_{i,j}$ values.
+If we store the latter quantities in three two-dimensional arrays, 
+where $i$ and $j$ become indices in the array,
+the basic operation
+consists of two nested loops and manipulation on the arrays inside
+the loop. This type of operation can be programmed in almost any
+computer language, since two-dimensional arrays are data structures
+found in most languages.
+
+\section{Implementation in Fortran 77}
+\label{F77impl}
+A rough implementation of the numerical problem described in the
+previous section has been realized in Fortran 77.
+It is not necessary to be familiar with the numerics in detail in
+order to play around with the code.
+We remark that the program applies a rough first-order approximation
+to the initial condition $\partial u/\partial t=0$, the other
+numerical expressions are as outlined in the section \ref{sec2impl}.
+
+The program consists of two files, \emp{main.f} and \emp{F77WAVE.fcp}.
+The \emp{main.f} file contains
+\bit
+\item a main program, where data structures are declared and some
+constants set, before the main routine \emp{timeloop} is called,
+\item a function \emp{h} implementing an expression for the
+$\lambda (x,y)$ function (here just 1.0 is returned),
+\item a function \emp{bell} for defining the initial
+condition (a Gaussian bell),
+\item a function \emp{setIC} for initializing arrays based on
+the problem's initial condition,
+\item a function \emp{timeloop}, which runs the finite difference
+scheme for a given number of time steps,
+\item a function \emp{dump} for dumping data to file.
+\eit
+The \emp{timeloop} function calls another function \emp{F77WAVE}
+for implementing the WAVE function defined in section \ref{sec2impl}.
+The WAVE function is just the core finite difference scheme for
+the wave equation, i.e., the ``heart'' of this simulation code.
+The \emp{F77WAVE} function is written in Fotran 77, but we have used
+a C preprocessor macro to define an inline function \emp{LaplaceU},
+corresponding to $[\triangle u]_{i,j}$ in section \ref{sec2num}:
+\bcc
+#define LaplaceU(u,lambda,i,j,im1,ip1,jm1,jp1) \
+  (dt*dt)/(dx*dx)*\
+  ( 0.5*(lambda(ip1,j  )+lambda(i  ,j  ))*(u(ip1,j  )-u(i  ,j  )) \
+   -0.5*(lambda(i  ,j  )+lambda(im1,j  ))*(u(i  ,j  )-u(im1,j  )))\
+ +(dt*dt)/(dy*dy)*\
+  ( 0.5*(lambda(i  ,jp1)+lambda(i  ,j  ))*(u(i  ,jp1)-u(i  ,j  )) \
+   -0.5*(lambda(i  ,j  )+lambda(i  ,jm1))*(u(i  ,j  )-u(i  ,jm1)))
+\ecc
+The equivalent mathematical expression is
+\beqan
+[\triangle  u]_{i,j} &\equiv&
+  \left({\Delta t\over\Delta x}\right)^2 
+  (\lambda_{i+{1\over2},j}(u_{i+1,j}-u_{i,j}) - 
+     \lambda_{i-{1\over2},j}(u_{i,j}-u_{i-1,j})) + \\ && 
+  \left({\Delta t\over\Delta y}\right)^2 
+  (\lambda_{i,j+{1\over2}}(u_{i,j+1}-u_{i,j}) - 
+     \lambda_{i,j-{1\over2}}(u_{i,j}-u_{i,j-1})) \ep
+\eeqan
+The symbols \emp{ip1} (``\emp{i} plus 1''), \emp{im1} (``\emp{i} minus 1''),
+and so on corresponds to $i+1$, $i-1$ etc.
+
+A special script, \emp{fcpp.py}, translates Fortran 77 code with C macros
+into plain Fortran 77. The resulting file is named \emp{F77WAVE.f}.
+With the \emp{LaplaceU} macro the code becomes much more readable, and it
+is easier to play around with modifications of the implementation of
+the finite difference scheme.
+
+The script \emp{make.sh} runs \emp{fcpp.py} and compiles the application
+with profiling turned on (plain Unix \emp{gprof}).
+
+When working with high-performance computing issues related to this
+wave simulation code, we shall modify the \emp{F77WAVE.fcp} file only.
+The core of this file is the WAVE function:
+\bcc
+      SUBROUTINE F77WAVE(up, u, um, lambda, a, b, c, nx, ny,
+     >                   dt, dx, dy)
+      IMPLICIT LOGICAL (A-Z)
+      INTEGER nx, ny
+      REAL*8 up(nx,ny), u(nx,ny), um(nx,ny), lambda(nx,ny)
+      REAL*8 a, b, c
+      REAL*8 dt, dx, dy
+      INTEGER i,j
+
+      DO 20 j = 2, ny-1
+         DO 10 i = 2, nx-1
+            up(i,j) = a*2*u(i,j) - b*um(i,j) +
+     >          c*LaplaceU(u,lambda,i,j,i-1,i+1,j-1,j+1)
+ 10      CONTINUE
+ 20   CONTINUE
+  
+C     Boundary points:
+
+      i=1
+      DO 30 j = 2, ny-1
+         up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >      c*LaplaceU(u,lambda,i,j,i+1,i+1,j-1,j+1)
+ 30   CONTINUE
+
+      i=nx
+      DO 40 j = 2, ny-1
+         up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >      c*LaplaceU(u,lambda,i,j,i-1,i-1,j-1,j+1)
+ 40   CONTINUE
+
+      j=1
+      DO 50 i = 2, nx-1
+         up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >      c*LaplaceU(u,lambda,i,j,i-1,i+1,j+1,j+1)
+ 50   CONTINUE
+
+      j=ny
+      DO 60 i = 2, nx-1
+         up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >      c*LaplaceU(u,lambda,i,j,i-1,i+1,j-1,j-1)
+ 60   CONTINUE
+
+C     Corners:
+      i=1
+      j=1
+      up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >   c*LaplaceU(u,lambda,i,j,i+1,i+1,j+1,j+1)
+
+      i=nx 
+      j=1
+      up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >   c*LaplaceU(u,lambda,i,j,i-1,i-1,j+1,j+1)
+
+      i=1 
+      j=ny
+      up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >   c*LaplaceU(u,lambda,i,j,i+1,i+1,j-1,j-1)
+
+      i=nx
+      j=ny
+      up(i,j) = a*2*u(i,j) - b*um(i,j) + 
+     >   c*LaplaceU(u,lambda,i,j,i-1,i-1,j-1,j-1)
+      RETURN
+      END
+\ecc
+In the implementation we have paid attention to constructing loops
+with the first index as the fastest index. This ensures that arrays
+are accessed in the way they are stored in Fortran.
+We have also treated the boundary points in separate loops.
+In some of the first exercises you are asked to rewrite the code in
+less efficient ways and measure the efficiency.
+
+\section{Exercises}
+\label{exer}
+
+\subsection*{CPU-Time Measurements}
+In most of the exercises below, the purpose is to perform some actions and
+measure the impact on the CPU time.
+The CPU time can be measure in different ways. The simplest is to
+use the program (or built-in shell command) \emp{time}:
+\bccq
+time app
+\eccq
+The output from \emp{time} when running the program \emp{app} may look
+as follows:
+\bccq
+real    0m4.314s
+user    0m3.950s
+sys     0m0.020s
+\eccq
+Here, \emp{real} is elapsed time (the time you have waited for the program
+to finish), 
+\emp{user} is user time (e.g.,
+arithmetics in the code), and
+\emp{sys} is system time (e.g., I/O in the code). 
+The CPU time is the sum of the user time and
+the system time.
+
+The preferred way to measure CPU time in these exercises is to run
+\emp{prof} or \emp{gprof}. With \emp{gprof}, you will find the
+CPU time at the last line of the \emp{cumulative seconds} column
+in the table of the CPU-time consumption of the various functions.
+This command picks out the relevant number:
+\bccq
+gprof app | perl -ne 'if (/MAIN__$/) 
+                      { $cpu=(split /\s+/)[2]; print "CPU=$cpu\n"; }'
+\eccq
+This command is available as the script \emp{cpu.sh}.
+To display the table of CPU-time consumption of the various functions,
+you can type
+\bccq
+gprof app | head -12
+\eccq
+which displays the first 12 lines of the \emp{gprof} output.
+
+If you want to have a look at the solution produced by the
+Fortran 77 program, you can run the script \emp{Verify/test1.sh}.
+The plotting requires that you have the X11 plotting program
+\emp{plotmtv} installed.
+
+\subsection*{Exercises}
+\ben
+\item
+\emph{Determine the appropriate problem size.}
+CPU-time measurements are not reliable unless they last for some
+(say at least 10) seconds.
+In the present code example, the grid size and the number of
+time steps govern the CPU time. We have fixed the number of time steps
+at 40, so the parameter to tune is the number of grid points in each
+spatial direction. This parameter is set in the top of the \emp{main.f.orig}
+file:
+\bccq
+      PARAMETER (n=501)
+\eccq
+Compile the code by
+\bccq
+make.sh
+\eccq
+and run it:
+\bccq
+time app
+\eccq
+Adjust the value of \emp{n} in the \emp{PARAMETER} statement until you
+have a CPU time between 10 and 30 seconds.
+
+\item
+\emph{Computations with and without I/O.}
+Measure the CPU time of the original implementation of the
+wave simulation code. Then ``uncomment'' the calls to \emp{dump}, i.e.,
+write the solution to file at every time step.
+Compile and measure the CPU time of a run.
+In the rest of the exercises, we shall \emph{not} write results to
+file so make sure you insert the comment again before proceeding.
+
+\item
+\emph{Function calls inside loops.}
+The $\lambda (x,y)$ coefficient in the wave equation is in our implementation
+stored in an array \emp{lambda}. Alternatively, we could call a function,
+here \emp{h(x,y)}. Modify the \emp{LaplaceU} macro to call \emp{h} instead
+of using \emp{lambda}. First try to replace \emp{lambda} by \emp{h(0,0)}
+(take a copy of the original \emp{F77WAVE.fcp} file!):
+\bcc
+#define LaplaceU(u,lambda,i,j,im1,ip1,jm1,jp1) \
+  (dt*dt)/(dx*dx)*\
+  ( 0.5*(h(0,0) + h(0,0))*(u(ip1,j  )-u(i  ,j  )) \
+   -0.5*(h(0,0) + h(0,0))*(u(i  ,j  )-u(im1,j  )))\
+ +(dt*dt)/(dy*dy)*\
+  ( 0.5*(h(0,0) + h(0,0))*(u(i  ,jp1)-u(i  ,j  )) \
+   -0.5*(h(0,0) + h(0,0))*(u(i  ,j  )-u(i  ,jm1)))
+\ecc
+In addition you need to declare \emp{h} in the \emp{F77WAVE} function
+as \emp{REAL*8}.
+Compare timings with the original code.
+
+Smart compilers will notice that \emp{h(0,0)} is a constant inside
+the loop and evaluate \emp{h(0,0)} just once outside the loop.
+Replace \emp{lambda(i,j)} by \emp{h((i-1)*delta,(j-1)*delta)},
+where \emp{delta} is the cell size, which must be initialized before
+the loops in the \emp{F77WAVE} function:
+\bcc
+REAL*8 delta
+delta = 10.0/(n-1)
+\ecc
+This time the \emp{h} needs to be called inside the loop, unless the
+compiler is so smart that it detects that the function declaration
+of \emp{h} is simple (just 1 is returned) and inlines that function.
+The timings will uncover how smart your compiler is.
+
+\item
+\emph{If-tests inside loops.}
+Instead of splitting the finite difference scheme into a loop over
+the internal grid points, \emp{i,j=2,...,n-1}, we can merge all
+loops and insert appropriate if-tests. This is a typical coding habit
+of novice numerical programmers:
+\bcc
+      DO 20 j = 1, ny
+         DO 10 i = 1, nx
+	    if (i .ge. 2 .and. i .le. nx-1 .and. j .ge. 2 
+     >          .and. j .le. ny-1) then
+            up(i,j) = a*2*u(i,j) - b*um(i,j) +
+     >          c*LaplaceU(u,lambda,i,j,i-1,i+1,j-1,j+1)
+            else if ...
+C           treat boundary points...
+ 10      CONTINUE
+ 20   CONTINUE
+\ecc
+Implement just one such if-test, i.e., the one given above with
+\emp{else if} replaced by \emp{end if}.
+Is your compiler sufficiently smart to replace the loop by new
+limits? Or do you get an increase in the CPU time?
+\een
+
+\section{Projects}
+\ben
+\item Extend the code to simulation of acoustic waves in a
+heterogenous three-dimensional box.
+The governing PDE is the same,
+\beq
+{\partial^2 u\over\partial t^2} = \nabla\cdot (\lambda\nabla u) .
+\eeq
+The boundary conditions are also the same: $\partial u/\partial n = 0$.
+\item Repeat the tests from the exercises with the two-dimensional
+version of the program. Comment upon differences in the results.
+\item Reimplement the program in C or C++. Repeat the efficiency tests.
+\een
+
+
+
+\end{document}
+
+\emph{Remarks.}
+When one faces
+more complicated partial differential equations and
+numerical methods, array manipulations in nested loops are still the
+core of most algorithms, but the programs now become much larger.
+Simulators for industrial problems might contain some hundred thousand
+lines of code. Organizing such programs in terms of array structures
+only make strong demands to the programmers in order to achieve a code
+that can easily be maintained and extended in the future.
+To simplify programming tasks, one can create new data structures that
+better reflect the mathematical abstractions that are involved in
+the numerical solution process. Experience has shown that this gives
+more modular code that is easier to reuse, maintain, and extend.
+We shall demonstrate how one can implement algorithm~\ref{Wave3D:algor3}
+using such techniques. Although the pay-off in this simple mathematical
+problem is minor, the techniques are particularly advantageous 
+when the equation, the domain, and the discretization
+become more complicated. Even in this simple example, working with
+data structures that are closer to the mathematics than plain arrays,
+will introduce a way of thinking that we believe is of general
+importance when developing numerical codes.
+
+A common strategy when building programs that are larger than a couple
+of pages, is to break the problem into small pieces, and then break
+each piece into even smaller pieces.
+Traditionally, the ``pieces'' in numerical codes have been
+functions (also referred to as subroutines or procedures).
+The question was then to find the right set of functions and shuffle
+data structures in and out of the functions to get the problem solved.
+In this document we shall present an implementation strategy where
+the ``pieces'' are \emph{classes}.  In a sense, classes are
+program modules consisting of both data structures and
+operations on these data structures.
+From the classes one makes objects, which are nothing but variables
+like reals and integers, except that the objects may contain large
+data structures and built-in operations on the data structures.
+Objects are hence special variables, defined by the programmer and tailored
+to the problem.
+The complete program declares a few objects that are manipulated in
+a few functions. Most of the work is done inside the objects.
+Experience has shown that well-designed objects can easily be reused
+in other programs solving different types of problems.
+
+

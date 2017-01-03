@@ -1,0 +1,8 @@
+set.seed(123456)
+y <- arima.sim(n = 100, list(ar = 0.9), innov=rnorm(100))
+op <- par(no.readonly=TRUE)
+layout(matrix(c(1, 1, 2, 3), 2, 2, byrow=TRUE))
+plot.ts(y, ylab='')
+acf(y, main='Autocorrelations', ylab='', ylim=c(-1, 1))
+pacf(y, main='Partial Autocorrelations', ylab='', ylim=c(-1, 1))
+par(op)

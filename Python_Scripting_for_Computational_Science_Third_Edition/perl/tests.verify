@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+import os, sys, glob
+from py4cs.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('hw.pl', options='1.2')
+test.run('datatrans1.pl', options='.datatrans_infile tmp1file')
+test.append('tmp1file')
+test.run('datatrans2.pl', options='.datatrans_infile tmp2file')
+test.append('tmp2file')
+
+test.run('simviz1.pl',  options='-A 5.0 -tstop 2 -case tmp4')
+test.append(os.path.join('tmp4','tmp4.i'))
+test.append(os.path.join('tmp4','tmp4.gnuplot'))
+test.append(os.path.join('tmp4','tmp4.ps'), maxlines=30)
+
+test.run('swap1.pl')
+test.append(os.path.join(os.pardir, 'py', 'regex', '.test1.c.tmp'))
+test.run('swap2.pl')
+test.append(os.path.join(os.pardir, 'py', 'regex', '.test1.c.tmp'))
+test.run('swap3.pl')
+test.append(os.path.join(os.pardir, 'py', 'regex', '.test1.c.tmp'))
+
+
+test.run('refs.pl')
+
+grep = r'\-side' + ' ' + ' '.join(glob.glob('*.pl'))
+test.run('grep1.pl',  options=grep)
+test.run('grep2.pl',  options=grep)
+test.run('grep2e.pl', options=grep)
+test.run('grep2l.pl', options=grep)
+test.run('grep2p.pl', options=grep)
+test.run('grep2x.pl', options=grep)
+test.run('grep3.pl',  options=grep)
+test.run('grep4.pl',  options=grep)
+
+

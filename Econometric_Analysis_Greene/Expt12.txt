@@ -1,0 +1,676 @@
+﻿/*=================================================================
+Example 20.12. Censoring in the Tobit and Poisson Regression Models
+*/=================================================================
+? (continued)
+?
+Dstat    ; Rhs=*
+Histogram;rhs=y$
+?
+Descriptive Statistics
+All results based on nonmissing observations.
+===============================================================================
+Variable        Mean         Std.Dev.        Minimum         Maximum      Cases
+===============================================================================
+Y         1.45590682      3.29875773      .000000000      12.0000000        601
+Z1        .475873544      .499833583      .000000000      1.00000000        601
+Z2        32.4875208      9.28876170      17.5000000      57.0000000        601
+Z3        8.17769551      5.57130315      .125000000      15.0000000        601
+Z4        .715474210      .451564115      .000000000      1.00000000        601
+Z5        3.11647255      1.16750940      1.00000000      5.00000000        601
+Z6        16.1663894      2.40255457      9.00000000      20.0000000        601
+Z7        4.19467554      1.81944266      1.00000000      7.00000000        601
+Z8        3.93178037      1.10317949      1.00000000      5.00000000        601
+Histogram for Y            NOBS=   601, Too low:     0, Too high:     0
+Bin  Lower limit   Upper limit       Frequency     Cumulative Frequency
+========================================================================
+  0         .000         1.000        451 ( .7504)         451( .7504)
+  1        1.000         2.000         34 ( .0566)         485( .8070)
+  2        2.000         3.000         17 ( .0283)         502( .8353)
+  3        3.000         4.000         19 ( .0316)         521( .8669)
+  4        4.000         5.000          0 ( .0000)         521( .8669)
+  5        5.000         6.000          0 ( .0000)         521( .8669)
+  6        6.000         7.000          0 ( .0000)         521( .8669)
+  7        7.000         8.000         42 ( .0699)         563( .9368)
+  8        8.000         9.000          0 ( .0000)         563( .9368)
+  9        9.000        10.000          0 ( .0000)         563( .9368)
+ 10       10.000        11.000          0 ( .0000)         563( .9368)
+ 11       11.000        12.000          0 ( .0000)         563( .9368)
+ 12       12.000        13.000         38 ( .0632)         601(1.0000)
+
+
+
+
+
+
+?
+? Specification analysis for the tobit model
+?
+Create   ;q=y>0$
+Namelist ; X = one,z1,z2,z3,z4,z5,z6,z7,z8 $
+Namelist ; Xr= one,   z2,z3,   z5,   z7,z8 $
+?
+? Tobit specification tests for three variables
+? Wald
+?
+Tobit    ; Lhs = y ; Rhs = X ; Wald:b(2)=0,b(5)=0,b(7)=0$
+Calc     ; LogLU=Logl $
+Tobit    ; Lhs = y ; Rhs = XR$
+?
+? Likelihood Ratio
+?
+Calc     ; List ; LogLR=Logl ; LRTest = -2*(LogLR - LogLu) $
+?
+? lagrange Multiplier
+?
+Tobit    ; Lhs = y ; Rhs = X ; Maxit = 0 
+         ; Start=b(1),0,b(2),b(3),0,b(4),0,b(5),b(6),s$
+
++---------------------------------------------+
+| Limited Dependent Variable Model - CENSORED |
+| Log likelihood function       -704.7311     |
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=+infinity        |
+| Wald test of  3 linear restrictions         |
+| Chi-squared =    1.66, Sig. level =  .64546 |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Primary Index Equation for Model
+ Constant  7.608487071      3.9059870        1.948   .0514
+ Z1        .9457873252      1.0628656         .890   .3735  .47587354
+ Z2       -.1926982765      .80968360E-01   -2.380   .0173  32.487521
+ Z3        .5331896065      .14660745        3.637   .0003  8.1776955
+ Z4        1.019181783      1.2795746         .797   .4257  .71547421
+ Z5       -1.698999723      .40548331       -4.190   .0000  3.1164725
+ Z6        .2536077921E-01  .22766679         .111   .9113  16.166389
+ Z7        .2129825522      .32115700         .663   .5072  4.1946755
+ Z8       -2.273284428      .41540687       -5.472   .0000  3.9317804
+         Disturbance standard deviation
+ Sigma     8.258432069      .55458061       14.891   .0000
++---------------------------------------------+
+| Limited Dependent Variable Model - CENSORED |
+| Log likelihood function       -705.5762     |
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=+infinity        |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Primary Index Equation for Model
+ Constant  8.174197436      2.7414456        2.982   .0029
+ Z2       -.1793325837      .79093240E-01   -2.267   .0234  32.487521
+ Z3        .5541418128      .13451794        4.119   .0000  8.1776955
+ Z5       -1.686220493      .40375155       -4.176   .0000  3.1164725
+ Z7        .3260532488      .25442475        1.282   .2000  4.1946755
+ Z8       -2.284972720      .40782792       -5.603   .0000  3.9317804
+         Disturbance standard deviation
+ Sigma     8.247080326      .55336401       14.904   .0000
+
+ LRTEST  =  .16903037971408140D+01
+
+Maximum iterations reached. Exit iterations with status=1.
+Maxit = 0. Computing LM statistic at starting values.
+No iterations computed and no parameter update done.
++---------------------------------------------+
+| Limited Dependent Variable Model - CENSORED |
+| Iterations completed                  1     |
+| LM Stat. at start values       1.681409     |
+| LM statistic kept as scalar    LMSTAT       |
+| Log likelihood function       -705.5762     |
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=+infinity        |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Primary Index Equation for Model
+ Constant  8.174197436      3.8998101        2.096   .0361
+ Z1        .0000000000      1.0537723         .000  1.0000  .47587354
+ Z2       -.1793325837      .80623305E-01   -2.224   .0261  32.487521
+ Z3        .5541418128      .14686554        3.773   .0002  8.1776955
+ Z4        .0000000000      1.2675769         .000  1.0000  .71547421
+ Z5       -1.686220493      .40440804       -4.170   .0000  3.1164725
+ Z6        .0000000000      .22719456         .000  1.0000  16.166389
+ Z7        .3260532488      .31951084        1.020   .3075  4.1946755
+ Z8       -2.284972720      .41462602       -5.511   .0000  3.9317804
+         Disturbance standard deviation
+ Sigma     8.247080326      .55345418       14.901   .0000
+/*
+? Get main results, and MLEs.  OLS is part of output
+?
+Tobit    ; Lhs = y ; Rhs = XR ; MarginalEffects ; Par ; OLS $
+Calc     ; List ; Ltobit=Logl $
+?
+? Scaled tobit estimates and standard errors
+?
+Wald     ; Start=B ; Var=varb ; labels=b1,b2,b3,b4,b5,b6,sg
+         ; fn1=b1/sg ; fn2=b2/sg ; fn3=b3/sg
+         ; fn4=b4/sg ; fn5=b5/sg ; fn6=b6/sg$
+?
+? Cragg/Greene consistency test for probability
+?
+Create   ; q = y>0 $
+Probit   ; Lhs=q ; Rhs=xr ; Marginals$
+Calc     ; Lprobit=Logl $
+Trunc    ; Lhs=y ; Rhs=Xr ; Marginals $
+Calc     ; LTrunc=Logl $
+Calc     ; List ; Cragg = -2*(Ltobit - Lprobit - Ltrunc) $
+/*
++-----------------------------------------------------------------------+
+| Limited Dependent Variable Model - CENSORED   Regression              |
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  5.608160612      .79659947        7.040   .0000
+ Z2       -.5034734786E-01  .22105810E-01   -2.278   .0228  32.487521
+ Z3        .1618520786      .36896903E-01    4.387   .0000  8.1776955
+ Z5       -.4763238840      .11130785       -4.279   .0000  3.1164725
+ Z7        .1060059379      .71100666E-01    1.491   .1360  4.1946755
+ Z8       -.7122423539      .11828889       -6.021   .0000  3.9317804
++---------------------------------------------+
+| Limited Dependent Variable Model - CENSORED |
+| Log likelihood function       -705.5762     |
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=+infinity        |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Primary Index Equation for Model
+ Constant  8.174197436      2.7414456        2.982   .0029
+ Z2       -.1793325837      .79093240E-01   -2.267   .0234  32.487521
+ Z3        .5541418128      .13451794        4.119   .0000  8.1776955
+ Z5       -1.686220493      .40375155       -4.176   .0000  3.1164725
+ Z7        .3260532488      .25442475        1.282   .2000  4.1946755
+ Z8       -2.284972720      .40782792       -5.603   .0000  3.9317804
+         Disturbance standard deviation
+ Sigma     8.247080326      .55336401       14.904   .0000
+
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Conditional Mean at Sample Point   1.1263 |
+| Scale Factor for Marginal Effects   .2338 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.910805170      .65758415        2.906   .0037
+ Z2       -.4192088958E-01  .18444435E-01   -2.273   .0230  32.487521
+ Z3        .1295365141      .31167559E-01    4.156   .0000  8.1776955
+ Z5       -.3941718881      .93379144E-01   -4.221   .0000  3.1164725
+ Z7        .7621839800E-01  .59471640E-01    1.282   .2000  4.1946755
+ Z8       -.5341365586      .94896126E-01   -5.629   .0000  3.9317804
+ 
+LTOBIT  = -.70557621764203170D+03
+
++-----------------------------------------------+
+| WALD procedure. Estimates and standard errors |
+| for nonlinear functions                       |
++-----------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Fncn( 1)  .9911625827      .33652215        2.945   .0032
+ Fncn( 2) -.2174497842E-01  .95484533E-02   -2.277   .0228
+ Fncn( 3)  .6719248399E-01  .16136495E-01    4.164   .0000
+ Fncn( 4) -.2044627222      .48371582E-01   -4.227   .0000
+ Fncn( 5)  .3953559755E-01  .30825623E-01    1.283   .1996
+ Fncn( 6) -.2770644434      .48258618E-01   -5.741   .0000
++---------------------------------------------+
+| Binomial Probit Model                       |
+| Log likelihood function       -307.2955     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+Constant  .9766647244      .36104809        2.705   .0068
+ Z2       -.2202376072E-01  .10177371E-01   -2.164   .0305  32.487521
+ Z3        .5990084920E-01  .17086004E-01    3.506   .0005  8.1776955
+ Z5       -.1836462412      .51493239E-01   -3.566   .0004  3.1164725
+ Z7        .3751312008E-01  .32844576E-01    1.142   .2534  4.1946755
+ Z8       -.2729824396      .52473295E-01   -5.202   .0000  3.9317804
++-------------------------------------------+
+| Partial derivatives of E[y] = F[*]   with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Observations used for means are All Obs.  |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .2969094977      .11108860        2.673   .0075
+ Z2       -.6695300413E-02  .30909282E-02   -2.166   .0303  32.487521
+ Z3        .1821006800E-01  .51704684E-02    3.522   .0004  8.1776955
+ Z5       -.5582910069E-01  .15568275E-01   -3.586   .0003  3.1164725
+ Z7        .1140411992E-01  .99845393E-02    1.142   .2534  4.1946755
+ Z8       -.8298761795E-01  .15933104E-01   -5.209   .0000  3.9317804
++---------------------------------------------+
+| Limited Dependent Variable Model - TRUNCATE |
+| Log likelihood function       -392.7103     |
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=+infinity        |
+| Observations after truncation       150     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+Constant  8.323045133      3.9597250        2.102   .0356
+ Z2       -.8414425459E-01  .11941653        -.705   .4810  33.410000
+ Z3        .5597703506      .21897633        2.556   .0106  9.5319467
+ Z5       -1.502400347      .61728675       -2.434   .0149  2.8533333
+ Z7        .1891403416      .37677181         .502   .6157  4.3133333
+ Z8       -1.349377201      .56454613       -2.390   .0168  3.4466667
+ Sigma     5.529829399      .65959601        8.384   .0000
+
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Observations used for means are All Obs.  |
+| Conditional Mean at Sample Point   5.5614 |
+| Scale Factor for Marginal Effects   .4843 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  4.030447257      1.9175029        2.102   .0356
+ Z2       -.4074698319E-01  .57827634E-01    -.705   .4810  33.410000
+ Z3        .2710696431      .10603962        2.556   .0106  9.5319467
+ Z5       -.7275396519      .29892205       -2.434   .0149  2.8533333
+ Z7        .9159149792E-01  .18245232         .502   .6157  4.3133333
+ Z8       -.6534379609      .27338232       -2.390   .0168  3.4466667
+
+ CRAGG =  .11140859667898440D+02
+
+? Moment based tests for normality
+Tobit    ; Lhs = y ; Rhs = XR ; Par$
+Matrix   ; Beta=b(1:6)$
+Create   ; bx=beta'xr ; eps=y-bx ; lambda=n01(bx/s)/phi(-bx/s)
+         ; bi= .5*q*(((eps/s)^2-1)/s^2)+.5*(1-q)*bx*lambda/s^3
+         ; ei=(q*eps-(1-q)*s*lambda)/s^2
+         ; a1=ei ;a2=ei*z2 ;a3=ei*z3 ;a4=ei*z5 ;a5=ei*z7
+         ; a6=ei*z8 ;a7=bi ;a8=ei^3  ;a9=ei^4-3*ei^2 $
+Namelist ; A=a1,a2,a3,a4,a5,a6,a7,a8,a9$
+Matrix   ; List ; Chesher=1'a*<a'a>*a'1$
+Create   ; m1=-(1-q)*(s^3*lambda*(bx/s+2)^2) + q*eps^3
+         ; m2= (1-q)*(s^4*lambda*bx/s*((bx/s)^2+3))
+               +  q *(eps^4 - 3*s^4)$
+Namelist ; G=a1,a2,a3,a4,a5,a6,a7 ; M=m1,m2$
+Matrix   ; Pagan=m'm-m'g*<g'g>*g'm 
+         ; List ; Pagan=1'm*<pagan>*m'1$
+CHESHER +--------------
+       1|  .5622181D+03
+PAGAN   +--------------
+       1|  .2031353D+02
+
+? 
+? Doubly censored (at 0 and 4) tobit model.  Compared to standard case
+?
+Tobit ; Lhs = y ; Rhs = XR ; Mar $
+Tobit ; Lhs = y ; Rhs = XR ; Mar ; Limits=0,4 $
+?
++---------------------------------------------+
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=+infinity        |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  8.174197436      2.7414456        2.982   .0029
+ Z2       -.1793325837      .79093240E-01   -2.267   .0234  32.487521
+ Z3        .5541418128      .13451794        4.119   .0000  8.1776955
+ Z5       -1.686220493      .40375155       -4.176   .0000  3.1164725
+ Z7        .3260532488      .25442475        1.282   .2000  4.1946755
+ Z8       -2.284972720      .40782792       -5.603   .0000  3.9317804
+ Sigma     8.247080326      .55336401       14.904   .0000
++---------------------------------------------+
+| Threshold values for the model:             |
+| Lower=     .0000     Upper=    4.0000       |
++---------------------------------------------+
+ Constant  7.900980451      2.8038548        2.818   .0048
+ Z2       -.1775982087      .79906293E-01   -2.223   .0262  32.487521
+ Z3        .5323021100      .14116841        3.771   .0002  8.1776955
+ Z5       -1.616335655      .42439672       -3.809   .0001  3.1164725
+ Z7        .3241864581      .25387778        1.277   .2016  4.1946755
+ Z8       -2.207007447      .44983190       -4.906   .0000  3.9317804
+ Sigma     7.943219445      .87690019        9.058   .0000
+
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| Conditional Mean at Sample Point   1.1263 |
+| Scale Factor for Marginal Effects   .2338 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.910805170      .65758415        2.906   .0037
+ Z2       -.4192088958E-01  .18444435E-01   -2.273   .0230  32.487521
+ Z3        .1295365141      .31167559E-01    4.156   .0000  8.1776955
+ Z5       -.3941718881      .93379144E-01   -4.221   .0000  3.1164725
+ Z7        .7621839800E-01  .59471640E-01    1.282   .2000  4.1946755
+ Z8       -.5341365586      .94896126E-01   -5.629   .0000  3.9317804
++-------------------------------------------+
+| Lower=     .0000     Upper=    4.0000       |
+| Conditional Mean at Sample Point    .2257 |
+| Scale Factor for Marginal Effects   .1229 |
++-------------------------------------------+
+ Constant  .9712865849      .34346628        2.828   .0047
+ Z2       -.2183257619E-01  .95804001E-02   -2.279   .0227  32.487521
+ Z3        .6543718236E-01  .16101450E-01    4.064   .0000  8.1776955
+ Z5       -.1987000409      .48288948E-01   -4.115   .0000  3.1164725
+ Z7        .3985302327E-01  .31004563E-01    1.285   .1987  4.1946755
+ Z8       -.2713127490      .48803373E-01   -5.559   .0000  3.9317804
+
+?  Poisson and Negative Binomial Regressions.  Uncensored
+?
+Poisson  ; Lhs=y  ; rhs = Xr ; MarginalEffects $
+Negbin   ; Lhs=y  ; rhs = Xr ; MarginalEffects $
+?
+? Censored Poisson and Negative Binomial Models, censored at 4
+?
+Create   ; yc=y   ; If(yc>=4)yc=4 $
+Poisson  ; Lhs=yc ; Rhs = Xr ; Limit=4 ; MarginalEffects$
+?
+? Create predictions from least restrictive model.  Convert
+? conditional means to integers, then censor.
+?
+Negbin   ; Lhs=yc ; Rhs = Xr ; Limit=4 ; Margin ; keep=yfnb$
+Create   ; Iyfnb=int(yfnb) ; If(iyfnb>4)iyfnb=4$
+
++---------------------------------------------+
+| Poisson Regression                          |
+| Log likelihood function       -1427.037     |
+| Restricted log likelihood     -1709.723     |
+| Chi- squared =  4125.90994  RsqP=   .0800   |
+| G  - squared =  2360.08448  RsqD=   .1933   |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  2.533905282      .19692367       12.867   .0000
+ Z2       -.3225529750E-01  .58514053E-02   -5.512   .0000  32.487521
+ Z3        .1156984318      .99084864E-02   11.677   .0000  8.1776955
+ Z5       -.3540371394      .30892099E-01  -11.460   .0000  3.1164725
+ Z7        .7982824190E-01  .19448856E-01    4.105   .0000  4.1946755
+ Z8       -.4094427239      .27381245E-01  -14.953   .0000  3.9317804
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| Conditional Mean at Sample Point   1.4559 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  3.689129986      .39117889        9.431   .0000
+ Z2       -.4696070767E-01  .11623520E-01   -4.040   .0001  32.487521
+ Z3        .1684461361      .19682706E-01    8.558   .0000  8.1776955
+ Z5       -.5154450866      .61365588E-01   -8.400   .0000  3.1164725
+ Z7        .1162224820      .38634166E-01    3.008   .0026  4.1946755
+ Z8       -.5961104549      .54391454E-01  -10.960   .0000  3.9317804
++---------------------------------------------+
+| Log likelihood function       -728.2441     |
+| Restricted log likelihood     -1427.037     |
+| Chi-squared                    1397.586     |
+| Degrees of freedom                    1     |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  2.189665176      .85899305        2.549   .0108
+ Z2       -.2623881896E-02  .17955428E-01    -.146   .8838  32.487521
+ Z3        .8481865225E-01  .40012554E-01    2.120   .0340  8.1776955
+ Z5       -.4222270934      .17050728       -2.476   .0133  3.1164725
+ Z7        .6044301285E-01  .90859681E-01     .665   .5059  4.1946755
+ Z8       -.4313313504      .16739868       -2.577   .0100  3.9317804
+          Overdispersion parameter for negative binomial model
+ Alpha     7.014805680      .94459163        7.426   .0000
+
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| Conditional Mean at Sample Point   1.4984 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  3.280911000      1.8007047        1.822   .0685
+ Z2       -.3931524815E-02  .37639913E-01    -.104   .9168  32.487521
+ Z3        .1270890418      .83878204E-01    1.515   .1297  8.1776955
+ Z5       -.6326490143      .35743393       -1.770   .0767  3.1164725
+ Z7        .9056551106E-01  .19046889         .475   .6344  4.1946755
+ Z8       -.6462904866      .35091738       -1.842   .0655  3.9317804
+
++---------------------------------------------+
+| Poisson Regression                          |
+| Log likelihood function       -747.7541     |
+| RIGHT Censored  Data: Threshold =  4.       |
+| Chi- squared =  1520.43723  RsqP=   .0799   |
+| G  - squared =  1077.99336  RsqD=   .1877   |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.899932460      .28256837        6.724   .0000
+ Z2       -.3284957645E-01  .83771861E-02   -3.921   .0001  32.487521
+ Z3        .1053474148      .14041819E-01    7.502   .0000  8.1776955
+ Z5       -.3233479425      .43740859E-01   -7.392   .0000  3.1164725
+ Z7        .7984038573E-01  .27533200E-01    2.900   .0037  4.1946755
+ Z8       -.3896778919      .39122373E-01   -9.960   .0000  3.9317804
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| Conditional Mean at Sample Point    .7663 |
+| Scale Factor for Marginal Effects   .7166 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.361437133      .28978016        4.698   .0000
+ Z2       -.2353906474E-01  .75918324E-02   -3.101   .0019  32.487521
+ Z3        .7548893733E-01  .14750440E-01    5.118   .0000  8.1776955
+ Z5       -.2317018658      .45888605E-01   -5.049   .0000  3.1164725
+ Z7        .5721133153E-01  .24384424E-01    2.346   .0190  4.1946755
+ Z8       -.2792320060      .45043450E-01   -6.199   .0000  3.9317804
+
++---------------------------------------------+
+| Negative Binomial Regression                |
+| Log likelihood function       -482.0505     |
+| Restricted log likelihood     -747.7541     |
+| Chi-squared                    531.4072     |
+| Degrees of freedom                    1     |
+| RIGHT Censored  Data: Threshold =  4.       |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  4.792788283      1.1636038        4.119   .0000
+ Z2       -.1659616715E-01  .24963901E-01    -.665   .5062  32.487521
+ Z3        .1744625408      .56779368E-01    3.073   .0021  8.1776955
+ Z5       -.7229290289      .19807844       -3.650   .0003  3.1164725
+ Z7        .8998362814E-01  .11558144         .779   .4363  4.1946755
+ Z8       -.8544311272      .21634356       -3.949   .0001  3.9317804
+          Overdispersion parameter for negative binomial model
+ Alpha     9.395956878      1.3533645        6.943   .0000
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| Conditional Mean at Sample Point    .7170 |
+| Scale Factor for Marginal Effects   .2577 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.235198281      .79158359        1.560   .1187
+ Z2       -.4277167262E-02  .71500734E-02    -.598   .5497  32.487521
+ Z3        .4496251822E-01  .30220047E-01    1.488   .1368  8.1776955
+ Z5       -.1863134028      .11685569       -1.594   .1108  3.1164725
+ Z7        .2319059725E-01  .33257461E-01     .697   .4856  4.1946755
+ Z8       -.2202041478      .13847023       -1.590   .1118  3.9317804
+
+Histogram; Rhs=yc$   (Actual data)
+Histogram; Rhs=iyfnb$(Predictions)
+
+Histogram for YC           NOBS=   601, Too low:     0, Too high:     0
+Bin  Lower limit   Upper limit       Frequency     Cumulative Frequency
+========================================================================
+  0         .000         1.000        451 ( .7504)         451( .7504)
+  1        1.000         2.000         34 ( .0566)         485( .8070)
+  2        2.000         3.000         17 ( .0283)         502( .8353)
+  3        3.000         4.000         19 ( .0316)         521( .8669)
+  4        4.000         5.000         80 ( .1331)         601(1.0000)
+Histogram for IYFNB        NOBS=   601, Too low:     0, Too high:     0
+Bin  Lower limit   Upper limit       Frequency     Cumulative Frequency
+========================================================================
+  0         .000         1.000        251 ( .4176)         251( .4176)
+  1        1.000         2.000         96 ( .1597)         347( .5774)
+  2        2.000         3.000         50 ( .0832)         397( .6606)
+  3        3.000         4.000         34 ( .0566)         431( .7171)
+  4        4.000         5.000        170 ( .2829)         601(1.0000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?  Zero inflated (split population) Poisson model+ Tobit(0,4)
+?
+Poisson  ; Lhs=yc ; Rhs = XR 
+         ; ZIP; Rh2=Xr;par; keep=yfpz ; Mar $
+Matrix   ; Beta = B(1:6) ; Gamma = B(7:12)$
+Create   ; Lambda=exp(Beta'xr);qi=lgp(gamma'xr)
+         ; Ey=(1-qi)*lambda ; Iey=int(ey)$
+Histogram; Rhs=Iey$
+Tobit    ; Lhs=yc ; Rhs = XR ; Alg=BFGS ;Mar $ 
+Tobit    ; Lhs=yc ; Rhs = XR ; Limits = 0,4 ; Alg=BFGS ;Mar $
+/*
+Histogram for IEY          NOBS=   601, Too low:     0, Too high:     0
+Bin  Lower limit   Upper limit       Frequency     Cumulative Frequency
+========================================================================
+  0         .000         1.000        448 ( .7454)         448( .7454)
+  1        1.000         2.000        134 ( .2230)         582( .9684)
+  2        2.000         3.000         17 ( .0283)         599( .9967)
+  3        3.000         4.000          2 ( .0033)         601(1.0000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
++----------------------------------------------------------------------+
+| Zero Altered Poisson      Regression Model                           |
+| Logistic distribution used for splitting model.                      |
+| ZAP term in probability is F[tau x Z(i)     ]                        |
+| Comparison of estimated models                                       |
+|             Pr[0|means]       Number of zeros        Log-likelihood  |
+| Poisson          .55783   Act.=   451 Prd.=   335.3      -771.44432  |
+| Z.I.Poisson      .77364   Act.=   451 Prd.=   465.0      -551.72760  |
+| Note, the ZIP log-likelihood is not directly comparable.             |
+| ZIP model with nonzero Q does not encompass the others.              |
+| Vuong statistic for testing ZIP vs. unaltered model is     21.6436   |
+| Distributed as standard normal. A value greater than                 |
+| +1.96 favors the zero altered Z.I.Poisson model.                     |
+| A value less than -1.96 rejects the ZIP model.                       |
++----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+          Poisson/Negbin regression model
+ Constant  1.274187369      .43940971        2.900   .0037
+ Z2       -.4219823370E-02  .12229828E-01    -.345   .7301  32.487521
+ Z3        .3312258287E-01  .23127736E-01    1.432   .1521  8.1776955
+ Z5       -.9085096098E-01  .72054203E-01   -1.261   .2074  3.1164725
+ Z7        .2052418829E-01  .44126404E-01     .465   .6418  4.1946755
+ Z8       -.8166127920E-01  .66574722E-01   -1.227   .2200  3.9317804
+          Zero inflation model
+ Constant -1.848860263      .66436621       -2.783   .0054
+ Z2        .3970949740E-01  .19046738E-01    2.085   .0371  32.487521
+ Z3       -.9814600629E-01  .31795289E-01   -3.087   .0020  8.1776955
+ Z5        .3062225236      .95089852E-01    3.220   .0013  3.1164725
+ Z7       -.6770594854E-01  .60739793E-01   -1.115   .2650  4.1946755
+ Z8        .4577650236      .94870568E-01    4.825   .0000  3.9317804
+
+ZIP
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Observations used for means are All Obs.  |
+| Conditional Mean at Sample Point    .0063 |
+| Scale Factor for Marginal Effects  -.3438 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  2.899747536      .57896387        5.009   .0000
+ Z2       -.2523628400E-01  .12985077E-01   -1.943   .0520  32.487521
+ Z3        .9869128559E-01  .26718883E-01    3.694   .0002  8.1776955
+ Z5       -.2879288809      .85416029E-01   -3.371   .0007  3.1164725
+ Z7        .6436057742E-01  .46300314E-01    1.390   .1645  4.1946755
+ Z8       -.3437579550      .79602625E-01   -4.318   .0000  3.9317804
+Tobit(0)
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Observations used for means are All Obs.  |
+| Conditional Mean at Sample Point   1.1263 |
+| Scale Factor for Marginal Effects   .2338 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  1.910805168      .65758415        2.906   .0037
+ Z2       -.4192088954E-01  .18444435E-01   -2.273   .0230  32.487521
+ Z3        .1295365140      .31167559E-01    4.156   .0000  8.1776955
+ Z5       -.3941718875      .93379144E-01   -4.221   .0000  3.1164725
+ Z7        .7621839725E-01  .59471639E-01    1.282   .2000  4.1946755
+ Z8       -.5341365577      .94896126E-01   -5.629   .0000  3.9317804
+Tobit(0,4)
++-------------------------------------------+
+| Partial derivatives of expected val. with |
+| respect to the vector of characteristics. |
+| They are computed at the means of the Xs. |
+| Observations used for means are All Obs.  |
+| Conditional Mean at Sample Point    .2257 |
+| Scale Factor for Marginal Effects   .1229 |
++-------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  .9712865866      .34346628        2.828   .0047
+ Z2       -.2183257607E-01  .95804001E-02   -2.279   .0227  32.487521
+ Z3        .6543718214E-01  .16101450E-01    4.064   .0000  8.1776955
+ Z5       -.1987000414      .48288948E-01   -4.115   .0000  3.1164725
+ Z7        .3985302304E-01  .31004563E-01    1.285   .1987  4.1946755
+ Z8       -.2713127494      .48803373E-01   -5.559   .0000  3.9317804
+
+

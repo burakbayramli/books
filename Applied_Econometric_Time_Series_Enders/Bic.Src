@@ -1,0 +1,16 @@
+procedure bic
+OPTION SWITCH altform 0
+	if altform == 0 {
+	compute aic = %nobs*log(%rss) + 2*(%nreg)
+	compute sbc = %nobs*log(%rss) + (%nreg)*log(%nobs)
+	display  ' aic = ' aic ' bic = ' sbc
+	}
+else {
+	com aic = %nobs*log(%rss)  + 2*(%nreg) - %nobs*log(%nobs)
+	com sbc =  %nobs*log(%rss) + (%nreg)*log(%nobs) - %nobs*log(%nobs)
+display "aic' = "  aic "bic'  = "  sbc
+	}
+end bic
+
+
+

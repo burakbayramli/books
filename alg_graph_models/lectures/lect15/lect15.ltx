@@ -1,0 +1,243 @@
+\documentclass[landscape]{slides}
+
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-15}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\betafn}{\mathrm{Beta}}
+\newcommand{\dirchfn}{\mathrm{Dirichlet}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+
+\begin{document}
+\DeclareGraphicsExtensions{.pdf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Iterative Proportional Fitting}}
+
+\begin{verbatim}
+$Date: 2006/12/04 16:24:30 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+\begin{itemize}
+\item Likelihood
+\item Maximising a likelihood
+\item Iterative Proportional Fitting (IPF)
+\item Decomposition for IPF
+\end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Acknowledgements}
+  
+This lecture draws on material from Steffen Lauritzen and Sam Roweis.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The problem}
+  
+  \begin{itemize}
+  \item You (somehow) know the conditional independence relations
+    between a set of variables, and
+  \item they are best expressed by a \emph{hierarchical model}.
+  \item You have some data for these variables\dots
+  \item \dots and want to choose factors (actual numbers) to define a
+    probability distribution which `fits' this data.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Fitting parameters to hierarchical models}
+  
+Recall: a \emph{hierarchical model} is a set of probability
+distributions with the same associated (reduced) hypergraph; and thus
+the same conditional independence assumptions.
+  \begin{description}
+  \item[Given] (1) A (reduced) hypergraph representing a hierarchical model
+    and (2) some data
+  \item[Find] The probability distribution in the hierarchical model
+    which maximise the \emph{likelihood} of the data
+  \end{description}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The probability  of single data point}
+  
+Let $\theta$ be a vector of parameters defining a particular
+    probability distribution for our model. $\theta$ is just the set
+    of all numbers in the factors defining a distribution. We allow
+    the possibility that $\theta$ only defines a distribution up to
+    normalisation (i.e.\ there's the nasty $Z_\theta$).
+
+Let $\mathbf{x}$ be a joint instantiation of the variables.
+
+
+\[P(\mathbf{x}|\theta) = Z_{\theta}^{-1} \prod_{h \in \hg}
+f_{h}(\mathbf{x}_{h} | \theta_{h})
+\]
+
+$\theta_{h}$ is just the sub-vector of $\theta$ relevant to factor
+$f_h$, the factor whose variables are the hyperedge $h$. So for some
+particular $\theta$, $f_{h}(\mathbf{x}_{h} | \theta_{h})$ is just the
+number for instantiation $\mathbf{x}_{h}$ in factor $f_h$.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The likelihood of a dataset}
+  
+  \begin{itemize}
+  \item Assume that our data is a collection of joint instantiations
+    ${\cal D} = \mathbf{x}^{1}, \mathbf{x}^{2}, \dots ,
+    \mathbf{x}^{n}$. (These superscripts are indices, not powers!)
+  \item We assume that each of these data points was sampled
+    independently from the `true' distribution in our hierarchical
+    model: they are \emph{independent and identically distributed}
+    (iid). Thus:
+  \end{itemize}
+\[
+P({\cal D}|\theta) = \prod_{i=1}^{n} P(\mathbf{x}^{i}|\theta)
+\]
+This probability is called the \emph{likelihood of the data}. We view
+it as a function of $\theta$.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Maximum likelihood estimation}
+  
+Just find 
+\[
+\arg \max_{\theta} P({\cal D}|\theta)
+\]
+ For each $h \in \hg$,
+let $\mathbf{x}_h$ be a variable ranging over joint instantiations of
+the variables in $h$: these are the rows of a corresponding
+factor. Let $n(\mathbf{x}_h)$ be the number of times instantiation
+$\mathbf{x}_h$ appears in the data, and let $n$ be the number of datapoints.
+
+Maximising the \emph{log-likelihood} is easier. We have:
+\[
+\log  P({\cal D}|\theta) = \sum_{h \in \hg} \sum_{\mathbf{x}_{h}}
+n(\mathbf{x}_h) \log f(\mathbf{x}_{h}|\theta_{h}) - n \log Z^{-1}_{\theta}
+\]
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Finding the maximum likelihood $\theta$}
+  
+\[
+\frac{\partial P({\cal D}|\theta)}{\partial f_{h}(\mathbf{x}_h|\theta_{h})}
+=
+\frac{n(\mathbf{x}_h)}{f_{h}(\mathbf{x}_h|\theta_{h})} - n \frac{P(\mathbf{x}_h|\theta)}{f_{h}(\mathbf{x}_h|\theta_{h})} 
+\]
+
+This (partial) derivative hits zero when
+\[
+P(\mathbf{x}_h|\theta) = \frac{n(\mathbf{x}_h)}{n}
+\]
+
+We can prove that this provides the global maximum, so model marginals
+equal observed marginals at the maximum likelihood $\theta$.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Iterative proportional fitting}
+  
+  \begin{itemize}
+  \item We need $\theta$ such that $P(\mathbf{x}_h|\theta) =
+    \frac{n(\mathbf{x}_h)}{n}$. How to find it?
+  \item With iterative proportional fitting, we repeatedly \emph{fit}
+    each factor in turn.
+  \item This corresponds to climbing the likelihood surface one
+    co-ordinate at a time.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Iterative proportional fitting (ctd)}
+
+Here's how to update factor $f_h$ (I've dropped the $\theta$s to cut down on clutter):
+
+\[
+f_{h}^{t+1}(\mathbf{x}_h) = f_{h}^{t}(\mathbf{x}_h)
+\frac{n(\mathbf{x}_h)/n}{P^{t}(\mathbf{x}_h)}
+\]
+
+Clearly, the hard work is computing the marginal $P^{t}(\mathbf{x}_h)$.\\
+Note that there's no change once $n(\mathbf{x}_h)/n = P(\mathbf{x}_h)$
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Towards faster IPF}
+  
+  \begin{description}
+  \item[Join] $\hg_{1} \vee \hg_{2} =\mathrm{red}(\hg_{1} \cup \hg_{2})$
+  \item[Meet] $\hg_{1} \wedge \hg_{2} =\mathrm{red}(\{h_{1} \cap h_{2}
+    : h_{1} \in \hg_{1}, h_{2} \in  \hg_{2}\})$
+  \end{description}
+
+If $\hg_{1} = \{ \{A,B,C\}, \{A,F\}, \{F,G\}, \{B,G\} \}$ and 
+$\hg_{2} = \{ \{B,C,D\}, \{D,E\} \}$ then
+\begin{eqnarray*}
+  \hg_{1} \vee \hg_{2} & = & \{ \{A,B,C\}, \{A,F\}, \{F,G\}, \{B,G\},
+  \{B,C,D\}, \{D,E\} \} \\
+  \hg_{1} \wedge \hg_{2} & = & \{ \{B, C \} \}
+\end{eqnarray*}
+
+$\hg_{1} \vee \hg_{2}$ is a \emph{direct join} of $\hg_{1}$ and
+$\hg_{2}$ because $\hg_{1} \wedge \hg_{2}$ has only one hyperedge.
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Decomposable hypergraphs}
+  
+  \begin{itemize}
+  \item A hypergraph is \emph{simple} if has only one hyperedge.
+  \item A hypergraph is decomposable if either it is simple or it is
+    the direct join of two smaller decomposable hypergraphs.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Back to IPF}
+
+If the hypergraph $\hg$ for our hierarchical model is the
+    direct join of two smaller hypergraphs $\hg_1$ and $\hg_2$, then
+    we can do IPF for $\hg_1$ and $\hg_2$ \emph{separately} and
+    combine the results.
+
+  Let $H_1$ be the variables in $\hg_{1}$ and $H_2$ be the variables
+  in $\hg_{2}$:
+\[
+\hat{P}_{\hg}(\mathbf{x}) =
+\frac{\hat{P}_{\hg_{1}}(\mathbf{x}_{H_{1}}) 
+\hat{P}_{\hg_{2}}(\mathbf{x}_{H_{2}})}
+{n(\mathbf{x}_{H_{1}\cap H_{2}})/n}
+\] 
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Fitting decomposable models}
+
+  \begin{itemize}
+  \item If the hypergraph is decomposable, we can extend the `direct
+    join' approach to show that we don't need IPF at all.
+  \item Recall from earlier that a hypergraph is decomposable iff it
+    is the clique hypergraph of some triangulated graph, and that
+    these cliques ($\cal C$) can be arranged into a join forest with
+    separators ($\cal S$). We have:
+  \end{itemize}
+  
+\[
+\hat{P}_{\hg}(\mathbf{x}) = \frac{
+\prod_{c \in \cal C}  n(\mathbf{x}_{c})}
+{\prod_{s \in \cal S}  n(\mathbf{x}_{s})^{\nu(s)}}
+\]
+
+$\nu(s)$ is how often the separator $s$ appears in the join forest.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

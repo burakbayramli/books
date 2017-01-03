@@ -1,0 +1,38 @@
+#!/usr/bin/expect -f
+
+############################################################
+# Expect script to supply Sqoop job execution password.
+#
+# This script needs the following arguments:
+#
+# sqoop_job = Sqoop job to execute
+#
+# For example:
+#  ./sqoop-job.exp stock_increment
+#
+############################################################
+
+set sqoop_job [lrange $argv 0 0]
+
+# check if argument was supplied
+if { $sqoop_job == "" }  {
+  puts "Usage: <sqoop_job>\n"
+  exit 1
+}
+
+set fp [open "~/.sqoop_pwd" r]
+set password [read $fp]
+
+set timeout -1
+
+# launch Sqoop
+spawn sqoop job --exec $sqoop_job
+match_max 100000
+
+# look for passwod prompt
+expect "*?assword:*"
+
+# send password aka $password
+send -- "$password\r"
+
+expect eof

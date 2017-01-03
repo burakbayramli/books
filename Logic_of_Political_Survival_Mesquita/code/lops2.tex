@@ -1,0 +1,94 @@
+\documentclass[12pt,fleqn]{article}\usepackage{common}
+\begin{document}
+
+Polity
+
+http://www.systemicpeace.org/inscrdata.html
+
+http://www.ub.umu.se/sok/tidskrifter/cnts
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+#name = 'SGP'
+#name = 'SIN'
+#name = 'CHN'
+#name = 'VEN'
+#name = 'TUR'
+#name = 'RUS'
+df = pd.read_csv('bdm2s2_nation_year_data_may2002.csv')
+df2 = df[(df['worldbankcode']==name) & (df['year'] > 1980)]
+def W(df_in):
+    df_in['W2'] = 0.
+    df_in['W2'] += ((pd.isnull(df_in['RegimeType'])==False) & (df_in['RegimeType'] !=2) & (df_in['RegimeType'] != 3)).astype(int)
+    df_in['W2'] += (df_in['xrcomp'] >= 2).astype(int)
+    df_in['W2'] += (df_in['xropen'] > 2).astype(int)
+    df_in['W2'] += (df_in['parcomp'] == 5).astype(int) # none for TR
+    df_in['W2'] = df_in['W2'] / 4.
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+W(df2)
+print df2[['worldbankcode','RegimeType','xrcomp','xropen','parcomp','year','W','W2','S']]
+\end{minted}
+
+\begin{verbatim}
+      worldbankcode  RegimeType  xrcomp  xropen  parcomp  year     W    W2  S
+10228           RUS           1     NaN     NaN      NaN  1981  0.75  0.25  1
+10229           RUS           1     NaN     NaN      NaN  1982  0.75  0.25  1
+10230           RUS           1     NaN     NaN      NaN  1983  0.75  0.25  1
+10231           RUS           1     NaN     NaN      NaN  1984  0.75  0.25  1
+10232           RUS           1     NaN     NaN      NaN  1985  0.75  0.25  1
+10233           RUS           1     NaN     NaN      NaN  1986  0.75  0.25  1
+10234           RUS           1     NaN     NaN      NaN  1987  0.75  0.25  1
+10235           RUS           1     NaN     NaN      NaN  1988  0.75  0.25  1
+10236           RUS           1     NaN     NaN      NaN  1989  0.75  0.25  1
+10237           RUS           1     NaN     NaN      NaN  1990  0.75  0.25  1
+10238           RUS           1     NaN     NaN      NaN  1991  0.75  0.25  1
+10239           RUS           1       3       4        3  1992  0.75  0.75  1
+10240           RUS           1       3       4        4  1993  0.75  0.75  1
+10241           RUS           1       3       4        4  1994  0.75  0.75  1
+10242           RUS           1       3       4        4  1995  0.75  0.75  1
+10243           RUS           1       3       4        4  1996  0.75  0.75  1
+10244           RUS           1       3       4        4  1997  0.75  0.75  1
+10245           RUS           1       3       4        4  1998  0.75  0.75  1
+10246           RUS           1       3       4        4  1999  0.75  0.75  1
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{minted}[fontsize=\footnotesize]{python}
+df['WS'] = df['W']/(np.log((df['S']+1)*10)/3)
+\end{minted}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{minted}[fontsize=\footnotesize]{python}
+pol = pd.read_csv('polity4v2013.csv')
+pol['RegimeType'] = 1.
+pol2 = pol[(pol['scode']==name) & (pol['year'] > 2000)]
+W(pol2)
+print pol2[['scode','year','xrcomp','xropen','parcomp','W2']]
+\end{minted}
+
+\begin{verbatim}
+      scode  year  xrcomp  xropen  parcomp    W2
+12558   RUS  2001       2       4        4  0.75
+12559   RUS  2002       2       4        4  0.75
+12560   RUS  2003       2       4        4  0.75
+12561   RUS  2004       2       4        4  0.75
+12562   RUS  2005       2       4        4  0.75
+12563   RUS  2006       2       4        4  0.75
+12564   RUS  2007       2       4        4  0.75
+12565   RUS  2008       2       4        4  0.75
+12566   RUS  2009       2       4        4  0.75
+12567   RUS  2010       2       4        4  0.75
+12568   RUS  2011       2       4        4  0.75
+12569   RUS  2012       2       4        4  0.75
+12570   RUS  2013       2       4        4  0.75
+\end{verbatim}
+
+
+
+
+
+\end{document}

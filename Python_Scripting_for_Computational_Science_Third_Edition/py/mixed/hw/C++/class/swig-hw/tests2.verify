@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+"""Regression script in src/py/mixed/hw/C++/swig-hw"""
+
+from scitools.Regression import TestRun
+import os, glob, sys
+
+test = TestRun("tests2.v", removepath=os.environ['scripting'])
+
+test.run("someapp", options="...", inputfile="")
+#test.silenrun("somecommand", options="")
+test.run("someapp", options="...", inputfile="")
+test.run("someapp", options="...", inputfile="")
+test.append("somefile")
+
+

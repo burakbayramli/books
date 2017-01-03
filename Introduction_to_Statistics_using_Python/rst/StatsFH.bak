@@ -1,0 +1,2510 @@
+| |image1|
+
+| University of Applied Sciences
+
+| An Introduction to
+
+| 
+|  **Statistics**
+
+| 
+
+0.4
+
+| *Author:*
+| Thomas Haslwanter
+
+0.4
+
+| *email:*
+| thomas.haslwanter@fh-linz.at
+
+| Version: 1.4
+| |image2|
+
+Introduction
+============
+
+*"Statistics ist the explanation of variance in the light of what
+remains unexplained."*
+
+Statistics was originally invented - as so many other things - by the
+famous mathematician C.F. Gauss, who said about his own work *"Ich habe
+fleissig sein müssen; wer es gleichfalls ist, wird eben so weit
+kommen"*. Even if your aspirations are not that high, you can get a lot
+out of statistics. In fact, if your work with real data, you probably
+won’t be able to avoid it. Statistics can
+
+-  Describe variation.
+
+-  Make quantitative statements about populations.
+
+-  Make predictions.
+
+**Books: **\ There are a number of good books about statistics. My
+favorite is : it does not talk a lot about computers and modeling, but
+gives you a terrific introduction into the field. Many formulations and
+examples in this manuscript have been taken from that book. A more
+modern book, which is more voluminous and in my opionion a bit harder to
+read, is . If you are interested in a simple introduction to modern
+regression modeling, check out .
+
+**WWW: **\ On the web, you find good very extensive statistics
+information in English under *http://www.statsref.com/*. A good German
+webpage on statistics and regulatory issues is
+*http://www.reiter1.com/*.
+
+Why Statistics?
+---------------
+
+Statistics will help you to
+
+-  Clarify the question.
+
+-  Identify the variable and the measure of that variable that will
+   answer that question.
+
+-  Determine the required sample size.
+
+-  Find the correct analysis for your data.
+
+-  Make predictions based on your data.
+
+Population and samples
+----------------------
+
+While the whole *population* of a group has certain characteristics, we
+can typically never measure all of them. Instead, we have to confine
+ourselves to investigate a representative *sample* of this group, and
+estimate the properties of the population. Great care should be used to
+make the sample representative for the population you study.
+
+Projects
+--------
+
+For this course, you will choose a partner, and analyze one of the five
+projects described below. You will have to
+
+#. Read up on the problem.
+
+#. Design the study:
+
+   #. Determine the parameter to analyze.
+
+   #. Decide on the requirements of the sample population.
+
+   #. Plan the randomization.
+
+   #. Decide which test you want to use for the analysis.
+
+#. Present your study design at the *Intermediate Presentation*
+
+#. Analyze dummy data provided by me.
+
+#. Generate the appropriate graphs.
+
+#. Present the results at the *Final Presentation*.
+
+Two groups will independently work on each project. You can choose from
+one of the following projects:
+
+#. Surgical Trainer
+
+#. Dry Eyes and Lasik
+
+#. Recovery after Stroke
+
+#. Active Office: Activity and Attention
+
+#. Pathological Heart Muscles
+
+ Surgical Trainer 
+~~~~~~~~~~~~~~~~~~
+
+| l p12cm Researcher & David Fuerst
+| Topic & Development of a surgical trainer for surgeries on the spine.
+| Task & Develop a study design for a test if training on a model spine
+has the same educational benefits as training surgeries on human
+cadavers.
+
+ Dry Eyes and Lasik 
+~~~~~~~~~~~~~~~~~~~~
+
+| l p12cm Researcher & Michael Ring
+| Topic & Benefits of iodine rinsing on dry eyes after Lasik surgery.
+| Task & Corneal reshaping with a laser, or "Lasik"-surgery, often
+causes severe dry eye problems. Treatment at the "Therme Bad Hall"
+promises relieve for dry eye patients. Design a study that uses the
+device developed by Michael Ring to investigate if the benefits of such
+a treatment are significant.
+
+ Recovery after Stroke 
+~~~~~~~~~~~~~~~~~~~~~~~
+
+| l p12cm Researcher & Thomas Minarik
+| Topic & Improvements due to home-training after stroke
+| Task & The typical treatment after stroke consists of intensive
+physiotherapy during the weeks in hospital, followed by intermittent
+treatment at the physiotherapist when the patients return home. We want
+to improve the recovery by introducing interactive home-based therapy.
+With this study we want to investigate if interactive home-based therapy
+leads to an improvement, compared to classical therapy.
+
+ Active Office: Activity and Attention 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+| l p12cm Researcher & Bernhard Schwartz
+| Topic & Improvements of attention due to increased activity in an
+office environment.
+| Task & Your ability to focus on your work depends on a lot of factors.
+One of them is your physical activity. We want to investigate how
+different working environments (e.g. working sitting vs. working
+standing) can affect your concentration at work.
+
+ Pathological Heart Muscles 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+| l p12cm Researcher & Sandra Mayr
+| Topic & The effects of *medication* and other factors on the structure
+of the cardiac muscle, as investigated by atomic force microscopy (AFM)
+on histological samples.
+| Task & To distinguish between healthy and hypertrophic hearts, the
+lengths of the sarcomeres of the heart muscles are measured using an
+AFM. Samples from hearts of healthy subjects and from patients with
+hypertrophic hearts are supplied by the Wagner-Jauregg Hospital in Linz.
+
+Programming Matters
+-------------------
+
+Python
+~~~~~~
+
+There are three reasons why I have decided to use Python for this
+lecture.
+
+#. It is the most elegant programming language that I know.
+
+#. It is free.
+
+#. It is powerful.
+
+I have not seen many books on Python that I really liked. My favorite
+introductory book is .
+
+In general, I suggest that you start out by installing a Python
+distribution which includes the most important libraries. My favorites
+here are and , which are very good starting points when you are using
+Windows. The former one has the advantage that most available
+documentation and help files also get installed locally. Mac and Unix
+users should check out the installations tips from Johansson (see Table
+[table:python]).
+
+There are also many tutorials available on the internet (Table
+[table:python]). Personally, most of the time I just google; thereby I
+stick primarily a) to the official pages, and b) to
+*http://stackoverflow.com/*. Also, I have found user groups surprisingly
+active and helpful!
+
+[table:python]
+
+If you decide to install things manually, you need the following modules
+in addition to the Python standard library:
+
+-  *numpy* ... For working with vectors and arrays.
+
+-  *scipy* ... All the essential scientific algorithms, including those
+   for statistics.
+
+-  *matplotlib* ... The de-facto standard module for plotting and
+   visualization.
+
+-  *pandas* ... Adds *DataFrames* (imagine powerful spreadsheets) to
+   Python.
+
+-  *statsmodels* ... This one is only required if you want to look more
+   into statistical modeling.
+
+Also, make sure that you have a good programming environment! Currently,
+my favorite way of programming is similar to my old Matlab style: I
+first get the individual steps worked out interactively in *ipython*.
+And to write a program, I then go to either *Spyder* (which is free) or
+*Wing* (which is very good, but commercial).
+
+Here an example, to get you started with Python (you find a
+corresponding ipython notebook under
+*http://nbviewer.ipython.org/url/work.thaslwanter.at/CSS/Code/getting\_started.ipynb*):
+
+Example-Session
+^^^^^^^^^^^^^^^
+
+Pandas
+~~~~~~
+
+*Pandas* is a Python module which provides suitable data structures for
+statistical analysis. The following piece of code shows you how pandas
+can be used for data analysis:
+
+Here is also a good place to introduce the short function that we will
+use a number of times to simplify the reading in of data:
+
+Basic Principles
+================
+
+Datatypes
+---------
+
+The type of your data is essential for the choice of test that you have
+to use for your data analysis. Your data can have one of the following
+datatypes:
+
+ Categorical 
+~~~~~~~~~~~~~
+
+ boolean 
+^^^^^^^^^
+
+Some data can only have two values. For example,
+
+#. male/female
+
+#. smoker/non-smoker
+
+ nominal 
+^^^^^^^^^
+
+Many classifications require more than two categories, e.g. * married /
+single / divorced *
+
+ ordinal 
+^^^^^^^^^
+
+These are ordered categorical data, e.g. * very few / few / some / many
+/ very many *
+
+ Numerical 
+~~~~~~~~~~~
+
+ Numerical discrete 
+^^^^^^^^^^^^^^^^^^^^
+
+For example * Number of children: 0 1 2 3 4 5 *
+
+ Continuous 
+~~~~~~~~~~~~
+
+Whenever possible, it is best to record the data in their original
+continuous format, and only with a sensible number of decimal places.
+For example, it does not make sense to record the body size with more
+than 1 mm accuracy, as there are larger changes in body height between
+the size in the morning and the size in the evening, due to compression
+of the intervertebral disks.
+
+Data Display
+------------
+
+When working with a statistical data set, you should *always* first look
+at the raw-data. Our visual system is incredibly good at recognizing
+patterns in visually represented data.
+
+ Scatter Plots 
+~~~~~~~~~~~~~~~
+
+This is the simplest way of representing your data: just plot each
+individual data point. (In cases where many data points are superposed,
+you may want to add a little bit of jitter to show each data point.)
+
+| [h] |image3|
+
+ Histograms 
+~~~~~~~~~~~~
+
+*Histograms* provide a first good overview of the distribution of your
+data. If you divide by the overall number of data points, you get a
+*relative frequency histogram*; and if you just connect the top center
+points of each bin, you obtain a *relative frequency polygon*.
+
+| [ht] |image4|
+
+ Cumulative Frequencies 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Cumulative frequency* curves indicate the number (or percent) of data
+with less than a given value. This is important for the statistical
+analysis (e.g. when we want to know the data range containing 95% of all
+the values). Cumulative frequencies are also useful for comparing the
+distribution of values in two or more different groups of individuals.
+
+When you use percentage points, the cumulative frequency presentation
+has the additional advantage that it is bounded:
+
+.. math:: 0 \leq x \leq 1
+
+| [ht] |image5|
+
+ Box Plots 
+~~~~~~~~~~~
+
+*Box plots* are frequently used in scientific publications to indicate
+values in two or more groups. The error bars typically indicate the
+*range*. However, outliers are often excluded, and plotted separately.
+There are a number of tests to check for outliers. One of them is to
+check for data which lie more than 1.5 \* *inter-quartile-range* (IQR)
+above or below the first/third quartile (see Section [sec:centiles]).
+
+| [!ht] |image6|
+| [fig:Boxplot]
+
+ Programs: Data Display 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+ Study Design 
+--------------
+
+To design a medical study properly is not only advisable - it is even
+required by ISO 14155-1:2003, for *Clinical investigations of medical
+devices for human subjects*. This norm specifies many aspects of your
+clinical study. It enforces the preparation of a *Clinical Investigation
+Plan (CIP)*, specifying
+
+-  The designation of a *monitor* for the investigation.
+
+-  The designation of a *clinical investigator*.
+
+-  Specification the data handling.
+
+-  Specification of the inclusion/exclusion criteria for the subjects.
+
+-  Specification of the paradigm.
+
+-  Specification and justification of the chosen sample numbers.
+
+-  Description of the data analysis.
+
+Types of Studies
+~~~~~~~~~~~~~~~~
+
+ Observational or experimental 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+With *observational* studies the researcher only collects information,
+but does not interact with the study population. In contrast, in
+*experimental* studies the researcher deliberately influences events
+(e.g. treats the patient with a new type of treatment) and investigates
+the effects of these interventions.
+
+ Prospective or retrospective 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In *prospective* studies the data are collected, starting with the
+beginning of the study. In contrast, a *retrospective* study takes data
+acquired from previous events, e.g. routine tests taken at a hospital.
+
+ Longitudinal or cross-sectional 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In *longitudinal* investigations, the researcher collects information
+over a period of time, maybe multiple times from each patient. In
+contrast, in *cross-sectional* studies individuals are observed only
+once. For example, most surveys are cross-sectional, but experiments are
+usually longitudinal.
+
+ Case control and Cohort studies 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In *case control* studies, first the patients are treated, and then they
+are selected for inclusion in the study, based on some characteristic
+(e.g. if they responded to a certain medication). In contrast, in
+*cohort studies*, first subjects of interest are selected, and then
+these subjects are studied over time, e.g. for their response to a
+treatment.
+
+ Design of Experiments 
+~~~~~~~~~~~~~~~~~~~~~~~
+
+ Bias 
+^^^^^^
+
+In general, when selecting our subject you try to make them
+representative of the population that you want to study; and you try to
+conduct your experiments in a way representative of investigations by
+other researchers. However, it is *very* easy to get a *bias* into your
+data. Bias can arise from a number of sources:
+
+-  The selection of subjects.
+
+-  The structure of the experiment.
+
+-  The measurement device.
+
+-  The analysis of the data.
+
+Care should be taken to avoid bias as much as possible.
+
+ Randomized controlled trial 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The gold standard for experimental scientific clinical trials is the
+*randomized controlled trial*. Thereby bias is avoided by splitting the
+subjects to be tested into an *intervention group* and a *control
+group*. The group allocation is made *random*. By having the groups
+differ in only one aspect, i.e. is the factor *treatment*, we should be
+able to detect the effect of the treatment on the patients. Factors that
+can affect the outcome of the experiment are called *covariates* or
+*confoundings*. Through *randomization*, covariates should be balanced
+across the groups.
+
+ Randomization 
+^^^^^^^^^^^^^^^
+
+This may be one of the most important aspects of experimental planning.
+Randomization is used to avoid bias as much as possible, and there are
+different ways to randomize an experiment. For the randomization,
+*random number generators*, which are available with most computer
+languages, can be used. To minimize the chance of bias, the randomly
+allocated numbers should be presented to the experimenter as late as
+possible.
+
+Depending on the experiment, there are different ways to randomize the
+group assingment.
+
+Simple randomization
+''''''''''''''''''''
+
+This procedure is robust against selection and accidental bias. The
+disadvantage is that the resulting groupsize can differ significantly.
+
+For many types of data analysis it is important to have the same sample
+number in each group. To achieve this, other options are possible:
+
+Block randomization
+'''''''''''''''''''
+
+This is used to keep the number of subjects in the different groups
+closely balanced at all times. For example, if you have two types of
+treatment, A and B, you can allocate them to two subjects in the
+following blocks:
+
+#. AABB
+
+#. ABAB
+
+#. ABBA
+
+#. BBAA
+
+#. BABA
+
+#. BAAB
+
+Based on this, you can use a random number generator to generate random
+integers between 1 and 6, and use the corresponding blocks to allocate
+the respective treatments. This will keep the number of subjects in each
+group always almost equal.
+
+Minimization
+''''''''''''
+
+A closely related, but not completely random way to allocate a treatment
+is *minimization*. Thereby you take whichever treatment has the smallest
+number of subjects, and allocate this treatment with a probability
+greater than 0.5 to the next patient.
+
+Stratified randomization
+''''''''''''''''''''''''
+
+Sometimes you may want to include a wider variety of subjects, with
+different characteristics. For example, you may choose to have younger
+as well as older subjects. In that case you should try to keep the
+number of subjects within each *stratum* balanced. For this you will
+have to keep different lists of random numbers for each group of
+subjects.
+
+ Crossover studies 
+^^^^^^^^^^^^^^^^^^^
+
+An alternative to randomization is the *crossover* design of studies. A
+crossover study is a longitudinal study in which subjects receive a
+sequence of different treatments. Every subject receives every
+treatment. To avoid causal effects, the sequence of the treatment
+allocation should be randomized.
+
+ Blinding 
+^^^^^^^^^^
+
+Consciously or not, the experimenter can significantly influence the
+outcome of an experiment. For example, a young researcher with a new
+"brilliant" idea for a new treatment will be bias in the execution of
+the experiment, as well in the analysis of the data, to see his
+hypothesis confirmed. To avoid such a subjective influence, ideally the
+experimenter as well as the subject should be blinded to the therapy.
+This is referred to as *double blinding*.
+
+ Replication 
+^^^^^^^^^^^^^
+
+For variable measurements it is helpful to have a number of independent
+repetitions of each measurement.
+
+ Sample selection 
+^^^^^^^^^^^^^^^^^^
+
+When selecting your subjects, you should take care of two points:
+
+#. Make sure that the samples are representative of the population.
+
+#. In comparative studies, care is needed in making groups similar with
+   respect to known sources of variation.
+
+For example, if you select your subjects randomly from patients at a
+hospital, you automatically bias your sample towards subjects with
+health problems.
+
+ Sample size 
+^^^^^^^^^^^^^
+
+Many studies fail, because the sample size is too small to observed an
+effect of the desired magnitude. To plan your sample size, you have to
+know
+
+-  What is the variance of the parameter in the population you are
+   investigating.
+
+-  What is the magnitude of the effect you are interested in, relative
+   to the standard deviation of the parameter.
+
+Structure of Experiments
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In a designed experiment, there may be several conditions, called
+*factors*, that are controlled by the experimenter. If each combination
+of factors is tested, we talk about a *factorial design* of the
+experiment.
+
+In planning the analysis, you have to keep the important distinction
+between *within subject* comparisons, and *between subjects*
+comparisons.
+
+Data Management
+~~~~~~~~~~~~~~~
+
+ Documentation 
+^^^^^^^^^^^^^^^
+
+Make sure that you document all the factors that may influence your
+results:
+
+-  The date and time of the experiment.
+
+-  Information about the experimenters and the subjects.
+
+-  The exact paradigm that you have decided on.
+
+-  Anything noteworthy that happens during the experiment.
+
+ Data Handling 
+^^^^^^^^^^^^^^^
+
+You can already significantly facilitate the data handling by storing
+your data with telltale names. For example, if you execute your
+experiments in Vienna and in Linz, you can store your rawdata with the
+format "[town][year][month][day].dat". For example, an experiment in
+Vienna on April 1, 2013 would be stored as "vi20130401.dat".
+
+When you have finished recording the data, back up your data right away.
+Best do that into a directory that is separate from the one where you do
+your data analysis afterwards.
+
+ Clinical Investigation Plan 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ISO norm 14155 specifies in detail the requirements for the
+*clinical investigation plan (CIP)*:
+
+#. Type of study (e.g. double-blind, with or without control group
+   etc.).
+
+#. Discussion of the control group and the allocation procedure.
+
+#. Description of the paradigm.
+
+#. Description and justification of primary endpoint of study.
+
+#. Description and justification of chosen measurement variable.
+
+#. Measurement devices and their calibration.
+
+#. Inclusion criteria for subjects.
+
+#. Exclusion criteria for subjects.
+
+#. Point of inclusion ("When is a subject part of the study?")
+
+#. Description of the measurement procedure.
+
+#. Criteria and procedures for the dropout of a subject.
+
+#. Chosen sample number and level of significance, and their
+   justification.
+
+#. Procedure for documentation of negative effects or side-effects.
+
+#. List of factors that can influence the measurement results or their
+   interpretation.
+
+#. Procedure for documentation, also for missing data.
+
+#. Statistical analysis procedure.
+
+Distributions of one Variable
+=============================
+
+Characterizing a Distribution
+-----------------------------
+
+ Distribution Center 
+~~~~~~~~~~~~~~~~~~~~~
+
+ Mean 
+^^^^^^
+
+By default, when we talk about the *mean value* we mean the *arithmetic
+mean* :math:`\bar{x}`:
+
+.. math:: \bar{x} = \frac{{\sum\limits_{i = 1}^n {{x_i}} }}{n}
+
+ Median 
+^^^^^^^^
+
+The *median* is that value that comes half-way when the data are ranked
+in order. In contrast to the mean, it is not affected by outlying data
+points.
+
+ Mode 
+^^^^^^
+
+The *mode* value is the most frequently occurring value in a
+distribution.
+
+ Geometric Mean 
+^^^^^^^^^^^^^^^^
+
+In some situations the *geometric mean* can be useful to describe the
+location of a distribution. It is usually close to the median, and can
+be calculated via the arithmetic mean of the log of the values.
+
+ Quantifying Variability 
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[sec:centiles]
+
+ Range 
+^^^^^^^
+
+This one is fairly easy: it is the difference between the highest and
+the lowest data value. The only thing that you have to watch out for:
+after you have acquired your data, you have to check for *outliers*,
+i.e. data points with a value much higher or lower than the rest of the
+data. Often, such points are caused by errors in the selection of the
+sample or in the measurement procedure. There are a number of tests to
+check for outliers. One of them is to check for data which lie more than
+1.5\*\ *inter-quartile-range* (IQR) above or below the first/third
+quartile (see below).
+
+ Centiles 
+^^^^^^^^^^
+
+The *Cumulative distribution function (CDF) * tells you for each value
+which percentage of the data has a lower value (Figure [fig:CDF]). The
+value below which a given percentage of the values occur is called
+*centile* or *percentile*, and corresponds to a value with a specified
+cumulative frequency.
+
+For example, when you look for the data range which includes 95% of the
+data, you have to find the :math:`2.5^{th}` and the :math:`97.5^{th}`
+percentile of your sample distribution.
+
+The 50th percentile is the *median*.
+
+Also important are the *quartiles*, i.e. the 25th and the 75th
+percentile. The difference between them is sometimes referred to as
+*inter-quartile range (IQR)*.
+
+Median, upper and lower quartile are used for the data display in box
+plots (Fig.[fig:Boxplot]).
+
+| [ht] |image7|
+| [fig:CDF]
+
+ Standard Deviation and Variance 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The *variance* (SD) of a distribution is defined as
+
+.. math::
+
+   \label{eq_variance} \index{general}{variance}
+     var = \frac{{\sum\limits_{i = 1}^n {({x_i-\bar{x}})^2} }}{n-1}
+
+Note that we divide by *n-1* rather than the more obvious n: dividing by
+:math:`n` gives the variance of the observations around the sample mean,
+but we virtually always consider our data as a sample from some larger
+population and wish to use the sample data to estimate the variability
+in the population. Dividing by :math:`n-1` gives us a better estimate of
+the population variance.
+
+The *standard deviation* is simply given by the square root of the
+variance:
+
+.. math:: s = \sqrt{var}
+
+In statistics it is often common to denote the population standard
+deviation with :math:`\sigma`, and the sample standard deviation with
+:math:`s`.
+
+Watch out: in Python, by default the variance is calculated for "n". You
+have to set "ddof=1" to obtain the variance for "n-1":
+
+::
+
+        In[19]: data = arange(7,14)
+
+        In[20]: std(data, ddof=0)
+        Out[20]: 2.0
+
+        In[21]: std(data, ddof=1)
+        Out[21]: 2.1602468994692865
+
+ Standard Error 
+^^^^^^^^^^^^^^^^
+
+While the standard deviation is a good measure for the distribution of
+your values, often you are more interested in the distribution of the
+mean value. For example, when you measure the response to a new
+medication, you might be interested in how well you can characterize
+this response, i.e. is how well you know the mean value. This measure is
+called the *standard error of the mean*, or sometimes just the *standard
+error*. In a single sample from a population with a standard deviation
+of :math:`\sigma` the variance of the sampling distribution of the mean
+is :math:`\sigma^2/n`, and so the standard error of the mean is
+:math:`\sigma/\sqrt{n}`.
+
+ Skewness 
+^^^^^^^^^^
+
+Distributions are *skewed* if they depart from symmetry. For example, if
+you have a measurement that cannot be negative, which is usually the
+case, then we can infer that the data have a skewed distribution if the
+standard deviation is more than half the mean. Such an asymmetry is
+referred to as *positive skewness*. The opposite, negative skewness, is
+rare.
+
+ Central Limit Theorem 
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The central limit theorem states that for identically distributed
+independent random variables (also referred to as *random variates*),
+the mean of a sufficiently large number of these variables will be
+approximately normally distributed.
+
+Distribution Functions
+----------------------
+
+The variable for a standardized distribution function is often called
+*statistic*. So you often find expressions like "the z-statistic" (for
+the normal distribution function), the "t-statistic" (for the
+t-distribution) or the "F-statistic" (for the F-distribution).
+
+Probability and Samples
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Normal Distribution
+~~~~~~~~~~~~~~~~~~~
+
+[sec:normalDistribution]
+
+The *Normal distribution* or *Gaussian distribution* is by far the most
+important of all the distribution functions. This is due to the fact
+that the mean values of *all* distribution functions approximate a
+normal distribution for large enough sample numbers. Mathematically, the
+normal distribution is characterized by a mean value :math:`\mu`, and a
+standard deviation :math:`\sigma`:
+
+.. math::
+
+   \label{eq_normal}
+        f_{\mu,\sigma} (x) = \frac{1}{\sigma \sqrt{2 \pi}} e^{-( x - \mu )^2 /2 \sigma^2}
+
+where :math:` - \infty < x < \infty `, and :math:`f_{\mu,\sigma}` is the
+*probability density function (PDF)* .
+
+| |image8|
+| [fig:normal]
+
+For smaller sample numbers, the sample distribution can show quite a bit
+of variability. For example, look at 25 distributions generated by
+sampling 100 numbers from a normal distribution (Fig.
+[fig:MultipleNormal])
+
+| [h] |image9|
+| [fig:MultipleNormal]
+
+Some examples of applications are:
+
+-  If the average man is 175 cm tall with a variance of 6 cm, what is
+   the probability that a man found at random will be 183 cm tall?
+
+-  If the average man is 175 cm tall with a variance of 6 cm and the
+   average woman is 168 cm tall with a variance of 3 cm, what is the
+   probability that the average man from a given sample will be shorter
+   than the average woman from a given sample?
+
+-  If cans are assumed to have a variance of 4 grams, what does the
+   average weight need to be in order to ensure that the 99% of all cans
+   have a weight of at least 250 grams?
+
+The normal distribution with parameters :math:`\mu` and :math:`\sigma`
+is denoted as :math:`N(\mu,\sigma)`. If the *random variate (rv)* *X* is
+normally distributed with expectation :math:`\mu` and standard deviation
+:math:`\sigma`, one denotes: :math:`\,X \sim N(\mu,\sigma)` or
+:math:`\,X \in N(\mu,\sigma)`.
+
+| c c c & Probability of being
+| Range & within range & outside range
+| mean :math:`\pm` 1SD & 0.683 & .317
+| mean :math:`\pm` 2SD & 0.954 & 0.046
+| mean :math:`\pm` 3SD & 0.9973 & 0.0027
+
+Figure [fig:DistributionUtilities] shows a number of functions are
+commonly used to select appropriate points from the normal distribution
+function:
+
+-  *Probability density function (PDF)*: note that to obtain the
+   probability for the variable appearing in a certain interval, you
+   have to *integrate* the PDF over that range.
+
+-  *Cumulative distribution function (CDF)*: gives the probability of
+   obtaining a value smaller than the given value
+
+-  *Survival function (SF)*: 1-CDF
+
+-  *Percentile point function (PPF)*: the inverse of the CDF. Answers
+   the question "Given a certain probability, what is the corresponding
+   value for the CDF?"
+
+-  *Inverse survival function (ISF)*: the name says it all.
+
+| [h] |image10|
+| [fig:DistributionUtilities]
+
+Other Continuous Distributions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[sec:ContinuousDistributions]
+
+t Distribution
+^^^^^^^^^^^^^^
+
+For a small number of samples (ca.:math:`<10`) from a normal
+distribution, the distribution of the mean deviates slightly from the
+normal distribution. The reason is that the sample mean does not
+coincide exactly with the population mean. This modified distribution is
+the *t-distribution*, and converges for larger values towards the normal
+distribution (Fig. [fig:t]).
+
+| |image11|
+| [fig:t]
+
+Chi-square Distribution
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The *Chi-square distribution* is related to normal distribution in a
+simple way: If a random variable :math:`X` has a normal distribution
+(:math:`X \in N(0,1)`), then :math:`X^2` has a chi-square distribution,
+with one degree of freedom (:math:`X^2 \in \chi_{1}^2`). The sum squares
+of :math:`n` independent and standard normal random variables has a
+chi-square distribution with :math:`n` degrees of freedom:
+
+.. math:: \sum\limits_{i = 1}^n {X_i^2} \in \chi_{n}^2
+
+| |image12|
+
+F Distribution
+^^^^^^^^^^^^^^
+
+Named after Sir Ronald Fisher, who developed the F distribution for use
+in determining critical values in ANOVAs (*ANalysis Of VAriance*). The
+cutoff values in an F table are found using three variables:
+
+-  ANOVA numerator degrees of freedom
+
+-  ANOVA denominator degrees of freedom
+
+-  significance level
+
+ANOVA compares the size of the variance between two different samples.
+This is done by dividing the larger variance over the smaller variance.
+The formula for the resulting *F statistic* is:
+
+.. math:: F(r_1, r_2) = \frac{\chi_{r1} ^2 /r_1}{\chi_{r2} ^2 /r_2}
+
+where :math:`\chi_{r1}^2` and :math:`\chi_{r2}^2` are the chi-square
+statistics of sample one and two respectively, and :math:`r_1` and
+:math:`r_2` are their degrees of freedom, i.e. the number of
+observations.
+
+F-Test of Equality of Variances
+'''''''''''''''''''''''''''''''
+
+One example could be if you want to compare apples that look alike but
+are from different trees and have different sizes. If you want to
+investigate whether they have the same variance of the weight on
+average, you have to calculate
+
+.. math:: F = \frac{S_x^2}{S_y^2}
+
+where :math:`S_x` ist he sample standard deviation of the first batch of
+apples, and :math:`S_y` the sample standard deviation for the second
+batch of apples.
+
+There are three apples from the first tree that weigh 110, 121 and 143
+grams respectively, and four from the other which weigh 88, 93, 105 and
+124 grams respectively. The F statistic is :math:`F 1.05`, and has
+:math:`n-1` and :math:`m-1` degrees of freedom, where :math:`n` and
+:math:`m` are the number of apples in each batch. The code sample below
+shots what the F statistic is close to the center of the distribution,
+so we cannot reject the hypthesis that the two batches have the same
+variance.
+
+::
+
+      In [1]:  apples1 = array([110, 121, 143])
+      In [2]:  apples2 = array([88, 93, 105, 124])
+      In [3]:  fval = std(apples1, ddof=1)/std(apples2, ddof=1)
+      In [4]:  fd = stats.distributions.f(3,4)
+      In [5]:fd.cdf(fval)
+      Out[27]: 0.537640478466751
+
+| |image13|
+
+Lognormal Distribution
+^^^^^^^^^^^^^^^^^^^^^^
+
+In some circumstances a set of data with a positively skewed
+distribution can be transformed into a symmetric distribution by taking
+logarithms. Taking logs of data with a skewed distribution will often
+give a distribution that is near to normal (see Figure [fig:lognormal]).
+
+.5 |Plotted against a linear abscissa.| [fig:Lognormal:sub:`S`\ ub1]
+
+.5 |Plotted against a logarithmic abscissa.|
+[fig:Lognormal:sub:`S`\ ub2]
+
+[fig:lognormal]
+
+Exponential Distribution
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+For a stochastic variable X with an *exponential distribution*, the
+probability distribution function is:
+
+.. math::
+
+   \label{eq_exponential}
+   f_x (x) =
+     \begin{cases}
+   \lambda e^{- \lambda x}, & \mbox{if } x \ge 0 \\
+   0, & \mbox{if } x < 0
+   \end{cases}
+
+The exponential PDF is shown in Figure [fig:exponential]
+
+| |image14|
+| [fig:exponential]
+
+Uniform Distribution
+^^^^^^^^^^^^^^^^^^^^
+
+This is a simple one: an even probability for all data values (Figure
+[fig:uniform]). Not very common for real data.
+
+| |image15|
+|  [fig:uniform]
+
+ Programs: Continuous Distribution Functions 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Discrete Distributions
+~~~~~~~~~~~~~~~~~~~~~~
+
+While the functions describing continuous distributions are referred to
+as *probability distribution functions*, discrete distributions are
+described by *probability mass functions*.
+
+Binomial Distribution
+^^^^^^^^^^^^^^^^^^^^^
+
+The Binomial is associated with the question "Out of a given number of
+trials, how many will succeed?" Some example questions that are modeled
+with a Binomial distribution are:
+
+-  Out of ten tosses, how many times will this coin land ”heads”?
+
+-  From the children born in a given hospital on a given day, how many
+   of them will be girls?
+
+-  How many students in a given classroom will have green eyes?
+
+-  How many mosquitos, out of a swarm, will die when sprayed with
+   insecticide?
+
+We conduct :math:`n` repeated experiments where the probability of
+success is given by the parameter :math:`p` and add up the number of
+successes. This number of successes is represented by the random
+variable :math:`X`. The value of :math:`X` is then between 0 and
+:math:`n`.
+
+When a random variable X has a Binomial Distribution with parameters
+:math:`p` and :math:`n` we write it as :math:`\,X \sim Bin(n,p)` or
+:math:`\,X \sim B(n,p)` and the probability mass function is given at
+:math:`X=k` by the equation:
+
+.. math:: P\left[X = k\right] = \begin{cases} {n \choose k} p^k \left(1-p\right)^{n-k}\ & 0 \le k \le n \\ 0 & \mbox{otherwise} \end{cases} \quad 0 \leq p \leq 1, \quad n \in \mathbb{N}
+
+where :math:`{n \choose k}={n! \over k!(n-k)!}`
+
+| |image16|
+
+Poisson Distribution
+^^^^^^^^^^^^^^^^^^^^
+
+Any French speaker will notice that "Poisson" means "fish", but really
+there’s nothing fishy about this distribution. It’s actually pretty
+straightforward. The name comes from the mathematician Siméon-Denis
+Poisson (1781-1840).
+
+The Poisson Distribution is ”very similar” to the Binomial Distribution.
+We are examining the number of times an event happens. The difference is
+subtle. Whereas the Binomial Distribution looks at how many times we
+register a success over a fixed total number of trials, the Poisson
+Distribution measures how many times a discrete event occurs, over a
+period of continuous space or time. There isn’t a "total" value n. As
+with the previous sections, let’s examine a couple of experiments or
+questions that might have an underlying Poisson nature.
+
+-  How many pennies will I encounter on my walk home?
+
+-  How many children will be delivered at the hospital today?
+
+-  How many products will I sell after airing a new television
+   commercial?
+
+-  How many mosquito bites did you get today after having sprayed with
+   insecticide?
+
+-  How many defects will there be per 100 metres of rope sold?
+
+What’s a little different about this distribution is that the random
+variable :math:`X` which counts the number of events can take on *any
+non-negative integer* value. In other words, I could walk home and find
+no pennies on the street. I could also find one penny. It’s also
+possible (although unlikely, short of an armored-car exploding nearby)
+that I would find 10 or 100 or 10,000 pennies.
+
+Instead of having a parameter p that represents a component probability
+like in the Binomial distribution, this time we have the parameter
+"lambda" or :math:`\lambda` which represents the "average or expected"
+number of events to happen within our experiment. The probability mass
+function of the Poisson is given by
+
+.. math:: P(X=k)=\frac{e^{-\lambda}\lambda^k}{k!}
+
+.
+
+| |image17|
+
+ Programs: Discrete Distribution Functions 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Data Analysis
+-------------
+
+Data Screening
+~~~~~~~~~~~~~~
+
+The first thing you have to do for your data analysis is simply *look at
+your data*. You should check for *missing data* in your data set, and
+*outliers* which can significantly influence the result of your
+analysis.
+
+Normality Check
+~~~~~~~~~~~~~~~
+
+The first way to check if your data are normally distributed, i.e. that
+they are linearly related to the standard normal distribution. In
+statistics, *:math:`Q–Q` plots* ("Q" stands for quantile) are used for
+visual assessments of distributions. They are a graphical method for
+comparing two probability distributions by plotting their quantiles
+against each other. First, the set of intervals for the quantiles are
+chosen. A point :math:`(x,y)` on the plot corresponds to one of the
+quantiles of the second distribution (y-coordinate) plotted against the
+same quantile of the first distribution (x-coordinate). Thus the line is
+a parametric curve with the parameter which is the (number of the)
+interval for the quantile.
+
+If the two distributions being compared are similar, the points in the
+:math:`Q-Q` plot will approximately lie on the line :math:`y = x`. If
+the distributions are linearly related, the points in the :math:`Q-Q`
+plot will approximately lie on a line, but not necessarily on the line
+:math:`y = x` (Figure [fig:qqplot]).
+
+| |image18|
+| [fig:qqplot]
+
+In addition, there are quantitative tests for normality. The test that I
+have encountered most frequently in recent literature is the
+*Kolmogorov-Smirnov test*.  [1]_ Altman mainly uses the *Shapiro-Wilk W
+test* , and a number of other tests are also available.
+
+Transformation
+~~~~~~~~~~~~~~
+
+If your data deviate significantly from a normal distribution, it is
+sometimes possible to make the distribution approximately normal by
+transforming your data. For example, data often have values that can
+only be positive (e.g. the size of persons), and that have long positive
+tail: such data can often be made normal by applying a *log transform*.
+This is demonstrated in Figure [fig:lognormal].
+
+Confidence Intervals
+~~~~~~~~~~~~~~~~~~~~
+
+Although it is common to concentrate the analysis on the p-values, it is
+often much more informative to report the *confidence intervals* for
+your data. The confidence intervals are given by
+
+.. math:: ci = mean \pm se * t_{n,\alpha}
+
+where :math:`se` is the standard error, and :math:`t_{n,\alpha}` the
+:math:`t` statistic for :math:`n` degrees of freedom. For the 95%
+two-sided confidence intervals, for example, you have to set
+:math:`\alpha=0.025` and :math:`\alpha=0.975` .
+
+ Statistical Tests 
+===================
+
+Hypothesis tests
+----------------
+
+[sec:hypotheses] Statistical evaluations are based on the initially
+often counterintuitive procedure of *hypothesis tests*. A hypothesis
+test is a standard format for assessing statistical evidence. It is
+ubiquitous in scientific literature, most often appearing in the form of
+statements of *statistical significance* and quotations like
+:math:`"p<0.01"` that pepper scientific journals. Thereby you proceed as
+follows: you
+
+-  state your hypothesis.
+
+-  decide which value you want to test your hypothesis on.
+
+-  calculate the *probability p* that you find the given value, assuming
+   that your hypothesis is true
+
+The first hypothesis is referred to as *null-hypothesis*, since we
+assume that there is *null* difference between the hypothesis and the
+result. The found probability for a specific target value is the
+*p-value* that you typically find in the literature. If :math:`p<0.05`,
+the difference between your sample and the value that you check is
+*significant*. If :math:`p<0.001`, we speak of a *highly significant*
+difference.
+
+An example for a *null hypothesis*: "We assume that our population has a
+mean value of 7."
+
+ Types of Error
+~~~~~~~~~~~~~~~
+
+In hypothesis testing, two types of errors can occur:
+
+Type I errors
+^^^^^^^^^^^^^
+
+These are errors, where you get a significant result despite the fact
+that the hypothesis is true. The likelihood of a Type I error is
+commonly indicated with :math:`\alpha`, and *is set before you start the
+data analysis*.
+
+For example, assume that the population of young Austrian adults has a
+mean IQ of 105 (i.e. we are smarter than the rest) and a standard
+deviation of 15. We now want to check if the average FH student in Linz
+has the same IQ as the average Austrian, and we select 20 students. We
+set :math:`\alpha=0.05`, i.e. we set our significance level to 95%. Let
+us now assume that the average student has in fact the same IQ as the
+average Austrian. If we repeat our study 20 times, we will find one of
+those 20 times that our sample mean is significantly different from the
+Austrian average IQ. Such a finding would be a false result, despite the
+fact that our assumption is correct, and would constitute a *type I
+error*.
+
+Type II errors and Test Power
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If we want to answer the question "How much chance do we have to reject
+the null hypothesis when the alternative is in fact true?" Or in other
+words, "What’s the probability of detecting a real effect?" we are faced
+with a different problem. To answer these questions, we need an
+*alternative hypothesis*.
+
+For the example given above, an *alternative hypothesis* could be: "We
+assume that our population has a mean value of 6."
+
+A *Type II error* is an error, where you do *not* get a significant
+result, despite the fact that the null-hypothesis is false. The
+probability for this type of error is commonly indicated with
+:math:`\beta`. The *power* of a statistical test is defined as
+:math:`(1-\beta)*100`, and is the chance of correctly accepting the
+alternate hypothesis. Figure [fig:power1] shows the meaning of the
+*power* of a statistical test. Note that for finding the power of a
+test, you need an alternative hypothesis.
+
+Sample Size
+~~~~~~~~~~~
+
+The power of a statistical test depends on four factors:
+
+#. :math:`\alpha`, the probability for Type I errors
+
+#. :math:`\beta`, the probability for Type II errors (
+   :math:`\Rightarrow` power of the test)
+
+#. :math:`d`, the magnitude of the investigated effect relative to
+   :math:`\sigma`, the standard deviation of the sample
+
+#. :math:`n`, the sample size
+
+Only 3 of these 4 parameters can be chosen, the :math:`4^{th}` is then
+automatically fixed.
+
+The size of the difference, :math:`d`, between mean treatment outcomes
+that will answer the clinical question being posed is often called
+*clinical significance* or *clinical relevance*.
+
+| [!ht] |image19|
+| [fig:power1]
+
+| [!ht] |image20|
+| [fig:power2]
+
+ Examples for some special cases 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For a test on one mean, this leads to a *minimum sample number* of
+
+.. math:: n = \frac{{{{({z_{1 - \alpha /2}} + {z_{1 - \beta }})}^2}{\sigma ^2}}}{{{d^2}}}
+
+Here z is the standardized normal variable (see also chapter
+[sec:normalDistribution])
+
+.. math:: z = \frac{x-\mu}{\sigma} .
+
+For finding a difference between two normally distributed means, the
+minimum number of samples we need in each group is
+
+.. math:: {n_1} = {n_2} = \frac{{({z_{1 - \alpha /2}} + {z_{1 - \beta }})}^2(\sigma _1^2 + \sigma _2^2)}{d^2} .
+
+ Programs: SampleSize 
+^^^^^^^^^^^^^^^^^^^^^^
+
+ Sensitivity and Specificity 
+-----------------------------
+
+Some of the more confusing terms in statistical analysis are
+*sensitivity* and *specificity* . A related topic are *positive
+predictive value (PPV)* and *negative predictive value (NPV)* . The
+following diagram shows how the four are related:
+
+| [ht] |image21|
+| [fig:sens:sub:`s`\ pec\ :sub:`d`\ iagram]
+
+-  **Sensitivity** = proportion of positives that are correctly
+   identified by a test = probability of a positive test, given the
+   patient is ill.
+
+-  **Specificity** = proportion of negatives that are correctly
+   identified by a test = probability of a negative test, given that
+   patient is well.
+
+-  **Positive predictive value** is the proportion of patients with
+   positive test results who are correctly diagnosed.
+
+-  **Negative predictive value** is the proportion of patients with
+   negative test results who are correctly diagnosed.
+
+While sensitivity and specificity are independent of prevalence, they do
+not tell us what portion of patients with abnormal test results are
+truly abnormal. This information is provided by the positive/negative
+predictive value. However, as Fig. [fig:prevalence] indicates, these
+values are affected by the *prevalence* of the disease. In other words,
+we need to know the prevalence of the disease as well as the PPV/NPV of
+a test to provide a sensible interpretation of the test results.
+
+| [ht] |image22|
+|  [fig:prevalence]
+
+Figure [fig:sens:sub:`s`\ pec\ :sub:`e`\ xample] gives a worked example:
+
+| [ht] |image23|
+| [fig:sens:sub:`s`\ pec\ :sub:`e`\ xample]
+
+Related calculations
+''''''''''''''''''''
+
+-  False positive rate (:math:`\alpha`) = type I error =
+   :math:`1-specificity` = :math:`\frac{FP}{FP + TN}` =
+   :math:`\frac{180}{180+1820}` = 9%
+
+-  False negative rate (:math:`\beta`) = type II error =
+   :math:`1−sensitivity` = :math:`\frac{FN}{TP + FN}` =
+   :math:`\frac{10}{20+10}` = 33%
+
+-  Power = sensitivity = :math:`1−\beta`
+
+-  Likelihood ratio positive = :math:`\frac{sensitivity}{1−specificity}`
+   = :math:`\frac{66.67\%}{1−91\%}` = 7.4
+
+-  Likelihood ratio negative = :math:`\frac{1−sensitivity}{specificity}`
+   = :math:`\frac{1−66.67\%}{91\%}` = 0.37
+
+Hence with large numbers of false positives and few false negatives, a
+positive FOB screen test is in itself poor at confirming cancer (PPV =
+10%) and further investigations must be undertaken; it did, however,
+correctly identify 66.7% of all cancers (the sensitivity). However as a
+screening test, a negative result is very good at reassuring that a
+patient does not have cancer (NPV = 99.5%) and at this initial screen
+correctly identifies 91% of those who do not have cancer (the
+specificity).
+
+ Large Sample Tests 
+--------------------
+
+Here I give an overview of the most common statistical tests for
+different combinations of data. This overview is taken from .
+
+[table:tests]
+
+Test of Means of Continuous Data
+================================
+
+Distribution of a Sample Mean
+-----------------------------
+
+One sample t-test for a mean value
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If we knew the mean and the standard deviation of a normally distributed
+population, we would know exactly the standard error, and use values
+from the normal distribution to determine how likely it is to find a
+certain mean value, given the population mean and standard deviation.
+However, in practice we have to *estimate* the mean and standard
+deviation from the sample, and the resulting distribution for the mean
+value deviates slightly from a normal distribution. Such distributions
+are called *t-distributions*, and were first described by a researcher
+working under the pseudonym of "Student".
+
+Let us look at a specific example: we take 100 normally distributed
+data, with a mean of 7 and with a standard deviation of 3. What is the
+chance of finding a mean value at a distance of 0.5 or more from the
+mean:?
+
+:math:`>>>` The probability from the t-test is 0.057, and from the
+normal distribution 0.054
+
+Wilcoxon signed rank sum test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If our data are not normally distributed, we cannot use the t-test
+(although this test is fairly robust against deviations from normality).
+Instead, we must use a *non-parametric* test on the mean value. We can
+do this by performing a *Wilcoxon signed rank sum test*.  [2]_  [3]_
+This method has three steps:
+
+#. Calculate the difference between each observation and the value of
+   interest.
+
+#. Ignoring the signs of the differences, rank them in order of
+   magnitude.
+
+#. Calculate the sum of the ranks of all the negative (or positive)
+   ranks, corresponding to the observations below (or above) the chosen
+   hypothetical value.
+
+In Table [tab:wilcoxon] you see an example, where the significance to a
+deviation from the value of 7725 is tested. The rank sum of the negative
+values gives :math:`3+5=8`, and can be looked up in the corresponding
+tables to be significant. In practice, your computer program will
+nowadays do this for you. This example also shows another feature of
+rank evaluations: tied values (here :math:`7515`) get accorded their
+mean rank (here :math:`1.5`).
+
+| l p2cm p2cm p2cm Subject & Daily energy intake (kJ) & Difference from
+7725 kJ & Ranks of differences
+| 1 & 5260 & 2465 & 11
+| 2 & 5470 & 2255 & 10
+| 3 & 5640 & 2085 & 9
+| 4 & 6180 & 1545 & 8
+| 5 & 6390 & 1335 & 7
+| 6 & 6515 & 1210 & 6
+| 7 & 6805 & 920 & 4
+| 8 & 7515 & 210 & 1.5
+| 9 & 7515 & 210 & 1.5
+| 10 & 8230 & -505 & 3
+| 11 & 8770 & -1045 & 5
+
+[tab:wilcoxon]
+
+Comparison of Two Groups
+------------------------
+
+When you compare two groups with each other, we have to distinguish
+between two cases. In the first case, we compare two values recorded
+from the same subject at two specific times. For example, we measure the
+size of students when they enter primary school and after their first
+year, and check if they have been growing. Since we are only interested
+in the *difference* between the first and the second measurement, this
+test is called *paired t-test*, and is essentially equivalent to a
+one-sample t-test for the mean difference.
+
+The second test is if we compare two independent groups. For example, we
+can compare the effect of a two medications given to two different
+groups of patients, and compare how the two groups respond. This is
+called an *unpaired t-test*, or *t-test for two independent groups*.
+
+If we have two independent samples the variance of the difference
+between their means is the *sum* of the separate variances, so the
+standard error of the difference in means is the square root of the sum
+of the separate variances:
+
+.. math::
+
+   \begin{aligned}
+      se({{\bar x}_1} - {{\bar x}_2}) &= \sqrt {\operatorname{var} ({{\bar x}_1}) + \operatorname{var} ({{\bar x}_2})}  \\
+      &= \sqrt {{{\left\{ {se({{\bar x}_1})} \right\}}^2} + {{\left\{ {se({{\bar x}_2})} \right\}}^2}}  \\
+      &= \sqrt {\frac{{s_1^2}}{{{n_1}}} + \frac{{s_2^2}}{{{n_2}}}}  \\\end{aligned}
+
+where :math:`\bar{x}_i` is the mean of the i-th sample, and *se*
+indicates the *standard error*.
+
+ Non-parametric Comparison of Two Groups: Mann-Whitney Test 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the measurement values from the two groups are not normally
+distributed we have to resort to a non-parametric test. The most common
+test for that is the *Mann-Whitney(-Wilkoxon) test*.
+
+Comparison of More Groups
+-------------------------
+
+ Analysis of Variance 
+~~~~~~~~~~~~~~~~~~~~~~
+
+If we want to compare three or more groups with each other, we need to
+use a *one way analysis of variance (ANOVA)*, sometimes also called a
+*one factor ANOVA*. Because the null hypothesis is that there is no
+difference between the groups, the test is based on a comparison of the
+observed variation between the groups (i.e. between their means) with
+that expected from the observed variability between subjects. The
+comparison takes the general form of an *F test* to compare variances,
+but for two groups the t test leads to exactly the same answer. We will
+discuss ANOVAs in more detail in chapter [sec:anova].
+
+ F Test 
+^^^^^^^^
+
+The :math:`F` test or *variance ratio test* is very simple. Under the
+null hypothesis that two Normally distributed populations have equal
+variances we expect the ratio of the two sample variances to have an *F
+distribution* (see section [sec:ContinuousDistributions]).
+
+ Bonferroni correction 
+^^^^^^^^^^^^^^^^^^^^^^^
+
+If an ANOVA yields a significant result, we have to test which of the
+groups are different. Typically, this is done with :math:`t-tests`.
+Since we perform multiple t tests, we should compensate for the risk of
+getting a significant result, even if our null hypothesis is true. The
+simplest - and at the same time quite conservative - approach is to
+divide the required p-value by the number of tests that we do
+(*Bonferroni correction*). For example, if you perform 4 comparisons,
+you check for significance not at :math:`p=0.05`, but at
+:math:`p=0.0125`.
+
+While multiple testing is not yet included in Python standardly, you can
+get a number of multiple-testing corrections done with the statsmodels
+package:
+
+::
+
+      In[7]: from statsmodels.sandbox.stats.multicomp import multipletests
+      In[8]: multipletests([.05, 0.3, 0.01], method='bonferroni')
+    Out[8]:
+      (array([False, False,  True], dtype=bool),
+      array([ 0.15,  0.9 ,  0.03]),
+      0.016952427508441503,
+      0.016666666666666666)
+
+ Kruskal-Wallis test 
+~~~~~~~~~~~~~~~~~~~~~
+
+Just as analysis of variance is a more general form of :math:`t` test,
+so there is a more general form of the non-parametric Mann-whitney test:
+the *Kruskal-Wallis test*. When the null hypothesis is true the test
+statistic follows the *Chi squared distribution*.
+
+Tests on Categorical Data 
+==========================
+
+In a sample of individuals the number falling into a particular group is
+called the *frequency*, so the analysis of categorical data is the
+analysis of frequencies. When two or more groups are compared the data
+are often shown in the form of a *frequency table*, sometimes also
+called *contingency table*.
+
++-------------+------------------+-----------------+-----------+
+|             | *Right Handed*   | *Left Handed*   | *Total*   |
++=============+==================+=================+===========+
+| *Males*     | 43               | 9               | 52        |
++-------------+------------------+-----------------+-----------+
+| *Females*   | 44               | 4               | 48        |
++-------------+------------------+-----------------+-----------+
+| *Total*     | 87               | 13              | 100       |
++-------------+------------------+-----------------+-----------+
+
+[table:frequency]
+
+One Proportion 
+---------------
+
+If you have one sample group of data, you can check if your sample is
+representative of the standard population. To do so, you have to know
+the proportion :math:`p` of the characteristic in the standard
+population. It can be shown that a in population with a characteristic
+with probability :math:`p`, the standard error of samples with this
+characteristic is given by
+
+.. math:: se(p) = \sqrt{p(1-p)/n}
+
+and the corresponding 95% confidence interval is
+
+.. math:: ci = mean \pm se * t_{n,0.95}
+
+If your data lie outside this confidence interval, they are *not*
+representative of the population.
+
+Frequency Tables
+----------------
+
+Chi-square Test
+~~~~~~~~~~~~~~~
+
+Assume you have observed absolute frequencies :math:`o_i` and expected
+absolute frequencies :math:`e_i` under the Null hypothesis of your test
+then it holds
+
+.. math:: V = \sum_i \frac{(o_i-e_i)^2}{e_i} \approx \chi^2_f
+
+.
+
+where :math:`f` are the degrees of freedom. :math:`i` might denote a
+simple index running from :math:`1,...,I` or even a multiindex
+:math:`(i_1,...,i_p)` running from :math:`(1,...,1)` to
+:math:`(I_1,...,I_p)`.
+
+The test statistic :math:`V` is approximately :math:`\chi^2`
+distributed, if
+
+-  for all absolute expected frequencies :math:`e_i` holds
+   :math:`e_i \geq 1` and
+
+-  for at least 80% of the absolute expected frequencies :math:`e_i`
+   holds :math:`e_i \geq 5`.
+
+The degrees of freedom can be computed by the numbers of absolute
+observed frequencies which can be chosen freely. We know that the sum of
+absolute expected frequencies is
+
+.. math:: \sum_i o_i = n
+
+which means that the maximum number of degrees of freedom is
+:math:`I-1`. We might have to subtract from the number of degrees of
+freedom the number of parameters we need to estimate from the sample,
+since this implies further relationships between the observed
+frequencies.
+
+Example
+^^^^^^^
+
+The :math:`\chi^2` test can be used to generate "quick and dirty" test,
+e.g.
+
+:math:`H_0:` The random variable :math:`X` is symmetrically distributed
+versus
+
+:math:`H_1:` the random variable :math:`X` is not symmetrically
+distributed.
+
+We know that in case of a symmetrical distribution the arithmetic mean
+:math:`\bar{x}` and median should be nearly the same. So a simple way to
+test this hypothesis would be to count how many observations are less
+than the mean (:math:`n_-`)and how many observations are larger than the
+arithmetic mean (:math:`n_+`). If mean and median are the same than 50%
+of the observation should smaller than the mean and 50% should be larger
+than the mean. It holds
+
+.. math:: V = \frac{(n_- - n/2)^2}{n/2} + \frac{(n_+ - n/2)^2}{n/2} \approx \chi^2_1
+
+.
+
+Comments
+^^^^^^^^
+
+The Chi-square test is a pure hypothesis test. It tells you if your
+observed frequency can be due to a random sample selection from a single
+population. A number of different expressions have been used for
+chi-square tests, which are due to the original derivation of the
+formulas (from the time before computers were pervasive). Expression
+such as *2x2 tables*, *r-c tables*, or *Chi-square test of contingency*
+all refer to frequency tables and are typically analyzed with chi-square
+tests.
+
+Fisher’s Exact Test
+~~~~~~~~~~~~~~~~~~~
+
+For small sample numbers, corrections should be made for some bias that
+is caused by the use of the continuous chi-squared distribution. This
+correction is referred to as *Yates correction*.
+
+If the requirement that 80% of cells should have expected values of at
+least 5 is not fulfilled, *Fisher’s exact test* should be used. This
+test is based on the observed row and column totals. The method consists
+of evaluating the probability associated with all possible 2x2 tables
+which have the same row and column totals as the observed data, making
+the assumption that the null hypothesis (i.e. that the row and column
+variables are unrelated) is true. In most cases, Fisher’s exact test is
+preferable to the chi-square test. But until the advent of powerful
+computers, it was not practical. You should use it up to approximately
+10-15 cells in the frequency tables.
+
+Analysis Programs
+-----------------
+
+With computers, the computational steps are trivial:
+
+Relation Between Two Continuous Variables
+=========================================
+
+If we have two related variables, the *correlation* measures the
+association between the two variables. In contrast, a *linear
+regression* is used for the prediction of the value of one variable from
+another. If we want to compare more than two groups of variables, we
+have to use a technique known as *Analysis of Variance (ANOVA)*.
+
+Correlation
+-----------
+
+Correlation Coefficient
+~~~~~~~~~~~~~~~~~~~~~~~
+
+If the two variables are normally distributed, the standard measure of
+determining the *correlation coefficient*, often ascribed to *Pearson* ,
+is
+
+.. math::
+
+   \label{eq:pearson}
+     r = \frac{\sum\limits_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum\limits_{i=1}^n (X_i - \bar{X})^2} \sqrt{\sum\limits_{i=1}^n (Y_i - \bar{Y})^2}}
+
+Pearson’s correlation coefficient, sometimes also referred to as
+*population correlation coefficient*, can take any value from -1 to +1.
+Examples are given in Figure [fig:correlation]. Note that the formula
+for the correlation coefficient is symmetrical between :math:`x` and
+:math:`y`.
+
+| |image24|
+| [fig:correlation]
+
+ Rank correlation 
+~~~~~~~~~~~~~~~~~~
+
+If the data distribution is not normal, a different approach is
+necessary. In that case one can rank the set of subjects for each
+variable and compare the orderings. There are two commonly used methods
+of calculating the rank correlation.
+
+-  *Spearman’s :math:`\rho`*, which is exactly the same as the Pearson
+   correlation coefficient :math:`r` calculated on the ranks of the
+   observations.
+
+-  *Kendall’s :math:`\tau`*.
+
+Regression
+----------
+
+We can use the method of *regression* when we want to predict the value
+of one variable from the other.
+
+| |image25|
+| [fig:regression]
+
+When we search for the best-fit line to a given :math:`(x_i,y_i)`
+dataset, we are looking for the parameters :math:`(k,d)` which minimize
+the sum of the squared *residuals* :math:`\epsilon_i` in
+
+.. math::
+
+   \label{eq:simpleRegression}
+     y_i = k * x_i + d + \epsilon_i
+
+where :math:`k` is the *slope* or *inclination* of the line, and
+:math:`d` the *intercept*. This is in fact just the one-dimensional
+example of the more general technique, which is described in the next
+section. Note that in contrast to the correlation, this relationship
+between :math:`x` and :math:`y` is no more symmetrical: it is assumed
+that the :math:`x-`\ values are known exactly, and that all the
+variability lies in the residuals.
+
+| |image26|
+| [fig:residuals]
+
+Introduction
+~~~~~~~~~~~~
+
+ [4]_ Given a data set :math:`\{y_i,\, x_{i1}, \ldots, x_{ip}\}_{i=1}^n`
+of :math:`n` statistical units, a linear regression model assumes that
+the relationship between the dependent variable :math:`y_i` and the
+:math:`p`-vector of regressors :math:`x_i` is linear. This relationship
+is modelled through a *disturbance term* or *error variable*
+:math:`\epsilon_i`, an unobserved random variable that adds noise to the
+linear relationship between the dependent variable and regressors. Thus
+the model takes the form
+
+.. math::
+
+   \label{eq:regression}
+      y_i = \beta_1   x_{i1} + \cdots + \beta_p x_{ip} + \varepsilon_i
+      = \mathbf{x}^{\rm T}_i\boldsymbol\beta + \varepsilon_i,
+      \qquad i = 1, \ldots, n,
+
+where :math:`^T` denotes the transpose, so that :math:`x_i^T\beta` is
+the inner product between vectors :math:`x_i` :math:`\beta`.
+
+Often these :math:`n` equations are stacked together and written in
+vector form as
+
+.. math:: \mathbf{y} = \mathbf{X}\boldsymbol\beta + \boldsymbol\varepsilon, \,
+
+where
+
+.. math::
+
+   \mathbf{y} = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix}, \quad
+      \mathbf{X} = \begin{pmatrix} \mathbf{x}^{\rm T}_1 \\ \mathbf{x}^{\rm T}_2 \\ \vdots \\ \mathbf{x}^{\rm T}_n \end{pmatrix}
+      = \begin{pmatrix} x_{11} & \cdots & x_{1p} \\
+      x_{21} & \cdots & x_{2p} \\
+      \vdots & \ddots & \vdots \\
+      x_{n1} & \cdots & x_{np}
+      \end{pmatrix}, \quad
+      \boldsymbol\beta = \begin{pmatrix} \beta_1 \\ \vdots \\ \beta_p \end{pmatrix}, \quad
+      \boldsymbol\varepsilon = \begin{pmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n \end{pmatrix}.
+
+Some remarks on terminology and general use:
+
+-  :math:`y_i` is called the *regressand*, *endogenous variable*,
+   *response variable*, *measured variable*, or *dependent variable*.
+   The decision as to which variable in a data set is modeled as the
+   dependent variable and which are modeled as the independent variables
+   may be based on a presumption that the value of one of the variables
+   is caused by, or directly influenced by the other variables.
+   Alternatively, there may be an operational reason to model one of the
+   variables in terms of the others, in which case there need be no
+   presumption of causality.
+
+-  :math:`\mathbf{x}_i` are called *regressors*, *exogenous variables*,
+   *explanatory variables*, *covariates*, *input variables*, *predictor
+   variables*, or *independent variables*, but not to be confused with
+   *independent random variables*. The matrix :math:`\mathbf{X}` is
+   sometimes called the *design matrix*.
+
+   -  Usually a constant is included as one of the regressors. For
+      example we can take :math:`x_{i1}=1` for :math:`i=1,...,n`. The
+      corresponding element of :math:`\beta` is called the *intercept*.
+      Many statistical inference procedures for linear models require an
+      intercept to be present, so it is often included even if
+      theoretical considerations suggest that its value should be zero.
+
+   -  Sometimes one of the regressors can be a non-linear function of
+      another regressor or of the data, as in polynomial regression and
+      segmented regression. The model remains linear as long as it is
+      linear in the parameter vector :math:`\beta`.
+
+   -  The regressors :math:`x_{ij}` may be viewed either as random
+      variables, which we simply observe, or they can be considered as
+      predetermined fixed values which we can choose. Both
+      interpretations may be appropriate in different cases, and they
+      generally lead to the same estimation procedures; however
+      different approaches to asymptotic analysis are used in these two
+      situations.
+
+-  :math:`\boldsymbol\beta\,` is a :math:`p`-dimensional *parameter
+   vector*. Its elements are also called *effects*, or *regression
+   coefficients*. Statistical estimation and inference in linear
+   regression focuses on :math:`\beta`.
+
+-  :math:`\varepsilon_i\,` is called the *error term*, *disturbance
+   term*, or *noise*. This variable captures all other factors which
+   influence the dependent variable :math:`y_i` other than the
+   regressors :math:`x_i`. The relationship between the error term and
+   the regressors, for example whether they are correlated, is a crucial
+   step in formulating a linear regression model, as it will determine
+   the method to use for estimation.
+
+-  If :math:`i=1` and :math:`p=1` in Eq.[eq:regression], we have a
+   *simple linear regression*, corresponding to
+   Eq.[eq:simpleRegression]. If :math:`i>1` we talk about *multilinear
+   regression* or *multiple linear regression* .
+
+*Example*. Consider a situation where a small ball is being tossed up in
+the air and then we measure its heights of ascent :math:`h_i` at various
+moments in time :math:`t_i`. Physics tells us that, ignoring the drag,
+the relationship can be modelled as :
+
+.. math:: h_i = \beta_1 t_i + \beta_2 t_i^2 + \varepsilon_i,
+
+where :math:`\beta_1` determines the initial velocity of the ball,
+:math:`\beta_2` is proportional to the standard gravity, and
+:math:`\epsilon_i` is due to measurement errors. Linear regression can
+be used to estimate the values of :math:`\beta_1` and :math:`\beta_2`
+from the measured data. This model is non-linear in the time variable,
+but it is linear in the parameters :math:`\beta_1` and :math:`\beta_2`;
+if we take regressors
+:math:`\mathbf{x}_i = (x_{i1},x_{i2}) = (t_i,t_i^2)`, the model takes on
+the standard form :
+:math:`h_i = \mathbf{x}^{\rm T}_i\boldsymbol\beta + \varepsilon_i.`
+
+Assumptions
+~~~~~~~~~~~
+
+To use the technique of linear regression, five assumptions should be
+fulfilled:
+
+-  The errors in the data values (i.e. the deviations from average) are
+   independent from one another.
+
+-  The model must be appropriate. (A linear regression does not properly
+   describe a quadratic curve.)
+
+-  The *independent variables* (i.e. :math:`x`) are exactly known.
+
+-  The variance of the *dependent variable* (i.e. :math:`y`) is the same
+   for all values of :math:`x`.
+
+-  The distribution of :math:`y` is approximately normal for all values
+   of :math:`x`.
+
+| |image27|
+
+| |image28|
+|  [fig:regline]
+
+Since to my knowledge there exists no program in the Python standard
+library (or numpy, scipy) to calculate the confidence intervals for a
+regression line, I include my corresponding program *lineFit.py*
+[py:fitLine]. The output of this program is shown in Figure
+[fig:regline]. This program also shows how Python programs intended for
+distribution should be documented.
+
+Relation Between Several Variables
+==================================
+
+When we have two groups, we can ask the question: "Are they different?"
+The answer is provided by hypothesis tests: by a *t-test* if the data
+are normally distributed, or by a *Mann-Whitney test* otherwise. If we
+want to go one step further and predict the value of one variable from
+another, we have to use the technique of *linear regression*.
+
+So what happens when we have more than two groups?
+
+To answer the question "Are they different?" for more than two groups,
+we have to use the *Analysis of Variance (ANOVA)-test* for data where
+the residuals are normally distributed. If this condition is not
+fulfilled, the *Friedmann Test* has to be used. And if we want to and
+predict the value of one variable *many* other variables, linear
+regression has to be replaced by of *multilinear regression* , sometimes
+also referred to as *multiple linear regression*.
+
+Variance Analysis
+-----------------
+
+[sec:anova] The idea behind ANOVA is to divide the variance into the
+variance *between* groups, and that *within* groups, and see if those
+distributions match the null hypothesis that all groups come from the
+same distribution. The variables that distinguish the different groups
+are often called *factors*.
+
+(By comparison, t-tests look at the mean values of two groups, and check
+if those are consistent with the assumption that the two groups come
+from the same distribution.)
+
+For example, if we compare a group with No treatment, another with
+treatment A, and a third with treatment B, then we perform a *one factor
+ANOVA*, sometimes also called *one-way ANOVA*, with "treatment" the one
+analysis factor. If we do the same test with men and with women, then we
+have a *two-factor* or *two-way ANOVA*, with "gender" and "treatment" as
+the two treatment factors. Note that with ANOVAs, it is quite important
+to have exactly the same number of samples in each analysis group!
+
+The one-way ANOVA assumes all the samples are drawn from normally
+distributed populations with equal variance. To test this assumption,
+you can use the *Levene test*.
+
+Compared to one-way ANOVAs, the analysis with two-way ANOVAs has a new
+element. We can look not only if each of the factors is significant; we
+can also check if the *interaction* of the factors has a significant
+influence on the distribution of the data. For sticking to the example
+above, if only women with treatment B get healthy, we have a significant
+interaction effect between "gender" and "treatment".
+
+ Example: one-way ANOVA 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+As an example, let us take the red cell folate levels (:math:`\mu g/l`)
+in threee groups of cardiac bypass patients given different levels of
+nitrous oxide ventilation (Amess et al, 1978):
+
+-  First the "Sums of squares (SS)" are calculated. Here the SS between
+   treatments is 15515.88, and the SS of the residuals is 39716.09 . The
+   total SS is the sum of these two values.
+
+-  The mean squares is the SS divided by the corresponding degrees of
+   freedom.
+
+-  The F-value is the larger mean squares value divided by the smaller
+   value. (If we only have two groups, the F-value is the square of the
+   corresponding t-value. See listing [py:multivariate]).
+
+-  From the F-value, we can looking up the corresponding p-value.
+
+ Example: two-way ANOVA 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+See the example in listing [py:modeling]
+
+ Multilinear Regression 
+------------------------
+
+If you have truly independent variables, *multilinear regression* is a
+straitforward extension of the simple linear regression. However, if
+your variables may be related to each other, you have to proceed much
+more carefully. For example, you may want to investigate how the
+prevalence of some disease correlates with age and with income: if you
+do so, you have to keep in mind that age and income are most likely
+correlated! For details, gives a good introduction to that topic. Also,
+check out the chapter on Modeling.
+
+ Statistical Models 
+====================
+
+ Model language 
+----------------
+
+The mini-language commonly used now in statistics to describe formulas
+was first used in the languages :math:`R` and :math:`S`, but is now also
+available in Python through the module *patsy*.
+
+For instance, if we have some variable :math:`y`, and we want to regress
+it against some other variables :math:`x, a, b`, and the interaction of
+a and b, then we simply write
+
+.. math:: y \sim x + a + b + a:b
+
+The symbols in Table [tab:syntax] are used on the right hand side to
+denote different interactions.
+
+[tab:syntax]
+
+A complete set of the description is found under
+
+ Design Matrix 
+~~~~~~~~~~~~~~~
+
+Definition
+^^^^^^^^^^
+
+In a regression model, written in matrix-vector form as
+
+.. math:: y=X\beta+ \epsilon,
+
+the matrix :math:`X` is the *design matrix*.
+
+Examples
+^^^^^^^^
+
+Simple Regression
+'''''''''''''''''
+
+Example of *simple linear regression* with 7 observations. Suppose there
+are 7 data points :math:`\left\{ {{y_i},{x_i}} \right\}`, where
+:math:`i=1,2,…,7`. The simple linear regression model is
+
+.. math:: y_i = \beta_0 + \beta_1 x_i +\epsilon_i, \,
+
+where :math:`\beta_0` is the y-intercept and :math:`\beta_1` is the
+slope of the regression line. This model can be represented in matrix
+form as
+
+.. math::
+
+   \begin{bmatrix}y_1 \\ y_2 \\ y_3 \\ y_4 \\ y_5 \\ y_6 \\ y_7 \end{bmatrix}
+     =
+     \begin{bmatrix}1 & x_1  \\1 & x_2  \\1 & x_3  \\1 & x_4  \\1 & x_5  \\1 & x_6 \\ 1 & x_7  \end{bmatrix}
+     \begin{bmatrix} \beta_0 \\ \beta_1  \end{bmatrix}
+     +
+     \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \\ \epsilon_6 \\ \epsilon_7 \end{bmatrix}
+
+where the first column of ones in the design matrix represents the
+y-intercept term while the second column is the x-values associated with
+the y-value.
+
+Multiple Regression
+'''''''''''''''''''
+
+Example of *multiple regression* with covariates (i.e. independent
+variables) :math:`w_i` and :math:`x_i`. Again suppose that the data are
+7 observations, and for each observed value to be predicted
+(:math:`y_i`), there are two covariates that were also observed
+:math:`w_i` and :math:`x_i`. The model to be considered is
+
+.. math:: y_i = \beta_0 + \beta_1 w_i + \beta_2 x_i + \epsilon_i
+
+This model can be written in matrix terms as
+
+.. math::
+
+   \begin{bmatrix}y_1 \\ y_2 \\ y_3 \\ y_4 \\ y_5 \\ y_6 \\ y_7 \end{bmatrix} =
+       \begin{bmatrix} 1 & w_1 & x_1  \\1 & w_2 & x_2  \\1 & w_3 & x_3  \\1 & w_4 & x_4  \\1 & w_5 & x_5  \\1 & w_6 & x_6 \\ 1& w_7  & x_7  \end{bmatrix}
+       \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2  \end{bmatrix}
+       +
+       \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \\ \epsilon_6 \\ \epsilon_7 \end{bmatrix}
+
+One-way ANOVA (Cell Means Model)
+''''''''''''''''''''''''''''''''
+
+Example with a one-way analysis of variance (ANOVA) with 3 groups and 7
+observations. The given data set has the first three observations
+belonging to the first group, the following two observations belong to
+the second group and the final two observations are from the third
+group. If the model to be fit is just the mean of each group, then the
+model is
+
+.. math:: y_{ij} = \mu_i + \epsilon_{ij}
+
+which can be written
+
+.. math::
+
+   \begin{bmatrix}y_1 \\ y_2 \\ y_3 \\ y_4 \\ y_5 \\ y_6 \\ y_7 \end{bmatrix} =
+     \begin{bmatrix}1 & 0 & 0 \\1 &0  &0 \\ 1 & 0 & 0 \\  0 & 1 & 0 \\  0 & 1 & 0 \\  0 & 0 & 1 \\  0 & 0 & 1\end{bmatrix}
+     \begin{bmatrix}\mu_1 \\ \mu_2 \\ \mu_3  \end{bmatrix}
+     +
+     \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \\ \epsilon_6 \\ \epsilon_7 \end{bmatrix}
+
+It should be emphasized that in this model :math:`\mu_i` represents the
+mean of the :math:`i`\ th group.
+
+One-way ANOVA (offset from reference group)
+'''''''''''''''''''''''''''''''''''''''''''
+
+The ANOVA model could be equivalently written as each group parameter
+:math:`\tau_i` being an offset from some overall reference. Typically
+this reference point is taken to be one of the groups under
+consideration. This makes sense in the context of comparing multiple
+treatment groups to a control group and the control group is considered
+the "reference". In this example, group 1 was chosen to be the reference
+group. As such the model to be fit is:
+
+.. math:: y_{ij} = \mu + \tau_i + \epsilon_{ij}
+
+with the constraint that :math:`\tau_1` is zero.
+
+.. math::
+
+   \begin{bmatrix}y_1 \\ y_2 \\ y_3 \\ y_4 \\ y_5 \\ y_6 \\ y_7 \end{bmatrix} =
+     \begin{bmatrix}1 &0 &0 \\1 &0  &0 \\ 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \\ 1  & 0 & 1\end{bmatrix}
+     \begin{bmatrix}\mu \\  \tau_2 \\ \tau_3 \end{bmatrix}
+     +
+     \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \\ \epsilon_6 \\ \epsilon_7 \end{bmatrix}
+
+In this model :math:`\mu` is the mean of the reference group and
+:math:`\tau_i` is the difference from group :math:`i` to the reference
+group. :math:`\tau_1` and is not included in the matrix because its
+difference from the reference group (itself) is necessarily zero.
+
+ Assumptions 
+-------------
+
+Standard linear regression models with standard estimation techniques
+make a number of assumptions about the predictor variables, the response
+variables and their relationship. Numerous extensions have been
+developed that allow each of these assumptions to be relaxed (i.e.
+reduced to a weaker form), and in some cases eliminated entirely. Some
+methods are general enough that they can relax multiple assumptions at
+once, and in other cases this can be achieved by combining different
+extensions. Generally these extensions make the estimation procedure
+more complex and time-consuming, and may also require more data in order
+to get an accurate model.
+
+The following are the major assumptions made by standard linear
+regression models with standard estimation techniques (e.g. ordinary
+least squares):
+
+-  **Weak exogeneity**. This essentially means that the predictor
+   variables :math:`x` can be treated as fixed values, rather than
+   random variables. This means, for example, that the predictor
+   variables are assumed to be error-free, that is they are not
+   contaminated with measurement errors. Although not realistic in many
+   settings, dropping this assumption leads to significantly more
+   difficult errors-in-variables models.
+
+-  **Linearity**. This means that the mean of the response variable is a
+   linear combination of the parameters (regression coefficients) and
+   the predictor variables. Note that this assumption is much less
+   restrictive than it may at first seem. Because the predictor
+   variables are treated as fixed values (see above), linearity is
+   really only a restriction on the parameters. The predictor variables
+   themselves can be arbitrarily transformed, and in fact multiple
+   copies of the same underlying predictor variable can be added, each
+   one transformed differently. This trick is used, for example, in
+   polynomial regression, which uses linear regression to fit the
+   response variable as an arbitrary polynomial function (up to a given
+   rank) of a predictor variable. This makes linear regression an
+   extremely powerful inference method. In fact, models such as
+   polynomial regression are often "too powerful", in that they tend to
+   overfit the data. As a result, some kind of regularization must
+   typically be used to prevent unreasonable solutions coming out of the
+   estimation process. Common examples are ridge regression and lasso
+   regression. Bayesian linear regression can also be used, which by its
+   nature is more or less immune to the problem of overfitting. (In
+   fact, ridge regression and lasso regression can both be viewed as
+   special cases of Bayesian linear regression, with particular types of
+   prior distributions placed on the regression coefficients.)
+
+-  **Constant variance** (aka *homoscedasticity*). This means that
+   different response variables have the same variance in their errors,
+   regardless of the values of the predictor variables. In practice this
+   assumption is invalid (i.e. the errors are heteroscedastic) if the
+   response variables can vary over a wide scale. In order to determine
+   for heterogeneous error variance, or when a pattern of residuals
+   violates model assumptions of homoscedasticity (error is equally
+   variable around the ’best-fitting line’ for all points of x), it is
+   prudent to look for a "fanning effect" between residual error and
+   predicted values. This is to say there will be a systematic change in
+   the absolute or squared residuals when plotted against the predicting
+   outcome. Error will not be evenly distributed across the regression
+   line. Heteroscedasticity will result in the averaging over of
+   distinguishable variances around the points to get a single variance
+   that is inaccurately representing all the variances of the line. In
+   effect, residuals appear clustered and spread apart on their
+   predicted plots for larger and smaller values for points along the
+   linear regression line, and the mean squared error for the model will
+   be wrong. Typically, for example, a response variable whose mean is
+   large will have a greater variance than one whose mean is small. For
+   example, a given person whose income is predicted to be $100,000 may
+   easily have an actual income of $80,000 or $120,000 (a standard
+   deviation]] of around $20,000), while another person with a predicted
+   income of $10,000 is unlikely to have the same $20,000 standard
+   deviation, which would imply their actual income would vary anywhere
+   between -$10,000 and $30,000. (In fact, as this shows, in many cases
+   – often the same cases where the assumption of normally distributed
+   errors fails – the variance or standard deviation should be predicted
+   to be proportional to the mean, rather than constant.) Simple linear
+   regression estimation methods give less precise parameter estimates
+   and misleading inferential quantities such as standard errors when
+   substantial heteroscedasticity is present. However, various
+   estimation techniques (e.g. weighted least squares and
+   heteroscedasticity-consistent standard errors) can handle
+   heteroscedasticity in a quite general way. Bayesian linear regression
+   techniques can also be used when the variance is assumed to be a
+   function of the mean. It is also possible in some cases to fix the
+   problem by applying a transformation to the response variable (e.g.
+   fit the logarithm of the response variable using a linear regression
+   model, which implies that the response variable has a log-normal
+   distribution rather than a normal distribution).
+
+-  **Independence of errors**. This assumes that the errors of the
+   response variables are uncorrelated with each other. (Actual
+   statistical independence is a stronger condition than mere lack of
+   correlation and is often not needed, although it can be exploited if
+   it is known to hold.) Some methods (e.g. generalized least squares)
+   are capable of handling correlated errors, although they typically
+   require significantly more data unless some sort of regularization is
+   used to bias the model towards assuming uncorrelated errors. Bayesian
+   linear regression is a general way of handling this issue.
+
+-  **Lack of multicollinearity in the predictors**. For standard least
+   squares estimation methods, the design matrix :math:`X` must have
+   full column rank :math:`p`; otherwise, we have a condition known as
+   multicollinearity in the predictor variables. This can be triggered
+   by having two or more perfectly correlated predictor variables (e.g.
+   if the same predictor variable is mistakenly given twice, either
+   without transforming one of the copies or by transforming one of the
+   copies linearly). It can also happen if there is too little data
+   available compared to the number of parameters to be estimated (e.g.
+   fewer data points than regression coefficients). In the case of
+   multicollinearity, the parameter vector :math:`\beta` will be
+   non-identifiable, it has no unique solution. At most we will be able
+   to identify some of the parameters, i.e. narrow down its value to
+   some linear subspace of :math:`R^p`. Methods for fitting linear
+   models with multicollinearity have been developed. Note that the more
+   computationally expensive iterated algorithms for parameter
+   estimation, such as those used in generalized linear models, do not
+   suffer from this problem — and in fact it’s quite normal to when
+   handling categorical data\|categorically-valued predictors to
+   introduce a separate indicator variable predictor for each possible
+   category, which inevitably introduces multicollinearity.
+
+Beyond these assumptions, several other statistical properties of the
+data strongly influence the performance of different estimation methods:
+
+-  The statistical relationship between the error terms and the
+   regressors plays an important role in determining whether an
+   estimation procedure has desirable sampling properties such as being
+   unbiased and consistent.
+
+-  The arrangement, or probability distribution of the predictor
+   variables :math:`x` has a major influence on the precision of
+   estimates of :math:`\beta`. Sampling and design of experiments are
+   highly-developed subfields of statistics that provide guidance for
+   collecting data in such a way to achieve a precise estimate of
+   :math:`\beta`.
+
+Interpretation
+~~~~~~~~~~~~~~
+
+A fitted linear regression model can be used to identify the
+relationship between a single predictor variable :math:`x_j` and the
+response variable :math:`y` when all the other predictor variables in
+the model are “held fixed”. Specifically, the interpretation of
+:math:`\beta_j` is the expected change in :math:`y` for a one-unit
+change in :math:`x_j` when the other covariates are held fixed—that is,
+the expected value of the partial derivative of :math:`y` with respect
+to :math:`x_j`. This is sometimes called the ”unique effect” of
+:math:`x_j` on ”y”. In contrast, the ”marginal effect” of :math:`x_j` on
+:math:`y` can be assessed using a correlation coefficient or simple
+linear regression model relating :math:`x_j` to :math:`y`; this effect
+is the total derivative of :math:`y` with respect to :math:`x_j`.
+
+Care must be taken when interpreting regression results, as some of the
+regressors may not allow for marginal changes (such as dummy variables,
+or the intercept term), while others cannot be held fixed (recall the
+example from the introduction: it would be impossible to “hold
+:math:`t_j` fixed” and at the same time change the value of
+:math:`t_i^2`.
+
+It is possible that the unique effect can be nearly zero even when the
+marginal effect is large. This may imply that some other covariate
+captures all the information in :math:`x_j`, so that once that variable
+is in the model, there is no contribution of :math:`x_j` to the
+variation in :math:`y`. Conversely, the unique effect of :math:`x_j` can
+be large while its marginal effect is nearly zero. This would happen if
+the other covariates explained a great deal of the variation of
+:math:`y`, but they mainly explain variation in a way that is
+complementary to what is captured by :math:`x_j`. In this case,
+including the other variables in the model reduces the part of the
+variability of :math:`y` that is unrelated to :math:`x_j`, thereby
+strengthening the apparent relationship with :math:`x_j`.
+
+The meaning of the expression “held fixed” may depend on how the values
+of the predictor variables arise. If the experimenter directly sets the
+values of the predictor variables according to a study design, the
+comparisons of interest may literally correspond to comparisons among
+units whose predictor variables have been “held fixed” by the
+experimenter. Alternatively, the expression “held fixed” can refer to a
+selection that takes place in the context of data analysis. In this
+case, we “hold a variable fixed” by restricting our attention to the
+subsets of the data that happen to have a common value for the given
+predictor variable. This is the only interpretation of “held fixed” that
+can be used in an observational study.
+
+The notion of a “unique effect” is appealing when studying a complex
+system where multiple interrelated components influence the response
+variable. In some cases, it can literally be interpreted as the causal
+effect of an intervention that is linked to the value of a predictor
+variable. However, it has been argued that in many cases multiple
+regression analysis fails to clarify the relationships between the
+predictor variables and the response variable when the predictors are
+correlated with each other and are not assigned following a study
+design.
+
+Bootstrapping
+-------------
+
+Another type of modelling is *bootstrapping*/. Sometimes you have data
+describing a distribution, but do not know what type of distribution it
+is. So what can you do if you want to find out e.g. confidence values
+for the mean?
+
+The answer is bootstrapping. Bootstrapping is a scheme of *resampling*,
+i.e. taking additional samples repeatedly from the initial sample, to
+provide estimates of its variability. In a case where the distribution
+of the initial sample is unknown, bootstrapping is of especial help in
+that it provides information about the distribution.
+
+Analysis of Survival Times
+==========================
+
+When analyzing survival times, different problems come up than the ones
+discussed so far. One question is how do we deal with subjects dropping
+out of a study. For example, assume that we test a new cancer drug.
+While some subjects die, others may believe that the new drug is not
+effective, and decide to drop out of the study before the study is
+finished. A similar problem would be faced when we investigate how long
+a machine lasts before it breaks down.
+
+Survival Probabilities
+----------------------
+
+Kaplan-Meier survival curve
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A clever way to deal with these problems is described in detail in .
+First, the time is subdivided into small periods. Then the likelihood is
+calculated that a subject survives a given period. The survival
+probability is given by
+
+.. math:: p_k = p_{k-1} * \frac{r_k-f_k}{r_k}
+
+where :math:`p_k` is the probability to survive period :math:`k`;
+:math:`r_k` is the number of subjects still at risk (i.e. still being
+followed up) immediately before the :math:`k^{th}` day, and :math:`f_k`
+is the number of observed failures on the day :math:`k`. The curve
+describing the resulting survival probability is called *life table*,
+*survival curve*, or *Kaplan-Meier curve* (see Figure
+[fig:SurvivalCurve]).
+
+| |image29|
+| [fig:SurvivalCurve]
+
+Note that the survival curve changes only when a "failure" occurs, i.e.
+when a subject dies. *Censored* entries, describing either when a
+subject drops out of the study or when the study finishes, are taken
+into consideration at the "failure" times, but otherwise do not affect
+the survival curve.
+
+Comparing Survival Curves in Two Groups
+---------------------------------------
+
+The most common test for comparing independent groups of survival times
+is the *logrank test*. This test is a non-parametric hypothesis test,
+testing the probability that both groups come from the same underlying
+population. Since to my knowledge this test is not yet implemented in a
+Python library, I have included an implementation based on the equations
+given by (see program [py:survival]).
+
+To explore the effect of different variables on survival, more advanced
+methods are required. The *Cox regression model* introduced by Cox in
+1972 is used widely when it is desired to investigate several variables
+at the same time. For details, check or other statistic textbooks.
+
+Appendix
+========
+
+ Lecture Schedule 
+------------------
+
+#. Introduction
+
+#. Basics [T]
+
+#. Study Design
+
+#. Normal Distribution [T]
+
+#. Other Continuous Distributions
+
+#. Data Analysis [T]
+
+#. Statistical Tests
+
+#. Continous Tests
+
+#. **Presentation Experimental Design**
+
+#. Categorical Tests
+
+#. Correlation [T]
+
+#. Regression [T]
+
+#. ANOVA [T]
+
+#. Statistical Models
+
+#. **Final Presentation**
+
+.. [1]
+   see scipy.stats.kstest, example given in univariate.py
+
+.. [2]
+   Python Example: scipy.stats.wilcoxon, in "univariate.py"
+
+.. [3]
+   The following description and example has been taken from , Table 9.2
+
+.. [4]
+   This section has been taken from Wikipedia
+
+.. |image1| image:: ../Images/regression.png
+.. |image2| image:: ../Images/cc_licence.png
+.. |image3| image:: ../Images/scatterPlot.png
+.. |image4| image:: ../Images/Histogram.png
+.. |image5| image:: ../Images/CumulativeFrequencyFunction.png
+.. |image6| image:: ../Images/boxplot.png
+.. |image7| image:: ../Images/NormalDist_PDF_CDF.png
+.. |image8| image:: ../Images/Normal_Distribution_PDF.png
+.. |image9| image:: ../Images/Normal_MultHist.png
+.. |image10| image:: ../Images/DistributionFunctions.png
+.. |image11| image:: ../Images/Student_t_pdf.png
+.. |image12| image:: ../Images/ChiSquare_pdf.png
+.. |image13| image:: ../Images/F_distributionPDF.png
+.. |Plotted against a linear abscissa.| image:: ../Images/LogNormal_Linear.png
+.. |Plotted against a logarithmic abscissa.| image:: ../Images/LogNormal_Logarithmic.png
+.. |image16| image:: ../Images/Exponential_pdf.png
+.. |image17| image:: ../Images/Uniform_Distribution_PDF.png
+.. |image18| image:: ../Images/Binomial_distribution_pmf.png
+.. |image19| image:: ../Images/Poisson_pmf.png
+.. |image20| image:: ../Images/ProbPlot.png
+.. |image21| image:: ../Images/power1.png
+.. |image22| image:: ../Images/power2.png
+.. |image23| image:: ../Images/Sensitivity_Specificity_Diagram.png
+.. |image24| image:: ../Images/Sensitivity_Specificity.png
+.. |image25| image:: ../Images/Sensitivity_Specificity_Example.png
+.. |image26| image:: ../Images/Correlation_examples2.png
+.. |image27| image:: ../Images/Linear_regression.png
+.. |image28| image:: ../Images/residuals_linreg.png
+.. |image29| image:: ../Images/Anscombes_quartet.png
+.. |image30| image:: ../Images/regression_wLegend.png
+.. |image31| image:: ../Images/Survival.png
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

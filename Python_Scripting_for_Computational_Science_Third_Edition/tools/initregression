@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+"""Write an initial regression script (.verify)"""
+import os, sys, string, glob
+
+usage = 'Usage: ' + sys.argv[0] + ' plain|Numerics name [removepath]'
+example = 'Ex: ' + sys.argv[0] + ''' plain test1 "os.environ['scripting']"'''
+
+try:
+    tp = sys.argv[1]
+except:
+    print usage, example; sys.exit(1)
+try:
+    name = sys.argv[2]
+except:
+    print usage, '\n', example; sys.exit(1)
+try:
+    removepath = sys.argv[3]
+except:
+    removepath = ''
+
+def dump_script(tp, name, removepath):
+    thisdir = os.getcwd()
+    if removepath:
+	if removepath.find('os.environ') != -1:
+            thisdir = string.replace(thisdir, eval(removepath)+'/', '')
+            removepath_str = ', removepath=' + removepath
+        else:
+            thisdir = string.replace(thisdir, removepath+'/', '')
+            # add quotes to path (such that it becomes a string arg.):
+            removepath_str = ', removepath=' + repr(removepath)
+	print removepath
+    else:
+        path = 'None'
+        removepath_str = ''
+    if tp == 'Numerics':
+        cls = 'TestRunNumerics'
+        ending = """
+# approximate treatment of floating-point numbers:
+test.approx(Regression.defaultfilter)
+"""
+    else:
+        cls = 'TestRun'
+        ending = ''
+        
+        
+    s = '''\
+#!/usr/bin/env python
+"""Regression script in %(thisdir)s."""
+
+import py4cs.Regression as Regression
+import os, glob, sys
+
+test = Regression.%(cls)s('%(name)s.v'%(removepath_str)s)
+
+test.run('someapp', options='...', inputfile='')
+#test.silentrun('somecommand', options='')
+test.run('someapp')
+test.run('someapp', options='...', inputfile='')
+test.append('somefile')
+
+%(ending)s
+''' % locals()
+    return s
+
+s = dump_script(tp, name, removepath)
+verify_script = name + '.verify'
+f = open(verify_script, 'w')
+f.write(s)
+f.close()
+os.chmod(verify_script, 0755)  # ensure the script is executable
+# do the same for all *.py script in this directory:
+for f in glob.glob('*.py'):
+    os.chmod(f, 0755)
+print 'written a verify script', verify_script
+
+

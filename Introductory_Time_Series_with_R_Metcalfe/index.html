@@ -1,0 +1,180 @@
+<html>
+<head>
+<title>Introductory Time Series with R</title>
+</head>
+<body bgcolor=white>
+<body>
+
+<h1 align="center">Introductory Time Series with R</h1>
+
+<h2 align="center">by <a href=http://elena.aut.ac.nz/~pcowpert>Paul S.P. Cowpertwait </a> and 
+<a href=http://www.adelaide.edu.au/directory/andrew.metcalfe>Andrew V. Metcalfe</a></h2>
+
+<h3 align="center"><a href=http://www.springer.com/statistics/statistical+theory+and+methods/book/978-0-387-88697-8>Springer.   ISBN: 978-0-387-88697-8</a></h3>
+
+<p ALIGN="center"><a href=http://www.springer.com/statistics/statistical+theory+and+methods/book/978-0-387-88697-8><IMG SRC="cover-large.gif" ALIGN="middle" ALT="[Image of Cover]" WIDTH=250 /></a></p>
+
+
+<p align="center">
+Published June 2009  
+</p>
+
+<font face="Ariel" size = 3>
+
+<table align="center" cellpadding="5" border="1">
+<tr>
+<th colspan="3" align="center">Material on this web page</th>
+</tr>
+
+<tr>
+<td valign="top"><a href="#About">About the Book</td>
+<td valign="top"><a href="#Contents">Contents</td>
+</tr>
+
+<tr>
+<td valign="top"><a href="#Exercises">Answers to Selected Exercises</a></td>
+<td valign="top"><a href="#Data">Data Sets</a></td>
+</tr>
+
+<tr>
+<td valign="top"><a href="#RScripts">R Scripts</td>
+<td valign="top"><a href="#Errata">Known Errata</td>
+</tr>
+
+</table>
+
+<hr>
+
+<h3><a id="About" name="About">About the book</a></h3>
+
+<p>Yearly global mean temperature and ocean levels, daily share prices, 
+and the signals transmitted back to Earth by the Voyager space craft are 
+all examples of sequential observations over time known as time series. 
+This book gives you a step-by-step introduction to analysing time series using the 
+open source software R,  which can be downloaded free of charge from: 
+<a href=http://www.r-project.org/>http://www.r-project.org</a>.</p>
+
+<p> Each time series model is motivated with practical 
+applications, and is defined in mathematical notation. Once the model has 
+been introduced it is used to generate synthetic data, using R code, and 
+these generated data are then used to estimate its parameters. This sequence 
+enhances understanding of both the model and the R function used to fit the 
+model to data. Finally, the model is applied to an observed series of data. 
+By using R, the whole procedure can be reproduced by the reader.</p>
+
+<p> The book is written for undergraduate students of mathematics, economics, business and 
+finance, geography, engineering and related disciplines, and postgraduate students who 
+may need to analyse time series as part of their taught programme or their research.</p>
+
+<p> <a href=http://elena.aut.ac.nz/~pcowpert>Paul Cowpertwait</a> (<a href="mailto:paul.cowpertwait@aut.ac.nz">paul.cowpertwait@aut.ac.nz</a>) is an associate professor in analytics at Auckland University of Technology with a substantial research record 
+in both the theory and applications of time series and stochastic models. Andrew 
+Metcalfe (<a href="mailto:andrew.metcalfe@adelaide.edu.au">andrew.metcalfe@adelaide.edu.au</a>) 
+is an associate professor in the School of Mathematical Sciences at the University of Adelaide, 
+and an author of six statistics textbooks and numerous research papers. Both authors 
+have extensive experience of teaching time series to students at all levels.</p>
+
+<hr>
+
+<h3><a id="Contents" name="Contents">Contents</a></h3>
+
+<table>
+<tbody><tr>
+<td valign="top">
+<ol>
+<li> Time Series Data</li>
+<li> Correlation</li>
+<li> Forecasting Strategies</li>
+<li> Basic Stochastic Models</li>
+<li> Regression</li>
+<li> Stationary Models</li>
+<li> Non-stationary Models</li>
+<li> Long Memory Processes</li>
+<li> Spectral Analysis</li>
+<li> System Identification</li>
+<li> Multivariate Models</li>
+<li> State Space Models</li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+
+<h3><a id="Data" name="Data">Data Sets</a></h3>
+
+<p>Data listed here are for teaching/research only and can be downloaded free of charge from various sites via the internet.  The sources are various, including R, the Climatic Research 
+Unit (University of East Anglia), Rob Hyndman's Time Series library, the Pacific 
+Exchange Rate Service, the United Nations Framework Convention on Climate Change, and 
+the Australian Bureaux of Statistics.  We are grateful to 
+these organisations and people for making their 
+data available.  Please let us know if you find your data here without a 
+suitable acknowledgement.  The chapter in which the data set first
+appears is shown first. </p>
+
+
+
+
+<table>
+<tr><td><a href=cbe.dat>         Chapter 1: Chocolate, Beer, Electricity</a></td></tr>
+<tr><td><a href=pounds_nz.dat>         Chapter 1: Exchange rate ($NZ per UK pound)</a></td></tr>
+<tr><td><a href=Maine.dat>         Chapter 1: Maine unemployment</a></td></tr>
+<tr><td><a href=USunemp.dat>         Chapter 1: US unemployment</a></td></tr>
+<tr><td><a href=global.dat>         Chapter 1: Global temperature data (edited)</a></td></tr>
+<tr><td><a href=Herald.dat>         Chapter 2: Herald square exhaust emission data</a></td></tr>
+<tr><td><a href=wave.dat>         Chapter 2: Wave tank data</a></td></tr>
+<tr><td><a href=Fontdsdt.dat>         Chapter 2: Font reservoir series</a></td></tr>
+<tr><td><a href=guesswhat.dat>         Chapter 2: Guess What?</a></td></tr>
+<tr><td><a href=varnish.dat>         Chapter 2: Varnish</a></td></tr>
+<tr><td><a href=ApprovActiv.dat>         Chapter 3: Building Approvals</a></td></tr>
+<tr><td><a href=motororg.dat>         Chapter 3: Complaints to a motor company</a></td></tr>
+<tr><td><a href=wine.dat>         Chapter 3: Australian wine sales</a></td></tr>
+<tr><td><a href=HP.txt>         Chapter 4: Hewlett-Packade closing prices</a></td></tr>
+<tr><td><a href=stemp.dat>         Chapter 7: Southern temperatures</a></td></tr>
+<tr><td><a href=osvisit.dat>         Chapter 7: Overseas visitors</a></td></tr>
+<tr><td><a href=stockmarket.dat>         Chapter 7: Stockmarket series</a></td></tr>
+<tr><td><a href=LAN.txt>         Chapter 8: LAN series</a></td></tr>
+<tr><td><a href=Nilemin.txt>         Chapter 8: Nile Minima</a></td></tr>
+<tr><td><a href=mprime.txt>         Chapter 8: Bank loan rates</a></td></tr>
+<tr><td><a href=imotor.txt>         Chapter 9: Electric motor series</a></td></tr>
+<tr><td><a href=zdd.txt>         Chapter 9: Vibration dose series</a></td></tr>
+<tr><td><a href=soi.txt>         Chapter 9: Southern oscillation index</a></td></tr>
+<tr><td><a href=pdo.txt>         Chapter 9: Pacific Decadal Oscillation index</a></td></tr>
+<tr><td><a href=leg4.dat>         Chapter 10: Tugboat data</a></td></tr>
+<tr><td><a href=us_rates.dat>         Chapter 11: US exchange rates</a></td></tr>
+<tr><td><a href=Murray.txt>         Chapter 12: Murray River data</a></td></tr>
+<tr><td><a href=MorgStan.dat>         Chapter 12: Morgan Stanley share prices</a></td></tr>
+</table>
+
+<hr>
+
+<h3><a id="RScripts" name="RScripts">R Scripts</a></h3>
+
+<p>The longer R scripts that appear in the
+text are available in the link below.</p>
+
+<table>
+<tr><td><a href=scripts.R>         R Scripts</a></td></tr>
+</table>
+
+<hr>
+
+<h3><a id="Errata" name="Errata">Known Errata</a></h3>
+
+<table>
+<tr><td><a href=errata.pdf>         Errata</a></td></tr>
+</table>
+
+<hr>
+
+<h3><a id="Exercises" name="Exercises">Exercises and Selected Answers</a></h3>
+
+<table>
+<tr><td><a href=solutions.pdf>         Solutions</a></td></tr>
+</table>
+
+<hr>
+
+<address>Last edited March 2010, by Paul Cowpertwait</address>
+</body>
+</html>

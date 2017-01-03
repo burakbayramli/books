@@ -1,0 +1,76 @@
+'''SConscript
+'''
+
+Import('CH RD DDS KEY BUILD')
+# BUILD forks a command 'python3 source[0] env.args[KEY]'
+env=Environment()
+env.args = {}
+
+target = (DDS('lorenz.xyz'), DDS('lorenz.4'))
+source = ('lorenz.py',)
+env.args[KEY(target)] = ('--L', '20000', '--levels', '4', '--quantfile',
+                        DDS('lorenz.4'), '--xyzfile', DDS('lorenz.xyz'))
+env.Command(target, source, BUILD)
+
+target = (DDS('TSintro_fine'), DDS('TSintro_qt'), DDS('TSintro_qtx'))
+source = ('lorenz.py',)
+env.args[KEY(target)] = ('--L', '2050', '--TSintro', DDS(''))
+env.Command(target, source, BUILD)
+
+target = (DDS('m12s.4y'),)
+source = ('MakeModel.py', CH('C.cpython-32mu.so'), CH('Scalar.py'),
+          CH('base.py'), DDS('lorenz.4'))
+env.args[KEY(target)]=('500', DDS(''), 'lorenz.4', 'm12s.4y')
+env.Command(target, source, BUILD )
+
+target = [DDS('states'), DDS('state_sequence')]+[
+    DDS('state%s'%x) for x in range(12)]
+source = ('StatePic.py', DDS('lorenz.4'), DDS('lorenz.xyz'), DDS('m12s.4y'))
+env.args[KEY(target)] = (DDS(''), 'lorenz.4', 'lorenz.xyz','m12s.4y')
+env.Command(target, source, BUILD)
+
+target = [DDS('varg_state%s'%x) for x in range(12)]
+source = ('VStatePic.py', DDS('lorenz.xyz'), DDS('states'))
+env.args[KEY(target)] = (DDS(''), 'lorenz.xyz', 'states')
+env.Command(target, source, BUILD)
+
+target = (DDS('benettin'),)
+source = ('LyapPlot.py',)
+env.args[KEY(target)] = target
+env.Command(target, source, BUILD)
+
+target = (DDS('H_study'),)
+source = ('cross_entropy.py', 'lor_C.cpython-32mu.so', CH('C.cpython-32mu.so'))
+env.args[KEY(target)] = ('--resultfile', target[0], '--exponents', '-2.0',
+                         '3.0', '0.5')
+env.Command(target, source, BUILD)
+
+target = (DDS('TrainChar'),)
+source = ('TrainChar.py', DDS('lorenz.4'))
+env.args[KEY(target)] = (source[-1], target[0])
+env.Command(target, source, BUILD)
+
+target = (DDS('ToyTS1'),)
+source = ('ToyTS1.py', RD('Save_Hview_T_100'))
+env.args[KEY(target)] = (source[-1], target[0])
+env.Command(target, source, BUILD)
+
+target = (DDS('Hsurvey'), DDS('HtauS'))
+source = ('Hsurvey.py', 'EKF.py')
+env.args[KEY(target)] = (DDS(''),)
+env.Command(target, source, BUILD)
+
+target = (DDS('em.pickle'),)
+source = ('em.py',)
+env.args[KEY(target)] = target
+env.Command(target, source, BUILD)
+
+target = (DDS('SGO_sim'), DDS('SGO_train'))
+source = ('ScalarGaussian.py',)
+env.args[KEY(target)] = (DDS(''),)
+env.Command(target, source, BUILD)
+
+#---------------
+# Local Variables:
+# eval: (python-mode)
+# End:

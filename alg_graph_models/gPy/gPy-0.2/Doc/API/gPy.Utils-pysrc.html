@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Utils</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        Module&nbsp;Utils
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Utils-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="gPy.Utils-module.html">Module gPy.Utils</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-docstring">"""Utility functions and variables</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">@var emptyset: The empty set</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring">@type emptyset: Frozenset</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">@var _version: Version of this module</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring">@type _version: String</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">Tkinter</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">math</tt> <tt class="py-keyword">import</tt> <tt class="py-name">log</tt><tt class="py-op">,</tt> <tt id="link-0" class="py-name" targets="Method gPy.RandomGraphs.EstRandomADG.exp()=gPy.RandomGraphs.EstRandomADG-class.html#exp"><a title="gPy.RandomGraphs.EstRandomADG.exp" class="py-name" href="#" onclick="return doclink('link-0', 'exp', 'link-0');">exp</a></tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">signal</tt><tt class="py-op">,</tt> <tt class="py-name">time</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">gc</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt id="link-1" class="py-name" targets="Variable gPy.Demos._version=gPy.Demos-module.html#_version,Variable gPy.Examples._version=gPy.Examples-module.html#_version,Variable gPy.Graphs._version=gPy.Graphs-module.html#_version,Variable gPy.Hypergraphs._version=gPy.Hypergraphs-module.html#_version,Variable gPy.IO._version=gPy.IO-module.html#_version,Variable gPy.Models._version=gPy.Models-module.html#_version,Variable gPy.Parameters._version=gPy.Parameters-module.html#_version,Variable gPy.RandomGraphs._version=gPy.RandomGraphs-module.html#_version,Variable gPy.Samplers._version=gPy.Samplers-module.html#_version,Variable gPy.Utils._version=gPy.Utils-module.html#_version,Variable gPy.Variables._version=gPy.Variables-module.html#_version"><a title="gPy.Demos._version
+gPy.Examples._version
+gPy.Graphs._version
+gPy.Hypergraphs._version
+gPy.IO._version
+gPy.Models._version
+gPy.Parameters._version
+gPy.RandomGraphs._version
+gPy.Samplers._version
+gPy.Utils._version
+gPy.Variables._version" class="py-name" href="#" onclick="return doclink('link-1', '_version', 'link-1');">_version</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'$Id: Utils.py,v 1.2 2006/11/20 09:36:28 jc Exp $'</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"> </tt>
+<a name="neg_cnf"></a><div id="neg_cnf-def"><a name="L15"></a><tt class="py-lineno"> 15</tt> <a class="py-toggle" href="#" id="neg_cnf-toggle" onclick="return toggle('neg_cnf');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#neg_cnf">neg_cnf</a><tt class="py-op">(</tt><tt class="py-param">clauses</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="neg_cnf-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="neg_cnf-expanded"><a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line">    <tt class="py-docstring">"""Each clause is an iterable of integers</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-docstring">    Given a set of clauses, return a CNF asserting that not all are true.</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">    <tt class="py-comment"># find suitable number for temporary z atoms</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">    <tt class="py-name">first_z</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">clause</tt> <tt class="py-keyword">in</tt> <tt class="py-name">clauses</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">lit</tt> <tt class="py-keyword">in</tt> <tt class="py-name">clause</tt><tt class="py-op">:</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">abs</tt><tt class="py-op">(</tt><tt class="py-name">lit</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">first_z</tt><tt class="py-op">:</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">                <tt class="py-name">first_z</tt> <tt class="py-op">=</tt> <tt class="py-name">abs</tt><tt class="py-op">(</tt><tt class="py-name">lit</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt class="py-name">first_z</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">    <tt id="link-2" class="py-name" targets="Method gPy.Models._AbsM.z()=gPy.Models._AbsM-class.html#z,Method gPy.Parameters.Factor.z()=gPy.Parameters.Factor-class.html#z"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-2', 'z', 'link-2');">z</a></tt> <tt class="py-op">=</tt> <tt class="py-name">first_z</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">    <tt class="py-comment"># set up extra clauses with z literals</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-comment"></tt>     </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">    <tt class="py-name">z_clauses</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">    <tt class="py-name">disj</tt> <tt class="py-op">=</tt> <tt class="py-name">set</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">clause</tt> <tt class="py-keyword">in</tt> <tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">clauses</tt><tt class="py-op">,</tt><tt class="py-name">key</tt><tt class="py-op">=</tt><tt class="py-name">len</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-name">z_clauses</tt><tt class="py-op">[</tt><tt id="link-3" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-3', 'z', 'link-2');">z</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">lit</tt> <tt class="py-keyword">in</tt> <tt class="py-name">clause</tt><tt class="py-op">:</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">            <tt class="py-name">z_clauses</tt><tt class="py-op">[</tt><tt id="link-4" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-4', 'z', 'link-2');">z</a></tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-op">-</tt><tt class="py-name">lit</tt><tt class="py-op">)</tt> <tt class="py-comment"># represents -z v -lit</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt class="py-name">disj</tt><tt class="py-op">.</tt><tt class="py-name">add</tt><tt class="py-op">(</tt><tt id="link-5" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-5', 'z', 'link-2');">z</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt id="link-6" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-6', 'z', 'link-2');">z</a></tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">    <tt class="py-name">ub_z</tt> <tt class="py-op">=</tt> <tt id="link-7" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-7', 'z', 'link-2');">z</a></tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">    <tt class="py-name">out_clauses</tt> <tt class="py-op">=</tt> <tt class="py-name">set</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">frozenset</tt><tt class="py-op">(</tt><tt class="py-name">disj</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">    <tt class="py-comment"># eliminate all zs by resolution</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-comment"></tt>     </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt id="link-8" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-8', 'z', 'link-2');">z</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">first_z</tt><tt class="py-op">,</tt><tt class="py-name">ub_z</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">zset</tt> <tt class="py-op">=</tt> <tt class="py-name">frozenset</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt id="link-9" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-9', 'z', 'link-2');">z</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-name">next_clauses</tt> <tt class="py-op">=</tt> <tt class="py-name">set</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">lit</tt> <tt class="py-keyword">in</tt> <tt class="py-name">z_clauses</tt><tt class="py-op">[</tt><tt id="link-10" class="py-name"><a title="gPy.Models._AbsM.z
+gPy.Parameters.Factor.z" class="py-name" href="#" onclick="return doclink('link-10', 'z', 'link-2');">z</a></tt><tt class="py-op">]</tt><tt class="py-op">:</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">            <tt class="py-name">litset</tt> <tt class="py-op">=</tt> <tt class="py-name">frozenset</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">lit</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">clause</tt> <tt class="py-keyword">in</tt> <tt class="py-name">out_clauses</tt><tt class="py-op">:</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">                 <tt class="py-keyword">if</tt> <tt class="py-op">-</tt><tt class="py-name">lit</tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-name">clause</tt><tt class="py-op">:</tt> <tt class="py-comment">#only add new clause if not a tautology</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">                    <tt class="py-name">next_clauses</tt><tt class="py-op">.</tt><tt class="py-name">add</tt><tt class="py-op">(</tt><tt class="py-name">clause</tt> <tt class="py-op">-</tt> <tt class="py-name">zset</tt> <tt class="py-op">|</tt> <tt class="py-name">litset</tt> <tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">out_clauses</tt> <tt class="py-op">=</tt> <tt class="py-name">next_clauses</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">    <tt class="py-comment"># only check now for redundant clauses, could do this when eliminating zs.</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">    <tt class="py-name">return_clauses</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">clause</tt> <tt class="py-keyword">in</tt> <tt class="py-name">out_clauses</tt><tt class="py-op">:</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">other</tt> <tt class="py-keyword">in</tt> <tt class="py-name">out_clauses</tt><tt class="py-op">:</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">other</tt> <tt class="py-op">!=</tt> <tt class="py-name">clause</tt> <tt class="py-keyword">and</tt> <tt class="py-name">other</tt> <tt class="py-op">&lt;=</tt> <tt class="py-name">clause</tt><tt class="py-op">:</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">                <tt class="py-keyword">break</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">            <tt class="py-name">return_clauses</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">clause</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line"> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">return_clauses</tt> </tt>
+</div><a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line"> </tt>
+<a name="order_from_nonlex"></a><div id="order_from_nonlex-def"><a name="L69"></a><tt class="py-lineno"> 69</tt> <a class="py-toggle" href="#" id="order_from_nonlex-toggle" onclick="return toggle('order_from_nonlex');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#order_from_nonlex">order_from_nonlex</a><tt class="py-op">(</tt><tt class="py-param">variables</tt><tt class="py-op">,</tt><tt class="py-param">nonlexs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="order_from_nonlex-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="order_from_nonlex-expanded"><a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">    <tt class="py-docstring">"""Return C{variables} in standard order,</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"><tt class="py-docstring">    except for those pairs of variables in C{nonlexs}</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"><tt class="py-docstring">    @raise ValueError: If C{variables} and C{nonlexs} are inconsistent</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-docstring">    For example C{variables}=('a','b','c') and C{nonlexs} = [['a','c']]</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">    <tt class="py-name">nonlexs</tt> <tt class="py-op">=</tt> <tt class="py-name">frozenset</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">pair</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">pair</tt> <tt class="py-keyword">in</tt> <tt class="py-name">nonlexs</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">    <tt class="py-keyword">def</tt> <tt class="py-def-name">compare</tt><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">,</tt><tt class="py-param">y</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">x</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">y</tt><tt class="py-op">:</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">,</tt><tt class="py-name">y</tt><tt class="py-op">)</tt> <tt class="py-keyword">in</tt> <tt class="py-name">nonlexs</tt><tt class="py-op">:</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-number">1</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">x</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">y</tt><tt class="py-op">:</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">y</tt><tt class="py-op">,</tt><tt class="py-name">x</tt><tt class="py-op">)</tt> <tt class="py-keyword">in</tt> <tt class="py-name">nonlexs</tt><tt class="py-op">:</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-number">1</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-number">0</tt> </tt>
+</div><a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">    <tt class="py-comment">#print 'nonlexs', nonlexs</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">output</tt> <tt class="py-op">=</tt> <tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt id="link-11" class="py-name" targets="Method gPy.FKMCMC.FamilyScoreCache.variables()=gPy.FKMCMC.FamilyScoreCache-class.html#variables,Method gPy.PC.CI.variables()=gPy.PC.CI-class.html#variables,Method gPy.PC.GraphSeparator.variables()=gPy.PC.GraphSeparator-class.html#variables,Method gPy.PC.HypotheticalSeparator.variables()=gPy.PC.HypotheticalSeparator-class.html#variables,Method gPy.Samplers.BNSampler.variables()=gPy.Samplers.BNSampler-class.html#variables,Method gPy.Variables.SubDomain.variables()=gPy.Variables.SubDomain-class.html#variables"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-11', 'variables', 'link-11');">variables</a></tt><tt class="py-op">,</tt><tt class="py-name">cmp</tt><tt class="py-op">=</tt><tt class="py-name">compare</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">     </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">    <tt class="py-comment"># check that a consistent set of nonlexs was sent in</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">v</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">output</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">w</tt> <tt class="py-keyword">in</tt> <tt class="py-name">output</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">+</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">:</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">v</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">w</tt> <tt class="py-keyword">and</tt> <tt class="py-op">(</tt><tt class="py-name">v</tt><tt class="py-op">,</tt><tt class="py-name">w</tt><tt class="py-op">)</tt> <tt class="py-keyword">in</tt> <tt class="py-name">nonlexs</tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> <tt class="py-op">(</tt><tt class="py-name">v</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">w</tt> <tt class="py-keyword">and</tt> <tt class="py-op">(</tt><tt class="py-name">w</tt><tt class="py-op">,</tt><tt class="py-name">v</tt><tt class="py-op">)</tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-name">nonlexs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">                <tt class="py-keyword">raise</tt> <tt class="py-name">ValueError</tt><tt class="py-op">(</tt><tt class="py-string">'variables = %s and nonlexs = %s is inconsistent'</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-12" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.variables
+gPy.PC.CI.variables
+gPy.PC.GraphSeparator.variables
+gPy.PC.HypotheticalSeparator.variables
+gPy.Samplers.BNSampler.variables
+gPy.Variables.SubDomain.variables" class="py-name" href="#" onclick="return doclink('link-12', 'variables', 'link-11');">variables</a></tt><tt class="py-op">,</tt><tt class="py-name">nonlexs</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">output</tt> </tt>
+</div><a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">                 </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">                 </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">     </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line"> </tt>
+<a name="pretty_str_set"></a><div id="pretty_str_set-def"><a name="L103"></a><tt class="py-lineno">103</tt> <a class="py-toggle" href="#" id="pretty_str_set-toggle" onclick="return toggle('pretty_str_set');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#pretty_str_set">pretty_str_set</a><tt class="py-op">(</tt><tt class="py-param">set</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="pretty_str_set-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="pretty_str_set-expanded"><a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">    <tt class="py-docstring">"""Return pretty string representation of a set</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-docstring">    @param set: A set</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"><tt class="py-docstring">    @type set: Set or Frozenset</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-docstring">    @return: Pretty string representation of a set</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: String</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">    <tt class="py-name">strs</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt id="link-13" class="py-name" targets="Method gPy.Parameters._IncrementalADTree.str()=gPy.Parameters._IncrementalADTree-class.html#str"><a title="gPy.Parameters._IncrementalADTree.str" class="py-name" href="#" onclick="return doclink('link-13', 'str', 'link-13');">str</a></tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">set</tt><tt class="py-op">]</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-string">'{%s}'</tt> <tt class="py-op">%</tt> <tt class="py-string">', '</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Method gPy.Hypergraphs.Hypergraph.join()=gPy.Hypergraphs.Hypergraph-class.html#join"><a title="gPy.Hypergraphs.Hypergraph.join" class="py-name" href="#" onclick="return doclink('link-14', 'join', 'link-14');">join</a></tt><tt class="py-op">(</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">strs</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"> </tt>
+<a name="member"></a><div id="member-def"><a name="L114"></a><tt class="py-lineno">114</tt> <a class="py-toggle" href="#" id="member-toggle" onclick="return toggle('member');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#member">member</a><tt class="py-op">(</tt><tt class="py-param">some_set</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="member-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="member-expanded"><a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">    <tt class="py-docstring">"""Return an arbitrary element from a set without altering the set.</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line"><tt class="py-docstring">    Can be used on any iterable. For ordered iterables returns the first</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line"><tt class="py-docstring">    member.</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"><tt class="py-docstring">    @param some_set: A set from which an arbitrary member is required</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line"><tt class="py-docstring">    @type some_set: Set</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line"><tt class="py-docstring">    @return: Arbitrary element from C{some_set} or C{None} if the set is</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line"><tt class="py-docstring">    empty</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: Any</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">some_set</tt><tt class="py-op">:</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">x</tt> </tt>
+</div><a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line"> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"><tt class="py-comment"># def subsetn(set,n):</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     """Generate subsets of size at most C{n}</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"><tt class="py-comment">#     Actually C{set} can be any iterable and tuples</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     are returned. Each tuple is in ascending order</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-comment">#     @param set: A 'set' of objects</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     @type set: Any iterable</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     @param n: Inclusive upper bound on size of subsets</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     @type n: Int</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     """</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     if n == 0:</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         yield ()</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     elif n == 1:</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         yield ()</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         for elt in set:</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#             yield (elt,)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#     else:</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         m = n-1</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         for tup1 in subsetn(set,m):</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#             yield tup1</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#             if len(tup1) == m:</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#                 for elt in set:</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#                     if elt &gt; tup1[-1]:</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#                         yield tup1 + (elt,)</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line"> </tt>
+<a name="all_subsets"></a><div id="all_subsets-def"><a name="L155"></a><tt class="py-lineno">155</tt> <a class="py-toggle" href="#" id="all_subsets-toggle" onclick="return toggle('all_subsets');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#all_subsets">all_subsets</a><tt class="py-op">(</tt><tt class="py-param">set_in</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="all_subsets-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="all_subsets-expanded"><a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">    <tt class="py-docstring">"""set_in has to be a list"""</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">set_in</tt><tt class="py-op">:</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">        <tt class="py-keyword">yield</tt> <tt class="py-name">set_in</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">        <tt class="py-name">elt</tt> <tt class="py-op">=</tt> <tt class="py-name">set_in</tt><tt class="py-op">.</tt><tt class="py-name">pop</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt id="link-15" class="py-name" targets="Function gPy.Utils.all_subsets()=gPy.Utils-module.html#all_subsets"><a title="gPy.Utils.all_subsets" class="py-name" href="#" onclick="return doclink('link-15', 'all_subsets', 'link-15');">all_subsets</a></tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">x</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">x</tt> <tt class="py-op">+</tt> <tt class="py-op">[</tt><tt class="py-name">elt</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line"> </tt>
+<a name="subsetn"></a><div id="subsetn-def"><a name="L165"></a><tt class="py-lineno">165</tt> <a class="py-toggle" href="#" id="subsetn-toggle" onclick="return toggle('subsetn');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#subsetn">subsetn</a><tt class="py-op">(</tt><tt class="py-param">set_in</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="subsetn-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="subsetn-expanded"><a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">    <tt class="py-docstring">"""Generate subsets of size at most C{n}</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line"><tt class="py-docstring">    Actually C{set_in} can be any iterable.</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line"><tt class="py-docstring">    If n &lt;= len(set_in)/2 tuples</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line"><tt class="py-docstring">    are returned. Each tuple is in ascending order. Otherwise</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line"><tt class="py-docstring">    a set is returned.</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line"><tt class="py-docstring">    This is optimised for n &lt; len(set)/2</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line"><tt class="py-docstring">    @param set_in: A 'set' of objects</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line"><tt class="py-docstring">    @type set_in: Any iterable</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line"><tt class="py-docstring">    @param n: Inclusive upper bound on size of subsets</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line"><tt class="py-docstring">    @type n: Int</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">    <tt class="py-name">tupleset</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">n</tt> <tt class="py-op">==</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">        <tt class="py-keyword">yield</tt> <tt class="py-name">set_in</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">n</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">/</tt><tt class="py-number">2</tt><tt class="py-op">:</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">        <tt class="py-name">realset</tt> <tt class="py-op">=</tt> <tt class="py-name">set</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt id="link-16" class="py-name" targets="Function gPy.Utils._subsetn()=gPy.Utils-module.html#_subsetn"><a title="gPy.Utils._subsetn" class="py-name" href="#" onclick="return doclink('link-16', '_subsetn', 'link-16');">_subsetn</a></tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">,</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">-</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">realset</tt><tt class="py-op">.</tt><tt class="py-name">difference</tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">        <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">n</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt id="link-17" class="py-name"><a title="gPy.Utils._subsetn" class="py-name" href="#" onclick="return doclink('link-17', '_subsetn', 'link-16');">_subsetn</a></tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">                <tt class="py-keyword">yield</tt> <tt class="py-name">x</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line"> </tt>
+<a name="_subsetn"></a><div id="_subsetn-def"><a name="L194"></a><tt class="py-lineno">194</tt> <a class="py-toggle" href="#" id="_subsetn-toggle" onclick="return toggle('_subsetn');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#_subsetn">_subsetn</a><tt class="py-op">(</tt><tt class="py-param">tupleset</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_subsetn-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_subsetn-expanded"><a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">n</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">elt</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-name">elt</tt><tt class="py-op">,</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">i</tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">        <tt class="py-name">n</tt> <tt class="py-op">-=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">tup1</tt><tt class="py-op">,</tt> <tt class="py-name">lasti</tt> <tt class="py-keyword">in</tt> <tt id="link-18" class="py-name"><a title="gPy.Utils._subsetn" class="py-name" href="#" onclick="return doclink('link-18', '_subsetn', 'link-16');">_subsetn</a></tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">tup1</tt><tt class="py-op">,</tt> <tt class="py-name">lasti</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">tup1</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">n</tt><tt class="py-op">:</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">                <tt class="py-name">lasti</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">elt</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">[</tt><tt class="py-name">lasti</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">                    <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-name">tup1</tt> <tt class="py-op">+</tt> <tt class="py-op">(</tt><tt class="py-name">elt</tt><tt class="py-op">,</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">lasti</tt> <tt class="py-op">+</tt> <tt class="py-name">i</tt> </tt>
+</div><a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line"> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line"> </tt>
+<a name="subsetn_batch"></a><div id="subsetn_batch-def"><a name="L208"></a><tt class="py-lineno">208</tt> <a class="py-toggle" href="#" id="subsetn_batch-toggle" onclick="return toggle('subsetn_batch');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#subsetn_batch">subsetn_batch</a><tt class="py-op">(</tt><tt class="py-param">set_in</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">,</tt><tt class="py-param">batch_size</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="subsetn_batch-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="subsetn_batch-expanded"><a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line"><tt class="py-docstring">    Generate lists of size C{batch_size} containing subsets of size</tt> </tt>
+<a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line"><tt class="py-docstring">    at most C{n} from C{set_in}.</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line"><tt class="py-docstring">    Final batch may be shorter than C{batch_size}</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">    <tt class="py-name">batch_template</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">None</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-name">batch_size</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">    <tt class="py-name">batch</tt> <tt class="py-op">=</tt> <tt class="py-name">batch_template</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">    <tt class="py-name">i</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">subset</tt> <tt class="py-keyword">in</tt> <tt id="link-19" class="py-name" targets="Function gPy.Utils.subsetn()=gPy.Utils-module.html#subsetn"><a title="gPy.Utils.subsetn" class="py-name" href="#" onclick="return doclink('link-19', 'subsetn', 'link-19');">subsetn</a></tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">i</tt>  <tt class="py-op">==</tt> <tt class="py-name">batch_size</tt><tt class="py-op">:</tt> </tt>
+<a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">batch</tt> </tt>
+<a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line">            <tt class="py-name">batch</tt> <tt class="py-op">=</tt> <tt class="py-name">batch_template</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line">            <tt class="py-name">i</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line">        <tt class="py-name">batch</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">subset</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">        <tt class="py-name">i</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line">    <tt class="py-keyword">yield</tt> <tt class="py-name">batch</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line"> </tt>
+<a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line"> </tt>
+<a name="subseteqn_batch"></a><div id="subseteqn_batch-def"><a name="L228"></a><tt class="py-lineno">228</tt> <a class="py-toggle" href="#" id="subseteqn_batch-toggle" onclick="return toggle('subseteqn_batch');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#subseteqn_batch">subseteqn_batch</a><tt class="py-op">(</tt><tt class="py-param">set_in</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">,</tt><tt class="py-param">batch_size</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="subseteqn_batch-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="subseteqn_batch-expanded"><a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line"><tt class="py-docstring">    Generate lists of size C{batch_size} containing subsets of size</tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line"><tt class="py-docstring">    C{n} from C{set_in}.</tt> </tt>
+<a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line"><tt class="py-docstring">    Final batch may be shorter than C{batch_size}</tt> </tt>
+<a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">    <tt class="py-name">batch_template</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">None</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-name">batch_size</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">    <tt class="py-name">batch</tt> <tt class="py-op">=</tt> <tt class="py-name">batch_template</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">    <tt class="py-name">i</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">subset</tt> <tt class="py-keyword">in</tt> <tt id="link-20" class="py-name" targets="Function gPy.Utils.subseteqn()=gPy.Utils-module.html#subseteqn"><a title="gPy.Utils.subseteqn" class="py-name" href="#" onclick="return doclink('link-20', 'subseteqn', 'link-20');">subseteqn</a></tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">i</tt>  <tt class="py-op">==</tt> <tt class="py-name">batch_size</tt><tt class="py-op">:</tt> </tt>
+<a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">batch</tt> </tt>
+<a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line">            <tt class="py-name">batch</tt> <tt class="py-op">=</tt> <tt class="py-name">batch_template</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">            <tt class="py-name">i</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">        <tt class="py-name">batch</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">subset</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">        <tt class="py-name">i</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">    <tt class="py-keyword">yield</tt> <tt class="py-name">batch</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line"> </tt>
+<a name="subseteqn"></a><div id="subseteqn-def"><a name="L247"></a><tt class="py-lineno">247</tt> <a class="py-toggle" href="#" id="subseteqn-toggle" onclick="return toggle('subseteqn');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#subseteqn">subseteqn</a><tt class="py-op">(</tt><tt class="py-param">set_in</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="subseteqn-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="subseteqn-expanded"><a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">    <tt class="py-docstring">"""Generate subsets of size C{n}</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line"><tt class="py-docstring">    Actually C{set_in} can be any iterable.</tt> </tt>
+<a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L252"></a><tt class="py-lineno">252</tt>  <tt class="py-line"><tt class="py-docstring">    If n &lt;= len(set_in)/2 tuples</tt> </tt>
+<a name="L253"></a><tt class="py-lineno">253</tt>  <tt class="py-line"><tt class="py-docstring">    are returned. Each tuple is in ascending order. Otherwise</tt> </tt>
+<a name="L254"></a><tt class="py-lineno">254</tt>  <tt class="py-line"><tt class="py-docstring">    a set is returned.</tt> </tt>
+<a name="L255"></a><tt class="py-lineno">255</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L256"></a><tt class="py-lineno">256</tt>  <tt class="py-line"><tt class="py-docstring">    This is optimised for n &lt; len(set_in)/2</tt> </tt>
+<a name="L257"></a><tt class="py-lineno">257</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L258"></a><tt class="py-lineno">258</tt>  <tt class="py-line"><tt class="py-docstring">    @param set_in: A 'set' of objects</tt> </tt>
+<a name="L259"></a><tt class="py-lineno">259</tt>  <tt class="py-line"><tt class="py-docstring">    @type set_in: Any iterable</tt> </tt>
+<a name="L260"></a><tt class="py-lineno">260</tt>  <tt class="py-line"><tt class="py-docstring">    @param n: Inclusive upper bound on size of subsets</tt> </tt>
+<a name="L261"></a><tt class="py-lineno">261</tt>  <tt class="py-line"><tt class="py-docstring">    @type n: Int</tt> </tt>
+<a name="L262"></a><tt class="py-lineno">262</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L263"></a><tt class="py-lineno">263</tt>  <tt class="py-line">    <tt class="py-name">tupleset</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">sorted</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L264"></a><tt class="py-lineno">264</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">n</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">/</tt><tt class="py-number">2</tt><tt class="py-op">:</tt> </tt>
+<a name="L265"></a><tt class="py-lineno">265</tt>  <tt class="py-line">        <tt class="py-name">realset</tt> <tt class="py-op">=</tt> <tt class="py-name">set</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt> </tt>
+<a name="L266"></a><tt class="py-lineno">266</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt id="link-21" class="py-name" targets="Function gPy.Utils._subseteqn()=gPy.Utils-module.html#_subseteqn"><a title="gPy.Utils._subseteqn" class="py-name" href="#" onclick="return doclink('link-21', '_subseteqn', 'link-21');">_subseteqn</a></tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">,</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">set_in</tt><tt class="py-op">)</tt><tt class="py-op">-</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L267"></a><tt class="py-lineno">267</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">realset</tt><tt class="py-op">.</tt><tt class="py-name">difference</tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L268"></a><tt class="py-lineno">268</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L269"></a><tt class="py-lineno">269</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt id="link-22" class="py-name"><a title="gPy.Utils._subseteqn" class="py-name" href="#" onclick="return doclink('link-22', '_subseteqn', 'link-21');">_subseteqn</a></tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L270"></a><tt class="py-lineno">270</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">x</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L271"></a><tt class="py-lineno">271</tt>  <tt class="py-line"> </tt>
+<a name="_subseteqn"></a><div id="_subseteqn-def"><a name="L272"></a><tt class="py-lineno">272</tt> <a class="py-toggle" href="#" id="_subseteqn-toggle" onclick="return toggle('_subseteqn');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#_subseteqn">_subseteqn</a><tt class="py-op">(</tt><tt class="py-param">tupleset</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_subseteqn-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_subseteqn-expanded"><a name="L273"></a><tt class="py-lineno">273</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">n</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L274"></a><tt class="py-lineno">274</tt>  <tt class="py-line">        <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">None</tt> </tt>
+<a name="L275"></a><tt class="py-lineno">275</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">n</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L276"></a><tt class="py-lineno">276</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">elt</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L277"></a><tt class="py-lineno">277</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-name">elt</tt><tt class="py-op">,</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">i</tt> </tt>
+<a name="L278"></a><tt class="py-lineno">278</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L279"></a><tt class="py-lineno">279</tt>  <tt class="py-line">        <tt class="py-name">m</tt> <tt class="py-op">=</tt> <tt class="py-name">n</tt><tt class="py-op">-</tt><tt class="py-number">1</tt> </tt>
+<a name="L280"></a><tt class="py-lineno">280</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">tup1</tt><tt class="py-op">,</tt> <tt class="py-name">lasti</tt> <tt class="py-keyword">in</tt> <tt id="link-23" class="py-name"><a title="gPy.Utils._subseteqn" class="py-name" href="#" onclick="return doclink('link-23', '_subseteqn', 'link-21');">_subseteqn</a></tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">,</tt><tt class="py-name">m</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L281"></a><tt class="py-lineno">281</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">tup1</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-name">m</tt><tt class="py-op">:</tt> </tt>
+<a name="L282"></a><tt class="py-lineno">282</tt>  <tt class="py-line">                <tt class="py-name">lasti</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L283"></a><tt class="py-lineno">283</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">elt</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">tupleset</tt><tt class="py-op">[</tt><tt class="py-name">lasti</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L284"></a><tt class="py-lineno">284</tt>  <tt class="py-line">                    <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-name">tup1</tt> <tt class="py-op">+</tt> <tt class="py-op">(</tt><tt class="py-name">elt</tt><tt class="py-op">,</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">lasti</tt> <tt class="py-op">+</tt> <tt class="py-name">i</tt> </tt>
+</div><a name="L285"></a><tt class="py-lineno">285</tt>  <tt class="py-line"> </tt>
+<a name="L286"></a><tt class="py-lineno">286</tt>  <tt class="py-line"> </tt>
+<a name="L287"></a><tt class="py-lineno">287</tt>  <tt class="py-line"> </tt>
+<a name="L288"></a><tt class="py-lineno">288</tt>  <tt class="py-line"><tt id="link-24" class="py-name" targets="Variable gPy.Utils.emptyset=gPy.Utils-module.html#emptyset"><a title="gPy.Utils.emptyset" class="py-name" href="#" onclick="return doclink('link-24', 'emptyset', 'link-24');">emptyset</a></tt> <tt class="py-op">=</tt> <tt class="py-name">frozenset</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L289"></a><tt class="py-lineno">289</tt>  <tt class="py-line"> </tt>
+<a name="_ScrolledCanvas"></a><div id="_ScrolledCanvas-def"><a name="L290"></a><tt class="py-lineno">290</tt> <a class="py-toggle" href="#" id="_ScrolledCanvas-toggle" onclick="return toggle('_ScrolledCanvas');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Utils._ScrolledCanvas-class.html">_ScrolledCanvas</a><tt class="py-op">(</tt><tt class="py-base-class">Tkinter</tt><tt class="py-op">.</tt><tt class="py-base-class">Frame</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_ScrolledCanvas-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_ScrolledCanvas-expanded"><a name="_ScrolledCanvas.__init__"></a><div id="_ScrolledCanvas.__init__-def"><a name="L291"></a><tt class="py-lineno">291</tt> <a class="py-toggle" href="#" id="_ScrolledCanvas.__init__-toggle" onclick="return toggle('_ScrolledCanvas.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils._ScrolledCanvas-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">parent</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">NONE</tt><tt class="py-op">,</tt><tt class="py-param">width</tt><tt class="py-op">=</tt><tt class="py-number">1000</tt><tt class="py-op">,</tt><tt class="py-param">height</tt><tt class="py-op">=</tt><tt class="py-number">800</tt><tt class="py-op">,</tt><tt class="py-param">xscroll</tt><tt class="py-op">=</tt><tt class="py-number">10000</tt><tt class="py-op">,</tt><tt class="py-param">yscroll</tt><tt class="py-op">=</tt><tt class="py-number">1000</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_ScrolledCanvas.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="_ScrolledCanvas.__init__-expanded"><a name="L292"></a><tt class="py-lineno">292</tt>  <tt class="py-line">        <tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">Frame</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name" targets="Method gPy.FKMCMC.FamilyScoreCache.__init__()=gPy.FKMCMC.FamilyScoreCache-class.html#__init__,Method gPy.FKMCMC.Order.__init__()=gPy.FKMCMC.Order-class.html#__init__,Method gPy.FKMCMC.OrderEnsemble.__init__()=gPy.FKMCMC.OrderEnsemble-class.html#__init__,Method gPy.FKMCMC.OrderSampler.__init__()=gPy.FKMCMC.OrderSampler-class.html#__init__,Method gPy.Graphs.ADG.__init__()=gPy.Graphs.ADG-class.html#__init__,Method gPy.Graphs.DiGraph.__init__()=gPy.Graphs.DiGraph-class.html#__init__,Method gPy.Graphs.EssentialGraph.__init__()=gPy.Graphs.EssentialGraph-class.html#__init__,Method gPy.Graphs.MutilatedADG.__init__()=gPy.Graphs.MutilatedADG-class.html#__init__,Method gPy.Graphs.UForest.__init__()=gPy.Graphs.UForest-class.html#__init__,Method gPy.Graphs.UGraph.__init__()=gPy.Graphs.UGraph-class.html#__init__,Method gPy.Graphs._AbsGraph.__init__()=gPy.Graphs._AbsGraph-class.html#__init__,Method gPy.Hypergraphs.DecomposableHypergraph.__init__()=gPy.Hypergraphs.DecomposableHypergraph-class.html#__init__,Method gPy.Hypergraphs.GraphicalHypergraph.__init__()=gPy.Hypergraphs.GraphicalHypergraph-class.html#__init__,Method gPy.Hypergraphs.Hypergraph.__init__()=gPy.Hypergraphs.Hypergraph-class.html#__init__,Method gPy.Hypergraphs.JoinForest.__init__()=gPy.Hypergraphs.JoinForest-class.html#__init__,Method gPy.Hypergraphs.ReducedGraphicalHypergraph.__init__()=gPy.Hypergraphs.ReducedGraphicalHypergraph-class.html#__init__,Method gPy.Hypergraphs.ReducedHypergraph.__init__()=gPy.Hypergraphs.ReducedHypergraph-class.html#__init__,Method gPy.Hypergraphs.SimpleHypergraph.__init__()=gPy.Hypergraphs.SimpleHypergraph-class.html#__init__,Method gPy.IO.GraphCanvas.__init__()=gPy.IO.GraphCanvas-class.html#__init__,Method gPy.K2.K2.__init__()=gPy.K2.K2-class.html#__init__,Method gPy.LearningUtils.CausalWorld.__init__()=gPy.LearningUtils.CausalWorld-class.html#__init__,Method gPy.Models.BN.__init__()=gPy.Models.BN-class.html#__init__,Method gPy.Models.CBN.__init__()=gPy.Models.CBN-class.html#__init__,Method gPy.Models.JFR.__init__()=gPy.Models.JFR-class.html#__init__,Method gPy.Models.RFR.__init__()=gPy.Models.RFR-class.html#__init__,Method gPy.Models.SFR.__init__()=gPy.Models.SFR-class.html#__init__,Method gPy.Models._AbsM.__init__()=gPy.Models._AbsM-class.html#__init__,Method gPy.PC.BFSeparator.__init__()=gPy.PC.BFSeparator-class.html#__init__,Method gPy.PC.CBFSeparator.__init__()=gPy.PC.CBFSeparator-class.html#__init__,Method gPy.PC.CI.__init__()=gPy.PC.CI-class.html#__init__,Method gPy.PC.Chi2Separator.__init__()=gPy.PC.Chi2Separator-class.html#__init__,Method gPy.PC.FullBFSearch.__init__()=gPy.PC.FullBFSearch-class.html#__init__,Method gPy.PC.GraphCI.__init__()=gPy.PC.GraphCI-class.html#__init__,Method gPy.PC.GraphSeparator.__init__()=gPy.PC.GraphSeparator-class.html#__init__,Method gPy.PC.HypotheticalSeparator.__init__()=gPy.PC.HypotheticalSeparator-class.html#__init__,Method gPy.PC.ICPattern.__init__()=gPy.PC.ICPattern-class.html#__init__,Method gPy.PC.IndepSearch.__init__()=gPy.PC.IndepSearch-class.html#__init__,Method gPy.PC.InterventionalICPattern.__init__()=gPy.PC.InterventionalICPattern-class.html#__init__,Method gPy.PC.PCCI.__init__()=gPy.PC.PCCI-class.html#__init__,Method gPy.Parameters.CPT.__init__()=gPy.Parameters.CPT-class.html#__init__,Method gPy.Parameters.CompactFactor.__init__()=gPy.Parameters.CompactFactor-class.html#__init__,Method gPy.Parameters.Factor.__init__()=gPy.Parameters.Factor-class.html#__init__,Method gPy.Parameters.IncrementalCompactFactor.__init__()=gPy.Parameters.IncrementalCompactFactor-class.html#__init__,Method gPy.Parameters.SqliteFactor.__init__()=gPy.Parameters.SqliteFactor-class.html#__init__,Method gPy.Parameters.Sumlgammadiffs.__init__()=gPy.Parameters.Sumlgammadiffs-class.html#__init__,Method gPy.Parameters._ADTree.__init__()=gPy.Parameters._ADTree-class.html#__init__,Method gPy.Parameters._IncrementalADTree.__init__()=gPy.Parameters._IncrementalADTree-class.html#__init__,Method gPy.RandomGraphs.EstRandomADG.__init__()=gPy.RandomGraphs.EstRandomADG-class.html#__init__,Method gPy.RandomGraphs.RandomADG.__init__()=gPy.RandomGraphs.RandomADG-class.html#__init__,Method gPy.Samplers.BNSampler.__init__()=gPy.Samplers.BNSampler-class.html#__init__,Method gPy.Samplers.ForwardSampler.__init__()=gPy.Samplers.ForwardSampler-class.html#__init__,Method gPy.Samplers.GibbsSampler.__init__()=gPy.Samplers.GibbsSampler-class.html#__init__,Method gPy.Samplers.MetropolisSampler.__init__()=gPy.Samplers.MetropolisSampler-class.html#__init__,Method gPy.Samplers.MultinomialSampler.__init__()=gPy.Samplers.MultinomialSampler-class.html#__init__,Method gPy.Utils.Timeout.__init__()=gPy.Utils.Timeout-class.html#__init__,Method gPy.Utils._ScrolledCanvas.__init__()=gPy.Utils._ScrolledCanvas-class.html#__init__,Method gPy.Variables.Domain.__init__()=gPy.Variables.Domain-class.html#__init__,Method gPy.Variables.SubDomain.__init__()=gPy.Variables.SubDomain-class.html#__init__"><a title="gPy.FKMCMC.FamilyScoreCache.__init__
+gPy.FKMCMC.Order.__init__
+gPy.FKMCMC.OrderEnsemble.__init__
+gPy.FKMCMC.OrderSampler.__init__
+gPy.Graphs.ADG.__init__
+gPy.Graphs.DiGraph.__init__
+gPy.Graphs.EssentialGraph.__init__
+gPy.Graphs.MutilatedADG.__init__
+gPy.Graphs.UForest.__init__
+gPy.Graphs.UGraph.__init__
+gPy.Graphs._AbsGraph.__init__
+gPy.Hypergraphs.DecomposableHypergraph.__init__
+gPy.Hypergraphs.GraphicalHypergraph.__init__
+gPy.Hypergraphs.Hypergraph.__init__
+gPy.Hypergraphs.JoinForest.__init__
+gPy.Hypergraphs.ReducedGraphicalHypergraph.__init__
+gPy.Hypergraphs.ReducedHypergraph.__init__
+gPy.Hypergraphs.SimpleHypergraph.__init__
+gPy.IO.GraphCanvas.__init__
+gPy.K2.K2.__init__
+gPy.LearningUtils.CausalWorld.__init__
+gPy.Models.BN.__init__
+gPy.Models.CBN.__init__
+gPy.Models.JFR.__init__
+gPy.Models.RFR.__init__
+gPy.Models.SFR.__init__
+gPy.Models._AbsM.__init__
+gPy.PC.BFSeparator.__init__
+gPy.PC.CBFSeparator.__init__
+gPy.PC.CI.__init__
+gPy.PC.Chi2Separator.__init__
+gPy.PC.FullBFSearch.__init__
+gPy.PC.GraphCI.__init__
+gPy.PC.GraphSeparator.__init__
+gPy.PC.HypotheticalSeparator.__init__
+gPy.PC.ICPattern.__init__
+gPy.PC.IndepSearch.__init__
+gPy.PC.InterventionalICPattern.__init__
+gPy.PC.PCCI.__init__
+gPy.Parameters.CPT.__init__
+gPy.Parameters.CompactFactor.__init__
+gPy.Parameters.Factor.__init__
+gPy.Parameters.IncrementalCompactFactor.__init__
+gPy.Parameters.SqliteFactor.__init__
+gPy.Parameters.Sumlgammadiffs.__init__
+gPy.Parameters._ADTree.__init__
+gPy.Parameters._IncrementalADTree.__init__
+gPy.RandomGraphs.EstRandomADG.__init__
+gPy.RandomGraphs.RandomADG.__init__
+gPy.Samplers.BNSampler.__init__
+gPy.Samplers.ForwardSampler.__init__
+gPy.Samplers.GibbsSampler.__init__
+gPy.Samplers.MetropolisSampler.__init__
+gPy.Samplers.MultinomialSampler.__init__
+gPy.Utils.Timeout.__init__
+gPy.Utils._ScrolledCanvas.__init__
+gPy.Variables.Domain.__init__
+gPy.Variables.SubDomain.__init__" class="py-name" href="#" onclick="return doclink('link-25', '__init__', 'link-25');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt id="link-26" class="py-name" targets="Method gPy.Graphs._AbsGraph.parent()=gPy.Graphs._AbsGraph-class.html#parent"><a title="gPy.Graphs._AbsGraph.parent" class="py-name" href="#" onclick="return doclink('link-26', 'parent', 'link-26');">parent</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L293"></a><tt class="py-lineno">293</tt>  <tt class="py-line">        <tt class="py-name">top</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">winfo_toplevel</tt><tt class="py-op">(</tt><tt class="py-op">)</tt>  </tt>
+<a name="L294"></a><tt class="py-lineno">294</tt>  <tt class="py-line">        <tt class="py-name">top</tt><tt class="py-op">.</tt><tt class="py-name">rowconfigure</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt>  </tt>
+<a name="L295"></a><tt class="py-lineno">295</tt>  <tt class="py-line">        <tt class="py-name">top</tt><tt class="py-op">.</tt><tt class="py-name">columnconfigure</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt>  </tt>
+<a name="L296"></a><tt class="py-lineno">296</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">rowconfigure</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L297"></a><tt class="py-lineno">297</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">columnconfigure</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L298"></a><tt class="py-lineno">298</tt>  <tt class="py-line">        <tt class="py-name">canvframe</tt> <tt class="py-op">=</tt> <tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">Frame</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+<a name="L299"></a><tt class="py-lineno">299</tt>  <tt class="py-line">        <tt class="py-name">canvframe</tt><tt class="py-op">.</tt><tt class="py-name">rowconfigure</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L300"></a><tt class="py-lineno">300</tt>  <tt class="py-line">        <tt class="py-name">canvframe</tt><tt class="py-op">.</tt><tt class="py-name">columnconfigure</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-name">weight</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L301"></a><tt class="py-lineno">301</tt>  <tt class="py-line">        <tt class="py-name">canv</tt> <tt class="py-op">=</tt> <tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">Canvas</tt><tt class="py-op">(</tt><tt class="py-name">canvframe</tt><tt class="py-op">)</tt> </tt>
+<a name="L302"></a><tt class="py-lineno">302</tt>  <tt class="py-line">        <tt class="py-comment"># </tt> </tt>
+<a name="L303"></a><tt class="py-lineno">303</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">(</tt><tt class="py-name">width</tt><tt class="py-op">=</tt><tt class="py-name">width</tt><tt class="py-op">,</tt><tt class="py-name">height</tt><tt class="py-op">=</tt><tt class="py-name">height</tt><tt class="py-op">)</tt> </tt>
+<a name="L304"></a><tt class="py-lineno">304</tt>  <tt class="py-line">        <tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">(</tt><tt class="py-name">scrollregion</tt><tt class="py-op">=</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">xscroll</tt><tt class="py-op">,</tt><tt class="py-name">yscroll</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L305"></a><tt class="py-lineno">305</tt>  <tt class="py-line"> </tt>
+<a name="L306"></a><tt class="py-lineno">306</tt>  <tt class="py-line">        <tt class="py-name">ysbar</tt> <tt class="py-op">=</tt> <tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">Scrollbar</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+<a name="L307"></a><tt class="py-lineno">307</tt>  <tt class="py-line">        <tt class="py-name">ysbar</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">(</tt><tt class="py-name">command</tt><tt class="py-op">=</tt><tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">yview</tt><tt class="py-op">)</tt> </tt>
+<a name="L308"></a><tt class="py-lineno">308</tt>  <tt class="py-line">        <tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">(</tt><tt class="py-name">yscrollcommand</tt><tt class="py-op">=</tt><tt class="py-name">ysbar</tt><tt class="py-op">.</tt><tt class="py-name">set</tt><tt class="py-op">)</tt> </tt>
+<a name="L309"></a><tt class="py-lineno">309</tt>  <tt class="py-line"> </tt>
+<a name="L310"></a><tt class="py-lineno">310</tt>  <tt class="py-line">        <tt class="py-name">xsbar</tt> <tt class="py-op">=</tt> <tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">Scrollbar</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt><tt id="link-27" class="py-name" targets="Method gPy.Graphs.EssentialGraph.orient()=gPy.Graphs.EssentialGraph-class.html#orient"><a title="gPy.Graphs.EssentialGraph.orient" class="py-name" href="#" onclick="return doclink('link-27', 'orient', 'link-27');">orient</a></tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">HORIZONTAL</tt><tt class="py-op">)</tt> </tt>
+<a name="L311"></a><tt class="py-lineno">311</tt>  <tt class="py-line">        <tt class="py-name">xsbar</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">(</tt><tt class="py-name">command</tt><tt class="py-op">=</tt><tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">xview</tt><tt class="py-op">)</tt> </tt>
+<a name="L312"></a><tt class="py-lineno">312</tt>  <tt class="py-line">        <tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">(</tt><tt class="py-name">xscrollcommand</tt><tt class="py-op">=</tt><tt class="py-name">xsbar</tt><tt class="py-op">.</tt><tt class="py-name">set</tt><tt class="py-op">)</tt> </tt>
+<a name="L313"></a><tt class="py-lineno">313</tt>  <tt class="py-line"> </tt>
+<a name="L314"></a><tt class="py-lineno">314</tt>  <tt class="py-line">        <tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">grid</tt><tt class="py-op">(</tt><tt class="py-name">sticky</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">NSEW</tt><tt class="py-op">)</tt> </tt>
+<a name="L315"></a><tt class="py-lineno">315</tt>  <tt class="py-line">        <tt class="py-name">canvframe</tt><tt class="py-op">.</tt><tt class="py-name">grid</tt><tt class="py-op">(</tt><tt class="py-name">row</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">column</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">sticky</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">NSEW</tt><tt class="py-op">)</tt> </tt>
+<a name="L316"></a><tt class="py-lineno">316</tt>  <tt class="py-line">        <tt class="py-name">xsbar</tt><tt class="py-op">.</tt><tt class="py-name">grid</tt><tt class="py-op">(</tt><tt class="py-name">row</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-name">column</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">sticky</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">EW</tt><tt class="py-op">)</tt> </tt>
+<a name="L317"></a><tt class="py-lineno">317</tt>  <tt class="py-line">        <tt class="py-name">ysbar</tt><tt class="py-op">.</tt><tt class="py-name">grid</tt><tt class="py-op">(</tt><tt class="py-name">row</tt><tt class="py-op">=</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">column</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-name">sticky</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">NS</tt><tt class="py-op">)</tt> </tt>
+<a name="L318"></a><tt class="py-lineno">318</tt>  <tt class="py-line"> </tt>
+<a name="L319"></a><tt class="py-lineno">319</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">canv</tt> <tt class="py-op">=</tt> <tt class="py-name">canv</tt> </tt>
+<a name="L320"></a><tt class="py-lineno">320</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">canvframe</tt> <tt class="py-op">=</tt> <tt class="py-name">canvframe</tt> </tt>
+</div></div><a name="L321"></a><tt class="py-lineno">321</tt>  <tt class="py-line"> </tt>
+<a name="scrolled_frame"></a><div id="scrolled_frame-def"><a name="L322"></a><tt class="py-lineno">322</tt> <a class="py-toggle" href="#" id="scrolled_frame-toggle" onclick="return toggle('scrolled_frame');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#scrolled_frame">scrolled_frame</a><tt class="py-op">(</tt><tt class="py-param">parent</tt><tt class="py-op">,</tt><tt class="py-param">width</tt><tt class="py-op">=</tt><tt class="py-number">1000</tt><tt class="py-op">,</tt><tt class="py-param">height</tt><tt class="py-op">=</tt><tt class="py-number">800</tt><tt class="py-op">,</tt><tt class="py-param">xscroll</tt><tt class="py-op">=</tt><tt class="py-number">10000</tt><tt class="py-op">,</tt><tt class="py-param">yscroll</tt><tt class="py-op">=</tt><tt class="py-number">1000</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="scrolled_frame-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="scrolled_frame-expanded"><a name="L323"></a><tt class="py-lineno">323</tt>  <tt class="py-line">    <tt class="py-docstring">"""Return a frame with scroll bars</tt> </tt>
+<a name="L324"></a><tt class="py-lineno">324</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L325"></a><tt class="py-lineno">325</tt>  <tt class="py-line"><tt class="py-docstring">    @param parent: The parent for the scrolled frame</tt> </tt>
+<a name="L326"></a><tt class="py-lineno">326</tt>  <tt class="py-line"><tt class="py-docstring">    @type parent: Suitable TKinter object</tt> </tt>
+<a name="L327"></a><tt class="py-lineno">327</tt>  <tt class="py-line"><tt class="py-docstring">    @param width: Width of frame</tt> </tt>
+<a name="L328"></a><tt class="py-lineno">328</tt>  <tt class="py-line"><tt class="py-docstring">    @type width: Int</tt> </tt>
+<a name="L329"></a><tt class="py-lineno">329</tt>  <tt class="py-line"><tt class="py-docstring">    @param height: Height of frame</tt> </tt>
+<a name="L330"></a><tt class="py-lineno">330</tt>  <tt class="py-line"><tt class="py-docstring">    @type height: Int</tt> </tt>
+<a name="L331"></a><tt class="py-lineno">331</tt>  <tt class="py-line"><tt class="py-docstring">    @param xscroll: Width of scrollable region</tt> </tt>
+<a name="L332"></a><tt class="py-lineno">332</tt>  <tt class="py-line"><tt class="py-docstring">    @type xscroll: Int</tt> </tt>
+<a name="L333"></a><tt class="py-lineno">333</tt>  <tt class="py-line"><tt class="py-docstring">    @param yscroll: Height of scrollable region</tt> </tt>
+<a name="L334"></a><tt class="py-lineno">334</tt>  <tt class="py-line"><tt class="py-docstring">    @type yscroll: Int</tt> </tt>
+<a name="L335"></a><tt class="py-lineno">335</tt>  <tt class="py-line"><tt class="py-docstring">    @return: Scrolled frame</tt> </tt>
+<a name="L336"></a><tt class="py-lineno">336</tt>  <tt class="py-line"><tt class="py-docstring">    @rtype: C{Tkinter.Frame}</tt> </tt>
+<a name="L337"></a><tt class="py-lineno">337</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L338"></a><tt class="py-lineno">338</tt>  <tt class="py-line">    <tt class="py-name">scr</tt> <tt class="py-op">=</tt> <tt id="link-28" class="py-name" targets="Class gPy.Utils._ScrolledCanvas=gPy.Utils._ScrolledCanvas-class.html"><a title="gPy.Utils._ScrolledCanvas" class="py-name" href="#" onclick="return doclink('link-28', '_ScrolledCanvas', 'link-28');">_ScrolledCanvas</a></tt><tt class="py-op">(</tt><tt id="link-29" class="py-name"><a title="gPy.Graphs._AbsGraph.parent" class="py-name" href="#" onclick="return doclink('link-29', 'parent', 'link-26');">parent</a></tt><tt class="py-op">,</tt><tt class="py-name">width</tt><tt class="py-op">,</tt><tt class="py-name">height</tt><tt class="py-op">,</tt><tt class="py-name">xscroll</tt><tt class="py-op">,</tt><tt class="py-name">yscroll</tt><tt class="py-op">)</tt> </tt>
+<a name="L339"></a><tt class="py-lineno">339</tt>  <tt class="py-line">    <tt class="py-name">gui</tt> <tt class="py-op">=</tt>  <tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">Frame</tt><tt class="py-op">(</tt><tt class="py-name">scr</tt><tt class="py-op">.</tt><tt class="py-name">canvframe</tt><tt class="py-op">)</tt> </tt>
+<a name="L340"></a><tt class="py-lineno">340</tt>  <tt class="py-line">    <tt class="py-name">scr</tt><tt class="py-op">.</tt><tt class="py-name">canv</tt><tt class="py-op">.</tt><tt class="py-name">create_window</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">window</tt><tt class="py-op">=</tt><tt class="py-name">gui</tt><tt class="py-op">,</tt><tt class="py-name">anchor</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">NW</tt><tt class="py-op">)</tt> </tt>
+<a name="L341"></a><tt class="py-lineno">341</tt>  <tt class="py-line">    <tt class="py-name">scr</tt><tt class="py-op">.</tt><tt class="py-name">grid</tt><tt class="py-op">(</tt><tt class="py-name">sticky</tt><tt class="py-op">=</tt><tt class="py-name">Tkinter</tt><tt class="py-op">.</tt><tt class="py-name">NSEW</tt><tt class="py-op">)</tt> </tt>
+<a name="L342"></a><tt class="py-lineno">342</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">gui</tt> </tt>
+</div><a name="L343"></a><tt class="py-lineno">343</tt>  <tt class="py-line"> </tt>
+<a name="logsumexp"></a><div id="logsumexp-def"><a name="L344"></a><tt class="py-lineno">344</tt> <a class="py-toggle" href="#" id="logsumexp-toggle" onclick="return toggle('logsumexp');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#logsumexp">logsumexp</a><tt class="py-op">(</tt><tt class="py-param">xs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="logsumexp-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="logsumexp-expanded"><a name="L345"></a><tt class="py-lineno">345</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">xs</tt><tt class="py-op">:</tt> </tt>
+<a name="L346"></a><tt class="py-lineno">346</tt>  <tt class="py-line">        <tt class="py-keyword">raise</tt> <tt class="py-name">RuntimeError</tt><tt class="py-op">,</tt><tt class="py-string">'logsumexp called with size 0 argument. (BUG AHOY!)'</tt> </tt>
+<a name="L347"></a><tt class="py-lineno">347</tt>  <tt class="py-line"> </tt>
+<a name="L348"></a><tt class="py-lineno">348</tt>  <tt class="py-line">    <tt class="py-comment"># numerical stability hack (based on Tom Minka's logsumexp.m)</tt> </tt>
+<a name="L349"></a><tt class="py-lineno">349</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">mx</tt> <tt class="py-op">=</tt> <tt class="py-name">max</tt><tt class="py-op">(</tt><tt class="py-name">xs</tt><tt class="py-op">)</tt> </tt>
+<a name="L350"></a><tt class="py-lineno">350</tt>  <tt class="py-line">    <tt class="py-name">r</tt> <tt class="py-op">=</tt> <tt class="py-name">mx</tt> <tt class="py-op">+</tt> <tt class="py-name">log</tt><tt class="py-op">(</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt id="link-30" class="py-name"><a title="gPy.RandomGraphs.EstRandomADG.exp" class="py-name" href="#" onclick="return doclink('link-30', 'exp', 'link-0');">exp</a></tt><tt class="py-op">(</tt><tt class="py-name">x</tt> <tt class="py-op">-</tt> <tt class="py-name">mx</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xs</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L351"></a><tt class="py-lineno">351</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">r</tt> </tt>
+</div><a name="L352"></a><tt class="py-lineno">352</tt>  <tt class="py-line"> </tt>
+<a name="L353"></a><tt class="py-lineno">353</tt>  <tt class="py-line"><tt id="link-31" class="py-name" targets="Variable gPy.Utils.infinity=gPy.Utils-module.html#infinity"><a title="gPy.Utils.infinity" class="py-name" href="#" onclick="return doclink('link-31', 'infinity', 'link-31');">infinity</a></tt> <tt class="py-op">=</tt> <tt id="link-32" class="py-name" targets="Class float=float-class.html"><a title="float" class="py-name" href="#" onclick="return doclink('link-32', 'float', 'link-32');">float</a></tt><tt class="py-op">(</tt><tt class="py-string">'infinity'</tt><tt class="py-op">)</tt> </tt>
+<a name="L354"></a><tt class="py-lineno">354</tt>  <tt class="py-line"><tt id="link-33" class="py-name" targets="Variable gPy.Utils.negative_infinity=gPy.Utils-module.html#negative_infinity"><a title="gPy.Utils.negative_infinity" class="py-name" href="#" onclick="return doclink('link-33', 'negative_infinity', 'link-33');">negative_infinity</a></tt> <tt class="py-op">=</tt> <tt id="link-34" class="py-name"><a title="float" class="py-name" href="#" onclick="return doclink('link-34', 'float', 'link-32');">float</a></tt><tt class="py-op">(</tt><tt class="py-string">'-infinity'</tt><tt class="py-op">)</tt> </tt>
+<a name="L355"></a><tt class="py-lineno">355</tt>  <tt class="py-line"> </tt>
+<a name="is_nan"></a><div id="is_nan-def"><a name="L356"></a><tt class="py-lineno">356</tt> <a class="py-toggle" href="#" id="is_nan-toggle" onclick="return toggle('is_nan');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#is_nan">is_nan</a><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="is_nan-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="is_nan-expanded"><a name="L357"></a><tt class="py-lineno">357</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">type</tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">)</tt> <tt class="py-keyword">is</tt> <tt id="link-35" class="py-name"><a title="float" class="py-name" href="#" onclick="return doclink('link-35', 'float', 'link-32');">float</a></tt> <tt class="py-keyword">and</tt> <tt class="py-name">x</tt> <tt class="py-op">!=</tt> <tt class="py-name">x</tt> </tt>
+</div><a name="L358"></a><tt class="py-lineno">358</tt>  <tt class="py-line"> </tt>
+<a name="is_finite"></a><div id="is_finite-def"><a name="L359"></a><tt class="py-lineno">359</tt> <a class="py-toggle" href="#" id="is_finite-toggle" onclick="return toggle('is_finite');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#is_finite">is_finite</a><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="is_finite-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="is_finite-expanded"><a name="L360"></a><tt class="py-lineno">360</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-keyword">not</tt> <tt id="link-36" class="py-name" targets="Function gPy.Utils.is_nan()=gPy.Utils-module.html#is_nan"><a title="gPy.Utils.is_nan" class="py-name" href="#" onclick="return doclink('link-36', 'is_nan', 'link-36');">is_nan</a></tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">)</tt> <tt class="py-keyword">and</tt> <tt class="py-name">x</tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-op">(</tt><tt id="link-37" class="py-name"><a title="gPy.Utils.infinity" class="py-name" href="#" onclick="return doclink('link-37', 'infinity', 'link-31');">infinity</a></tt><tt class="py-op">,</tt><tt id="link-38" class="py-name"><a title="gPy.Utils.negative_infinity" class="py-name" href="#" onclick="return doclink('link-38', 'negative_infinity', 'link-33');">negative_infinity</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L361"></a><tt class="py-lineno">361</tt>  <tt class="py-line"> </tt>
+<a name="square"></a><div id="square-def"><a name="L362"></a><tt class="py-lineno">362</tt> <a class="py-toggle" href="#" id="square-toggle" onclick="return toggle('square');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#square">square</a><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="square-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="square-expanded"><a name="L363"></a><tt class="py-lineno">363</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">x</tt><tt class="py-op">*</tt><tt class="py-name">x</tt> </tt>
+</div><a name="L364"></a><tt class="py-lineno">364</tt>  <tt class="py-line"> </tt>
+<a name="swap"></a><div id="swap-def"><a name="L365"></a><tt class="py-lineno">365</tt> <a class="py-toggle" href="#" id="swap-toggle" onclick="return toggle('swap');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#swap">swap</a><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="swap-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="swap-expanded"><a name="L366"></a><tt class="py-lineno">366</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">x</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L367"></a><tt class="py-lineno">367</tt>  <tt class="py-line"> </tt>
+<a name="rlog"></a><div id="rlog-def"><a name="L368"></a><tt class="py-lineno">368</tt> <a class="py-toggle" href="#" id="rlog-toggle" onclick="return toggle('rlog');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#rlog">rlog</a><tt class="py-op">(</tt><tt class="py-param">x</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="rlog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="rlog-expanded"><a name="L369"></a><tt class="py-lineno">369</tt>  <tt class="py-line">    <tt class="py-docstring">"""Restricted log; for x == 0 return - infinity; else log(x)"""</tt> </tt>
+<a name="L370"></a><tt class="py-lineno">370</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">x</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L371"></a><tt class="py-lineno">371</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-39" class="py-name"><a title="gPy.Utils.negative_infinity" class="py-name" href="#" onclick="return doclink('link-39', 'negative_infinity', 'link-33');">negative_infinity</a></tt> </tt>
+<a name="L372"></a><tt class="py-lineno">372</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">log</tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L373"></a><tt class="py-lineno">373</tt>  <tt class="py-line"> </tt>
+<a name="L374"></a><tt class="py-lineno">374</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L375"></a><tt class="py-lineno">375</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># This file contains the Python code from Program 14.10 of</tt> </tt>
+<a name="L376"></a><tt class="py-lineno">376</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># "Data Structures and Algorithms</tt> </tt>
+<a name="L377"></a><tt class="py-lineno">377</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># with Object-Oriented Design Patterns in Python"</tt> </tt>
+<a name="L378"></a><tt class="py-lineno">378</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># by Bruno R. Preiss.</tt> </tt>
+<a name="binom"></a><div id="binom-def"><a name="L379"></a><tt class="py-lineno">379</tt> <a class="py-toggle" href="#" id="binom-toggle" onclick="return toggle('binom');">-</a><tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#binom">binom</a><tt class="py-op">(</tt><tt class="py-param">n</tt><tt class="py-op">,</tt> <tt class="py-param">m</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="binom-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="binom-expanded"><a name="L380"></a><tt class="py-lineno">380</tt>  <tt class="py-line">    <tt class="py-name">b</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-op">(</tt><tt class="py-name">n</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L381"></a><tt class="py-lineno">381</tt>  <tt class="py-line">    <tt class="py-name">b</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L382"></a><tt class="py-lineno">382</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-name">n</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L383"></a><tt class="py-lineno">383</tt>  <tt class="py-line">        <tt class="py-name">b</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L384"></a><tt class="py-lineno">384</tt>  <tt class="py-line">        <tt class="py-name">j</tt> <tt class="py-op">=</tt> <tt class="py-name">i</tt> <tt class="py-op">-</tt> <tt class="py-number">1</tt> </tt>
+<a name="L385"></a><tt class="py-lineno">385</tt>  <tt class="py-line">        <tt class="py-keyword">while</tt> <tt class="py-name">j</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L386"></a><tt class="py-lineno">386</tt>  <tt class="py-line">            <tt class="py-name">b</tt><tt class="py-op">[</tt><tt class="py-name">j</tt><tt class="py-op">]</tt> <tt class="py-op">+=</tt> <tt class="py-name">b</tt><tt class="py-op">[</tt><tt class="py-name">j</tt> <tt class="py-op">-</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L387"></a><tt class="py-lineno">387</tt>  <tt class="py-line">            <tt class="py-name">j</tt> <tt class="py-op">-=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L388"></a><tt class="py-lineno">388</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">b</tt><tt class="py-op">[</tt><tt class="py-name">m</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L389"></a><tt class="py-lineno">389</tt>  <tt class="py-line"> </tt>
+<a name="L390"></a><tt class="py-lineno">390</tt>  <tt class="py-line"><tt class="py-comment"># end of Bruno R. Preiss code.</tt> </tt>
+<a name="L391"></a><tt class="py-lineno">391</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L392"></a><tt class="py-lineno">392</tt>  <tt class="py-line"> </tt>
+<a name="pairs"></a><div id="pairs-def"><a name="L393"></a><tt class="py-lineno">393</tt> <a class="py-toggle" href="#" id="pairs-toggle" onclick="return toggle('pairs');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#pairs">pairs</a><tt class="py-op">(</tt><tt class="py-param">xs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="pairs-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="pairs-expanded"><a name="L394"></a><tt class="py-lineno">394</tt>  <tt class="py-line">    <tt class="py-name">xs</tt> <tt class="py-op">=</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">xs</tt><tt class="py-op">)</tt> </tt>
+<a name="L395"></a><tt class="py-lineno">395</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">xs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L396"></a><tt class="py-lineno">396</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">y</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xs</tt><tt class="py-op">[</tt><tt class="py-name">i</tt><tt class="py-op">+</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">:</tt> </tt>
+<a name="L397"></a><tt class="py-lineno">397</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">,</tt><tt class="py-name">y</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L398"></a><tt class="py-lineno">398</tt>  <tt class="py-line"><tt class="py-comment">#     for i in xrange(len(xs)):</tt> </tt>
+<a name="L399"></a><tt class="py-lineno">399</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         x = xs[i]</tt> </tt>
+<a name="L400"></a><tt class="py-lineno">400</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#         for y in xs[i+1:]:</tt> </tt>
+<a name="L401"></a><tt class="py-lineno">401</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#             yield (x,y)</tt> </tt>
+<a name="L402"></a><tt class="py-lineno">402</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="powerset"></a><div id="powerset-def"><a name="L403"></a><tt class="py-lineno">403</tt> <a class="py-toggle" href="#" id="powerset-toggle" onclick="return toggle('powerset');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#powerset">powerset</a><tt class="py-op">(</tt><tt class="py-param">s</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="powerset-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="powerset-expanded"><a name="L404"></a><tt class="py-lineno">404</tt>  <tt class="py-line">    <tt class="py-comment"># {x | x &lt;- 2^s }</tt> </tt>
+<a name="L405"></a><tt class="py-lineno">405</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">return</tt> <tt id="link-40" class="py-name" targets="Function gPy.Utils._powerset()=gPy.Utils-module.html#_powerset"><a title="gPy.Utils._powerset" class="py-name" href="#" onclick="return doclink('link-40', '_powerset', 'link-40');">_powerset</a></tt><tt class="py-op">(</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L406"></a><tt class="py-lineno">406</tt>  <tt class="py-line"> </tt>
+<a name="powersetn"></a><div id="powersetn-def"><a name="L407"></a><tt class="py-lineno">407</tt> <a class="py-toggle" href="#" id="powersetn-toggle" onclick="return toggle('powersetn');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#powersetn">powersetn</a><tt class="py-op">(</tt><tt class="py-param">s</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="powersetn-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="powersetn-expanded"><a name="L408"></a><tt class="py-lineno">408</tt>  <tt class="py-line">    <tt class="py-comment"># {x | x &lt;- 2^s, |x| &lt; n }</tt> </tt>
+<a name="L409"></a><tt class="py-lineno">409</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">if</tt> <tt class="py-name">n</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> <tt class="py-keyword">or</tt> <tt class="py-name">n</tt> <tt class="py-op">&gt;=</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L410"></a><tt class="py-lineno">410</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-41" class="py-name"><a title="gPy.Utils._powerset" class="py-name" href="#" onclick="return doclink('link-41', '_powerset', 'link-40');">_powerset</a></tt><tt class="py-op">(</tt><tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L411"></a><tt class="py-lineno">411</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-42" class="py-name" targets="Function gPy.Utils._powersetn()=gPy.Utils-module.html#_powersetn"><a title="gPy.Utils._powersetn" class="py-name" href="#" onclick="return doclink('link-42', '_powersetn', 'link-42');">_powersetn</a></tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L412"></a><tt class="py-lineno">412</tt>  <tt class="py-line"> </tt>
+<a name="_powersetn"></a><div id="_powersetn-def"><a name="L413"></a><tt class="py-lineno">413</tt> <a class="py-toggle" href="#" id="_powersetn-toggle" onclick="return toggle('_powersetn');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#_powersetn">_powersetn</a><tt class="py-op">(</tt><tt class="py-param">s</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_powersetn-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_powersetn-expanded"><a name="L414"></a><tt class="py-lineno">414</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">xrange</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">n</tt><tt class="py-op">+</tt><tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L415"></a><tt class="py-lineno">415</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt id="link-43" class="py-name"><a title="gPy.Utils.subsetn" class="py-name" href="#" onclick="return doclink('link-43', 'subsetn', 'link-19');">subsetn</a></tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">,</tt><tt class="py-name">i</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L416"></a><tt class="py-lineno">416</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">x</tt> </tt>
+</div><a name="L417"></a><tt class="py-lineno">417</tt>  <tt class="py-line"> </tt>
+<a name="_powerset"></a><div id="_powerset-def"><a name="L418"></a><tt class="py-lineno">418</tt> <a class="py-toggle" href="#" id="_powerset-toggle" onclick="return toggle('_powerset');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#_powerset">_powerset</a><tt class="py-op">(</tt><tt class="py-param">s</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_powerset-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_powerset-expanded"><a name="L419"></a><tt class="py-lineno">419</tt>  <tt class="py-line">    <tt class="py-comment"># seems to be faster than using subsetn</tt> </tt>
+<a name="L420"></a><tt class="py-lineno">420</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">s</tt><tt class="py-op">:</tt> </tt>
+<a name="L421"></a><tt class="py-lineno">421</tt>  <tt class="py-line">        <tt class="py-keyword">yield</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L422"></a><tt class="py-lineno">422</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> </tt>
+<a name="L423"></a><tt class="py-lineno">423</tt>  <tt class="py-line"> </tt>
+<a name="L424"></a><tt class="py-lineno">424</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-op">[</tt><tt class="py-name">s</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L425"></a><tt class="py-lineno">425</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">xs</tt> <tt class="py-keyword">in</tt> <tt id="link-44" class="py-name"><a title="gPy.Utils._powerset" class="py-name" href="#" onclick="return doclink('link-44', '_powerset', 'link-40');">_powerset</a></tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L426"></a><tt class="py-lineno">426</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">x</tt> <tt class="py-op">+</tt> <tt class="py-name">xs</tt> </tt>
+</div><a name="L427"></a><tt class="py-lineno">427</tt>  <tt class="py-line"> </tt>
+<a name="TimedOut"></a><div id="TimedOut-def"><a name="L428"></a><tt class="py-lineno">428</tt> <a class="py-toggle" href="#" id="TimedOut-toggle" onclick="return toggle('TimedOut');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Utils.TimedOut-class.html">TimedOut</a><tt class="py-op">(</tt><tt class="py-base-class">Exception</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TimedOut-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TimedOut-expanded"><a name="L429"></a><tt class="py-lineno">429</tt>  <tt class="py-line">    <tt class="py-keyword">pass</tt> </tt>
+</div><a name="L430"></a><tt class="py-lineno">430</tt>  <tt class="py-line"> </tt>
+<a name="Timeout"></a><div id="Timeout-def"><a name="L431"></a><tt class="py-lineno">431</tt> <a class="py-toggle" href="#" id="Timeout-toggle" onclick="return toggle('Timeout');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="gPy.Utils.Timeout-class.html">Timeout</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Timeout-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Timeout-expanded"><a name="L432"></a><tt class="py-lineno">432</tt>  <tt class="py-line">    <tt class="py-docstring">"""Timeouts. Usage:</tt> </tt>
+<a name="L433"></a><tt class="py-lineno">433</tt>  <tt class="py-line"><tt class="py-docstring">    t = Timeout(30)</tt> </tt>
+<a name="L434"></a><tt class="py-lineno">434</tt>  <tt class="py-line"><tt class="py-docstring">    try:</tt> </tt>
+<a name="L435"></a><tt class="py-lineno">435</tt>  <tt class="py-line"><tt class="py-docstring">       try:</tt> </tt>
+<a name="L436"></a><tt class="py-lineno">436</tt>  <tt class="py-line"><tt class="py-docstring">           t.start()</tt> </tt>
+<a name="L437"></a><tt class="py-lineno">437</tt>  <tt class="py-line"><tt class="py-docstring">           ...</tt> </tt>
+<a name="L438"></a><tt class="py-lineno">438</tt>  <tt class="py-line"><tt class="py-docstring">       except TimedOut:</tt> </tt>
+<a name="L439"></a><tt class="py-lineno">439</tt>  <tt class="py-line"><tt class="py-docstring">           ...</tt> </tt>
+<a name="L440"></a><tt class="py-lineno">440</tt>  <tt class="py-line"><tt class="py-docstring">    finally:</tt> </tt>
+<a name="L441"></a><tt class="py-lineno">441</tt>  <tt class="py-line"><tt class="py-docstring">       t.clear()</tt> </tt>
+<a name="L442"></a><tt class="py-lineno">442</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="Timeout.__init__"></a><div id="Timeout.__init__-def"><a name="L443"></a><tt class="py-lineno">443</tt> <a class="py-toggle" href="#" id="Timeout.__init__-toggle" onclick="return toggle('Timeout.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils.Timeout-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">timeout</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Timeout.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Timeout.__init__-expanded"><a name="L444"></a><tt class="py-lineno">444</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">timeout</tt> <tt class="py-op">&lt;=</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L445"></a><tt class="py-lineno">445</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt class="py-name">RuntimeError</tt><tt class="py-op">,</tt> <tt class="py-string">'time out must be positive'</tt> </tt>
+<a name="L446"></a><tt class="py-lineno">446</tt>  <tt class="py-line">        <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-45" class="py-name" targets="Class gPy.Utils.Timeout=gPy.Utils.Timeout-class.html"><a title="gPy.Utils.Timeout" class="py-name" href="#" onclick="return doclink('link-45', 'Timeout', 'link-45');">Timeout</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name"><a title="gPy.FKMCMC.FamilyScoreCache.__init__
+gPy.FKMCMC.Order.__init__
+gPy.FKMCMC.OrderEnsemble.__init__
+gPy.FKMCMC.OrderSampler.__init__
+gPy.Graphs.ADG.__init__
+gPy.Graphs.DiGraph.__init__
+gPy.Graphs.EssentialGraph.__init__
+gPy.Graphs.MutilatedADG.__init__
+gPy.Graphs.UForest.__init__
+gPy.Graphs.UGraph.__init__
+gPy.Graphs._AbsGraph.__init__
+gPy.Hypergraphs.DecomposableHypergraph.__init__
+gPy.Hypergraphs.GraphicalHypergraph.__init__
+gPy.Hypergraphs.Hypergraph.__init__
+gPy.Hypergraphs.JoinForest.__init__
+gPy.Hypergraphs.ReducedGraphicalHypergraph.__init__
+gPy.Hypergraphs.ReducedHypergraph.__init__
+gPy.Hypergraphs.SimpleHypergraph.__init__
+gPy.IO.GraphCanvas.__init__
+gPy.K2.K2.__init__
+gPy.LearningUtils.CausalWorld.__init__
+gPy.Models.BN.__init__
+gPy.Models.CBN.__init__
+gPy.Models.JFR.__init__
+gPy.Models.RFR.__init__
+gPy.Models.SFR.__init__
+gPy.Models._AbsM.__init__
+gPy.PC.BFSeparator.__init__
+gPy.PC.CBFSeparator.__init__
+gPy.PC.CI.__init__
+gPy.PC.Chi2Separator.__init__
+gPy.PC.FullBFSearch.__init__
+gPy.PC.GraphCI.__init__
+gPy.PC.GraphSeparator.__init__
+gPy.PC.HypotheticalSeparator.__init__
+gPy.PC.ICPattern.__init__
+gPy.PC.IndepSearch.__init__
+gPy.PC.InterventionalICPattern.__init__
+gPy.PC.PCCI.__init__
+gPy.Parameters.CPT.__init__
+gPy.Parameters.CompactFactor.__init__
+gPy.Parameters.Factor.__init__
+gPy.Parameters.IncrementalCompactFactor.__init__
+gPy.Parameters.SqliteFactor.__init__
+gPy.Parameters.Sumlgammadiffs.__init__
+gPy.Parameters._ADTree.__init__
+gPy.Parameters._IncrementalADTree.__init__
+gPy.RandomGraphs.EstRandomADG.__init__
+gPy.RandomGraphs.RandomADG.__init__
+gPy.Samplers.BNSampler.__init__
+gPy.Samplers.ForwardSampler.__init__
+gPy.Samplers.GibbsSampler.__init__
+gPy.Samplers.MetropolisSampler.__init__
+gPy.Samplers.MultinomialSampler.__init__
+gPy.Utils.Timeout.__init__
+gPy.Utils._ScrolledCanvas.__init__
+gPy.Variables.Domain.__init__
+gPy.Variables.SubDomain.__init__" class="py-name" href="#" onclick="return doclink('link-46', '__init__', 'link-25');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L447"></a><tt class="py-lineno">447</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_timeout</tt> <tt class="py-op">=</tt> <tt class="py-name">timeout</tt> </tt>
+<a name="L448"></a><tt class="py-lineno">448</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+</div><a name="L449"></a><tt class="py-lineno">449</tt>  <tt class="py-line"> </tt>
+<a name="Timeout.start"></a><div id="Timeout.start-def"><a name="L450"></a><tt class="py-lineno">450</tt> <a class="py-toggle" href="#" id="Timeout.start-toggle" onclick="return toggle('Timeout.start');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils.Timeout-class.html#start">start</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Timeout.start-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Timeout.start-expanded"><a name="L451"></a><tt class="py-lineno">451</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt> <tt class="py-op">=</tt> <tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">signal</tt><tt class="py-op">(</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGALRM</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-47" class="py-name" targets="Method gPy.Utils.Timeout._ohno()=gPy.Utils.Timeout-class.html#_ohno"><a title="gPy.Utils.Timeout._ohno" class="py-name" href="#" onclick="return doclink('link-47', '_ohno', 'link-47');">_ohno</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L452"></a><tt class="py-lineno">452</tt>  <tt class="py-line">        <tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">alarm</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_timeout</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L453"></a><tt class="py-lineno">453</tt>  <tt class="py-line"> </tt>
+<a name="Timeout.clear"></a><div id="Timeout.clear-def"><a name="L454"></a><tt class="py-lineno">454</tt> <a class="py-toggle" href="#" id="Timeout.clear-toggle" onclick="return toggle('Timeout.clear');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils.Timeout-class.html#clear">clear</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Timeout.clear-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Timeout.clear-expanded"><a name="L455"></a><tt class="py-lineno">455</tt>  <tt class="py-line">        <tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">alarm</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L456"></a><tt class="py-lineno">456</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L457"></a><tt class="py-lineno">457</tt>  <tt class="py-line">            <tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">signal</tt><tt class="py-op">(</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGALRM</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt><tt class="py-op">)</tt> </tt>
+<a name="L458"></a><tt class="py-lineno">458</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+</div><a name="L459"></a><tt class="py-lineno">459</tt>  <tt class="py-line"> </tt>
+<a name="Timeout._ohno"></a><div id="Timeout._ohno-def"><a name="L460"></a><tt class="py-lineno">460</tt> <a class="py-toggle" href="#" id="Timeout._ohno-toggle" onclick="return toggle('Timeout._ohno');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils.Timeout-class.html#_ohno">_ohno</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">signum</tt><tt class="py-op">,</tt><tt class="py-param">frame</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Timeout._ohno-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Timeout._ohno-expanded"><a name="L461"></a><tt class="py-lineno">461</tt>  <tt class="py-line">        <tt class="py-comment"># ensure one shot</tt> </tt>
+<a name="L462"></a><tt class="py-lineno">462</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">signal</tt><tt class="py-op">(</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGALRM</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt><tt class="py-op">)</tt> </tt>
+<a name="L463"></a><tt class="py-lineno">463</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_oldhand</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L464"></a><tt class="py-lineno">464</tt>  <tt class="py-line">        <tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">alarm</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L465"></a><tt class="py-lineno">465</tt>  <tt class="py-line">        <tt class="py-keyword">raise</tt> <tt id="link-48" class="py-name" targets="Class gPy.Utils.TimedOut=gPy.Utils.TimedOut-class.html"><a title="gPy.Utils.TimedOut" class="py-name" href="#" onclick="return doclink('link-48', 'TimedOut', 'link-48');">TimedOut</a></tt> </tt>
+</div></div><a name="L466"></a><tt class="py-lineno">466</tt>  <tt class="py-line"> </tt>
+<a name="L467"></a><tt class="py-lineno">467</tt>  <tt class="py-line"> </tt>
+<a name="L468"></a><tt class="py-lineno">468</tt>  <tt class="py-line"><tt class="py-comment"># from timeit.py</tt> </tt>
+<a name="L469"></a><tt class="py-lineno">469</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">if</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">platform</tt> <tt class="py-op">==</tt> <tt class="py-string">"win32"</tt><tt class="py-op">:</tt> </tt>
+<a name="L470"></a><tt class="py-lineno">470</tt>  <tt class="py-line">    <tt class="py-comment"># On Windows, the best timer is time.clock()</tt> </tt>
+<a name="L471"></a><tt class="py-lineno">471</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">default_timer</tt> <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">clock</tt> </tt>
+<a name="L472"></a><tt class="py-lineno">472</tt>  <tt class="py-line"><tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L473"></a><tt class="py-lineno">473</tt>  <tt class="py-line">    <tt class="py-comment"># On most other platforms the best timer is time.time()</tt> </tt>
+<a name="L474"></a><tt class="py-lineno">474</tt>  <tt class="py-line"><tt class="py-comment"></tt>    <tt class="py-name">default_timer</tt> <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">time</tt> </tt>
+<a name="L475"></a><tt class="py-lineno">475</tt>  <tt class="py-line"> </tt>
+<a name="tic"></a><div id="tic-def"><a name="L476"></a><tt class="py-lineno">476</tt> <a class="py-toggle" href="#" id="tic-toggle" onclick="return toggle('tic');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#tic">tic</a><tt class="py-op">(</tt><tt class="py-param">enable_gc</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="tic-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="tic-expanded"><a name="L477"></a><tt class="py-lineno">477</tt>  <tt class="py-line">    <tt class="py-docstring">"""Returns the current time in seconds.</tt> </tt>
+<a name="L478"></a><tt class="py-lineno">478</tt>  <tt class="py-line"><tt class="py-docstring">    Typical usage:</tt> </tt>
+<a name="L479"></a><tt class="py-lineno">479</tt>  <tt class="py-line"><tt class="py-docstring">        t = tic()</tt> </tt>
+<a name="L480"></a><tt class="py-lineno">480</tt>  <tt class="py-line"><tt class="py-docstring">        ... do stuff n times ...</tt> </tt>
+<a name="L481"></a><tt class="py-lineno">481</tt>  <tt class="py-line"><tt class="py-docstring">        total_time = toc(t,n)</tt> </tt>
+<a name="L482"></a><tt class="py-lineno">482</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L483"></a><tt class="py-lineno">483</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">enable_gc</tt><tt class="py-op">:</tt> </tt>
+<a name="L484"></a><tt class="py-lineno">484</tt>  <tt class="py-line">        <tt class="py-name">gc</tt><tt class="py-op">.</tt><tt class="py-name">disable</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L485"></a><tt class="py-lineno">485</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">default_timer</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L486"></a><tt class="py-lineno">486</tt>  <tt class="py-line"> </tt>
+<a name="toc"></a><div id="toc-def"><a name="L487"></a><tt class="py-lineno">487</tt> <a class="py-toggle" href="#" id="toc-toggle" onclick="return toggle('toc');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gPy.Utils-module.html#toc">toc</a><tt class="py-op">(</tt><tt class="py-param">s</tt><tt class="py-op">,</tt><tt class="py-param">n</tt><tt class="py-op">,</tt><tt class="py-param">enable_gc</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="toc-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="toc-expanded"><a name="L488"></a><tt class="py-lineno">488</tt>  <tt class="py-line">    <tt class="py-docstring">"""Returns the average time elapsed in seconds.</tt> </tt>
+<a name="L489"></a><tt class="py-lineno">489</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L490"></a><tt class="py-lineno">490</tt>  <tt class="py-line"><tt class="py-docstring">    Typical usage:</tt> </tt>
+<a name="L491"></a><tt class="py-lineno">491</tt>  <tt class="py-line"><tt class="py-docstring">        t = tic()</tt> </tt>
+<a name="L492"></a><tt class="py-lineno">492</tt>  <tt class="py-line"><tt class="py-docstring">        ... do stuff n times ...</tt> </tt>
+<a name="L493"></a><tt class="py-lineno">493</tt>  <tt class="py-line"><tt class="py-docstring">        total_time = toc(t,n)</tt> </tt>
+<a name="L494"></a><tt class="py-lineno">494</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L495"></a><tt class="py-lineno">495</tt>  <tt class="py-line"><tt class="py-docstring">    where n is the number of iterations of the process to be measured.</tt> </tt>
+<a name="L496"></a><tt class="py-lineno">496</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L497"></a><tt class="py-lineno">497</tt>  <tt class="py-line">    <tt class="py-name">t</tt> <tt class="py-op">=</tt> <tt class="py-name">default_timer</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L498"></a><tt class="py-lineno">498</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">enable_gc</tt><tt class="py-op">:</tt> </tt>
+<a name="L499"></a><tt class="py-lineno">499</tt>  <tt class="py-line">        <tt class="py-name">gc</tt><tt class="py-op">.</tt><tt class="py-name">enable</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L500"></a><tt class="py-lineno">500</tt>  <tt class="py-line">        <tt class="py-name">gc</tt><tt class="py-op">.</tt><tt class="py-name">collect</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L501"></a><tt class="py-lineno">501</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-op">(</tt><tt class="py-name">t</tt> <tt class="py-op">-</tt> <tt class="py-name">s</tt><tt class="py-op">)</tt><tt class="py-op">/</tt><tt id="link-49" class="py-name"><a title="float" class="py-name" href="#" onclick="return doclink('link-49', 'float', 'link-32');">float</a></tt><tt class="py-op">(</tt><tt class="py-name">n</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L502"></a><tt class="py-lineno">502</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Sep 19 13:59:04 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

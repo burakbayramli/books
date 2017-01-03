@@ -1,0 +1,99 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>AGM Practical 07</title>
+  </head>
+  <body>
+    <h1>Algorithms for Graphical Models (AGM)</h1>
+    <h2>Practical 07: Fitting hierarchical models</h2>
+
+    <hr />
+    
+    <ol>
+      <li>
+	<a href="#coin">Coin tossing</a>
+      </li>
+      <li>
+	<a href="#mle">Maximum likelihood estimation</a>
+      </li>
+      <li>
+	<a href="#bayesian">Bayesian parameter estimation</a>
+      </li>
+    </ol>
+    <hr />
+    
+    <h4><a id="coin"></a>Coin tossing</h4>
+
+    <p><em>Without using any gPy modules</em>, write a Python program
+    <tt>coin.py</tt> which simulates tossing a biassed coin an
+    arbitrary number of times. The probability of heads and the number
+    of tosses are specified on the command line. So that <tt>python
+	coin.py 0.4 1000</tt> is an acceptable way of running the
+      program. The output should be written to standard output.
+    </p>
+
+    <p>Hint: Look at <tt>argv</tt> in the Python <tt>sys</tt>
+      module. Also look at the <tt>random</tt> module.
+    </p>
+
+    <p>
+      <a href="coin.py">Solution</a>
+    </p>
+
+    <hr />
+
+    <h4><a id="mle"></a>Maximum likelihood estimation</h4>
+
+    <p>
+      Alter <tt>coin.py</tt> so that it outputs a `running estimate'
+      for the probability of heads using the sample it is creating. So
+      after each sampled toss a new estimate is produced and written
+      on a new line of your output. Use <tt>gnuplot</tt> to get a
+      plot. If your running estimate is in a file called
+      <tt>runests.txt</tt>, you can do the following. Start up
+      <tt>gnuplot</tt> (just call it from the command line) and type
+      <tt>plot 'runests.txt' with lines</tt> at the <tt>gnuplot</tt>
+      prompt.
+    </p>
+
+    <p>
+      <a href="coin_runest.py">Solution</a>
+    </p>
+
+    <hr />
+
+    <h4><a id="bayesian"></a>Bayesian parameter estimation</h4>
+
+    <p>
+      Have a look at <a href="beta.py"><tt>beta.py</tt></a> which
+      provides a rudimentary function for plotting Beta distribution
+      curves. Alter your coin-tossing program so that now it generates
+      a Beta distribution for the probability of heads after each coin
+      toss. The prior &alpha; and &beta; values should be provided on
+      the command line, along with the true probability and the number
+      of tosses to simulate.
+    </p>
+ 
+  <p>
+      <a href="coin_bayes.py">Solution</a>
+    </p>
+
+
+    <hr />
+    <p>
+<!-- hhmts start -->
+Last modified: Tue Dec  5 11:53:57 GMT 2006
+<!-- hhmts end -->
+    </p>
+    
+    <p>
+      <a href="http://validator.w3.org/check?uri=referer"><img
+          src="../../valid-xhtml11"
+          alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+    </p>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+F77 stand-alone program:
+
+BEST TIME (F77 stand-alone): 0.2284
+F77 extension module:
+running build
+running config_cc
+unifing config_cc, config, build_clib, build_ext, build commands --compiler options
+running config_fc
+unifing config_fc, config, build_clib, build_ext, build commands --fcompiler options
+running build_src
+building extension "callback" sources
+f2py options: []
+f2py:> tmp2/src.linux-i686-2.5/callbackmodule.c
+creating tmp2
+creating tmp2/src.linux-i686-2.5
+Reading fortran codes...
+	Reading file '_cb.f' (format:fix,strict)
+Post-processing...
+	Block: callback
+			Block: fcb
+			Block: gridloop2_fcb
+Post-processing (stage 2)...
+Building modules...
+	Building module "callback"...
+		Creating wrapper for Fortran function "fcb"("fcb")...
+		Constructing wrapper function "fcb"...
+		  fcb = fcb(x,y)
+		Constructing wrapper function "gridloop2_fcb"...
+		  a = gridloop2_fcb(xcoor,ycoor,[nx,ny])
+	Wrote C/API module "callback" to file "tmp2/src.linux-i686-2.5/callbackmodule.c"
+	Fortran 77 wrappers are saved to "tmp2/src.linux-i686-2.5/callback-f2pywrappers.f"
+  adding 'tmp2/src.linux-i686-2.5/fortranobject.c' to sources.
+  adding 'tmp2/src.linux-i686-2.5' to include_dirs.
+copying /home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/f2py/src/fortranobject.c -> tmp2/src.linux-i686-2.5
+copying /home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/f2py/src/fortranobject.h -> tmp2/src.linux-i686-2.5
+  adding 'tmp2/src.linux-i686-2.5/callback-f2pywrappers.f' to sources.
+running build_ext
+customize UnixCCompiler
+customize UnixCCompiler using build_ext
+customize GnuFCompiler
+Found executable /usr/bin/g77
+gnu: no Fortran 90 compiler found
+gnu: no Fortran 90 compiler found
+customize GnuFCompiler using build_ext
+building 'callback' extension
+compiling C sources
+C compiler: gcc -pthread -fno-strict-aliasing -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC
+
+creating tmp2/tmp2
+creating tmp2/tmp2/src.linux-i686-2.5
+compile options: '-DF2PY_REPORT_ON_ARRAY_COPY=1 -Itmp2/src.linux-i686-2.5 -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -c'
+gcc: tmp2/src.linux-i686-2.5/callbackmodule.c
+gcc: tmp2/src.linux-i686-2.5/fortranobject.c
+compiling Fortran sources
+Fortran f77 compiler: /usr/bin/g77 -g -Wall -fno-second-underscore -fPIC -O3 -funroll-loops -march=pentium-m -mmmx -msse -fomit-frame-pointer -malign-double
+compile options: '-DF2PY_REPORT_ON_ARRAY_COPY=1 -Itmp2/src.linux-i686-2.5 -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -c'
+g77:f77: _cb.f
+g77:f77: tmp2/src.linux-i686-2.5/callback-f2pywrappers.f
+/usr/bin/g77 -g -Wall -g -Wall -shared tmp2/tmp2/src.linux-i686-2.5/callbackmodule.o tmp2/tmp2/src.linux-i686-2.5/fortranobject.o tmp2/_cb.o tmp2/tmp2/src.linux-i686-2.5/callback-f2pywrappers.o ./ext_gridloop.so -L/home/hpl/sysdir/Linux/lib/python2.5/config -lpython2.5 -lg2c -o ./callback.so
+running build
+running config_cc
+unifing config_cc, config, build_clib, build_ext, build commands --compiler options
+running config_fc
+unifing config_fc, config, build_clib, build_ext, build commands --fcompiler options
+running build_src
+building extension "ext_gridloop2" sources
+f2py options: []
+f2py:> tmp1/src.linux-i686-2.5/ext_gridloop2module.c
+Reading fortran codes...
+	Reading file '_cb.f' (format:fix,strict)
+Post-processing...
+	Block: ext_gridloop2
+			Block: gridloop2
+Post-processing (stage 2)...
+Building modules...
+	Building module "ext_gridloop2"...
+		Constructing wrapper function "gridloop2"...
+		  a = gridloop2(xcoor,ycoor,[nx,ny])
+	Wrote C/API module "ext_gridloop2" to file "tmp1/src.linux-i686-2.5/ext_gridloop2module.c"
+  adding 'tmp1/src.linux-i686-2.5/fortranobject.c' to sources.
+  adding 'tmp1/src.linux-i686-2.5' to include_dirs.
+running build_ext
+customize UnixCCompiler
+customize UnixCCompiler using build_ext
+customize GnuFCompiler
+Found executable /usr/bin/g77
+gnu: no Fortran 90 compiler found
+gnu: no Fortran 90 compiler found
+customize GnuFCompiler using build_ext
+building 'ext_gridloop2' extension
+compiling C sources
+C compiler: gcc -pthread -fno-strict-aliasing -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC
+
+compile options: '-DF2PY_REPORT_ON_ARRAY_COPY=1 -Itmp1/src.linux-i686-2.5 -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -c'
+gcc: tmp1/src.linux-i686-2.5/ext_gridloop2module.c
+compiling Fortran sources
+Fortran f77 compiler: /usr/bin/g77 -g -Wall -fno-second-underscore -fPIC -O3 -funroll-loops -march=pentium-m -mmmx -msse -fomit-frame-pointer -malign-double
+compile options: '-DF2PY_REPORT_ON_ARRAY_COPY=1 -Itmp1/src.linux-i686-2.5 -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -c'
+g77:f77: _cb.f
+/usr/bin/g77 -g -Wall -g -Wall -shared tmp1/tmp1/src.linux-i686-2.5/ext_gridloop2module.o tmp1/tmp1/src.linux-i686-2.5/fortranobject.o tmp1/_cb.o -L/home/hpl/sysdir/Linux/lib/python2.5/config -lpython2.5 -lg2c -o ./ext_gridloop2.so
+Grid2Deff.timing2: reference CPU time = 0.2284
+ Grid2Deff.gridloop (1 calls): elapsed=53.9148, CPU=53.57
+ Grid2Deff.gridloop (1 calls): elapsed=28.972, CPU=28.8
+ Grid2Deff.__call__ (1 calls): elapsed=0.315786, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.311573, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=44.9752, CPU=44.48
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=11.9529, CPU=10.68
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=45.7471, CPU=45.06
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=10.8332, CPU=10.57
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=45.4276, CPU=45.07
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=10.6919, CPU=10.62
+ Grid2Deff.ext_gridloop_vec2 (20 calls): elapsed=10.2621, CPU=10.02
+ Grid2Deff.ext_gridloop2_str (20 calls): elapsed=4.8931, CPU=4.72
+ Grid2Deff.ext_gridloop_noalloc (20 calls): elapsed=4.00733, CPU=3.98
+ Grid2Deff.ext_gridloop2_fcb (20 calls): elapsed=4.89595, CPU=4.85
+ Grid2Deff.ext_gridloop2_v2 (20 calls): elapsed=4.35377, CPU=4.32
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=6.20304, CPU=6.13
+ Grid2Deff.gridloop (1 calls): elapsed=13.8683, CPU=13.77
+ Grid2Deff.gridloop (1 calls): elapsed=13.9663, CPU=13.87
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/F77
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "some external experiment"
+with CPU time:
+  0.22839999999999999
+
+g.ext_gridloop_noalloc, myfunc          |     0.87
+g.ext_gridloop2_v2('sin(x*y) + 8*x')    |     0.95
+g.ext_gridloop2_str, myfunc             |     1.03
+g.ext_gridloop2_fcb('sin(x*y) + 8*x')   |     1.06
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.34
+g.__call__, expression1_f               |     1.36
+g.__call__, myfunc1                     |     1.36
+g.ext_gridloop_vec2, myfuncf2           |     2.19
+g.ext_gridloop2, myfunc2                |    46.28
+g.ext_gridloop2, expression2_f          |    46.50
+g.ext_gridloop1, myfunc2                |    46.76
+g.ext_gridloop_psyco, myfunc2           |    60.29
+g.ext_gridloop_psyco, expression2_f     |    60.73
+g.gridloop, myfunc2                     |   126.09
+g.ext_gridloop1, myfunc1                |   194.75
+g.ext_gridloop2, myfunc1                |   197.29
+g.ext_gridloop2, expression1_f          |   197.33
+g.gridloop, myfunc1                     |   234.54
+
+C extension module; a single handwritten function:
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+module ext_gridloop:
+   gridloop1(a, xcoor, ycoor, pyfunc)
+   a = gridloop2(xcoor, ycoor, pyfunc)
+Grid2Deff.timing2: reference CPU time = 0.2284
+ Grid2Deff.gridloop (1 calls): elapsed=52.3782, CPU=52.05
+ Grid2Deff.gridloop (1 calls): elapsed=28.9263, CPU=28.74
+ Grid2Deff.__call__ (1 calls): elapsed=0.312025, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.31095, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=41.9973, CPU=41.79
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=9.02129, CPU=8.95
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=41.6409, CPU=41.41
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.24441, CPU=9.17
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=42.4211, CPU=41.52
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.32699, CPU=9.17
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=6.23095, CPU=6.12
+ Grid2Deff.gridloop (1 calls): elapsed=13.8516, CPU=13.73
+ Grid2Deff.gridloop (1 calls): elapsed=14.0377, CPU=13.91
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C/plain
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "some external experiment"
+with CPU time:
+  0.22839999999999999
+
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.34
+g.__call__, myfunc1                     |     1.36
+g.__call__, expression1_f               |     1.36
+g.ext_gridloop1, myfunc2                |    39.19
+g.ext_gridloop2, expression2_f          |    40.15
+g.ext_gridloop2, myfunc2                |    40.17
+g.ext_gridloop_psyco, myfunc2           |    60.11
+g.ext_gridloop_psyco, expression2_f     |    60.90
+g.gridloop, myfunc2                     |   125.83
+g.ext_gridloop2, myfunc1                |   181.30
+g.ext_gridloop2, expression1_f          |   181.79
+g.ext_gridloop1, myfunc1                |   182.97
+g.gridloop, myfunc1                     |   227.89
+
+C extension module; separate function and handwritten wrapper:
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+module ext_gridloop:
+   gridloop1(a, xcoor, ycoor, pyfunc)
+   a = gridloop2(xcoor, ycoor, pyfunc)
+Grid2Deff.timing2: reference CPU time = 0.2284
+ Grid2Deff.gridloop (1 calls): elapsed=52.4379, CPU=52
+ Grid2Deff.gridloop (1 calls): elapsed=29.0783, CPU=28.88
+ Grid2Deff.__call__ (1 calls): elapsed=0.312343, CPU=0.3
+ Grid2Deff.__call__ (1 calls): elapsed=0.311539, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=42.1662, CPU=41.92
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=9.08741, CPU=9
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=41.7689, CPU=41.42
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.09206, CPU=9.03
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=41.9709, CPU=41.43
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.078, CPU=9.02
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=6.19014, CPU=6.12
+ Grid2Deff.gridloop (1 calls): elapsed=13.9052, CPU=13.79
+ Grid2Deff.gridloop (1 calls): elapsed=13.9773, CPU=13.83
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C/clibcall
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "some external experiment"
+with CPU time:
+  0.22839999999999999
+
+g.__call__, myfunc1                     |     1.31
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.34
+g.__call__, expression1_f               |     1.36
+g.ext_gridloop1, myfunc2                |    39.40
+g.ext_gridloop2, expression2_f          |    39.49
+g.ext_gridloop2, myfunc2                |    39.54
+g.ext_gridloop_psyco, myfunc2           |    60.38
+g.ext_gridloop_psyco, expression2_f     |    60.55
+g.gridloop, myfunc2                     |   126.44
+g.ext_gridloop2, myfunc1                |   181.35
+g.ext_gridloop2, expression1_f          |   181.39
+g.ext_gridloop1, myfunc1                |   183.54
+g.gridloop, myfunc1                     |   227.67
+
+C++ extension module; handwritten wrapper + class:
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+Grid2Deff.timing2: reference CPU time = 0.2284
+ Grid2Deff.gridloop (1 calls): elapsed=52.8568, CPU=52.47
+ Grid2Deff.gridloop (1 calls): elapsed=28.8515, CPU=28.62
+ Grid2Deff.__call__ (1 calls): elapsed=0.312556, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.310317, CPU=0.3
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=42.8747, CPU=41.99
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=9.27451, CPU=9.14
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=42.4066, CPU=41.48
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.24222, CPU=9.11
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=42.5254, CPU=41.7
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.29527, CPU=9.13
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=6.36213, CPU=6.12
+ Grid2Deff.gridloop (1 calls): elapsed=14.2035, CPU=13.83
+ Grid2Deff.gridloop (1 calls): elapsed=14.1676, CPU=13.95
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C++/plain
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "some external experiment"
+with CPU time:
+  0.22839999999999999
+
+g.__call__, expression1_f               |     1.31
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.34
+g.__call__, myfunc1                     |     1.36
+g.ext_gridloop2, myfunc2                |    39.89
+g.ext_gridloop2, expression2_f          |    39.97
+g.ext_gridloop1, myfunc2                |    40.02
+g.ext_gridloop_psyco, myfunc2           |    60.55
+g.ext_gridloop_psyco, expression2_f     |    61.08
+g.gridloop, myfunc2                     |   125.31
+g.ext_gridloop2, myfunc1                |   181.61
+g.ext_gridloop2, expression1_f          |   182.57
+g.ext_gridloop1, myfunc1                |   183.84
+g.gridloop, myfunc1                     |   229.73
+
+C++ extension module; handwritten wrapper using SCXX:
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+Grid2Deff.timing2: reference CPU time = 0.2284
+ Grid2Deff.gridloop (1 calls): elapsed=53.3182, CPU=52.11
+ Grid2Deff.gridloop (1 calls): elapsed=30.1054, CPU=29.04
+ Grid2Deff.__call__ (1 calls): elapsed=0.318992, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.311635, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=52.7896, CPU=51.69
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=32.2456, CPU=31.02
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=76.1302, CPU=74.25
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=55.3155, CPU=53.57
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=102.517, CPU=97.48
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=1384.87, CPU=89.54
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=15.358, CPU=6.4
+ Grid2Deff.gridloop (1 calls): elapsed=13.8489, CPU=13.56
+ Grid2Deff.gridloop (1 calls): elapsed=13.9808, CPU=13.72
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C++/scxx
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "some external experiment"
+with CPU time:
+  0.22839999999999999
+
+g.__call__, myfunc1                     |     1.36
+g.__call__, expression1_f               |     1.36
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.40
+g.ext_gridloop_psyco, myfunc2           |    59.37
+g.ext_gridloop_psyco, expression2_f     |    60.07
+g.gridloop, myfunc2                     |   127.15
+g.ext_gridloop1, myfunc2                |   135.81
+g.ext_gridloop1, myfunc1                |   226.31
+g.gridloop, myfunc1                     |   228.15
+g.ext_gridloop2, myfunc2                |   234.54
+g.ext_gridloop2, myfunc1                |   325.09
+g.ext_gridloop2, expression2_f          |   392.03
+g.ext_gridloop2, expression1_f          |   426.80
+
+C++ extension module; conversion class wrapped with SWIG:
+C++ standalone program (with MyArray and gridloop1):
+gridloop1 called 50 times!
+cmd: ./tmp.app 1100; elapsed=12.61 cpu=12.25  = 0.245 sec

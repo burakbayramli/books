@@ -1,0 +1,19 @@
+```{r loadCh0,message=FALSE}
+library(ggplot2)
+library(xlsx)
+library(reshape2)
+```
+
+```{r DetailsWTIDSeries, dependson="loadCh0", message=FALSE}
+## Table DetailsWTIDSeries
+fname="../Piketty2014FiguresTables/Chapter8TablesFigures.xlsx"
+tabname="DetailsWTIDSeries"
+
+dWTID = read.xlsx(fname,sheetName=tabname,rowIndex=4:147,colIndex=1:126,header=TRUE,keepFormulas=TRUE)
+dWTID<-dWTID[c(-1,-2),]
+names(dWTID)[1]<-"YEAR"
+columns.France<-c(1,grep("France",names(dWTID)))
+recoTS81<-dWTID[,columns.France]
+columns.USA<-c(1,grep("United.States",names(dWTID)))
+recoTS82<-dWTID[,columns.USA]
+```

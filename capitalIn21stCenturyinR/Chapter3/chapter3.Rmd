@@ -1,0 +1,134 @@
+The Metamorphoses of Capital: Chapter 3
+========================================================
+
+### Data provenance
+
+The data were downloaded as Excel files from: http://piketty.pse.ens.fr/en/capital21c2. 
+
+### Loading relevant libraries and data
+
+### This document depends on the [xlsx](http://cran.r-project.org/web/packages/xlsx/index.html), [reshape2](http://cran.r-project.org/web/packages/reshape2/index.html), [scales](http://cran.r-project.org/web/packages/scales/index.html), and [ggplot2](http://cran.r-project.org/web/packages/ggplot2/index.html) packages.
+
+setwd("/Users/pacha/Dropbox/R/capitalIn21stCenturyinR/Chapter3")
+
+library(XLConnect)
+library(WriteXLS)
+
+excel.file <- file.path("Chapter3TablesFigures.xlsx")
+
+```{r loadCh0,message=FALSE}
+library(ggplot2)
+library(xlsx)
+library(reshape2)
+### scales for percent of the axes
+library(scales)
+```
+
+## Figures 3.1 and 3.2
+
+These figures are based on Table TS3.1 and TS3.2. Here we read
+data from the excel file and name the data series.
+
+```{r tabTS3.1, message=FALSE, cache=TRUE}
+## Table TS3.1
+tab = read.xlsx("Chapter3TablesFigures.xlsx",sheetName="TS3.1",rowIndex=9:19,colIndex=1:10,header=FALSE)
+names(tab) =  c("year","nat","nat_land", "nat_house", "nat_dom", "nat_foreign", "public", "public_ass", "public_debt", "private")
+```
+
+```{r tabTS3.2,  message=FALSE, cache=TRUE}
+## Table TS3.1
+tab32 = read.xlsx("Chapter3TablesFigures.xlsx",sheetName="TS3.2",rowIndex=9:19,colIndex=1:10,header=FALSE)
+names(tab32) =  c("year","nat","nat_land", "nat_house", "nat_dom", "nat_foreign", "public", "public_ass", "public_debt", "private")
+```
+
+The caption of the table TS3.1 lists the sources for this table
+as 
+
+> Source: Piketty-Zucman 2013, UK.xls, links frozen on 01-24-2013.   				
+
+and 
+> Source: Piketty-Zucman 2013, France.xls, links frozen on 01-24-2013
+
+for table TS3.2
+Let's make a function that will plot our data:
+```{r func3_1, fig.width=8, fig.height=4}
+run31_32 = function(tab, num, country){
+  fdat <- tab[,c("year","nat_land", "nat_house", "nat_dom", "nat_foreign")]
+  names(fdat) <- c("year","Agricultural land","Housing", "Other Domestic Capital", "Net foreign capital")
+  
+  # Make the data long for stacking
+  fdat <- melt(fdat, id.var="year")
+  names(fdat) <- c("year","capital_type","percent")
+  
+  qplot(year, percent, data=fdat, geom="ribbon", position = "stack", 
+        fill = capital_type, xlab= "Year", ylab= "Value of National Capital (% National Income)") + scale_y_continuous(labels = percent, limits = c(0, 8)) + 
+    ggtitle(paste0("Figure ", num, ". Capital in ", country, ", 1700-2010")) + theme(legend.position="bottom", legend.background = element_rect(fill="transparent")) + scale_x_continuous(breaks = seq(1700, 2020, by=20))
+}
+```
+
+Now we make Figure F3.1:
+
+```{r figF3_1, dependson="tabTS3.1", fig.width=8, fig.height=4}
+run31_32(tab, num = "3.1", "Britain")
+```
+
+Figure F3.2:
+
+```{r figF3_2, dependson="tabTS3.2", fig.width=8, fig.height=4}
+run31_32(tab32, num = "3.2", "France")
+```
+
+In Figure 3.1 and 3.2 of Piketty, the axes are equally spaced, but correspond to different periods of time such as the first two tickmarks represent 1700-1750, a period of 50 years, whereas the last 2 tickmarks represent 1990-2010, spanning 30 years, and the ones before span 1970-1990, only 20 years.  
+
+## Figures 3.3 and 3.4
+Let's make another function to create the plot for 3.3 and 3.4
+```{r func3_3,  fig.width=8, fig.height=4}
+run_33_34 = function(tab, num, country){
+fdat <- tab[, c("year","public_ass", "public_debt")]
+names(fdat) <- c("year", "Public Assets", "Public Debt")
+fdat <- melt(fdat, id.var="year")
+names(fdat) <- c("year", "Capital", "percent")
+
+qplot(year, percent, data=fdat, geom=c("line", "point"), colour = Capital, xlab= "Year", ylab= "Public assets and debt (% national income)") + scale_y_continuous(labels = percent, limits = c(0, 2.5)) + 
+  ggtitle(paste0("Figure ", num, ". Public wealth in ", country, ", 1700-2010")) + theme(legend.position=c(0.5, .8), legend.background = element_rect(fill="transparent")) + scale_x_continuous(breaks = seq(1700, 2020, by=20))
+}
+```
+
+Figure 3.3
+
+```{r fig3_3, dependson="tabTS3.1", fig.width=8, fig.height=4}
+run_33_34(tab, "3.3", "Britain")
+```
+
+Figure 3.4
+
+```{r fig3_4, dependson="tabTS3.2", fig.width=8, fig.height=4}
+run_33_34(tab32, "3.4", "France")
+```
+
+
+## Figures 3.5 and 3.6
+Let's make another function to create the plot for 3.5 and 3.6
+```{r func3_5, fig.width=8, fig.height=4}
+run_35_36 = function(tab, num, country){
+fdat <- tab[, c("year","nat", "public", "private")]
+names(fdat) <- c("year", "National Capital (Public + Private)", "Public", "Private")
+fdat <- melt(fdat, id.var="year")
+names(fdat) <- c("year", "Capital_Type", "percent")
+
+qplot(year, percent, data=fdat, geom=c("line", "point"), colour = Capital_Type, xlab= "Year", ylab= "National, private and public capital (% national income)") + scale_y_continuous(labels = percent, limits = c(-2, 9)) + 
+  ggtitle(paste0("Figure ", num, ". Private and public capital in ", country, ", 1700-2010")) + theme(legend.position=c(0.5, .5), legend.background = element_rect(fill="transparent")) + scale_x_continuous(breaks = seq(1700, 2020, by=20))
+}
+```
+
+Figure 3.5
+
+```{r fig3_5, dependson="tabTS3.1", fig.width=8, fig.height=4}
+run_35_36(tab, "3.5", "Britain")
+```
+
+Figure 3.6
+
+```{r fig3_6, dependson="tabTS3.2", fig.width=8, fig.height=4}
+run_35_36(tab32, "3.6", "France")
+```

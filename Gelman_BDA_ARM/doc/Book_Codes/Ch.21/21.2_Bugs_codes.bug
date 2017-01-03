@@ -1,0 +1,20 @@
+# Finite-population sd's
+
+for (i in 1:n){
+  e.y[i] <- y[i] - y.hat[i]
+  }
+  s.y <- sd(e.y[])
+
+  s.g <- sd(g[])
+  s.d <- sd(d[])
+
+for (j in 1:J){
+  g[j] ~ dnorm (g.hat[j], tau.g)
+  g.hat[j] <- a.0 + a.1*u.1[j] + a.2*u[2]
+  tau.g <- pow(sigma.g, -2)
+
+for (j in 1:J){
+  e.g[j] <- g[j] - g.hat[j]
+}
+s.g <- sd(e.g[])
+

@@ -1,0 +1,35 @@
+# 2-way anova for flight simulator experiment
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- mu + b.treatment[treatment[i]] + b.airport[airport[i]]
+    e.y[i] <- y[i] - y.hat[i]
+  }
+  g.mu <- mu + mean(b.treatment[]) + mean(b.airport[])
+  gg.mu <- mu + mu.treatment + mu.airport
+  mu ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y,-2)
+  sigma.y ~ dunif (0, 100)
+  s.error <- sd(e.y[])
+#
+  for (j in 1:n.treatment){
+    b.treatment[j] ~ dnorm (mu.treatment, tau.treatment)
+    g.treatment[j] <- b.treatment[j] - mean(b.treatment[])
+    gg.treatment[j] <- b.treatment[j] - mu.treatment
+  }
+  mu.treatment ~ dnorm (0, .0001)
+  tau.treatment <- pow(sigma.treatment,-2)
+  sigma.treatment ~ dunif (0, 100)
+  s.treatment <- sd(b.treatment[])
+#
+  for (j in 1:n.airport){
+    b.airport[j] ~ dnorm (mu.airport, tau.airport)
+    g.airport[j] <- b.airport[j] - mean(b.airport[])
+    gg.airport[j] <- b.airport[j] - mu.airport
+  }
+  mu.airport ~ dnorm (0, .0001)
+  tau.airport <- pow(sigma.airport,-2)
+  sigma.airport ~ dunif (0, 100)
+  s.airport <- sd(b.airport[])
+}

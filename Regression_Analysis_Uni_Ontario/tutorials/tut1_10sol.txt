@@ -1,0 +1,60 @@
+#1 
+#a
+summary(cars)
+
+#b
+dim(cars)
+
+#c
+cars[17,]
+
+#d
+hist(cars$speed)
+hist(cars$dist)
+hist(sqrt(cars$dist))
+
+#e
+boxplot(cars$speed)
+boxplot(cars$dist)
+
+
+car1.lm <- lm(dist~speed, data=cars)
+car2.lm <- lm(sqrt(dist)~speed, data=cars)
+
+summary(car1.lm)
+summary(car2.lm)
+
+plot(dist~speed, data=cars)
+abline(car1.lm)
+
+plot(sqrt(dist)~speed, data=cars)
+abline(car2.lm)
+
+
+predict(car2.lm, newdata=data.frame(speed=21),interval="confidence")
+predict(car2.lm, newdata=data.frame(speed=21),interval="prediction")
+
+#2
+#a
+large <- c(2,2.5,3,4,3,3)
+median <- c(2,3,2,2,2.5,3)
+small <- c(3,3,2,2,2,2.5)
+
+#b
+flight.time <- data.frame(large=large,median=median, small=small)
+
+#c
+rm(large, median, small)
+
+#d
+boxplot(flight.time)
+
+#e
+sd(flight.time$small)
+
+#f
+sapply(flight.time,sd)
+
+#g
+flight.stk <- stack(flight.time)
+ 

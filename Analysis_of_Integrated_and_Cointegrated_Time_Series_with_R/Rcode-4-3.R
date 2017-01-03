@@ -1,0 +1,8 @@
+library(urca)
+data(nporg)
+gnp <- log(na.omit(nporg[, "gnp.r"]))
+gnp.d <- diff(gnp)
+gnp.ct.df <- ur.ers(gnp, type = "DF-GLS", model = "trend", lag.max = 4)
+gnp.ct.pt <- ur.ers(gnp, type = "P-test", model = "trend")
+gnp.d.ct.df <- ur.ers(gnp.d, type = "DF-GLS", model = "trend", lag.max = 4)
+gnp.d.ct.pt <- ur.ers(gnp.d, type = "P-test", model = "trend")

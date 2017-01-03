@@ -1,0 +1,7 @@
+#/bin/sh
+for i in $@; do
+    echo "echo unpacking file $i"
+    echo "cat > $i <<EOF"
+    cat $i
+    echo "EOF"
+done

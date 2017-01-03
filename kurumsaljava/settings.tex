@@ -1,0 +1,291 @@
+\lstset{%
+    float=hbp,%
+    basicstyle=\ttfamily\small, %
+    columns=flexible, %
+    tabsize=2, %
+    frame=lines, %
+    extendedchars=true, %
+    showspaces=false, %
+    showstringspaces=false, %
+    breaklines=false, %
+    breakautoindent=true, %
+    captionpos=t%
+}
+
+\makeindex
+
+\ifpdf
+  \pdfoutput=1
+  \usepackage[plainpages=false,pdfpagelabels,bookmarksnumbered]{hyperref}
+  \usepackage{memhfixc}
+\fi
+
+\newcommand{\theclass}{memoir}
+
+\providecommand{\tx}{TeX}
+\providecommand{\ltx}{LaTeX}
+
+
+\makeatletter
+
+%%% Print and Index macros
+\newcommand{\Ppstyle}[1]{\textsl{#1}}
+\newcommand{\pstyle}[1]{\Ppstyle{#1}%
+            \index{#1 pages?\Ppstyle{#1} (pagestyle)}%
+            \index{pagestyle!#1?\Ppstyle{#1}}}            % pagestyle
+\newcommand{\Pcstyle}[1]{\textsl{#1}}
+\newcommand{\cstyle}[1]{\Pcstyle{#1}%
+            \index{#1 chaps?\Pcstyle{#1} (chapterstyle)}%
+            \index{chapterstyle!#1?\Pcstyle{#1}}}          % chapterstyle
+\newcommand{\Pclass}[1]{\textsf{#1}}
+\newcommand{\Lclass}[1]{\Pclass{#1}%
+            \index{#1 class?\Pclass{#1} (class)}%
+            \index{class!#1?\Pclass{#1}}}                % class name
+\newcommand{\Ppack}[1]{\textsf{#1}}
+\newcommand{\Lpack}[1]{\Ppack{#1}%
+            \index{#1 pack?\Ppack{#1} (package)}%
+            \index{package!#1?\Ppack{#1}}}              % package name
+\newcommand{\Popt}[1]{\textsf{#1}}
+\newcommand{\Lopt}[1]{\Popt{#1}%
+            \index{#1 opt?\Popt{#1} (option)}%
+            \index{option!#1?\Popt{#1}}}               % option name
+\newcommand{\Ie}[1]{\texttt{#1}\index{#1 env?\texttt{#1} (environment)}%
+                               \index{environment!#1?\texttt{#1}}}
+\newcommand{\Icn}[1]{\texttt{#1}\index{#1 cou?\texttt{#1} (counter)}%
+                                \index{counter!#1?\texttt{#1}}}
+\newcommand{\Itt}[1]{\texttt{#1}\index{#1tt?\texttt{#1}}}
+
+% print and index an \if... \piif{if...} or friend (e.g., \else)
+\newcommand{\piif}[1]{\cs{#1}\index{#1?\cs{#1}}}
+
+%%%\newcommand{\seealso}[2]{\emph{see also} #1}
+
+\newcommand{\listofx}{`List of\ldots'}
+
+% print a begin environment
+\newcommand{\senv}[1]{\texttt{\bs begin\{#1\}}}
+
+% print an end environment
+\newcommand{\eenv}[1]{\texttt{\bs end\{#1\}}}
+
+% print a file name
+\newcommand{\file}[1]{\texttt{#1}}
+
+% print and index a file name
+\newcommand{\ixfile}[1]{\file{#1}%
+            \index{#1 file?\file{#1} (file)}%
+            \index{file!#1?\file{#1}}}
+
+% print & index CTT
+\newcommand{\ctt}{\textsc{ctt}}
+\newcommand{\pictt}{\ctt\index{CTT?\ctt}}
+
+% index marking
+\newcommand{\idxmark}[1]{#1\markboth{#1}{#1}}
+
+\newcommand{\foredge}{foredge}
+\newlength{\pwlayi}\setlength{\pwlayi}{0.45\textwidth} % 
+\newlength{\pwlayii}\setlength{\pwlayii}{0.45\pwlayi}
+
+%% definition of \meta is taken from doc.dtx
+\begingroup
+\obeyspaces%
+\catcode`\^^M\active%
+\gdef\meta{\begingroup\obeyspaces\catcode`\^^M\active%
+\let^^M\do@space\let \do@space%
+\def\-{\egroup\discretionary{-}{}{}\hbox\bgroup\itshape}%
+\m@ta}%
+\endgroup
+\def\m@ta#1{\leavevmode\hbox\bgroup$\langle$\itshape#1\/$\rangle$\egroup
+    \endgroup}
+\def\do@space{\egroup\space
+    \hbox\bgroup\itshape\futurelet\next\sp@ce}
+\def\sp@ce{\ifx\next\do@space\expandafter\sp@@ce\fi}
+\def\sp@@ce#1{\futurelet\next\sp@ce}
+%% end of \meta and supports
+
+
+%% The definition of \MakeShortVerb & \DeleteShortVerb
+%% are now in the memoir class.
+
+%% The macros \cmd, \cs, \marg, \oarg, \parg are taken from ltxdoc.dtx
+% \cmd{\fred} typesets \fred
+\def\cmd#1{\cs{\expandafter\cmd@to@cs\string#1}}
+\def\cmd@to@cs#1#2{\char\number`#2\relax}
+% \cs{fred} typesets \fred
+\DeclareRobustCommand{\cs}[1]{\texttt{\char`\\#1}}
+% \marg{arg} typesets {<arg>}
+\providecommand{\marg}[1]{%
+  {\ttfamily\char`\{}\meta{#1}{\ttfamily\char`\}}}
+% \oarg{arg} typesets [<arg>]
+\providecommand{\oarg}[1]{%
+  {\ttfamily\char`\[}\meta{#1}{\ttfamily\char`\]}}
+% \parg{x,y} typesets (<x,y>)
+\providecommand{\parg}[1]{%
+  {\ttfamily\char`\(}\meta{#1}{\ttfamily\char`\)}}
+
+\def\bs{\texttt{\char`\\}}
+
+%%% macro \cmd from Heiko Oberdiek CTT 2001/05/26 (prints and indexes a command)
+\newcommand*{\cmdprint}[1]{\texttt{\string#1}}
+\def\cmd#1{\cmdprint{#1}%
+  \index{\expandafter\@gobble\string#1?\string\cmdprint{\string#1}}}
+
+% print and index \\!
+\newcommand{\pixslashbang}{\cmdprint{\\!}\index{"\"\"!?\string\cmdprint{\\}\texttt{"!}}}
+
+% print and index \!
+\newcommand{\pixabang}{\cmdprint{\!}\index{"!?\string\cs{}\texttt{"!}}}
+
+
+\newcommand{\lnc}[1]{\cmdprint{#1}%
+  \index{\expandafter\@gobble\string#1len?\string\cmdprint{\string#1} (length)}%
+  \index{length!\expandafter\@gobble\string#1len?\string\cmdprint{\string#1}}}
+
+%%%%%% stuff for new LaTeX code environment
+
+% \zeroseps sets list before/after skips to minimum values
+\newcommand{\@zeroseps}{\setlength{\topsep}{\z@}
+                        \setlength{\partopsep}{\z@}
+                        \setlength{\parskip}{\z@}}
+\newlength{\gparindent} \setlength{\gparindent}{\parindent}
+% now we can do the new environment. This has no extra before/after spacing.
+\newenvironment{lcode}{\@zeroseps
+  \renewcommand{\verbatim@startline}{\verbatim@line{\hskip\gparindent}}
+  \small\setlength{\baselineskip}{\onelineskip}\verbatim}%
+  {\endverbatim
+   \vspace{-\baselineskip}%
+   \noindent
+}
+
+%%%%% LaTeX syntax
+\newenvironment{syntax}{\begin{center}
+                        \begin{tabular}{|p{0.9\linewidth}|} \hline}%
+                       {\hline
+                        \end{tabular}
+                        \end{center}}
+
+\providecommand{\Note}{\textbf{NOTE:}}
+
+\font\largefont= cmr17 scaled \magstep5              %
+
+\def\drop#1#2{{\noindent
+    \setbox0\hbox{\largefont #1}\setbox1\hbox{#2}\setbox2\hbox{(}%
+    \count0=\ht0\advance\count0 by\dp0\count1\baselineskip
+    \advance\count0 by-\ht1\advance\count0by\ht2
+    \dimen1=.5ex\advance\count0by\dimen1\divide\count0 by\count1
+    \advance\count0 by1\dimen0\wd0
+    \advance\dimen0 by.25em\dimen1=\ht0\advance\dimen1 by-\ht1
+    \global\hangindent\dimen0\global\hangafter-\count0
+    \hskip-\dimen0\setbox0\hbox to\dimen0{\raise-\dimen1\box0\hss}%
+    \dp0=0in\ht0=0in\box0}#2}
+
+% end of DROP.STY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\versal}[1]{{\noindent
+    \setbox0\hbox{\largefont #1}%
+    \count0=\ht0                   % height of versal
+    \count1=\baselineskip          % baselineskip
+    \divide\count0 by \count1      % versal height/baselineskip
+    \dimen1 = \count0\baselineskip % distance to drop versal
+    \advance\count0 by 1\relax     % no of indented lines
+    \dimen0=\wd0                   % width of versal
+    \global\hangindent\dimen0      % set indentation distance
+    \global\hangafter-\count0      % set no of indented lines
+    \hskip-\dimen0\setbox0\hbox to\dimen0{\raise-\dimen1\box0\hss}%
+    \dp0=0in\ht0=0in\box0}}
+
+\makeatother
+
+\MakeShortVerb{\|}
+% \DeleteShortVerb{\|}
+
+
+%%% need more space for ToC page numbers
+\setpnumwidth{2.55em}
+\setrmarg{3.55em}
+
+%%% need more space for ToC section numbers
+\cftsetindents{section}{1.5em}{3.0em}
+\cftsetindents{subsection}{4.5em}{3.9em}
+\cftsetindents{subsubsection}{8.4em}{4.8em}
+\cftsetindents{paragraph}{10.7em}{5.7em}
+\cftsetindents{subparagraph}{12.7em}{6.7em}
+
+%%% need more space for LoF numbers
+\cftsetindents{figure}{0em}{3.0em}
+
+%%% and do the same for the LoT
+\cftsetindents{table}{0em}{3.0em}
+
+%%% set up the page layout
+%%\settrimmedsize{11in}{210mm}{*}
+%\setlength{\trimtop}{0pt}
+%\setlength{\trimedge}{\stockwidth}
+%\addtolength{\trimedge}{-\paperwidth}
+%\settypeblocksize{7.75in}{33pc}{*}
+%\setulmargins{4cm}{*}{*}
+%\setlrmargins{1.25in}{*}{*}
+%\setmarginnotes{17pt}{51pt}{\onelineskip}
+%\setheadfoot{\onelineskip}{2\onelineskip}
+%\setheaderspaces{*}{2\onelineskip}{*}
+
+\settrimmedsize{\paperheight}{\paperwidth}{*}
+\settypeblocksize{18.5cm}{12cm}{*}
+\setulmargins{2.0cm}{*}{*}
+\setlrmargins{2.0cm}{*}{*}
+\checkandfixthelayout
+
+
+\bibliographystyle{alpha}
+
+\newcommand{\prtoc}{ToC}             % print ToC
+\newcommand{\prlof}{LoF}
+\newcommand{\prlot}{LoT}
+\newcommand{\ixtoc}{\index{ToC}}     % index ToC
+\newcommand{\ixlof}{\index{LoF}}
+\newcommand{\ixlot}{\index{LoT}}
+\newcommand{\toc}{\prtoc\ixtoc}      % print & index ToC
+\newcommand{\lof}{\prlof\index{LoF}}
+\newcommand{\lot}{\prlot\index{LoT}}
+
+\newcommand{\noidxnum}[1]{}
+
+%%% subfigures and subtables
+\newsubfloat{figure}
+\newsubfloat{table}
+
+%% end preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% list subfigures
+\setcounter{lofdepth}{2}
+
+\index{table of contents|see{ToC}}
+\index{list!of figures|see{LoF}}
+\index{figure!list of|see{LoF}}
+\index{list!of tables|see{LoT}}
+\index{table!list of|see{LoT}}
+\index{marginal note|see{marginalia}}
+\index{footnote!in title|see{thanks}}
+\index{counter|noidxnum}
+\index{environment|noidxnum}
+\index{length|noidxnum}
+\index{list|noidxnum}
+\index{illustration|seealso{float, figure}}
+\index{figure|seealso{float}}
+\index{file|noidxnum}
+\index{table|seealso{float}}
+\index{chapter!style|see{chapterstyle}}
+\index{chapter!heading|see{heading}}
+\index{page!style|see{pagestyle}}
+\index{part!heading|see{heading}}
+\index{subfloat|noidxnum}
+
+%%% ToC down to subsections
+\settocdepth{subsection}
+\frontmatter
+\pagestyle{empty}

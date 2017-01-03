@@ -1,0 +1,14 @@
+# Multiple comparisons example
+
+model {
+  for (j in 1:J){
+    y[i] ~ dnorm (theta[j], tau.y[j])
+    tau.y[j] <- pow(sigma.y[j], -2)
+  }
+  for (j in 1:J){
+    theta[j] ~ dnorm (mu.theta, tau.theta)
+    e.theta[j] <- theta[j] - mu.theta[j]
+  }
+  tau.theta <- pow(sigma.theta, -2)
+  mu.theta ~ dunif (0, 100)
+}

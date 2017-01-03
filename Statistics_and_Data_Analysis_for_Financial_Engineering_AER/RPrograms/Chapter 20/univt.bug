@@ -1,0 +1,9 @@
+model{
+for(i in 1:N){
+y[i] ~ dt(mu,tau,df)
+}
+mu ~ dnorm(0.0,1.0E-6)
+tau ~ dgamma(0.1,0.01)
+df ~ dunif(2,50)
+lambda <- sqrt(1/tau)
+}

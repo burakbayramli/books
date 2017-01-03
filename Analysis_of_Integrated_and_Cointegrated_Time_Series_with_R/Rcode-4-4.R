@@ -1,0 +1,5 @@
+library(urca)
+data(nporg)
+gnp <- na.omit(nporg[, "gnp.n"])
+gnp.tau.sp <- ur.sp(gnp, type = "tau", pol.deg=2, signif=0.05)
+gnp.rho.sp <- ur.sp(gnp, type = "rho", pol.deg=2, signif=0.05)

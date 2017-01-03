@@ -1,0 +1,19 @@
+# Electric company example with pair indicators: controlling for pre-test
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[pair[i]] + theta*treatment[i] + b.pre.test*pre.test[i]
+  }
+  for (j in 1:n.pair){
+    a[j] ~ dnorm (mu.a, tau.a)
+  }
+  theta ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+  mu.a ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+  b.pre.test ~ dnorm (0, .0001)
+}
+

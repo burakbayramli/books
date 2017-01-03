@@ -1,0 +1,252 @@
+\documentclass[landscape]{slides}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+
+\newcommand{\lecnum}{AGM-17}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\betafn}{\mathrm{Beta}}
+\newcommand{\dirchfn}{\mathrm{Dirichlet}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+
+\begin{document}
+\DeclareGraphicsExtensions{.pdf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Structure learning}}
+
+\begin{verbatim}
+$Date: 2006/12/11 10:38:14 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Overview}
+  
+  \begin{itemize}
+  \item Scoring BNs and decomposable models
+  \item Essential graphs
+  \item Searching
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Statistical inference}
+  
+\includegraphics*{statinf.pdf}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Structure learning}
+
+  \begin{description}
+  \item[Given] Data ($D$)
+  \item[Find] A graphical model ($M$) (e.g.\ a BN) which `fits' the
+    data
+  \end{description}
+
+The hope is that the `learnt' model captures the true underlying
+conditional independence relations.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{titledslide}{A Bayesian approach}
+  
+Find a graphical model $M$ which maximises $P(M|D)$. Bayes' theorem
+tells us that
+\[
+P(M|D) = P(M) \frac{P(D|M)}{P(D)}
+\]
+
+With a uniform prior, where $P(M) = \frac{1}{|\cal M|}$, what matters is the likelihood $P(D|M)$.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Fitted likelihoods vs marginal likelihoods}
+  
+  \begin{itemize}
+  \item Let's assume $M$ is a model in the proper sense: a set of
+    probability distributions. Let $(M,\theta)$ be a model with a
+    particular choice of parameters.
+  \item For example, $M$ could be an ADG, and $\theta$ a corresponding
+    set of CPTs so that $(M,\theta)$ is a BN.
+  \item If $D = \mathbf{x}^{1}, \mathbf{x}^2, \dots \mathbf{x}^{n}$
+    where each $\mathbf{x}^i$ is a joint instantiation (and the data
+    is iid) then: $P(D|M,\theta) = \prod_{i=1}^{n} P(\mathbf{x}^{i}|M,\theta)$
+  \item $P(D|M,\theta)$ is thus easy to compute, but what about $P(D|M)$?
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Marginal likelihood}
+  
+  \begin{itemize}
+  \item To compute $P(D|M)$ we need to (conceptually) compute
+    $P(D|M,\theta)$ for \emph{all possible parameter vectors} $\theta$
+    and weight each summand by how likely each $\theta$ is.
+  \item Since there are continuously infinitely many $\theta$s this is
+    an integration: $P(D|M) = \int_{\theta} P(D|M,\theta) P(\theta)
+    d\theta$
+  \item $P(\theta)$ will be a (multi-dimensional) density function.
+  \item This doesn't look for hopeful \dots
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Dirichlets to the rescue}
+
+For BNs, suppose we assume Dirichlet distributions for each variable
+(and parent instantiation). Let $i$ index variables, $j$ index instantiations of the
+parents of variables and $k$ index values of a variable, then: 
+\[
+P(D|M) = \prod_{i=1}^{n}\prod_{j=1}^{q_{i}}
+  \frac{\Gamma(\alpha_{ij})}{\Gamma(n_{ij} + \alpha_{ij})}
+  \prod_{k=1}^{r_{i}} \frac{\Gamma(n_{ijk} + \alpha_{ijk})}{\Gamma(\alpha_{ijk})}
+\]
+where e.g.\ $n_{ijk}$ is how often variable $i$ had value $k$ when its
+parents had instantiation $j$. The $\alpha_{ijk}$ are corresponding
+Dirichlet parameters.
+
+Note that $P(D|M) = \prod_{i=1}^{n} \mathrm{Score}_{i}$.
+
+We actually compute $\log P(D|M)$ which is a sum of scores for each variable.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{For decomposable models}
+  
+Let $\cal C$ be the cliques (hyperedges), and $\cal S$ the separators:
+
+\[
+P(D|M) = \frac{\prod_{C \in \cal C}H(C)}{\prod_{S \in \cal S} H(S)}
+\]
+where
+\[
+H(C) = \frac{\Gamma(\alpha_{C})}{\Gamma(n + \alpha_{C})}
+  \prod_{k=1}^{r_{C}} \frac{\Gamma(n_{k} + \alpha_{k})}{\Gamma(\alpha_{k})}
+\]
+Here $k$ indexes joint instantiations of the clique variables. Similarly for separators
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Overfitting (and how to avoid it)}
+  
+  \begin{itemize}
+  \item Care has to be taken when using $P(D|M,\hat{\theta})$, fitted
+    likelihood, as a score.
+  \item The more parameters $M$ has, the easier it is to choose
+    $\hat{\theta}$ to fit the data: this can lead to
+    \emph{overfitting} which reflects chance regularities in the data.
+  \item Marginal likelihood doesn't cherry pick: it considers
+    \emph{all} possible parameter values for a model and so prevents
+    overfitting.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Learning as search}
+
+  \begin{itemize}
+  \item There are too many models to score each exhaustively.
+  \item It is thus necessary to heuristically \emph{search} for
+    high-scoring models.
+  \item There are many options for searching.
+  \item `Greedy' search (hill-climbing) is one option: consider
+    candidates and `move' to whichever has the highest score. Stop if
+    no candidate improves the score of the current model.
+  \item The R package \texttt{deal} includes this approach.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Markov equivalence classes}
+
+  \begin{itemize}
+  \item $A \rightarrow B$ and $A \leftarrow B$ are the same model: the
+    set of all joint distributions for $A$ and $B$: the saturated model.
+  \item They have the same conditional independence relations and are
+    thus in the same \emph{Markov equivalence class}.
+  \item Two BNs are Markov equivalent iff they have the same skeleton
+    (graph ignoring arrow direction) and the same \emph{immoralities}.
+  \item $A \rightarrow B \rightarrow C$ is Markov equivalent to $A
+    \leftarrow B \leftarrow C$, but not to $A \rightarrow B \leftarrow C$
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Likelihood equivalence}
+  
+  \begin{itemize}
+  \item Unless the arrows in a BN actually represent causal relations,
+  \item then it is a mistake to give different scores to BNs in the
+    same Markov equivalence class.
+  \item A scoring function that avoids this mistake is
+    \emph{likelihood equivalent}
+  \item Most choices of Dirichlet priors are \emph{not} likelihood
+    equivalent.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Essential graphs}
+  
+  \begin{itemize}
+  \item An \emph{essential graph} is a unique representative of a
+    Markov equivalence class.
+  \item For a given BN, it is possible to generate its essential graph.
+  \item Searching (and scoring) can then take place in the space of
+    essential graphs rather than ADGs.
+  \item See (Chickering, 2002), for example.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayesian model averaging}
+  
+  \begin{itemize}
+  \item Returning a single `best guess' for the true BN/HM fails to
+    reflect the inherent uncertainty in learning.
+  \item An alternative is to produce a posterior distribution over models,
+  \item or at least an approximation to such a distribution.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{MCMC over models}
+  
+  \begin{itemize}
+  \item A common approach to Bayesian model averaging is to use MCMC
+    to approximately sample from the posterior.
+  \item With the Metropolis-Hastings MCMC algorithm a new model is
+    `proposed' using a probabilistic mutation operator
+  \item With a certain probability the proposed  model is accepted,
+    otherwise it is rejected and the chain doesn't change state.
+  \item (Roughly) if the new model is more probable it is accepted,
+    otherwise there's still a chance of acceptance if it is not much
+    less probable.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Tracking MCMC}
+  
+  \begin{itemize}
+  \item It is often illuminating to track $\log P(D|M)$ as MCMC (or
+    indeed a search algorithm) progresses.
+  \item Here's some \emph{log-likelihood trajectories} from my own
+    research (with Nicos Angelopoulos)
+  \item In some cases, there is clear evidence of the MCMC getting
+    stuck :-(
+  \item We used artificial data sampled from a `true' BN. The dotted
+    line is the log-likelihood of this BN.
+  \end{itemize} 
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\includegraphics*[width=\textwidth]{n1prior09hf1K.pdf}
+\includegraphics*[width=\textwidth]{n10prior06sc500.pdf}
+\includegraphics*[width=\textwidth]{n1prior05p21K.pdf}
+
+\end{document}

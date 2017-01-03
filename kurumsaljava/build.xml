@@ -1,0 +1,85 @@
+<project default="doit" basedir="." >
+
+  <path id="build.classpath">
+    <pathelement location="itext-1.4.3.jar"/>
+    <pathelement location="."/>
+  </path>
+  
+  <target name="zip">
+    <zip destfile="/home/burak/downloads//memman-1.1.zip"
+         basedir="/home/burak/Documents/publications/memman"/>
+    <copy overwrite="yes" file="/home/burak/downloads//memman-1.1.zip"
+          failonerror="false"
+          todir="/media/KINGSTON/"/>
+  </target>
+  
+  
+  <target name="doit">
+    <exec executable="sh">
+      <arg line="run.sh"/>
+    </exec>
+  </target>
+
+  <target name="bw">
+    <exec executable="sh">
+      <arg line="bwimage.sh"/>
+    </exec>
+  </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="pub" includes="**/*.bak"/>
+    </delete>
+  </target>
+  
+  <target name="image">
+    <mkdir dir="pub"/>
+    <exec executable="gs">
+      <arg line="-dNOPAUSE"/>
+      <arg line="-dBATCH"/>
+      <arg line="-sDEVICE=jpeg"/>
+      <arg line="-sOutputFile=./pub/page%d.jpg"/>
+      <arg line="-r300"/>
+      <arg line="-f"/>
+      <arg line="kurumsaljava7.pdf"/>      
+    </exec>
+    <antcall target="post-process"/>
+  </target>
+
+  <target name="post-process">    
+    <exec executable="perl">
+      <arg line="img.pl"/>
+    </exec>
+  </target>
+  
+  <target name="html">
+    <mkdir dir="pub"/>
+    <copy toDir="pub" file="index.xml"/>
+    <exec executable="perl">
+      <arg line="gen.pl"/>
+    </exec>
+  </target>
+
+  <target name="copy">
+    <copy overwrite="yes" todir="c:/temp/kjebook">
+      <fileset dir="./pub">
+        <include name="**/slidepage*.jpg"/>
+        <include name="**/*.xml"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="pub">
+    <antcall target="image"/>
+    <antcall target="html"/>
+    <antcall target="copy"/>
+    <antcall target="clean"/>
+  </target>
+
+  <target name="compile">
+    <javac destdir="." classpathref="build.classpath" debug="true">
+      <src path="."/>
+    </javac>
+  </target>
+  
+</project>

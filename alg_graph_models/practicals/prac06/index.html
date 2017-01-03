@@ -1,0 +1,201 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>AGM Practical 06</title>
+  </head>
+  <body>
+    <h1>Algorithms for Graphical Models (AGM)</h1>
+    <h2>Practical 06: Gibbs sampling with BUGS</h2>
+
+    <hr />
+    
+    <ol>
+      <li>
+	<a href="#introduction">Introduction</a>
+      </li>
+      <li>
+	<a href="#asia">The Asia expert system</a>
+      </li>
+      <li>
+	<a href="#beetles">Beetles</a>
+      </li>
+    </ol>
+    <hr />
+    
+    <h4><a id="introduction"></a>Introduction</h4>
+
+    <p>
+      This practical asks you to work through a couple of examples
+      using the WinBUGS tool. To use this tool you should be running
+      Windows, so if you aren't reboot now!</p>
+    <p>
+      The WinBUGS stuff is in <tt>C:\Program Files\WinBUGS14. </tt>You
+      can start WinBUGS by running the following: <tt>C:\Program
+      Files\WinBUGS14\WinBUGS14.exe</tt>
+    </p>
+ 
+    <hr />
+
+    <h4>
+    <a id="asia"></a>The Asia expert system
+    </h4>
+
+    <ol>
+      <li>
+	Start up WinBUGS by running <tt>C:\Program
+	Files\WinBUGS14\WinBUGS14.exe</tt>
+      </li>
+      <li>
+	Once WinBUGS has started, use the <tt>Open </tt>command from
+	the <tt>File </tt>menu to open the file <tt>C:\Program
+	Files\WinBUGS14\Examples\Asia.odc</tt>.  This contains the
+	fictitious "Asia" medical expert system, which was previously
+	discussed in the lectures.
+      </li>
+      <li>
+	Note that the Asia example contains a number of parts:
+	<ul>
+	  <li>
+	    The model: a description of the Asia Bayesian net in the
+	    BUGS language.
+	  </li>
+	  <li>
+	    The data: in this case the data just gives the conditional
+	    and unconditional probabilities needed to define the
+	    Bayesian net.
+	  </li>
+	  <li>
+	    Initial values: BUGS uses simulation (<i>Markov Chain
+	    Monte Carlo)</i> to do its computations. Here someone has
+	    manually put in some initial values for the nodes of the
+	    net. (BUGS can usually work out reasonable initial values
+	    if they are not put in by the user).
+	  </li>
+	  <li>
+	    Results: Here are some results from a previous run. You
+	    are going to create some new results.
+	  </li>
+	</ul>
+	</li>
+      <li>
+	Bring up the <tt>Specification tool </tt>by selecting
+	Specification... from the Model drop-down menu,
+      </li>
+      <li>
+	Select <tt>check_model</tt> from the <tt>Specification
+	tool</tt>.  This checks there are no syntax errors in the
+	model description. You should get a <tt>model is syntactically
+	correct</tt> mesage at the bottom of your screen.
+      </li>
+      <li>
+	Double click on the word <tt>list </tt>just under the
+	<tt>Data</tt> heading.  Now select <tt>load data </tt>from
+	the <tt>Specification tool </tt>menu.  This loads the data.
+      </li>
+      <li>
+	Now select <tt>compile </tt>from the <tt>Specification
+	Tool</tt>.
+      </li>
+      <li>
+	Double click on the word <tt>list </tt>just under the
+	<tt>Inits</tt> heading.  Now select <tt>load inits
+	</tt>from the <tt>Specification Tool </tt>menu.
+      </li>
+      <li>
+	Now you are ready to do computation by simulation. Select
+	<tt>Update...  </tt>from the <tt>Model </tt>menu. A window
+	will appear. Don't bother changing the default values you get,
+	just click the <tt>update </tt>button to do 1000
+	iterations. This means 1000 guessed values for each node are
+	generated.  So far you are not acutally recording any of these
+	1000 guessed values for each node. We are just running the
+	chain in order to "forget" the initial values. No need to kill
+	the window.
+      </li>
+      <li>
+	Now select <tt>Samples... </tt>from the Inference menu. Type
+	<tt>smoking </tt>in the node window, and then click
+	<tt>set</tt>. From now on guessed values for <tt>smoking
+	</tt>will be recorded. Do the same for
+	<tt>lung.cancer</tt>.
+      </li>
+      <li>
+	Go back to the update window, and click update again, to
+	perform another 1000 iterations.
+      </li>
+      <li>
+	Now we will have a look at the values that have been produced
+	by the simulation you have just run. Select
+	<tt>Samples...</tt> again from the <tt>Inference </tt>window
+	to get the <tt>Sample Monitor Tool </tt>window back (no need
+	to do this, if the window is still there!). Make sure
+	<tt>lung.cancer</tt> appears in the node window, by using the
+	little arrow on the right of the node box, if necessary. Click
+	on <tt>density </tt>to get a histogram of the values which
+	have been generated for <tt>lung.cancer</tt>. A value of "1"
+	indicates "no", and "2" indicates "yes". Leave the window open
+	and do another 1000 updates as before.
+      </li>
+      <li>
+	With <tt>lung.cancer</tt> in the node window, click on
+	<tt>density </tt>again.  The histogram won't have changed due
+	to the last 1000 updates, so we have converged on the correct
+	values for P(<tt>lung.cancer</tt>=yes) and
+	P(<tt>lung.cancer</tt>=no).  Have a look at the histogram for
+	smoking too.
+      </li>
+      <li>
+	Also click on <tt>trace </tt>in the <tt>Sample Monitor
+	Tool. </tt>with <tt>lung.cancer </tt>in the node window. This
+	shows the values of <tt>lung.cancer</tt> on each
+	iteration. (It is usually "1" which means "no")
+      </li>
+    </ol>
+
+    <hr />
+
+    <h4><a id="beetles"></a>Beetles</h4>
+
+    <ol>
+      <li>
+	This example uses a Bayesian net to analyse data on how many
+	beetles are killed after 5 hour exposure to carbon
+	disulphide.
+      </li>
+      <li>
+	Open up <tt>C:\Program Files\WinBUGS14\Examples\Beetles.odc
+	</tt>from WinBUGS
+      </li>
+      <li>
+	Now proceed as for the Asia example, this time keeping track
+	of the node <tt>alpha.</tt> Note how the graph produced by the
+	density button gets smoother as you do more iterations. This
+	is because we are converging to the true probability
+	distribution for this parameter.
+      </li>
+      <li>
+	Note that <tt>alpha </tt>can have infinitely many values, it
+	is a continuous random variable. Most real applications of
+	Bayesian nets focus on continuous valued random
+	variables.
+      </li>
+    </ol>
+
+    <hr />
+    <p>
+<!-- hhmts start -->
+Last modified: Tue Nov 21 20:42:49 GMT 2006
+<!-- hhmts end -->
+    </p>
+    
+    <p>
+      <a href="http://validator.w3.org/check?uri=referer"><img
+          src="../../valid-xhtml11"
+          alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+    </p>
+
+</body>
+</html>

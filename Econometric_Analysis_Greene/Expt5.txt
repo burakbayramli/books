@@ -1,0 +1,1143 @@
+﻿Chapter 16. Simultaneous Equations Models
+
+/*=================================================================
+Example 16.1.  Supply Equation for Agriculture Goods
+*/=================================================================
+    Read ; Nobs = 27 ; Nvar = 7 ; Names = 1 $
+    Year    Q     P     L    NptCost  CPI    Income 
+    1960    72    51    24     46     88.7     6036    
+    1961    70    52    25     46     89.6     6113    
+    1962    71    54    26     47     90.6     6271    
+    1963    74    55    27     47     91.7     6378    
+    1964    72    55    29     47     92.9     6727    
+    1965    76    53    31     48     94.5     7027    
+    1966    73    55    33     50     97.2     7280    
+    1967    77    52    35     50    100.0     7513    
+    1968    79    52    38     50    104.2     7728    
+    1969    80    50    40     52    109.8     7891    
+    1970    77    52    42     54    116.3     8134    
+    1971    86    56    43     57    121.3     8322    
+    1972    87    60    47     61    125.3     8562    
+    1973    92    91    53     73    133.1     9042    
+    1974    84   117    66     83    147.7     8867    
+    1975    93   105    75     91    161.2     8944    
+    1976    92   102    86     97    170.5     9175    
+    1977   100   100   100    100    181.5     9381    
+    1978   102   105   109    108    195.4     9735    
+    1979   113   116   125    125    217.4     9829    
+    1980   101   125   145    138    246.8     9722    
+    1981   117   134   158    148    272.4     9769    
+    1982   117   121   157    150    289.1     9725    
+    1983    88   128   148    153    298.4     9930    
+    1984   111   139   146    155    311.1    10421    
+    1985   117   120   128    151    322.2    10563    
+    1986   108   106   112    146    328.4    10780    
+?
+? Ordinary Least Squares
+?
+Regress ; Lhs = Q ; Rhs = One,P $
+?
+? Instrumental Variables
+?
+2sls    ; Lhs = Q ; Rhs = One,P ; Inst = One,Income $
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  54.13197960      4.5260001       11.960   .0000
+ P         .4195301608      .49591310E-01    8.460   .0000  85.407407
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  46.93490818      5.1954400        9.034   .0000
+ P         .5037976926      .57792782E-01    8.717   .0000  85.407407
+*/
+/*=================================================================
+Example 16.2.  A Small Macroeconomic Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.3.  Klein’s Model I
+No Computations
+*/=================================================================
+
+/*=================================================================
+Example 16.4.  Cobweb Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.5.  Structure and Reduced Form
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.6.  Observational Equivalence
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.7.  Identification
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.8.  An Identified Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.9.  Rank and Order Conditions
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.10.  Identification of Klein’s Model I 
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.11.  Identification with Linear Restrictions
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.12.  The Fully Recursive Model
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.13.  A Model of Industry Structure
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.14.  Regression Function
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.15.  Limited Information Estimation of Klein’s 
+                Consumption Function
+*/=================================================================
+Read ; Nobs = 22 ; Nvar = 10 ; Names = 1 $
+Year  C     P   Wp   I   Klag    X   Wg    G    T   
+1920 39.8 12.7 28.8  2.7 180.1 44.9 2.2  2.4  3.4
+1921 41.9 12.4 25.5 -0.2 182.8 45.6 2.7  3.9  7.7
+1922 45.0 16.9 29.3  1.9 182.6 50.1 2.9  3.2  3.9
+1923 49.2 18.4 34.1  5.2 184.5 57.2 2.9  2.8  4.7
+1924 50.6 19.4 33.9  3.0 189.7 57.1 3.1  3.5  3.8
+1925 52.6 20.1 35.4  5.1 192.7 61.0 3.2  3.3  5.5
+1926 55.1 19.6 37.4  5.6 197.8 64.0 3.3  3.3  7.0
+1927 56.2 19.8 37.9  4.2 203.4 64.4 3.6  4.0  6.7
+1928 57.3 21.1 39.2  3.0 207.6 64.5 3.7  4.2  4.2
+1929 57.8 21.7 41.3  5.1 210.6 67.0 4.0  4.1  4.0
+1930 55.0 15.6 37.9  1.0 215.7 61.2 4.2  5.2  7.7
+1931 50.9 11.4 34.5 -3.4 216.7 53.4 4.8  5.9  7.5
+1932 45.6  7.0 29.0 -6.2 213.3 44.3 5.3  4.9  8.3
+1933 46.5 11.2 28.5 -5.1 207.1 45.1 5.6  3.7  5.4
+1934 48.7 12.3 30.6 -3.0 202.0 49.7 6.0  4.0  6.8
+1935 51.3 14.0 33.2 -1.3 199.0 54.4 6.1  4.4  7.2
+1936 57.7 17.6 36.8  2.1 197.7 62.7 7.4  2.9  8.3
+1937 58.7 17.3 41.0  2.0 199.8 65.0 6.7  4.3  6.7
+1938 57.5 15.3 38.2 -1.9 201.8 60.9 7.7  5.3  7.4
+1939 61.6 19.0 41.6  1.3 199.9 69.5 7.8  6.6  8.9
+1940 65.0 21.1 45.0  3.3 201.2 75.7 8.0  7.4  9.6
+1941 69.7 23.5 53.3  4.9 204.5 88.4 8.5 13.8 11.6
+?
+? Data preparation for examples
+?
+Create ; If(_Obsno > 1) Plag = P[-1] $
+Create ; If(_Obsno > 1) Xlag = X[-1] $
+Create ; W = Wp + Wg $
+Create ; A = Year - 1931 $
+Date   ; 1920 $
+Period ; 1921 - 1941 $
+Namelist  ; ZC  = One,P,Plag,W
+          ; ZI  = One,P,Plag,Klag 
+          ; ZWp = One,X,Xlag,A 
+          ; Xc  = One,Plag
+          ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+          ; Yc  = C,P,W
+          ; Yic = P,W $
+?
+? Ordinary Least Squares
+?
+Regress  ; lhs=c;rhs=zc $
+?
+? Two Stage Least Squares
+?
+2SLS     ; lhs=c;rhs=zc;inst=allx $
+?
+? GMM in two passes.  First improves 2SLS starting values.  2SLS
+? will be used to compute W matrix.
+?
+Minimize ; fcn=(c-c1*p-c2*w-b1-b2*plag) ;labels=b1,b2,c1,c2  
+         ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+?
+? Starting values now are results of previous. (Can be iterated.)
+?
+Minimize ; fcn=(c-c1*p-c2*w-b1-b2*plag) ;labels=b1,b2,c1,c2  
+         ; start=b;inst=allx ;pds=0 $
+?  
+? LIML, using matrix algebra.  Note, CXRT obtains roots for 
+? a nonsymmetric matrix.
+?
+Matrix   ; w0=rcpm(xc,yc) 
+         ; w1=rcpm(allx,yc) 
+         ; w1iw0=<w1>*w0$
+Matrix   ; roots=cxrt(w1iw0) $
+Calc     ; List ; lc=roots(3,1) $ LC = lambda_1
+Matrix   ; w0c=part(w0,2,3,2,3)- lc*part(w1,2,3,2,3)
+         ; dc =part(w0,2,3,1,1)- lc*part(w1,2,3,1,1)$
+Matrix   ; gammac=<w0c>*dc$
+Matrix   ; betac=<Xc'Xc>*Xc'c - <Xc'Xc>*Xc'Yic*Gammac $
+Matrix   ; deltac=[gammac/betac] $
+Create   ; ec=c-zc'deltac $
+Calc     ; scc = 1/n * ec'ec $
+?
+? Construct partitioned VC matrix.  There are other ways.
+Matrix   ; vv=yic'yic-yic'allx * <allx'allx> * allx'yic 
+         ; q11=yic'yic - lc*vv 
+         ; q21=xc'yic 
+         ; q22=xc'xc
+         ; Q=[q11/q21,q22] 
+         ; AsyVC = {scc=1/n*ec'ec} * <Q> $
+Matrix   ; Stat(deltac,asyvc)$
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
+| Dep. var. = C        Mean=   53.99523810    , S.D.=   6.860865557     |
+| Model size: Observations =      21, Parameters =   4, Deg.Fr.=     17 |
+| Residuals:  Sum of squares= 17.87944870    , Std.Dev.=        1.02554 |
+| Fit:        R-squared=  .981008, Adjusted R-squared =          .97766 |
+| Model test: F[  3,     17] =  292.71,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -28.1086, Restricted(b=0) Log-L =     -69.7279 |
+|             LogAmemiyaPrCrt.=     .225, Akaike Info. Crt.=      3.058 |
+| Autocorrel: Durbin-Watson Statistic =   1.36747,   Rho =       .31626 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  16.23660027      1.3026983       12.464   .0000
+ P         .1929343813      .91210168E-01    2.115   .0495  16.890476
+ PLAG      .8988489781E-01  .90647938E-01     .992   .3353  16.376190
+ W         .7962187497      .39943920E-01   19.933   .0000  41.480952
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     |
+| Dep. var. = C        Mean=   53.99523810    , S.D.=   6.860865557     |
+| Model size: Observations =      21, Parameters =   4, Deg.Fr.=     17 |
+| Residuals:  Sum of squares= 17.74900975    , Std.Dev.=        1.02179 |
+| Fit:        R-squared=  .976711, Adjusted R-squared =          .97260 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
+| Model test: F[  3,     17] =  237.65,    Prob value =          .00000 |
+| Diagnostic: Log-L =    -28.0317, Restricted(b=0) Log-L =     -69.7279 |
+|             LogAmemiyaPrCrt.=     .217, Akaike Info. Crt.=      3.051 |
+| Autocorrel: Durbin-Watson Statistic =   1.48507,   Rho =       .25746 |
++-----------------------------------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  16.55475577      1.3207924       12.534   .0000
+ P         .1730221194E-01  .11804941         .147   .8835  16.890476
+ PLAG      .2162340404      .10726796        2.016   .0438  16.376190
+ W         .8101826976      .40249714E-01   20.129   .0000  41.480952
+               +---------------------------------------------+
+               | Instrumental Variables (NL2SLS)             |
+               | GMM Estimator - Lags      =  0 Periods      |
+               | Value of the GMM criterion:                 |
+               | e(b)tZ inv(ZtWZ) Zte(b)     =   4.835800    |
+               | Sum of functions f(x,b)   =    .6479525     |
+               | Sample size is    21 observations.          |
+               +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1        14.74432887      1.1596099       12.715   .0000
+ C1        .7579169049E-01  .93571242E-01     .810   .4179
+ B2        .1662685044      .82477615E-01    2.016   .0438
+ C2        .8493652466      .35606173E-01   23.854   .0000
+               +---------------------------------------------+
+               | Instrumental Variables (NL2SLS)             |
+               | GMM Estimator - Lags      =  0 Periods      |
+               | Value of the GMM criterion:                 |
+               | e(b)tZ inv(ZtWZ) Zte(b)     =   3.742084    |
+               | Sum of functions f(x,b)   =   -1.337299     |
+               | Sample size is    21 observations.          |
+               +---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1        14.31901808      .89660570       15.970   .0000
+ C1        .9024320093E-01  .61598126E-01    1.465   .1429
+ B2        .1433282337      .65493259E-01    2.188   .0286
+ C2        .8639300042      .29249909E-01   29.536   .0000
+LC      =  .14987455068361610D+01
+Matrix statistical results: Coefficients=DELTAC    Variance=ASYVC
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ DELTA_ 1 -.2225130663      .20174780       -1.103   .2701
+ DELTA_ 2  .8225586646      .55378199E-01   14.853   .0000
+ DELTA_ 3  17.14765463      1.8402953        9.318   .0000
+ DELTA_ 4  .3960272891      .17359775        2.281   .0225
+/*=================================================================
+Example 16.16.  Nonlinear Two Stage Least Squares
+No computations
+*/=================================================================
+
+/*=================================================================
+Example 16.17.  Estimates of Klein’s Model I
+These are the entries in Table 16.5.  Note, LIMDEP does not 
+contain a FIML estimator for linear simultaneous equations models.
+The values in the text are from Julian Silk’s 1998 survey in the
+Journal of Applied Econometrics.
+*/=================================================================
+?------------------------------------------------------------------
+? Limited Information Estimates of the Consumption Function
+?------------------------------------------------------------------
+Namelist  ; ZC  = P,W,One,Plag
+          ; Xc  = One,Plag
+          ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+          ; Yc  = C,P,W
+          ; Yic = P,W $
+?
+? Ordinary Least Squares
+?
+Regress   ; lhs=c;rhs=zc $
+?
+? Two Stage Least Squares
+?
+2SLS      ; lhs=c;rhs=zc;inst=allx $
+?
+? GMM (Heteroscedastic 2SLS) in two steps
+?
+Minimize  ; fcn=(c-c1*p-c2*w-b1-b2*plag) ;labels=b1,b2,c1,c2  
+          ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+Minimize  ; fcn=(c-c1*p-c2*w-b1-b2*plag) ;labels=b1,b2,c1,c2  
+          ; start=b;inst=allx ;pds=0 $
+?
+? Limited Information Maximum Likelihood
+?
+Matrix    ; w0=rcpm(xc,yc) ; w1=rcpm(allx,yc) ; w1iw0=<w1>*w0$
+Matrix    ; roots=cxrt(w1iw0) $
+Calc      ; List ; lc=roots(3,1) $ LC = lambda_1
+Matrix    ; w0c=part(w0,2,3,2,3)- lc*part(w1,2,3,2,3)
+          ; dc =part(w0,2,3,1,1)- lc*part(w1,2,3,1,1)$
+Matrix    ; gammac=<w0c>*dc$
+Matrix    ; betac=<Xc'Xc>*Xc'c - <Xc'Xc>*Xc'Yic*Gammac $
+Matrix    ; deltac=[gammac/betac] $
+Create    ; ec=c-zc'deltac $
+Calc      ; scc = 1/n * ec'ec $
+Matrix    ; vv=yic'yic-yic'allx * <allx'allx> * allx'yic 
+          ; q11=yic'yic - lc*vv ; q21=xc'yic  ; q22=xc'xc
+          ; Q=[q11/q21,q22]     ; AsyVC = scc * <Q> $
+Matrix    ; Stat(deltac,asyvc)$
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  16.23660027      1.3026983       12.464   .0000
+ P         .1929343813      .91210168E-01    2.115   .0495  16.890476
+ PLAG      .8988489781E-01  .90647938E-01     .992   .3353  16.376190
+ W         .7962187497      .39943920E-01   19.933   .0000  41.480952
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ Constant  16.55475577      1.3207924       12.534   .0000
+ P         .1730221194E-01  .11804941         .147   .8835  16.890476
+ PLAG      .2162340404      .10726796        2.016   .0438  16.376190
+ W         .8101826976      .40249714E-01   20.129   .0000  41.480952
++---------------------------------------------+
+| Instrumental Variables (NL2SLS)             |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1        14.74432887      1.1596099       12.715   .0000
+ C1        .7579169049E-01  .93571242E-01     .810   .4179
+ B2        .1662685044      .82477615E-01    2.016   .0438
+ C2        .8493652466      .35606173E-01   23.854   .0000
++---------------------------------------------+
+| Instrumental Variables (NL2SLS)             |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1        14.31901808      .89660570       15.970   .0000
+ C1        .9024320093E-01  .61598126E-01    1.465   .1429
+ B2        .1433282337      .65493259E-01    2.188   .0286
+ C2        .8639300042      .29249909E-01   29.536   .0000
++---------------------------------------------+
+| Limited Information Maximum Likelihood      |
++---------------------------------------------+
+LC      =  .14987455068361610D+01
+Matrix statistical results: Coefficients=DELTAC    Variance=ASYVC
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ DELTA_ 1 -.2225130663      .20174780       -1.103   .2701
+ DELTA_ 2  .8225586646      .55378199E-01   14.853   .0000
+ DELTA_ 3  17.14765463      1.8402953        9.318   .0000
+ DELTA_ 4  .3960272891      .17359775        2.281   .0225
+*/
+?------------------------------------------------------------------
+? Limited Information Estimates of the Investment Function
+?------------------------------------------------------------------
+Namelist ; Zi  = P,One,Plag,Klag
+         ; Xi  = One,Plag,Klag
+         ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+         ; Yi  = I,P
+         ; Yii = P $
+?
+? Ordinary Least Squares
+?
+Regress  ; lhs=i;rhs=zi $
+?
+? Two Stage Least Squares
+?
+2SLS     ; lhs=i;rhs=zi;inst=allx $
+?
+? GMM (Heteroscedastic 2SLS) in two steps
+?
+Minimize ; fcn=(i-c1*p-b1-b2*plag-b3*klag) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+Minimize ; fcn=(i-c1*p-b1-b2*plag-b3*klag) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $
+?
+? Limited Information Maximum Likelihood
+?
+Matrix   ; w0=rcpm(xi,yi) ; w1=rcpm(allx,yi) ; w1iw0=<w1>*w0$
+Matrix   ; roots=cxrt(w1iw0) $
+Calc     ; List ; li=roots(2,1) $ LI = lambda_i
+Matrix   ; w0i=part(w0,2,2,2,2)- li*part(w1,2,2,2,2)
+         ; di =part(w0,2,2,1,1)- li*part(w1,2,2,1,1)$
+Matrix   ; gammai=<w0i>*di$
+Matrix   ; betai=<Xi'Xi>*Xi'i - <Xi'Xi>*Xi'Yii*Gammai $
+Matrix   ; deltai=[gammai/betai] $
+Create   ; ei=i-zi'deltai $
+Calc     ; sii = 1/n * ei'ei $
+Matrix   ; vv=yii'yii-yii'allx * <allx'allx> * allx'yii 
+         ; q11=yii'yii - li*vv ; q21=xi'yii  ; q22=xi'xi
+         ; Q=[q11/q21,q22]     ; AsyVi = scc * <Q> $
+Matrix   ; Stat(deltai,asyvi)$
+/*
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ P         .4796356446      .97114565E-01    4.939   .0001  16.890476
+ Constant  10.12578854      5.4655465        1.853   .0814
+ PLAG      .3330387135      .10085923        3.302   .0042  16.376190
+ KLAG     -.1117946837      .26727563E-01   -4.183   .0006  200.49524
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ P         .1502218238      .17322929         .867   .3858  16.890476
+ Constant  20.27820894      7.5427059        2.688   .0072
+ PLAG      .6159435775      .16278539        3.784   .0002  16.376190
+ KLAG     -.1577876366      .36126239E-01   -4.368   .0000  200.49524
++---------------------------------------------+
+| Instrumental Variables (NL2SLS)             |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ C1        .1858604203      .12989159        1.431   .1525
+ B1        21.40696309      6.3295608        3.382   .0007
+ B2        .5513081166      .12529953        4.400   .0000
+ B3       -.1605617059      .30488292E-01   -5.266   .0000
++---------------------------------------------+
+| Instrumental Variables (NL2SLS)             |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ C1        .1456261147      .12918005        1.127   .2596
+ B1        23.45972356      6.3989474        3.666   .0002
+ B2        .5905688424      .12021221        4.913   .0000
+ B3       -.1705127999      .30659198E-01   -5.562   .0000
++---------------------------------------------+
+| Limited Information Maximum Likelihood      |
++---------------------------------------------+
+ LI      =  .10859528454002810D+01
+Matrix statistical results: Coefficients=DELTAI    Variance=ASYVI
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ DELTA_ 1  .7518475798E-01  .21852742         .344   .7308
+ DELTA_ 2  22.59082544      9.2367486        2.446   .0145
+ DELTA_ 3  .6803863833      .20338880        3.345   .0008
+ DELTA_ 4 -.1682643562      .44096598E-01   -3.816   .0001
+*/
+
+?------------------------------------------------------------------
+? Limited Information Estimates of the Private Wage Function
+?------------------------------------------------------------------
+Namelist ; Zw  = X,One,Xlag,A
+         ; Xw  = One,Xlag,A
+         ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+         ; Yw  = Wp,X
+         ; Yww =    X $
+?
+? Ordinary Least Squares
+?
+Regress  ; lhs=Wp;rhs=zw $
+?
+? Two Stage Least Squares
+?
+2SLS     ; lhs=Wp;rhs=zw;inst=allx $
+?
+? GMM (Heteroscedastic 2SLS) in two steps
+?
+Minimize ; fcn=(wp-c1*x-b1-b2*xlag-b3*a) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+Minimize ; fcn=(wp-c1*x-b1-b2*xlag-b3*a) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $
+?
+? Limited Information Maximum Likelihood
+?
+Matrix   ; w0=rcpm(xw,yw) ; w1=rcpm(allx,yw) ; w1iw0=<w1>*w0$
+Matrix   ; roots=cxrt(w1iw0) $
+Calc     ; List ; lw=roots(2,1) $ Lw = lambda_i
+Matrix   ; w0w=part(w0,2,2,2,2)- lw*part(w1,2,2,2,2)
+         ; dw =part(w0,2,2,1,1)- lw*part(w1,2,2,1,1)$
+Matrix   ; gammaw=<w0w>*dw$
+Matrix   ; betaw=<Xw'Xw>*Xw'Wp - <Xw'Xw>*Xw'Yww*Gammaw $
+Matrix   ; deltaw=[gammaw/betaw] $
+Create   ; ew=w-zw'deltaw $
+Calc     ; sww = 1/n * ew'ew $
+Matrix   ; vv=yww'yww-yww'allx * <allx'allx> * allx'yww 
+         ; q11=yww'yww - lw*vv ; q21=xw'yww  ; q22=xw'xw
+         ; Q=[q11/q21,q22]     ; AsyVw = scc * <Q> $
+Matrix   ; Stat(deltaw,asyvw)$
++-----------------------------------------------------------------------+
+| Ordinary    least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |t-ratio |P[|T|>t] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ X         .4394769672      .32407585E-01   13.561   .0000  60.057143
+ Constant  1.497043847      1.2700320        1.179   .2547
+ XLAG      .1460899468      .37423132E-01    3.904   .0011  57.985714
+ A         .1302452303      .31910308E-01    4.082   .0008  .00000000
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ X         .4388590651      .35631917E-01   12.316   .0000  60.057143
+ Constant  1.500296886      1.1477802        1.307   .1912
+ XLAG      .1466738215      .38836133E-01    3.777   .0002  57.985714
+ A         .1303956872      .29140980E-01    4.475   .0000  .00000000
++---------------------------------------------+
+| Instrumental Variables (NL2SLS)             |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ C1        .4558023506      .29975507E-01   15.206   .0000
+ B1        2.674614797      .79150468        3.379   .0007
+ B2        .1107652011      .32325545E-01    3.427   .0006
+ B3        .1306003395      .23711758E-01    5.508   .0000
++---------------------------------------------+
+| Instrumental Variables (NL2SLS)             |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ C1        .4549711244      .27742069E-01   16.400   .0000
+ B1        3.056885791      .64409650        4.746   .0000
+ B2        .1058094977      .29645884E-01    3.569   .0004
+ B3        .1304310746      .21732485E-01    6.002   .0000
++---------------------------------------------+
+| Limited Information Maximum Likelihood      |
++---------------------------------------------+
+LW      =  .24685825448762760D+01
+Matrix statistical results: Coefficients=DELTAW    Variance=ASYVW
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ DELTA_ 1  .4339413998      .13721657        3.162   .0016
+ DELTA_ 2  1.526186685      2.4003056         .636   .5249
+ DELTA_ 3  .1513206752      .13543451        1.117   .2639
+ DELTA_ 4  .1315931213      .65413164E-01    2.012   .0442
+?------------------------------------------------------------------
+? Full Information Estimates of the Entire System
+?------------------------------------------------------------------
+Namelist ; Zc  = P,One,Plag,W
+         ; Zi  = P,One,Plag,Klag
+         ; Zw  = X,One,Xlag,A
+         ; allX= One,G,T,A,Wg,Plag,Klag,Xlag $
+?
+? Three Stage Least Squares
+?
+3sls     ; Lhs = C,I,Wp
+         ; Eq1 = Zc ; Eq2 = Zi ; Eq3 = Zw ; Inst = allX
+         ; Maxit=1 $
+? Iterated Three Stage Least Squares
+?
+3sls     ; Lhs = C,I,Wp
+         ; Eq1 = Zc ; Eq2 = Zi ; Eq3 = Zw ; Inst = allX ; Maxit = 200 $
+?
+? GMM (Heteroscedasticity corrected - 3SLS)
+2SLS     ; lhs=c;rhs=zc;inst=allx $
+Minimize ; fcn=(c-c1*p-c2*w-b1-b2*plag) ;labels=b1,b2,c1,c2  
+         ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+Minimize ; fcn=(c-c1*p-c2*w-b1-b2*plag) ;labels=b1,b2,c1,c2  
+         ; start=b;inst=allx ;pds=0 $
+Matrix   ; b0c = b $
+2SLS     ; lhs=i;rhs=zi;inst=allx $
+Minimize ; fcn=(i-c1*p-b1-b2*plag-b3*klag) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+Minimize ; fcn=(i-c1*p-b1-b2*plag-b3*klag) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $
+Matrix   ; b0i=b $
+2SLS     ; lhs=Wp;rhs=zw;inst=allx $
+Minimize ; fcn=(wp-c1*x-b1-b2*xlag-b3*a) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $  (Requests White estimator.)
+Minimize ; fcn=(wp-c1*x-b1-b2*xlag-b3*a) ;labels=c1,b1,b2,b3  
+         ; start=b;inst=allx ;pds=0 $
+Matrix   ; b0w=b $
+Nlsur    ; Lhs = c,i
+         ; Fn1 = c1c*p+c2c*w+b1c+b2c*plag
+         ; Fn2 = c1i*p+b1i+b2i*plag+b3i*klag
+         ; labels=b1c,b2c,c1c,c2c,c1i,b1i,b2i,b3i
+         ; inst=allx ; Pds = 0 ; start = b0c,b0i $
+Nlsur    ; Lhs = c,i
+         ; Fn1 = c1c*p+c2c*w+b1c+b2c*plag
+         ; Fn2 = c1i*p+b1i+b2i*plag+b3i*klag
+         ; labels=b1c,b2c,c1c,c2c,c1i,b1i,b2i,b3i
+         ; inst=allx ; Pds = 0 ; start = b$
+Nlsur    ; Lhs = c,wp
+         ; Fn1 = c1c*p+c2c*w+b1c+b2c*plag
+         ; Fn2 = c1w*x+b1w+b2w*xlag+b3w*a
+         ; labels=b1c,b2c,c1c,c2c,c1w,b1w,b2w,b3w
+         ; inst=allx ; Pds = 0 ; start = b0c,b0w $
+Nlsur    ; Lhs = c,wp
+         ; Fn1 = c1c*p+c2c*w+b1c+b2c*plag
+         ; Fn2 = c1w*x+b1w+b2w*xlag+b3w*a
+         ; labels=b1c,b2c,c1c,c2c,c1w,b1w,b2w,b3w
+         ; inst=allx ; Pds = 0 ; start = b$
+
+
+/*
+Iteration    0, 3SLS          =    1.000000
+Iteration    1, 3SLS          =    6.218180
++-----------------------------------------------------------------------+
+| Estimates for equation: C                                             |
+| InstVar/GLS least squares regression    Weighting variable = none     |
+| Dep. var. = C        Mean=   53.99523810    , S.D.=   6.860865557     |
+| Model size: Observations =      21, Parameters =   4, Deg.Fr.=     17 |
+| Residuals:  Sum of squares= 15.15991704    , Std.Dev.=         .94433 |
+| Fit:        R-squared=  .980108, Adjusted R-squared =          .97660 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ P         .1248904748      .10812905        1.155   .2481  16.890476
+ Constant  16.44079006      1.3045488       12.603   .0000
+ PLAG      .1631440928      .10043819        1.624   .1043  16.376190
+ W         .7900809364      .37937905E-01   20.826   .0000  41.480952
++-----------------------------------------------------------------------+
+| Estimates for equation: I                                             |
+| InstVar/GLS least squares regression    Weighting variable = none     |
+| Dep. var. = I        Mean=   1.266666667    , S.D.=   3.551947822     |
+| Model size: Observations =      21, Parameters =   4, Deg.Fr.=     17 |
+| Residuals:  Sum of squares= 35.58179232    , Std.Dev.=        1.44674 |
+| Fit:        R-squared=  .825805, Adjusted R-squared =          .79507 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ P        -.1307918242E-01  .16189624        -.081   .9356  16.890476
+ Constant  28.17784687      6.7937702        4.148   .0000
+ PLAG      .7557239621      .15293313        4.942   .0000  16.376190
+ KLAG     -.1948482493      .32530695E-01   -5.990   .0000  200.49524
++-----------------------------------------------------------------------+
+| Estimates for equation: WP                                            |
+| InstVar/GLS least squares regression    Weighting variable = none     |
+| Dep. var. = WP       Mean=   36.36190476    , S.D.=   6.304401335     |
+| Model size: Observations =      21, Parameters =   4, Deg.Fr.=     17 |
+| Residuals:  Sum of squares= 8.840453075    , Std.Dev.=         .72113 |
+| Fit:        R-squared=  .986262, Adjusted R-squared =          .98384 |
+|             (Note:  Not using OLS.  R-squared is not bounded in [0,1] |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ X         .4004918798      .31813414E-01   12.589   .0000  60.057143
+ Constant  1.797217728      1.1158550        1.611   .1073
+ XLAG      .1812910150      .34158776E-01    5.307   .0000  57.985714
+ A         .1496741151      .27935236E-01    5.358   .0000  .00000000
+Iteration    0, 3SLS          =    1.000000
+Iteration    1, 3SLS          =    6.218180
+Iteration    2, 3SLS          =    10.48822
+Iteration    3, 3SLS          =    .5763712
+Iteration    4, 3SLS          =    .2171606
+Iteration    5, 3SLS          =    .1027887
+Iteration    6, 3SLS          =    .5286157E-01
+Iteration    7, 3SLS          =    .2829082E-01
+Iteration    8, 3SLS          =    .1549538E-01
+Iteration    9, 3SLS          =    .8618531E-02
+Iteration   10, 3SLS          =    .4845825E-02
+Iteration   11, 3SLS          =    .2745297E-02
+Iteration   12, 3SLS          =    .1563106E-02
+Iteration   13, 3SLS          =    .8927143E-03
+Iteration   14, 3SLS          =    .5106840E-03
+Iteration   15, 3SLS          =    .2923557E-03
+Iteration   16, 3SLS          =    .1674028E-03
+Iteration   17, 3SLS          =    .9585057E-04
+Iteration   18, 3SLS          =    .5487439E-04
+Iteration   19, 3SLS          =    .3141145E-04
+Iteration   20, 3SLS          =    .1797896E-04
+Iteration   21, 3SLS          =    .1029008E-04
+Iteration   22, 3SLS          =    .5889308E-05
+3SLS           has converged.
++-----------------------------------------------------------------------+
+| Estimates for equation: C                                             |
+| Dep. var. = C        Mean=   53.99523810    , S.D.=   6.860865557     |
+| Residuals:  Sum of squares= 15.55344524    , Std.Dev.=         .95651 |
+| Fit:        R-squared=  .979592, Adjusted R-squared =          .97599 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ P         .1645094601      .96197848E-01    1.710   .0872  16.890476
+ Constant  16.55898395      1.2244009       13.524   .0000
+ PLAG      .1765639840      .90100112E-01    1.960   .0500  16.376190
+ W         .7658012598      .34759924E-01   22.031   .0000  41.480952
++-----------------------------------------------------------------------+
+| Estimates for equation: I                                             |
+| Dep. var. = I        Mean=   1.266666667    , S.D.=   3.551947822     |
+| Residuals:  Sum of squares= 77.44061536    , Std.Dev.=        2.13432 |
+| Fit:        R-squared=  .620881, Adjusted R-squared =          .55398 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ P        -.3565294667      .26015597       -1.370   .1705  16.890476
+ Constant  42.89618287      10.593827        4.049   .0001
+ PLAG      1.011297438      .24877372        4.065   .0000  16.376190
+ KLAG     -.2601995125      .50869239E-01   -5.115   .0000  200.49524
++-----------------------------------------------------------------------+
+| Estimates for equation: WP                                            |
+| Dep. var. = WP       Mean=   36.36190476    , S.D.=   6.304401335     |
+| Residuals:  Sum of squares= 10.29600960    , Std.Dev.=         .77823 |
+| Fit:        R-squared=  .984000, Adjusted R-squared =          .98118 |
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ X         .3747792799      .31102726E-01   12.050   .0000  60.057143
+ Constant  2.624763189      1.1955595        2.195   .0281
+ XLAG      .1936506079      .32401819E-01    5.977   .0000  57.985714
+ A         .1679261514      .28929060E-01    5.805   .0000  .00000000
+
+
++---------------------------------------------+
+| Instrumental Variables (NLGMM)              |
+| GMM Estimator - Lags      =  0 Periods      |
+| Value of the GMM criterion:                 |
+| e(b)tZ inv(ZtWZ) Zte(b)     =   7.606920    |
+| Criterion is computed with  2 moments.      |
+| Sample size is    21 observations.          |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1C       14.30534796      .79434267       18.009   .0000
+ B2C       .1433584920      .58608748E-01    2.446   .0144
+ C1C       .8602401610E-01  .56340585E-01    1.527   .1268
+ C2C       .8653025338      .27820114E-01   31.103   .0000
+ C1I       .1351102595      .94264741E-01    1.433   .1518
+ B1I       25.34841841      5.6448443        4.491   .0000
+ B2I       .5927664696      .93616894E-01    6.332   .0000
+ B3I      -.1796698395      .27689550E-01   -6.489   .0000
++----------------------------------------------------------------------+
+| __ Equation   Mean of LHS   S.D. of LHS   R-squared   Sum of squares |
+|  1 C            53.995238      6.860866     .976663  .2197005865D+02 |
+|  2 I             1.266667      3.551948     .874902  .3156545749D+02 |
+| Note, R-squared can be negative if not using unconstrained OLS.      |
++----------------------------------------------------------------------+
++---------------------------------------------+
+| Instrumental Variables (NLGMM)              |
+| GMM Estimator - Lags      =  0 Periods      |
+| Value of the GMM criterion:                 |
+| e(b)tZ inv(ZtWZ) Zte(b)     =   8.071095    |
+| Criterion is computed with  2 moments.      |
+| Sample size is    21 observations.          |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1C       14.12059142      .78436693       18.003   .0000
+ B2C       .1334184814      .53436985E-01    2.497   .0125
+ C1C       .8955986166E-01  .51408927E-01    1.742   .0815
+ C2C       .8718406315      .27353986E-01   31.873   .0000
+ C1I       .1172631998      .10486278        1.118   .2635
+ B1I       27.30187323      6.0641470        4.502   .0000
+ B2I       .6015143664      .10075260        5.970   .0000
+ B3I      -.1886236665      .29346365E-01   -6.427   .0000
+
++----------------------------------------------------------------------+
+| __ Equation   Mean of LHS   S.D. of LHS   R-squared   Sum of squares |
+|  1 C            53.995238      6.860866     .976123  .2247893030D+02 |
+|  2 I             1.266667      3.551948     .866117  .3378217615D+02 |
+| Note, R-squared can be negative if not using unconstrained OLS.      |
++----------------------------------------------------------------------+
++---------------------------------------------+
+| Instrumental Variables (NLGMM)              |
+| GMM Estimator - Lags      =  0 Periods      |
+| Value of the GMM criterion:                 |
+| e(b)tZ inv(ZtWZ) Zte(b)     =   7.971118    |
+| Criterion is computed with  2 moments.      |
+| Sample size is    21 observations.          |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1C       13.99930343      .76149035       18.384   .0000
+ B2C       .1423333720      .52555043E-01    2.708   .0068
+ C1C       .7337067766E-01  .52604141E-01    1.395   .1631
+ C2C       .8761416931      .23485747E-01   37.305   .0000
+ C1W       .4422673046      .14333438E-01   30.856   .0000
+ B1W       2.923427871      .46922831        6.230   .0000
+ B2W       .1215364067      .17476163E-01    6.954   .0000
+ B3W       .1147426472      .17274603E-01    6.642   .0000
+
++----------------------------------------------------------------------+
+| __ Equation   Mean of LHS   S.D. of LHS   R-squared   Sum of squares |
+|  1 C            53.995238      6.860866     .975305  .2324854015D+02 |
+|  2 WP           36.361905      6.304401     .985064  .1187286539D+02 |
+| Note, R-squared can be negative if not using unconstrained OLS.      |
++----------------------------------------------------------------------+
++---------------------------------------------+
+| Instrumental Variables (NLGMM)              |
+| GMM Estimator - Lags      =  0 Periods      |
+| Value of the GMM criterion:                 |
+| e(b)tZ inv(ZtWZ) Zte(b)     =   8.013053    |
+| Criterion is computed with  2 moments.      |
+| Sample size is    21 observations.          |
++---------------------------------------------+
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ B1C       13.51841390      .67388799       20.060   .0000
+ B2C       .1318749567      .46910978E-01    2.811   .0049
+ C1C       .7646941379E-01  .42668300E-01    1.792   .0731
+ C2C       .8904279576      .20572940E-01   43.282   .0000
+ C1W       .4374349195      .15241824E-01   28.700   .0000
+ B1W       3.063836038      .36507811        8.392   .0000
+ B2W       .1242708219      .16776962E-01    7.407   .0000
+ B3W       .1057929779      .18491324E-01    5.721   .0000
++----------------------------------------------------------------------+
+| __ Equation   Mean of LHS   S.D. of LHS   R-squared   Sum of squares |
+|  1 C            53.995238      6.860866     .973504  .2494418734D+02 |
+|  2 WP           36.361905      6.304401     .984094  .1264344970D+02 |
+| Note, R-squared can be negative if not using unconstrained OLS.      |
++----------------------------------------------------------------------+
+*/
+/*=================================================================
+Example 16.18.  Testing Overidentifying Restrictions
+*/=================================================================
+? Critical Values from the chi-squared tables
+?
+Calc      ; List ; Ctb(.95,2) ; Ctb(.95,3) ; Ctb(.95,8)
+                 ; Ctb(.99,2) ; Ctb(.99,3) ; Ctb(.99,8) $
+Result  =  .59914645483899940D+01 Result  =  .78147277654400000D+01
+Result  =  .15507313057789990D+02
+Result  =  .92103403732599900D+01 Result  =  .11344866676609990D+02
+Result  =  .20090235031410010D+02
+?
+? Consumption Function
+?
+Namelist  ; ZC  = P,W,One,Plag ; Xc  = One,Plag
+          ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+          ; Yc  = C,P,W        ; Yic = P,W $
+Matrix    ; w0=rcpm(xc,yc) ; w1=rcpm(allx,yc) ; w1iw0=<w1>*w0$
+Matrix    ; roots=cxrt(w1iw0) $
+Calc      ; List ; lc=roots(3,1) 
+                 ; LRC = n*(lc-1) $ LC = lambda_1
+Matrix    ; w0c=part(w0,2,3,2,3)- lc*part(w1,2,3,2,3)
+          ; dc =part(w0,2,3,1,1)- lc*part(w1,2,3,1,1)$
+Matrix    ; gammac=<w0c>*dc$
+Matrix    ; betac=<Xc'Xc>*Xc'c - <Xc'Xc>*Xc'Yic*Gammac $
+Matrix    ; deltac=[gammac/betac] $
+Create    ; ec=c-zc'deltac $
+Calc      ; List ; TRsqML = n * Rsq(allX,ec) $
+2sls      ; Lhs = c ; Rhs = Zc ; Inst = allX $
+Calc      ; List ; TRsq2S = n * Rsq(allX,ec) $
+/*
+    LC      =  .14987455068361610D+01
+    LRC     =  .10473655643559380D+02
+    TRSQML  =  .69882815854773230D+01
+    TRSQ2S  =  .87715071877722210D+01
+*/
+? Investment Equation
+?
+Namelist  ; Zi  = P,One,Plag,Klag ; Xi  = One,Plag,Klag
+          ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+          ; Yi  = I,P             ; Yii = P $
+Matrix    ; w0=rcpm(xi,yi) ; w1=rcpm(allx,yi) ; w1iw0=<w1>*w0$
+Matrix    ; roots=cxrt(w1iw0) $
+Calc      ; List ; li=roots(2,1) 
+                 ; LRI = n*(li-1) $ LC = lambda_1
+Matrix    ; w0i=part(w0,2,2,2,2)- li*part(w1,2,2,2,2)
+          ; di =part(w0,2,2,1,1)- li*part(w1,2,2,1,1)$
+Matrix    ; gammai=<w0i>*di$
+Matrix    ; betai=<Xi'Xi>*Xi'i - <Xi'Xi>*Xi'Yii*Gammai $
+Matrix    ; deltai=[gammai/betai] $
+Create    ; ei=i-zi'deltai $
+Calc      ; List ; TRsqML = n * Rsq(allX,ei) $
+2sls      ; Lhs = i ; Rhs = Zi ; Inst = allX ; res=ei $
+Calc      ; List ; TRsq2S = n * Rsq(allX,ei) $
+/*
+    LI      =  .10859528454002810D+01
+    LRI     =  .18050097534059040D+01
+    TRSQML  =  .16621437671853260D+01
+    TRSQ2S  =  .18149654746484310D+01
+*/
+Namelist  ; Zw  = X,One,Xlag,A
+          ; Xw  = One,Xlag,A
+          ; allX= One,G,T,A,Wg,Plag,Klag,Xlag
+          ; Yw  = Wp,X
+          ; Yww =    X $
+Matrix    ; w0=rcpm(xw,yw) ; w1=rcpm(allx,yw) ; w1iw0=<w1>*w0$
+Matrix    ; roots=cxrt(w1iw0) $
+Calc      ; List ; lw=roots(2,1) 
+                 ; LRW = n*(lw-1) $ Lw = lambda_i
+Matrix    ; w0w=part(w0,2,2,2,2)- lw*part(w1,2,2,2,2)
+          ; dw =part(w0,2,2,1,1)- lw*part(w1,2,2,1,1)$
+Matrix    ; gammaw=<w0w>*dw$
+Matrix    ; betaw=<Xw'Xw>*Xw'Wp - <Xw'Xw>*Xw'Yww*Gammaw $
+Matrix    ; deltaw=[gammaw/betaw] $
+Create    ; ew=w-zw'deltaw $
+Calc      ; List ; TRsqML = n * Rsq(allX,ew) $
+2sls      ; Lhs = wp ; Rhs = Zi ; Inst = allX ; res=ew $
+Calc      ; List ; TRsq2S = n * Rsq(allX,ew) $
+/*
+    LW      =  .24685825448762760D+01
+    LRW     =  .30840233442401800D+02
+    TRSQML  =  .19967143547399120D+02
+    TRSQ2S  =  .12495220104086450D+02
+*/
+
+/*=================================================================
+Example 16.19.  Exogeneity Text
+*/=================================================================
+Namelist ; Zc  = P,One,Plag,W  ; allX= One,G,T,A,Wg,Plag,Klag,Xlag $
+2sls     ; Lhs = wp ; Rhs = Zw ; Inst = allX $
+Matrix   ; b2sls = b ; v2sls = varb $
+2sls     ; Lhs = wp ; Rhs = Zw ; Inst = One,G,T,A,Wg,Plag,Klag $
+Matrix   ; biv   = b ; viv   = varb $
+Matrix   ; d = b2sls - biv ; vd = viv - v2sls ; list ; d’<vd>d $
+/*
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     +
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ X         .4388590651      .35631917E-01   12.316   .0000  60.057143
+ Constant  1.500296886      1.1477802        1.307   .1912
+ XLAG      .1466738215      .38836133E-01    3.777   .0002  57.985714
+ A         .1303956872      .29140980E-01    4.475   .0000  .00000000
++-----------------------------------------------------------------------+
+| Two stage   least squares regression    Weighting variable = none     +
++---------+--------------+----------------+--------+---------+----------+
+|Variable | Coefficient  | Standard Error |b/St.Er.|P[|Z|>z] | Mean of X|
++---------+--------------+----------------+--------+---------+----------+
+ X         .4227689087      .38241699E-01   11.055   .0000  60.057143
+ Constant  1.252388099      1.1761293        1.065   .2869
+ XLAG      .1676141104      .42685758E-01    3.927   .0001  57.985714
+ A         .1306215540      .29428573E-01    4.439   .0000  .00000000
+Matrix Result   has  1 rows and  1 columns.
+               1
+        +--------------
+       1|  .1397709D+01
+*/
+/*=================================================================
+Example 16.20.  Dynamic Model
+*/=================================================================
+
+Namelist ; Zc  = P,One,Plag,W
+         ; Zi  = P,One,Plag,Klag
+         ; Zw  = X,One,Xlag,A
+         ; allX= One,G,T,A,Wg,Plag,Klag,Xlag $
+?
+? Two stage least squares
+?
+2sls     ; Lhs = C ; Rhs = Zc ; Inst = allX $
+Matrix   ; deltac = -b $
+2sls     ; Lhs = I ; Rhs = Zi ; Inst = allX $
+Matrix   ; deltai = -b $
+2sls     ; Lhs = Wp; Rhs = Zw ; Inst = allX $
+Matrix   ; deltaw = -b $
+?
+Matrix   ; List 
+         ; Gamma=[ 1,0,0,-1,0,0 /
+                   0,1,0,-1,0,-1  /
+                   deltac(4) ,0,1,0,1,0 /
+                   0,0,deltaw(1) ,1,-1,0 /
+                   deltac(1) ,deltai(1) ,0,0,1,0 /
+                   0,0,0,0,0,1 ]
+         ; Beta =[deltac(2),deltai(2),deltaw(2),0,0,0 /
+                  deltac(4),0,0,0,0,0 /
+                          0,0,0,0,1,0 /
+                          0,0,0,-1,0,0 /
+                          0,0,deltaw(4),0,0,0 ] 
+         ; Phi = [0,0,0,0,0,0 /
+                  0,0,0,0,0,0 /
+                  0,0,0,0,0,0 /
+                  0,0,deltaw(3),0,0,0 /
+                  deltac(3),deltai(3),0,0,0,0 /
+                  0,deltai(4),0,0,0,-1] 
+         ; Pie = -Beta * <Gamma>
+         ; Delta = -Phi * <Gamma>  $
+Matrix   ; Impact = Pie 
+         ; ID = Iden(6)-Delta
+         ; Final = Pie * <ID> 
+         ; List ; Impact ; Final $
+Gamma
+	C		I		Wp		X		P		K
+C	1		0		0		-1		0		0
+I	0		1		0		-1		0		-1
+Wp	-0.810183	0		1		0		1		0
+X	0		0		-0.438859	1		-1		0
+P	-0.0173022	-0.150222	0		0		1		0
+K	0		0		0		0		0		1
+
+Beta
+1	-16.5548	-20.2782	-1.5003	0		0		0
+Wg	-0.810183	0		0		0		0		0
+T	0		0		0		0		1		0
+G	0		0		0		-1		0		0
+A	0		0	-0.130396		0		0		0
+
+Phi
+Clag	0		0		0		0		0		0
+Ilag	0		0		0		0		0		0
+Wplag	0		0		0		0		0		0
+Xlag	0		0		-0.146674	0		0		0
+Plag	-0.216234	-0.615944	0		0		0		0
+Klag	0	0.157788		0		0		0		-1
+
+Pie
+1	42.826		25.8412	31.6355	68.6672	37.0317   25.8412
+Wg	1.34781	0.124073	0.645949	1.47188	0.825934  0.124073
+T	-0.128469	-0.175877	-0.133565	-0.304346	-1.17078 -0.175877
+G	0.663588	0.153142	0.797289	1.81673	1.01944   0.153142
+A	0.158997	-0.00675496	0.197208	0.152242	-0.0449665 .00675496
+
+Delta
+Clag	0		0		0		0		0		0
+Ilag	0		0		0		0		0		0
+Wplag	0		0		0		0		0		0
+Xlag	0.178845	-0.00759822	0.221827	0.171247   -0.05058  -0.00759822
+Plag	0.768457	0.743385	0.663486	1.51184     0.848357  0.743385
+Klag	-0.104706	-0.181952	-0.125802	-0.286658  -0.160855  0.818048
+
+Impact
+1	42.826		25.8412	31.6355	68.6672	37.0317    25.8412
+Wg	1.34781	0.124073	0.645949	1.47188	0.825934   0.124073
+T	-0.128469	-0.175877	-0.133565	-0.304346	-1.17078  -0.175877
+G	0.663588	0.153142	0.797289	1.81673	1.01944   0.153142
+A	0.158997	-0.00675496	0.197208	0.152242   -0.0449665 -0.00675496
+
+Final
+1	40.623		-3.55271e-015	 25.2864	40.623		15.3366    202.985
+Wg	1.88934	-9.71445e-017	 1.10627	1.88934	0.783068   3.80233
+T	-0.544604	1.66533e-016	-0.318884	-0.544604	-1.22572    -5.9517
+G	1.33199	-1.11022e-016	 1.36546	2.33199	0.966533   4.69317
+A	0.175347	7.80626e-018	0.233067	0.175347   -0.0577199  -0.280269
+*/
+
+/*=================================================================
+Example 16.21.  Dynamic Multipliers
+This example uses the results of the previous example.
+*/=================================================================
+Matrix   ; TGMults = Init(21,2,0) 
+         ; Mults   = Init(5,6,0) 
+         ; Power   = Iden(6) $
+Proc
+Matrix   ; Mults = Pie * Power
+         ; Power = Power * Delta 
+         ; policy = Part(Mults,3,4,4,4) ; policy = policy'
+         ; TGMults(pd,*) = Policy $
+EndProc
+Exec     ; pd=1,21 $
+Matrix   ; Lag = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+         ; Taxes = Part(TGMults,1,21,1,1)
+         ; Spending = Part(TGMults,1,21,2,2) $
+?
+? Note, multipliers for T and G are in rows 3 and 4.  
+? X equation is 4th column.
+?
+Mplot    ; Lhs = Lag ; Rhs = Taxes,Spending
+         ; Yaxis=ImplsRsp
+         ; Title=Policy Multipliers
+         ; Fill ; Limits=-2,2 ; Endpoints=0,20 ; Bars = 0 $
+/*
+	1	2
+1	-0.304346	 1.81673
+2	-1.77174	 1.80845
+3	-1.44891	 1.19185
+4	-0.648659	 0.454813
+5	 0.131132	-0.177949
+6	 0.693882	-0.607156
+7	 0.983324	-0.810247
+8	 1.02081	-0.81446
+9	 0.869783	-0.675201
+10	 0.609822	-0.457538
+11	 0.317264	-0.221828
+12	 0.0525235	-0.0144296
+13	-0.146023	 0.136441
+14	-0.262493	 0.220487
+15	-0.299883	 0.242033
+16	-0.274167	 0.215105
+17	-0.207813	 0.158215
+18	-0.123998	 0.0898461
+19	-0.0423556	 0.0252261
+20	 0.023451	-0.025408
+21	 0.0664187	-0.057181
+*/
+
+
+/*=================================================================
+Example 16.22.  Model Stability
+*/=================================================================
+Matrix  ; Delta1 = Part(Delta,4,6,4,6) ; List ; Cxrt(Delta1) $
+/*
+       +----------------------------
+       1|  .7701737D+00 -.3494454D+00
+       2|  .7701737D+00  .3494454D+00
+       3|  .2973049D+00  .0000000D+00
+*/
+/*=================================================================
+Example 16.23.  Adjustment of Klein’s Model I
+*/=================================================================
+Matrix ; Sim = Init(32,6,0) $
+Matrix ; y0=[69.7,4.9,53.3,88.4,23.5,209.4] $
+Matrix ; ye=[70.5,  0,52.2,84.3,20.5,227.7] $
+Matrix ; dy = y0-ye $
+Matrix ; id = iden(6)$
+Proc
+Matrix ; dev=dy*id ; id=id*delta ; Sim(pd,*)=dev $
+EndProc
+Exec   ; pd=1,60$
+Matrix ; Date =[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,
+               18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
+       ;date=date+1940 $
+Matrix ; DevC=Part(Sim,1,32,1,1)
+       ; DevK=Part(sim,1,32,6,6)$
+Mplot  ; Lhs=date
+       ; Rhs=Devc,Devk
+       ; Fill ; bars=0$
+
+

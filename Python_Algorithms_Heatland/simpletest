@@ -1,0 +1,53 @@
+"""
+An *extremely* simple test driver, in the vein of nosetest (written simply
+because at present, Nose doesn't work with Python 3). For every file foo.py
+supplied as a command-line argument, the module foo is imported, and every
+global object with a name starting with "test_" is executed without arguments.
+If an AssertionError is raised, that counts as a failure; any other exception
+counts as an error. In addition, doctest.testmod is run on the module. And
+that's it.
+"""
+
+import doctest, sys
+
+def run(name):
+    mod = __import__(name)
+    failures = []
+    errors = []
+    for n in dir(mod):
+        if not n.startswith("test_"): continue
+        try:
+            getattr(mod, n)()
+        except AssertionError:
+            sys.stdout.write("F")
+            failures.append(name + "." + n)
+        except Exception:
+            sys.stdout.write("E")
+            errors.append(name + "." + n)
+        else:
+            sys.stdout.write(".")
+            sys.stdout.flush()
+    doctest.testmod(mod)
+    sys.stdout.write(".")
+    sys.stdout.flush()
+    return failures, errors
+
+def main(args):
+    failures, errors = [], []
+    for fname in args:
+        if fname.endswith(".py"):
+            f, e = run(fname.rsplit(".", 1)[0])
+            failures.extend(f)
+            errors.extend(e)
+    sys.stdout.write("\n")
+    if failures or errors: print()
+    if failures:
+        print("Failures:")
+        print("\n".join(failures))
+    if errors:
+        print("Errors:")
+        print("\n".join(errors))
+
+if __name__ == "__main__":
+    import sys
+    main(sys.argv[1:])

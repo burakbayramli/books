@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+import os, sys
+from scitools.Regression import *
+
+test = TestRun('tests.v')
+
+test.run('simviz1c.py', options='--m 10 --func siny --screenplot 0')
+test.run('simviz1cp.py', options='--m 10 --func siny --screenplot 0')
+test.run('simviz1cp_unit.py', options='-m "10 kg" -func siny --screenplot 0')
+
+f = open('tmp.sh', 'w')
+f.write("""
+export QUERY_STRING=''
+python simviz1cpCGI.py.cgi
+export QUERY_STRING='m=10&func=siny'
+python simviz1cpCGI.py.cgi
+""")
+f.close()
+os.chmod('tmp.sh', 0755)  # executable for all
+test.run('tmp.sh')
+
+f = open('tmp.sh', 'w')
+f.write("""
+export QUERY_STRING=''
+python simviz1cpCGI_unit.py.cgi
+export QUERY_STRING='m=10 kg&func=siny'
+python simviz1cpCGI_unit.py.cgi
+""")
+f.close()
+os.chmod('tmp.sh', 0755)  # executable for all
+test.run('tmp.sh')
+
+# note that <IMG SRC="tmp_... tag contains random numbers
+# that will differ between runs, therefore we remove these lines:
+from subst import subst
+subst(r'<IMG SRC="tmp_.*/tmp_.*\.png">', '', 'tests.v')
+
+test.run('mloop4simviz1.py',
+         options="-m '10 & 1 & 2' -c ' 0.5 & [1:6,1] & 10.1' -noscreenplot")
+test.run('mloop4simviz1_v2.py',
+         options="-m '10 & 1 & 2' -c ' 0.5 & [1:6,1] & 10.1' -noscreenplot")
+test.run('mloop4simviz1_v3.py',
+         options="-m '10 & 1 & 2' -c ' 0.5 & [1:6,1] & 10.1' -noscreenplot -remove 'm == 10 and c == 2'")
+
+test.run('inputfile_wunits.py', options='_test')
+

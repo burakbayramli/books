@@ -1,0 +1,1750 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Structures.ProbADG</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        <a href="gPy.Structures-module.html">Module&nbsp;Structures</a> ::
+        Class&nbsp;ProbADG
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Structures.ProbADG-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class ProbADG</h1><p class="nomargin-top"><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+object --+                
+         |                
+<a href="gPy.Structures._Incidence-class.html" onclick="show_private();">_Incidence</a> --+            
+             |            
+     <a href="gPy.Structures._AbsGraph-class.html" onclick="show_private();">_AbsGraph</a> --+        
+                 |        
+object --+       |        
+         |       |        
+<a href="gPy.Structures._Incidence-class.html" onclick="show_private();">_Incidence</a> --+   |        
+             |   |        
+   <a href="gPy.Structures._AbsDiGraph-class.html" onclick="show_private();">_AbsDiGraph</a> --+        
+                 |        
+           <a href="gPy.Structures.DiGraph-class.html">DiGraph</a> --+    
+                     |    
+                   <a href="gPy.Structures.ADG-class.html">ADG</a> --+
+                         |
+                        <strong class="uidshort">ProbADG</strong>
+</pre>
+
+<hr />
+<p>Class for representing probability distributions over ADGs (for 
+  Bayesian inference of Bayesian networks)</p>
+  <p>Adding extra vertices after construction is not allowed</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">vertices</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">arrows</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">non_arrows</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">pa_lim</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">vertex_positions</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Graph initialisation</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="make_domain_graph"></a><span class="summary-sig-name">make_domain_graph</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Make a domain graph a la Kurihara and Kondo from family scores</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.make_domain_graph">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Formal string representation of a graph</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.__repr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#add_arrow" class="summary-sig-name">add_arrow</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">frm</span>,
+        <span class="summary-sig-arg">to</span>)</span><br />
+      Add an arrow (directed edge) between two existing vertices</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.add_arrow">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#add_vertex" class="summary-sig-name">add_vertex</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">vertex</span>)</span><br />
+      Adds a vertex to a graph</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.add_vertex">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#ban_arrow" class="summary-sig-name">ban_arrow</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">frm</span>,
+        <span class="summary-sig-arg">to</span>)</span><br />
+      Ban an arrow (directed edge) between two existing vertices</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.ban_arrow">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#ban_arrows" class="summary-sig-name">ban_arrows</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">non_arrows</span>)</span><br />
+      Ban a collection of arrows to the graph</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.ban_arrows">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#condition" class="summary-sig-name">condition</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">filter</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Condition on data</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.condition">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#condition_sql" class="summary-sig-name">condition_sql</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">filter</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Condition on data</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.condition_sql">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="condition_from_dict"></a><span class="summary-sig-name">condition_from_dict</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">dkt</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.condition_from_dict">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="encode_arrows"></a><span class="summary-sig-name">encode_arrows</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.encode_arrows">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#encoding" class="summary-sig-name">encoding</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adg</span>,
+        <span class="summary-sig-arg">full</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Return 'family' encoding of <code>adg</code> as a string</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.encoding">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Boolean</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#feasible" class="summary-sig-name">feasible</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adg</span>)</span><br />
+      Whether <code>adg</code> is one of the ADGs permitted by 
+      <code>self</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.feasible">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List of <code>(vertex,child)</code> tuples</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#non_arrows" class="summary-sig-name">non_arrows</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a list of banned arrows</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.non_arrows">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Float (negative)</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#logprob_feasible" class="summary-sig-name">logprob_feasible</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adg</span>)</span><br />
+      Return the log probability of <code>adg</code> assuming it is 
+      feasible</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.logprob_feasible">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#write_abbrev" class="summary-sig-name">write_abbrev</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">adgs</span>,
+        <span class="summary-sig-arg">fobj</span>)</span><br />
+      Print out abbreviated representations of <code>adgs</code></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_abbrev">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#write_cnf" class="summary-sig-name">write_cnf</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">atomsets</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">parents</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">total_order</code><code class="variable-quote">'</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">acyclicity</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">direct_reversible</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">scaling</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">comments</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Encode C{self} as a weighted CNF in DIMACS format</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="parse_maxwalksat"></a><span class="summary-sig-name">parse_maxwalksat</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">fobj</span>)</span><br />
+      For this to work must have conditioned on data and  written CNF to 
+      generate the encoding for families</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.parse_maxwalksat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#runwalksat" class="summary-sig-name">runwalksat</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">output_filename</span>,
+        <span class="summary-sig-arg">set_true</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">flags</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">printatoms</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Basic routine to run maxwalksat</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.runwalksat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="write_printatomsinitfile"></a><span class="summary-sig-name">write_printatomsinitfile</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">cycle_atom</span>=<span class="summary-sig-default">False</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_printatomsinitfile">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="write_initfile"></a><span class="summary-sig-name">write_initfile</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">set_true</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>)</span><br />
+      Set all to false unless cheating</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_initfile">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Boolean</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#find_it" class="summary-sig-name">find_it</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">output_filename</span>,
+        <span class="summary-sig-arg">true_adg</span>,
+        <span class="summary-sig-arg">set_true</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">flags</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span><br />
+      Method for searching for a true ADG</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.find_it">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#best_n" class="summary-sig-name">best_n</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">output_filename</span>,
+        <span class="summary-sig-arg">best</span>,
+        <span class="summary-sig-arg">set_true</span>=<span class="summary-sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="summary-sig-arg">flags</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span><br />
+      Get <code>n</code> best ADGs</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.best_n">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#make_sample" class="summary-sig-name">make_sample</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">cnf_filename</span>,
+        <span class="summary-sig-arg">sample_filename</span>,
+        <span class="summary-sig-arg">flags</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">encode_arrows</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Generate a sample</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.make_sample">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="rescore2"></a><span class="summary-sig-name">rescore2</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file</span>,
+        <span class="summary-sig-arg">outfile</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.rescore2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#logllhds" class="summary-sig-name">logllhds</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>)</span><br />
+      Since newmaxwalksat only computes integer costs it is necessary to go
+      through the file it creates and assign the correct likelihood</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.logllhds">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#rawexpval" class="summary-sig-name">rawexpval</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">fns</span>)</span><br />
+      Compute a vector of expected values from a '.sample' file</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.rawexpval">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="yield_sample"></a><span class="summary-sig-name">yield_sample</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">file</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.yield_sample">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="write_cnf2"></a><span class="summary-sig-name">write_cnf2</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">encode_arrows</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">scaling</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">ancestors</span>=<span class="summary-sig-default"><code class="variable-group">frozenset([</code><code class="variable-group">])</code></span>,
+        <span class="summary-sig-arg">nonancestors</span>=<span class="summary-sig-default"><code class="variable-group">frozenset([</code><code class="variable-group">])</code></span>,
+        <span class="summary-sig-arg">indeps</span>=<span class="summary-sig-default"><code class="variable-group">frozenset([</code><code class="variable-group">])</code></span>,
+        <span class="summary-sig-arg">comments</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Like write_cnf, but don't bother with acyclicity atom</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="write_cnf3"></a><span class="summary-sig-name">write_cnf3</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">scaling</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">comments</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Encode parent sets as combinations of literals</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf3">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="find_feasible"></a><span class="summary-sig-name">find_feasible</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">infilename</span>,
+        <span class="summary-sig-arg">outfilename</span>,
+        <span class="summary-sig-arg">n</span>=<span class="summary-sig-default">1</span>)</span><br />
+      Go through a list of digraphs encoding with arrows and select the 
+      first n acyclic ones</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.find_feasible">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="find_feasible2"></a><span class="summary-sig-name">find_feasible2</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">infilename</span>,
+        <span class="summary-sig-arg">outfilename</span>,
+        <span class="summary-sig-arg">n</span>=<span class="summary-sig-default">1</span>)</span><br />
+      Go through a list of digraphs encoding with family atom and  select 
+      the first n acyclic ones</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.find_feasible2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="gPy.Structures.ProbADG-class.html#write_cnf4" class="summary-sig-name">write_cnf4</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">scaling</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">comments</span>=<span class="summary-sig-default">True</span>,
+        <span class="summary-sig-arg">lim</span>=<span class="summary-sig-default">2</span>)</span><br />
+      Encode parent sets as combinations of literals</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf4">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="write_cnf5"></a><span class="summary-sig-name">write_cnf5</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">scaling</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">cycle_lim</span>=<span class="summary-sig-default">2</span>,
+        <span class="summary-sig-arg">comments</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Just use family atoms</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf5">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="write_cnf6"></a><span class="summary-sig-name">write_cnf6</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">scaling</span>=<span class="summary-sig-default">1</span>,
+        <span class="summary-sig-arg">comments</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Use family atoms and a total order</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf6">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures.ADG-class.html">ADG</a></code></b>:
+      <code><a href="gPy.Structures.ADG-class.html#ancestor">ancestor</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#ancestors">ancestors</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#ancestral_adg">ancestral_adg</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#connect">connect</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#connect2">connect2</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#descendants">descendants</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#families">families</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#remove_arrow">remove_arrow</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures.ADG-class.html">ADG</a></code></b> (private):
+      <code><a href="gPy.Structures.ADG-class.html#_ancestor" onclick="show_private();">_ancestor</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures.DiGraph-class.html">DiGraph</a></code></b>:
+      <code><a href="gPy.Structures.DiGraph-class.html#dfsvisit">dfsvisit</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#enumerate_cycles">enumerate_cycles</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#essential_graph">essential_graph</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#generate">generate</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#minimal_cycles">minimal_cycles</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#minimal_paths">minimal_paths</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#topological_order">topological_order</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures.DiGraph-class.html">DiGraph</a></code></b> (private):
+      <code><a href="gPy.Structures.DiGraph-class.html#_ancestors" onclick="show_private();">_ancestors</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#_descendants" onclick="show_private();">_descendants</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#_minimaldfs" onclick="show_private();">_minimaldfs</a></code>,
+      <code><a href="gPy.Structures.DiGraph-class.html#_tarjan_backtrack" onclick="show_private();">_tarjan_backtrack</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures._AbsGraph-class.html" onclick="show_private();">_AbsGraph</a></code></b>:
+      <code><a href="gPy.Structures._AbsGraph-class.html#__eq__">__eq__</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#__ne__">__ne__</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#__str__">__str__</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#add_vertices">add_vertices</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#arbitrary_vertex">arbitrary_vertex</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#arrows">arrows</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#child">child</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#children">children</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#copy">copy</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#delete_vertex">delete_vertex</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#diff">diff</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#discard_arrow">discard_arrow</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#discard_line">discard_line</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#edges">edges</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#extend_paths">extend_paths</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#get_gui_graph_kill">get_gui_graph_kill</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#gui_display">gui_display</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#gui_edit">gui_edit</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#is_neighbour">is_neighbour</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#is_parent">is_parent</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#lines">lines</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#moralise">moralise</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#neighbours">neighbours</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#orphanlist">orphanlist</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#parent">parent</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#parents">parents</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#paths">paths</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#put_vertex">put_vertex</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#reinit">reinit</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#remove_vertex">remove_vertex</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#set_vertex_positions">set_vertex_positions</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#vertex_positions">vertex_positions</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#vertexlist">vertexlist</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#vertices">vertices</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures._AbsGraph-class.html" onclick="show_private();">_AbsGraph</a></code></b> (private):
+      <code><a href="gPy.Structures._AbsGraph-class.html#_gui_help" onclick="show_private();">_gui_help</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures._AbsDiGraph-class.html" onclick="show_private();">_AbsDiGraph</a></code></b>:
+      <code><a href="gPy.Structures._AbsDiGraph-class.html#add_arrows">add_arrows</a></code>,
+      <code><a href="gPy.Structures._AbsDiGraph-class.html#put_arrow">put_arrow</a></code>,
+      <code><a href="gPy.Structures._AbsDiGraph-class.html#put_arrows">put_arrows</a></code>,
+      <code><a href="gPy.Structures._AbsDiGraph-class.html#put_family">put_family</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures._Incidence-class.html" onclick="show_private();">_Incidence</a></code></b>:
+      <code><a href="gPy.Structures._Incidence-class.html#reachable">reachable</a></code>,
+      <code><a href="gPy.Structures._Incidence-class.html#separates">separates</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS METHODS ==================== -->
+<a name="section-ClassMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures.DiGraph-class.html">DiGraph</a></code></b>:
+      <code><a href="gPy.Structures.DiGraph-class.html#generate_from_vertices">generate_from_vertices</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures._AbsGraph-class.html" onclick="show_private();">_AbsGraph</a></code></b> (private):
+      <code><a href="gPy.Structures._AbsGraph-class.html#_edit_help_msg" onclick="show_private();">_edit_help_msg</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Dictionary, one key for each vertex. The value of 
+      self._family_scores[v] is also a dictionary: each key is a possible 
+      parent set for v and the corresponding value is that family's 
+      contribution to a BDeu score.</span>
+    </td><td class="summary">
+        <a name="_family_scores"></a><span class="summary-name">_family_scores</span><br />
+      If the distribution is conditional on (complete) data, then this 
+      holds the 'family' components of the BDeu score.
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">List of functions; each function takes an ADG as input and returns a 
+      real</span>
+    </td><td class="summary">
+        <a name="_features"></a><span class="summary-name">_features</span><br />
+      Features; the log probability of any feasible ADG is (modulo 
+      normalisation) the sum of its feature values
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Dictionary</span>
+    </td><td class="summary">
+        <a name="_indx"></a><span class="summary-name">_indx</span><br />
+      Maps each vertex to its position in a sorted tuple of vertices
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Dictionary</span>
+    </td><td class="summary">
+        <a name="_nonch"></a><span class="summary-name">_nonch</span><br />
+      Maps each vertex to all vertices which are not allowed to be its 
+      child
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Dictionary</span>
+    </td><td class="summary">
+        <a name="_nonpa"></a><span class="summary-name">_nonpa</span><br />
+      Maps each vertex to all vertices which are not allowed to be its 
+      parent
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Tuple</span>
+    </td><td class="summary">
+        <a name="_variables"></a><span class="summary-name">_variables</span><br />
+      Vertices in order
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">Boolean</span>
+    </td><td class="summary">
+        <a name="_vertices_fixed"></a><span class="summary-name">_vertices_fixed</span><br />
+      Whether new vertices can be added (False after construction)
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures.ADG-class.html">ADG</a></code></b> (private):
+      <code><a href="gPy.Structures.ADG-class.html#_an" onclick="show_private();">_an</a></code>,
+      <code><a href="gPy.Structures.ADG-class.html#_de" onclick="show_private();">_de</a></code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Structures._AbsGraph-class.html" onclick="show_private();">_AbsGraph</a></code></b> (private):
+      <code><a href="gPy.Structures._AbsGraph-class.html#_ch" onclick="show_private();">_ch</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#_ne" onclick="show_private();">_ne</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#_pa" onclick="show_private();">_pa</a></code>,
+      <code><a href="gPy.Structures._AbsGraph-class.html#_vertex_positions" onclick="show_private();">_vertex_positions</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">vertices</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">arrows</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">non_arrows</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">pa_lim</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">vertex_positions</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Graph initialisation</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>vertices</code></strong> - The vertices of the graph</li>
+        <li><strong class="pname"><code>arrows</code></strong> - The arrows of the graph</li>
+        <li><strong class="pname"><code>lines</code></strong> - The lines of the graph</li>
+        <li><strong class="pname"><code>vertex_positions</code></strong> - A mapping from vertices to canvas co-ordinates</li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If <code>arrows</code> or <code>lines</code> contains a vertex not 
+        included in <code>vertices</code></li>
+        <li><code><strong class='fraise'><a href="gPy.Structures.ExistingVertexError-class.html">ExistingVertexError</a></strong></code> - If <code>vertices</code> repeats a vertex.</li>
+    </ul></dd>
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.__repr__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Formal string representation of a graph</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__repr__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="add_arrow"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_arrow</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">frm</span>,
+        <span class="sig-arg">to</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.add_arrow">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Add an arrow (directed edge) between two existing vertices</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>frm</code></strong> (Any immutable type) - Parent</li>
+        <li><strong class="pname"><code>to</code></strong> (Any immutable type) - Child</li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If either vertex does not exist</li>
+        <li><code><strong class='fraise'>ValueError</strong></code> - If the arrow to be added has been banned</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Structures._AbsDiGraph-class.html#add_arrow">_AbsDiGraph.add_arrow</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="add_vertex"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_vertex</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">vertex</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.add_vertex">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Adds a vertex to a graph</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>vertex</code></strong> - The vertex to add</li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="gPy.Structures.ExistingVertexError-class.html">ExistingVertexError</a></strong></code> - If vertex already exists</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="gPy.Structures._AbsGraph-class.html#add_vertex">_AbsGraph.add_vertex</a>
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="ban_arrow"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">ban_arrow</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">frm</span>,
+        <span class="sig-arg">to</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.ban_arrow">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Ban an arrow (directed edge) between two existing vertices</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>frm</code></strong> (Any immutable type) - Banned parent</li>
+        <li><strong class="pname"><code>to</code></strong> (Any immutable type) - Banned child</li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If either vertex does not exist</li>
+        <li><code><strong class='fraise'>ValueError</strong></code> - If the arrow to be banned is required to exist</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="ban_arrows"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">ban_arrows</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">non_arrows</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.ban_arrows">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Ban a collection of arrows to the graph</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>arrows</code></strong> (An iterator over pairs (of vertices). Each pair is a sequence of 
+          length 2) - The arrows to ban</li>
+    </ul></dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If a vertex does not exist</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="condition"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">condition</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>,
+        <span class="sig-arg">filter</span>=<span class="sig-default">True</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.condition">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Condition on data</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>data</code></strong> (<a href="gPy.Parameters.CompactFactor-class.html" 
+          class="link">Parameters.CompactFactor</a>) - Complete discrete data</li>
+        <li><strong class="pname"><code>filter</code></strong> (Boolean) - If true, a parent set is only stored if its score is higher than 
+          that of all its subsets.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="condition_sql"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">condition_sql</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>,
+        <span class="sig-arg">filter</span>=<span class="sig-default">True</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.condition_sql">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Condition on data</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>data</code></strong> (<a href="gPy.Parameters.SqliteFactor-class.html" 
+          class="link">Parameters.SqliteFactor</a>) - Complete discrete data</li>
+        <li><strong class="pname"><code>filter</code></strong> (Boolean) - If true, a parent set is only stored if its score is higher than 
+          that of all its subsets.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="encoding"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">encoding</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">adg</span>,
+        <span class="sig-arg">full</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.encoding">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return 'family' encoding of <code>adg</code> as a string</p>
+  <p>inefficient since don't currently store mapping from family to 
+  atom</p>
+  <p>If <code>full</code> is set then all parent and ancestor atoms made 
+  true by this <code>adg</code> are also included.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="feasible"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">feasible</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">adg</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.feasible">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Whether <code>adg</code> is one of the ADGs permitted by 
+  <code>self</code></p>
+  <p>It is assumed that <code>adg</code> has the same vertices as 
+  <code>self</code></p>
+  <p>This works for any digraph, but is intended for use with acyclic 
+  ones</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>adg</code></strong> (<a href="gPy.Structures.DiGraph-class.html" 
+          class="link">DiGraph</a>) - A digraph (most likely acyclic)</li>
+    </ul></dd>
+    <dt>Returns: Boolean</dt>
+        <dd>Whether <code>adg</code> is permitted by <code>self</code></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="non_arrows"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">non_arrows</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.non_arrows">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a list of banned arrows</p>
+  <dl class="fields">
+    <dt>Returns: List of <code>(vertex,child)</code> tuples</dt>
+        <dd>A list of banned arrows</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="logprob_feasible"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">logprob_feasible</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">adg</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.logprob_feasible">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return the log probability of <code>adg</code> assuming it is 
+  feasible</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>adg</code></strong> (<a href="gPy.Structures.ADG-class.html" class="link">ADG</a>) - A feasiable ADG</li>
+    </ul></dd>
+    <dt>Returns: Float (negative)</dt>
+        <dd>The log probability of <code>adg</code> assuming it is feasible</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="write_abbrev"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">write_abbrev</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">adgs</span>,
+        <span class="sig-arg">fobj</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_abbrev">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Print out abbreviated representations of <code>adgs</code></p>
+  <p>For each variable (in order) print out its parent set as an ordered 
+  list</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>adgs</code></strong> (Iterator/sequence) - Iterator/sequence of <a href="gPy.Structures.ADG-class.html" 
+          class="link">ADG</a> objects</li>
+        <li><strong class="pname"><code>fobj</code></strong> (File) - Writeable file</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="write_cnf"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">write_cnf</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">filename</span>,
+        <span class="sig-arg">atomsets</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">parents</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">total_order</code><code class="variable-quote">'</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">acyclicity</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">direct_reversible</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">scaling</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">comments</span>=<span class="sig-default">True</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Encode C{self} as a weighted CNF in DIMACS format
+
+Generates a WCNF file, and stores information in _wcf_info attribute.
+
+@param filename: Filename for weighted CNF
+@type filename: String
+@param atomsets: Which graphical relations to encode as propositional atoms.
+Only the following (given as strings) are currently supported:
+ parents: For each pa -&gt; ch relation mentioned in the families in
+ the _family_scores attribute of self, create an atom asserting that pa is the parent of ch.
+ ancestors: For each unordered pair of vertices create an atom asserting that one
+ is an ancestor of the other, but only if the families stored in  the _family_scores attribute
+ allow this possibility.
+ families: For each family stored in the _family_scores attribute of self, create an atom
+ asserting that the family obtains.
+ total_order: For each ordered pair of vertices create an atom asserting that this pair
+ is lexicographically ordered in a total order.
+ cycle_atom: Create an atom asserting the existence of an atom.
+Evidently, there is redundancy here and one would not want to represent all of these atoms.
+The default gives the minimal number of atoms.
+@type atomsest: A tuple of strings
+@param acyclicity: If equals 1 cyclic digraphs are ruled out using hard clauses. Otherwise a number
+between 0 and 1 is expected and the hard clauses are softened by multiplying their weights by C{acyclicity}.
+The nature of the hard clauses depends on the atoms used in the encoding as specifed by C{atoms}
+@type acyclicity: Number
+@param direct_reversible: If using total_order, and an arrow is established to be reversible
+then effect a lexicographic ordering
+@type: direct_reversible: Boolean
+@param scaling: How much to multiply scores by before making into integers
+@type scaling: Numeric
+@param comments: Whether to print comments to the file
+@type comments: Boolean
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="runwalksat"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">runwalksat</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">output_filename</span>,
+        <span class="sig-arg">set_true</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">flags</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">printatoms</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.runwalksat">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Basic routine to run maxwalksat</p>
+  <p>Assumes write_cnf has been done</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="find_it"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_it</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">output_filename</span>,
+        <span class="sig-arg">true_adg</span>,
+        <span class="sig-arg">set_true</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">flags</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.find_it">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Method for searching for a true ADG</p>
+  <p>write_cnf has been done.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>output_filename</code></strong> (String) - Where <code class="link">true_adg</code> will be if it is found 
+          in the search.</li>
+        <li><strong class="pname"><code>true_adg</code></strong> (<a href="gPy.Models.BN-class.html" class="link">Models.BN</a>) - The true ADG</li>
+        <li><strong class="pname"><code>set_true</code></strong> (Sequence) - Sequence of atoms to initialise to true (only for cheating!)</li>
+        <li><strong class="pname"><code>flags</code></strong> (String) - Options to give newmaxwalksat</li>
+    </ul></dd>
+    <dt>Returns: Boolean</dt>
+        <dd>Whether <code>true_adg</code> is amongst those found in the 
+          search</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="best_n"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">best_n</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">output_filename</span>,
+        <span class="sig-arg">best</span>,
+        <span class="sig-arg">set_true</span>=<span class="sig-default"><code class="variable-group">(</code><code class="variable-group">)</code></span>,
+        <span class="sig-arg">flags</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.best_n">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get <code>n</code> best ADGs</p>
+  <p>write_cnf has been done.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>output_filename</code></strong> (String) - Where <code class="link">true_adg</code> will be if it is found 
+          in the search.</li>
+        <li><strong class="pname"><code>set_true</code></strong> (Sequence) - Sequence of atoms to initialise to true (only for cheating!)</li>
+        <li><strong class="pname"><code>flags</code></strong> (String) - Options to give newmaxwalksat</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="make_sample"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">make_sample</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">cnf_filename</span>,
+        <span class="sig-arg">sample_filename</span>,
+        <span class="sig-arg">flags</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">encode_arrows</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.make_sample">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Generate a sample</p>
+  <p>Assumes self has already been conditioned</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>cnf_filename</code></strong> - Name of WCNF file</li>
+        <li><strong class="pname"><code>sample_filename</code></strong> (String) - Where sample will go</li>
+        <li><strong class="pname"><code>flags</code></strong> (String) - Options to give newmaxwalksat</li>
+        <li><strong class="pname"><code>encode_arrows</code></strong> - Whether to create atom representing the existence of arrows</li>
+        <li><strong class="pname"><code>encode_arrow</code></strong> (Boolean)</li>
+        <li><strong class="pname"><code>cnf_filemane</code></strong> (String)</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="logllhds"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">logllhds</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">filename</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.logllhds">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Since newmaxwalksat only computes integer costs it is necessary to go 
+  through the file it creates and assign the correct likelihood</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>filename</code></strong> (String) - Name of file created by run of newmaxwalksat</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="rawexpval"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">rawexpval</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">filename</span>,
+        <span class="sig-arg">fns</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.rawexpval">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Compute a vector of expected values from a '.sample' file</p>
+  <p>It is up to the functions in <code>fns</code> to understand what the 
+  integers mean</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="write_cnf4"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">write_cnf4</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">filename</span>,
+        <span class="sig-arg">scaling</span>=<span class="sig-default">1</span>,
+        <span class="sig-arg">comments</span>=<span class="sig-default">True</span>,
+        <span class="sig-arg">lim</span>=<span class="sig-default">2</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Structures-pysrc.html#ProbADG.write_cnf4">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Encode parent sets as combinations of literals</p>
+  <p>Only rule out cycles of length 2</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Aug 13 16:47:16 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

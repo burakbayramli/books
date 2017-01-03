@@ -1,0 +1,196 @@
+
+initial data = cos(2x) on [0 2pi]
+speed = c=1/2
+t_0 = 0; t_f = 1; dt = 1/10; dx = pi/5
+
+explicit upwind
+err_inf =          err_two              err_one
+4.4107e-01 1.7671  7.8873e-01  1.7588   1.8761e+00  1.7919
+2.4960e-01 1.8732  4.4845e-01  1.8700   1.0470e+00  1.9027
+1.3325e-01 1.9141  2.3981e-01  1.9342   5.5029e-01  1.9521 
+6.9615e-02 1.9611  1.2398e-01  1.9672   2.8190e-01  1.9762
+3.5498e-02 1.9821  6.3026e-02  1.9837   1.4265e-01  1.9860
+1.7909e-02 1.9909  3.1772e-02  1.9918   7.1828e-02  1.9936
+8.9954e-03 1.9955  1.5951e-02  1.9959   3.6029e-02  1.9968   
+4.5079e-03 1.9977  7.9919e-03  1.9980   1.8044e-02  1.9984
+2.2565e-03         4.0000e-03           9.0290e-03
+
+
+Lax-Friedrichs 
+err_inf =           err_two              err_one
+ 9.6724e-01 1.0156  1.8235e+00   1.0291  4.2728e+00  1.0574
+ 9.5241e-01 1.1039  1.7718e+00   1.1486  4.0409e+00  1.1464
+ 8.6275e-01 1.3791  1.5426e+00   1.3841  3.5248e+00  1.3908
+ 6.2560e-01 1.6133  1.1145e+00   1.6180  2.5344e+00  1.6245
+ 3.8778e-01 1.7833  6.8880e-01   1.7852  1.5601e+00  1.7885
+ 2.1745e-01 1.8847  3.8583e-01   1.8858  8.7230e-01  1.8876
+ 1.1538e-01 1.9406  2.0460e-01   1.9411  4.6213e-01  1.9419
+ 5.9455e-02 1.9698  1.0540e-01   1.9701  2.3798e-01  1.9705
+ 3.0182e-02         5.3503e-02           1.2077e-01
+
+
+Lax-Wendroff
+
+err_inf =            err_two =           err_one =
+ 2.3751e-01  3.7103  4.4630e-01  3.8122  1.0756e+00  3.8904
+ 6.4015e-02  3.9384  1.1707e-01  3.9939  2.7647e-01  4.1321 
+ 1.6254e-02  3.9870  2.9312e-02  4.0173  6.6908e-02  4.0305
+ 4.0768e-03  3.9933  7.2965e-03  4.0133  1.6601e-02  4.0299
+ 1.0209e-03  3.9982  1.8181e-03  4.0078  4.1194e-03  4.0159
+ 2.5534e-04  3.9993  4.5364e-04  4.0042  1.0258e-03  4.0083
+ 6.3847e-05  3.9999  1.1329e-04  4.0021  2.5591e-04  4.0040 
+ 1.5962e-05  4.0000  2.8308e-05  4.0011  6.3914e-05  4.0020
+ 3.9905e-06          7.0750e-06          1.5970e-05
+
+Beam-Warming
+
+err_inf =            err_two =            err_one =
+ 3.5463e-01  3.2147  6.9592e-01  3.3813  1.6515e+00  3.4174 
+ 1.1031e-01  3.8318  2.0581e-01  3.9453  4.8325e-01  4.0628 
+ 2.8789e-02  3.9689  5.2167e-02  4.0170  1.1895e-01  4.0328 
+ 7.2538e-03  3.9958  1.2987e-02  4.0147  2.9495e-02  4.0241 
+ 1.8154e-03  3.9964  3.2347e-03  4.0083  7.3295e-03  4.0170 
+ 4.5425e-04  3.9997  8.0700e-04  4.0043  1.8246e-03  4.0080
+ 1.1357e-04  3.9999  2.0153e-04  4.0022  4.5525e-04  4.0041 
+ 2.8394e-05  3.9999  5.0355e-05  4.0011  1.1370e-04  4.0021     
+ 7.0986e-06          1.2585e-05          2.8409e-05      
+
+
+This is the best of all possible worlds, where the initial data is
+wonderfully smooth and the derivatives are all nice.  And we see
+ratios going to two and four, where expected.  Now let's see what
+happens as the initial data gets nastier.
+
+-----------------------------------------------------------------
+
+First, let's take periodic initial data which has a jump in its second
+derivative.
+
+explicit upwind:
+ratios of L^infty errors
+   1.4537   1.8735   1.9141   1.9611   1.9821   1.9909  1.9955   1.9977
+ratios of L^2 errors
+   1.6569   1.7854   1.8569   1.9097   1.9425   1.9629  1.9756   1.9837
+ratios of L^1 errors
+   1.6054   1.8012   1.8662   1.9191   1.9408   1.9637  1.9752   1.9832
+
+Lax-Friedrichs:
+ratios of L^infty errors
+   1.2862   1.4048   1.5100   1.6353   1.7841   1.8847   1.9406   1.9698
+ratios of L^2 errors
+   1.3651   1.5164   1.5435   1.5798   1.6824   1.7887   1.8661   1.9160
+ratios of L^1 errors
+   1.4446   1.5569   1.4649   1.4963   1.6304   1.7656   1.8573   1.9123
+
+Lax-Wendroff:
+ratios of L^infty errors
+   2.0940   2.4327   2.3007   2.3845   2.5797   2.4744   2.4744   2.5251
+ratios of L^2 errors
+   2.6642   3.1382   3.3737   3.2911   3.2303   3.2227   3.2011   3.1900
+ratios of L^1 errors
+   2.6233   3.4246   3.9469   3.7842   3.8455   3.8876   3.9322   3.9396
+
+Beam-Warming:
+ratios of L^infty errors
+   2.3375   1.8960   2.3945   2.3602   2.4540   2.4934   2.4615   2.5042
+ratios of L^2 errors
+   2.3743   3.1630   3.2572   3.2644   3.2453   3.2092   3.1871   3.1733
+ratios of L^1 errors
+   2.1364   3.5229   3.6368   3.7969   3.9109   3.9031   3.9119   3.9353
+
+Summary: When the errors are measured w/ the L^1 norm the ratios are all
+doing what they should be doing even though there's a jump in the second
+derivative.
+ 
+-----------------------------------------------------------------
+
+Now, let's take periodic initial data which has a jump in its first
+derivative.
+
+explicit upwind:
+ratios of L^infty errors
+   1.4455   1.0024   1.4578   1.2425   1.4476   1.2574   1.4196   1.4239
+ratios of L^2 errors
+   1.8145   1.4853   1.7083   1.6576   1.6926   1.6751   1.6956   1.6913
+ratios of L^1 errors
+   1.8444   1.7998   1.8837   1.9110   1.9530   1.9663   1.9854   1.9914
+
+Lax-Friedrichs:
+ratios of L^infty errors
+   1.0514   .86802   1.2420   1.2574   1.3666   1.3446   1.4027   1.4098
+ratios of L^2 errors
+   1.0485   1.1165   1.3489   1.5189   1.6201   1.6668   1.6889   1.6957
+ratios of L^1 errors
+   1.0437   1.1518   1.3810   1.5841   1.7292   1.8264   1.8932   1.9349
+
+Lax-Wendroff:
+ratios of L^infty errors
+   2.2370   1.6639   1.6299   1.5445   1.6173   1.4682   1.6074   1.6284
+ratios of L^2 errors
+   2.6623   2.3036   2.1651   1.9757   2.0376   1.9333   2.0153   2.0058
+ratios of L^1 errors
+   2.7677   2.6697   2.6233   2.6256   2.4357   2.4668   2.4930   2.4807
+
+Beam-Warming:
+ratios of L^infty errors
+   1.6233   1.2151   1.7556   1.5956   1.4276   1.3080   1.6320   1.6671
+ratios of L^2 errors
+   2.2887   1.6918   2.0834   1.8915   1.9459   1.8804   1.9666   1.9636
+ratios of L^1 errors
+   2.8111   2.2863   2.4500   2.4042   2.4148   2.3605   2.4516   2.4050
+
+Summary: When the errors are measured w/ the L^1 norm the ratios for the
+lower-order accuracy schemes are going to two.  The higher-order accuracy
+schemes have definitely been compromised.
+
+-----------------------------------------------------------------
+
+Now, let's take periodic initial data which has a jump discontinuity
+
+
+explicit upwind:
+ratios of L^infty errors
+   1.1735   .98236   1.0564   .90636   1.0517   .93933   1.0154   1.0134
+ratios of L^2 errors
+   1.3703   1.2028   1.2026   1.1791   1.1991   1.1832   1.1931   1.1910
+ratios of L^1 errors
+   1.5560   1.4261   1.4250   1.4079   1.4215   1.4102   1.4170   1.4155
+
+Lax-Friedrichs:
+ratios of L^infty errors
+   1.0295   1.0812   1.0862   .96041   .96358   1.0234   .97921   1.0079
+ratios of L^2 errors
+   1.2434   1.3108   1.2377   1.1919   1.1899   1.1908   1.1890   1.1897
+ratios of L^1 errors
+   1.2897   1.4315   1.4390   1.4224   1.4197   1.4177   1.4146   1.4145
+
+Lax-Wendroff:
+ratios of L^infty errors
+   1.0446   .73000   1.0320   1.0785   .87033   1.0604   .94573  .95654
+ratios of L^2 errors
+   1.1919   1.1349   1.3401   1.3532   1.2199   1.3372   1.2412   1.2319
+ratios of L^1 errors
+   1.4265   1.3223   1.4985   1.5568   1.6098   1.6771   1.5596   1.5290
+
+Beam-Warming:
+ratios of L^infty errors
+   1.1332   1.2378   .85829   .87540   1.0600   .91826   1.0153   1.0173
+ratios of L^2 errors
+   1.4977   1.4871   1.1640   1.1208   1.3353   1.1513   1.2750   1.2731
+ratios of L^1 errors
+   1.7629   1.7140   1.4790   1.4220   1.5830   1.4483   1.5405   1.5356
+
+Summary: The convergence rate appears completely shot.  The errors are
+decreasing suggesting that the schemes converges (as we know they must
+--- they're consistent and stable).  But they're converging relatively
+slowly.  Note that the L^1 norm of the error is decreasing the most
+quickly.  In fact, one can show that the L^1 norms for the
+"first-order" methods decrease like sqrt(k) and so the ratios for
+explicit upwinding and Lax-Friedrichs should go to sqrt(2) = 1.4142...
+And the L^1 norms for the "second-order" methods decrease like k^(2/3)
+and so the ratios for Lax-Wendroff and beam-warming should go to
+2^(2/3) = 1.5874.  Which they probably would if I took the time 
+to refine further...
+
+
+

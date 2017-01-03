@@ -1,0 +1,58 @@
+---
+output: html_document
+---
+Capital in the 21st Century: Chapter 0
+========================================================
+
+### Data provenance
+
+The data were downloaded as Excel files from: http://piketty.pse.ens.fr/en/capital21c2. 
+
+### Set global options for graphics
+
+```{r, message=FALSE}
+library(knitr)
+opts_chunk$set(comment=NA,dev=c('pdf','png'),fig.path='figures/',fig.height=5,fig.width=10,dpi=300)
+```
+
+### Load required libraries
+
+This document depends on the [xlsx](http://cran.r-project.org/web/packages/xlsx/index.html), [reshape2](http://cran.r-project.org/web/packages/reshape2/index.html), [ggplot2](http://cran.r-project.org/web/packages/ggplot2/index.html), and [scales](http://cran.r-project.org/web/packages/scales/index.html) packages.
+
+```{r message=FALSE}
+library(ggplot2)
+library(scales)
+library(xlsx)
+library(reshape2)
+```
+
+### Load data
+
+```{r message=FALSE}
+tsi1 <- read.xlsx("../Piketty2014FiguresTables/Chapter0TablesFigures.xlsx",sheetName="TSI.1",rowIndex=7:107,colIndex=1:2,header=FALSE)
+names(tsi1) = c("Year","top10is")
+
+
+tsi2 <- read.xlsx("../Piketty2014FiguresTables/Chapter0TablesFigures.xlsx",sheetName="TSI.2",rowIndex=6:20,colIndex=1:4,header=FALSE)
+names(tsi2) = c("Year","Germany","France","Britain")
+tsi2 = melt(tsi2,id.vars=c("Year"))
+names(tsi2) = c("Year","Country","ciratio")
+```
+
+
+## Make FI.1
+
+This code remakes Figure FI.1. 
+
+```{r,Figure1,cache=TRUE}
+ggplot(data=tsi1,aes(x=Year,y=top10is)) + geom_line() + geom_point(shape=15,size=3) + ylab("Share of top decile in national income") + xlab("") + theme_bw() + scale_y_continuous(labels=percent,breaks=pretty_breaks(n=6)) + scale_x_continuous(breaks=pretty_breaks(n=11))
+```
+
+## Make FI.2
+
+This code remakes Figure FI.2. 
+
+```{r,Figure2,cache=TRUE}
+ggplot(data=tsi2,aes(x=Year,y=ciratio,group=Country,colour=Country)) + geom_line() + geom_point(aes(shape=Country), size=3) + ylab("Market value of private capital (% national income)") + xlab("") + theme_bw() + theme(legend.key=element_blank()) + scale_y_continuous(labels=percent,breaks=pretty_breaks(n=5)) + scale_x_continuous(breaks=pretty_breaks(n=8)) + theme(legend.position=c(.75, .75),legend.background=element_rect(colour='black')) 
+```
+

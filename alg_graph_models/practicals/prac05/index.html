@@ -1,0 +1,166 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>AGM Practical 05</title>
+  </head>
+  <body>
+    <h1>Algorithms for Graphical Models (AGM)</h1>
+    <h2>Practical 05: Join trees and sampling</h2>
+
+    <hr />
+    
+    <ol>
+      <li><a href="#maths">Some maths</a></li>
+      <li><a href="#forming">Forming join trees</a></li>
+      <li><a href="#manual_triangulation">Manual
+	  triangulation</a></li>
+      <li><a href="#grahams">Graham's algorithm</a></li>
+      <li><a href="#basic_sampling">Basic sampling</a></li>
+    </ol>
+    <hr />
+
+    <h4><a id="maths"></a>Some maths</h4>
+
+    <p>Acknowledgement: This question comes from <cite>Introduction to
+    Bayesian Networks</cite> by Finn Jensen. The solution is from a
+      web resource for that book.
+    </p>
+
+    <p>
+      Let G be a triangulated graph with vertices U, and let A1, A2,
+      ...An be a zero fill-in for G. Assume that eliminated variables
+      (and lines to them) are actually deleted. Let Ci be the set of variables
+      containing Ai and all its neighbours at the time of
+      elimination.
+    </p>
+    <ol>
+      <li>
+	Show that each clique of G is a Ci for some i.
+      </li> 
+      <li>
+	Show that for all i &lt; n, there is a j&gt;i such that Ci \
+	{Ai} is a subset of Cj
+      </li>
+    </ol>
+    <p>
+      NB. If Ci and Cj are cliques (i&lt;j) such that Ci \ {Ai} is a
+      subset of Cj, then there exists a junction tree for G with the
+      link (Ci,Cj).
+    </p>
+
+    <p>
+      Solution: <a
+	href="http://www.cs.auc.dk/~fvj/opgloesning.html#q3">Look at
+	i) and ii) of Exercise 8</a>
+      </p>
+    
+    <hr />
+
+    <h4>
+      <a id="forming"></a>Forming join trees (or not as the case may be)
+    </h4>
+
+    <p>
+      Show that it is not possible to create a join tree from the
+      following graph. Identify what the problem is and how the graph
+      can be altered to overcome the problems.</p>
+    
+    <p>
+      <img src="graph.jpg" height="320" width="302" alt="picture of a graph"/>
+    </p>
+
+    <hr />
+
+
+    <h4>
+      <a id="manual_triangulation"></a>Manual triangulation
+    </h4>
+
+    <p>
+      Find optimal triangulations for the following graphs.
+    </p>
+    <p>
+      <img src="moregraphs.jpg" height="621" width="664" alt="several graphs"/>
+    </p>
+
+    <hr />
+
+    <h4><a id="grahams"></a>Graham's algorithm</h4>
+
+    <p>Write a program which uses Graham's algorithm to check whether
+      a hypergraph is decomposable. Use gPy's <a
+	href="../../gPy/Doc/API/gPy.Hypergraphs.Hypergraph-class.html">Hypergraph</a> class to represent your
+      hypergraph. Feel free to use any methods of that class (except
+      of course those that check for decomposability!) Use the
+      following hypergraphs as test cases.</p>
+
+
+     <ol> 
+       <li>{{A,B},{B,C},{C,D},{A,D}}</li> 
+       <li>{{A,B,C},{A,C,D} }</li> 
+       <li>{ {TbOrCa, XRay}, {Bronchitis, Smoking}, {Tuberculosis, 
+ 	VisitAsia}, {VisitAsia}, {Smoking}, {Bronchitis, Dyspnea, 
+ 	TbOrCa}, {Cancer, Smoking}, {Cancer, TbOrCa, Tuberculosis} 
+ 	}</li> 
+       <li>{ {TbOrCa, XRay}, {Bronchitis, Smoking}, {Tuberculosis, 
+ 	VisitAsia}, {Bronchitis, Dyspnea, 
+ 	TbOrCa}, {Cancer, Smoking}, {Cancer, TbOrCa, Tuberculosis} 
+ 	}</li> 
+       <li>{ {TbOrCa, XRay}, {Bronchitis, Smoking}, {Tuberculosis, 
+ 	VisitAsia}, {Bronchitis, Dyspnea, TbOrCa}, {Cancer, TbOrCa, 
+ 	Tuberculosis} }</li> 
+     </ol> 
+
+     <p> 
+       <a href="decomp_sol.txt">Classification of test hypergraphs</a> 
+     </p> 
+
+
+    <p>
+      If you're feeling ambitious you can adapt your program to
+      construct a join forest <em>en passant</em>.
+    </p>
+
+    <p>
+      <a
+	href="../../gPy/Doc/API/gPy.Hypergraphs.Hypergraph-class.html#join_forest_ve"> A complicated solution</a> Simpler, but perhaps slower ones are fine.
+    </p>
+
+    <hr />
+
+    <h4><a id="basic_sampling"></a>Basic sampling</h4>    
+    
+    <p>
+      Design a class for a basic sampler. Only two public methods are
+      needed. A constructor <code>__init__</code> which takes a
+      probability distribution as a sequence of <em>n</em> floats as
+      its only argument, and a method <code>sample</code> which spits
+      out an integer in the list <code>range(n)</code> according to
+      the probability distribution. This is not hard to get working,
+      but your job is to ensure that the sampling is
+      <em>efficient</em> (in the long run) whatever the input distribution.
+    </p>
+
+    <hr />
+
+    <p>
+      <a href="answers.html">ANSWERS</a>
+      </p>
+
+    <p>
+<!-- hhmts start -->
+Last modified: Mon Dec  1 10:15:56 GMT 2008
+<!-- hhmts end -->
+    </p>
+    
+    <p>
+      <a href="http://validator.w3.org/check?uri=referer"><img
+          src="../../valid-xhtml11"
+          alt="Valid XHTML 1.1!" height="31" width="88" /></a>
+    </p>
+
+</body>
+</html>

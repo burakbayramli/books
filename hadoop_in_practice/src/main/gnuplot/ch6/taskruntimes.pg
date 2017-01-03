@@ -1,0 +1,54 @@
+#!/usr/bin/gnuplot
+reset
+set terminal png size 1024,786 linewidth 1 rounded
+
+set output 'taskruntimes.png'
+
+set size 1,0.5
+set origin 0,0
+
+set multiplot
+
+
+
+set offset graph 0, graph 0, graph 0.25, graph 0
+
+set style line 80 lw 2 lt rgb "#808080"
+
+# Line style for grid
+set style line 81 lw 0.2 lt 0  # dashed
+set style line 81 lt rgb "#C0C0C0"  # grey
+
+set grid back linestyle 81
+set border 3 back linestyle 80
+
+set xtics nomirror
+set ytics nomirror
+
+set boxwidth 1
+
+
+set style data boxes
+set title "Map Execution Times"
+
+unset key
+set style fill   transparent solid 0.75 noborder
+
+# plot the first graph so that it takes a half of the screen
+set size 0.5,0.5
+set origin 0,0.5
+
+set yrange [0:120]
+set xrange [0:40]
+
+plot 'taskruntimes-map.dat' using 1
+
+set size 0.5,0.5
+set origin 0.5,0.5
+
+set title "Reduce Execution Times"
+
+set yrange [0:25]
+set xrange [0:15]
+
+plot 'taskruntimes-reduce.dat' using 1

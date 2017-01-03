@@ -1,0 +1,43 @@
+# Bugs model for iv -- Tony Lancaster version but *not* using Wishart
+# now with varying intercepts
+
+model {
+  for (i in 1:n){                       
+    yd[i,1:2] ~ dmnorm (yd.hat[i,],Tau.yd[,])      # data model:  the likelihood
+    yd.hat[i,1] <- alpha[siteset[i]] + delta*beta*z[i]
+    yd.hat[i,2] <- gamma[siteset[i]] + delta*z[i]
+  }
+  for (j in 1:J){
+  ag[j,1:2] ~ dmnorm (theta[1:2],Tau.ag[1:2,1:2])
+  alpha[j] <- ag[j,1]
+  gamma[j] <- ag[j,2]
+  }
+
+# data level
+  Tau.yd[1:2,1:2] <- inverse(Sigma.yd[,])
+  Sigma.yd[1,1] <- pow(sigma.y,2)
+  sigma.y ~ dunif (0, 100)                # noninformative prior on sigma.a
+  Sigma.yd[2,2] <- pow(sigma.d,2)
+  sigma.d ~ dunif (0, 100)                # noninformative prior on sigma.b
+  Sigma.yd[1,2] <- rho.yd*sigma.y*sigma.d  
+  Sigma.yd[2,1] <- Sigma.yd[1,2]                # noninformative prior on rho
+  rho.yd ~ dunif(-1,1)
+
+  delta ~ dnorm (.35, 100 )
+  beta ~ dnorm (0, .001)
+
+# group level
+  Tau.ag[1:2,1:2] <- inverse(Sigma.ag[,])
+  Sigma.ag[1,1] <- pow(sigma.a,2)
+  sigma.a ~ dunif (0, 100)
+  Sigma.ag[2,2] <- pow(sigma.g,2)
+  sigma.g ~ dunif (0, 100)
+  Sigma.ag[1,2] <- rho.ag*sigma.a*sigma.g
+  Sigma.ag[2,1] <- Sigma.ag[1,2]  
+  rho.ag ~ dunif(-1,1)
+
+  theta[1] ~ dnorm(0, .001)
+  theta[2] ~ dnorm(0, .001)
+}
+
+

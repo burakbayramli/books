@@ -1,0 +1,130 @@
+Two factor, fixed and random effects, CRD - mosquito bites                                         1
+raw data
+
+Obs    score    product    location
+
+  1      21      deet         1    
+  2      19      deet         1    
+  3      20      deet         1    
+  4      22      deet         1    
+  5      14      sss          1    
+  6      15      sss          1    
+  7      13      sss          1    
+  8      16      sss          1    
+  9      14      deet         2    
+ 10      17      deet         2    
+ 11      15      deet         2    
+ 12      17      deet         2    
+ 13      12      sss          2    
+ 14      11      sss          2    
+ 15      12      sss          2    
+ 16      14      sss          2    
+ 17      16      deet         3    
+ 18      20      deet         3    
+ 19      18      deet         3    
+ 20      19      deet         3    
+ 21      14      sss          3    
+ 22      14      sss          3    
+ 23      14      sss          3    
+ 24      12      sss          3    
+Two factor, fixed and random effects, CRD - mosquito bites                                         2
+ANOVA using MIXED
+
+The Mixed Procedure
+
+                  Model Information
+
+Data Set                     WORK.BITES               
+Dependent Variable           score                    
+Covariance Structure         Variance Components      
+Estimation Method            REML                     
+Residual Variance Method     Profile                  
+Fixed Effects SE Method      Model-Based              
+Degrees of Freedom Method    Satterthwaite            
+
+
+              Class Level Information
+ 
+Class       Levels    Values
+
+product          2    deet sss                      
+location         3    1 2 3                         
+
+
+            Dimensions
+
+Covariance Parameters             3
+Columns in X                      3
+Columns in Z                      9
+Subjects                          1
+Max Obs Per Subject              24
+Observations Used                24
+Observations Not Used             0
+Total Observations               24
+
+
+                     Iteration History
+ 
+Iteration    Evaluations    -2 Res Log Like       Criterion
+
+        0              1        98.04693681                
+        1              1        87.12901620      0.00000000
+
+
+                   Convergence criteria met.                    
+
+
+     Covariance Parameter Estimates
+ 
+Cov Parm                Ratio    Estimate
+
+location               1.4492      2.6771
+product*location       0.1729      0.3194
+Residual               1.0000      1.8472
+
+
+           Fit Statistics
+
+-2 Res Log Likelihood            87.1
+AIC (smaller is better)          93.1
+Two factor, fixed and random effects, CRD - mosquito bites                                         3
+ANOVA using MIXED
+
+The Mixed Procedure
+
+           Fit Statistics
+
+AICC (smaller is better)         94.5
+BIC (smaller is better)          90.4
+
+
+        Type 3 Tests of Fixed Effects
+ 
+              Num     Den
+Effect         DF      DF    F Value    Pr > F
+
+product         1       2      43.32    0.0223
+
+
+                                       Least Squares Means
+ 
+                               Standard
+Effect    product   Estimate      Error     DF   t Value   Pr > |t|    Alpha      Lower      Upper
+
+product   deet       18.1667     1.0737    2.5     16.92     0.0012     0.05    14.3300    22.0034
+product   sss        13.4167     1.0737    2.5     12.50     0.0026     0.05     9.5800    17.2534
+
+
+                             Differences of Least Squares Means
+ 
+                                      Standard
+Effect   product  _product  Estimate     Error    DF  t Value  Pr > |t|  Adjustment     Adj P
+
+product  deet     sss         4.7500    0.7217     2     6.58    0.0223  Tukey-Kramer  0.0223
+
+                        Differences of Least Squares Means
+ 
+                                                                   Adj         Adj
+Effect   product  _product   Alpha       Lower       Upper       Lower       Upper
+
+product  deet     sss         0.05      1.6448      7.8552      1.6448      7.8552

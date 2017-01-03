@@ -1,0 +1,39 @@
+procedure laglength y start end laglength
+TYPE SERIES y
+TYPE INTEGER start end *laglength
+
+option integer maxlag 1
+
+local integer v1 v2  bestlag i
+local real sbc sbcmin
+inq(series=y) v1>>start v2>>end
+
+lin(noprint) y v1+maxlag v2
+# constant
+compute sbcmin = %nobs*log(%rss) + (%nreg)*log(%nobs) , bestlag = 0
+
+do i = 1,maxlag
+	lin(noprint) y v1+maxlag v2
+	# constant y{1 to i}
+	compute sbc = %nobs*log(%rss) + (%nreg)*log(%nobs)
+	if sbc < sbcmin ; compute bestlag = i , sbcmin = sbc
+end do i
+if bestlag.EQ.0 ; dis 'DO NOT USE LAGS'
+if bestlag.GT.0
+lin y v1+bestlag v2 ; # constant y{1 to bestlag}
+
+if %defined(laglength) ; com laglength = bestlag
+messagebox(style=yesno,status=status) 'Do you want to run a unit root test?'
+if status.eq.1 ; @unit(lags=bestlag-1) y v1 v2
+
+end laglength
+
+
+
+
+
+
+
+
+
+

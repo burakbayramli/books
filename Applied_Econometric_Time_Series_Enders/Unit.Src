@@ -1,0 +1,29 @@
+Procedure Unit y start end corrs
+TYPE SERIES y *corrs
+TYPE INTEGER start end
+LOCAL SERIES dy resids xx time
+LOCAL INTEGER v1 v2
+OPTION SWITCH GRAPH 0
+OPTION INTEGER LAGS 1
+OPTION CHOICE DET 2 NONE INTERCEPT TREND
+INQUIRE(SERIES=y) v1>>start v2>>end
+set dy = y - y{1}
+set time = t
+
+If det.eq.1; lin(noprint) dy v1 v2 resids ; # y{1} dy{1 to lags}
+If det.eq.2 ; lin(noprint) dy v1 v2 resids ; # y{1} dy{1 to lags} constant
+If det.eq.3; lin(noprint) dy v1 v2 resids ; # y{1} dy{1 to lags} constant time
+
+dis '  '; dis 'The estimate of rho with ' lags ' lags = ' %beta(1)
+dis 'The t-statistic for the null hypothesis rho = 0 is ' %tstats(1)
+cor(noprint,number=24) resids v1 v2 xx
+if %defined(corrs) ; set corrs 1 25 = xx
+
+if graph==1 {
+spgraph(hfields=1,vfields=2,header='RESIDUAL ANALYSIS')
+gra(header='Time Path') 1 ; # resids * v2
+gra(max=1.0,min=-1.0,style=bar,number=0,nodates,header='Residual ACF') 1; # xx
+spgraph(done)
+}
+end unit
+

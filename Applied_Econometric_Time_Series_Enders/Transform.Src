@@ -1,0 +1,33 @@
+procedure transform y
+type series y
+
+menu 'Select the Transformation'
+choice 'Logarithmic'
+{
+sta(noprint,fractiles) y
+   if %minimum > 0. {
+     com a$ = 'L' + %label(y)
+     set %s(a$) = log(y)
+   }
+  if %minimum.le.0
+    mes(style=alert) "I CAN ONLY TAKE THE LOG OF POSITIVE NUMBERS"
+}
+
+choice 'First Difference'
+{
+com a$ = 'D' + %label(y)
+set %s(a$) = y - y{1}
+}
+
+choice 'Growth Rate'
+{
+com a$ = 'G' + %label(y)
+set %s(a$) = y/y{1} - 1
+}
+end menu
+
+graph(header='Time Path of ' + a$) 1 ; # %s(a$)
+
+end transform
+*********************
+

@@ -1,0 +1,2781 @@
+\movetooddpage
+
+\chapter{Performans, Ölçeklemek} \label{performance}
+
+\thischapterhas{
+  \item Yük testleri ve JMeter
+  \item Bir uygulamanýn týkanma noktalarýný bulmak
+  \item Performans iyileþtirmeleri
+  \item Ölçeklemek
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\versal{G}\textsc{üzel} iþleyen bir uygulamayý tanýmlamak için, o ``programýn
+hatasýz çalýþmasý'' artýk yeterli bir kýstas olmamaktadýr. Günümüzde doðru ama
+yavaþ çalýþan bir sistem kullanýcýlarýný soðutacaðý için, aynen yanlýþ çalýþan
+bir sistem gibi istenmeyen bir sonuç ürünüdür.
+
+Tarihsel olarak kurumsal programcýlýk (IT) dünyasýnda uzun süredir {\em
+birikmiþ} bir yazýlým ihtiyacý (application backlog) durumu mevcut idi. Bu
+durum, programcýlarýn acele yazdýklarý sistemlerini sadece doðruluk açýsýndan
+test ederek, performans konularýný sonraya býrakmalarýna sebebiyet
+vermiþtir. Fakat müþteri ile direk iletiþimde olan ve birebir satma amaçlý olan
+e-ticaret sistemlerinin yaygýnlaþmasý ile bir paradigma deðiþikliði meydana
+geldi. Artýk bir Web sistemi müþterisini yavaþ bir sistem ile bekletmek
+istemeyecekti, çünkü rakibi ``bir týklama mesafesi kadar'' yakýndaydý. Böylece
+günümüzdeki hem doðruluk hem performans amacý güden senteze gelmiþ
+oluyoruz. Yeni yaklaþýma göre performans analizi/iyileþtirmesi, sadece sonda
+yapýlan, ve gerektiði anda yemek tarifi gibi bir araya konan bazý ufak
+``numaralar'' toplamý olmamalýdýr. Performans konusu, aynen bakýmý rahat kod
+yazmak için yazýlým mühendisliði þemsiyesinin altýlnda oluþturulduðu gibi, bir
+yöntem, bir süreç ve düþünüþ þekli hâline gelmelidir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kavramlar}
+
+Bir sistemin performans durumu ve gereklilikleri hakkýnda konuþurken beþ çok
+basit ana kavramý kullanmak yeterlidir
+\cite[sf. 42]{perfbook}. Bunlar:
+
+\begin{itemize}
+   \item Yük (workload)
+   \item Cevap zamaný (response time)
+   \item Üretilen iþ (throughput)
+   \item Kaynak kullanýmý (resource utilization)
+   \item Kaynak servisleme zamaný (resource service times)
+\end{itemize}
+Hesap \textbf{kaynaklarýndan} (computing resources) oluþan bir bilgisayar
+sistemi, bir \textbf{yük} üzerinde çalýþmaya baþladýðý zaman dýþarýdan
+görülebilen ölçümler \textbf{cevap zamaný} ve \textbf{üretilen iþ} olacaktýr, ve
+bu ölçüler sistemin dýþa dönük performans ölçütleridir. Sistemin iç
+performansýný târif eden ölçümler \textbf{kaynak kullanýmý} ve \textbf{kaynak
+servis zamaný}, dýþarýdan görülen performansa bir teknik açýklama saðlarlar.
+
+\textbf{Cevap zamaný} en basit hâliyle, tek bir iþi yapmak için harcanan
+zamandýr. Her iþ tipinin deðiþik cevap zamanlarý olabilir. \textbf{Üretilen iþ}
+ise bir sistemin toplam, ya da iþlem {\em bölü} zaman (sayý/saniye -rate-)
+olarak ne kadar iþ yaptýðýnýn göstergesidir. Cevap zamaný ve yapýlan iþ
+ölçümleri bir sistem üzerindeki yük ile doðrudan baðlantýlýdýr. Belli bir
+kýrýlma noktasýndan sonra sistemimiz çok fazla yükü kaldýrmayýp, cevap zamaný ve
+üretilen iþ ölçümlerinde düþüþ yaþayabilir. Ya da, belli bir cevap zamanýný
+kaldýrmak için yazýlmýþ bir sistem, üzerindeki yük arttýkça üretilen iþ
+ölçümünde artýþ görüp, cevap zamanýnda hiç artýþ görmeyebilir (bu, performansý
+iyi olan bir sisteme örnektir). Yâni cevap zamaný ve üretilen iþ ölçümleri her
+zaman bir yük çerçevesi (context) içinde telâfuz edilmelidir.
+
+\textbf{Kaynaklar} arasýnda mikroiþlemci (CPU), sabit diskler (hard drive),
+bellek (memory) ve að (network) baðlantýsý sayýlabilir.
+
+\textbf{Mikroiþlemci} sistemimizin en hýzlý birimidir ve bir bilgisayarýn
+kalbidir. Her türlü veri alýsveriþi (I/O), program iþletme ve hesap yapma gibi
+hayati iþleri halleder. Bu þekilde bir hayati görevi olmasý sebebiyle,
+genellikle yavaþ iþleyen sistemlerde ilk suçlanan birim mikroiþlemci olur. Fakat
+bir final analize atlamadan önce, tüm faktörlere bakmamýz gerekir: Belki
+mikroiþlemci çok fazla ama ayný türden iþlemi ayný anda iþlemeye mecbur
+býrakýlmýþtýr, yâni mikroiþlemci zamaný için bir {\em yarýþ} sözkonusudur. Ya
+da, mikroiþlemci veri alýþveriþi ile de sorumlu olduðu için ve kurumsal
+sistemler genellikle IO baðýmlý (IO bound) olduklarý için, belki de mikroiþlemci
+bir IO aracýnýn boþalmasýný bekliyor ve genellikle boþ (idle) duruyor
+olabilir. Bu yüzden, mikroiþlemci temelli olduðunu sandýðýmýz bu problemi çözmek
+için yeni bir mikroiþlemci eklersek, sorunumuzu çözülmeyecektir. Bu sefer yeni
+mikroiþlemci de boþ beklemeye baþlayacaktýr.
+
+\textbf{Bellek} CPU'nun hatýrlamak istediði verileri, iþlemek istediði iþlemleri
+(instructions) tuttuðu bir depodur. Uçucu bellek (RAM) kalýcý bellekten (disk)
+her zaman daha hýzlýdýr fakat bellek, diðer tüm kaynaklar gibi, sýnýrlýdýr. Eðer
+uygulamamýz elde mevcut olandan fazla bellek istiyorsa, modern iþletim
+sistemleri disk sistemini bellek gibi kullanabilme, sayfalama (paging)
+yeteneðine sahiptir. Fakat uygulamamýzýn çok fazla sayfalama yapmaya baþlamasý
+da istenilen bir þey deðildir, çünkü çok hýzlý olduðunu bildiðimiz bellek için
+yazdýðýmýz kodlar, artýk diske giderek daha yavaþ bir ortamda çalýþmaya
+baþlamýþtýr. Her modern iþletim sistemi, yaptýðý sayfalama istatistiklerini
+paylaþma yeteneðine sahiptir. Bu istatistikleri kullanarak, eðer çok yüksek
+sayfalama görürsek, o zaman uçucu belleðin gereðinden fazla kullaným (utilized)
+gördüðünü anlayabiliriz. Çözüm ya bellek eklemek, ya bellek kullanýmýný
+azaltmaktýr (yükü yeni makinalara aktararak, ya da kodu deðiþtirerek).
+
+\textbf{Diskler}, kalýcý olmasýný istediðimiz iletiþimin (IO) hedefidir. Bir
+disk, manyetik {\em disklerden} oluþur (ismi de buradan gelir) ve program
+çökmesi, elektrik kesintisi gibi kazasal durumlarda bilgimizi koruyacak olan
+ortam olma görevini yapar. Kaybolmasýný istemediðimiz verilerin diskte
+tutulmasý, bu yüzden program doðruluðu açýsýndan büyük önem taþýr. Birden fazla
+diski birarada kullanmak istiyorsanýz, RAID adý verilen disk yöntemi
+ihtiyacýnýzý karþýlýyabilir. RAID, \textbf{R}edundant \textbf{A}rray of
+\textbf{I}nexpensive
+\textbf{D}isks (Gereðinden Fazla Alýnmýþ Ucuz Disk Kümesi) kýsaltmasýndan gelir,
+ve depolanmak istenen veriyi birden fazla parçaya bölerek (striping), bu
+parçalarý her ucuz disk üzerinde parça parça tutarak veriye eriþimi
+hýzlandýrmayý amaçlar. RAID bir önbellek (cache) ile kullanýrsa daha ideal bir
+ortam hâline gelir, çünkü önbelleksiz olarak kullanýmda ufak ve noktasal
+eriþimlerin (random access) sürekli tüm disklere giderek paralel iþlemenin
+avantajlarýný yoketmesi mümkündür. Bu sebeple RAID çözümünü aldýðýnýz firmanýn
+teknik altyapýsýný iyi tanýmanýz gerekmektedir.
+
+Büyük miktardaki veri transferleri doðal olarak birkaç diske daðýlacaðýndan, bu
+tür kullaným için RAID'in faydasý olacaktýr.
+
+\textbf{Að} birden fazla bilgisayarýn birbiri ile haberleþmesi için gereken
+altyapýdýr, ve Internet + servis tarafýnda bir küme mimarisi durumunda
+performansý etkileyecek önemli faktörlerden biridir. Að servisleme zamaný
+üzerinde, aðda kullanýlan iletiþim protokolünün (TCP/IP, UDP) büyük etkileri
+vardýr, bu sebeple mimari tasarýmýmýzda bilinmesi gereken önemli bir faktördür. 
+
+\section{Yaklaþým}
+
+Ýyi perform eden bir sistemin performans kriteri, her zaman müþteriye baðlý olan
+bir detaydýr. Bu yüzden projeye baþlamadan önce, sistem hakkýnda ``istenilen
+performans ölçülerinin'' müþteriden alýnmasý gerekecektir. Bu ölçülerin
+alýnmasýný aynen uygulamanýn özellik listesini aldýðýmýz ciddiyette almalýyýz
+çünkü aynen bir programýn doðruluðunu özellik listesinin ne olduðu belirlediði
+gibi, ne kadar hýzlý olduðunu da yine müþterinin belirttiði performans
+kriterleri belirleyecektir.
+
+Ýyi perform eden bir sistemin teknik gerçekleþtirimi için, düþünce þeklimizin
+iyi performans kavramý üzerine kurulmasýndan bahsettik. O zaman, böyle bir
+sistemi yazarken dikkat etmemiz gereken kurallarý ve aklýmýzda tutmamýz gereken
+prensipleri sýralayalým: Bu kurallar ve prensipler, daha ilk kodu yazdýðýmýz
+andan itibaren dikkat edilecek kurallardýr.
+
+\begin{itemize}
+   \item Veri tabanýna ne zaman gidersek, orada yapýlan iþlemi (transaction)
+     ufak tutmalýyýz.
+   \item Veri tabanlarý {\em kümeler} ile çalýsmayý severler. Örnek olarak 100
+   tane SQL \PVerb!UPDATE! yapan sorgular yerine, 100 satýrý tek bir SQL ile
+   güncelleyen bir sorgu veri tabanlarý tarafýndan daha çabuk iþletilir. 
+   \item Mimarimizdeki fiziksel katmanlar, gereðinden fazla
+   olmamalýdýr. Network'e her çýkýþýmýzda belli bir performans bedeli ödüyoruz.
+   \item Sýk eriþilen ve az deðiþen birimler, önbelleðe konmalýdýr (bir veri
+   nesnesi, veri tabaný baðlantýsý gibi). 
+   \item Kod bakýmý açýsýndan çok kullanýcýlý sistemler, tek bir makina için
+   yazýlýyormuþ gibi yazýlabilmelidir. Ölçekleme, uygulama servis paketinin
+   ayarlarýný deðiþtirmek suretiyle yapýlan, programlama dýþý bir iþlem
+   olmalýdýr. Ölçekleme zamaný gelince, ek bir makina (donaným) koyarak sistemin
+   iþlem gücünü arttýrabilmeliyiz. Bu durum, kaðýttan insan zinciri (Þekil
+   \ref{perf:paperchain}) yapmaya benzer.   
+\end{itemize}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/paper_chain.eps}
+  }
+}
+\caption{\label{perf:paperchain} Tek Makina Gibi Yaz, Otomatik Çoðalt}
+\end{figure}
+
+Tüm bunlara raðmen, eðer uygulamamýzýn yavaþ iþlediðini gözlemliyorsak, o zaman
+detaylý analiz yapma zamanýmýz gelmiþtir.
+
+\subsection{Analiz} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{perf:approach:analysis}
+
+Cevap zamaný ve üretilen iþ ölçüleri her zaman bir yük çerçevesinde anlamlý
+olduðu için, programýmýzýn performansýný analiz etmek için yapay bir yük
+yaratmalýyýz. Bu tür bir teste yük testi adý verilmektedir. Yük testi, tek ya da
+daha fazla makinanýn yüzlerce hattâ binlerce kullanýcýyý taklit (simüle) etmesi
+ile servis tarafýndaki kodlarýnýz üzerinde bir kullanýcý trafiði yaratmasý, ve
+bizim de bu reaksiyonlarý ve performans ölçütlerini toplamamýza verilen
+isimdir. Apache JMeter bu tür bir taklit yükü oluþturacak araçlardan biridir, bu
+ürünü \ref{perf:jmeter} bölümünde daha yakýndan tanýyacaðýz.
+
+Yük testine baþlamadan önce, aklýmýzda, projenin baþýnda aldýðýmýz ``beklenen
+performans ölçülerinin'' olmalýdýr. Çünkü yük testinin sonuçlarýný topladýktan
+sonra, iþimizin bitip bitmediðini belli edecek ölçüler bunlar olacaktýr. Bu
+beklenen ölçüler projenin baþýnda müþteri tarafýnda belirtilmiþ ölçüler
+olacaktýr. Meselâ, "sistemin xx kadar eþzamanlý aktif kullanýcýya hizmet
+verebilmesini istiyorum, ve her sayfanýn cevap zamaný (response time) yy saniye
+altýnda olmalý" gibi.
+
+Yük testi sýrasýnda aynen ``sonuç ortamýnda (production) kullanýlacaðý
+miktarda'' test verisi kullanmak çok önemlidir. Veri miktarý ve çeþidi her zaman
+gerçek sonuç ortamýný yansýtacak þekilde olmalýdýr. Ayný þekilde test {\em
+donaným} ortamý da, sonuç ortamýný mümkünse bire bir, deðilse çok yakýn bir
+þekilde yansýtmalýdýr.
+
+Artýk týkanma noktalarýný bulmaya baþlayabiliriz. Týkanma noktalarý,
+uygulamamýzýn bir yerinde {\em kaynaklar üzerinde} þunlardan birinin
+göstergesidir:
+
+\begin{itemize}
+   \item Kaynak kullaným fazlalýðý (high utilization)
+   \item Kaynaða eriþim yarýþý (fazlalýlýðý) sýrasýnda kaynaðýn boðulmasý
+\end{itemize}
+O zaman, uygulamamýz iþlerken ilk önce kaynaklarý takip edip, kullaným durumu ve
+bekleme zamanlarýný takip etmeliyiz. Her kaynaðýn kendine has bir takip aracý
+vardýr. CPU için \PVerb!vmstat!, disk için \PVerb!vmstat! ve \PVerb!iostat!
+gibi.
+
+Ýyi iþleyen bir sistemi (uygulama artý iþletim sistemi) analiz etmek için, þu
+þekilde bir irdeleme yapabiliriz: Sistem optimal sayýda kullanýcýnýn isteklerini
+optimal bir hýzda karþýlýyor iken, mikroiþlemci kullanýmý \%90 üzerinde
+olmalýdýr. Bu, iþlemcinin {\em meþgul olduðunu} gösterir ve bu iyiye bir
+iþarettir. Demek ki uygulamamýz, sistemin mümkün olan tüm gücünü kullanmaktadýr.
+
+Bu durumun tersi de olabilir: CPU kullanýmý \%100'de, fakat desteklenebilen
+kullanýcý sayýsý bekleneden az ise, demek ki uygulamamýzýn bazý bölümleri
+gereksiz bir þekilde CPU zamaný yemektedir. Hangi kod parçasýnýn bu zamaný
+yediðini anlamak için Profiler ve benzeri araçlarla daha detaylý analize devam
+etmeliyiz.
+
+Peki, ne kadar eþzamanlý kullanýcý/iþlem için ne kadar bellek kullanmak gerekir?
+Bunun cevabýný \textbf{Kurumsal Web'in Altýn Kanunu} veriyor. Þimdiye kadar
+kurduðumuz Kurumsal Web uygulamalarýnýn iþleyiþine ve kapasitesine bakarak
+geliþtirdiðimiz bu oran, þöyledir:
+
+\begin{quote}
+``1 Ghz hýzýndaki mikroiþlemci üzerinde, 1 GB JVM belleði ile çalýþan
+uygulamamýz, ayný anda 500 oturumu (session) idare edebilir''.
+\end{quote}
+              
+Bu ayarlarý yaptýysak ama sanal bellek (virtual memory) çok fazla kullanýlýyor
+ise, Java Sanal Makinasý için ayýrdýðýmýz bellek, iþletim sisteminin elinde
+olduðundan daha fazla bir deðere ayarlanmýþ olabilir; Bu yanlýþ ayarý telâfi
+etmek için iþletim sistemi sürekli sanal belleðe giderek, diskte ve diskten
+fazla okuma/yazmaya sebebiyet vermektedir. Bildiðimiz gibi iþletim sistemleri
+ellerindeki mevcut gerçek bellek kapasistesinden çok daha fazlasýný, disk'i
+sanal bir bellek gibi kullanarak yaratabilirler. Tabii bunun yan etkisi, daha
+yavaþ çalýþan bir uygulama olacaktýr, çünkü disk'e yazmak ve oradan okumak,
+gerçek bellekten okuyup yazmaktan daha yavaþtýr.
+
+Bir kurumsal uygulamanýn disk'e gidiþi her zaman veri tabaný üzerinden olur, bu
+sebeple veri tabanýnýn olduðu makinadaki kaynaklarý ayrý olarak takibe almanýz
+gerekebilir. Eðer bu makinada gereðinden fazla diskten okuma ve yazma var ise,
+veri tabanýnýn önbelleðini arttýrma gündeme gelebilir, ya da uygulamanýz
+tarafýndan veri tabanýna gönderilen SQL komutlarýnda azaltma ya da düzeltme
+yapýlmalýdýr.
+
+Uygulamamýzýn üzerinde çalýþtýðý makinalarý takip etmeden önce, bilmemiz gereken
+diðer bir bilgi, ayný sistemin {\em üzerinde yük yok iken} nasýl
+çalýþtýðýdýr. Çünkü, belki de suç uygulamada (ve uygulama servisinde) deðil,
+uygulamanýn üzerinde çalýþtýðý makinanýn ayarlarýndadýr. Bir iþletim sisteminin
+sýfýr yük altýnda nasýl çalýþtýðýný bilmiyorsak, yük altýnda nasýl çalýþtýðýna
+dair bir karþýlaþtýrma yapmamýz zaten zor olacaktýr, bu sebeple hiç yük yok iken
+sistemimizin nasýl çalýþtýðýný not etmemiz gerekmektedir.
+
+\section[Analiz Araçlarý][ANALÝZ ARAÇLARI]{Analiz Araçlarý}
+
+\subsection{JMeter} 
+\label{perf:jmeter}
+
+Yük testlerimiz için JMeter\footnote{\url{jakarta.apache.org/jmeter}} aracý
+kullanabiliriz. JMeter, bir Web uygulamasýnýn üzerinde deðiþik türden yükler
+oluþturmak için gerekli tüm özelliklere sahiptir.
+
+JMeter ile yük testi yapabilmek için, web uygulamamýzý JMeter'a {\em aynen bir
+kullanýcý kullanýyormuþ gibi} kullandýrtmamýz lâzýmdýr. Yâni JMeter,
+uygulamamýza baðlanýp, bir kullanýcý gibi sayfalarý yüklemeli, biraz veri
+girmeli, birþeyler silmeli, ve uygulamadan bazý listeler almalýdýr. Yâni JMeter,
+uygulamayý bir {\em sanal kullanýcý} gibi kullanmalýdýr.
+
+JMeter, web uygulamanýza sanal bir kullanýcý olarak gözükmek için, HTTP
+protokolunu kullanýr. Bir JMeter'a verilen {\em test planý}, hangi sayfanýn ne
+zaman, ve hangi bilgiyle çaðýrýldýðýný belirler. Bu bilgilerin ýþýðýnda test
+planýný iþleme koyduðunuz zaman, JMeter HTTP protokolu ile uygulanýza baðlanacak
+ve istediðiniz veriler ile sayfalarýnýzý gezmeye baþlayacaktýr. Eðer test
+planýmýzý dinamik veriler girebilecek þekilde ayarlamýþsak, eþzamanlý kullanýcý
+sayýsýný istediðimiz kadar arttýrabiliriz, ve böylece gerçek dünya þartlarýnda
+uygulamamýzýn nasýl davranacaðýný, nihai ortamda iþleme konmadan önce,
+görebilmiþ oluruz.
+
+Test planý hazýrlamak için, iki yöntemi takip edebilirsiniz. Ýlki, JMeter'a
+gerekli çaðrý komutlarýný elle eklemektir. Ýkincisi, {\em siz} web uygulamasýný
+kullanýrken yapýlan tüm hareketlerinizi JMeter'a {\em kaydettirmenizdir}. Ýkinci
+yöntem, doðal olarak daha basittir, ve takip edilmesini tavsiye ettiðimiz yöntem
+budur. JMeter'in kaydettiði test planýný kullanmadan önce biraz deðiþtirmeniz
+gerekecektir, fakat bu deðiþiklik çok büyük ölçekte olmayacaktýr, ve herþeyin
+elle yapýldýðý þartlardan çok daha basit olacaktýr.
+
+\subsubsection{JMeter Kullanýmý} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+JMeter programýný kurmak için JMeter sitesinden indireceðiniz zip dosyasýný
+herhangi bir dizinde açýn. JMeter ana dosyasýnýn \PVerb!JMETER_DIR! altýnda
+olduðunu farz edersek, progamý baþlatmak için \PVerb!JMETER_DIR/bin/jmeter.bat!
+ya da \PVerb!JMETER_DIR/bin/jmeterw.bat!  dosyasýna týklamamýz gerekiyor. JMeter
+ilk baþladýðýnda Þekil \ref{perf:jmeter:start} üzerindeki gibi bir ekran
+göreceksiniz.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_1.eps}
+  }
+}
+\caption{\label{perf:jmeter:start} JMeter Açýlýþ Ekraný}
+\end{figure}
+
+JMeter'in görsel kullanýmý ilk baþta deðiþik gelebilir. JMeter da bir görsel
+birimi sürükle/býrak (drag/drop) ile hareket ettirip yerine býraktýðýnýzda, size
+Þekil \ref{perf:jmeter:dragdrop} üzerinde gösterildiði gibi bir menü ile bir
+seçim sunulacaktýr. Gösterilen örnekte, Counter adlý JMeter görsel birimini
+\PVerb!HTTP Request Defaults! adlý birimin üzerine býrakmýþýz.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_dragdrop.eps}
+  }
+}
+\caption{\label{perf:jmeter:dragdrop} Sürükle ve Býrak}
+\end{figure}
+
+Sorulan sorulardan eðer \PVerb!Insert Before! seçilirse, sürüklediðiniz birim,
+üzerine býraktýðýnýz birim ile {\em ayný} seviyede, ama önce gelmek üzere
+pozisyonlanýr. \PVerb!Insert After! seçilirse, yine ayný seviyede, ama {\em sonra}
+gelecek þekilde pozisyonlanma yapýlýr. \PVerb!Add as Child! seçilir ise, bir
+birim öteki birimin çocuðu olacak þekilde düzenlenir. Her birimi her baþka birim
+altýna çocuk olarak eklemek legal deðildir; JMeter yeni birimi sadece çocuk
+kabul eden diðer birimlerin altýna atmanýza izin verecektir.
+
+\subsubsection{Senaryo Kaydetmek} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{perf:jmeter:record}
+
+Elle ya da üretilerek girilen test planlarý ``Test Plan'' altýna gitmesini
+isteriz. Test planýný üretebilmemiz için, {\em üzerinden} uygulamamýza
+baðlanacaðýmýz bir proxy servisi yaratmamýz gerekiyor. Proxy servisi, Web
+tarayýcýlarýmýzdan bildiðimiz bir kavramdýr. Internet'te bir siteye baðlanýrken,
+genelde o siteye direk olarak deðil, bir proxy üzerinden çýkarýz, yâni web
+isteðini bizim için bir proxy (yer tutucu) gerçekleþtirmiþ olur. Bir yerel aðýn
+Internet'e baðlantýsý genellikle bir proxy üzerinden yapýlýr, meselâ bir
+þirketin yerel aðýndan dýþarý çýkan herkes, ayný proxy'i kullanýr. Að güvenliði
+için bu þekilde bir kullanýma ihtiyaç vardýr \cite[sf. 85]{tcpip}.
+
+JMeter da, aynen yerel að için hazýrlanan bir proxy gibi, bir proxy
+baþlatabilir. Bunu yapma amacý, o proxy üzerinden web uygulamasý test edilirken,
+yapýlan tüm hareketleri, GET, POST iþlemlerini gözlemleyebileceði bir geçiþ
+noktasýna ihtiyacýnýn olmasýdýr. Yâni birazdan hazýrlamasýný öðreneceðimiz
+JMeter Proxy Server, biz testimizi yaparken tüm web isteklerinin ve cevaplarýnýn
+üzerinden yönlenlendirileceði bir geçiþ noktasý olacak.
+
+Proxy Server eklemek için, Workbench üzerinden sað týklama yaparak menüden
+\PVerb!Add | Non-Test Elements | HTTP Proxy Server! seçeneðini seçin.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_proxy.eps}
+  }
+}
+\caption{JMeter Ýçin Proxy Server Yaratmak}
+\end{figure}
+
+Proxy'nin ayarlarýný deðiþtirmek için, eklenen HTTP Proxy Server biriminin
+üzerinde týklayarak, ayarlarýný yapabiliriz. Meselâ Proxy Server'in hangi port
+üzerinden servis vereceðini tanýmlamak istiyorsak, o port numarasýný
+\PVerb!Port!  kutusundan girmeliyiz. Genelde, yerel bir JBoss'ta çalýþan
+uygulamanýn port numarasý \PVerb!8080! olacaðý için, Proxy Server için verilen
+olaðan deðeri \PVerb!8080!'i deðiþtirmemiz gerekiyor. Bu deðer için \PVerb!8090!
+kullanalým. Þekil \ref{perf:jmeter:proxyconf} üzerinde bu ayarlarý görebiliriz.
+
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_proxy_2.eps}
+  }
+}
+\caption{\label{perf:jmeter:proxyconf} Proxy Ayarlarý}
+\end{figure}
+
+Deðiþecek diðer ayar, \PVerb!Target Controller! için ``Use Recording
+Controller'' ve \PVerb!Grouping! altýnda ``Store 1st sample of each group only''
+seçenekleridir. Bu seçeneklerden \PVerb!Target Controller!, kaydedilen kullanýcý
+iþlemlerinin ``nereye kaydedileceðini'' belirler. Biz bu kaydedilme iþleminin
+\PVerb!Test Plan! altýnda bir dinleyici tarafýndan dinlenip kaydedilmesini
+istiyoruz. Böylece test planýmýz, dinleme ve kaydetme bittikten sonra bizim için
+iþletilmeye hazýr bir test planýný ayný JMeter penceresi içinde bekletiyor
+olacaktýr.
+
+Önce test planýnýn kullanýma hazýr bir hâle getirmemiz gerekiyor. Ayarlarý öyle
+yapalým ki, test plan üretimi bittikten sonra, üzerinde ufak deðiþikliklerden
+sonra ``Ýþlet'' komutunu verebileceðimiz bir yapý hazýr olsun. Bunun için
+öncelikle eklememiz gereken, \PVerb!Thread Group! birimidir. Bu birim, yük
+testlerinin kaç Thread ve kaç kere iþletileceðini kontrol eden bir
+birimdir. \PVerb!Thread Group!  eklemek için, \PVerb!Test Plan!  üzerinden sað
+týklama ile \PVerb!Add | Thread Group! seçimini yapýn.
+
+Test planýnýn hangi makinaya ve porta baðlanacaðýný kontrol edebilmek için,
+\PVerb!Http Request Defaults! adýnda ``her sayfa baðlantýsý için ayný'' olacak
+olaðan deðerleri belirleyen bir birim eklemeliyiz. Bu eklemeyi, biraz önce
+eklediðimiz \PVerb!Thread Group! üzerinden \PVerb!Add | Config Element | HTTP
+Request Defaults! seçimi ile yapabiliriz. Ekleme bittikten sonra JMeter ekraný
+Þekil \ref{perf:jmeter:httpdefaults} gibi gözükecektir.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_httpdefaults.eps}
+  }
+}
+\caption{\label{perf:jmeter:httpdefaults} HTTP Request Defaults Ayarlarý}
+\end{figure}
+
+\PVerb!HTTP Request Defaults! deðerleri þimdilik \PVerb!localhost!, \PVerb!8080!
+ve \PVerb!http! olabilir. Kullanýcýyý kayýtlamayý \PVerb!localhost:8080!
+üzerindeki bir uygulama üzerinden yapacaðýmýz için, testi geri çalarken (replay)
+ayný makina ve port deðerini kullandýk. Eðer kaydedilmiþ testleri baþka bir
+makina, port'a doðru yönlendirmek istersek, bunun için test edilecek makinayý
+deðiþtirmek için \PVerb!HTTP Request Defaults! üzerinden çok basit bir iþlem
+olacaktýr. Zaten klasik JMeter kullanma kalýbý budur: Yerel bir JBoss üzerinde
+test hareketleri kaydedilir, daha sonra, {\em daha güçlü} bir test makinasý
+üzerinde ayný testler geri çalýnýr.
+
+Þimdi kayýt edici birimi ekleyelim: \PVerb!Thread Group! altýnda \PVerb!Add |
+Logic Controller | Recording Controller! ile bir kayýt edici eklemiþ
+oluruz. Kayýt edici için hiçbir ayar yapmamýz gerekmiyor. JMeter için tek önemli
+olan kayýt edicinin nerede olduðudur çünkü kayýt edilecek sayfa istekleri o
+seviyeye yazýlacaktýr.
+
+Kayýt etmeye baþlamadan önce yapmamýz gereken son iþlem, Internet tarayýcýmýzýn
+üzerinden geçiþ yapacaðý Proxy Server bilgisini vermektir. Bu Proxy Server,
+JMeter'da tanýmladýðýmýz Proxy Server olacak. Mozilla Firefox üzerinde proxy
+deðiþtirmek için \PVerb!Tools | Options | Connection Settings!  ekranýna gidin,
+ve \PVerb!HTTP Proxy! deðeri için \PVerb!localhost! ve \PVerb!8090!  girin. Bu
+deðerler, biraz önce JMeter Proxy Server için tanýmladýðýmýz deðerlerin
+aynýsýdýr. Ve dikkat edin ki \PVerb!No Proxy For! kutusunda \PVerb!localhost!
+olmasýn. Internet Explorer için ise, \PVerb!Tools | Internet Options |
+Connections | LAN Settings! altýndaki \PVerb!Proxy Server! ekranýnda ``Use a
+proxy server'' kutusunu seçin ve, \PVerb!Address! ve \PVerb!Port! kutularýna
+gerekli deðerleri girin. Þekil \ref{perf:jmeter:mozilla} üzerinde Mozilla proxy
+ayarlarýný görüyoruz. 
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/jmeter_proxy_mozilla.eps}
+  }
+}
+\caption{\label{perf:jmeter:mozilla} Mozilla Firefox için Proxy Ayarlarý}
+\end{figure}
+
+Güzel. Artýk kaydetmeye hazýrýz. Þimdi kayýt için þunlarý yapalým:
+
+\begin{itemize}
+   \item Web uygulamamýzý baþlatalým
+   \item JMeter'da tanýmladýðýmýz \PVerb!HTTP Proxy Server! ekranýndaki
+   \PVerb!Start! düðmesine basarak, proxy server'ý baþlatalým.
+   \item Tarayýcýmýzý \PVerb!localhost:8080!'a yönelterek, uygulamýmýzý test
+   etmeye baþlayalým.
+\end{itemize}
+
+Test uygulamasý olarak örnek kodlar içindeki \PVerb!StrutsHibAdv! projesini
+kullandýk. Bu uygulamanýn tam adresi
+\PVerb!http://localhost:8080/kitapdemo/main.do! adresidir. Bu adrese ilk
+gittiðimiz zaman, ilk ekran yüklemesi ile arka planda birçok iþlemin yapýldýðýný
+göreceksiniz. Web isteði, tarayýcý proxy server'ý üzerinden Web uygulamamýza
+gidecek ve gözlemi yapan proxy server JMeter olduðu için, yaptýðýmýz istek
+JMeter tarafýndan yakalanacaktýr. Web isteði, JBoss üzerindeki uygulamaya
+yönlendirilir, ama ondan önce JMeter bu isteðin ne olduðunu \PVerb!Test Plan!
+altýnda kaydedecektir (çünkü \PVerb!Recording Controller!'ý orada
+tanýmladýk). Web isteði iþini bitirip geri gelir gelmez, \PVerb!Thread Group |
+Recording Controller! altýnda yeni birimlerin {\em otomatik olarak} eklendiðini
+göreceksiniz. Þekil \ref{perf:jmeter:recorded} üzerinde kaydedilen iþlemleri
+görüyoruz. Bu iþlemler, þu web isteklerinden üretilmiþtir:
+
+\begin{itemize}
+   \item Ana ekrana git
+   \item Yeni bir araba ekle (araba \#1)
+   \item Bir yeni araba daha ekle (araba \#2)
+   \item Araba \#1'i sil
+   \item Araba \#2'yi yeni bilgilerle güncelle
+   \item Garage listesi al
+   \item Garage \#2 üzerine týklayarak altýndaki arabalara bak
+   \item Tüm araba listesini ``Liste'' seçeneðine týklayarak göster
+\end{itemize}
+
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_recorded.eps}
+  }
+}
+\caption{\label{perf:jmeter:recorded} Kaydedilen Ýþlemler}
+\end{figure}
+
+Bir senaryoyu kaydettikten sonra onu \PVerb!File | Save Test Plan as! menü
+seçeneði ile disk'e yazabilirsiniz.
+
+\subsubsection{Kaydedilen Testleri Ýþletmek}  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Kayýt edilen web isteklerinin detaylarýný, o isteðin üzerine týklayarak
+görebilirsiniz. Meselâ \PVerb!/kitapdemo/add-car.do! isteðine týklarsak, bu
+istek içinde hangi parametrelerin gönderilmiþ olduðu saðdaki detay ekranýnda
+listenecektir. \PVerb!add-car.do! için \PVerb!Send Parameters With the Request!
+baþlýðýnýn altýnda, \PVerb!licensePlate!, \PVerb!available! ve \PVerb!size!
+gibi, bir araba yaratmak için gerekli parametrelerin FORM içinde gönderilmiþ
+olduðunu görüyoruz. Herþey düzgün gözüküyor.
+
+\begin{quote}
+  \textbf{Not}: Bir tek detay haricinde her þey düzgün; Kayýt iþlemindeki tek
+  eksik, \PVerb!/kitapdemo/update-car.do! içindeki \PVerb!version! bilgisinin
+  kayýt edilmemesidir. Bu bilgiyi, o isteðin detayýna girip, \PVerb!Add!
+  düðmesine týklayarak elle ekleyebilirsiniz. \PVerb!Version! deðeri için
+  \PVerb!0!  deðerini girin (version konusunun detaylarý için
+  \ref{web:patterns:update} bölümüne bakabilirsiniz).
+\end{quote}
+
+Kayýt iþlemi tamamlandýðýna göre, senaryomuzu kurumsal uygulamamýz üzerinde
+iþletebiliriz. Veri tabanýndaki tüm \PVerb!car! satýrlarýný temizledikten sonra
+(yoksa ayný \PVerb!licensePlate! kimlikli eklenen ikinci \PVerb!car! problem
+çýkartýrdý) test senaryosunu JMeter ana menüsü \PVerb!Run | Start! ile
+iþletelim.
+
+Senaryo, \PVerb!Thread Group! içinde tanýmlanan iþletme koþullarýna göre
+iþletilecektir. Bu koþullar tek bir thread'in sadece bir kez iþletilmesini
+öngörüyor. Bu ayarlar, \PVerb!Thread Group! detay ekranýnda gözükebilir (Þekil
+\ref{perf:jmeter:threadgroup}).
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_threadgroup.eps}
+  }
+}
+\caption{\label{perf:jmeter:threadgroup} Thread Group Detayý}
+\end{figure}
+
+\PVerb!Thread Group! ekranýndaki seçenekleri daha detaylý tarif etmemiz
+gerekirse:
+
+\begin{itemize}
+   \item \textbf{Number of Threads}: Yük testinin eþzamanlý kaç thread
+   ile iþletilmesi gerektiðini kontrol eder
+   \item \textbf{Ramp-up Period}: \PVerb!Number of Threads! seçeneðinde
+   belirtilen kadar thread'in, ne kadar süre içinde baþlatýlmasý gerektiðini
+   buradan ayarlayabilirsiniz. Meselâ eðer thread sayýsý 10 ve \PVerb!Ramp-Up
+   Period! 100 ise, 100 tane thread, 10'ar saniye aralýklarla baþlatýlacaktýr.
+
+   Eklemek gerekir ki biz yük test senaryolarýmýzda bu seçeneði pek
+   kullanmýyoruz. Bunun sebebi, eþzamanlý {\em aktif} sanal kullanýcý sayýsýnýn
+   sürekli belli bir sayýda tutacak türden testlere ihtiyaç duymamýzdýr. Bu
+   bilinen sayý kadar bir yük oluþturulmasý, uygulamamýzýn eþzamanlý kaç tane
+   kullanýcýya dayanabileceði hakkýnda bize bir fikir vermektedir.
+
+   \item \textbf{Loop Count}: \PVerb!Number of Threads!'de belirtilen kadar
+   thread'in kaç kere arka arkaya iþletileceði buradan ayarlýyoruz. Meselâ 10
+   thread'e \PVerb!Loop Count! 5 verdiysek, uygulamamýz üzerinde toplam 50
+   thread iþlemiþ olacaktýr (tabii herhangi bir anda, uygulama üzerinde eþzamanlý
+   sadece 10 thread olacaktýr).
+\end{itemize}
+
+
+\subsubsection{Deðiþken (Dinamik) Test Deðerleri} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+Test planýmýzý bir kere iþlettiðimize göre, ayný planý, eþzamanlý birçok
+kullanýcý (thread) tarafýndan ve üstüste iþletmeyi düþünebiliriz. Fakat bunun
+için \PVerb!Thread Group! altýndaki muhtelif alanlarý deðiþtirip tekrar
+iþleterek doðru sonuç alacaðýmýzý düþünüyorsak, yanýlýrýz. Eðer senaryoyu bu
+þekilde iþletirsek, Hibernate ve veri tabaný tarafýndan hatalar geldiðini
+göreceðiz.
+
+Bu hatalarýn sebebi, birden fazla \PVerb!Car! nesnesinin ayný kimlik ile birkaç
+kere eklenmeye çalýþýlýyor olmasýdýr. Bu da, test senaryosunun statik yapýsý
+gözönüne alýnýrsa, çok normâldir. Test senaryomuz, test içinde gömülü (hard
+coded) bir \PVerb!licensePlate! verisini kullanarak yazýldý. Eðer ayný testi
+birkaç thread'den iþletirsek, ayný \PVerb!licensePlate!'li arabalar, birkaç kez
+eklenmeye çalýþýlacaktýr, ve bu da \PVerb!license_plate! kolonu tekil olmasý
+gereken \PVerb!car! tablosu için hatalý bir durumdur!
+
+O zaman, eþzamanlý birçok kullanýcýyý ayný test senaryosu ile kullanmak
+istiyorsak, senaryomuza dinamik bir \PVerb!licensePlate! kullandýrabilmemiz
+gerekiyor. Öyle ki, senaryoyu iþleten her thread, otomatik olarak yeni bir
+\PVerb!licensePlate! kullanýyor olsun.
+
+\subsubsection{Counter}
+
+Senaryomuza bu þekilde bir dinamikliði JMeter programýnýn Counter tekniðini
+kullanarak ekleyebiliriz. Bir Counter, birim olarak eklendiði \PVerb!Thread
+Group! altýda, her deðiþik thread'in her döngüsünde yeni artacak þekilde
+tanýmlanabilen bir JMeter birimidir. Bu birimi, \PVerb!Recording Controller!
+üzerinden \PVerb!Add | Pre Processors | Counter! seçeneði ile ekleyebiliriz. 
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_counter.eps}
+  }
+}
+\caption{Counter}
+\end{figure}
+
+Counter'ýn hangi sayýdan baþlayýp kaçar kaçar artacaðýný ayarlamak için, Counter
+üzerinde týklayarak detaylarýna girebiliriz. Örnek için bizim girdiðimiz
+deðerler, Þekil \ref{perf:jmeter:counter:detail} üzerinde gösterilmiþtir.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_counter_detail.eps}
+  }
+}
+\caption{\label{perf:jmeter:counter:detail} Counter ile Artan Plaka Deðiþkeni}
+\end{figure}
+
+Bu ayarlara göre Counter, 1 deðerinden baþlayarak birer birer artacak, ve 10000
+üst deðerine kadar böyle artacaktýr.
+
+Artýk elimizde dinamik, deðiþken bir \PVerb!licensePlate! deðiþkeni olduðuna
+göre, bu deðiþkeni gereken web istekleri içinde kullanabiliriz. Meselâ, elimizde
+iki tane \PVerb!add-car.do! isteði var, bir istek için
+\PVerb!\${licensePlateCounter}-1!, öteki için \PVerb!\${licensePlateCounter}-2!
+tanýmýný kullanýrsak, bu istekleri arka arkaya iþletebilmiþ olacaðýz
+(\PVerb!licensePlateCounter! dinamik bir deðiþken olmasýna raðmen, bir tur
+bitmeden deðiþmez, bu sebeple ayný tur içinde iki farklý \PVerb!Car! için ayný
+deðiþkeni kullanmak, yine bir hataya sebep olurdu. O yüzden ayný tur içinde
+\PVerb!licensePlateCounter!'ý her araba için ufak bir ek ile
+deðiþtiriyoruz).
+
+Dinamik \PVerb!licensePlate! kullanan diðer yerler þunlardýr (ve bunlarýn
+hepsini \PVerb!licensePlateCounter! kullanacak þekilde deðiþtirmemiz gerekiyor).
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_addcar_licenseplatecounter.eps}
+  }
+}
+\caption{Dinamik Plaka Deðeri ile add-car.do}
+\end{figure}
+
+\begin{itemize}
+  
+\item Test silme iþlemi için biraz önce eklenen \PVerb!licensePlateCounter!
+  deðiþkenlerinden birini seçip, silme detayýna girip FORM içinde
+  gönderilen parametrelerden \PVerb!licensePlate! için bu deðiþkeni (meselâ
+  \PVerb!\${licensePlateCounter}-1!) girebiliriz. Böylece eklenen arabalardan
+  biri silinmiþ olacaktýr.
+  
+\item \PVerb!edit-car.do!: Yükleme testi içindeki \PVerb!licensePlate!'i
+  deðiþtirin (silinmemiþ olan \PVerb!Car! için)
+  
+\item \PVerb!update-car.do!: Biraz önce yüklenen \PVerb!Car!'ýn güncellenmesi
+  için, \PVerb!licensePlate!'i deðiþtirin. Ayrýca, \PVerb!description!
+  öðesinin, yine \PVerb!licensePlateCounter!'ý kullanarak, dinamik bir deðer
+  göndermesini saðlayýn. Bunun sebebi, eðer bir nesne üzerinde hiçbir deðiþiklik
+  olmazsa, Hibernate'in bu durumu anlayýp (dirty check), veri tabanýnda
+  \PVerb!UPDATE!  yapmayacak olmasýdýr (Hibernate ne kadar akýllý deðil
+  mi?). Biz testimizde bir veri tabaný güncellemesi olmasýný istediðimiz için,
+  herhangi bir deðerin ``deðiþmesini'' zorlamak istiyoruz. Bu yüzden
+  \PVerb!description! öðesi için ``description changed for
+  \PVerb!\${licensePlateCounter}!'' gibi bir ibare kullanabilirsiniz.
+
+Bu deðiþikliklerden sonra, test senaryomuzu artýk birden fazla thread ve birden
+fazla {\em kere} iþletmemiz mümkün olacaktýr. Tam bir yük testi! 
+   
+\end{itemize}
+
+\subsubsection{Randomizer}
+
+\PVerb!Counter! dinamik deðerleri, her JMeter senaryosunu iþlettiðimizde, bizim
+tanýmladýðýmýz baþlangýç deðerinden baþlar. Eðer baþlangýç deðeri olarak 1
+kullandýysak, senaryomuzu her iþlettiðimizde \PVerb!\${licensePlateCounter}!
+deðeri de 1 deðerinden baþlayacaktýr. Fakat yük testlerimize, bizim senaryomuza
+özel bir þarttan dolayý, her baþlangýçta ayný olan bir sayaç deðeri yerine,
+rasgele (random) olan deðerler gerekebilir.
+
+Bu tür durumlarda, \PVerb!Randomizer!  adlý \PVerb!Pre-Processor! birimini
+kullanabiliriz\footnote{Randomizer,tarafýmýzdan geliþtirilmiþ bir JMeter
+birimidir. Bu özelliði JMeter'a eklemek için, kitap örnek programlarý dizini
+altýndaki randomizer.patch yamasýný JMeter sürümü üzerinde uygulamanýz
+gerekmektedir. Yama uygulamasý için \ref{install:patch} bölümüne bakýnýz.}.
+
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_randomizer.eps}
+  }
+}
+\caption{\label{perf:jmeter:randomizer} Randomizer}
+\end{figure}
+
+\PVerb!Randomizer! birimine, \PVerb!Add | Pre-Processors | Randomizer!
+menüsünden eriþilebilir. \PVerb!Randomizer! eklendikten sonra, ayný
+\PVerb!Counter! örneðinde olduðu gibi, tanýmlanan bir deðiþken üzerinden rasgele
+sayýlara eriþilebilecektir. Þekil \ref{perf:jmeter:randomizer} üzerindeki örnek
+bir kullanýmda rasgele deðerlerin, \PVerb!\${randomVar}! adlý bir deðiþkene
+atanmasý belirtilmiþtir. Bu deðiþken, artýk herhangi bir HTTP istek biriminde
+rasgele sayý olarak kullanýlabilecektir.
+
+\subsubsection{Veri Hazýrlýk Ýþlemleri} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+Test senaryomuzu iþletmeden önce, her seferinde, veri tabanýný elle temizlemek
+gerekiyor. Bu çok külfetli bir iþlemdir (Kural \#7). Evet, Counter kullanýmý ile
+her iþleyiþ {\em içinde} deðerler deðiþiyor, ya da Randomizer kullanýmý ile
+iþleyiþten iþleyiþe bile deðiþik deðerler almamýz mümkün, fakat senaryo sonunda
+her \PVerb!Car!'ý silen bir web isteðimiz olmadýðý için, veri tabanýnda bazý
+\PVerb!car! satýrlarý artýk kalmýþ olacaktýr. Eðer her senaryonun temiz bir veri
+tabaný ile baþlamasýný istiyorsak, ve eðer silme iþlemini elle yapmak
+istemiyorsak, bu iþi JMeter'a yaptýrabiliriz. JMeter'ýn programlama birimlerinin
+arasýnda, bir JDBC sorgu iþletme birimi de vardýr. Bu birime verilen tanýdýk,
+bildik JDBC baðlantý ayarlarý üzerinden iþletilecek bir sorgu sayesinde her test
+senaryosunun baþýnda \PVerb!truncate table car!  ile tabanýn temizlenmesini
+saðlayabiliriz.
+
+JDBC birimini yeni bir \PVerb!Thread Group! altýna koymamýz gerekiyor, çünkü
+senaryomuzu iþleten esas \PVerb!Thread Group!'u, eþzamanlý ve birden fazla
+iþleyebilecek þekilde hazýrlanmýþ bir gurup idi. Her thread için veri tabaný
+temizliði yapýlmasýný istemiyoruz, temizliðin sadece bir kez, ve test baþýnda
+yapýlmasýný istiyoruz. O zaman baþa yeni bir \PVerb!Thread Group!
+ekleyebiliriz, ve ``thread sayýsý'' ve ``kaç kere'' parametrelerini 1 deðerinde
+tutarýz.
+
+Bu yeni gurup üzerinde \PVerb!Add | Config Element | JDBC Database Login Defaults!
+adýnda yeni bir birim ekleyelim. Veri taban baðlantý bilgilerini buradan
+gireceðiz. Örnek bir ekraný Þekil \ref{perf:jmeter:jdbcdefaults} üzerinde
+görebilirsiniz. 
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_jdbc_defaults.eps}
+  }
+}
+\caption{\label{perf:jmeter:jdbcdefaults} JDBC Baðlantý Ayarlarý}
+\end{figure}
+
+Baðlantý ayarlarý tamamlandýktan sonra, iþletmek istediðimiz sorguyu
+girebiliriz. Bunun için ikinci bir JDBC birimi olan \PVerb!JDBC Request!
+birimini kullanacaðýz. Ayný \PVerb!Thread Group! altýnda \PVerb!Add | Sampler |
+JDBC Request! ile bu birimi ekleyebiliriz. Temizlik sorgumuzu iþletmek için de,
+birimin detaylarýna girip \PVerb!SQL Query String! parametresi için
+\PVerb!truncate table car! deðerini girebiliriz. JDBC ayarlarýnýn bitmiþ hâlini
+Þekil \ref{perf:jmeter:jdbcquery} üzerinde görebilirsiniz.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_jdbc_query.eps}
+  }
+}
+\caption{\label{perf:jmeter:jdbcquery} JDBC Sorgu Tanýmý}
+\end{figure}
+
+\begin{quote}
+  \textbf{Not}: JMeter'in JDBC ile veri tabanýnýza eriþebilmesi için, gerekli
+  JDBC sürücü jar dosyasýna ihtiyacý vardýr. Bu dosyayý geliþtirme dizininden
+  alýp (meselâ MySQL için \PVerb!mysql-connector-java-3.0.16-ga-bin.jar!
+  dosyasý) direk \PVerb!JMETER_DIR/lib! altýna atabilirsiniz.
+\end{quote}
+
+Tüm bunlar yapýldýktan sonra, artýk \PVerb!Run | Start! ile senaryomuzu
+istediðimiz kadar thread ile ve istediðimiz kere üst üste çalýþtýrmamýz mümkün
+olacaktýr.
+
+\subsubsection{Komut Satýrýndan Çalýþtýrmak}
+
+Eðer JMeter programýný görsel arayüzü yerine komut satýrýndan çalýþtýrmak
+istiyorsanýz, önceden disk'e kaydettiðiniz senaryoyu \PVerb!File | Open! ile
+tekrar yüklemek yerine, bir senaryoyu kaydedildiði þekliyle direk komut
+satýrýndan \PVerb!jmeter! komutunu \PVerb!-n! seçeneði üzerinden kullanarak
+iþletebilirsiniz. \PVerb!JMETER/bin! dizini \PVerb!PATH! içinde ise þu komutu
+kullanmak yeterlidir;
+
+\begin{lstlisting}[language=Java, frame=none]
+jmeter -n -t myscenario.jmx
+\end{lstlisting}
+
+\subsubsection{Performans Verisini Görmek} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Yük testinin iþlerken ne kadar zaman aldýðýný görmek için, görsel bir rapor
+birimi de eklemek mümkündür. \PVerb!Thread Group! üzerinden \PVerb!Add |
+Listener | Aggregate Report! seçilirse, raporlama birimi eklenmiþ
+olacaktýr. Þekil \ref{perf:jmeter:aggregate} üzerinde görülen sonuçlar, yerel
+bir makina üzerinde 10 eþzamanlý thread'in 5 kere arka arkaya iþletilmesi
+sonucunda elde edilmiþtir. Test makinasýnýn yerel olmasý, loglama seviyesinin
+DEBUG olmasý ve \PVerb!StrutsHibAdv! projesinin üzerinde optimizasyon yapýlmamýþ
+(þimdilik) bir proje olmasý sonucunda, 1 saniyede 2.6 iþlem
+gerçekleþtirilebilmiþtir.
+
+\PVerb!StrutsHibAdv! projesini nasýl hýzlandýracaðýmýzý \ref{perf:opt} bölümünde
+göreceðiz.
+
+\begin{figure}[!thp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmeter_aggregate.eps}
+  }
+}
+\caption{\label{perf:jmeter:aggregate} Yük Testi Sonuçlarýný Görmek}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection[Unix Üzerinde Ýstatistik Toplamak][UNIX ÜZERÝNDE ÝSTATÝSTÝK TOPLAMAK]{Unix Üzerinde Ýstatistik Toplamak}
+
+Uygulamamýzýn, üzerinde çalýþtýðý iþletim sistemini ne kadar verimli
+kullandýðýný anlamamýz için, iþletim sistemi komut satýrýnda bazý programlar
+kullanarak sistemden istatistikler toplayabiliriz. Bu istatistikler,
+mikroiþlemci, diskler, iþletim sistemi önbelleði ve virtual memory (sanal
+bellek) birimleri hakkýnda bilgiler verecektir. Bu bilgileri kullanarak iþletim
+sisteminin ne kadar iyi kullanýldýðýný (utilized) anlayabiliriz.
+
+Bu bölümün geri kalanýnda, Unix iþletim sisteminden performans bilgisi
+toplamanýn yöntemlerini tanýyacaðýz. Linux iþletim sistemi, süreçlerinizin
+(process) performansýný takip edebilmeniz için çok yararlý araçlar saðlar.
+
+\subsubsection{Komutlar} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Altta gösterilen komutlar, izledikleri süreçlere ve iþletim sistemin bütününe
+baþlangýçta ufak bir ek yük getirirler, o yüzden canlý bir sistem üzerinde,
+özellikle tekrar eden bir þekilde kullanýlmalarý uygun olmayabilir. Tavsiyemiz,
+bu araçlarý yük testi yaptýðýnýz makinada kullamanýzdýr. 
+
+\subsubsection{Süreçler (Processes)} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+Her sürecin CPU kullaným yüzdesine (utilization) göre ps çýktýsý almak (en cok
+kullanýma sahip olan en altta olmak üzere) için kullanýlan \PVerb!ps! komutu
+þöyledir:
+
+\begin{lstlisting}[language=Java, frame=none]
+ps -eo pid,pcpu,args | sort +1n
+\end{lstlisting}
+Bu komut bizi ayrý ayrý \PVerb!ps! ve \PVerb!top! kullanmaktan
+kurtaracaktýr. Bildiðimiz gibi \PVerb!top!, her süreç no'sunun (PID) ne kadar
+CPU zamaný yediðini gösterir. Fakat PID, bize bir sürec ismi vermez, bu sebeple
+testçiler ayrý bir \PVerb!ps! ve \PVerb!grep! komutu kullanarak PID'den script
+ismi almak zorunda kalýyorlardý. Gösterdiðimiz \PVerb!ps! sayesinde iki komut
+yerine bir tane yeterli olmaktadýr. 
+
+\subsubsection{vmstat} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\label{perf:stats:vmstat}
+
+
+Ýþletim sistemin CPU kullanýmý, sanal belleði, disk istatistikleri ve boþ gerçek
+hafýza gibi birçok deðeri \PVerb!vmstat! programýndan öðrenebilirsiniz. Eðer
+\PVerb!vmstat <saniye>! gibi bir komut kullanýrsanýz, \PVerb!vmstat! bir sonsuz
+döngü içinde verdiðiniz her saniye deðeri kadar bekleyecek, ve sonra uyanarak
+tüm istatistikleri tekrar toplayacaktýr. Altta örnek bir \PVerb!vmstat! çýktýsý
+görüyoruz. 
+
+\begin{lstlisting}[language=Java, frame=none]
+procs --------memory-------- ---swap-- -----io---- --system-- ----cpu----
+ r  b  swpd   free   buff  cache   si   so    bi    bo	  in   cs us sy id wa
+ 2  0     0 760628  44344 155940    0    0    14   122	 291 3063 49  2 49  0
+\end{lstlisting}
+
+
+\textbf{CPU} altýnda listelenen, \PVerb!us!, \PVerb!sy!, \PVerb!id! kalemleri, sýrasýyla
+kullanýcý, sistem ve boþ zaman (idle time) için harcanan zaman yüzdesini
+gösterir. Bir Java uygulamasýnýn kullandýðý CPU yüzdesi, \PVerb!us! altýnda
+çýkacaktýr. Ýþletim sisteminin çekirdek (kernel) içinde harcadýðý zaman
+\PVerb!sy! altýnda çýkar, ve CPU'nun yüzde kaç zamanda boþ durduðu ise
+\PVerb!id! altýnda gösterilir.
+
+\textbf{IO} baþlýðý altýndaki \PVerb!bi! ve \PVerb!bo!, sýrasýyla, kaç bloðun
+tüm blok araçlarýna gönderildiði, ve kaç bloðun araçlardan okunduðunu
+gösterir. Bu deðerler, bir saniyede kaç bloðun araçlara yazýlýp okunduðunu
+belirtirler. Linux üzerinde bir blok, 1 kilobayt'týr (1024 bayt). Diðer Unix'ler
+üzerinde bir bloðun ne kadar olduðuna \PVerb!man vmstat! üzerinden
+bakabilirsiniz.
+
+\textbf{Memory} altýnda \PVerb!free! deðeri, iþletim sisteminin kullanmadýðý ve
+boþ duran bellek kapasitesini gösterir. Bu boþ alan, herhangi bir uygulama için
+kullanýma hazýr bellek ölçüsüdür. \PVerb!swpd!, o an kullanýmda olan sanal
+bellek (virtual memory) büyüklüðünü gösterir. 
+
+\subsubsection{/usr/proc/bin/pstack} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bu komut size Java sürecinizin içindeki lwp yýðýtýný gösterir. Her Java
+Thread'i koþmaya baþlamadan önce bir lwp'ye (hafif süreç/lightweight process)
+baðlanmak zorundadýr, ve bu komutu ile hangi Thread'in hangi sistem çaðrýsý
+üzerinde beklediðini raporda görebilirsiniz. Bütün Thread'leri bir soketten
+okumada, ya da bir yerel çaðýrým üzerinden JDBC sürücünüzü beklediðini
+görebilirsiniz. Bâzen bu gibi bir bilgi yeterli olmayabilir, çünkü hangi
+Thread'in hangi soket no'sunu beklediðini bu araç göstermez. 
+
+\subsubsection{/usr/proc/bin/pldd} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bu komut hangi yerel kodun (native code) JVM'inize yüklenmiþ olduðunu göstermesi
+açýsýndan yararlýdýr. Komut, hangi \PVerb!.so! dosyasýnýn JVM sürecine dinamik
+link edilmiþ olduðunu göstererek çalýþýr.
+
+\subsubsection{/usr/proc/bin/pflags} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bu komut, her süreç içindeki her lwp'nin iþaretlerini (flags) ve bekleme
+durumunu (wait state) rapor eder. Bu komutu kaç tane thread context deðtirimi
+(switch) olduðunu anlamak için kullanabilirsiniz. Eðer her JVM için birden fazla
+CPU var ise, context deðiþtirimi büyük bir ihtimalle yüksek sayýda olacaktýr. 
+
+\subsubsection{/usr/proc/bin/pfiles} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Pfiles, herhangi bir sürecin açýk tuttuðu dosyalarý gösterir, böylece dosyalarýn
+kapanmamasý ile alakalý olan problemleri takip etmenize yarar. 
+
+\subsubsection{lsof} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bir Unix sürecinin açýk tuttuðu dosyalarý görmek için
+\PVerb!lsof!'u\footnote{ftp://vic.cc.purdue.edu/pub/tools/unix/lsof/}
+kullanabilirsiniz.  \PVerb!lsof!, \PVerb!pfiles!'a benzer, fakat daha yararlý
+bir çýktý verir.
+
+\subsubsection{truss -c -p} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Bu komut, bir sürece karþý baþlatýlmasý ve kesilmesi (interrupt) arasýnda süreç
+tarafýndan yapýlmýþ olan sistem çâðrýlarýný rapor eder. Örnek:
+
+
+
+\begin{lstlisting}[language=Java, frame=none]
+\$ ps
+
+ PID TTY      TIME CMD
+ 11218 pts/5    0:00 ps
+ 11211 pts/5    0:00 bash
+
+\$ truss -c -p 11211
+
+^C  (Control-C ile programý durdurduk)
+
+syscall               seconds   calls  errors
+                     --------  ------   ----
+sys totals:              .000       0      0
+usr time:                .000
+elapsed:                3.750
+\end{lstlisting}
+
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection[Detaylý Performans Ýstatistiði Toplamak]
+	[DETAYLI PERFORMANS ÝSTATÝSTÝÐÝ TOPLAMAK]
+	{Detaylý Performans Ýstatistiði Toplamak (Profiling)}
+
+Diyelim ki elinizdeki program çok yavaþ çalýþýyor. Unix'de \PVerb!vmstat! ile
+(ya da Windows üzerinden Task Manager üzerinden) bakýyoruz, ve görüyoruz ki
+makinadaki CPU kullanýmý (CPU utilization) 100\%'e gelmiþ! Fakat (gene
+varsayalým) programýmýz belirli aralýklarla \PVerb!Thread.currentThread.sleep()!
+metodunu iþleten türden bir program, ve CPU'yu bu kadar zorlamamasý gerekiyor.
+
+Acaba programýn hangi bölümü bu kadar CPU zamaný çalýyor? Ya da, daha genel bir
+soru: Hangi Java metotu iþlemekte en uzun zaman alýyor?
+
+\begin{figure}[!thp]
+  \center{
+    \scalebox{0.65}{
+      \includegraphics{./images/profiler_3.eps}
+      }
+    }
+  \caption{CPU Kullanýmý}
+\end{figure}
+
+\subsubsection{Genel Ýhtiyaç} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+Yukarýdaki sorunun cevabý, Profiler adlý araçlar ile verilir. Elimizdeki 
+problem için bir Profiler'dan beklediðimiz, en acýsýz þekilde
+JVM'e eklemlenebilmesi, ``kaydet'' þeklinde bir komut ile bütün metot
+çaðrýmlarýný JVM içinde gözetlemeye baþlamasý, ``dur'' diyince ham çýktýyý 
+bir dosyaya yazmasý, ve bu ham veriden, daha sonra görsel bir þekilde bütün
+metot çaðýrýmlarýný ne kadar zaman aldýðý bilgisi ile birlikte
+gösterebilmesidir. Analiz evresinde bir görsel araç ile kullanýcý bütün
+metotlarý iþleyiþte harcadýðý zamana göre sýralayarak en yavaþ metotu hemen
+görebilir. Bu metot da dertlerimizin kaynaklandýðý metot olacaktýr.  
+
+
+Java için revaçta birçok Profiler seçeneði mevcuttur. Þu anda piyasadaki biri
+bedava biri ticari iki kullanýþlý Profiler'dan bahsedeceðiz. Bedava seçenek
+olarak JDK'nin parçasý olan HProf, ticari olarak ta YourKit Java Profiler
+\footnote{http://www.yourkit.com} adlý Profiler üzerinde karar kýldýk. Tabii bu
+iki paket üzerinden anlatacaðýmýz kavramlar \textbf{her Profiler} üzerinde
+geçerli olacaktýr. YJP ürünü ticari olsa da, test etme lisansý çerçevesinde 15
+gün bedava kullanýlabilir.
+
+\subsubsection{HProf} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+HProf baðlamýnda CPU, bellek kullaným, vs türden istatistikleri toplamak için,
+incelenen program iþletilirken Java komut satýrýna \PVerb!-Xrunhprof! eklemek
+gerekiyor.
+
+Degisik secenekler eklenerek toplanan istatistik tanýmlanabilir. Tüm liste
+için aþaðýdaki seçeneði kullanýnýz.
+
+\begin{lstlisting}[language=Java, frame=none]
+java -Xrunhprof:help
+\end{lstlisting}
+Meselâ, CPU bazýnda istatistik toplamak için
+
+\begin{lstlisting}[language=Java, frame=none]
+java .... -Xrunhprof:cpu=samples,depth=6 com.sirket.XYZ
+\end{lstlisting}
+Yukarýdaki komutu iþlettikten sonra, ölçmek istediðimiz kod bölümlerini egzersiz
+eden testlerimizi iþletiriz.
+
+Test bittikten sonra, artýk sonuçlarý görmek için, programý bitirmek (JVM'i
+durdurmak) gerekiyor (Control-C, \PVerb!kill -9!, vs). Ancak o zaman Profiler
+topladýðý sonuçlarý bir dosyaya yazacaktýr. Dosya ismi tanýmlanmaz ise, çýktý
+dosya ismi \PVerb!java.hprof.txt! olacaktýr. Bu dosya içinde (en altta), en cok
+zamanýn harcandýðý metotlar, en fazlasý üstte olmak üzere listelenmektedir.
+
+
+  \begin{lstlisting}[language=Java, frame=none]
+CPU SAMPLES BEGIN (total = 203235) Fri Jan 21 18:39:44 2005
+rank   self  accum   count trace method
+   1 14.96% 14.96%   30394   553 java.net.PlainSocketImpl.socketAccept
+   2 12.96% 14.10%   1002    123 com.sirket.vs..vs..
+   3 11.96% 14.00%   435     343 com.sirket.vs..vs..
+   4 10.00% 14.00%   554     564 com.sirket.vs..vs..
+  \end{lstlisting}
+Buna göre en çok zaman \PVerb!java.net.PlainSocketImpl.socketAccept! içinde
+harcanmýþ. socketAccept'in stack trace'ini görmek için, listedeki TRACE
+kolonunda verilen numarayý alýp, \PVerb!java.hprof.txt! içinde baþtaki bölümde
+aramak gerekiyor. Burada aranacak kelime "TRACE 553". Bu da þöyle gözükebilir:
+
+\begin{lstlisting}[language=Java, frame=none]
+
+TRACE 553:
+
+java.net.PlainSocketImpl.socketAccept(PlainSocketImpl.java:Native method
+)
+        java.net.PlainSocketImpl.accept(PlainSocketImpl.java:353)
+        java.net.ServerSocket.implAccept(ServerSocket.java:448)
+        java.net.ServerSocket.accept(ServerSocket.java:419)
+        sun.rmi.transport.tcp.TCPTransport.run(TCPTransport.java:334)
+        java.lang.Thread.run(Thread.java:534)
+        com.sirket.paket.FilancaClass.metot(FilancaClass.java:222)
+\end{lstlisting}
+En çok zaman harcanan çaðýrým zinciri bu olarak gözüküyor. Artýk kodumuza
+dalýp sorunlu olan bölümü optimize etmeye baþlayabiliriz.
+
+Call Stack listesinin derinliðini (kaç metot gösterileceðini) \PVerb!depth=xx!
+kontrol ediyor. \PVerb!Cpu=samples!, örnekleme yöntemi ile (her metotun
+gözlenmediði) türden ölçüm yapmak için kullanýlýyor.
+
+\subsubsection{YJP} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+YJP'nin JVM'e eklemlenebilmesi için, komut satýrýndan iþletilen \PVerb!java!
+komutunun, {\em YJP üzerinden} iþletilmesi lazým. YJP'yi indirip bir dizine
+kurduktan sonra, programýmýzý iþlettiðimiz \PVerb!.sh! ya da \PVerb!.bat!
+dosyasý içine þu komutlarý eklememiz lazým.
+
+\begin{lstlisting}[language=Java, frame=none]
+set YJP_JAVA_HOME=c:\j2sdk1.4.2\_04
+set JAVA_HOME=c:\j2sdk1.4.2\_04
+
+set PATH=C:\yjp-2.5-build310\bin;%PATH%
+
+java -Xrunyjpagent -cp . Test
+\end{lstlisting}
+Java komutundan sonra eklenen -Xrunyjpagent seçeneði, kontrolü YJP'ye
+vermektedir. Þimdi, YJP görsel programýný iþletmek için (kaydet, dur, göster
+komutlarýný vereceðimiz program bu olacaktýr) \PVerb!YJP_DIZINI/bin/yjp.bat!
+içine
+
+\begin{lstlisting}[language=Java, frame=none]
+set JAVA_HOME=C:\j2sdk1.4.2\_04
+set YJP_JAVA\_HOME=C:\j2sdk1.4.2_04
+\end{lstlisting}
+komutlarýný ekleyin. Ölçtüðümüz programa dönelim: YJP'nin gözetimi altýnda
+iþletmek için, kostur.bat'ý koþturalým.
+
+\begin{lstlisting}[language=Java, frame=none]
+> ./kostur.bat
+...
+c:\\temp>java -Xrunyjpagent -cp . Test
+[YourKit Java Profiler 2.5] Listening on port 10000...
+\end{lstlisting}
+Bu en son ``listening'' mesajýný görünce, demektir ki YJP gözetimi altýnda
+programýmýz iþliyor. YJP hem gözetliyor, hem de port 10000 üzerinden
+baðlanabilecek bir programa bilgi vermeye hazýrlanýyor. Meselâ YJP'nin önyüz
+programý bu port'a baðlanacaktýr. Þimdi o öteki kýsmý
+\PVerb!YJP_DIZINI/bin/yjp.sh! (ya da \PVerb!yjp.bat! ile) çalýþtýralým.
+
+\begin{figure}[!thp]
+  \center{
+    \scalebox{0.60}{
+      \includegraphics{./images/profiler_1.eps}
+      }
+    }
+  \caption{YJP Baðlantý Ekraný}
+\end{figure}
+
+Makina ve port bilgilerini bu programa girdikten sonra, gönderelim. Baðlandýktan
+sonra, ``start sampling'' adlý bir seçenek göreceksiniz (sol tarafta). Bunu
+seçtikten sonra, YJP numune veri toplamaya baþlamýþtýr. Bu veri toplamayý
+istediðiniz zaman ``stop sampling'' komutu ile durdurabilirsiniz. Bu durdurmadan
+sonra, aþaðýdaki gibi bir soru sorulacaktýr: Ham veriyi hangi dosya üzerine
+yazmak istiyorsunuz?
+
+
+\begin{figure}[!thp]
+  \center{
+    \scalebox{0.60}{    
+      \includegraphics{./images/profiler_2.eps}
+      }
+    }
+  \caption{YJP ile Sonuçlarý Kaydetmek}
+\end{figure}
+
+
+Yukarýda \PVerb!cikti_1! gibi bir isim verdikten sonra, akýþ sizi direk olarak
+raporlama ve analiz ekranýna alacaktýr. Artýk bu ekranda metotlarýn iþleyiþ
+zamanýný görebilirsiniz. \PVerb!ProfileSample! örnek kodumuzda, en çok zamanýn
+\PVerb!Test.cagir2()! metotunda harcandýðýný görüyoruz 9,224 rakamý kodun geri
+kalan tarafýna göre çok büyük bir rakamdýr, ve böylece hain kodu bulmuþ olduk.
+
+\begin{figure}[!thp]
+  \center{
+    \scalebox{0.60}{
+      \includegraphics{./images/profiler_4.eps}
+      }
+    }
+  \caption{YJP ile Sonuçlara Bakmak}
+\end{figure}
+
+\PVerb!ProfilerSample! projesinin basitliði bizi aldatmamalý. Bu kadar ufak bir
+kod içinde, problemli kýsmý çýplak gözle de görebilirdik. Fakat düþünün ki 1000
+metot çaðrýmýnýn yapýldýðý bir programýmýz var ve bu programda en yavaþ iþleyen
+noktayý bulmammýz bekleniyor. Doðal olarak nereden bakmaya baþlayacaðýmýzý bile
+bilemezdik. Profiler araçlarý hem bu baþlangýcý, hem de daha detaylý analizler
+için gereken özellikleri ayný pakette bize sunmaktadýr.
+
+\subsubsection{StopWatch} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Detaylý performans ölçümü için ne kadar görsel ticari, açýk yazýlým ürününü
+sorunun üstüne atsak ta, bazen kendi yazdýðýmýz ve kodun istediðimiz bölümüne
+koyabileceðimiz bir araç daha faydalý olabilir. Kodun bir kýsmýný ölçülebilecek
+hâle getirmeye, {\em instrumentation} adý verilir; O zaman denebilir ki, hazýr
+araçlar üzerinden yaptýðýmýz performans verisi toplama iþlemi, {\em tüm kodu}
+instrument etmektedir. Bu bölümde, sadece istediðimiz kýsýmlarý, kendi
+yazdýðýmýz bir instrumentation aracý ile yapmayý öðreneceðiz.
+
+Bu amaç için \PVerb!StopWatch! adlý bir yardýmcý class'ý geliþtirdik. StopWatch
+kelimesinin Ýngilizce anlamý, spor müsabakalarýnda kullanýlan türden bir ``ölçüm
+saatidir''. Bu saatin bir ``baþla'' bir de ''dur'' düðmesi vardýr, ve baþla
+düðmesine basýlýnca ölçüm (genellikle milisaniye bazýnda) alýnmaya
+baþlanýr. ``Dur'' komut verilince saat durur, ve o anki ölçülmüþ deðeri
+gösterir.
+
+Kodlarýmýzdan istatistik toplamak için bize gereken saat de, bu þekilde bir
+saattir. Tabii bizim \PVerb!StopWatch! class'ýmýz, normal saatlere göre bazý
+ek özellikler de içerecektir:
+
+\begin{itemize}
+   \item Tek bir \PVerb!StopWatch! ana class'ý üzerinde, farklý kod bloklarý
+   üzerinde ölçüm alan farklý saatler aktif olabilmelidir.
+   
+   \item Ölçülen bir bloða {\em birkaç kere} girilince, yeni alýnan deðerler
+   eskisine eklenerek, toplamsal (cumulative) ölçüm tutulmalýdýr.
+   
+   \item Belli aralýklarla, bir thread üzerinden, tüm saatlerin ölçüm deðerleri
+   ekrana basýlmalýdýr.
+   
+\end{itemize}
+Bu özelliklere sahip olan bir \PVerb!StopWatch! class'ý, þu þekilde kodlanmýþtýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class StopWatch   {
+
+    private static Logger logger = Logger.getLogger("appLogger"); 
+
+    private Calendar startCal;
+    private Calendar endCal;
+    private TimeZone tz = TimeZone.getTimeZone("CST");
+    
+    private static Thread stopWatchThread = null;
+
+    public static final String BLOK_1 = "BLOK_1";
+    public static final String BLOK_2 = "BLOK_2";
+    ... 
+    
+    public StopWatch() {  }
+    
+    public class ShowThread extends Thread {
+        public ShowThread() { }
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(10000L);
+                } catch (Exception e) {                
+                } 
+                StopWatch.showAll();
+            } 
+        }
+    }
+    
+    public StopWatch(String tzoneStr) {
+        tz = TimeZone.getTimeZone(tzoneStr);
+    }
+    
+    public void start() {
+        startCal = Calendar.getInstance(tz);
+    }
+    
+    public void stop() {
+        endCal = Calendar.getInstance(tz);
+    }
+    
+    public double elapsedSeconds() {
+        return (endCal.getTimeInMillis() -
+                startCal.getTimeInMillis())/1000.0;
+    }
+    
+    public long elapsedMillis() {
+        return endCal.getTimeInMillis() -
+               startCal.getTimeInMillis();
+    }
+    
+    public double elapsedMinutes() {
+        return (endCal.getTimeInMillis() -
+                startCal.getTimeInMillis())/(1000.0 * 60.0);
+    }
+
+    // ---------------- STATIC SECTION -------------------------
+    
+    public void startThread() {
+        stopWatchThread = new ShowThread();
+        stopWatchThread.start();
+    }
+
+    private static HashMap watches = new HashMap();
+    
+    private static HashMap values = new HashMap();
+    
+    private static HashMap counts = new HashMap();
+    
+    public static synchronized void start(String key) {
+        StopWatch stopWatch = new StopWatch();
+        if (!values.containsKey(key)) {
+            values.put(key, new Double(0));
+            counts.put(key, new Integer(0));
+        } 
+        
+        watches.put(key, stopWatch);
+        
+        stopWatch.start();
+    }
+    
+    public static synchronized void stop(String key) {
+        StopWatch stopWatch = (StopWatch)watches.get(key);
+        stopWatch.stop();
+        
+        double old = ((Double)values.get(key)).doubleValue();
+        int oldCount = ((Integer)counts.get(key)).intValue();
+        
+        values.put(key, new Double(old + stopWatch.elapsedSeconds()));
+        counts.put(key, new Integer(oldCount + 1));
+    }
+    public static synchronized void showAll() {
+        logger.debug(values);
+        logger.debug(counts);
+    }
+}
+\end{lstlisting}
+\PVerb!StopWatch!'ý kullanmak için, ölçmek istediðiniz her kod parçasý için bir isim
+vermemiz gerekiyor. Bu ismi, bir sabit olarak \PVerb!StopWatch! içinde
+tanýmlayabiliriz. Meselâ,
+
+\begin{lstlisting}[language=Java, frame=none]
+public class StopWatch   {
+    ...
+    public static final String GET_CARS_ACTION = "GET_CARS_ACTION";
+    public static final String VIEW_CAR_ACTION = "VIEW_CAR_ACTION";
+    public static final String GET_GARAGES_ACTION = "GET_GARAGES_ACTION";
+    ...
+}
+\end{lstlisting}
+Bu tanýmlar ile, üç tane ölçüm bloðu tanýmlamýþ olduk. Bloklarda ne kadar zaman
+geçirildiðini ölçmek için, gerekli \PVerb!.java! dosyalarýna girerek, ölçümün
+baþlamasý ve bitmesi gereken yerlerde \PVerb!start! ve \PVerb!stop! çaðrýlarýný
+koymamýz gerekiyor; Meselâ \PVerb!ShowCarDetailAction! içine bir ölçüm bloðu
+yerleþtirelim. Ölçümü baþlatýp durdurabilmek için \PVerb!start! ve \PVerb!stop!
+çaðrýlarýný þöyle kullanacaðýz:
+
+\begin{lstlisting}[language=Java, frame=none]
+public class ShowCarDetailAction extends Action
+{
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        StopWatch.start(StopWatch.VIEW_CAR_ACTION);
+        ...
+        //
+        // iþlem kodlarý
+        //
+        ...
+        StopWatch.stop(StopWatch.VIEW_CAR_ACTION);
+
+        return mapping.findForward("success");
+    }    
+}	
+\end{lstlisting}
+Ölçümleri, Action'ýn \PVerb!execute! metotunun giriþinde baþlamak ve dönmeden
+hemen önce bitecek þekilde koyduk. Daha dar bir alaný da ölçmeyi
+seçebilirdik.
+
+Toplanan ölçümleri loglarda ve ya \PVerb!STDOUT!  ekranýnda göstermek için,
+uygulama bazýnda tek ayar yapmamýz gerekiyor: Uygulama baþladýðýnda
+\PVerb!StopWatch! içindeki ``ekrana istatistikleri basan'' thread'i baþlatmamýz
+lâzým. Bunun için, \PVerb!ShowThread! ismindeki \PVerb!StopWatch! içinde tanýmlý
+bir iç class'ý (inner class) kullanacaðýz.  Bu thread, her 10 saniyede bir
+uyanýp, o ana kadar toplanan istatistikleri ekrana basmak üzere
+kodlanmýþtýr. Ekrana basýlan istatikler, her ölçüm bloðu için, o bloðun toplam
+olarak kaç kere çaðýrýldýðý, ve o blokta toplam olarak (saniye bazýnda) ne kadar
+zaman harcandýðýdýr.
+
+\PVerb!ShowThread!'i tetiklemek için, meselâ \PVerb!StrutsHibAdv! projesinde,
+\PVerb!AppStartup.start! metotunda þu çaðrýyý yapabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+new StopWatch().startThread();
+\end{lstlisting}
+Artýk uygulamamýz baþladýðýnda ekrana (hem \PVerb!STDOUT! hem de log dosyasýna)
+aþaðýdaki gibi mesajlar her 10 saniyede bir basýlacaktýr. Bazý ölçüm deðerleri
+görmek için uygulama üzerinde çok basit bir test yaptýk (araba yüklemek, detay
+görmek, garajlardan araba almak, vs gibi).
+
+\begin{lstlisting}[language=Java, frame=none]
+17:02:36,920 INFO  [STDOUT] {GET_CARS_ACTION=5.258, GET_CARS_FOR_GARAGE_AC
+TION=0.09, GET_GARAGES_ACTION=0.03, VIEW_CAR_ACTION=0.02}
+17:02:36,920 INFO  [STDOUT] {GET_CARS_ACTION=2, GET_CARS_FOR_GARAGE_ACTION
+=1, GET_GARAGES_ACTION=1, VIEW_CAR_ACTION=1}
+\end{lstlisting}
+Üstteki mesajlara göre, \PVerb!VIEW_CAR_ACTION! bloðu bir kere çaðýrýlmýþ ve
+0.02 saniye zaman harcanmýþ, \PVerb!GET_CARS_ACTION! 2 kere çaðýrýlýp içinde
+5.28 saniye harcanmýþ ve \PVerb!GET_CARS_FOR_GARAGE_ACTION! 1 kere çaðýrýlýp
+0.09 saniye harcanmýþtýr.
+
+Bu sonuçlar üzerinde hemen bir analiz yapacak olursak, \PVerb!GET_CARS_ACTION! 2
+kez çaðrýlmýþ olsa bile, bu blokta 5.28 gibi çok uzun bir zaman harcandýðýný
+farkederiz. Bunun sebebi, hiç optimize edilmemiþ \PVerb!StrutsHibAdv!
+projesinin, taban baðlantý havuzlarýný (connection pool) anca {\em kullanýcý ilk
+isteði yaptýktan} sonra kurmaya baþlýyor olmasýdýr (ilk ekran da arabalarý
+yüklediði için \PVerb!GET_CARS_ACTION! bloðuna girilir). Bu yüzden bu blokta
+5.28 gibi çok uzun bir zaman geçirilmiþtir. \ref{hibernate:install:session}
+bölümünde yaptýðýmýz tavsiyenin geçerli olduðunu böylece görmüþ oluyoruz: Taban
+baðlantýlarý, önbellekleme gibi baþta hazýr olmasý daha uygun olan ilk
+yüklemeleri, uygulama baþýnda bir þekilde zorlayýp, ilk gelen kullanýcýya bu
+performans bedelini ödetmememiz gerekmektedir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Performans Ýyileþtirmeleri ve Ölçeklemek][PERFORMANS ÝYÝLEÞTÝRMELERÝ VE
+ÖLÇEKLEMEK]{Performans Ýyileþtirmeleri ve Ölçeklemek} \label{perf:opt}
+
+Bu bölüme kadar, bir kurumsal uygulama üzerinde yük yaratmak ve kod üzerindeki
+týkanma noktalarýný (bottleneck) bulmak için kullanýlabilecek araçlarý
+tanýdýk. Eðer elimizde beklenen bir performans kriteri var ise, bu kritere
+ulaþýp ulaþmadýðýmýzý yük testleri sonuçlarýna bakarak anlayabiliyor, ve problem
+yaratabilecek alanlarda harcanan zamaný profiler araçlarý daha detaylý bir
+þekilde alabiliyorduk.
+
+Bu ölçümler sonucunda, yapýlabilecek bazý genel optimizasyon numaralarýný bu
+bölümde paylaþmak istiyoruz. Bahsedeceðimiz türden genel optimizasyonlar, JBoss,
+Hibernate, veri tabaný ve log sistemi odaklý olacaktýr. Optimizasyonlar, þu
+baþlýklar altýnda iþlenecek:
+
+\begin{enumerate}
+   \item JVM'e yeterli bellek ayýrmak
+   \item Log seviyesini deðiþtirmek (üçüncü parti ürünler ve kendi kodlarýmýz için)
+   \item JBoss Web iþleyicisinin kullandýðý thread sayýsýný arttýrmak
+   \item Hibernate açýlýþ ve kritik bazý veri yükleme iþlemlerini uygulama
+   baþýnda yapmak
+   \item Hibernate POJO nesneleri ve listelerini, veri tabaný yerine önbellekten
+   almak
+   \item Hibernate POJO'lar arasý iliþkilerde, tembel yükleme seçeneðini
+     kullanmak
+   \item Hibernate'in iliþkileri için ürettiði SQL'i iyileþtirmek için,
+   \PVerb!fetch=``join''!  seçeneðini kullanmak
+   \item Web uygulamamýzý küme ortamýnda çalýþtýrmak
+   \item Session Bean'lerimizi daðýtýk yapýda kullanmak
+   \item Veri tabanýný hýzlandýrmak için, gereken yerlerde kolon indekslerini
+   eklemek   
+\end{enumerate}
+Genel kural olarak, týkanma noktalarýný tamir süreci þöyle olmalýdýr:
+
+\begin{quote}
+  \textbf{Performans Ýyileþtirme Metadolojisi}: Ýlk önce en ciddi týkanma
+  noktasýný bulun ve tamir edin. Sonra bu iþlemi tekrar edin. Performans kabul
+  edilir seviyeye gelince, durun.
+\end{quote}
+
+
+\subsection{JVM} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+Java uygulamalarýný iþletmek için kullanýlan komut satýr programý \PVerb!java!
+(\PVerb!JAVA_HOME/bin! altýnda), en az ve en çok ne kadar hafýza kullanacaðýný
+seçenek olarak alabilir. Meselâ en az 100 Megabayt ve en fazla 200 Megabayt
+isteyen bir uygulama þöyle baþlatýlabilir:
+
+\begin{lstlisting}[language=Java, frame=none]
+java -Xms100m -Xmx200m -classpath ... MyApplication
+\end{lstlisting}
+JBoss ortamýnda, uygulama servisini biz direk \PVerb!java! komutu ile deðil,
+baþka bir script içinden çalýþtýrdýðýmýz için, \PVerb!java! komutunu kullanan bu
+script'i deðiþtirmemiz gerekiyor. Bu script \PVerb!JBOSS_HOME/bin! altýnda olan
+\PVerb!run.conf! dosyasýdýr; Ýçeriði, paketten çýktýðý þekliyle þöyledir:
+
+\begin{lstlisting}[language=Java, frame=none]
+if [ "x\$JAVA_OPTS" = "x" ]; then
+   JAVA_OPTS="-server -Xms128m -Xmx128m"
+fi
+\end{lstlisting}
+Deðiþtirmemiz gereken \PVerb!-server! seçeneðinden sonra gelen kýsýmdýr.
+Uygulamamýzý istediðimiz ölçekte çalýþtýrmak için, JVM'e iþletim sisteminde
+mevcut gerçek bellek deðerinin izin verdiði kadar bellek yeri
+vermeliyiz. Meselâ, 1 GB belleði olan bir Linux servis makinasýnda, aþaðý yukarý
+200 MB kadar yeri iþletim sisteminin kendisi kullanýr. Geri kalan yerin tamamý
+JVM'e verilebilir. En az ve en çok deðerleri ayný olmasýnda hiç bir sakýnca
+yoktur (biz böyle yapýyoruz).
+
+``Ne kadar eþzamanlý kullanýcý/iþlem için ne kadar bellek gerektiði'' sorusuna
+cevabý \ref{perf:approach:analysis} bölümündeki Kurumsal Web'in Altýn Kanunu
+vermiþti: Bu oran baþlangýç olarak iyi bir kriterdir. Tabii bu oranýn oturum
+kýsmýný zorlayarak 600, 700 rakamlarýna çýkabilirsiniz, fakat belli bir noktadan
+sonrasý uygulamanýzýn optimal iþleyiþi kötü yönde etkilenecektir. Dikkat
+edilmesi gereken diðer bir nokta, 500 sayýsýnýn eþzamanlý aktif olan {\em
+oturum} sayýsýný göstermesidir. Bir sistemde 500 tane oturum olmasý demek, 500
+kiþinin {\em sürekli, ayný anda} bir sayfaya týklayýp sistem üzerinde bir istek
+yaratmasý demek deðildir. Kullanýcýnýn düþünme zamaný (think-time) olduðunu
+gözönünde bulundurursak, 500 session, belki 100 eþzamanlý sayfa isteðine tekabül
+eder. Bu sayý çok önemlidir, çünkü JMeter ile yük testi yaparken \PVerb!Thread
+Group!  altýnda vermeniz gereken eþzamanlý thread sayýsý, 500 deðil, 100
+olacaktýr.
+
+
+\subsection{Log4J} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ref{web:install:log4j} bölümünde, JBoss ortamýnda Log4J ayarlarýný nasýl ve
+nerede yapacaðýmýzý tarif etmiþtik. Performans arttýrýmý için, bu ayar
+dosyasýnýn her tür bilgilendirme mesajýna (özellikle \PVerb!DEBUG! seviyesindeki
+mesajlara) izin vermemesi gerekir. Çünkü \PVerb!DEBUG! seviyesindeki
+bilgilendirme mesajlarý, kod içinden {\em en fazla} üretilen
+mesajlardýr. Genelde hata bulmak için programcý tarafýndan koda eklenen bu
+mesajlar, nihai ortamda iþe yaramayacak bir ton mesajý log dosyasýna basarlar. O
+sebeple, nihai ortamda kapatýlmalarý gerekir.
+
+Bildiðimiz gibi Log4J ortamýnda bilgilendirme mesajlarý
+\PVerb!logger.debug(``mesaj'')! kullanýmýyla basýlýr. Bir üst seviyede, yâni
+bilgilendirmeden daha nadir ve daha ciddi olan mesajlar \PVerb!INFO! üzerinden,
+\PVerb!logger.info! kullanarak basýlacaktýr. Hatalar ise, tipik olarak
+\PVerb!logger.error!  ile loglanýr.
+
+Loglama iþlemini hýzlandýrmak için bizim kullanacaðýmýz özellik ise, Log4J'in
+loglama seviyesini Java paket bazýnda kontrol edebilme özelliðidir. Bu özellik
+sayesinde, her Java paketinin hangi seviyede loglamasý gerektiðini
+tanýmlayabiliyoruz. Nihai ortamda çalýþan bir servisin, tüm paketler için
+loglama seviyesini \PVerb!INFO!'ya çekmesi gerekiyor. Bu þekilde ayarlanmýþ
+örnek bir \PVerb!log4j.xml! dosyasý, aþaðýda görülebilir (bu dosyanýn bir
+örneðini \PVerb!StrutsHibPerformance! projesinde de bulabilirsiniz).
+
+\begin{lstlisting}[language=Java, frame=none]
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+                     debug="false">
+   <appender name="appAppender"
+             class="org.jboss.logging.appender.DailyRollingFileAppender">
+      <param name="File"
+             value="\${jboss.server.home.dir}/log/kitapdemo.log"/>
+      <param name="Append" value="false"/>
+      <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern"
+                value="[%d] %5p [%t] (%F:%L) - %m%n"/>        
+      </layout>
+   </appender>
+
+   <category name="org.apache">
+      <priority value="INFO"/>
+   </category>
+
+   <category name="org.jgroups">
+      <priority value="WARN"/>
+   </category>
+
+   <category name="org.hibernate">
+      <priority value="INFO"/>
+   </category>
+
+   <category name="org.hibernate.cache">
+      <priority value="INFO"/>
+   </category>
+
+   <category name="org.apache.axis">
+      <priority value="INFO"/>
+   </category>
+
+   <category name="com.opensymphony.oscache">
+      <priority value="INFO"/>
+   </category>
+    
+   <category name="com.mchange.v2.resourcepool">
+      <priority value="INFO"/>
+   </category>
+
+   ....
+   
+   <logger name="appLogger" additivity="false">
+     <level value="INFO"/>
+     <appender-ref ref="appAppender"/>
+   </logger>
+
+</log4j:configuration>
+\end{lstlisting}
+Görüldüðü gibi \PVerb!<category name>! ibaresinden sonra, seviyesi set edilmek
+istenen {\em paket} ismi veriliyor. Her paketin hangi seviyede loglanacaðý
+\PVerb!<level value>! etiketi ile bildiriliyor.
+
+Peki üstteki listeye hangi paketleri ekleyeceðimizi nereden bildik? Çok basit:
+Uygulamayý birkaç kez iþletip, \PVerb!kitapdemo.log! dosyasýnda yazýlan
+\PVerb!DEBUG! mesajlarýnýn hangi paketten geldiðine baktýk (Log4J bir mesajýn
+hangi paketteki hangi class'tan geldiðini gösterebilir) ve mesajlarýný görmek
+istemediðimiz paketleri, üstteki listeye ekledik. Bir paketin seviyesini
+deðiþtirdiðimiz zaman, o paketin altýndaki tüm class'larýn seviyesi o seviyeye
+set edilmiþ olacaktýr. 
+
+Nihai ortamda yanlýþ log seviyesinde (\PVerb!DEBUG!) çalýþýyor olmak,
+baþlangýçta yapýlan en yaygýn performans hatalarýndan biridir. Ne zaman 10
+saniyede iþlemesini beklediðimiz kurumsal uygulamamýzýn ilk deploy edildikten
+sonra 3 dakikada çalýþtýðýný görürsek, ilk kontrol etmemiz gereken yerin log
+seviyeleri olduðunu hemen hatýrlamalýyýz. Meselâ eðer seviyelerini
+\PVerb!INFO!'ya çekmemiþseniz, EHCache, OSCache ve Hibernate paketlerinin müthiþ
+miktarda \PVerb!DEBUG! log üretip uygulamanýza diz çöktüreceðine emin
+olabilirsiniz. Bu paketlerin log seviyesini \PVerb!INFO!'ya getirdiðiniz anda,
+uygulamanýz kanatlanýp uçacaktýr. 
+
+
+\subsection{JBoss Thread'lerini Arttýrmak} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Yük testlerinizi gerçekleþtirirken, JMeter \PVerb!Thread Group! sayýmýz 150
+üzerine çýktýðýnýzda, JBoss'tan ``maksimum thread sayýsýna eriþildiði'' ve
+``servisin týkandýðý'' hakkýnda bir mesaj alýrsýnýz. Bunun sebebi, paketten
+çýktýðý hâliyle JBoss'un HTTP isteklerini karþýlayan thread sayýsýnýn da 150
+olmasýdýr. Tek JVM üzerinde 150'den daha yüksek ölçekte testler
+gerçekleþtirebilmek için, HTTP istek karþýlayýcý thread sayýsýný arttýrmamýz
+gerekiyor. Bu deðiþikliði yapacaðýmýz dosya,
+\PVerb!JBOSS_HOME/server/default/deploy/jbossweb-tomcat50.sar! altýndaki
+\PVerb!server.xml!  dosyasýdýr. Burada gördüðünüz
+
+\begin{lstlisting}[language=Java, frame=none]
+<Connector port="8080" address="\${jboss.bind.address}"
+   maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+\end{lstlisting}
+olarak verilen satýrdaki, \PVerb!maxThreads! için tanýmlanmýþ deðeri 150'den
+daha yüksek bir deðere çekersek, daha yüksek ölçekte yük testlerimizi servis
+üzerinde kullanabiliriz. Deðiþiklikten sonra JBoss servisinizi kapatýp açmamýz
+gerekecektir. 
+
+
+\subsection{Açýlýþ Hibernate Ýþlemleri} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{perf:opt:hibernatestart}
+
+Uygulamamýz baþlarken eðer \PVerb!HibernateSession! nesnesi hiç çaðrýlmaz ise,
+Hibernate hiçbir hazýrlýk iþlemi yapmayacaktýr. Bu hazýrlýklar iþlemleri
+arasýnda, gereken tüm veri taban baðlantýlarýnýn açýlýp havuza konmasý, nesne
+eþleme dosyalarýnýn okunmasý ve POJO'larýn bir öniþlemden geçirilerek kalýcýlýk
+iþlemleri için hazýr edilmesi gibi iþlemler vardýr.
+
+Hazýrlýk iþlemlerini tetiklemek için, \PVerb!HibernateSession! içindeki
+\PVerb!static!  kodlarýn bir þekilde çaðýrýlmasý gerekmektedir. Bunu yapmak için
+en basit yol \PVerb!HibernateSession! nesnesinin bir \PVerb!static! metotunu
+çaðýrmaktýr, çünkü \PVerb!HibernateSession! hafýzaya alýndýðý an Java
+kurallarýna göre içindeki \PVerb!static! blok bir defaya mahsus olmak üzere
+iþleme konur.
+
+\PVerb!HibernateSession!'i kullanmak için üzerinde zararsýz bir iþlem bulmamýz
+lazým: Bu da \PVerb!openSession! ve hemen arkasýndan \PVerb!closeSession!
+çaðrýsý olabilir. Bu iki iþlem bir Hibernate oturumunu hemen açýp kapatýr, ve
+toplam olarak hiçbir þey deðiþmemiþ olur, fakat \PVerb!static! blok iþleme
+konduðu için tüm Hibernate hazýrlýklarýnýn yapýlmasý zorlanýr. Bu iki çaðrýyý,
+\PVerb!AppStartup!  nesnesindeki \PVerb!start! metotunun içine
+koyabiliriz. Örnek kodu \PVerb!StrutsHibPerformance! projesinde bulabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AppStartup  implements AppStartupMBean {
+    ..
+    public void start() throws Exception {
+        HibernateSession.openSession();
+        HibernateSession.closeSession();
+        ..
+    }
+}
+\end{lstlisting}
+
+Baþlangýçta baðlantý havuzlarýnýn hazýrlanmasýný zorladýðýmýz gibi, bazý
+verilerin Hibernate önbelleðine alýnmasýný da zorlayabiliriz. Bunu yapmak için,
+uygulama baþýnda uygulamanýn sýkça kullanacaðýný {\em bildiðimiz} nesneleri
+\PVerb!get! ve HQL sorgularý ile hafýzaya getiririz; Böylece bu nesneler ayný
+anda önbelleðe alýnmýþ olurlar.
+
+Bu iþlemleri de \PVerb!AppStartup.start! metotunda gerçekleþtirebiliriz (nasýl
+olsa bir Hibernate oturumunu açmýþ bulunmaktayýz, oturumu hemen altýndaki
+satýrlarda veri yüklemesi için kullanabiliriz).
+
+\subsection{Hibernate Önbellek Kullanýmý} \label{perf:opt:cache} %%%%%%%%%%%%%
+\label{perf:opt:hibernatecache}
+
+Hibernate kullanan kodlarýn JDBC kullanan kodlardan daha hýzlý olmasýnýn iki
+sebebi, Hibernate'in ürettiði SQL'in elle yazýlan SQL'den daha optimal olmasý ve
+Hibernate'in sýk deðiþmeyen POJO'larý veri tabaný yerine önbellekten
+alabilmesidir. Hibernate, kontrolünde olan POJO'larý, gene kendi kontrolünde
+olan \PVerb!get!, \PVerb!saveOrUpdate! ve \PVerb!delete! komutlarý üzerinden ne
+zaman önbelleðe yazacaðýný ve ne zaman oradan silmesi gerektiðini çok iyi
+bildiði için, Hibernate {\em üzerinden} önbellek kullanýmý programcý üzerinde
+çok az külfet getiren bir iþlem hâline gelmektedir. 
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/single_jvm_no_cache.eps}
+  }
+}
+\caption{Önbelleksiz Hibernate}
+\end{figure}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/single_jvm_yes_cache.eps}
+  }
+}
+\caption{Önbellekli Hibernate}
+\end{figure}
+
+Hibernate ile beraber kullanýlabilecek birçok açýk yazýlým ve ticari önbellek
+paketi mevcuttur. Biz bu bölümde EhCache ve OsCache önbellek paketlerini
+iþleyeceðiz. EhCache, tek JVM'li ortamlarda, OsCache ise, daðýtýk mimarilerde
+kullanýlmasýný tavsiye ettiðimiz paketlerdir.
+
+\subsubsection{Genel Ayarlar}
+Önbellek kullanmak için, \PVerb!hibernate.cfg.xml! dosyasýnda hangi nesnelerin
+ve iliþkilerin önbellekleceðini belirtmelisiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<class-cache
+    class="org.mycompany.kitapdemo.pojo.Car"
+    region="Simple"
+    usage="read-write"/>
+
+<class-cache
+    class="org.mycompany.kitapdemo.pojo.Garage"
+    region="Simple"
+    usage="read-write"/>
+
+<collection-cache
+    collection="org.mycompany.kitapdemo.pojo.Garage.cars"
+    region="Simple"
+    usage="read-write"/>
+\end{lstlisting}
+Üstteki tanýmlara göre \PVerb!Garage!, \PVerb!Car! nesneleri, ayrýca
+\PVerb!Garage! üzerindeki \PVerb!cars! iliþkisinin önbelleðe alýnacaðý
+belirtilmiþtir. Hibernate, sorgulardan gelen sonuçlarý da
+önbellekleyebilir. Bunun için, Hibernate \PVerb!Query! nesnesinin üzerinde
+\PVerb!setCacheable(true)! çaðrýsýný yapmalýsýnýz, ve \PVerb!Query! üzerinde
+sorgu sonuçlarýnýn hangi önbellek bölgesini (region) kullanacaðýný
+belirtmelisiniz. 
+
+\begin{lstlisting}[language=Java, frame=none]
+Query  query = s.createQuery("from Car");        
+query.setCacheable(true);
+query.setCacheRegion("KitapDemoQueries");                
+\end{lstlisting}
+Buradaki kullaným, sorgu sonuçlarýnýn \PVerb!KitapDemoQueries! adlý bir
+bölgede kullanýlmasý gerektiðini belirtiyor. Sorgu sonuçlarýnýn önbellek bölgesi,
+aynen POJO ve nesne iliþkilerin bölgeleri gibi tanýmlanmýþtýr.
+
+Sorgu sonuçlarý önbelleklemesinin perde arkasý þöyledir: Hibernate, bir sorgudan
+gelen sonuçlarýn sadece kimlik deðerlerini önbellekte tutar. Gerçek objeler,
+ikinci seviye önbellekte tutulacaktýr. Bir sorgu sonucunun önbellekten atýlmasý
+(eviction) POJO nesnelerinden farklý olarak, o sorgu içinde referans edilen
+herhangi bir nesnenin deðiþmesi (\PVerb!delete!, \PVerb!saveOrUpdate!,
+\PVerb!merge!)  durumunda olur. Bu aslýnda oldukça kýsýtlayýcý bir kýstastýr
+(tabii ki sistem doðruluðu için böyle yapýlmasý gerekir) ama sorgularý önbelleðe
+alma/almama kritlerimizde aklýmýzda tutmamýz gereken önemli bir etkendir.
+
+\subsubsection{Önbellek Bölgeleri}
+
+Önbellek paketinin önbelleklenen bir nesneyi ne kadar uzun süre içeride
+tutacaðý, ne kadar kullanýlmadan kalmasýna (idle time) izin vereceði, o nesneden
+kaç tane nesnenin olmasýna (bölge büyüklüðü baðlamýnda) izin vereceði gibi {\em
+fiziki ayarlar}, hep bir bölge baz alýnarak yapýlmaktadýr. Eðer fiziki ayarlar,
+her nesne, her iliþki için ayný olsaydý, Hibernate birbirinden deðiþik olmasý
+gereken türden önbellek kullanýmlarýna hitap edemezdi.
+
+\subsubsection{EhCache}
+
+Hangi nesne ve iliþkileri önbelleðe alýnmasýný belirttik. Artýk kullanacaðýmýz
+önbellekleme paketini belirtmeli, ve bu önbellek paketine bölge tanýmlarý
+vermeliyiz. Paket olarak EhCache kullanmak için, \PVerb!hibernate.cfg.xml!
+dosyasýnda, EhCache ile köprü kurabilen bir class'ý belirtmemiz gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+<property name="hibernate.cache.provider_class">
+  org.hibernate.cache.EhCacheProvider
+</property>
+\end{lstlisting}
+\PVerb!EhCacheProvider!, Hibernate ile EhCache arasýnda baðlantý kuran köprü
+kodudur. Bu tanýmdan sonra, \PVerb!CLASSPATH!'te bulunmasý gereken ayrý bir
+dosya \PVerb!ehcache.xml! içinde, her {\em bölgenin} fiziki ayarlarýný yapmamýz
+gerekiyor.
+
+\begin{lstlisting}[language=XML, frame=none]
+<ehcache>
+  <diskStore path="java.io.tmpdir"/>
+  <cache name="org.mycompany.kitapdemo.pojo.Car"
+         maxElementsInMemory="1000"
+         eternal="true"
+         timeToIdleSeconds="0"
+         timeToLiveSeconds="0"
+         overflowToDisk="false"
+         />
+  <cache name="org.mycompany.kitapdemo.pojo.Garage"
+         maxElementsInMemory="1000"
+         eternal="true"
+         timeToIdleSeconds="0"
+         timeToLiveSeconds="0"
+         overflowToDisk="false"
+         />
+  <cache name="org.mycompany.kitapdemo.pojo.Garage.cars"
+         maxElementsInMemory="1000"
+         eternal="true"
+         timeToIdleSeconds="0"
+         timeToLiveSeconds="0"
+         overflowToDisk="false"
+         />
+  <cache name="KitapDemoQueries"
+         maxElementsInMemory="1000"
+         eternal="true"
+         timeToIdleSeconds="0"
+         timeToLiveSeconds="1000"
+         overflowToDisk="false"
+         />
+</ehcache>
+\end{lstlisting}
+Her önbellek bölgesini tanýmlarken kullandýðýmýz parametrelerin açýklamasý
+þöyledir:
+
+\begin{itemize}
+\item \textbf{maxElementsInMemory}, bir bölge içinde en fazla kaç tane birimin
+tutulaðýný belirtir. 
+
+\item \textbf{eternal}: Bölge içindeki birimin sonsuza kadar önbellekte kalýp
+kalmayacaðýný \PVerb!eternal! parametresi için \PVerb!true! ya da \PVerb!false!
+vererek ayarlayabiliriz. Bu deðer \PVerb!true! olarak belirlenmiþse, o bölgedeki
+birimlerde deðiþiklik yapýlmadýðý sürece önbellekte tutulurlar. Ayrýca bu
+durumda \PVerb!timeToIdleSeconds! ve \PVerb!timeToLiveSeconds!  deðerlerine
+bakýlmayacaktýr. Eðer \PVerb!eternal! \PVerb!false! ise,
+\PVerb!timeToIdleSeconds! ve \PVerb!timeToLiveSeconds! parametrelerinin ayarlarý
+baz alýnýr.
+
+\item \textbf{timeToIdleSeconds}: Bir nesnenin önbellekte ne kadar kullanýlmadan
+kalabileceðini belirler. Eðer bir nesne, önbellekten x saniye kadar alýnmamýþsa
+ve \PVerb!timeToIdleSeconds! deðeri x saniye ise, o obje önbellekten atýlacaktýr.
+
+\item \textbf{timeToLiveSeconds}: Bir nesnenin, {\em kullanýlsa da kullanýlmasa
+da} ne kadar süre önbellek bölgesinde tutulacaðýný belirtir. 
+\end{itemize}
+
+\subsubsection{OsCache}
+
+Performansý EhCache kadar iyi olan diðer bir önbellek paketi,
+OsCache'dir. OsCache kullanmak için, \PVerb!hibernate.cfg.xml!'de OsCache ile
+iletiþim kuracak baðlantý kodunu tanýmlamak gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+<property name="hibernate.cache.provider_class">
+      org.mycompany.kitapdemo.util.OSCacheProvider
+</property>
+\end{lstlisting}
+Dikkat: OsCache ile baðlantý kurmak için
+\PVerb!org.mycompany.kitapdemo.util.OSCacheProvider! class'ýný
+tanýmladýk\footnote{Hibernate paketinin içinden çýkan OsCacheProvider kodu,
+daðýtýk mod'da calýþmaya hazýr deðildir. Köprü kodunu, OsCache programcýlarý
+deðiþtirerek daðýtýk þekilde çalýþmaya hazýr hâle getirdiler. Bu kodu,
+http://wiki.opensymphony.com/display/CACHE/Hibernate adresinden, ya da
+StrutsHibPerformance projesinde bulabilirsiniz}. Önbellek bölge ayarlarýný ise,
+\PVerb!CLASSPATH!'te tutulacak \PVerb!oscache.properties! adlý bir dosyada
+yapýyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+cache.capacity=100000
+cache.timeout=-1
+\end{lstlisting}
+OsCache bölge ayarlarý EhCache'e kýyasla daha basittir. Tüm nesneler ayný bölge
+içinde olacaktýr. Fakat OsCache'de, EhCache'de olmayan bir özellik vardýr, o da
+daðýtýk bir yapýda çalýþabilme özelliðidir.
+
+\subsubsection{Daðýtýk Mimari ve OsCache}
+
+Daðýtýk mimarilerde önbellek kullanýmý, eðer kendi hâline býrakýlýrsa problem
+doðuracak bir durumdur. Meselâ daðýtýk mimariye hazýr olmayan EhCache'i daðýtýk
+yapýda kullandýðýmýzý varsayalým. Þekil \ref{perf:opt:dist:cache:bad} üzerinde
+bu mimariyi görüyoruz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/hibernate_dist_cache_bad.eps}
+  }
+}
+\caption{\label{perf:opt:dist:cache:bad} Yanlýþ Daðýtýk Mimari ve Önbellek Kullanýmý}
+\end{figure}
+
+Böyle bir yapýda, meselâ, hem JVM \#1'in hem JVM \#2'nin {\em ayný anda} okuduðu
+bir Car \#1 nesnesi olduðunu farz edelim. Böyle bir yapýda, eðer Car \#1 nesnesi
+JVM \#1 tarafýndan deðiþtirilirse, bu deðiþiklik JVM \#1'in önbelleðine ve veri
+tabanýna doðru þekilde yansýr. Fakat, güncellemeden önce Car \#1'i kendi
+önbelleðine almýþ olan \textbf{JVM \#2}, bu durumdan tamamen habersiz
+kalacaktýr. Bu durum, uygulamanýn doðruluðu açýsýndan tam bir hezamet olur,
+çünkü önbelleðinde tuttuðu nesnenin doðru olduðunu zanneden JVM \#2, veri
+tabanýna gidip en son deðeri almasý gerektiðinden habersizdir. Böylece JVM \#2'i
+kullanan bir kullanýcý, eski ve yanlýþ deðerler görecektir.
+
+Bu durumu düzeltmek için, að üzerinden {\em birbirlerine mesaj gönderebilen}
+türden daðýtýk önbellek paketleri kullanmak gerekmektedir. Þekil
+\ref{perf:opt:dist:cache} üzerinde böyle bir yapý görüyoruz.
+
+OsCache, daðýtýk yapýda çalýþabilen türden bir önbellektir. Önbellekler arasýnda
+haberleþme, OsCache içinde JGroups adý verilen bir multicast protokol ürünü ile
+halledilir. Multicast, bildiðimiz gibi, yayýn bazlý bir protokoldür ve yerel
+aðlarda sýkça kullanýlan Ethernet donanýmýnýn da yayýn bazlý olduðunu
+düþünürsek, yayýn bazlý donaným üzerinde yayýn bazlý protokolün optimal bir
+þekilde çalýþabileceði sonucuna varýrýz.
+
+OsCache'i daðýtýk bir yapýda çalýþtýrmak için tek yapmamýz gereken,
+\PVerb!oscache.properties! içinde gerekli tanýmlarý yapmaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+cache.cluster.multicast.ip=231.12.21.132
+cache.event.listeners=
+   com.opensymphony.oscache.plugins.clustersupport.
+   JavaGroupsBroadcastingListener
+cache.blocking=false
+\end{lstlisting}
+Bu ayarlar ile, OsCache önbelleði içinde deðiþen her nesne için yerel að
+üzerindeki {\em her diðer OsCache'e} multicast ile bir mesaj gönderir. Bu mesaj,
+deðiþen her nesnenin diðer önbelleklerden silinmesi için gönderilen bir
+mesajdýr, böylece kendi önbelleðinden bir nesneyi kaybeden diðer JVM'ler, bu
+nesnenin gerçek deðerini almak için veri tabanýna gitmeye mecbur kalýrlar. Bu da
+istediðimizi bir davranýþtýr, çünkü o nesnenin en son {\em doðru} hâli, veri
+tabanýnda olacaktýr.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/hibernate_dist_cache.eps}
+  }
+}
+\caption{\label{perf:opt:dist:cache} Doðru Daðýtýk Mimari ve Önbellek Kullanýmý}
+\end{figure}
+
+\subsection{Hibernate ve Tembel Yükleme (Lazy Loading)}
+\label{perf:opt:hibernatelazy}
+
+
+Tembel yükleme, içinde veri taþýyan bir nesnenin (tek nesne ya da nesneler
+içeren bir \PVerb!List)! verilerini o veriye ihtiyaç oluncaya kadar yüklemeyip
+beklemesi anlamýna gelir. Hibernate, 3. versiyondan itibaren, olaðan davranýþ
+olarak tembel yükleme yapmak üzere ayarlanmýþtýr. Hibernate \PVerb!get()!  ya da
+\PVerb!load()!  ile bir ana nesneyi yüklerseniz, bu nesnenin öðeleri veri
+tabanýndan yüklenecek, fakat bu nesnenin bire bir, bire çok, ya da çoka çok
+iliþkisinin olduðu diðer nesnelerin içerikleri yüklenmeyecektir.
+
+Bunun yapýlmasýnýn sebebi, uygulamalarýn kullaným düzenine (pattern) bakýlarak,
+genelde bir nesneden, o nesnenin iliþkinin olduðu {\em her diðer} nesneye
+atlanmadýðýnýn bilinmesidir. Eðer kullanýcý, çoðunlukla, A nesnesinin
+detaylarýna bakýyor fakat A'nýn iliþkide olduðu B'nin detaylarýna (öðelerine)
+hiç bakmadan A nesnesini atýyorsa, o zaman ``A yüklenince B'nin otomatik
+yüklenmesi'' gibi bir önsezinin hiçbir deðeri olmayacaktýr. Hibernate, bu genel
+kullaným düzenine göre bir optimal ayarý desteklemiþtir.
+
+Fakat, her tür kullaným þekli ve uygulama çeþidi için bu doðru olmayabilir. A
+yüklenince B'nin detaylarýna ihtiyaç olan þartlar için, tembel yüklemeyi
+kapatabilirsiniz. Hibernate, tembel yükleme ayarýný class ve iliþki seviyesinde
+yapmanýza izin verir. Meselâ her \PVerb!Garage! yüklenince onunla iliþkide olan
+\PVerb!Car! listesi yüklensin istiyorsanýz, \PVerb!Garage.hbm.xml! eþleme
+dosyasýnda þu ayarý yababilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+    <set name="cars"
+         inverse="true"
+         lazy="false"
+         >
+      <key>
+        <column name="garage_id"/>
+      </key>
+      <one-to-many class="Car"/>
+    </set>
+\end{lstlisting}
+Eðer bir class'ýn iliþkide olduðu tüm iliþkiler için tembel yüklemenin iptal
+edilmesini istiyorsanýz, class seviyesinde þu ayarý yapmanýz gerekir:
+
+\begin{lstlisting}[language=Java, frame=none]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <class name="Garage" table="garage" lazy="false">
+     ...
+  </class>  
+</hibernate-mapping>
+\end{lstlisting}
+Eðer \PVerb!Car! için 2. seviye önbelleði iþleme koymuþsak, \PVerb!lazy="false"!
+kullanýmý aradýðý deðerleri önbellekten alacaktýr. Nesne önbellekte bulunamaz
+ise, veri tabanýndan ek bir \PVerb!SELECT! iþletilecektir.
+
+\subsection{Hibernate Yükleme (Fetching) Stratejileri}
+\label{perf:opt:hibernatefetch}
+
+Tembel yükleme iþaret edilen nesnelerin ``ne zaman'' yükleneceðini belirtiyorsa,
+yükleme stratejisi nesnelerin ``nasýl'' yükleneceðini belirler. Tembel yükleme
+þartlarýnda, iþaret edilen bir nesne önbellekte yok ise, ana nesnenin bir
+\PVerb!SELECT! ile yüklenmesinden her iliþki için ek bir \PVerb!SELECT!
+gerekecektir. Bundan kaçýþ yoktur. Bu da her durumda kötü deðildir, fakat
+uygulamamýzýn kullaným düzeni her ana nesnenin detayýndan sonra her iliþkide
+olunan nesnenin detayýný almayý gerektiriyor ise, ek \PVerb!SELECT!  yöntemi
+veri tabanýna eriþim açýsýndan optimal olmayacaktýr. \ref{db}. bölümde
+belirttiðimiz gibi veri tabanlarý {\em kümelerle} çalýþmayý severler; 10 tane
+satýrý iþleyen 10 SQL komutu yerine, tek SQL ile 10 satýrý iþlemek veri
+tabanlarý için daha tercih edilir kullaným þeklidir.
+
+Hibernate, ek SELECT problemine \footnote{Bu probleme literatürde ``N+1
+problemi'' ismi de veriliyor} çözüm olarak, \PVerb!fetch="join"! seçeneðini
+getirmiþtir. Bu ayar, eðer bir Hibernate iliþkisi üzerinde tanýmlanýrsa, ana
+nesneyi yükleyen \PVerb!SELECT!'e otomatik olarak bir \PVerb!JOIN! ibaresi
+eklenecektir. Bu JOIN, ikinci nesnenin ana nesne ile iliþkide olan {\em tüm
+satýrlarýný} tek bir kerede yükler.
+
+\begin{lstlisting}[language=Java, frame=none]
+<set name="cars"
+     inverse="true"
+     fetch="join"
+     >
+  <key>
+    <column name="garage_id"/>
+  </key>
+  <one-to-many class="Car"/>
+</set>
+\end{lstlisting}
+Bu kullanýmý test etmek için \PVerb!HibernateRelFetchSelect! projesine
+bakabilirsiniz. Testimiz þudur:
+
+\begin{lstlisting}[language=Java, frame=none]
+Session s = HibernateSession.openSession(); 
+HibernateSession.beginTransaction();        
+Garage garage = (Garage) s.get(Garage.class, new Integer(1));
+for (Iterator it = garage.getCars().iterator(); it.hasNext();) {
+    Car car = (Car)it.next();
+    System.out.println(car.getLicensePlate());
+}
+\end{lstlisting}
+Test programýný iþletirseniz, \PVerb!fetch="join"! kullanýlmadýðý zaman
+(Hibernate olaðan \PVerb!fetch! deðeri \PVerb!fetch="select"! deðeridir) þu
+çýktýyý görürsünüz:
+
+\begin{lstlisting}[language=Java, frame=none]
+...
+Hibernate: select garage0_.id as id0_, garage0_.description as
+descript2_1_0_ from garage garage0_ where garage0_.id=?
+
+Hibernate: select cars0_.garage_id as garage3___, cars0_.license_plate as
+license1___, cars0_.license_plate as license1_0_, cars0_.description as
+descript2_0_0_, cars0_.garage_id as garage3_0_0_ from car cars0_ where
+cars0_.garage_id=?
+...
+\end{lstlisting}
+Görüldüðü gibi, Garage ile tek Car iliþkidedir, ve ek \PVerb!SELECT! problemi
+yüzünden iki tane \PVerb!SELECT! üretilmiþtir. Eðer bu \PVerb!SELECT!
+sorgularýný teke indirmek istiyorsak, \PVerb!fetch="join"! ayarýný verdikten
+sonra testi tekrar iþletiriz, ve o zaman þu sonuç gelir:
+
+\begin{lstlisting}[language=Java, frame=none]
+..
+Hibernate: select garage0_.id as id1_, garage0_.description as
+descript2_1_1_,cars1_.garage_id as garage3___, cars1_.license_plate as
+license1___,cars1_.license_plate as license1_0_, cars1_.description as
+descript2_0_0_,cars1_.garage_id as garage3_0_0_ from garage garage0_ left
+outer join car cars1_ on garage0_.id=cars1_.garage_id where garage0_.id=?
+..
+\end{lstlisting}
+Burada tek bir SQL üretildiðini görüyoruz, demek ki ek \PVerb!SELECT! problemi
+halledilmiþtir. \PVerb!Car! nesneleri, bir \PVerb!left outer join! komutu ile
+artýk \PVerb!Garage! ile birlikte {\em tek sorgu ile} yüklenebilir
+durumdadýr. 
+
+\subsection{JBoss Kümesi (Web Uygulamalarý Ýçin)} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{perf:opt:cluster}
+
+Bir küme (cluster), birden fazla servis noktasýnýn (node) birarada çalýþmasýndan
+meydana gelen kütledir. Bu servis noktalarýnýn genelde ortak bir amacý
+vardýr. Bir servis noktasý bir bilgisayar da olabilir, ayný bilgisayarda çalýþan
+birden fazla süreç (process) de olabilir. JBoss dünyasýnda bir küme iki þeyi
+yapar: Çökme Toleransý (Fault Tolerance) ve Yük Daðýtýmý (Load Balancing).
+
+\textbf{Çökme Toleransý} bir bilgisayarda çökme olduðu anda, kullanýcýnýn baðlý
+olduðu servis noktasýnýn deðiþtirilebilmesi ve bu deðiþimin kullanýcýya fark
+ettirilmeden yapýlabilmesidir. Web dünyasýnda bunun tercümesi kullanýcýnýn
+oturum (session) bilgisinin baþka bir makinada her zaman kopyasýnýn olmasý, ve
+çökme anýnda kullanýcýnýn kopyaya doðru yönlendirilmesi iþlemidir.
+
+\textbf{Yük Daðýtýmý} ölçekleme amaçlý olarak eþzamanlý kullanýcýlarýn yükünü
+birden fazla makinaya daðýtarak tek servis noktalarý üzerindeki yükü
+(baðlantýyý) azaltma çabasýna denir. Çökme Toleransý ve Yük Daðýtýmý
+terimlerini birbiri ile karýþtýrmamak gerekir.
+
+Kümeleme hakkýnda konuþurken telâfuz edilen bir diðer özellik de, Yüksek
+Mevcudiyet (High Availability) kavramýdýr. Bu kavram bir kullanýcýnýn baðlanacak
+bir servis bulma þansýný ve bu servisten gelecek cevap süresinin (response time)
+her zaman mâkul çerçevede olmasý gerekliliðine/garantisine verilen genel
+addýr. Çökme Toleransý desteði, her zaman Yüksek Mevcudiyet anlamýna gelir. Ama
+tersi her zaman doðru olmayabilir çünkü çökme toleransý, {\em veri doðruluðu}
+ile çok yakýn alakalýdýr; Kullanýcý, arka planda çökme olsa da hem çökmeyi
+hissetmemeli, hem de o anda girmekte olabileceði {\em verisinde} bir yanlýþlýk
+görmemelidir. Finans dünyasýnda yapýlan elektronik iþlemler bunun tipik
+örneðidir. Fakat kýyasla Yüksek Mevcudiyet, her zaman veri doðruluðunu
+gerektirmez, belli yüzdelerde veri yanlýþlýðýna raðmen ayakta olan bir
+bilgisayarlarý bulmamýz ihtimali yüksek ise, Yüksek Mevcudiyete sahibiz
+demektir. Telco dünyasý her zaman veri doðruluðu gerektirmeyen yüksek mevcudiyet
+için güzel bir örnektir.
+
+Bu bölümde, Web uygulamamýzý tek bir JBoss üzerinden deðil, iki JBoss
+servisinden oluþan bir kümede nasýl çalýþtýrabileceðimizi öðreneceðiz. 
+
+\subsubsection{Apache ve JBoss Kümesi} \label{perf:opt:web:cluster}
+
+Ayný uygulamayý birden fazla JBoss üzerinde çalýþtýrýnca, þu sorulabilir:
+Dýþarýdan gelen Web isteklerinin hangi JBoss'a gideceðine kim karar verecektir?
+Bu sorunun cevabý, ``Web isteðini ilk karþýlayan servis noktasýndan'' baþkasý
+deðildir. Apache Web Server (port 80 üzerinde iþlem yapan) Web isteklerini ilk
+karþýlayan yer olarak, gerekli JBoss servisine aktarma görevini
+yapabilir.
+
+Apache'nin bu görevi yerine getirmesi için, Apache üzerinde mod\_jk adýnda bir
+eklenti kurmamýz gerekiyor. Mod\_jk kurulduktan sonra, üzerinde elimizdeki tüm
+JBoss servislerini kayýt ederiz, ve böylece Apache'nin JBoss servislerinden
+haberi olur.
+
+Mod\_jk, JBoss servisleri ile AJP port'u ve AJP protokolü üzerinden iletiþim
+kurar. AJP protokolu, HTTP protokolu gibi Web bilgisi servis etmek için
+yazýlmýþtýr, fakat AJP tek baþýna tarayýcýnýza HTML servis etmek için deðil, Web
+Server programý ile beraber çalýþarak Servlet teknolojisi ile Apache arasýnda
+baðlantý kurulabilmesi için kullanýlýr. Þekil
+\ref{perf:opt:cluster:single:logical} üzerinde böyle bir kurulumu görüyoruz. 
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{1.4}{
+  \includegraphics{./images/cluster_single_apache_two_jboss.eps}
+  }
+}
+\caption{\label{perf:opt:cluster:single:logical} Ayný Makinada Küme: Bir Apache ve Ýki
+JBoss}
+\end{figure}
+
+Optimal olan Web fiziksel mimarisi, statik içeriðin (jpg, gif dosyalarý gibi)
+Apache tarafýndan servis edilmesi, sadece Servlet iþlemlerinin JBoss'a
+býrakýlmasýdýr. Bunun için tüm statik içerik Apache dizinleri içinde
+olmalýdýr. Bunun nasýl yapýlacaðýný bu bölümde göreceðiz. Özet olarak ölçekleme
+amaçlarýmýz için bir JBoss kümesi, hýzlandýrma amaçlarýmýz için statik
+içerikleri Apache'ye iþletme tekniklerini uygulayacaðýz.
+
+\subsubsection{HttpSession}
+
+Bir Web uygulamasýnýn \PVerb!HttpSession! üzerine bilgi koymasý muhtemel olduðu
+için, küme ortamýnda bile, oturum baðlýlýðý (session affinity) kavramýný küme
+ortamýna taþýmamýz gerekecek. Yâni bir kullanýcý ilk web isteðinin karþýlanmasý
+için JBoss \#1'e gittiyse, ayný oturum altýndaki ikinci isteði de ayný JBoss'a
+yönlendirilmelidir, çünkü hafýzada (\PVerb!HttpSession!) tutulan bilgiler, o JVM
+üzerindedir.
+
+Fakat oturum baðlýlýðý kullanýmý, JVM'in çökmesi durumunda bir zorluk yaratýr,
+çünkü eðer JVM belleðinde (\PVerb!HttpSession!) önemli bazý bilgiler tutuyorsak
+ve onu kaybedersek, yeni isteklerin mod\_jk tarafýndan öteki JBoss'a
+yönlendirilmesi yeterli deðildir: Bellekteki bilgilerin öteki JVM'ler üzerinde
+de tutuluyor olmasý gerekir. Yoksa yönlendirmeden sonra yeni JVM üzerinde
+beklenen deðerler bulunamayacaktýr. JBoss, bu problemi, her servisi birbiriyle
+yayýn bazlý bir protokol üzerinden konuþturarak çözmüþtür. Her Servlet üzerinde
+tutulan \PVerb!HttpSession! içeriði, ayný kümenin parçasý olan {\em öteki bir
+JBoss'a} JGroups yayýn kütüphanesi ile kopyalanýr. Oturum Kopyalama (Session
+Replication) için gereken ayarlarý bu bölümde göreceðiz.
+
+Kavramlarý anlattýðýmýza göre, Þekil \ref{perf:opt:cluster:single:logical}
+üzerindeki kümeyi kurmaya baþlayabiliriz.
+
+\subsubsection{Kurmak}
+
+Apache'yi Linux üzerinde kurmak için, kaynaklarýndan derlememiz
+gerekiyor. Alttaki adres 
+
+\begin{lstlisting}[language=sh, frame=none]
+http://godel.cs.bilgi.edu.tr/mirror/apache/httpd/binaries/linux/
+\end{lstlisting}
+üzerinden \PVerb!httpd-2.0.50-i686-pc-linux-gnu.tar.gz! adlý kaynak dosyayý
+indirin. Bu dosyayý herhangi bir dizinde açýn. Bu dizine \PVerb!APACHE_SOURCE!
+diyelim. Þimdi aþaðýdaki komutlarý komut satýrýndan uygulayýn.
+
+\begin{lstlisting}[language=sh, frame=none]
+cd APACHE_SOURCE
+
+./configure --with-layout=Apache
+            --prefix=/usr/local/apache
+            --enable-rule=SHARED_CORE --enable-module=so
+
+make
+
+make install
+\end{lstlisting}
+Dizin \PVerb!/usr/local/apache!, derleme ve install bittikten sonra Apache iþler
+dosyalarýnýn bulunacaðý yer olacaktýr. Bu dizine giderek, sonucu kontrol
+edebilirsiniz: \PVerb!bin/!, \PVerb!conf/! gibi dizinler görmeniz
+gerekiyor. Test olarak, Apache'yi hemen baþlatýp durdurabilirsiniz.
+
+\begin{lstlisting}[language=sh, frame=none]
+/usr/local/apache/bin/apachectl start
+
+/usr/local/apache/bin/apachectl stop
+\end{lstlisting}
+Mod\_jk'yi de, aynen Apache gibi, kaynaklarýndan derleyeceðiz. Alttaki adres
+
+\begin{lstlisting}[language=sh, frame=none]
+http://www.apache.org/dist/jakarta/tomcat-connectors/jk/source
+\end{lstlisting}
+üzerinden \PVerb!jakarta-tomcat-connectors-1.2.10-src.tar.gz! paketini
+indirin. Paketi açýn (\PVerb!MODJK_SOURCE! diyelim) ve bu dizinin altýnda,
+\PVerb!MODJK_SOURCE/jk/native/!  dizinine gidin. Derlemek için þu komutlarý
+kullanýn:
+
+\begin{lstlisting}[language=sh, frame=none]
+./configure --with-apxs=/usr/local/apache/bin/apxs --enable-EAPI
+
+make
+\end{lstlisting}
+Derleme bittikten sonra, \PVerb!MODJK_SOURCE/jk/native/apache-2.0/! altýnda
+mod\_jk'nin kütüphanesi yaratýlmýþ olmalýdýr. Bu dosyayý alýp, Apache altýna
+atmamýz gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+cp ./apache-2.0/mod_jk.so APACHE_HOME/modules
+\end{lstlisting}
+Artýk, Apache tarafýnda ayarlarý yapmaya baþlayabiliriz. Apache'nin kurulmuþ
+olduðu \PVerb!/usr/local/apache! dizinine gidelim, ve \PVerb!conf! dizini
+altýnda þu dosyalarý yaratalým.
+
+\begin{lstlisting}[language=sh, caption=httpd.conf]
+# Include mod_jk configuration file
+Include conf/mod-jk.conf
+\end{lstlisting}
+
+\begin{lstlisting}[language=sh, caption=mod-jk.conf]
+# Load mod_jk module
+# Specify the filename of the mod_jk lib
+LoadModule jk_module modules/mod_jk.so
+
+# Where to find workers.properties
+JkWorkersFile conf/workers.properties
+
+# Where to put jk logs
+JkLogFile logs/mod_jk.log
+
+# Set the jk log level [debug/error/info]
+JkLogLevel info 
+
+# Select the log format
+JkLogStampFormat  "[%a %b %d %H:%M:%S %Y]"
+
+# JkOptions indicates to send SSK KEY SIZE
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+
+# JkRequestLogFormat
+JkRequestLogFormat "%w %V %T"
+
+# Mount your applications
+JkMount /kitapdemo/*.do loadbalancer
+
+# You can use external file for mount points.
+# It will be checked for updates each 60 seconds.
+# The format of the file is: /url=worker
+# /examples/*=loadbalancer
+JkMountFile conf/uriworkermap.properties               
+
+# Add shared memory.
+# This directive is present with 1.2.10 and
+# later versions of mod_jk, and is needed for
+# for load balancing to work properly
+JkShmFile logs/jk.shm 
+
+# Add jkstatus for managing runtime data
+<Location /jkstatus/>
+    JkMount status
+    Order deny,allow
+    Deny from all
+    Allow from 127.0.0.1
+</Location>    
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=sh, caption=workers.properties]
+# Define list of workers that will be used
+# for mapping requests
+worker.list=loadbalancer,status
+# Define Node1
+worker.node1.port=8109
+worker.node1.host=localhost
+worker.node1.type=ajp13
+worker.node1.lbfactor=1
+worker.node1.cachesize=10
+
+# Define Node2
+worker.node2.port=8209
+worker.node2.host=localhost
+worker.node2.type=ajp13
+worker.node2.lbfactor=1
+worker.node2.cachesize=10
+
+# Load-balancing behaviour
+worker.loadbalancer.type=lb
+worker.loadbalancer.balance_workers=node1, node2
+worker.loadbalancer.sticky_session=1
+worker.loadbalancer.local_worker_only=1
+worker.list=loadbalancer
+
+# Status worker for managing load balancer
+worker.status.type=status
+\end{lstlisting}
+
+\PVerb!worker.node1.lbfactor! ve \PVerb!worker.node2.lbfactor! parametrelerinin
+deðerine göre mod\_jk, hangi küme birimine daha fazla yük aktarmasý gerektiðini
+anlar. Eðer \PVerb!node1.lbfactor=100! ve \PVerb!node2.lbfactor=200! olsaydý,
+\PVerb!node2!'ye \PVerb!node1!'e nazaran iki kat daha fazla yük aktarýlýrdý. 
+
+\PVerb!worker.loadbalancer.sticky_session=1! parametresi, oturum baðlýlýðý
+(session affinity) kavramýný kullanacaðýmýzý göstermektedir (\PVerb!=1!)
+
+\begin{lstlisting}[language=Java, caption=uriworkermap.properties]
+# Simple worker configuration file
+#
+# Mount the Servlet context to the ajp13 worker
+/kitapdemo/*.do=loadbalancer
+\end{lstlisting}
+Ayar dosyalarý \PVerb!mod-jk.conf! ve \PVerb!uriworkermap.properties! içinde yük
+daðýtýcýya (\PVerb!loadbalancer!) iletilmek üzere sadece \PVerb!/kitapdemo/*.do!
+URL düzeninin seçilmiþ olduðuna dikkat edelim. Böylece, baþta belirttiðimiz
+gibi, sadece dinamik içeriði (\PVerb!.do! ile biten URL'ler, yâni Struts
+Action'larý) JBoss'a iletmiþ oluyoruz. Geri kalan her türlü Web isteðini Apache
+karþýlayacaktýr. Bunu, statik içeriði daha hýzlý servis etmek için
+yapýyoruz. JBoss içindeki HTTP servisi, büyük statik içerik yüklerini kaldýrmak
+için uygun deðildir. Apache Web Server'ý bu konuda en hýzlý servislerden
+biridir.
+
+Sitemizi oluþturan statik içeriðin Apache tarafýndan karþýlanabilmesi için de,
+Apache'nin o içeriðe sahip olmasý gerekmektedir. O zaman statik içeriðimizi,
+geliþtirme dizini olan \PVerb!src/pages! olarak alýp, olduðu gibi
+\PVerb!/usr/local/apache/htdocs/kitapdemo! altýna kopyalamamýz
+gerekiyor. \PVerb!htdocs! dizini, Apache için en üst seviye içerik dizini olarak
+kabul edilir. Apache iþleten \PVerb!localhost!  makinanýzý tarayýcýnýzdan
+\PVerb!http://localhost/page.html! ile ziyaret edersek, Apache,
+\PVerb!pages.html! adlý dosyayý \PVerb!htdocs! altýnda arayacaktýr.
+
+Artýk JBoss servislerini (kümesini) hazýrlayabiliriz. Örnek web projesi olarak
+\PVerb!StrutsHibPerformance!'ý kullanacaðýz.
+
+\begin{enumerate}
+   \item Projeyi önce derleyip (\ref{install:samples} bölümünde anlatýldýðý
+   gibi) \PVerb!JBOSS/server/default/deploy! altýna gönderelim.
+   \item \PVerb!JBOSS/server/default/all! dizininin,
+   \PVerb!JBOSS/server/default/node1! ve \PVerb!JBOSS/server/default/node2! olarak
+   iki kopyasýný çýkartalým.
+   \item Daha önceden \PVerb!JBOSS/server/default/deploy! altýna göndermiþ
+   olduðumuz (derleme ile) \PVerb!kitapdemo.sar! projesini, \PVerb!node1!
+   ve \PVerb!node2! dizinleri altýna kopyalayalým.
+   \item Her iki dizinde de,
+   \PVerb!kitapdemo.sar/kitapdemo.war/WEB-INF/classes/web.xml! dosyasýna girelim
+   ve \PVerb!<distributable/>! etiketini þu þekilde ekleyelim:
+   \begin{lstlisting}[language=Java, frame=none]
+<web-app>
+   ...
+   <distributable/>
+</web-app>
+   \end{lstlisting}
+   \item \ref{install:jboss:cluster:ports} bölümünde anlatýldýðý gibi,
+   \PVerb!node1! ve \PVerb!node1! altýndaki JBoss kuruluþunu, deðiþik port'lar
+   kullanmasý için ayarlayalým.
+   \item \PVerb!JBOSS_HOME/server/node1/deploy/jbossweb-tomcat50.sar!  ve
+   \PVerb!JBOSS_HOME/server/node2/deploy/jbossweb-tomcat50.sar!  altýnda olan
+   \PVerb!server.xml! dosyalarýndaki \PVerb!Engine name="jboss.web"! diyen bloðu
+   þöyle deðiþtirelim:
+   \begin{lstlisting}[language=Java, frame=none]
+<Engine name="jboss.web" defaultHost="localhost" jvmRoute="node1">
+    ..
+</Engine>
+   \end{lstlisting}
+   ve
+   \begin{lstlisting}[language=Java, frame=none]
+<Engine name="jboss.web" defaultHost="localhost" jvmRoute="node2">
+    ..
+</Engine>
+   \end{lstlisting}
+   \item \PVerb!JBOSS_HOME/server/node1/deploy/jbossweb-tomcat50.sar/META-INF!
+    ve \PVerb!JBOSS_HOME/server/node2/deploy/jbossweb-tomcat50.sar/META-INF!
+    altýndaki \PVerb!jboss-service.xml! dosyalarýnda \PVerb!UseJK! komutunun
+    verildiði satýrý bulalým, ve onu þöyle deðiþtirelim:
+    \begin{lstlisting}[language=Java, frame=none]
+<attribute name="UseJK">true</attribute>    
+    \end{lstlisting}
+\end{enumerate}
+Küme hazýrlýðýmýz tamamlandý. Apache, mod\_jk üzerinden iki JBoss servisini
+tanýyor, ve onlarýn arasýnda yük daðýtýmý yapmak üzere hazýr. JBoss
+servislerinin her biri de ayrý port'larda çalýþmak üzere ayarlandýlar (küme
+ortamýnda port deðiþikliði için \ref{install:jboss:cluster:ports} bölümüne
+bakýnýz). Her iki JBoss da baþlatýldýktan sonra, birbirleri ile iletiþime
+geçerek \PVerb!HttpSession!  içeriklerini ötekine kopyalayacaklar, ve çökme
+durumunda Apache mod\_jk, yeni istekleri {\em çökmemiþ} makinaya
+yönlendirdiðinde, kullanýcý uygulamayý sanki hiç çökmemiþ gibi kullanmaya devam
+edecektir.
+
+Kümeyi baþlatmak için \PVerb!JBOSS_HOME! altýndan
+
+\begin{lstlisting}[language=Java, frame=none]
+bin/run.sh -c node1
+
+bin/run.sh -c node1
+\end{lstlisting}
+komutlarýný uygulamalýyýz. Apache için ise \PVerb!/usr/local/apache! altýnda
+
+\begin{lstlisting}[language=Java, frame=none]
+/usr/local/apache/bin/apachectl start
+\end{lstlisting}
+komutunu kullanýrýz. Üç servisin tamamý ayaða kalktýktan sonra, tarayýcýnýzý
+\PVerb!http://makina-ismi/kitapdemo/main.do! adresine yönelttiðinizde  Apache'nin
+Web isteðini JBoss'lardan birine yönelttiðini ve baþlangýç sayfasýný bastýðýný
+göreceksiniz. Yük daðýtýmýný test etmek için, ikinci bir tarayýcý açýn, ve
+tekrar ayný adrese gidin. Bu sefer yönlendirme yapýlan JBoss, ikincisi
+olacaktýr. Çökmeye dayanýklýlýðý test etmek için, birinci JBoss'u \PVerb!Control
+C! ile çökertin, ve her iki tarayýcýyý da günceleyin. Uygulamanýn hiçbir þey
+olmamýþ gibi iþlemeye devam ettiðini göreceksiniz.
+
+\begin{quote}
+\textbf{Not:} JBoss servislerini baþlattýðýnýzda eðer
+\begin{lstlisting}[language=Java, frame=none]
+java.net.SocketException: bad argument for IP_MULTICAST_IF: address
+not bound to any interface
+\end{lstlisting}
+hatasý gelirse, Linux servisiniz multicast paketlerini yönlendirmeye (route)
+hazýr deðil demektir \cite[sf. 93]{jbossclustering} . Multicast desteði eklemek
+icin, komut satýrýnda
+\begin{lstlisting}[language=Java, frame=none]
+route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0
+\end{lstlisting}
+komutunu \PVerb!root! olarak iþletmelisiniz. Ayný komutu sürekli iþletmeyi
+hatýrlamaktan kurtulmak için bu kullanýmý bir baþlangýç script'inin içine
+koymanýz isabetli olur. Ayrýca, JVM'in IPv6 (internet protokolü sürüm 6)
+kullanýyorsanýz, yeni bir network hatasý çýkacaktýr. Bu hatadan kurtulmak için,
+Linux seviyesinde IPv6 yerine IPv4 kullanmanýz
+yeterlidir\footnote{http://wiki.jboss.org/wiki/View.jsp?page=IPv6}. \PVerb!JBOSS/bin/run.conf!
+içinde \PVerb!JAVA_OPTS! deðiþkenine þu deðeri atamanýz yeterli olacaktýr
+
+\begin{lstlisting}[language=Java, frame=none]
+JAVA_OPTS="-server .. -Djava.net.preferIPv4Stack=true"
+\end{lstlisting}
+
+\end{quote}
+
+\begin{quote}
+\textbf{Not 2:} Eðer JBoss kümesi baþladýðýnda ayrý makinalardaki JBoss'lar
+birbirini görmez ise, Linux üzerindeki birimleriniz \PVerb!127.0.0.1! adresini
+baðlanýyor olabilir. Bu durumda JBoss'unuz network'teki diðer IP'leri
+görmeyecektir. Bunun önünce geçmek için \PVerb!run.conf! içinde set edilen
+\PVerb!JAVA_OPTS!'a meselâ \PVerb!192.168.1.1! IP adresi taþýyan Linux makinasý
+için \PVerb!-Dbind.address=192.168.1.1! ibaresini eklemeniz gerekecektir.
+\end{quote}
+
+\subsubsection{Fiziksel Küme Yapýlarý}
+
+Üstte tarif ettiðimiz küme kuruluþu, hepsi ayný makinada çalýþan bir Apache ve
+iki JBoss servisi üzerinden hazýrlandý. Gerçek bir Web sitesinin fiziksel
+yapýsý, daha fazla donaným birimi içerecektir, çünkü ölçekleme demek, problemin
+üzerine daha fazla donaným atmak, daha fazla beygir gücü ile eþzamanlý yapýlan
+islem sayýsýný arttýrmaktýr. Kümenin donaným yapýsý açýsýndan çoðunlukla takip
+edilen yöntem, her JBoss servisinin ayrý bir Unix makinasý üzerinde
+olmasýdýr. Böyle bir yapýyý Þekil \ref{perf:opt:cluster:single:physical}
+üzerinde görüyoruz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.30}{
+  \includegraphics{./images/jboss_apache_cluster_simplest_bw.eps}
+  }
+}
+\caption{\label{perf:opt:cluster:single:physical} Küme: Ayrý Makinalarda Bir
+  Apache Ýki JBoss}
+\end{figure}
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.30}{
+  \includegraphics{./images/jboss_apache_cluster_ultimate_bw.eps}
+  }
+}
+\caption{\label{perf:opt:cluster:many:physical} Küme: Final Fiziksel Mimari}
+\end{figure}
+
+Bu þekle göre, ayrý bir makinadaki Apache, ilk isteði alarak mod\_jk üzerinden
+yine ayrý makinalarda olan JBoss servislerinden birine yönlendirmektedir. Bu da
+kullanýlabilir, ve ölçeklenebilir bir mimaridir. Daha fazla eþzamanlý
+kullanýcýyý idare  edebilmek için, JBoss kümesine yeni bir makina eklenir, ve
+mod\_jk ile kayýt ettirilir. 
+
+Daha da ciddi bir mimari için, Þekil \ref{perf:opt:cluster:many:physical}'deki
+mimariyi tavsiye ediyoruz. Bu mimaride, kümedeki JBoss'larýn çökmesine hazýr
+olunduðu gibi, Apache'lerden birinin de çökmesine bile hazýrýz. Görüldüðü gibi,
+tek Apache yerine iki Apache kullanýlmýþtýr, ve her iki Apache de kümedeki tüm
+JBoss'lardan haberdardýr.
+
+
+Ýki Apache arasýnda seçim yapmak için, Cisco 11150 markasýndaki bir switch
+donanýmýný kullanacaðýz. Bu switch, aynen Apache'nin Java \verb!HttpSession!
+seviyesinde yapýþkanlýk saðladýðý gibi, pür HTTP bazýnda bir yapýþkanlýk saðlar,
+yâni ayný müþteriyi (client) ayný Apache'ye yönlendirir. Bu switch, çok basit
+bir yönlendirme yaptýðý için çökme þansý daha azdýr (kýyasla Apache bir yandan
+statik HTML servislemesi de yapar). Switch'in Yüksek Mevcudiyet gereklilikleri
+network admin'lerinin sorumluluðu altýnda olacaktýr. Biz eðer sistemimizi bu
+yazýda tarif edilen seviyeye getirdiysek, bir kurumsal teknik mimar olarak
+kontrolümüz altýndaki tüm noktalarý elimizden geldiðince saðlama almýþ
+durumdayýz demektir.
+
+\subsection{EJB Kümesi Yaratmak} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ref{dist:ejb} bölümünde EJB Session Bean teknolojisini iþledik. Bu bölümde
+iþlenen þekliyle EJB Session Bean nesneleri, kendilerini JNDI üzerinden bulan,
+baðlanan ve elinde referansýný tutan dýþ müþterilere metotlarýný
+sunabiliyordu. Gerçek bir projeye örnek olarak bir Swing uygulamasý JNDI
+üzerinden eriþebileceði EJB Session Bean nesnelerinde metot çaðrýlarý yaparak
+(CommandHandler mimarisinde tek nesne ve \PVerb!executeCommand! metotuna) servis
+tarafýna gerekli iþleri yaptýrdýðý bir yapýyý düþünebiliriz. Þekil
+\ref{perf:ejb:cluster:good} üzerinde böyle bir yapýyý görüyoruz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/ejb_distributed.eps}
+  }
+}
+\caption{\label{perf:ejb:cluster:good} Bir EJB Kümesi}
+\end{figure}
+
+
+Bu yapý, dikkatimizi çekebileceði gibi, \ref{dist:ejb} bölümünde tarif edilen
+yapýdan deðiþiktir. Yeni yapýda, Swing uygulamasý EJB'lere ulaþýrken bir
+``akýllý yer tutucu'' (smart proxy) üzerinden baðlanmakta ve yerel (local) JNDI
+yerine, global JNDI servisi kullanmaktadýr. Yerel JNDI yerine global JNDI
+kullanýlmasýnýn sebepleri þunlardýr:
+
+\begin{itemize}
+\item \ref{perf:opt:web:cluster} bölümündeki Web kümesi gerekliliklerine benzer
+   bir þekilde, kodlama basitliði açýsýndan, çaðýran tarafta tek ve herkese
+   ortak bir giriþ noktasýna ihtiyaç vardýr.
+ \item Daðýtýcý merkez nokta, merkezi bir yer olduðu için, kümedeki birimlerde
+   olan yüke göre, yeni isteði yükü en az olan EJB servisine yönlendirme
+   iþlemini gerçekleþtirmek için en uygun yerdir.
+ \item Giriþ noktasý, küme birimlerinden ayrý olduðu için tek çökme noktasý
+ (single point of failure) yapýsýndan bizi kurtarýr. 
+\end{itemize}
+
+Bir diðer deðiþiklik ise, yerel yerine global ve yüksek mevcudiyeti olan JNDI
+(HA-JNDI) kullanýldýðý zaman, geriye gelen normal bir EJB proxy'nin deðil,
+akýllý bir proxy'nin olmasýdýr. Akýllý proxy'nin kullanýlmasýnýn sebebi ise,
+küme içindeki diðer EJB küme birimlerinden haberdar olan bir proxy'ye olan
+ihtiyaçtýr. Çökmeden kurtulma tekniðini kullanmak için böyle bir proxy'ye
+ihtiyaç vardýr. Senaryo olarak þunu düþünün: Meselâ Swing uygulamasýnýn
+HA-JNDI'dan aldýðý, makina \#1 üzerinde EJB \#1'e iþaret eden bir eden bir proxy
+olsa ve o sýrada makina \#1 çökse, elimizdeki referansýn bize hissettirilmeden
+{\em çökmemiþ} olan makina \#2'de olan bir EJB \#1 kopyasýna yönlendirilerek
+Swing uygulamasýnýn hiçbir þey olmamamýþ gibi iþine devam edebilmesini
+isteriz. Akýllý proxy, küme kavramýndan haberdar bir nesne olarak bu iþi
+baþarýlý bir þekilde yapabilir.
+
+\subsubsection{JBoss Üzerinde EJB Kümesi Kullanmak}
+
+JBoss kullanarak bir EJB kümesi yaratmak için, üç þey yapýlmasý gerekiyor.
+
+\begin{enumerate}
+   \item Projenizde EJB ayarlarý yapan dosyalardan biri olan
+   \PVerb!dd/jboss.xml! içinde EJB'mizin küme hâlinde çalýþacaðýný
+   belirtmeliyiz. Bunun için bahsi geçen dosyada þu þekilde bir ayar deðiþikliði
+   gerekir:
+
+   \begin{lstlisting}[language=Java, frame=none]
+<jboss>
+   <enterprise-beans>
+      <session>
+         <ejb-name>test/MyTestSession</ejb-name>
+         <jndi-name>ejb/test/MyTestSessionBean</jndi-name>
+            <clustered>True</clustered>
+      </session>
+   </enterprise-beans>
+   <resource-managers>
+   </resource-managers>
+   </resource-managers>
+</jboss>
+   \end{lstlisting}
+   Bu listede, normâl EJB'ye göre olan tek deðiþiklik, \PVerb!<clustered>!
+   etiketi altýnda \PVerb!True! deðerinin verilmiþ olmasýdýr. Olaðan (default)
+   deðer olarak bu etiket, \PVerb!False! deðerini taþýyacaktýr.
+
+   \item Kümemize ait olan servisleri \PVerb!run.sh! ya da \PVerb!run.bat! ile
+   baþlatmadan önce, iþler kodlarýmýzýn \PVerb!JBOSS_HOME/server/all! dizinine
+   gönderilmiþ olmasý gerekmektedir. Tabii servisimizi baþlatýrken de \PVerb!sh
+   run.sh -c all! komutunu kullanmalýyýz. Eðer ayný makinada birden fazla küme
+   birimi (JBoss servisi) kullanacaksak, \ref{install:jboss:cluster:ports}
+   bölümünde anlatýlan port deðiþiklik tekniðini kullanmalýyýz.
+
+   \item HA-JNDI, JBoss üzerinde JNDI servisinden deðiþik bir port'tan servis
+   edilir. O yüzden HA-JNDI'ý bulan kodlarýn baðlandýðý port'un bilinmesi
+   gerekiyor. Bu port deðerinin ne olduðunu, JBoss baþlangýç log mesajlarýna
+   bakarak bulabiliriz. Meselâ, aþaðýdaki gibi bir açýlýþ ekranýnda
+\begin{lstlisting}[language=Java, frame=none]
+....
+17:50:16,237 INFO  [SnmpAgentService] SNMP agent going active
+17:50:17,739 INFO  [DefaultPartition] Initializing
+17:50:18,149 INFO  [STDOUT]
+-------------------------------------------------------
+GMS: address is localhost:1032 (additional data: 14 bytes)
+-------------------------------------------------------
+17:50:20,262 INFO  [DefaultPartition] Number of cluster members: 1
+17:50:20,262 INFO  [DefaultPartition] Other members: 0
+17:50:20,272 INFO  [DefaultPartition] Fetching state (will wait
+for 30000 milliseconds):
+17:50:20,923 INFO  [HANamingService] Listening on /0.0.0.0:1100
+...
+\end{lstlisting}
+Bu ekranda \PVerb!HANamingService!'in \PVerb!1100! numaralý port'ta dinlemeye
+baþlamýþ olduðu bildirilmektedir. Ýþte bu port, HA-JNDI için kullanmamýz gereken
+port'tur. Ayrýca küme ortamýnda birden fazla makina olabileceði için, ve bu
+makinalarýn çökme ihtimaline karþý, JBoss HA-JNDI kullanýmý
+\PVerb!Context.PROVIDER_URL! için birden fazla makine ismi tanýmlamamýza izin
+verir. O zaman baðlantý kodlarýnýz þu þekilde olmalýdýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+MyTestSession beanRemote;
+InitialContext ic = null;
+
+Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,
+      "org.jnp.interfaces.NamingContextFactory");
+p.put(Context.URL_PKG_PREFIXES, "jboss.naming:org.jnp.interfaces");
+p.put(Context.PROVIDER_URL, "host1:1100, host2:1100, host3:1100");
+try {            
+    ic = new InitialContext(p); 
+    Object objref = ic.lookup("ejb/test/MyTestSessionBean");
+    ...
+\end{lstlisting}
+Böylece \PVerb!host1!,\PVerb!host2! ve \PVerb!host3! isimli makinelerde
+çalýþmakta olan HA-JNDI servislerinden hangisi ayakta ise ondan bir EJB
+referansý talep edebiliyoruz. \PVerb!lookup! yöntemi sýrasýyla listedeki her
+makinadaki HA-JNDI'ya gidecek, eðer makinayý bulamazsa bir sonrakine devam
+edecektir. 
+\end{enumerate}
+
+\subsubsection{Yanlýþ Mimariler}
+
+\ref{dist:rmi} bölümünde, Web katmaný içeren mimarilerde EJB kullanmanýn optimal
+olmadýðýndan bahsetmiþtik. Sebeplerini burada detaylý olarak açýklayalým;
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/ejb_distributed_local_wrong.eps}
+  }
+}
+\caption{\label{perf:ejb:webcluster:local:wrong}
+  Yanlýþ EJB Kümesi - Yerel Çaðrý Yapýlacaksa EJB'ye Ne Gerek Var?}
+\end{figure}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/ejb_distributed_wrong.eps}
+  }
+}
+\caption{\label{perf:ejb:webcluster:wrong}
+  Yanlýþ Bir EJB Kümesi - Web Katmaný ile EJB Konuþuyor}
+\end{figure}
+
+\begin{itemize}
+\item Web EJB'yi Yerel Çaðýrýyor: Þekil \ref{perf:ejb:webcluster:local:wrong} üzerinde
+gösterilen yapýda, þu soru sorulabilir: Eðer Web kodlarýndan yerel çaðrý
+yapýlacaksa, daðýtýk mimaride çalýþmaya yarayan EJB teknolojisinin kullanýlmasý
+gerekli midir? Bazý mimarlar tarafýndan ``ileride ayýrmamýz rahat olsun diye''
+yerel bile çaðýrýlsa EJB kullanýlmýþ olmasý, bir seviyede belki geçerli
+olabilirdi, fakat birbirinden ayrý olan Web + EJB mimarisinin baþka sebeplerden
+ötürü optimal olmamasý, bu tasarýmýn baþarýsýna gölge düþürür.
+
+\item Web ile EJB Ayrý JVM'lerde: Þekil \ref{perf:ejb:webcluster:wrong} üzerindeki
+fiziksel olarak ayrý Web ve EJB þartlarýnda, performans açýsýndan network'e her
+çýkýþýmýzda ek bir bedel öderiz. Bu yüzden Web ortamýndan iþlem mantýk
+kodlarýmýzý EJB içine koymak yerine, düz bir class üzerinden Java \PVerb!import!
+ile kendi JVM'imize dahil ederek yerel çaðrý yapmamýz daha hýzlý
+olacaktýr. Kodlama açýsýndan da düz class kullanmak, tek bir bileþen için Home,
+Remote ve Bean class'larý yazýlmasýný gerektiren EJB seçeneðinden daha az
+kodlama gerektirecektir. Kodlama külfeti argümaný, yeni JDK 5.0 annotation
+teknolojisi üzerinden EJB 3.0 üzerinden kullanýlýyor olsa bile geçerlidir, çünkü
+bu sefer annotation'larýn eklenmesi ve ayar dosyalarýnda gereken deðiþiklikler,
+yerel çaðrý yapýldýðý duruma göre ek kod külfeti anlamýna gelecektir.
+\end{itemize}
+
+Fakat buna raðmen, Web + EJB mimarisi hakkýnda þu ek savunmayý da bazen
+iþitebiliyoruz: ``Web + EJB mimarisinde bazý kodlar bazý kodlardan fiziksel
+olarak ayrýldýklarý için, bir parçanýn çöküþü öteki parçayý etkilemez''. Bu
+geçersiz bir savunmadýr. Son kullanýcýdan baþlayan bir Web isteðini bir zincir
+gibi düþünürsek, bir zincir, sadece en zayýf halkasý kadar saðlamdýr. A, B'yi
+çaðýrýr, B C'yi çaðýrýr ve B çökerse, A'nýn da C'nin de çalýþmasý hiçbir anlam
+ifade etmeyecektir. Bu yüzden iþlem mantýðý kodlarýnýn ayrý bir fiziksel
+makinada olmasý, çökmeden kurtulma açýsýndan hiç bir yardýmda bulunamaycak bir
+faktördür.
+
+Son iddia, ``Web + EJB durumunda bir kod öbeðinin (meselâ EJB) daha fazla iþlem
+gücüne ihtiyacý varsa, onun fiziksel ölçeklenmesinin ayrý yapýlabilmesi, meselâ
+ek bir EJB makinasý ile sadece iþlem gücü isteyen öbeklere iþlem gücü
+verilebilme'' iddiasýdýr. Bu düþüncede, pür Web mimarisine kýyasla, ciddi
+eksiklikler vardýr. Web + EJB fiziksel katmanlarý ayrý olan bir mimarinin pür
+Web fiziksel katmaný içeren bir mimariye nazaran yükünü optimal þansý sýfýra
+yakýndýr. Bunu matematiksel olarak þöyle ispatlayabiliriz.
+
+\newtheorem{dist}{Daðýtýk Mimari Performans Teoremi}[section]
+\begin{dist}
+Pür Web mimarisinde olan belli bir yük altýndaki $n \in \mathbb{N}$ makina, kod
+içerisinde web için $w (w \in \mathbb{R}, 0 \leqslant w \leqslant 1$), iþlem
+mantýðý için ise $e (e \in \mathbb{R}, 0 \leqslant w \leqslant 1$) kadar zaman
+harcamaktadýrlar. Ayrýca $e + w = 1$ olduðunu farz ediyoruz.
+
+Pür Web kodlarýný Web için ayrý, iþlem mantýðý için ayrý EJB ``fiziksel
+makinalara'' geçirdiðimizde (ki Web makinalarýnýn sayýsý $fw \in \mathbb{N}$,
+EJB makinalarýnýn sayýsý $fe \in \mathbb{N}$ olsun) tam kullaným gören (fully
+utilized) tek daðýlým, $fe = en$ olduðu þartlardadýr. Ayný þekilde Web için tam
+kullaným $fw = wn$ þartlarýnda olur. Diðer tüm muhtemel daðýlýmlarda makinalarýn
+bir kýsmý her zaman az yüklenmiþ (underutilized) diðer kýsmý da gereðinden fazla
+yüklenmiþ (overutilized) olacaklardýr.
+\end{dist}
+
+\begin{proof}
+Bir makina zamanýna $1$ deðeri verelim. O zaman pür fiziksel Web þartlarýnda tüm
+makinalarda harcanan iþlem mantýðý makina zamaný, $e \cdot n$ olarak
+hesaplanabilir. Ayrý fiziksel Web ve EJB makinalarýna geçilince, her EJB
+makinasý baþýna düþen makina zamaný ise
+
+\begin{equation}
+E_{load} = \frac{e \cdot n}{fe}
+\end{equation}
+olarak gösterebiliriz. $E_{load}$ deðerinin $1$ çýkmasý için tek yol, görüldüðü
+üzere, $fe = e \cdot n$ olduðu þartlarda olacaktýr. Diðer tüm muhtemel
+daðýlýmlarda, üstteki formülün böleninde yeralan $fe$ deðeri, bölümde olan $e
+\cdot n$'den ya büyük ya da küçük olacaðý için sonuç $1$'den ya büyük ya da
+küçük olacaktýr. Ayrýca $fe$'nin $e \cdot n$'e eþit olmasý da düþük bir
+olasýlýktýr çünkü $fe$ bir doðal sayý, $e \cdot n$ ise bir gerçek (real)
+sayýdýr. O zaman EJB makinasý ya az kullanýlýyor olacak, ya da boðulacaktýr.
+
+$E_{load}$'un $1$'den küçük çýkmasý þartý da iyi deðildir, çünkü bu $fe$'nin $e
+\cdot n$'den büyük olduðu þartlarda olur ve bunun sonucu $W_{load}$'un 1'den
+büyük çýkmasýdýr, bu da Web makinalarýnýn boðulduðu anlamýna gelir. Bunu þöyle
+ispatlayabiliriz; 
+
+\begin{eqnarray}
+f \cdot e & > & e \cdot n \\
+f \cdot e & > & (1 - w) \cdot n \\
+f \cdot e & > & n - w \cdot n \\
+n - fe & < & w \cdot n \\
+fw & < & w \cdot n \textrm{ çünkü } f \cdot e + f \cdot w = n \\ 
+W_{load} & = & \frac{w \cdot n}{fw} \\
+W_{load} \geqslant 1
+\end{eqnarray}
+\end{proof}
+
+Eðer bu teorinin, tersi yönünde ilerlesek, yâni tam kullaným (fully utilized)
+Web+EJB mimarisini pür Web mimarisine geçirirsek, o zaman daðýlýmýn sancýsýz
+þekilde düzgün olacaðýný görürdük (bu teori, basitliði sebebinden
+ispatlanmayacaktýr) çünkü ayrý fiziksel katmanlardan tek katmana geçiþ
+yapýyoruz, ve Web ile iþlem mantýðý kodlarý ayný JVM içindedir. Bu durumda yük
+daðýtýmý için tek gereken, Apache'nin kullanýcý yüküne göre gereken
+yönlendirmeyi yapmasýdýr. O zaman þu sonuca varýyoruz: Kullanabilecek en az
+donanýmla, Web + EJB mimarisi sadece çok küçük bir ihtimalle (neredeyse sýfýr)
+pür Web mimarisiyle ayný performansý gösterebilecektir.
+
+Web + EJB kullanýmýnda pür Web kullanýmýna nazaran donaným ihtiyacý, bir makina
+zamaný kadar olsa bile, teorilerin ispatý sýrasýnda yok farzettiðimiz bir
+gerçeklik daha vardýr. Teoride network yavaþlatma faktörünü (latency) sýfýr
+olarak farz ettik. Fakat, gerçek dünyada {\em ayrý} fiziksel EJB katmanýna
+network üzerinden gitmek, uygulamamýz üzerinde kesinlikle yavaþlatýcý bir faktör
+olacaktýr. Sadece bu sebep için bile Web ortamýnda daðýtýk nesneler kullanýlmasý
+uygun deðildir.
+
+O zaman, örnek olarak 6 makinayý 3 Web 3 EJB olarak ayýrmak yerine (Þekil
+\ref{perf:ejb:webcluster:wrong}), 6 makinanýn hepsini Web (ve onun
+\PVerb!import! ile dahil edip çaðýrdýðý iþlem mantýðý kodlarýna) ayýrmak daha
+iyidir (Þekil \ref{perf:ejb:webcluster:right} -ki bu mimari
+\ref{perf:opt:cluster:many:physical} üzerinde gösterilen ideal yapý ile aynýdýr-).
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/ejb_none_distributed_right.eps}
+  }
+}
+\caption{\label{perf:ejb:webcluster:right}
+  Doðru Web Kümesi}
+\end{figure}
+Dýþarýdan baðlananlarýn {\em ayný anda} hem Web hem zengin önyüz (meselâ Swing)
+olabilmesi þartlarýnda bile tavsiyemiz, Web üzerinden EJB'ye
+baðlanýlmamasýdýr. Bu þartlarda iþlem mantýðý kodlarýný pür Java kodlarýna
+ayýrýp hem Web'den hem EJB'lerden \PVerb!import! ederek çaðýrmak, Web fiziksel
+katmanýnýn EJB katmanýna çaðrý yapmasýndan daha optimal olacaktýr.
+
+\subsection{Veri Tabanýnda Ýndeks Kullanýmý}
+
+Bir kurumsal uygulamanýn optimal çalýþmasýnda, o uygulamanýn veri tabanýnda
+gerçekleþtirdiði sorgularýn performansý çok önemlidir. Eðer bu sorgularýn ne
+kadar hýzlý çâlýþtýðýný anlamak istiyorsak, öncelikle sorgularýn ne olduðunu
+görmeliyiz. Bunun için \PVerb!hibernate.cfg.xml! dosyasýnda
+
+\begin{lstlisting}[language=XML, frame=none]
+<property name="show_sql">true</property>
+\end{lstlisting}
+ayarýný yapmalýyýz. Bu ayar, Hibernate'in ürettiði tüm SQL sorgularýný ekrana
+basacaktýr. Böylece yavaþ iþlemesi muhtemel olan SQL'leri gözümüzle görebilmiþ
+oluruz.
+
+Fakat, eklememiz gerekir ki, þartlarýn \%99'unda Hibernate'in ürettiði SQL,
+bizim elle yazacaðýmýz SQL'den daha optimal olacaktýr. Ayrýca Hibernate arka
+planda, meselâ Oracle þartlarýnda ``bind parameters'' gibi hýzlandýrýcý
+teknolojileri kullandýðý için, sorgu iþletim hýzý stored procedure hýzýna bile
+eþit hâle gelmektedir. Yâni, iþin pür Hibernate tarafýnda bir problemimiz
+olmayacaktýr; Hibernate'e has optimizasyon numaralarý bu yüzden önbellekleme,
+fetching ayarlarý gibi baþka bir seviyede yapýlýr.
+
+Eðer tüm optimizasyonlara raðmen Hibernate veri eriþimini yavaþ olduðunu
+gözlemlersek, sebep, veri tabanýnda eklenmesi unutulmuþ indeksler
+olabilir. Ýndekslerin yetersiz olmasý þartýnda zaten SQL ister üretilsin, ister
+elle yazýlsýn, yavaþ çalýþacaktýr; En alt seviyedeki veri tabaný gerekli þekilde
+optimize edilmemiþtir.
+
+Veri tabanlarýný optimize etmek için, Hibernate'in ürettiði SQL'in \PVerb!WHERE!
+bölümünde kullanýlan filtre þartlarýna bakabiliriz. Bu filtre þartlarýnda
+kullanýlan kolonlarýn (meselâ bir SQL içinde kullanýlan her kolonun
+kombinasyonu) için bir indeks var mýdýr? Eðer
+
+\begin{lstlisting}[language=SQL, frame=none]
+...
+WHERE
+  KOLON1 = '22'
+  KOLON2 = 'VS VS'
+  ;
+\end{lstlisting}
+gibi bir SQL üretilmiþ ise, \PVerb!KOLON1! + \PVerb!KOLON2! kombinasyonu
+üzerinde bir indeks olmalýdýr. Eðer indeks var ise, bu indeks ile \PVerb!WHERE!
+filtre þartlarý uyum gösterdiði anda veri tabaný bu indeksi iþleme sokacaktýr.
+
+Gözle kontrol yerine, gerekli yerde indeks olup olmadýðýný anlamak için mekanik
+bir yöntem de takip edebiliriz. Her veri taban ürününde bir SQL sorgu analiz
+programý mevcuttur, bu program bir sorgunun gerekli indekslerin kullanýp
+kullanmadýðýný gösterebilir. Ýndeks kavramýný, analiz yöntemini, ve her taban
+ürünü için bunlarýn nasýl kullanýldýðýný ayrýntýlý þekilde
+\ref{db:index} bölümünde okuyabilirsiniz.
+
+Ýndeks eklerken dikkat edilmesi gereken bir husus, sadece ve sadece gereken
+kolon kombinasyonu için indeks eklememizin gerektiðidir. Ýndeksler, diðer pek
+çok þeyin aksine, ``ne kadar fazla olursa o kadar iyi'' olan katkýlardan
+deðildirler, çünkü veri tabaný bir tabloya her yeni satýr eklediðinde o tablo
+üzerindeki olan indeksleri güncellemeye de mecburdur, ve bu güncelleme iþleminin
+bir hýz bedeli vardýr. Bu sebeple eðer bir tabloda gereðinden fazla indeks var
+ise, \PVerb!SELECT! iþlemimizi hýzlandýrmýþ olsak bile, bu sefer
+\PVerb!INSERT!  iþlemimizi yavaþlatmýþ oluruz. Ýndeksleme iþlemini kararýnda
+yapmalýyýz; O zaman indeksler performansýmýzý arttýran önemli bir faktör
+olabilirler.
+

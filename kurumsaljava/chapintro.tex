@@ -1,0 +1,193 @@
+\movetooddpage
+
+\chapter[Giriþ][GÝRÝÞ]{Giriþ} \label{intro}
+
+\thischapterhas{
+  \item Kurumsal programcýlýk tanýmý
+  \item Niye bu kitap
+  \item Bölümlerin içindekiler
+}
+
+\versal{K}\textsc{urumsal} sistemler (enterprise systems), vazgeçilmez bileþeni
+olarak bir veri tabanýný içeren, kullanýcýsýna bir önyüz saðlayan ve ayný anda
+birden fazla kullanýcýyý destekleyen sistemlere verilen addýr. Kurumsal
+yazýlýmlar, þirketlerin ya da organizasyonlarýn veri alýþveriþini idare ederler,
+ve bu idareyle veriyi, stratejik bilgiye donüþtürmeye çalýþarak yazýlýmý
+kullanan þirkete rakiplerine karþý bir fark/üstünlük (differentiator) saðlamaya
+çalýþýrlar. Bilgi iþlem, ya da IT, bu sektörün diðer adlarýdýr.
+
+Kurumsal yazýlýmlarý geliþtirmekle uzmanlaþmýþ programcýlara, kurumsal programcý
+adýný veriyoruz. Kurumsal programcý, ya iþi yazýlým olmayan bir þirketin bilgi
+iþlem bölümünde, ya da iþi þirketlere yazýlým danýþmanlýðý vermek olan danýþman
+(consulting) þirketlerinde çalýþýr. Danýþmanlýk þirketinde kurumsal programcý
+asal çalýþandýr, dýþ dünyaya onun yaptýðý iþ pazarlanýr. Diðer þirketlerde
+destekleyici konumdadýr; Programcý, iþi baþka bir þey olan bir þirkete yazýlým
+desteði vermektedir.
+
+Bu kitabýn {\em tamamýnýn} odaðý, kurumsal programcýdýr. Fakat kurumsal bir
+yazýlým üzerinde çalýþmýyorsanýz bile bu kitaptaki tavsiyelerin bir bölümü
+iþinize yarayabilir; Meselâ veri tabanýný sadece okuma amaçlý ve onu da içindeki
+çoðu veriyi hafýzaya yükleyerek kullanan, çok kullanýcýlý ama dýþ dünyaya hiçbir
+önyüz saðlamayan bir arka plan programý kurumsal program sayýlamaz, ama o tür
+bir yazýlýma faydalý olacak tekniklerin bazýlarý bu kitapta bulunabilir, meselâ
+bölüm \ref{performance}, \ref{object}, \ref{dist}. Kullandýðýnýz programlama
+dili Java bile olmayabilir, bu durumda \ref{performance}. bölümdeki bir Web
+uygulamasýný dýþarýdan test etmek için JMeter kullanýmý ilginizi çekebilir. Web
+uygulamasý bile yazmýyor olabilirsiniz, fakat masaüstü, zengin önyüz
+teknolojilerini kullanan bir uygulamanýn bile nesnesel tasarým tekniklerine
+ihtiyacý olacaktýr (\ref{object}. bölüm).
+
+Ýþ tecrübemiz baðlamýnda þahsen uzun süre danýþmanlýk sektöründe çalýþtýðýmýz
+için, kitaptaki anektodlarýn ve tecrübe ýþýðýnda paylaþýlan tekniklerin
+çoðunlukla danýþman þirketlere dönük olmasý normâldir. Fakat tecrübemiz
+gösteriyor ki danýþmanlar, süreç kullanýmý, tasarým metotlarý ve diðer birçok
+kurumsal programcýlýk metotlarýnda hep baþý çekmiþ ve yolgösterici
+olmuþlardýr. Danýþmanlarýn böyle olmasýnýn sebebi tamamen içinde yaþadýklarý
+sektörün onlarýn üzerinde mecbur býraktýðý þartlarla alâkalýdýr; Müþteri her
+zaman deðiþir, sýk sýk gelen projeler hep yeni bir yeni baþlangýç anlamýna
+gelir. Danýþmanýn müþterisi için yeni proje, kâr potansiyelidir, ama bir yandan
+yeni teknoloji, risk anlamýna gelir ve bu risklerin azaltýlmasý için bazý yollar
+takip edilmelidir. Projeyi belli bir zamanda yapmaya talep olarak riski üzerine
+alan danýþman þirketi, yazýlýmý kodlama (delivery) üzerinde en optimal yolu
+bulmak zorundadýr, çünkü geç kalan ya da daha kötüsü bitmeyen bir proje,
+danýþmanýn þirketi için para ve ün kaybý anlamýna gelir.
+
+Kurumsal Java kitabýný takip edebilmek için gereken bilgi seviyesi, temel Java
+bilgisidir. Bu kitapta miras alma (inheritance), çokyüzlülük (polymorphism) ya
+da diðer Java sözdizim teferruatlarý iþlenmeyecektir; Eðer bu bilgilere
+ihtiyacýnýz var ise, temel Java hakkýnda güvenilir bir kaynaða baþvurmanýzý
+tavsiye ederiz.
+
+\section[Bölüm Rehberi][BÖLÜM REHBERÝ]{Bölüm Rehberi}
+
+Kurumsal Java kitabýný düz bir sýrada okumak gerekli deðildir, zaten bölümler
+sýralama önem taþýyacak þekilde hazýrlanmamýþtýr. Eðer Web bazlý sistemleri
+öðrenmek istiyorsanýz, \ref{web}. ve \ref{hibernate}. bölümlere direk olarak
+gidebilirsiniz. Bu bölümlerde Struts/JSTL bazlý ve arka planda Hibernate
+teknolojisini kullanan bir Web sistemini kurmak için gerekli tüm teknikleri
+bulabilirsiniz.
+
+Eðer uygulamamýzdaki önyüz, Swing gibi bir zengin önyüz teknolojisi ise, arka
+planda uzaktan nesne eriþim, ya da genel adýyla, daðýtýk nesne teknolojisi
+kullanmak zorundayýz, ve bu yaygýn teknolojilerin üç tanesi, RMI, EJB Session
+Bean ve JMS, \ref{dist}. bölümde detaylý olarak anlatýlmýþtýr. Þahsen
+kariyerimizin ilk projesinde bir daðýtýk nesne çözümü olan CORBA ile kurumsal
+kodlamaya baþlamýþ olmamýz, bu alanda bize oldukça tecrübe (hem iyi hem kötü)
+yaþattý, ve bu tecrübenin þekillendirdiði tavsiyeleri de bu bölümde
+bulacaksýnýz.
+
+Bir kurumsal uygulamanýn hýzlý çalýþmasý, en az doðru çalýþmasý kadar önemlidir;
+Bu sebeple performans iyileþtirmesi apayrý bir bölüm olarak sunulmuþtur
+(\ref{performance}. bölüm). Bu bölümdeki bilgileri, ilgili olduðu her
+teknolojinin bölümlerine koyarak daðýtmak mümkündü, fakat performans konusunun
+kendine has terminolojisi ve hâtta metadolojisi olmasý sebebiyle, ayrý bir bölüm
+olarak verilmesi kararlaþtýrýldý. Ölçekleme ile ilgili konularý ayný bölümde
+bulabilirsiniz.
+
+Uygulamamýzýn vazgeçilmez tabakasý, tüm verilerin hem çýkýþ ve hem de sonuç
+noktasý olan iliþkisel veri tabanlarýný \ref{db}. bölümde anlatmaya
+çalýþtýk. Ýliþkisel tabanlarýn temeli olan iliþkisel model (relational model),
+ve eriþim yöntemi olan SQL burada iþlendi. Her ne kadar Hibernate gibi kalýcýlýk
+teknolojileri ile artýk basmakalýp SQL yazmaktan kurtulsak ta, yine de SQL'i iyi
+bilmemiz gerekmektedir. Sonuçta Hibernate'in sorgulama dili olan HQL bile,
+aslýnda SQL'in nesnesel bir versiyonudur. Ayrýca uygulama içinden kullanýma ek
+olarak proje sýrasýnda uygulama dýþýndan test amaçlý olarak veri tabanýnda ne
+olduðunu anlamak için SQL iþletmek gerekmektedir. Bu yüzden SQL anlatýmý bölüme
+dahil edilmiþtir.
+
+Nesnesel tasarým tekniklerini anlattýðýmýz \ref{object}. bölümde nesnesel
+tasarýmýn diðer tasarým tekniklerinden farkýný ve nesnesel tasarým yapmak için
+gereken temel bilgileri vereceðiz. Kurumsal yazýlýmlarda çok iþe yarayacak bazý
+kritik nesnesel tasarým teknikleri de bu bölümde gösterilecektir. Daha sonra,
+tüm nesnesel modelleme numaralarýnýn biraraya geldiði teknik mimarin ne olduðunu
+da bu bölümde târif edeceðiz, ve bu târifin teknik lider olmak isteyen herkes
+tarafýndan okumasýný tavsiye ediyoruz.
+
+Geliþtirme ve kabul testleri, kitabýmýzýn önemli bölümlerinden biri olacak
+(\ref{testing}. bölüm); Geliþtirme sýrasýnda kendi kendimizi kontrol mekanizmasý
+olan birim testlerini yazmayý bu bölümde iþliyoruz. Ayrýca gereklilikleri
+dýþarýdan (önyüzden) test etmek için gereken JMeter aracýný kullanmayý da
+iþleyeceðiz. Test etme iþlemi, projemizin ayrýlmaz bir parçasý olarak kabul
+edilmelidir. Test yöntemlerinden özellikle birim testleri geliþtirme sürecine ne
+kadar dahil edilebilirse, kendimizi o kadar iyi/baþarýlý hissetmeliyiz.
+
+Kitabýmýzýn teknik tarafý, iþler hâlde ve test edilmiþ örnek Java kodlarý ile
+destekleniyor; Bu örnek programlarý düzgün, temiz yapýda ve optimal çalýþýr hâle
+getirmek için çok uðraþtýk, ve en az kitabýn metni kadar önemli olduðunu
+düþünüyoruz. Örnek kodlarýn nereden indirileceði ve kullanýlacaðý
+\ref{install:samples} bölümünde anlatýldý, kullanmak için gereken programlar
+JBoss Uygulama Servisi, Java derleyicisi, ve Ant derleme sisteminin nasýl
+kurulacâgý yine bölüm \ref{install} içinde bulunabilir. Projelerimizde sýkça
+kullandýðýmýz faydalý programlarýn tümünün kuruluþu bölüm \ref{install} içinde
+anlatýlmaktadýr, buna tek istisna MySQL, Oracle ve PostgreSQL'ýn nasýl
+kurulacaðýný anlatan \ref{db:install} bölümüdür.
+
+Bir uygulamanýn kodlamasý bittikten sonra, iþleyeceði nihai yer olan sonuç
+(production) ortamýna nasýl gönderileceði, ve buraya gönderildikten sonra nasýl
+izlenip takip edileceði \ref{deploymonitor}. bölümde iþleniyor. Bir kurumsal
+uygulama tipik olarak birçok süreçten meydana gelir; Uygulama servisi, veri
+tabaný ve web server olarak düþünürsek en az üç tane Unix sürecimiz
+olacaktýr. Bu süreçlerin ayakta kalmasý ve çökerse tekrar ayaða kaldýrýlmalarý
+kurumsal sistemlerde gerekli teknik numaralardandýr; Bunlarý yapabilmek için
+gerekli script'leri \ref{deploymonitor}. bölümde bulacaksýnýz. Uygulamanýzdan
+istatistik paylaþmak ve bu istatistiklerin üzerine alarm þartlarý koyarak
+sürekli, otomatik olarak takip edebilmek için önce Java JMX teknolojisi ile
+bunlarý nasýl dýþ dünya ile paylaþacaðýmýzý, ve sonra tarafýmýzdan yazýlmýþ bir
+açýk yazýlým projesi olan JmxMonitor ile bu istatistikleri nasýl takip
+edebileceðimizi göreceðiz.
+
+\section{Türkçe Kullanýmý}
+
+Kitabýmýzdaki Türkçe kullanýmýnda Sayilar ve Kuramlar blogunda takip ettiðimiz
+ayný dikkati vermeye özen gösterdik. Fakat örnek kodlarda ve karþýlýðý yeterince
+iyi olmayan kelimelerde o kelimelerin Ýngilizcesini kullanmaya karar verdik.
+
+Örnek kodlar için bunu planlamamýþtýk. Fakat Türkiye'deki programcýlarýn
+Ýngilizce kelimeler, ve deðiþken isimleri ile kodlama hususunda oldukça hiç bir
+problemi olmadýðýný gözlemledik. Ayrýca ilerideki bir tarihte elinizde
+tuttuðunuz kitabýn Ýngilizce'ye çevirilmesi sözkonusu olabileceði için, örnek
+kodlarýn Ýngilizce olmasý kararlaþtýrýldý.
+
+Karþýlýðý bulunamayan (ya da beðenilmeyen) kelimelerde, meselâ bir Ant {\em
+task}'i, Ant {\em target}'i, ya da Unix {\em script}'i gibi, o kelimelerin
+olduðu gibi kullanýlmasý kararlaþtýrýldý. Ant kelimelerindeki sorun, bu
+terimlerin herhangi bir karþýlýðýnýn sektörde kimse tarafýndan ortaya atýlmamýþ
+olmasýydý, yâni ortada bir konsensüs yoktu. Eðer bu kelimeler yerine ``görev'',
+ve ``hedef'' karþýlýklarýný kullanacak olsaydýk, o zaman Ant Ýngilizce belgeleri
+ile ayrýlýða düþecek, ve okuyucumuzun kafasýný karýþtýrmýþ olacaktýk. Ayrýca bu
+kelimeler pek yaygýn olan ve baþka amaçlar için kullanýlan gerçek hedef ve görev
+kelimeleriyle aynýdýrlar, bu yüzden hiç deðilse {\em ayrý bir þey} olduðu daha
+belli olan task ve target kelimelerinin kullanýlmasý bize daha mantýklý
+gelmiþtir. Ayný durum, Türkçe karþýlýðý ``iþlem'' olan transaction kelimesi için
+de geçerliydi.
+
+Script Türkçe'ye {\em betik} olarak çevirilen, ve Türkçesi ne yazýk ki sektörde
+tutmayan bir kelimedir. Bu kelimenin kullanýmýný uzun süredir takip ediyor ve
+þahsen de cümlelerimizin parçasý yapýyorduk, fakat uyum bakýmýndan yeterli
+olmadýðýna kanaat getirip, kelimenin orijinalini desteklemeye karar
+verdik. Betik kelimesi, ses yapýsý ve uyumu açýsýndan bir türlü bir script
+sözcüðünün gücüne eriþememiþtir. Bizim Türkçe kelime seçerken kýstasýmýz, bir
+kelimenin anlatým (cümle) içinde akýcý bir þekilde yer alabilmesi, ve o kelime
+üzerinden anlatýlanýn, anlaþýlmasýdýr. Ayrýca, bu kitap okunduktan sonra, burada
+edinilen bilgiler hakkýnda yeni bilgiler edinilmek istendiðinde, Ýngilizce
+dokümanlarýn programcýya çok fazla yabancý gelmemesi diðer bir amacýmýzdý. Bu
+amaçla Türkçesini kullandýðýmýz bir terimin yanýna muhakkak Ýngiliz'cesini
+parantez içinde yazmaya dikkat ettik. Böylece, programcý isterse, o kelimeyi
+Google'da arayabilecek, ya da ilgili programýn dokümantasyonunda tarama yaparak
+konuyla ilgili diðer teferruatlarý öðrenme þansýna kavuþacaktýr.
+
+\section{Ek Bilgiler}
+
+Kitaba yorumlarýyla yardýmcý olan ve hatalarýn düzeltilmesine katkýda bulunan
+Java Teknoloji Derneði'ndeki arkadaþlardan veri tabaný bölümünü okuyan Murat
+Acar'a, Hibernate bölümünü okuyan Melih Sakarya'ya ve Web bölümünü gözden
+geçiren Altuð Altýntaþ'a (ve yorum yapan diðer arkadaþlara) buradan teþekkür
+ediyorum. Geri kalan tüm hatalarýn sorumluluðu bana aittir.
+
+Hatalar
+bulundukça, \PVerb!http://sayilarvekuramlar.blogspot.com/2008/11/kurumsal-java-hatalar-1-basm.html!
+adresinden (düzeltmeler ile birlikte) paylaþýlacaktýr. Kitap ile ilgili diðer
+bilgileri \PVerb!http://sayilarvekuramlar.blogspot.com! adresinden
+bulabilirsiniz.
+
+Ýyi okumalar, ve baþarýlar.

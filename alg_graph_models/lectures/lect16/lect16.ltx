@@ -1,0 +1,257 @@
+\documentclass[landscape]{slides}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+
+\newcommand{\lecnum}{AGM-16}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\betafn}{\mathrm{Beta}}
+\newcommand{\dirchfn}{\mathrm{Dirichlet}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+
+\begin{document}
+\DeclareGraphicsExtensions{.pdf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Dynamic graphical models}}
+
+\begin{verbatim}
+$Date: 2006/12/05 09:14:49 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Overview}
+  
+  \begin{itemize}
+  \item Standard Bayesian nets model \textbf{static} situations with a
+    \textbf{fixed} (finite) set of random variables
+  \item Dynamic Bayesian networks model processes which evolve
+    dynamically over time
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{DBNs for robot navigation}
+
+Focussing on true position and velocity
+
+\includegraphics[height=0.6\textheight,width=0.7\textwidth]{robdbn.pdf}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{DBNs for robot navigation}
+
+The full story
+
+\includegraphics[height=0.6\textheight,width=0.7\textwidth]{robdbnfull.pdf}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The problem}
+  
+Let $\mathbf{X}^{(t)}$ represent the state of our world at time $t$
+\[
+\mathbf{X}^{(t)} =
+(Pos_{t},SensorA_{t},SensorB_{t},Vel_{t},ThinkPos_{t})
+\]
+
+We have a distribution over trajectories:
+\begin{small}
+\begin{eqnarray*}
+  \lefteqn{P(\mathbf{X}^{(0)},\mathbf{X}^{(1)}, \dots
+    ,\mathbf{X}^{(t)}) = } \\
+&& P(\mathbf{X}^{(0)}) P(\mathbf{X}^{(1)}|\mathbf{X}^{(0)}) \dots
+P(\mathbf{X}^{(t)}|\mathbf{X}^{(0)},\mathbf{X}^{(1)}, \dots
+\mathbf{X}^{(t-1)}) 
+\end{eqnarray*}
+  \end{small}
+
+That's a lot of parameters
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The solution (part1)}
+  
+\textbf{The Markov assumption:} $\mathbf{X}^{(t+1)}$ is independent
+of $\mathbf{X}^{(t')}$ for $t'<t$ given $\mathbf{X}^{(t)}$
+
+Our state variables are expressive enough to summarise all relevant
+information about the past
+
+\begin{small}
+\begin{eqnarray*}
+  \lefteqn{P(\mathbf{X}^{(0)},\mathbf{X}^{(1)}, \dots
+    ,\mathbf{X}^{(t)}) = } \\
+&& P(\mathbf{X}^{(0)}) P(\mathbf{X}^{(1)}|\mathbf{X}^{(0)}) P(\mathbf{X}^{(2)}|\mathbf{X}^{(1)})\dots
+P(\mathbf{X}^{(t)}|\mathbf{X}^{(t-1)}) 
+\end{eqnarray*}
+\end{small}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The solution (part2)}
+  
+If all the $P(\mathbf{X}^{(t)}|\mathbf{X}^{(t-1)})$ were different
+that's an infinite number of probabilities to define!
+
+So assume that $P(\mathbf{X}^{(t)}|\mathbf{X}^{(t-1)})$ is the same
+for every $t$.
+
+The process is \textbf{time-invariant} or \textbf{stationary}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{A dynamic Bayesian network}
+  
+So just need: $P(\mathbf{X}^{(0)})$ (standard Bayesian network)
+
+and $P(\mathbf{X}^{(t)}|\mathbf{X}^{(t-1)})$ a \textbf{network fragment} where
+the variables in $\mathbf{X}^{(t-1)}$ have no parents
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{What can we do with our DBN?}
+  
+  \begin{itemize}
+  \item Given a sequence of sensor readings, we can get a distribution
+    over the true position and velocity
+  \item This is our \textbf{belief state}
+  \item Could also add variables for eg sensor failure
+  \item Due to our assumptions it is quite easy to update our belief
+    state when a new set of sensor readings come in.
+  \end{itemize}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Inference in DBNs}
+  
+  \begin{itemize}
+  \item Unfortunately, generally not possible to get a compact
+    representation for the belief state, so have to resort to
+    approximate inference:
+    \begin{enumerate}
+    \item Keep track of just the high probability assignments in the
+      belief state
+    \item Stochastic simulation
+    \end{enumerate}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Stochastic simulation}
+  
+  \begin{itemize}
+  \item Generate a `beam' of $M$ trajectories through the DBN
+  \item Have to weight each trajectory by how likely the observed
+    evidence is given the states in the trajectory. 
+  \item This is likelihood weighting (not MCMC). Problem is that the
+    weight of each trajectory will get very small as time goes on
+  \item Solution is the \textbf{Survival of Fittest algorithm}---kill
+    off the low weight trajectories.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{DBN software and slides}
+
+  DBNs are not in \texttt{gPy} but are implemented in Kevin Murphy's
+  \emph{Bayes Net Toolbox for Matlab}.
+
+Kevin's MATLAB software is at:
+\url{http://bnt.sourceforge.net}
+
+There's a nice slide show on inference in DBNs at:
+\url{http://www-robotics.stanford.edu/%7Exb/uai98/uai98slides/index.html}
+
+
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Digression: Relating attributes and relating things}
+  
+  \begin{itemize}
+  \item In the Asia model
+    \begin{itemize}
+    \item we \textbf{do} (probabilistically) relate attributes of a
+      patient
+    \item we \textbf{do not} represent relationships between patients
+    \end{itemize}
+  \item In a DBN
+    \begin{itemize}
+    \item we \textbf{do} (probabilistically) relate attributes of a
+      state-of-the-world
+    \item also we \textbf{do} represent relationships between
+      successive states-of-the-world
+    \end{itemize}
+  \end{itemize}
+
+\end{titledslide}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Making decisions in a dynamic world}
+
+Dynamic model + decisions = Partially Observable Markov Decision
+Process (POMDP)
+
+\begin{description}
+\item[Decision Process] Not a passive observer, we (or the robot)
+  decide between courses of action
+\item[Markov] (Informally) What happens next depends on how things are
+  now and what we do now
+\item[Partially Observable] Don't know everything about the current
+  state of the world.
+\end{description}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{POMDP overview}
+  
+  \begin{description}
+  \item[Transition model] $P(S'|S,A)$. Where you end up depends on
+    where you are and what you do.
+  \item[Utilities] \ \\
+    \begin{itemize}
+    \item States to avoid
+    \item Goal states
+    \item Time taken to get to goal states
+    \end{itemize}
+  \item[Policies] What to do
+  \end{description}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Example application: Sewer Robots}
+  
+Description quoted from a GMD (as was) project on \emph{sewer robots}:
+
+  Robot navigation in sewers is prone to suffering from uncertainty 
+  \begin{enumerate}
+  \item of sensing (overlooking or mis-interpreting landmarks),
+  \item of information (out-dated or inaccurate maps),
+  \item of motion control (wrong turning at junctions)
+  \end{enumerate}
+  
+Precision in any of these three uncertainty sources can help resolve
+  uncertainty in the others.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Example application: Sewer Robots}
+
+  The position uncertainty resulting from the possibility of wrong
+  turning and wrong landmark classification is represented in a
+  Partially Observable Markov Decision Process (POMDP), yielding a
+  probability distribution over robot positions in the network that
+  gets updated after moves from a landmark to a neighboring one and
+  after classifying the recent landmark. 
+  
+  Using this POMDP model, the robot motion through the sewer according
+  to a given path plan is monitored, deviations from the plan are
+  detected with high probability, and corrections made accordingly. 
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

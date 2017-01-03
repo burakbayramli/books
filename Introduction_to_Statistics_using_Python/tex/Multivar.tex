@@ -1,0 +1,37 @@
+\chapter{Relation Between Several Variables}
+
+When we have two groups, we can ask the question: "Are they different?" The answer is provided by hypothesis tests: by a \emph{t-test} if the data are normally distributed, or by a \emph{Mann-Whitney test} otherwise. If we want to go one step further and predict the value of one variable from another, we have to use the technique of \emph{linear regression}.
+
+So what happens when we have more than two groups?
+
+To answer the question "Are they different?" for more than two groups, we have to use the \emph{Analysis of Variance (ANOVA)-test} for data where the residuals are normally distributed. If this condition is not fulfilled, the \emph{Kruskal-Wallis Test} has to be used.
+
+What should we do if we have paired data?
+
+If we have matched pairs for two groups, and the differences are not normally distributed, we can use the \emph{Wilcoxon signed rank sum test}. The rank test for more than two groups of matched data is the \emph{Friedman test}\index{general}{test!Friedman}.\footnote{It may be worth mentioning that Thom Baguley suggested the following: Where one-way repeated measures ANOVA is not appropriate, rank transformation followed by ANOVA will provide a more robust test with greater statistical power than the Friedman test.}
+
+An example for the application of the Friedman test: Ten professional piano players are blindfolded, and are asked to judge the quality of three different pianos. Each player rates each piano on a scale of 1 to 10 (1 being the lowest possible grade, and 10 the highest possible grade). The null hypothesis is that all three pianos rate equally. To test the null hypothesis, the Friedman test is used on the ratings of the ten piano players.
+
+And if we want to and predict the value of one variable \emph{many} other variables, linear regression has to be replaced by of \emph{multilinear regression} \index{general}{regression!multilinear}, sometimes also referred to as \emph{multiple linear regression}.
+
+\section{Two-way ANOVA} \label{sec:anovaTwoWay} \index{general}{ANOVA, two-way} \index{general}{test!ANOVA}
+
+Compared to one-way ANOVAs, the analysis with two-way ANOVAs has a new element. We can look not only if each of the factors is significant; we can also check if the \emph{interaction} of the factors has a significant influence on the distribution of the data. For sticking to the example above, if only women with treatment B get healthy, we have a significant interaction effect between "gender" and "treatment".
+
+\PyImg "anovaTwoway.py" (p \pageref{py:anovaTwoway}): Two-way Analysis of Variance (ANOVA).
+\index{python}{anovaTwoway}
+
+\begin{verbatim}
+                        df  sum_sq mean_sq        F    PR(>F)
+  C(fetus)               2  324.00  162.00  2113.10  1.05e-27
+  C(observer)            3    1.19    0.39     5.21  6.497-03
+  C(fetus):C(observer)   6    0.56    0.09     1.22  3.29e-01
+  Residual              24    1.84    0.07      NaN       NaN
+\end{verbatim}
+
+\section{Multilinear Regression} \index{general}{regression!multilinear}
+
+If you have truly independent variables, \emph{multilinear regression} is a straightforward extension of the simple linear regression. However, if your variables may be related to each other, you have to proceed much more carefully. For example, you may want to investigate how the prevalence of some disease correlates with age and with income: if you do so, you have to keep in mind that age and income are most likely correlated! For details, \cite{Kaplan2009} gives a good introduction to that topic. Also, check out the chapter on Modeling.
+
+\PyImg "mult\_regress.py" (p \pageref{py:mult_regress}): Multiple regression example.
+\index{python}{multipleRegression} 

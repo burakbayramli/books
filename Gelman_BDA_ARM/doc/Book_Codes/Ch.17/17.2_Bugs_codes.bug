@@ -1,0 +1,152 @@
+
+## Varying-intercept, varying-slope with group-level predictors ##
+
+ # Simple model with no correlation between intercepts and slopes
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (a.hat[j], tau.a)
+    b[j] ~ dnorm (b.hat[j], tau.b)
+    a.hat[j] <- g.a.0 + g.a.1*u[j]
+    b.hat[j] <- g.b.0 + g.b.1*u[j]
+  }
+  g.a.0 ~ dnorm (0, .0001)
+  g.a.1 ~ dnorm (0, .0001)
+  g.b.0 ~ dnorm (0, .0001)
+  g.b.1 ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  tau.b <- pow(sigma.b, -2)
+  sigma.a ~ dunif (0, 100)
+  sigma.b ~ dunif (0, 100)
+}
+##############################################################################
+
+ # Modeling the correlation 
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] <- B[j,1]
+    b[j] <- B[j,2]
+    B[j,1:2] ~ dmnorm (B.hat[j,], Tau.B[,])
+    B.hat[j,1] <- g.a.0 + g.a.1*u[j]
+    B.hat[j,2] <- g.b.0 + g.b.1*u[j]
+  }
+  g.a.0 ~ dnorm (0, .0001)
+  g.a.1 ~ dnorm (0, .0001)
+  g.b.0 ~ dnorm (0, .0001)
+  g.b.1 ~ dnorm (0, .0001)
+
+  Tau.B[1:2,1:2] <- inverse(Sigma.B[,])
+  Sigma.B[1,1] <- pow(sigma.a, 2)
+  sigma.a ~ dunif (0, 100)
+  Sigma.B[2,2] <- pow(sigma.b, 2)
+  sigma.b ~ dunif (0, 100)
+  Sigma.B[1,2] <- rho*sigma.a*sigma.b
+  Sigma.B[2,1] <- Sigma.B[1,2]
+  rho ~ dunif (-1, 1)
+}
+
+#############################################################################
+ 
+ # Scaled inverse-Wishart model 
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] <- xi.a*B.raw[j,1]
+    b[j] <- xi.b*B.raw[j,2]
+    B.raw[j,1:2] ~ dmnorm (B.raw.hat[j,], Tau.B.raw[,])
+    B.raw.hat[j,1] <- g.a.0.raw + g.a.1.raw*u[j]
+    B.raw.hat[j,2] <- g.b.0.raw + g.b.1.raw*u[j]
+  }
+  g.a.0 <- xi.a*mu.a.raw
+  g.a.1 <- xi.a*mu.a.raw
+  g.b.0 <- xi.b*mu.b.raw
+  g.b.1 <- xi.b*mu.b.raw
+  mu.a.raw ~ dnorm (0, .0001)
+  mu.b.raw ~ dnorm (0, .0001)
+
+  xi.a ~ dunif (0, 100)
+  xi.b ~ dunif (0, 100)
+
+  Tau.B.raw[1:2,1:2] ~ dwish(W[,], df)
+  df <- 3
+  Sigma.B.raw[1:2,1:2] <- inverse(Tau.B.raw[,])
+  sigma.a <- xi.a*sqrt(Sigma.B.raw[1,1])
+  sigma.b <- xi.b*sqrt(Sigma.B.raw[2,2])
+  rho <- Sigma.B.raw[1,2]/sqrt(Sigma.B.raw[1,1]*Sigma.B.raw[2,2])
+}
+
+#############################################################################
+ 
+ # Multiple group-level predictors
+
+a.hat[j] <- inprod (g.a[], U[j,])
+b.hat[j] <- inprod (g.b[], U[j,])
+
+for (j in 1:J){
+    g.a[j] ~ dnorm (0, .0001)
+    g.b[j] ~ dnorm (0, .0001)
+  }
+
+#############################################################################
+ 
+ # Multiple varying coefficients with multiple group-level predictors
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- inprod(B[county[i],],X[i,])
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (k in 1:K){
+    for (j in 1:J){
+      B[j,k] <- xi[k]*B.raw[j,k]
+    }
+    xi[k] ~ dunif (0, 100)
+  }  
+  for (j in 1:J){
+    B.raw[j,1:K] ~ dnorm (B.raw.hat[j,], Tau.B.raw[,])
+    for (k in 1:K){
+      B.raw.hat[j,k] <- inprod(G.raw[k,],U[j,])
+    }
+  }
+  for (k in 1:K){
+    for (l in 1:L){
+      G[k,l] <- xi[k] + G.raw[k,l]
+      G.raw[k,l] ~ dnorm (0, .0001)
+    }
+  }
+  Tau.B.raw[1:K,1:K] ~ dwish(W[,], df)
+  df <- K+1
+  Sigma.B.raw[1:K,1:K] <- inverse(Tau.B.raw[,])
+  for (k in 1:K){
+    for (k.prime in 1:K){
+      rho.B[k,k.prime] <- Sigma.B.raw[k,k.prime]/
+        sqrt(Sigma.B.raw[k,k]*Sigma.B.raw[k.prime,k.prime])
+    }
+    sigma.B[k] <- abs(xi[k])*sqrt(Sigma.B.raw[k,k])
+  }
+}

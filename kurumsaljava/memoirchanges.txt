@@ -1,0 +1,24 @@
+Bolum basliklarinin sayfa saginda cikmasi icin asagidaki
+degisiklikler gerekiyor.
+
+\def\@makechapterhead#1{%
+  \chapterheadstart%  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+   \ifnum \c@secnumdepth >\m@ne
+     \if@mainmatter
+     \begin{center}
+       \printchaptername \chapternamenum \printchapternum
+     \end{center}
+       \afterchapternum % \par\nobreak \vskip 20\p@
+     \else
+       \printchapternonum
+     \fi
+   \else
+     \printchapternonum
+   \fi
+   \interlinepenalty\@M
+     \begin{center}
+   \printchaptertitle{#1} % \Huge \bfseries #1
+     \end{center}
+   \afterchaptertitle % \par\nobreak \vskip 40\p@
+  }}

@@ -1,0 +1,15 @@
+This directory contains the Fortran 77 source code of the oscillator
+program. The file make.sh shows the basic steps in compiling, linking,
+(and if desired) installing the program. The compiler used in make.sh
+is g77 (GNU's Fortran 77 compiler, which is open source code), but any
+standard Fortran 77 compiler can be used. The program must be
+installed in a directory found in your PATH environment variable.
+In make.sh we use $scripting/$MACHINE_TYPE/bin, but you can of course
+copy the executable to any other appropriate directory.
+
+If you do not have a Fortran 77 compiler, you can use a (slower)
+Python version found in ../Python, or you can compile a C version of
+the oscillator code found in ../C-f2c. The C version was automatically
+translated from the Fortran 77 version by means of the program f2c.
+This requires the compiled C files to be linked with the libf2c
+library.

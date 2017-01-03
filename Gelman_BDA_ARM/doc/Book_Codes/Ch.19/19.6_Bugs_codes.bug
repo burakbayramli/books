@@ -1,0 +1,18 @@
+# Educational testing example
+
+model {
+  for (j in 1:J){                               # J = number of schools
+    y[i] ~ dnorm (theta[j], tau.y[j])           # data model: the likelihood
+    theta[j] <- mu.theta + xi*eta[j]
+    tau.y[j] <- pow(sigma.y, -2)
+  }
+  xi ~ dnorm (0, tau.xi)
+  tau.xi <- pow(prior.scale, -2)
+  for (j in 1:J){
+    eta[j] ~ dnorm (0, tau.eta)                 # hierarchical model for theta
+  }
+  tau.eta ~ dgamma (.5, .5)                     # chi^2 with 1 d.f.
+  sigma.theta <- abs(xi)/sqrt(tau.eta)          # cauchy = normal/sqrt(chi^2)
+  mu.theta ~ dnorm (0, .0001)                   # noninformative prior on mu 
+}
+

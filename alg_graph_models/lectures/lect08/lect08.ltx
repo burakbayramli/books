@@ -1,0 +1,285 @@
+\documentclass[landscape]{slides}
+
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\lecnum}{AGM-08}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Bayesian nets}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/16 10:24:16 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+  Bayesian nets:
+    \begin{itemize}
+    \item what they are
+    \item as factored distributions
+    \item conditional independence properties
+    \end{itemize}
+
+
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayesian net structure}
+  
+  \begin{itemize}
+  \item The structure of a Bayesian net is given by a directed acyclic
+    graph (DAG) whose nodes are the variables of a distribution.
+  \item Here's one for the `Asia' example:
+  \end{itemize}
+
+  \includegraphics[width=6cm,height=20cm,angle=90]{asia.pdf}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Directed graph terminology}
+  
+  \begin{itemize}
+  \item If there's an arrow $A \rightarrow B$ in a directed graph,
+    then $A$ is a \emph{parent} of $B$ and $B$ is a \emph{child} of $A$.
+  \item A directed graph (digraph) is \emph{acyclic} if the graph
+    contains no loops which follow the direction of the arrows.
+  \item The DAG defines a partial order on nodes. A (total) ordering
+    of nodes consistent with a given DAG is one consistent with this
+    partial ordering.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Bayesian net parameters}
+  
+  \begin{itemize}
+  \item There is a \emph{conditional probability table (CPT)} for each
+    variable.
+  \item The CPT for variable $X$ defines a distribution over the
+    values of $X$ \emph{for each joint instantiation of the parents of
+      $X$}
+  \item Here are the CPTs for Asia. Cue \verb+asia_cpts+ from \texttt{gPy.Examples}
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The distribution represented by a Bayesian net}
+
+  \begin{itemize}
+  \item Note that each CPT is a factor.
+  \item The distribution represented by a Bayesian net is the product
+    of all the CPTs.
+  \item So BNs are factored representations of probability distributions and so everything we have
+    said about such more general factored representations holds for BNs as well.
+  \item But (unsurprisingly!) BNs have extra properties.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{No normalisation needed}
+  
+  \begin{itemize}
+  \item A product of CPTs, one for each variable, defines a
+    distribution directly, no matter what numbers are in the CPTs \dots
+  \item \dots \emph{as long as the corresponding digraph is acyclic}.
+  \item There is no need to normalise: you will prove this as an
+    exercise.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The moral graph}
+  
+  \begin{itemize}
+  \item If we `forget' that the CPTs are CPTs and just treat them as
+    factors, then the resulting interaction graph is called the
+    \emph{moral graph}.
+  \item Unmarried parents get connected (since they are together in
+    some CPT) and the arrows disappear (since the CPTs lose their CPTness).
+  \item It's not difficult to see that a BN \emph{factorises according
+    to its moral graph}.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Conditional independencies from a BN's moral graph}
+  
+  \begin{itemize}
+  \item Since a BN factorises according to its moral graph, we can
+    read off some conditional independencies from its moral graph.
+  \item For example, we have that $\ci{\{A\}}{\{B,D,S\}}{\{E,L,T\}}$.
+  \item However, there are further conditional independence relations
+    which hold in a BN but cannot be deduced from the moral graph.
+  \item To get these we need to exploit properties of CPTs \dots
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The key property of CPTs}
+  
+  \begin{itemize}
+  \item For any configuration of its parents the values for
+    the child must add up to one: this is what makes it a CPT.
+  \item So if we marginalise away the child variable in a CPT we end
+    up with a factor of ones.
+  \item Factors with all data values = 1 can be deleted from a
+    factored distribution without altering the distribution.
+  \item So if a variable only appears in its own CPT then we can
+    marginalise it away from the Bayesian net by simply removing this CPT!
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Removing childless variables from Bayesian nets}
+  
+  \begin{itemize}
+  \item Let $P(A,T,E,L,S,B,D,X)$ be the joint distribution defined by
+    the `Asia' Bayesian net.
+  \item The marginal distribution $P(A,T,E,L,S,B,X)$ [$D$ marginalised
+    away] is given by the BN with (i) the CPT for $D$ deleted and thus
+    (ii) the node $D$ and all links to it deleted in the corresponding
+    acyclic digraph. 
+  \item The BN for $P(A,T,E,L,S,X)$ [$B$ marginalised away in
+    addition] is produced by deleting $B$ from the BN for $P(A,T,E,L,S,B,X)$.
+  \item Clearly there is some sort of general principle here \dots
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Ancestral sets}
+  
+  \begin{itemize}
+  \item In a given digraph, the \emph{ancestors} of vertex $X$,
+    denoted $an(X)$, is the set of nodes $Y$ such that there is a
+    directed path from $Y$ to $X$.
+  \item It's just the transitive closure of the parent relationship.
+  \item A set of nodes $\mathbf{X}$ is an \emph{ancestral set} iff for
+    any node $X \in \mathbf{X}$ we have $an(X) \subseteq \mathbf{X}$.
+  \item Let $An(\mathbf{Z})$ denote the smallest ancestral set
+    containing a set of nodes $\mathbf{Z}$. (Just add ancestors, recursively.)
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Ancestral sets by example}
+  
+  \begin{itemize}
+  \item Some ancestral sets in the `Asia' digraph:\\ $\emptyset,
+    \{B,L,S\}, \{A,E,L,S,T\}, \{A,B,E,L,S,T\}, \{A,S\}$.
+  \item And some sets which are not ancestral:\\ $\{L\}, \{A,E,L,S\}$.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The key property of Bayesian nets}
+  
+  \begin{itemize}
+  \item (Notation: Let $P$ be a joint distribution and $\mathbf{X}$ be
+    some subset of its variables, then denote the distribution
+    produced by marginalising $P$ onto $\mathbf{X}$ as
+    $P_{\mathbf{X}}$. If \gr{} is a graph, let $\gr_{\mathbf{X}}$ be the
+    graph formed by removing from \gr{} all nodes not in $\mathbf{X}$.)
+  \item Let $P$ be defined by a BN with acyclic digraph \gr{} and let
+    $\mathbf{X}$ be an ancestral set in \gr \dots
+  \item \dots then $P_{\mathbf{X}}$ is given by the BN with DAG
+    $\gr_{\mathbf{X}}$ (and the relevant CPTs deleted).
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{What this means for conditional independence}
+
+  \begin{itemize}
+  \item If we want to know whether the BN structure implies
+    $\ci{\mathbf{A}}{\mathbf{B}}{\mathbf{S}}$ for disjoint sets of
+    variables $\mathbf{A}, \mathbf{B}, \mathbf{S}$ \dots
+  \item \dots first construct the DAG for the distribution $P_{An(\mathbf{A} \cup
+      \mathbf{B} \cup \mathbf{S})}$.
+  \item This is just $\gr_{An(\mathbf{A} \cup
+      \mathbf{B} \cup \mathbf{S})}$ where \gr{} is the original DAG.
+  \item Then construct the moral graph for this (smaller) DAG and use
+    this (smaller) moral graph to check for separation.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The directed global Markov property}
+
+This is from Lauritzen:
+
+Let $P$ factorise recursively according to \gr. Then
+\[
+\ci{\mathbf{A}}{\mathbf{B}}{\mathbf{S}}
+\]
+whenever $\mathbf{A}$ and $\mathbf{B}$ are separated by $\mathbf{S}$
+in $(\gr_{An(\mathbf{A} \cup
+      \mathbf{B} \cup \mathbf{S})})^{m}$, the moral graph of the
+    smallest ancestral set containing $\mathbf{A} \cup
+      \mathbf{B} \cup \mathbf{S}$.
+
+This property, which recursive factorisation implies, is the
+\emph{directed global Markov property}.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Further conditional independence relations in `Asia'}
+
+  \begin{itemize}
+  \item Using this technique from $\gr_{\mathrm{Asia}}$ we can deduce
+    that $\ci{A}{S}{\emptyset}$.
+  \item And that $\ci{A}{S}{T}$.
+  \item But not that $\ci{A}{S}{E}$. It could be that $\ci{A}{S}{E}$
+    for a particular choice of CPTs, but this does not hold for all
+    choices of CPTs.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The directed local Markov property}
+  
+  \begin{itemize}
+  \item In some DAG \gr \dots
+  \item Let $nd(A)$ be the non-descendants of node $A$ and $pa(A)$ be
+    the parents of $A$.
+  \item A distribution $P$ obeys the \emph{directed local Markov
+      property} relative to \gr, if each variable is independent of
+    its non-descendants given its parents: $\ci{A}{nd(A)}{pa(A)}$.
+  \item It turns out that for any DAG \gr, recursive factorisation,
+    the global Markov property and the local Markov property are all equivalent.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Inference in Bayesian nets}
+  
+  \begin{itemize}
+  \item Since a BN is a factored distribution, one option is just to
+    use variable elimination as previously described.
+  \item There are also BN-specific options for inference, both
+    exact and approximate.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

@@ -1,0 +1,1878 @@
+\movetooddpage
+
+\chapter[Veri Tabanlarý][VERÝ TABANLARI]{Veri Tabanlarý} \label{db}
+
+\thischapterhas{
+\item Ýliþkisel Teori ve Kavramlarý
+\item Ýndeksler, Görüntüler, Tetikler
+\item Oracle, PostgreSQL ve MySQL'i Unix üzerinde kurmak
+}
+
+\versal{H}\textsc{er} kurumsal uygulamanýn etrafýnda döndüðü, bir depoya alýp
+verdiði, sorgulayýp bulduðu ve biriktirdiði metin ve sayýsal bilgilerin
+toplamýna {\em veri} diyoruz. Bir kurumsal uygulamada veriye eriþim, en hayati
+noktalardan biridir. Ýþyerleri verilerinin doðruluðuna ve bütünlüðüne çok önem
+verirler. Hâtta kitabýmýzýn konusu olan kurumsal uygulamalar için denebilir ki,
+aslýnda bir uygulamanýn yegâne görevi veri tabanýndaki veriyi göze güzel bir
+þekilde sunmaktan ve göze güzel gelen þekilde almaktan ibarettir.
+
+Veri depolama ve geri almanýn modellerinden biri olan iliþkisel model,
+E. F. Codd \cite{codd} tarafýndan ortaya sürülmüþ ve günümüzdeki modern tüm
+iliþkisel veri tabanlarýn iþleyiþini tanýmlayan bir teorik altyapýdýr. Bu
+modelin temeli küme teorisine dayanýr, ve tamamýyle tanýmlý, iç bütünlüðü
+kurulmuþ saðlam matematiksel bir yapýdýr. Yapý öyledir ki, bir iliþkisel model
+üzerinde iþleyen bir sorgunun ``doðru olup olmadýðýný'' bile matematiksel olarak
+ispatlayabilirsiniz\footnote{Ayný þekilde bir analiz ne yazýk ki yazýlým
+mühendisliði gibi alanlarda mümkün olmamaktadýr, çünkü bu alanlardaki eþya
+makina deðil, insandýr}. Ýliþkisel model, ortaya atýldýðý 70'li yýllarda,
+akademik çevrelerde müthiþ bir çarpýþmaya sebebiyet vermiþti. O vakitte yarýþta
+olan diðer veri modeli olan hiyerarþik model, iliþkisel model ile girdiði
+çarpýþmadan yenik ayrýlmýþtýr\footnote{Nesnesel veri tabanlarý da hiyerarþik
+modelin günümüzdeki yansýmalarýdýrlar, ve bir türlü sektörde kabul
+görmemelerinin sebebi, 70'lerdeki savaþý kaybetmiþ olmalarýnýn bir
+sonucudur}. Akabinde iliþkisel modeli ticari ürün hâline getiren ve SQL'i ilk
+destekleyen þirketlerden olan Oracle, bu alana çok hýzlý girmesiyle müthiþ bir
+piyasa hakimiyetine ve finansal baþarýya kavuþmuþtur. Önyüze odaklý olan
+Microsoft'tan sonra bir servis tarafý teknolojisi satýcýsý olan Oracle'ýn ikinci
+büyük yazýlým þirketi olmasý, veri depolamasý ve eriþiminin önemine iþaret
+etmektedir.
+
+Günümüzde artýk SQL dili ile eriþilen iliþkisel veri tabanlarý, ticariden açýk
+yazýlýma, küçükten büyüðe giden geniþ bir yelpazede bulunabilen hale
+gelmiþlerdir. Günümüzde eðer finans, telekom, saðlýk sektöründen biri için bir
+kurumsal yazýlým geliþtiriyorsak, arka plandaki veri tabanýný olarak iliþkisel
+bir teknoloji bulmamýzýn olasýlýðý artýk çok yüksektir.
+
+Verinin depolama ve eriþimin bu seviyede önemi sebebiyle, verinin tutulduðu
+iliþkisel veri tabanlarýný, iliþkisel þemalarýn altyapýsýný tanýmlayan iliþkisel
+modeli, ve tüm teori ve teknolojinin bir araya geldiði SQL eriþim dilini
+öðreneceðiz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Ýliþkisel Model][ÝLÝÞKÝSEL MODEL]{Ýliþkisel Model}
+\label{relational}
+
+Ýliþkisel modelin temeli, birden fazla kolonu birarada tutarak onlar arasýnda
+bir {\em alakâ} kurulmasýný saðlayan {\em iliþki} kavramýdýr
+\cite[sf. 138]{dbfund}. Ýliþki, modern veri tabanlarýnda bir {\em tabloya}
+tekabül eder. O zaman bir tabloda, yâni bir iliþkide, tipik olarak birden fazla
+kolon olur. Tablo \ref{db:relational:sample} üzerinde örnek bir iliþki
+görüyoruz.
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:sample} Örnek Tablo (Car)}
+  \begin{tabular}{|p{5.0pc}|p{5.0pc}|}
+    \hline
+    \tiny{LICENSE\_PLATE} &  \tiny{DESCRIPTION}  \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:datasample} Örnek Tablo (Veri Ýle)}
+  \begin{tabular}{|p{5.0pc}|p{5.0pc}|}
+    \hline
+    \tiny{LICENSE\_PLATE} &  \tiny{DESCRIPTION}  \\
+    \hline
+    34 TTD 2202 & sarý araba \\
+    \hline
+    34 GD 22 & kýrmýzý araba \\
+    \hline
+    35 TG 54 & benim tarifim \\
+    \hline
+    16 RR 344 & bu araba ikinci el \\
+    \hline
+    33 RE 43 & sarý araba \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+Eðer bir tabloya veri eklemek istiyorsak, o tablonun iliþki yapýsýna uyan
+verileri SQL ile veri tabanýna verebiliriz. Bunun için SQL'de \PVerb!INSERT!
+komutunu kullanabiliriz. Örnek bir INSERT ibaresi altta gözükmektedir.
+
+\begin{lstlisting}[language=Java, frame=none]
+INSERT INTO CAR (LICENSE_PLATE, DESCRIPTION)
+VALUES ('34 TTD 2202', 'sarý araba');
+INSERT INTO CAR (LICENSE_PLATE, DESCRIPTION)
+VALUES ('34 GD 22', 'kýrmýzý araba');
+INSERT INTO CAR (LICENSE_PLATE, DESCRIPTION)
+VALUES ('35 TG 54', 'benim tarifim');
+INSERT INTO CAR (LICENSE_PLATE, DESCRIPTION)
+VALUES ('16 RR 344', 'bu araba ikinci el');
+INSERT INTO CAR (LICENSE_PLATE, DESCRIPTION)
+VALUES ('33 RE 43', 'sarý araba');
+..
+\end{lstlisting}
+Bu komut, \PVerb!CAR! adlý tabloya beþ satýr veri ekleyecektir. Komut iþledikten
+sonra sonuç, Tablo \ref{db:relational:datasample} üzerindeki gibi
+gözükecektir. \PVerb!CAR! tablosundan veri almak için, SQL'in \PVerb!SELECT!
+komutu kullanabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT * from CAR;
+\end{lstlisting}
+komutu, \PVerb!CAR! arabasýndaki tüm verileri ve tüm kolonlarý (\PVerb!*!
+iþareti ile) geri getirir. Eðer geri getirilen veriler üzerinde (satýr bazýnda)
+filtreleme yapmak istiyorsak, \PVerb!SELECT! komutuna \PVerb!WHERE! komutunu
+eklemek zorundayýz. Meselâ
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT * from CAR WHERE LICENSE_PLATE=`34 TTD 2202'
+\end{lstlisting}
+komutu, plakasý \PVerb!34 TTD 2202! olan tüm arabalarý (yani tek satýr) geri
+getirecektir.
+
+Bir tablodaki veriyi güncellemek için, \PVerb!UPDATE! komutunu kullanmamýz
+gerekir. \PVerb!UPDATE!, güncellenmek istenen verinin yeni hâlini \PVerb!set!
+komutundan sonra alýr. Güncelleyeceði satýrýn hangisi olacaðýný ise
+\PVerb!WHERE!  komutuna verilen bir filtre deðeri ile anlar.
+
+\begin{lstlisting}[language=Java, frame=none]
+UPDATE CAR set DESCRIPTION = `siyah araba'
+WHERE LICENSE_PLATE = `34 TTD 2202'
+\end{lstlisting}
+Böylece daha önce `sarý araba' olan taným (description) \PVerb!UPDATE!
+komutundan sonra `siyah araba' hâline gelecektir.
+
+\subsection{Tablo Arasý Ýliþkiler} \label{db:relation:tables}
+
+Ýliþkisel modelde kolonlarýn arasýnda iliþki kurulduðu gibi (bir tablo),
+tablolar arasýnda da iliþki kurmak mümkündür. Bunu yapmak için iliþkisel model,
+yabancý anahtar (foreign key) kavramýný kullanýr. Yabancý anahtar, bir tablodaki
+asal anahtar, kimlik niteliði taþýyan bir kolonun, diðer bir tabloya bir iþaret
+edici olarak konmasýdýr. Meselâ Tablo \ref{db:relational:garage} üzerinde
+gösterilen yeni tabloya iþaret etmek için, bu tablodaki bir satýrý (garajý)
+tekil olarak seçebilen bir kolon deðerini (\PVerb!ID)!, iþaret {\em eden}
+tablonun üzerine yabancý anahtar olarak (\PVerb!GARAGE_ID! kolonu) koyarýz
+(Tablo \ref{db:relational:car}). Bu iliþkinin kuþbakýþý görüntüsü Þekil
+\ref{db:relational:rel:garage:car} üzerinde görülmektedir.
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:garage} Garage Tablosu}
+  \begin{tabular}{|p{5.0pc}|p{5.0pc}|}
+    \hline
+    \tiny{ID} &  \tiny{DESCRIPTION}  \\
+    \hline
+    1 & Garage 1 \\
+    \hline
+    2 & Garage 2 \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:car} Yeni Car}
+  \begin{tabular}{|p{5.0pc}|p{5.0pc}|p{5.0pc}|}
+    \hline
+    \tiny{LICENSE\_PLATE} &  \tiny{DESCRIPTION} & \tiny{GARAGE\_ID} \\
+    \hline
+    34 TTD 2202 & sarý araba & 1\\
+    \hline
+    34 GD 22 & kýrmýzý araba & 1\\
+    \hline
+    35 TG 54 & benim tarifim & 2\\
+    \hline
+    16 RR 344 & bu araba ikinci el & 2\\
+    \hline
+    33 RE 43 & sarý araba & 2\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/sample-er-2.eps}
+  }
+}
+\caption{\label{db:relational:rel:garage:car} Garage ve Car Ýliþkisi}
+\end{figure}
+
+\subsubsection{Bütünlük Kontrolleri} \label{db:relation:table:integrity}
+
+Ýki tablo arasýnda yabancý anahtar iliþkisi var ise, iþaret {\em eden} tabloya
+bir veri eklerken, yabancý anahtarýn iþaret ettiði {\em diðer} tablodaki satýrýn
+mevcut olmasýný kontrol etmek, iyi bir prensip sayýlýr. Meselâ, sisteme bir
+\PVerb!CAR! ekliyorsak ve bu sistemin iþ kurallarý baðlamýnda ``bir arabanýn her
+zaman bir garaj altýnda olmasý gerektiðini'' biliyorsak, o zaman \PVerb!CAR!
+tablosu üzerindeki \PVerb!garage_id! kolonu üzerinde bir bütünlük kontrolü
+(integrity constraint) koyabiliriz.
+
+Bütünlük kontolleri, bizim belirttiðimiz bir kolon ve hedef kolon üzerinde, her
+veri eklendiðinde veri tabaný tarafýndan yapýlan kontrollere verilen isimdir. Bu
+kontrollere göre eklenen yabancý anahtarýn deðeri, iþaret edilen tablodaki asal
+anahtar içinde olup olmadýðý kontrol edilir; Eðer bu veri yok ise, veri tabaný
+\PVerb!INSERT! komutunuza bir hata mesajý ile cevap verecektir. Bütünlük
+kontrolleri koymak için MySQL tabanýnda þu komutu kullanabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+alter table car add FOREIGN KEY (garage_id) REFERENCES garage(id);
+\end{lstlisting}
+Diðer tabanlarda sözdizim farklý olabilir, fakat iþi özünde bilmeniz gereken,
+kaynak ve hedef tablo+kolon ikilisini bilmektir. Yukarýdaki bütünlük kontrolü
+komutu iþletildikten sonra, artýk \PVerb!car.garage_id! kolonuna koyulacak her
+verinin \PVerb!garage.id!  kolonunda olmasý mecbur olacaktýr. 
+
+
+\subsubsection{Birleþtirim}
+
+Ýki tablo arasýnda iliþkiyi kurduktan sonra eðer bir tablodaki satýrdan, o
+satýrýn iliþkisini olduðu diðer tablodaki satýra atlamak istersek, iliþkisel
+modelde birleþtirim (join) kavramýný kullanmamýz gerekir. Birleþtirim, küme
+teorisinden gelen bir kavramdýr, ve SQL'de þu þekilde gösterilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT * FROM GARAGE, CAR;
+\end{lstlisting}
+Bu komut, her iki tablodaki {\em her} satýrý diðer tablodaki diðer {\em her}
+satýr ile teker teker kombinasyona sokarak, bir kartezyen kombinasyonu olarak
+geri getirir. Birleþtirime sokulan her tablo, \PVerb!FROM!  ibaresinden sonra
+birbirinden virgülle ayrýlarak belirtilmelidir. Eðer
+\PVerb!CAR! tablosunda 5, \PVerb!GARAGE!  tablosunda 2 satýr var ise, kartezyen
+birleþim 10 tane satýr geri getirecektir. Kartezyen birleþim sonucunu Tablo
+\ref{db:relational:cartesian} üzerinde görüyoruz.
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:cartesian} Kartezyen Birleþimi}
+  \begin{tabular}{|p{4.5pc}|p{4.5pc}|p{4.5pc}|p{4.5pc}|p{4.5pc}|}
+    \hline
+    \tiny{ID} &  \tiny{DESCRIPTION} & \tiny{LICENSE\_PLATE} &  \tiny{DESCRIPTION} & \tiny{GARAGE\_ID} \\
+    \hline
+    1 & Garage 1 & 34 TTD 2202 & sarý araba & 1\\
+    \hline
+    2 & Garage 2 & 34 TTD 2202 & sarý araba & 1\\
+    \hline
+    1 & Garage 1 & 34 GD 22 & kýrmýzý araba & 1\\
+    \hline
+    2 & Garage 2 & 34 GD 22 & kýrmýzý araba & 1\\
+    \hline
+    1 & Garage 1 & 35 TG 54 & benim tarifim & 2\\
+    \hline
+    2 & Garage 2 & 35 TG 54 & benim tarifim & 2\\
+    \hline
+    1 & Garage 1 & 16 RR 344 & bu araba ikinci el & 2\\
+    \hline
+    2 & Garage 2 & 16 RR 344 & bu araba ikinci el & 2\\
+    \hline    
+    1 & Garage 1 & 33 RE 43 & sarý araba & 2\\
+    \hline
+    2 & Garage 2 & 33 RE 43 & sarý araba & 2\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+
+Fakat bu birleþim, hiçbir pratik uygulama için faydalý olmayacaktýr. Geri gelen
+sonuç listesini bir þekilde daraltmamýz gerekmektedir. Çoðunlukla ihtiyacýmýz
+olan, baþlangýç tablolarýndaki bir tablodan (ve onun bir satýrýndan) bir
+diðerine (onun bir satýrýna) atlayabilmektir. O zaman, kartezyen sonuçta {\em
+yabancý anahtarý} ve asal anahtarý birbirine uyan satýrlarý bu büyük birleþimden
+çekip çýkartmayý deneyebiliriz. Çünkü, gördüðümüz gibi, artýk yabancý anahtar ve
+tekil anahtarlar, ayný büyük tablo içinde yanyana gelmiþlerdir, ve basit bir
+\PVerb!WHERE! þartý, birbirine uyan satýrlarý çekip çýkarmak için yeterli
+olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT *
+FROM GARAGE, CAR
+WHERE ID = GARAGE_ID;
+\end{lstlisting}
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:cartesian:filtered} Filtrelenmiþ Kartezyen Birleþimi}
+  \begin{tabular}{|p{4.5pc}|p{4.5pc}|p{4.5pc}|p{4.5pc}|p{4.5pc}|}
+    \hline
+    \tiny{ID} &  \tiny{DESCRIPTION} & \tiny{LICENSE\_PLATE} &  \tiny{DESCRIPTION} & \tiny{GARAGE\_ID} \\
+    \hline
+    1 & Garage 1 & 34 TTD 2202 & sarý araba & 1\\
+    \hline
+    1 & Garage 1 & 34 GD 22 & kýrmýzý araba & 1\\
+    \hline
+    2 & Garage 2 & 35 TG 54 & benim tarifim & 2\\
+    \hline
+    2 & Garage 2 & 16 RR 344 & bu araba ikinci el & 2\\
+    \hline    
+    2 & Garage 2 & 33 RE 43 & sarý araba & 2\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+Sonucu Tablo \ref{db:relational:cartesian:filtered} üzerinde
+görüyoruz. Filtrelenmiþ kartezyen kombinasyonundan gelen bu þekilde sonuçlar,
+daha pratik uygulamasý olabilecek türden sonuçlardýr. Garajlar ve onlarýn altýnda
+olan arabalar, artýk ayný satýrda yanyana hâlde gösterilmiþtir. Eðer daha da
+detaylý bir sonuç görmek istersek, meselâ sadece 1 no'lu garaj altýndaki tüm
+arabalarý görmek istersek, üstteki sorguyu biraz daha geniþleterek þöyle bir SQL
+kullanabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT *
+FROM GARAGE, CAR
+WHERE ID = GARAGE_ID
+AND GARAGE_ID = 1
+\end{lstlisting}
+Bu sorgunun sonucu Tablo \ref{db:relational:cartesian:one:garage} üzerinde
+sergilenmiþtir. Artýk sadece 2 no'lu ve altýndaki arabalarý listemizde
+görmekteyiz.
+
+\begin{table}
+\begin{center}
+  \caption{\label{db:relational:cartesian:one:garage} Tek Garajýn Altýndaki Arabalar}
+  \begin{tabular}{|p{4.5pc}|p{4.5pc}|p{4.5pc}|p{4.5pc}|p{4.5pc}|}
+    \hline
+    \tiny{ID} &  \tiny{DESCRIPTION} & \tiny{LICENSE\_PLATE} &  \tiny{DESCRIPTION} & \tiny{GARAGE\_ID} \\
+    \hline
+    1 & Garage 1 & 34 TTD 2202 & sarý araba & 1\\
+    \hline
+    1 & Garage 1 & 34 GD 22 & kýrmýzý araba & 1\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table}
+Eðer geri getirilen kolonlarý (satýrlarý deðil) filtrelemek istiyorsak,
+\PVerb!SELECT! komutundan sonra belirtilen kolon listesi ile bu isteðimizi
+belirtebiliriz. Örneðimizde, \PVerb!*!  iþaretini kullanarak tüm kolonlarý almak
+istediðimizi belirttik, fakat \PVerb!SELECT LICENSE_PLATE! ile sadece plaka
+no'larýný almamýz mümkün olabilirdi.
+
+Çoka çok türden iliþkiler kurmak için iki tablo arasýnda bir ara tablo
+kullanmayý seçebilirsiniz. Bu durumda iliþki, Þekil
+\ref{db:relational:rel:garage:car:xfer} üzerindeki gibi gözükecektir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.35}{
+  \includegraphics{./images/sample-er.eps}
+  }
+}
+\caption{\label{db:relational:rel:garage:car:xfer} Ara Tablo ile Ýliþki}
+\end{figure}
+Ara tabloyu birleþtirime dahil etmek için, \PVerb!FROM!'dan sonra gelen listeye,
+ara tabloyu da eklemeniz gerekecektir. Bunun yapmanýn genel mantýðý, iki tablolu
+kullaným ile aynýdýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT *
+FROM GARAGE, CAR, GARAGE_CAR
+WHERE ID = GARAGE_ID AND
+CAR.LICENSE_PLATE = GARAGE_CAR.LICENSE_PLATE AND
+GARAGE_ID = 1;
+\end{lstlisting}
+
+\subsubsection{Bir Tabloda Olan, Ötekinde Olmayan Satýrlar}
+
+Ýki tabloda birbirine uyan satýrlarý birleþtirim (join) ile getirmek
+mümkündür. Eðer bir tabloda olan ama bir diðerinden {\em olmayan} satýrlarý geri
+getirmek istersek, SQL'in \PVerb!WHERE NOT EXISTS! komutunu kullanmamýz
+gerekecektir. \PVerb!NOT EXISTS!, her zaman bir alt sorgu (subsquery) içinde
+kullanýlýr. Alt sorgular, SQL sorgularýnýzý daha detaylandýrmak için kullanýlan
+tekniklerden biridir; Bu teknik ile ana sorgudan sonra parantezler içinde üst
+sorgudaki küme içinden daha detaylý seçimler yapmak mümkündür.
+
+Alt sorgularý, çoðu durumda, bir birleþtirim formuna çevirmek mümkündür. Fakat
+sektörümüzde genel kullaným birleþtirim ile çözülebilecek problemlerin direk
+birleþtirim kullanýlarak çözülmesi yönünde olduðu için, alt sorgular birleþtirim
+sözdizimi kadar raðbet görmemiþtir; \PVerb!NOT EXISTS! kullanýmý bunun
+haricindedir, çünkü standart SQL baðlamýnda ``bir satýrda olan ama ötekinde
+olmayan sonuçlarý bulma'' sorgusunu daha temiz bir þekilde gerçekleþtirmenin
+yolu alt sorgular üzerinden \PVerb!NOT EXISTS! komutunu kullanmaktan geçer.
+
+\PVerb!NOT EXISTS! kavramýný anlatmak için bir örnek geliþtirelim: Bu örnekte
+iki tablo yaratalým, \PVerb!passengers! (yolcular) \PVerb!cars!  (arabalar)
+\footnote{http://dev.mysql.com/tech-resources/articles/4.1/subqueries.html}. Bu
+örnekte yolcular bir treni oluþturan kompartmanlarda oturmaktadýrlar. Her yolcu,
+\PVerb!passengers! tablosunda ismiyle kimliklendirilecektir, ve kompartmanlar
+\PVerb!compartment! kolonu ile \PVerb!cars! tablosu üzerinde tutulacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE TABLE passengers (
+   name VARCHAR(15), 
+   compartment INT);
+
+INSERT INTO passengers VALUES ('smith',20);
+INSERT INTO passengers VALUES ('jones',25);
+
+CREATE TABLE cars (
+   compartment INT,
+   class VARCHAR(10));
+
+INSERT INTO cars VALUES (20,'compartmant 1');
+\end{lstlisting}
+Bu þemaya ve örnek veriye göre, \PVerb!smith! adlý yolcu \PVerb!20! no'lu ve
+\PVerb!cars! {\em tablosunda mevcut} bir kompartmanda oturmaktadýr. Bizim
+sorguyla bulmak istediðimiz \PVerb!jones! adlý yolcudur, çünkü bu yolcu
+\PVerb!25! no'lu ve \PVerb!cars! üzerinde {\em olmayan} bir kompartmanda
+oturmaktadýr.
+
+\begin{quote}
+\textbf{Not:} Sadece örnek olarak verilmiþ bu þemanýn gerçek dünya þartlarýna
+pek uyduðu söylenemez, çünkü bu tür bir uygulamalarda genellikle \PVerb!cars!'ýn
+asal anahtarý \PVerb!compartmant! ve \PVerb!passengers!'daki yabancý anahtar
+\PVerb!compartmant! arasýnda bir bütünlük kontrolü
+(\ref{db:relation:table:integrity}) konacak, ve \PVerb!passengers!'a yapýlan her
+\PVerb!INSERT! kontrol edilerek \PVerb!INSERT INTO passengers VALUES
+('jones',25)! komutu bu kontrolden geçmeyecekti. Sadece örnek amaçlý olarak bu
+þemayý ve veriyi kullanýyoruz, \PVerb!NOT EXISTS! genellikle arasýnda
+yabancý/asal anahtar iliþkisi olmayan tablolar için kullanýlýr.
+\end{quote}
+
+\PVerb!NOT EXISTS! içeren alt sorgu kullanan örneðimizdeki SQL komutu, þöyle
+olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT * FROM passengers
+WHERE NOT EXISTS
+   (SELECT * FROM cars
+    WHERE cars.compartment = passengers.compartment);
+\end{lstlisting}
+Bu sorguda üst sorgu, \PVerb!passengers! tablosundaki verilerden sorgulamaya
+baþlamýþtýr. Üst sorgudan sonra parantez içinde bir sorgu daha görüyoruz, demek
+ki alt sorgu mevcuttur. Alt sorgularýn iþleyiþini hayal etmek için þöyle
+düþünmek faydalýdýr; Sanki üst sorgudaki her satýrýn teker teker alt sorguya
+verildiðini düþünün. Eðer üst sorguda \PVerb!NOT EXISTS! kullanýmý mevcut ise,
+ve alt alt sorgudan, üst sorgudan verilen artý kendi yaptýðý bazý filtrelemeler
+sonucunda ``hiç bir sonuç'' geri gelmez ise, üst sorgudaki \PVerb!NOT EXISTS!
+þartýna uyulmuþ olacaðý için, üstten alta verilmiþ olan satýr, baþarýlý bir
+satýr olarak geri döndürülecektir.
+
+Alt sorguda \PVerb!cars.compartment! kullanýmýna dikkat çekmek isterim; Yâni üst
+sorgudaki tabloya alt sorgudan eriþmek mümkündür (ama tersi mümkün
+deðildir). Ayrýca bu durum önceki paragrafta bahsettiðimiz üstten alta teker
+teker gönderilen satýrlar betimlemesine de uygundur.
+
+Bu örnek sorgudan cevap olarak tek bir \PVerb!passengers! satýrý geri
+gelecektir; O da \PVerb!25! no'lu kompartmanda oturan \PVerb!jones! adlý
+kiþidir. 
+
+\subsection{Veri Modelini Normâlleþtirmek}
+
+Normâlleþtirme (normalization), iliþkisel bir veri tabaný modelinin daha arý
+hale getirilmesidir. Normâlleþtirme, ayný zamanda "ilk taslak" veri tabaný
+tasarýmýnýn üzerinde revizyonlar yapmanýnýn yolu, taslaðý son haline
+yaklaþtýrmanýn yöntemlerden birisidir. Normâlleþtirmenin altyapýsý
+matematikseldir, aynen iliþkisel modelin kendisinin matematiksel olmasý
+gibi. Temel alýnan kavram, iþlevsel baðlýlýk (functional dependency) denen bir
+kavramdýr. Normalleþtirmenin amaçlarý þunlardýr.
+
+\textbf{Veri Bütünlüðü}: Sadece bu öðe bile normalleþtirme ile uðraþmak için
+yeterli bir sebeptir. Veri, bütünlüðü bozulmamýþ bir þekilde kalýr, çünkü her
+çeþit bilgi, sadece bir kere tek bir yerde saklanýr. Yani, bir veri çeþidinin
+kopyasýnýn veri tabanýnýn deðiþik çizelgeleri üzerinde saklanmasý gerekmez. Eðer
+veri gereksiz þekilde kopyalanmýþ ise, bu deðiþik kopyalar, kopyalardan habersiz
+olan uygulama kodlarý yüzünden bir süre sonra birbirinden farklý deðerleri
+taþýmaya baþlayabilirler. Bu, doðruluk ve tutarlýlýk açýsýndan çok kötü bir
+sonuçtur. Bu gibi durumlarda iliþkisel veri taban paketinizin otomatik bütünlük
+kontrol (automatic integrity check) mekanizmalarý bile iþe yaramaz. Tedavinin,
+uygulama seviyesinde yapýlmasý gerekir. Fakat bu da uygulama programlarýný daha
+kompleks hâle getirecek, dolayýsýyla bakýmýný zorlaþtýracaktýr.
+
+\textbf{Uygulamadan Baðýmsýz Veri Modeli}: Normalleþtirme, genelde bilinen ve
+takip edilen ``iliþkisel model, verinin içeriðine göre kurulmalý, uygulamaya
+göre deðil'' kavramýný bir adým daha öne alýr. Bu sayede veri modeli, üzerinde
+onu kullanan uygulama deðiþse bile daha tutarlý, sabit ve deðiþmez olarak
+kalacaktýr. Uygulama programýnýn gereksinimlerinin veri tabaný mantýksal
+(logical) model üzerindeki etkisi sýfýr olmalýdýr. Daha ileride göreceðimiz
+gibi, uygulama, mantýksal model üzerinde deðil, fiziksel (physical) model
+üzerinde etki yapar.
+
+\textbf{Depolama Yeri Azaltýmý}: Yabancý/göstergeç anahtarlarýn haricinde,
+tamamiyle normâlleþtirilmiþ bir veri tabaný gereksiz (kopyalanmýþ) veri
+miktarýný en aza indirecektir. Kopyalanma miktarý azaldýðý için, depo yerine
+olan ihtiyaçta azalýr. Ve gene bu sayede, veri tabaný motorunun arama yapmasý da
+daha rahatlaþacaktýr.
+
+\subsubsection{Birinci Normal Formu}
+
+Bu form, tekrar eden hiç bir gurup taþýmaz. Bir baþka deyiþle, bir hücre
+üzerinde taþýnan deðer tek ve basit olmalýdýr. Aþaðýdaki örnek veride, son sene
+nüfusu \%5'den fazla artmýþ olan þehirlerden bazýlarýný görüyoruz. Þehir
+bilgilerinin bazýlarýnýn ayný hücre içerisinde guruplandýðýný görüyoruz. Bu
+yüzden bu tablo, normal deðildir (hâtta 1NF bile deðildir).
+
+
+\begin{table}
+  \begin{center}
+  \caption{\label{db:relational:notnormal} Normal Olmayan Tablo}
+  \begin{tabular}{|p{3.1pc}|p{3.1pc}|p{3.1pc}|p{4.0pc}|p{3.1pc}|p{3.1pc}|p{2.0pc}|}
+    \hline
+    \tiny{EYALET} &  \tiny{KISALTMA} &  \tiny{EYALET NÜFUSU} &  \tiny{ÞEHÝR} &
+    \tiny{GEÇEN YILIN NÜFUSU} &
+    \tiny{BU YIL NÜFUS} &  \tiny{YÜZDE ARTIÞ} \\
+    \hline
+    North Carolina &  NC &  5M &  Burlington, Raligh &  40k, 200k &  44k, 222k &
+    10\%, 11\%  \\
+    \hline
+    Vermont &  VT &  4M &  Burlington &  60k &  67.2k &  12\% \\
+    \hline
+    New York &  NY &  17M &  Albany, New York City, White Plains &  500k, 14M,
+    & & \\
+    \hline
+    100k &  570k, 14.7M, 106k &  8\%, 5\%, 6\% & & & & \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+Bu tablodaki bilgiye bakarak, þehir bilgilerinden mesela \PVerb!BU_YILIN_NÜFUSU!
+kolonundaki nüfuslardan hangisinin hangi þehre ait olduðunu nereden bilebiliriz?
+Bir kolon içinde bile birçok nüfus ve birçok þehir var. Sorumluluðu veri
+modelinden uygulama programýna atarak, sýraya göre bir eþleme düþünülebilir,
+fakat bu da en temel iliþkisel veri tabaný kuralý olan 'kolon içinde sýra olmaz'
+kuralýnýn ihlalidir.
+
+Bu veri yapýsýný 1NF (birinci normal formu) hâline getirmek için, tekrar eden
+guruplarý (verileri) tek kolondan çýkarýp, deðiþik satýrlara yaymak
+gerekir. Alttaki tabloda \ref{db:relational:1nf} üzerinde, tablo
+\ref{db:relational:notnormal} verisinin 1NF'e getirilmiþ halini görebilirsiniz.
+
+\begin{table}
+  \begin{center}
+  \caption{\label{db:relational:1nf} 1NF}
+  \begin{tabular}{|p{3.2pc}|p{3.2pc}|p{3.2pc}|p{4.0pc}|p{2.5pc}|p{3.2pc}|p{2.0pc}|}
+    \hline
+    \tiny{EYALET} & \tiny{KISALTMA} & \tiny{EYALET NÜFUSU} & \tiny{ÞEHÝR} &
+    \tiny{GEÇEN YIL NÜFUS} & \tiny{BU YIL NÜFUS} & \tiny{YÜZDE ARTIÞ} \\
+    \hline
+    North Coralina &  NC &  5M &  Burlington &  40k &  44k &  10\% \\  
+    \hline
+    North Coralina &  NC &  5M &  Raleigh &  200k &  222k &  11\% \\
+    \hline
+    Vermont &  VT &  4M &  Burlington &  60k &  67.2k &  12\% \\
+    \hline
+    New York &  NY &  17M &  Albany &  500k &  540k &  8\% \\
+    \hline
+    New York &  NY &  17M &  New York City &  14M &  14.7M &  5\% \\
+    \hline
+    New York &  NY &  17M &  White Plains &  100k &  106k &  6\% \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+Bu yeni veri modelinde, eyalet kolonu asal anahtar (primary key) olarak
+addedildi. Fakat bu son tabloda da bazý problemler var. Güncellemek ve silmek
+için, hala birçok veriye teker teker uðrayýp, verinin bütünlüðünü kod yazarak
+birarada tutmamýz gerekiyor. Mesela eðer yeni bir þehir satýrý ekleyecek olsak,
+beraberinde eyalet verisi de eklememiz lazým. Ya da bir eyaletin son þehrini
+veri tabanýndan silsek, bu eyaletin verisini veri tabanýndan tamamen kaybetmiþ
+oluyoruz. Demek ki 1NF'ten daha optimal bir yapýya geçmemiz gerekiyor.
+
+\subsubsection{Ýkinci Normal Formu}
+
+2NF yapýsýnda 1NF örneðinde gördüðümüz þekilde yarým baðýmlýlýk
+bulunmaz. Anahtar olmayan her kolon, asal anahtara tamamen baðlý
+olmalýdýr. Anahtar kolon, birden fazla kolonu kapsýyorsa, anahtar olmayan
+kolonlar anahtar kolonlarýn hepsine tamamen baðlý olmalýdýr. Tablo
+\ref{db:relational:1nf} bu kritere hâla uymuyor. Þehir bilgileri eyalet
+bilgisine baðlý deðil. Daha detaylý olarak, bütün þehir kolonlarý
+(\PVerb!SEHIR!, \PVerb!GECEN_YIL_NUFUS!, \PVerb!BU_YIL_NUFUS!,
+\PVerb!YUZDE_ARTIS!) asal anahtar eyalet kolonuna \PVerb!EYALET! tamamen baðlý
+durumda deðildir.
+
+Bu yüzden, birbirine tam baðlý olmayan bilgileri ayrý tablolara parçalamamýz
+gerekiyor. Tablo \ref{db:relational:2nf:one} ve \ref{db:relational:2nf:two}
+üzerinde 2NF þemanýn son hâlini görüyoruz. 
+
+\begin{table}[!hbp]
+  \begin{center}
+  \caption{\label{db:relational:2nf:one} 2NF Eyalet Tablosu}
+  \begin{tabular}{|p{3.2pc}|p{3.2pc}|p{5.0pc}|}
+    \hline
+    \tiny{EYALET} &  \tiny{KISALTMA} &  \tiny{EYALET\_NÜFUSU} \\
+    \hline
+    North Carolina &  NC &  5M \\
+    \hline
+    Vermont &  VT &  4M \\
+    \hline
+    New York &  NY &  17M \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[!hbp]
+  \begin{center}
+  \caption{\label{db:relational:2nf:two} 2NF Þehir Tablosu}
+  \begin{tabular}{|p{3.2pc}|p{3.2pc}|p{3.2pc}|p{3.2pc}|p{3.2pc}|p{3.2pc}|}
+    \hline
+    \tiny{EYALET} &  \tiny{KISALTMA} &  \tiny{ÞEHÝR} &  \tiny{GEÇ YIL NÜFUS} &
+    \tiny{BU YIL NÜFUS} & \tiny{YÜZDE ARTIÞ} \\
+    \hline
+    North Coralina &  NC &  Burlington &  40k &  44k &  10\% \\
+    \hline
+    North Coralina &  NC &  Raleigh &  200k &  222k &  11\% \\
+    \hline
+    Vermont &  VT &  Burlington &  60k &  67.2k &  12\% \\
+    \hline
+    New York &  NY &  Albany &  500k &  540k &  8\% \\
+    \hline
+    New York &  NY &  New York City &  14M &  14.7M &  5\% \\
+    \hline
+    New York &  NY &  White Plains &  100k &  106k &  6\% \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+\subsubsection{Üçüncü Normal Formu}
+
+
+3NF veri modelinde, anahtar olmayan hiçbir kolon, baþka anahtar olmayan kolona
+baðlý olamaz. 2NF'de bütün kolonlarýn asal anahtara baðlý olduðunu
+söylemiþtik. 3NF'e göre, bu baðlantý \textbf{dolaylý bile olamaz}. Mesela,
+\PVerb!YUZDE_ARTIS! kolonuna bakalým. Bu kolon, \PVerb!GECEN_YILIN_NUFUSU! ve
+\PVerb!BU_YILIN_NUFUSU! kolonlarýna baðlýdýr, çünkü bu iki kolondaki deðerlerden
+\textbf{hesaplanýr} (Hesaplanan kolonlara literatürde türetilen (derived) kolon
+ismi de verilmektedir). Üretilen kolonlar asal anahtara baðlýlardýr ama, bu
+baðlýlýk dolaylýdýr, yani baðlý olduklarý esas iki kolon asal anahtara baðlý
+olduðu için onlar da asal anahtara baðlýlardýr.
+
+Üçüncü normal formunda böyle kolonlara izin verilmez. \PVerb!YUZDE_ARTIS!
+kolonu 3NF'de þemadan atýlmasý gerekmektedir. Türetilen deðerler, uygulama
+programý tarafýndan anlýk hesaplanacaktýr. Eðer hesaplanan deðer çok sýk
+eriþiliyor ise, o zaman Oracle görüntü kavramý kullanýlarak bu hesabýn hayali
+bir tablo çerçevesinde servis edilmesi performans açýsýndan yararlý olabilir.
+
+Veri tabanýnýn 3NF (en son) halini Tablo \ref{db:relational:3nf:one},
+\ref{db:relational:3nf:two} ve \ref{db:relational:3nf:three} üzerinde görüyoruz.
+
+\begin{table}[!hbp]
+  \begin{center}
+  \caption{\label{db:relational:3nf:one} 3NF}
+  \begin{tabular}{|p{3.2pc}|p{3.2pc}|}
+    \hline
+    \tiny{EYALET} &  \tiny{EYALET NÜFUS} \\
+    \hline
+    North Carolina &  5M \\
+    \hline
+    Vermont &  4M \\
+    \hline
+    New York &  17M \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[!hbp]
+  \begin{center}
+  \caption{\label{db:relational:3nf:two} 3NF}
+  \begin{tabular}{|p{3.2pc}|p{3.2pc}|}
+    \hline
+    \tiny{EYALET} &  \tiny{KISALTMA} \\
+    \hline
+    North Carolina &  NC \\
+    \hline
+    Vermont &  VT \\
+    \hline
+    New York &  NY \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}
+  \begin{center}
+  \caption{\label{db:relational:3nf:three} 3NF}
+  \begin{tabular}{|p{3.2pc}|p{3.2pc}|p{3.2pc}|p{3.2pc}|p{3.2pc}|}
+    \hline
+    \tiny{ÞEHÝR} & \tiny{KISALTMA} &  \tiny{GEÇEN YIL NÜFUS} &
+    \tiny{BU YIL NÜFUS} &  \tiny{YÜZDE ARTIÞ} \\
+    \hline
+    Burlington &  NC &  40k &  44k &  10\% \\
+    \hline
+    Raleigh &  NC &  200k &  222k &  11\% \\
+    \hline
+    Burlington &  VT &  60k &  67.2k &  12\% \\
+    \hline
+    Albany &  NY &  500k &  540k &  8\% \\
+    \hline
+    New York City &  NY &  14M &  14.7M &  5\% \\
+    \hline
+    White Plains &  NY &  100k &  106k &  6\%  \\
+    \hline
+  \end{tabular}
+  \end{center}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Yardýmcý Kavramlar}
+
+Tablo, SQL gibi ana kavramlarýn üstüne, çoðu veri taban ürünü bazý ek servisleri
+kullanýcýlarýna sunmaktadýr. Bu servisler, bir tablo üzerinde yapýlan silme,
+güncelleme, ekleme gibi bir iþlem olduðu {\em anda} bir ek komutun iþletilmesini
+saðlayan tetik (trigger) kavramý olabilir. Tetik, normâl proglamlama dillerinden
+bize tanýdýk gelecek bir kavramdýr, bir çengel (hook) olarak görülebilir, ve
+çengel, takýldýðý yer aktif olunca kendisi de aktif hâle gelecektir. Diðer
+kavramlardan görüntü (view), dizi (sequence) ve eþanlam (synonym) sayýlabilir.
+
+Bu kavramlarý þimdiye kadar Oracle üzerinde kullandýðýmýz için, bu bölümde de
+Oracle üzerinden iþleyeceðiz. Fakat kendi ürününüz üzerinde bu kavramlarýn
+karþýlýklarýný bulabilirsiniz (özellikle PostgreSQL üzerinde, çünkü bu taban
+özellik olarak Oracle'a en yakýn olan açýk yazýlým ürünüdür). 
+
+
+\subsubsection{SID}
+
+Veri tabaný kelimesini kullandýðýmýzda genelde birçok þeyden ayný anda
+bahsediyoruz. Oracle paket programýnýn tamamýna, içinde bilgi depolayan
+kayýtlarý, kullanýcý isimlerinin toplamina ayný anda veri tabaný deniyor. Fakat,
+Oracle dunyasinda, bu kavramlari daha da berraklaþtýrmamýz gerekecek. SID = Veri
+tabaný diyeceðiz, ve, veri tabaný Oracle paket programý deðildir gibi bir taným
+yapacaðýz. Peki o zaman, veri tabaný nedir?
+
+Oracle'a göre veri tabaný, hakkýnda konuþabileceðimiz en büyük kayýt
+birimidir. Ýçinde tablolar, onlarýn yazýldýðý dosyalar, bu tablolara
+eriþecek kullanýcý isimleri, ve paralolarýn toplamýna veri tabaný diyoruz. Bir
+proje icinde þu kelimeleri duyabilirsiniz.
+
+\begin{itemize}
+\item Hangi veri tabanýna baðlandýn, tablo x'i bu tabanda bulamýyorum...
+\item (Admin'e) Benim kullanýcý ismimi bu veri tabanýnda da yaratýr mýsýnýz ?
+Kullanýcý þifrem kabul edilmiyor
+\item Fazla veri tabaný yaratmaya gerek yok, bir tane üzerinde çalýþsak olmaz
+mý?
+\item Hayýr olmaz, çünkü veri tabaný idarecileri iki veri tabaný olursa
+idaresi kolaylaþýr diyorlar.
+\end{itemize}
+
+SID, veri tabanýna eriþmemizi saylayacak bir isimden ibarettir. Örnek olarak
+SATIS, BORDRO, MUSTERI gibi veri tabaný isimleri olabilir.
+
+\subsection{Tablo Alaný}
+
+Tablo alaný (tablespace), tablolarýn üzerinde depolanacaðý dosya ismidir,
+yâni \PVerb!/usr/dizin1/dizin2/cizelge_alan_1.dbf! gibi bir gerçek Unix
+dosyasýndan bahsediyoruz. Oracle veri tabanýnýn, gerçek dünya ile (iþletim
+sistemi) buluþtuðu yere tablo alanýdýr.Tablo ile tablo alanlarýnýn
+baðlantýsý, alan yaratýlýrken sâdece bir kere yapýlýr. Ondan sonra ne zaman bu
+tabloya eriþseniz, önceden tanýmlanmýþ olan dosyadan oku/yaz otomatik olarak
+yapýlacaktýr.
+
+Tablo alaný yaratmak için, þöyle bir komut iþletebiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE TABLESPACE cizelge_alan_1 DATAFILE
+'/usr/local/dizin1/oracle/cizelge_alan_1.dbf' SIZE 200M;
+\end{lstlisting}
+
+\subsection{Þema}
+
+Þema\PVerb!=!kullanýcý gibi bir taným yapabiliriz, fakat Oracle dünyasýnda þema
+biraz daha güçlü bir kavramdýr. Eðer daha basit veri tabanlarýna alýþýksak,
+herhalde her kullanýcýnýn her tabloyu görmesine alýþýðýzdýr. Fakat Oracle için
+tablolarýn eriþilip eriþilmeyeceði, tablolarýn nerede tutulacaðý (yâni
+sahiplenme mekanizmasý) þema bazýnda idare edilmektedir. Bir veri tabanýna
+(\PVerb!SID=ORNEK1!) baðlandýðýnýz zaman, bu tabanda bazý tablolarý
+göremeyebilirsiniz. Görmek için, belli bir kullanýcý ve þema kullanarak
+baðlanmanýz gerekecektir. Ayný isimdeki iki tabloyu deðiþik þemalarda
+yaratabiliriz; Oracle bundan yakýnmaz. Yâni SID'den sonra Oracle'ý
+paylaþtýrmanýn/bölmenin ikinci bir yolu þemadýr.
+
+Oracle idarecileri az miktarda SID ve paylaþtýrmak için çok miktarda þema
+yaratmayý tercih ederler. Þema yaratmak için kullanýcý yaratmamýz yeterlidir.
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE USER hasan IDENTIFIED BY hasanslx DEFAULT TABLESPACE alan1;
+\end{lstlisting}
+Bu konu hakkýnda bazý notlar þunlardýr:
+
+\begin{itemize}
+\item Kullanýcý MEHMET olarak SID'e baðlandýysanýz, ve CREATE TABLE komutunu
+iþletip bir tablo yarattýysanýz, bu tablo MEHMET þemasýna ait olacaktýr. Bu
+tabloyu baþkalarý göremez. Görmesi için özel izin `vermeniz' gerekir.
+
+\item Eðer MEHMET kullanýcýsý olarak bir tablo yarattýysanýz ve detay
+belirtmediyseniz, bu tablo DEFAULT TABLESPACE diye yukarýda belirttiðimiz yokluk
+deðeri (default) \PVerb!alan1! altýnda yaratýlýr.
+\end{itemize}
+
+
+
+\subsection{Görüntü}
+
+Görüntüler, önceden depolanmýþ ve sorgulanabilen SQL kodlarýdýr. Bir görüntü,
+güvenlik ötürü bazý çizgeleri göstermeden, bu çizgelerin verisinin bir kýsmýný
+göstermek için kullanýlabilir. Mesela halkla iliþkiler bölümü için, isim, soyad
+ve adres bir görüntü içinden gösterilebilir, öteki bilgiler saklanabilir. Ya da,
+daðýnýk veri tabanlarýndan toparlanacak bilgiler, bir görüntü ile önceden
+kodlanýr ise, artýk birden fazla veri tabanýna baðlanmak yerine, tek bir görüntü
+üzerinden veri alýnabilir. Özet olarak, normalde iþleyen her SQL kodu, görüntü
+yaramak için kullanýlabilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+create or replace view goruntu_1 as
+select isim, soyad
+from MUSTERI;
+\end{lstlisting}
+
+\subsection{Dizi (Sequence)}
+
+Tekil sayý yaratmak için kullanýlan Oracle nesnesine dizi adý verilir. Dizi
+yaratmak için baþlangýç deðeri, artýþ miktarý ve bitiþ sayýsý vermek
+yeterlidir. Yani, 1..n arasý her seferinde 1 kadar artacak bir dizi yaratmak
+mümkün. Bu sayýlar genelde kimlik no gibi özgün olmasý gereken deðerler için
+kullanýlýr. Her seferinde kod içinde, `önceki deðer + 1' demek yerine, SQL
+kullanarak her diziden yeni sayý isteyiþimizde, güncel dizi artýþ deðeri kadar
+otomatik olarak arttýrýlýr ve alýnan sayý SQL sonucu olarak verilir.
+
+
+Bir dizi yarattýðýnýz zaman, \PVerb!NEXTVAL! ve \PVerb!CURRVAL! sanal
+kolonlarýný kullanýrýz. Mesela \PVerb!UYE_DIZISI! adlý bir dizi yarattý isek,
+\PVerb!SELECT UYE_DIZI.NEXTVAL FROM DUAL! diyerek o anki deðeri alabiliriz. Bu
+komut sonucunda ayrýca dizi deðeri 1 arttýrýlýr. \PVerb!SELECT UYE_DIZI.CURRVAL
+FROM DUAL!  kullanýmý o anki deðeri verecektir. Fakat diziyi arttýrmaz.
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE SEQUENCE DIZI_ISMI
+INCREMENT BY 1 -- artýþ
+START WITH 100; -- baþlangýç
+\end{lstlisting}
+
+\subsection{Tetik}
+
+Tetikler (trigger), depolanmýþ PL/SQL kodlarýdýr. Önceden öngörülen belli bazý
+tablolara, gene önceden öngörülen þekilde bir eriþim olduðunda tetikler
+ateþlenirler, ve kodlanan iþlemi yerine getirirler. Tetikler, satýr ekleme,
+silme, güncelleme ya da bütün bu temel iþlemlerin deðiþik guruplamalarý için
+kodlanabilirler. Tetiklerin en çok kullanýldýðý alan, veri bütünlüðü için
+kýsýtlamalar koymaktýr. Bu tür kýsýtlamalar Oracle terimleri ile, veri bütünlük
+kontrolleri (integrity constraints) olarak bilinir, ve satýrlar arasýnda bazý
+kontroller getirebilir. Fakat bu tür satýr bazlý kontrollerin yetmediði
+hallerde, tetik kodlarý iþe yarayabilir. Çünkü tetik kodlarý içine PL/SQL ile
+kodlayabildiðiniz her türlü kod koyabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+create to replace trigger musteri_tetik_1 INSTEAD OF
+insert on musteri for each row
+begin
+insert into maas values
+('1', '2'); -- buraya daha deðiþken kod koyabilirsiniz
+end;
+/
+\end{lstlisting}
+
+\subsection{Dizi ve Tetik}
+
+Bazý veri þemalarýnda ID kolonu atanan bir deðer deðil, üretilmesi gereken bir
+sayýdýr.  Bu sayý, en basit hâliyle 1'den baþlayarak her yeni veri satýrý için
+birer farkla artmasý gereken bir sayýdýr.
+
+
+O zaman her satýrý yazarken bu ID'nin üretilmesi gerekmektedir. Bu üretimi, ya
+uygulama içinde yapacaðýz, ya da veri tabanýn otomatik olarak yapmasýný
+saðlayacaðýz.
+
+Otomatik attýrým bazý veri tabanlarýnda bir kolon tipi olarak bile karþýnýza
+çýkabilir. Oracle'da bu iþi yapmak için bir sequence ve bir trigger kullanmamýz
+gerekiyor. Oracle, bu tekil sayýnýn üretimini ve tabloya atanmasý iþini
+birbirinden ayýrmýþtýr. Bu da sanýyorum isabet olmuþtur, auto-increment kolon
+tipi hakikaten çok basitleyici bir çözümdür.
+
+Oracle'da otomatik ID üretimi için iki þey gerekir; Bir sequence, bir de
+trigger. Meselâ, þöyle bir tablomuz olduðunu düþünelim.
+
+\begin{lstlisting}[language=Java, frame=none]
+create table test (
+id number,
+veri varchar2(20),
+...   
+);
+\end{lstlisting}
+Bu tablo için bir sequence ve bir trigger yaratalým.
+
+\begin{lstlisting}[language=Java, frame=none]
+create sequence test_seq
+start with 1
+increment by 1
+nomaxvalue
+;
+
+create trigger test_trigger
+before insert on test
+for each row
+begin
+select test_seq.nextval into :new.id from dual;
+end;
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, frame=none]
+INSERT into test (veri) values ('blablabla');
+\end{lstlisting}
+gibi bir \PVerb!INSERT! kullandýðýmýzda, hiç ID'ye dokunmamýza gerek kalmadan,
+bir sonraki ID sayýsý hesaplanacak ve kolona koyulacaktýr.
+
+\subsection{Veri Taban Köprüsü}
+
+Köprüler (database link) nesne (tablo, kolon, vs) bazýnda deðil, tüm veri tabaný
+bazýnda baðlantý kurar. Yani, uzakta olan bir veri tabanýna, sürekli olarak ve
+uzak adresini kullanarak eriþmek istemiyorsanýz, bir köprü, yani kestirme
+yaratarak o veri tabanýna sanki yerel bir tabanmýþ gibi eriþebilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE PUBLIC DATABASE LINK baglanti_1
+CONNECT TO kullanici
+IDENTIFIED BY sifre
+USING 'UZAK_VERI_TABAN_SID_DEGERI';
+\end{lstlisting}
+
+
+\subsection{Eþanlam (Synonym)}
+
+Eþanlamlar, bir veri tabanýndaki tablolarden diðer tablolara kestirme iþaret
+olarak görülebilir. Bir eþanlam yaratmak için eþanlam ismi, ve o eþanlamýn
+yerini tuttuðu Oracle nesnesinin ismi gereklidir. SQLPlus kullanarak bu eþanlama
+eriþtiðimizde, Oracle arka planda eþanlamýn yerini tuttuðu nesneyi bulur, ve
+iþlemi o öteki nesne üzerinde yapar.
+
+Ýki türlü eþanlam vardýr. Umumi (public) ve özel (private). Özel eþanlamlar
+içinde yaratýldýklarý þemaya özel olurlar, o þemaya ait kalýrlar ve baþka
+kullanýcýlar tarafýndan eriþilemez, hatta görülmezler bile. Eðer eþanlamlar
+umumi ise, bütün þematikler tarafýndan kullanýlabilirler.
+
+Oracle'ýn bir nesneye eriþmek için hangi tür bir algoritma izlediðine gelelim.
+Eðer þöyle bir kod iþletildi ise,
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT * FROM FROM MAAS
+\end{lstlisting}
+Oracle MAAS nesnesini bulmak için þunlarý yapar.
+
+\begin{itemize}
+\item MAAS adlý bir tablo ya da görüntü var mý?
+\item Bu ikisi yoksa, Oracle MAAS adýnda özel bir eþanlam arar.
+\item Var ise, özel eþanlamýn gösterdiði nesne kullanýlýr.
+\item Yok ise, MAAS adlý umumi eþanlam aranýr.
+\item Hiçbiri yok ise, Oracle ORA-00942 hata mesajýný verecektir.
+\end{itemize}
+
+\begin{lstlisting}[language=Java, frame=none]
+create synonym MUSTERI for BIZIM_UZUN_MUSTERI_ISMI;
+\end{lstlisting}
+
+
+\subsection{Ýndeksler} \label{db:index}
+
+Bir tablodan veri almak için, kullandýðýmýz \PVerb!SELECT! komutunun
+\PVerb!WHERE! kýsmý içinde filtre þartlarý belirtmemiz gerekir. Bu þartlar, veri
+tabaný tablosu taranýrken gereken satýrlarý diðerlerinden ayýrýp onlarý çekip
+çýkarabilmemiz için kullanýlýr. Arama þartlarý tanýmlandýktan sonra, veri tabaný
+kapalý perdeler arkasýnda tarama iþlemini gerçekleþtirmek için þunlarý yapar:
+Tabloyu tararken, ilk satýrdan baþlayýp teker teker sonuncu satýra doðru tüm
+satýrlara bakar, ve filtre þartlarýnýn uyup uymadýðýný kontrol eder.
+
+Fakat tüm satýrlara bakýlan türden bir arama, özellikle büyük tablolar için çok
+uzun zaman alacaktýr. Eðer tüm satýrlara bakýlan türden bir tarama yapýlmasýný
+istemiyorsak, veri tabanýna arama yaparken bir þekilde {\em yardým etmenin}
+yolunu bulmalýyýz.
+
+Ýndeksler bu türden yardým yöntemidirler. Ýndeksler, kendileri veri içermezler,
+sadece gerçek veriyi içeren tablonun belli satýrlarýna {\em iþaretler}
+taþýrlar. Çok hýzlý aranabilen türden veri yapýlarýdýrlar. Bu iþaretler, belli
+anahtar kolonlarýna göre (indeksle) yapýlmýþtýr. Ýndeksler bu açýdan bir fihriste
+benzerler.
+
+Bir indeksin kullanýma konmasý þöyle olur: Eðer \PVerb!SELECT! filtremiz içinde
+kullanýlan kolonlar üzerinde bir indeks mevcutsa, veri tabaný filtreyi önce
+indeksden tarar, buradan gelen satýr iþaretini kullanarak ta gerçek tabloya
+giderek aranan gerçek satýrý döndürür.
+
+Ýndeksler gerçek tabloyu indeksledikleri için, bu tabloda olan her deðiþim
+indeksleri etkiler. Meselâ tabloya yeni bir satýr eklenirse, indeks bu ekleme
+iþlemini yansýtacak þekilde güncellenir. Bu sebeple gereðinden fazla indeks
+eklenmesi bir tabloya yapýlan \PVerb!INSERT! iþlemlerini yavaþlatacaktýr. Tam
+kararýnda kurulan indeksler, hem \PVerb!SELECT!  sorgularýmýzý hýzlandýrýr, hem
+de \PVerb!INSERT!'lerimiz üzerinde fazla bir etkide bulunmazlar.
+
+Þu anda piyasada olan her profosyonel veri taban ürünü, indeks teknolojisini
+desteklemektedir. Bu bölümün geri kalanýnda PostgreSQL, Oracle ve MySQL
+tabanlarýnda indeks eklemenin yollarýný, ve en önemlisi, herhangi bir sorgunun
+üzerinde analiz yaparak indeks kullanýp kullanmadýðýný görebilmek için gereken
+komutlarý öðreneceðiz.
+
+Elimizde \PVerb!car! ve \PVerb!garage! adlý iki tablo olduðunu düþünün. Bu
+tablolar arasýnda bire çok türünden bir iliþki olsun ve bir \PVerb!car! birçok
+garajýn altýnda olabilsin. Bu iliþkiyi fiziksel anlamda, \PVerb!car! tablosu
+üzerinde bir \PVerb!garage_id! koyarak gerçekleþtiriyoruz.
+
+\subsubsection{PostgreSQL}
+
+Bir sorgunun indeks kullanýp kullanmadýðýný analiz etmek için, o sorguyu
+\PVerb!psql! ile PostgreSQL komut satýrýna girip, \PVerb!EXPLAIN! komutu
+eþliðinde iþletmemiz gerekmektedir.
+
+\begin{lstlisting}[language=Java, frame=none]
+explain
+select * from car where license_plate = '34 THY 334';
+\end{lstlisting}
+Eðer hiçbir indeks tanýmlamamýþsak, þöyle bir cevap geriye gelecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+QUERY PLAN
+--------------------------------------------------------
+Seq Scan on car  (cost=0.00..330.00 rows=44 width=170)
+Filter: ((license_plate)::text = '34 THY 334'::text)
+\end{lstlisting}
+Bu çýktýda ilk dikkatimizi çeken kelimeler, \PVerb!Seq Scan! kelimeleri
+olmalýdýr. Bu kelimeler Sequential Scan (sýrayla tarama, teker teker bakma)
+kelimesinin bir kýsaltmasýdýr, ve \PVerb!SELECT! komutunun teker teker her
+satýra baktýðý anlamýna gelir. Bu performans açýsýndan istediðimiz bir durum
+deðildir. Biz indekslerin kullanýlmasýný istiyoruz. Ve gördük ki, hiçbir indeks
+kullanýlmamýstýr. Çünkü daha indeks tanýmlamadýk! Ayný þekilde,
+
+\begin{lstlisting}[language=Java, frame=none]
+explain 
+select c.*
+from
+car c, garage g
+where
+c.garage_id = g.id and
+g.id = 2 and
+c.available = 't';
+\end{lstlisting}
+sorgusunun analizi de þu cevabý getirecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+QUERY PLAN
+----------------------------------------------------------------------
+Nested Loop  (cost=18.50..372.26 rows=88 width=170)
+->  Seq Scan on car c  (cost=0.00..352.00 rows=22 width=170)
+Filter: ((available = true) AND (2::numeric = garage_id))
+->  Materialize  (cost=18.50..18.54 rows=4 width=23)
+->  Seq Scan on garage g  (cost=0.00..18.50 rows=4 width=23)
+Filter: (id = 2::numeric)
+\end{lstlisting}
+Çok kötü. Bu sorguda da, hem iki tablo birleþtirimi (join) hem de
+\PVerb!available! kolonu üzerinde yaptýðýmýz filtreleme üzerinde \PVerb!seq
+scan! taramasý yapýldýðýný görüyoruz. Satýr sayýsý oldukça fazla olan
+\PVerb!car! ve \PVerb!garage! tablolarý kullanýyor olsaydýk, bu son sorgunun da
+performaný çok kötü olacaktýr.
+
+O zaman indeksleri ekleyelim. PostgreSQL'da indeks þöyle eklenir:
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE UNIQUE INDEX car_license_plate_idx on car (license_plate);
+CREATE UNIQUE INDEX garage_id_idx on garage (id);
+CREATE INDEX car_available_idx on car (available);
+CREATE INDEX car_garage_idx on car (garage_id);
+\end{lstlisting}
+
+\PVerb!car! tablosunda \PVerb!license_plate! kolonu üzerinden iþleyen bir indeks
+ekledik. Ayný þekilde \PVerb!garage.id! kolonuna, \PVerb!car.available! kolonuna
+ve \PVerb!car.garage_id! kolonuna indeksler ekledik. Ýndeksler eklendikten
+sonra, sýrasýyla her iki sorguda yapýlan \PVerb!EXPLAIN! komutu, þu sonucu
+döndürecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+QUERY PLAN
+--------------------------------------------------------------------------
+Index Scan using car_license_plate_idx on car  (cost=0.00..6.00 rows=1
+width=170)
+Index Cond: ((license_plate)::text = '701790-171'::text)
+
+QUERY PLAN
+---------------------------------------------------------------------------
+Nested Loop  (cost=0.00..15.03 rows=2 width=170)
+->  Seq Scan on garage g  (cost=0.00..1.05 rows=1 width=23)
+Filter: (id = 2::numeric)
+->  Index Scan using car_garage_idx on car c  (cost=0.00..13.96 rows=2
+width=170)
+Index Cond: (2::numeric = garage_id)
+Filter: (available = true)
+\end{lstlisting}
+Sonuca bakarak görüyoruz ki, birinci sorguda \PVerb!Seq Scan! ibaresinde
+kurtulduk. Artýk bu sorguya eriþim, \PVerb!Index Scan! ile olmaktadýr, yâni
+verdiðimiz sorgu \PVerb!car! tablosuna yarattýðýmýz indeks üzerinden
+eriþilmektedir. Bir hýz ilerlemesi kaydettik. Ýkinci sorguda, \PVerb!available!
+kolonu üzerindeki sorgudaki filtre ibaresi de indeks kullanmaya baþlamýþtýr.
+
+Fakat PostgreSQL sorgu hýzlandýrýcýsý (optimizer), \PVerb!garage.id!  üzerindeki
+indeksi devreye sokmamýþtýr, çünkü \PVerb!garage! tablosunda çok az veri vardýr
+(örnek verimiz böyle idi) ve bu þekilde az veri taþýyan tablolarda indeks
+kullanýp kullanmamak bir hýz farký getirmeyecektir.
+
+\subsubsection{Oracle}
+
+Oracle üzerinde indeks yaratmak için \PVerb!CREATE INDEX!, sorgularýn indeks
+kullanýmýný analiz etmek için \PVerb!EXPLAIN PLAN! komutlarý
+kullanýlýr. \PVerb!EXPLAIN PLAN!, komutu iþlettiðini þemada iþleyebilmek için
+\PVerb!PLAN_TABLE! adlý bir sistem tablosunu kullanýr. Oracle 10g üzerinde bu
+tablo her veri tabaný içinde kurulmuþ olur, ama eðer kullandýðýnýz versiyonda
+mevcut deðilse, tabloyu þu komut ile yaratabilirsiniz (\PVerb!ORACLE_HOME!,
+Oracle paketinin kurulmuþ olduðu dizini temsil eder).
+
+\begin{lstlisting}[language=Java, frame=none]
+\$ sqlplus user/pass@SID
+@ORACLE_HOME/product/<versiyon>/<Db>/rdbms/admin/utlxplan.sql
+\end{lstlisting}
+\PVerb!utlxplan.sql! dosyasýnda \PVerb!plan_table! ve ilgili tüm tablolarýn
+yaratýlmasý için gereken iþlemler yapýlmaktadýr.
+
+Analiz için þu komutu kullanabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+explain plan SET STATEMENT_ID='SORGU_1' FOR
+select * from car where license_plate = '34 THY 334';
+
+SELECT LPAD(' ',2*DEPTH) | | OPERATION | | ' ' | | OPTIONS | | ' '
+| | OBJECT_NAME | | ' ' | | DECODE(ID, 0, 'COST= '| | POSITION)
+"QUERY PLAN"
+FROM PLAN_TABLE START WITH ID=0 AND STATEMENT_ID='SORGU_1'
+CONNECT BY PRIOR ID=PARENT_ID;
+\end{lstlisting}
+Sonuç þöyle gelir:
+
+\begin{lstlisting}[language=Java, frame=none]
+QUERY PLAN
+---------------------------------
+
+SELECT STATEMENT   COST= 3
+TABLE ACCESS FULL CAR
+\end{lstlisting}
+Bu iþletim planýna bakarsak, \PVerb!TABLE ACCESS FULL! kelimelerini hemen
+gözümüze çarpar. Bu kelimeler bize iþletilen sorgunun hiçbir indeks
+kullanmadýðýný göstermektedir, ve Oracle tablodaki satýrlara teker teker ve
+sýrayla eriþmeye çalýþmaktadýr. Ayný þekilde diðer sorgumuza bakarsak;
+
+\begin{lstlisting}[language=Java, frame=none]
+explain plan SET STATEMENT_ID='SORGU_1' FOR
+select c.*
+from
+car c, garage g
+where
+c.garage_id = g.id and
+g.id = 2 and
+c.available = 't';
+
+SELECT LPAD(' ',2*DEPTH) | | OPERATION | | ' ' | | OPTIONS | | ' '
+| | OBJECT_NAME | | ' ' | | DECODE(ID, 0, 'COST= '| | POSITION)
+"QUERY PLAN"
+FROM PLAN_TABLE START WITH ID=0 AND STATEMENT_ID='SORGU_1'
+CONNECT BY PRIOR ID=PARENT_ID;
+\end{lstlisting}
+þu sonucu görürüz
+
+\begin{lstlisting}[language=Java, frame=none]
+QUERY PLAN
+----------------------------------
+
+SELECT STATEMENT   COST= 6
+MERGE JOIN CARTESIAN
+TABLE ACCESS FULL CAR
+BUFFER SORT
+TABLE ACCESS FULL GARAGE
+\end{lstlisting}
+Bu analiz sonucunda da bol bol \PVerb!TABLE ACCESS FULL! görmekteyiz. Demek ki
+gerekli yerlere indeksler eklememiz gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE UNIQUE INDEX car_license_plate_idx on car (license_plate);
+CREATE UNIQUE INDEX garage_id_idx on garage (id);
+CREATE INDEX car_available_idx on car (available);
+CREATE INDEX car_garage_idx on car (garage_id);
+\end{lstlisting}
+Þimdi \PVerb!EXPLAIN PLAN!'i tekrar iþletirsek, þu sonuçlarý göreceðiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+QUERY PLAN
+-----------------------------------------------
+
+SELECT STATEMENT   COST= 1
+TABLE ACCESS BY INDEX ROWID CAR
+INDEX UNIQUE SCAN CAR_LICENSE_PLATE_IDX
+
+QUERY PLAN
+-------------------------------------------------
+
+SELECT STATEMENT   COST= 0
+NESTED LOOPS
+INDEX UNIQUE SCAN GARAGE_ID_IDX
+TABLE ACCESS BY INDEX ROWID CAR
+BITMAP CONVERSION TO ROWIDS
+BITMAP AND
+BITMAP CONVERSION FROM ROWIDS
+INDEX RANGE SCAN CAR_AVAILABLE_IDX
+BITMAP CONVERSION FROM ROWIDS
+INDEX RANGE SCAN CAR_GARAGE_IDX    
+\end{lstlisting}
+Bu sonuçlar çok daha iyidir. Birinci sorgunun analizi \PVerb!TABLE INDEX BY
+ROWID CAR! kelimesini taþýyor, bu demektir ki tabloya eriþim artýk bir indeks
+üzerinden gerçekleþmektedir. Kullanýlan indeks \PVerb!CAR_LICENSE_PLATE_IDX!
+isimli indekstir, bu da hemen altýndaki satýrda belirtilmiþtir.
+
+Ýkinci sorgunun sonucu biraz daha çetrefildir, fakat burada da görüldüðü gibi
+artýk \PVerb!TABLE ACCESS FULL! sözü kaybolmuþtur, onun yerine indekslerin
+kullanýlmaya baþlandýðý \PVerb!INDEX UNIQUE SCAN!, \PVerb!INDEX RANGE SCAN! ve
+\PVerb!TABLE ACCESS BY ROWID! kelimelerinden belli olmaktadýr. \PVerb!INDEX
+UNIQUE! ile \PVerb!INDEX RANGE! arasýndaki fark, ilkinin tekil bir satýra iþaret
+edebilmesi, ikincisinin tekrar eden anahtar deðerlere iþaret eden türden bir
+indeks olmasýdýr.
+
+Sonuç olarak Oracle dünyasýnda sorgu optimizasyonu ile amacýmýz, \PVerb!EXPLAIN
+PLAN!'den gelen sonuçlarda görülebilecek \PVerb!TABLE ACCESS FULL! ibaresinden
+kurtulmaktýr. 
+
+\subsubsection{MySQL}
+
+MySQL veri tabanýnda analiz için \PVerb!explain! komutu kullanýlýr. Aynen
+PostgreSQL örneðinde olduðu gibi, analiz etmek istediðiniz sorgunun önüne
+\PVerb!explain! ibaresini eklerseniz, MySQL analiz sonucunu gösterecektir. Örnek
+olarak \PVerb!car! ve \PVerb!garage! üzerindeki yapýlan iki sorguyu analiz
+edelim:
+
+\begin{lstlisting}[language=Java, frame=none]
+explain  select * from car where license_plate = '32 TF 22';
+\end{lstlisting}
+
+\tiny{}
+\begin{verbatim}
++-------+------+---------------+------+---------+------+------+-------------+
+| table | type | possible_keys | key  | key_len | ref  | rows | Extra       |
++-------+------+---------------+------+---------+------+------+-------------+
+| car   | ALL  | NULL          | NULL |    NULL | NULL |    5 | Using where |
++-------+------+---------------+------+---------+------+------+-------------+
+\end{verbatim}
+\normalsize{}
+
+\begin{lstlisting}[language=Java, frame=none]
+explain 
+select c.*
+from
+car c, garage g
+where
+c.garage_id = g.id and
+g.id = 2 and
+c.available = 't';
+\end{lstlisting}
+
+\tiny{}
+\begin{verbatim}	
++-------+------+---------------+------+---------+------+------+-------------+
+| table | type | possible_keys | key  | key_len | ref  | rows | Extra       |
++-------+------+---------------+------+---------+------+------+-------------+
+| c     | ALL  | NULL          | NULL |    NULL | NULL |   47 | Using where |
+| g     | ALL  | NULL          | NULL |    NULL | NULL |    4 | Using where |
++-------+------+---------------+------+---------+------+------+-------------+
+\end{verbatim}
+\normalsize{} \PVerb!explain! komutundan gelen üstteki sonuçlar, her tablo için
+bir satýr olmak üzere listelenecektir. Her tabloya yapýlan eriþimin yöntemini,
+\PVerb!type! altýnda bulabilirsiniz. MySQL dünyasýnda, sorgu analizinde bir
+tablo için \PVerb!type! için \PVerb!ALL! görmek {\em iyi deðildir}. \PVerb!type!
+için gelmesi muhtemel deðerleri en iyiden en kötüye olacak þekilde bir
+sýralamasýný aþaðýda görüyoruz.
+
+\begin{enumerate}
+\item \PVerb!system!
+\item \PVerb!const!
+\item \PVerb!eq_ref!
+\item \PVerb!ref!
+\item \PVerb!ref_or_null!
+\item \PVerb!index_merge!
+\item \PVerb!ununique_subquery!
+\item \PVerb!range!
+\item \PVerb!index!
+\item \PVerb!ALL!
+\end{enumerate}
+\PVerb!ALL! deðeri en alttadýr, yâni yukarýdaki sorgularýmýzýn eriþtiði
+tablolara indeks eklemezsek, yukarýdaki sorgular en kötü performans ile
+iþletiliyor olacaktýrlar. O zaman bu durumu düzeltmek için indekslerimizi
+ekleyelim:
+
+\begin{lstlisting}[language=Java, frame=none]
+CREATE UNIQUE INDEX garage_id_idx on garage (id);
+CREATE INDEX car_available_idx on car (available);
+CREATE INDEX car_garage_idx on car (garage_id);
+CREATE UNIQUE INDEX car_license_plate_idx on car (license_plate);
+alter table garage add PRIMARY KEY(id);
+alter table car add PRIMARY KEY(license_plate);
+alter table car add FOREIGN KEY (garage_id) REFERENCES garage(id);
+\end{lstlisting}
+Tekrar \PVerb!explain! eþliðinde iki sorguyu iþletelim ve sonuçlarý görelim.
+
+\tiny{}
+\begin{verbatim}
++-------+-------+-----------------------+---------+---------+-------+------+-------+
+| table | type  | possible_keys         | key     | key_len | ref   | rows | Extra |
++-------+-------+-----------------------+---------+---------+-------+------+-------+
+| car   | const | PRIMARY,license_plate | PRIMARY |      30 | const |    1 |       |
++-------+-------+-----------------------+---------+---------+-------+------+-------+
+
++-------+-------+---------------+-----------+---------+-------+------+-------------+
+| table | type  | possible_keys | key       | key_len | ref   | rows | Extra       |
++-------+-------+---------------+-----------+---------+-------+------+-------------+
+| g     | const | PRIMARY,id    | PRIMARY   |      31 | const |    1 |             |
+| c     | ref   | garage_id     | garage_id |      32 | const |   10 | Using where |
++-------+-------+---------------+-----------+---------+-------+------+-------------+
+\end{verbatim}
+\normalsize{}
+
+Sonuçlar daha iyileþti. Birinci sorguda \PVerb!car! tablosuna olan eriþim,
+sorgu iyilik derecesinde 2. seviyede olan \PVerb!const! seviyesine
+yükseldi. Ýkinci sorguda ise \PVerb!garage! (\PVerb!g!) ve \PVerb!car!
+(\PVerb!c!) tablolarýnýn eriþimi ise \PVerb!garage! için \PVerb!const! ve
+\PVerb!car! için iyilik derecesinde 4. seviyede olan \PVerb!ref! eriþimine
+yükseldi. 
+
+\subsection{Oracle SQL*Loader}
+
+Metin bazlý bilgileri Oracle veri tabanýna yüklemek istiyorsanýz, bunun en rahat
+yolu SQL*Loader adlý programý kullanmaktýr.  SQL*Loader, kontrol dosyasý denilen
+bir ayartaným dosyasý eþliðinde, virgül ayýrýmlý, boþluk ayýrýmlý, tab ayýrýmlý,
+ya da sabit uzunluktaki kolonlar içeren metinlerin hepsini veri tabanýna
+yükleyebilir. Bunu bir örnek üzerinde görelim: Önce üzerinde yükleme yapacaðýmýz
+tabloyu veri tabanýnda yaratalým.
+
+\begin{lstlisting}[language=Java, frame=none]
+create table musteri (
+
+  cust_nbr        number(7)        not null,
+  cust_name       varchar2(100)    not null,
+  cust_addr1      varchar2(50),
+  cust_addr2      varchar2(50),
+  cust_city       varchar2(30),
+  cust_state      varchar2(2),
+  cust_zip        varchar2(10),
+  cust_phone      varchar2(20),
+  cust_birthday   date)
+/
+
+create table hesap (
+
+  cust_nbr        number(7)        not null,
+  acct_nbr        number(10)       not null,
+  acct_name       varchar2(40)     not null)
+/
+\end{lstlisting}
+Üstteki komutlarý kullanarak tabloyu yarattýktan sonra, örnek metin dosyalarýný
+\PVerb!SqlLodader! projesinden alýp kullanabilirsiniz.
+
+\subsubsection{Sabit Uzunluklu Kayýt Yüklemek}
+
+Þimdi, SQL*loader'ýn çalýþmasý için bir kontrol dosyasý lazým. Müþteri verisi
+için yazýlmýs aþaðýdaki kontrol dosyasý örneðini, load1.ctl adýnda diskinize
+yazýn. Bu örnek, sabit uzunluklu bir veri dosyasýný yüklemek için verilmiþtir.
+
+\begin{lstlisting}[language=Java, frame=none]
+LOAD DATA
+INFILE 'cust.dat'
+INTO TABLE musteri
+   (cust_nbr      POSITION(01:07)    INTEGER EXTERNAL,
+    cust_name     POSITION(08:27)    CHAR,
+    cust_addr1    POSITION(28:47)    CHAR,
+    cust_city     POSITION(48:67)    CHAR,
+    cust_state    POSITION(68:69)    CHAR,
+    cust_zip      POSITION(70:79)    CHAR,
+    cust_phone    POSITION(80:91)    CHAR,
+    cust_birthday POSITION(100:108)  DATE "DD-MON-YY" NULLIF 
+                                     cust_birthday=BLANKS)
+\end{lstlisting}
+Artýk müþteriyi veri tabanýna yüklemeye hazýrýz. Aþaðýdaki komut
+ile bunu yapabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+\$ sqlldr kullanici/sifre control=load1.ctl log=load1.log bad=load1.bad
+   discard=load1.dis
+\end{lstlisting}
+Bilgisayardan gelen yanýt:
+
+\begin{lstlisting}[language=Java, frame=none]
+SQL*Loader: Release 8.0.3.0.0 - Production on Wed Mar 10 8:10:23 1999
+(c) Copyright 1997 Oracle Corporation.  All rights reserved.
+Commit point reached - logical record count 23
+\end{lstlisting}
+Çýktýya (\PVerb!sqlloader_musteri_cikti.txt!)  bakarak SQL*Loader'ýn baþarýya
+ulaþýp ulaþmadýðýný anlayabiliriz.
+
+Bu sonuca göre, olanlar þunlardýr: 2'inci kayýt veri tabanýna kabul edilmedi,
+çünkü tarih verisi Oracle tarafýndan geçersiz bulundu. Bu geçersiz kayýt, kötü
+(bad) dosyasýna yazýldý. Kötü dosyasýnýn ismini komut satýrýndan
+\PVerb!bad=load1.bad!  ibaresini kullanarak verilmiþti.
+
+\subsubsection{Deðiþken Uzunluklu Kayýt Yüklemek}
+
+Þimdi hesap verisini virgül ayrýklý bir veri dosyasýndan veri tabanýna
+yükleyelim. Bu þekilde bir yükleme için lazým olan kontrol dosyasý (load2.ctl)
+aþaðýdadýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+LOAD DATA
+
+INFILE 'acct.dat'
+
+INTO TABLE hesap
+
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+(cust_nbr, acct_nbr, acct_name)
+\end{lstlisting}
+Bu kontrol dosyasýný da komut satýrýndan iþletelim.
+
+\begin{lstlisting}[language=Java, frame=none]
+\$ sqlldr kullanici/sifre control=load2.ctl log=load2.log
+  bad=load2.bad discard=load2.dis
+\end{lstlisting}
+Bilgisayardan gelen yanýt:
+
+\begin{lstlisting}[language=Java, frame=none]
+SQL*Loader: Release 8.0.3.0.0 - Production on Wed Mar 10 8:10:23 1999
+(c) Copyright 1997 Oracle Corporation.  All rights reserved.
+Commit point reached - logical record count 12
+\end{lstlisting}
+Çýktýya (\PVerb!sqlloader_hesap_cikti.txt!) bakarak SQL*Loader'ýn baþarýya
+ulaþýp ulaþmadýðýný anlayabiliriz.
+
+Bu çýktýya bakarak, þu sonuca varabiliriz: Bütün kayýtlar hatasýz bir
+þekilde yüklendi. Bu örnek veri dosyasý deðiþken uzunluklu veri
+içerdiði için, metin dosyasýnýn içinde bir ayraç gerektiðini
+hatýrlatmamýz lazým. Bu örnek içinde ayraç olarak virgül iþareti
+kullanýldýk.
+
+\subsubsection{Kayýt Eklemek}
+
+INTO TABLE hesap þeklindeki sözdizimi, boþ olan bir tablo
+farzediyordu. Eðer içinde zaten veri mevcut olan bir tabloya veri
+eklemek istiyorsanýz, INTO TABLE ifadesinin baþýna APPEND eklemeniz
+gerekiyor. Yani, 
+
+\begin{lstlisting}[language=Java, frame=none]
+LOAD DATA
+
+INFILE 'acct.dat'
+
+APPEND INTO TABLE hesap
+
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+    (cust_nbr, acct_nbr, acct_name)
+\end{lstlisting}
+
+\subsubsection{Özet}
+
+SQL*Loader için gereken ayarlarý burada özetleyelim.
+
+\begin{itemize}
+\item Yüklenecek veri dosyasýnýn ismi, kontrol dosyasýnda INFILE ibaresinden
+ sonra verilir.
+\item Hedef tablosunun ismi, kontrol dosyasýnda INTO TABLE ibaresinden sonra
+gelir.
+\item Deðiþken uzunluklu veri dosyalarý için ayraç karakteri, kontrol dosyasýnda
+FIELDS TERMINATED BY ibaresinden sonra verilir.
+\item Sabit uzunluklu veri dosyalarý için baþlangýç ve bitiþ kolonlarý, kontrol
+dosyasýnda POSITION(BAÞLANGIÇ:BÝTÝÞ) olarak tanýmlanýr.
+\end{itemize}
+
+\section{Transaction}
+
+Veri tabanýný üzerinde iþletilen her SQL komutu bir transaction altýnda
+yapýlýr. Transaction, bir ve ya daha fazla SQL iþlemini kapsayabilir, zâten
+çoðunlukla kullanýlma amacý budur: Hep beraber etki etmesi gereken deðiþiklikler
+için birleþtirici bir ünite saðlamak. \ref{hibernate:transaction} bölümündeki
+örneði tekrarlamak gerekirse, bir banka uygulamasýnda bir müþterinin iki banka
+hesabý olsa, ve bu müþteri bir hesaptan ötekine para transfer etmek istese,
+transaction sayesinde bir hesaptan eksiltmek için yapýlan \PVerb!UPDATE! SQL
+iþlemi, para eklemek için yapýlan ekleme \PVerb!UPDATE! SQL iþlemi ile ayný anda
+etki edebilecektir. Bu iki iþlemi ayný transaction altýna koyabiliriz. 
+
+Transaction kavramý, bir iliþkisel tabanda veri doðruluðunu, veri taban
+baðlantýsýný, tablolar üzerine konan kilitleri ve verinin en son görüntüsünü
+biraraya getiren ve hepsi ile yakýn alâkasý olan merkezi bir kavramdýr. Bir
+tabanda gerçekleþtirdiðimiz her SQL sorgusu, bu sebeple, bir transaction altýnda
+yapýlacaktýr; Eðer bundan haberimiz yoksa, yâni bilerek bir transaction baþlatýp
+durdurmuyorsak kapalý kapýlar altýnda bizim için bir tane muhakkak baþlatýp
+bitiriliyordur.
+
+SQL kullanýrken bir transaction'ýn baþlamasý, SQL sorgusunun tabana gelmesiyle
+ya da transaction baþlatma emrinin verilmesiyle olur. Eðer o anda iþleyen baþka
+bir transaction yok ise, taban bir tane otomatik olarak baþlatýr. Transaction'ýn
+bitmesi \PVerb!commit! ya da \PVerb!rollback! komutlarýndan bir tanesi ile
+olacaktýr. \PVerb!Commit!, o transaction altýnda yapýlan deðiþikliklerin {\em
+kalýcý} olmasýna karar verildiði anlamýna gelir.
+
+Bir \PVerb!commit! gelmeden önce diðer transaction'lar (yâni diðer veri taban
+baðlantýlarýnda SQL iþletmekte olanlar) bizim son deðiþikliklerimizden tamamen
+habersiz olacaklardýr. Bu diðer baðlantýlar, sadece verinin bizim transaction
+{\em baþladýðý andaki son} hâlini görürler. Ama bizim baðlantýmýz içinde içinde
+biz kendi güncelleme, silme, ekleme iþlemlerimizin sonucunu görebiliriz.
+
+Eðer bir transaction altýndayken (ve bir takým iþlemlerden sonra) bir
+\PVerb!rollback!  komutu gelirse, bu, yapýlan veri deðiþtirme iþlemlerinden {\em
+vazgeçildiði} anlamýna gelecektir. O zaman veri tabaný, yapýlan hiçbir
+deðiþikliði kalýcý yapmaz, ve öteki baðlantýlar ve transaction'lar eski veriyi
+görmeye devam ederler.
+
+\begin{quote}
+  \textbf{Not}: Günümüzdeki popüler kullanýma göre iki deðiþik transaction, her
+  zaman iki deðiþik baðlantý (db connection) anlamýna gelir. Ayný baðlantý
+  içinden içiçe geçmiþ (nested) transaction baþlatmak gereksiz bir karmaþýklýk
+  yaratmaktadýr, ve bu sebeple konumuz dýþýndadýr.
+\end{quote}
+
+Eðer bir transaction'ý baþlatmýþ süreç (process) çökerse, o veri tabaný
+ baðlantýsý, ve o baðlantýda baþlatýlmýþ olan transaction \PVerb!rollback!
+edilecektir. Bu, kurumsal bir uygulamanýn veri bütünlüðü için çok önemlidir;
+\PVerb!Commit!  sinyali gelen kadar hiçbir deðiþikliðin kalýcý olmamasý hayati
+önem taþýr. Çöken bir sürecin o ana kadar veri tabanýný ne durumda býraktýðýný
+bilemeyiz, belki yapýlacak SQL iþlemlerinin sadece yarýsý
+gerçekleþtirilebilmiþtir. Bu durumdaki bir transaction'ý commit etmek, intihar
+demek olurdu! Meselâ müþteri örneðine dönersek, belki müþterinin hesabýnda para
+eksiltilmiþ, ama öteki hesabýna para eklenemeden süreç çökmüþtür. Bu durumdaki
+bir transaction commit edilecek olsa, müþteri para kaybetmiþ olurdu! Bu tolere
+edilecek bir davranýþ deðildir. Bu sebeple veri taban ürünleri, çöken bir
+sürecin baðlantýsýný ve onun içindeki olduðu transaction'ý otomatik olarak
+\PVerb!rollback! ederler.
+
+Ayrýca tüm modern veri taban ürünlerinde transaction ve satýr seviye kilit (row
+level lock) yakýnen (birebir) baðlantýlýdýr. Þöyle ki; Eðer bir satýr üzerinde
+\PVerb!UPDATE!  komutu ile güncelleme yapýlmýþsa ve o transaction \PVerb!commit!
+edilmeden ikinci bir \PVerb!UPDATE! ayný satýrý güncellemeye kalkarsa, ikinci
+\PVerb!UPDATE!  birincinin bitmesini {\em bekleyecektir}. Bitmek, daha önce
+belirttiðimiz gibi, ya \PVerb!commit! ya da \PVerb!rollback! ile olmasý mümkün
+bir iþlemdir.
+
+Ýkinci \PVerb!UPDATE! birinci bittiði anda iþleme konur ve o da bittiðinde
+(\PVerb!commit!  ya da \PVerb!rollback! ile) geri gelir.
+
+\section{Beklemeden Kitlemek}
+
+Eðer bir satýr üzerinde kilit olmasýný bekliyor, ve o kilit üzerinde takýlmak
+istemiyorsak, Oracle'a o satýrý {\em beklemeden} kitlemeyi
+denettirebiliriz. Bunun için;
+
+\begin{lstlisting}[language=Java, frame=none]
+SELECT ... WHERE .. FOR UPDATE NOWAIT;
+\end{lstlisting}
+komutu kullanýlýr. Normâlde \PVerb!SELECT FOR UPDATE! komutunun kitleme
+davranýþý, \PVerb!UPDATE! komutununki ile aynýdýr. Ayrýca \PVerb!NOWAIT! eki,
+Oracle'a eðer bir kilit mevcutsa beklemeden dönmesini söyleren ek bir davranýþ
+saðlar.
+
+Kilit beklemeden dönme yöntemi toptan (batch) iþlem yapan programýmýz için
+faydalý olabilir. Meselâ, her yeni \PVerb!GARAGE!'ýn altýndaki her \PVerb!CAR!
+nesnelerini bir þekilde iþlemden geçirmemiz istense ve uygulamamýzýn çok süreçli
+(multi process) bir hâlde çalýþmasý istense, birden fazla sürecin ayný tablo
+üzerine akýn etmesi bir problem doðurabilirdi. Paylaþým mekanizmasý olarak
+\PVerb!GARAGE! tablosu üzerinde \PVerb!SELECT FOR UPDATE NOWAIT! ile alýnan bir
+kilidi kullanýrsak, ikinci, üçüncü, vs. gelen süreçler, beklemeden dönecekler,
+ve baþka bir \PVerb!GARAGE! satýrýný kilitlemeye (kapmaya) uðraþacaklardýr.
+
+Böylece bir \PVerb!GARAGE!  satýrýnýn iþlenmekte olduðunu, üzerinde kilit
+olmasýndan anlayabiliriz. Alternatif olarak \PVerb!GARAGE!'a \PVerb!STATUS!
+adýnda bir kolon eklesek (üzerinde `iþleniyor',`iþlenmiyor' gibi bir durum kodu
+kullanýlarak), bu iþimize yaramazdý, çünkü bir \PVerb!GARAGE!'ý iþlemekte olan
+sürecin çökme durumunda, \PVerb!STATUS! kolonu eski hâline getirilemeyeceði
+için, sürekli iþleniyor modunda gibi gözükecekti; Halbuki kilit kullanýldýðý
+þartlarda, sürecin çöküþü satýr kilidinin otomatik olarak býrakýlmasý anlamýna
+gelecek, böylece yeni bir sürecin ayný satýrý kitleyerek iþleme kalýnan yerden
+devam etmesine izin verilecebilecektir. Altta bahsedilen toptan iþlemin taklit
+kodunu (pseudocode) görüyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+list = run_query(``SELECT * from GARAGE'');
+for garage in list
+begin
+   result = ``SELECT * FROM GARAGE '' +
+            ``where ID = garage.id FOR UPDATE NOWAIT'';
+   if (result.size == 0)
+   begin
+      continue;      
+   else 
+      process_cars(garage);
+   end;    
+end
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kurmak} \label{db:install}
+
+Bu bölümde MySQL, PostgreSQL ve Oracle'ý SuSe Linux üzerinde nasýl kuracaðýmýzý
+göreceðiz. 
+
+\subsection{Linux Üzerinde Oracle} \label{database:linux:oracle}
+
+Ýlk önce, tüm Oracle iþletim seviyesi iþlemlerini yapmak için, \PVerb!oracle!
+adýnda bir Unix kullanýcýsý yaratmanýz gerekiyor. Aþaðýdaki komutlarý
+\PVerb!root! olarak iþletin.
+
+\begin{lstlisting}[language=Java, frame=none]
+groupadd dba
+
+groupadd oinstall
+
+groupadd oper
+
+mkdir /home/oracle
+
+chown -R oracle /home/oracle
+
+useradd -g oinstall -G dba,oper oracle
+
+passwd oracle
+\end{lstlisting}
+Oracle, bir Unix kuruluþundan belli ayarlar bekler, sistemin paketten çýktýðý
+haliyle çalýsmayacaktýr. SuSE Linux için kernel seviyesinde yapýlmasý gereken
+ayarlar aþaðýda verilmiþtir.
+
+\begin{lstlisting}[language=Java, frame=none, caption=/etc/sysctl.conf]
+kernel.shmall = 2097152
+kernel.shmmax = 2147483648
+kernel.shmmni = 4096
+kernel.sem = 250 32000 100 128
+fs.file-max = 65536
+net.ipv4.ip_local_port_range = 1024 65000
+\end{lstlisting}
+Bu ayarlarýn iþleme konmasý için, SuSE Linux üzerinde \PVerb!/sbin/chkconfig
+boot.sysctl on! komutu iþletilmelidir.
+
+Artýk kuruluþ iþlemini baþlatabiliriz. Bunun için \PVerb!oracle! kullanýcýsý
+altýndan \PVerb!./runInstaller! komutunun iþletilmesi gerekiyor. Bu program, X
+Windows (\ref{unix:xwindows}) üzerinden çalýþan görsel bir programdýr. Olaðan
+deðerleri kullanmak için ``Next'' düðmesine basarak geçebilirsiniz. Çoðu Oracle
+kuruluþu için olaðan deðerler uygundur. Daha ileri türden kuruluþlar için,
+DBA'inize danýþýn.
+
+Oracle iþler kodlarýnýn kuruluþu bittikten sonra, sýra bir veri tabaný yaratmaya
+geliyor. Oracle kuruluþ sýrasýnda kurulan veri tabaný yerine bir baþkasýný
+yaratmak isterseniz, \PVerb!dbca! görsel programýný baþlatarak istediðiniz
+tabaný yaratabilirsiniz. Ayný þekilde, taban için bir isim vererek, geri kalan
+olaðan deðerler ile  taban yaratmak mümkündür.
+
+Bu aþamada en önemli ve deðiþik yapmanýz gereken iþlem, taban seviyesinde Türkçe
+karakter desteði için yapmanýz gereken deðiþikliktir. Þekil
+\ref{oracle_charset}, istenilen karakter desteði için kullanýlmasý gereken
+ekraný ve seçilmesi gereken deðerleri gösteriyor.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{0.40}{
+      \includegraphics{./images/oracle_charset_dbca.eps}
+    }
+  }
+  \caption{\label{oracle_charset} Türkçe Karakter Set Desteði}
+\end{figure}
+
+Taban yaratýldýktan sonra, \PVerb!/etc/oratab! dosyasýna girin, ve burada, yeni
+yarattýðýnýz taban için olan satýrýn en sonundaki deðeri ``N'' deðerinden ``Y''
+deðerine getirin. Bu dosya, \PVerb!dbstart! komutu kullanýldýðýnda hangi veri
+tabanlarýnýn baþlatýlmasý gerektiðini kontrol eder. Bundan sonra \PVerb!oracle!
+kullanýcýsýndan \PVerb!dbstart!  kullanarak tabanýnýzý baþlatabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+oracle@linux:~> dbstart
+
+SQL*Plus: Release 10.1.0.3.0 - Production on Mon Jun 6 15:07:36 2005
+
+Copyright (c) 1982, 2004, Oracle.  All rights reserved.
+
+SQL> Connected to an idle instance.
+SQL> ORACLE instance started.
+
+Total System Global Area  285212672 bytes
+Fixed Size                   778776 bytes
+Variable Size              95428072 bytes
+Database Buffers          188743680 bytes
+Redo Buffers                 262144 bytes
+Database mounted.
+
+Database opened.
+SQL> Disconnected from Oracle Database 10g Enterprise Edition Release
+     10.1.0.3.0
+- Production
+With the Partitioning, OLAP and Data Mining options
+
+Database "orcl" warm started.
+\end{lstlisting}
+Bu taban üzerinde eðer admin seviyesi iþlemler yapmak isterseniz,
+\PVerb!dbca!'den admin için verdiðiniz þifreyi kullanarak Oracle'a
+baðlanabilirsiniz. Meselâ, yeni bir kullanýcý yaratmamýz gerekse:
+
+\begin{lstlisting}[language=Java, frame=none]
+sqlplus system/<þifre>@orcl
+
+create user kitapdemo identified by kitapdemo default tablespace users;
+
+grant dba to kitapdemo;
+\end{lstlisting}
+Þifre olarak \PVerb!kitapdemo! metnini kullanacak, ve olaðan tablo depolama yeri
+(tablespace) \PVerb!users! olacak \PVerb!kitapdemo! adýnda bir kullanýcý
+yarattýk, ve bu kullanýcýya DBA haklarý verdik. 
+
+Diðer bir makinadan yeni tabanýnýza baðlanmak için, o makinada Oracle Client
+kuruluþunu yapmýþ olmanýz gerekir. Bu kuruluþdan sonra Oracle dizinini bulun
+(meselâ \PVerb!ORACLE_HOME!), ve bu dizin altýndaki \PVerb!tnsnames.ora!
+dosyasýna servis makinanýz vere yeni Oracle tabanýnýz hakkýnda bilgileri
+ekleyin:
+
+\begin{lstlisting}[language=Java, caption=ORACLE\_HOME/ora92/network/admin/tnsnames.ora]
+SAMPLE =
+(DESCRIPTION = (ADDRESS_LIST =
+(ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.0.1)(PORT = 1521))
+)
+(CONNECT_DATA =
+(SID=SAMPLE)
+)
+)
+\end{lstlisting}
+
+Burada belirtilen \PVerb!HOST!, veri tabanýný barýndýran makinanýn IP adresidir.
+\PVerb!SID!, \PVerb!dbca! ile yarattýðýnýz veri tabanýnýn ismidir. Artýk
+makinanýzdan \PVerb!sqlplus! komutunu kullanarak uzaktaki tabana baðlanabilir ve
+tablolar yaratýp veri ekleyebilirsiniz. Daha önce yarattýðýmýz \PVerb!kitapdemo!
+kullanýcýsýný kullanalým. 
+
+\begin{lstlisting}[language=Java, frame=none]
+sqlplus kitapdemo/kitapdemo@orcl
+
+create table vsvs (kolon1 varchar2(20) ..);
+...
+\end{lstlisting}
+
+\subsection{Linux Üzerinde PostgreSQL} \label{database:linux:postgres}
+
+SuSE Linux üzerinde PostgreSQL kurmak için, öncelikle
+\PVerb!http://www.postgresql.org/ftp/binary/v8.0.2/linux/suse/sles8-i386/! adresinden
+
+\begin{itemize}
+\item \PVerb!postgresql-libs-8.0.2-1.i586.rpm!
+\item \PVerb!postgresql-8.0.2-1.i586.rpm!
+\item \PVerb!postgresql-server-8.0.2-1.i586.rpm!
+\end{itemize}
+
+dosyalarýný indirin ve bu dosyalarý \PVerb!root! kullanýcýsý tarafýndan
+\PVerb!rpm -i! ile, teker teker ve gösterildiði sýrada, iþletin.
+
+Bir PostgreSQL servisini kullanmak için ilk yapmanýz gereken, veri tabaný
+alanýný sýfýrlamaktýr. Fakat bunun için kullanýlacak \PVerb!initdb! komutunu
+\PVerb!root! olarak iþletmenize izin verilmez. PostgreSQL servisini iþletmek
+için yeni bir kullanýcý yaratmanýz gerekiyor. Unix kullanýcýsý \PVerb!root!
+olarak þunlarý iþletin.
+
+\begin{lstlisting}[language=Java, frame=none]
+mkdir /home/postgres
+
+useradd -d /home/postgres -s /bin/bash -p postgres postgres
+
+chown -R postgres /home/postgres
+\end{lstlisting}
+Bu yeni kullanýcý olarak sisteme girin.
+
+\begin{lstlisting}[language=Java, frame=none]
+su - postgres
+
+initdb -E UNICODE
+
+/usr/bin/pg_ctl -D /var/lib/pgsql/data -l logfile start
+
+createdb test
+\end{lstlisting}
+Yukarýdaki komutlarla, veri taban alanýný sýfýrladýk ve Türkçe karakter
+kullanacak \PVerb!test! adlý bir veri tabaný yarattýk. En son olarak veri taban
+servisini baþlattýk. 
+
+Þimdi \PVerb!demo! adýnda yeni bir kullanýcý ekleyelim. Sorulan y/n sorularýna
+``Enter'' tuþuna basarak geçebilirsiniz. 
+
+\begin{lstlisting}[language=Java, frame=none]
+postgres@linux:~> createuser -P
+Enter name of user to add: demo
+Enter password for new user: <biz burada demo deðerini kullandýk>
+Enter it again: <..>
+Shall the new user be allowed to create databases? (y/n)
+Shall the new user be allowed to create more new users? (y/n)
+CREATE USER
+\end{lstlisting}
+PostgreSQL'ýn çalýþtýðý sistemi ve servisini JDBC üzerinden gelecek dýþ
+baðlantýlara açmak için, aþaðýdaki dosyalarý deðiþtirmeniz gerekiyor.
+
+\begin{lstlisting}[language=Java, caption=/var/lib/pgsql/data/postgresql.conf]
+  listen_addresses = '*'
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, caption=/var/lib/pgsql/data/pg\_hba.conf]
+  host all        all         192.168.0.2       255.255.255.255   trust
+\end{lstlisting}
+satýrýný ekleyin. Bu satýrda belirtilen \PVerb!192.168.0.2! IP deðeri, {\em
+  baðlanan} bilgisayarýn IP adresi olmalýdýr. Bu deðerlerin etkiye geçmesi için,
+komut satýrýnda \PVerb!postgres! kullanýcýsý olarak
+
+\begin{lstlisting}[language=Java, frame=none]
+  /usr/bin/pg_ctl restart
+\end{lstlisting}
+komutunu iþleterek yeni deðerlere iþleme sokabilirsiniz. Ayrýca, PostgreSQL
+kullanýcýsýnýn (örneðimizde \PVerb!demo!) bir tabloya eriþebilmesi için
+
+\begin{lstlisting}[language=Java, frame=none]
+grant all on <tablo ismi> to public;
+\end{lstlisting}
+komutunu vermeyi unutmayýn. 
+
+\subsection{Linux Üzerinde Mysql}
+
+MySQL'i Linux ve Solaris üzerinde kurmanýn en saðlam yolu, RPM deðil,
+\PVerb!tar.gz! sonekli bir dosyayý kullanýp bu dosyayý uygun yere
+açmanýzdýr. Bunun için, \PVerb!http://dev.mysql.com/downloads/!  adresinden
+istediðiniz genel sürüm numarasýna giderek, buradan \PVerb!Linux (non RPM
+package) downloads! altýndaki \PVerb!Standard! satýrýndan \PVerb!Pick A
+Mirror!'a týklayarak \PVerb!mysql-standard-xxx-pc-linux-i686.tar.gz! gibi bir
+dosyayý indirmeye baþlayýn. Ýndirdikten sonra aþaðýdaki komutlarý \PVerb!root!
+olarak sýrasýyla uygulayýn.
+
+\begin{lstlisting}[language=Java, frame=none]
+tar xvzf mysql-standard-4.0.23-pc-linux-i686.tar.gz
+
+ln mysql-standard-4.0.23-pc-linux-i686 -s /usr/local/mysql
+
+cd /usr/local/mysql
+
+groupadd mysql
+
+useradd -g mysql mysql
+
+./scripts/mysql_install_db --user=mysql
+
+chown -R root  .
+
+chown -R mysql data
+
+chgrp -R mysql .
+
+bin/mysqld_safe --user=mysql &
+
+bin/mysql
+\end{lstlisting}
+TAR dosyasýný açtýk, veri tabanýný hazýrladýk ve \PVerb!mysqld_safe! ile veri
+taban servisini baþlattýk. En son komut ile, mysql komut satýrýna girmemizi
+saðladý. Bu komut satýrýnda ilk iþ olarak MySQL \PVerb!root! kullanýcýsý için
+bir þifre tanýmlamanýz iyi olur. Altta bu þifreyi \PVerb!admin!  olarak seçtik.
+
+\begin{lstlisting}[language=Java, frame=none]
+  mysql> SET PASSWORD FOR root@'localhost' = PASSWORD('admin');
+\end{lstlisting}
+Artýk, MySQL komut satýrýna salt \PVerb!bin/mysql! ile deðil, \PVerb!bin/mysql
+-p! ile girmemiz gerekiyor. Þifre sorulunca \PVerb!admin! girebiliriz.
+
+En son yapýlmasý gereken, \PVerb!root! kullanýcýsýný dýþ makina baðlantýlarýna
+açmaktýr. Bunu yapmazsak, MySQL'e sadece \PVerb!localhost!'tan baðlanabiliriz,
+ki bu da daðýtýk bir uygulama için pek faydalý olmazdý.
+
+\begin{lstlisting}[language=Java, frame=none]
+mysql> GRANT ALL ON *.* TO root@'%'
+-> IDENTIFIED BY `admin'
+-> WITH GRANT OPTION;
+\end{lstlisting}
+Eðer \PVerb!mysqld_safe! baþlamaz ise, \PVerb!mysqld! programýný
+deneyebilirsiniz. Baþlattýktan sonra \PVerb!mysql! komutu problem çýkartýrsa,
+meselâ \PVerb!mysql.sock! dosyasýnýn bulunamamasý gibi, o zaman bu dosyayý
+istenen/aranan yere bir Unix sembol baðlantý (symbolic link) ile
+baðlayarak tekrar deneyebýlýrsýnýzç
+
+\begin{lstlisting}[language=Java, frame=none]
+ln -s /var/lib/mysql/mysql.sock /tmp/mysql.sock
+\end{lstlisting}

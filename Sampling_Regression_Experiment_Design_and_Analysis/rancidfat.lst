@@ -1,0 +1,117 @@
+                    Two factor, CRD, fixed and random effects - Fat consumption                    1
+                                              raw data
+
+                                Obs    amount      fat      machine
+
+                                  1      709     control       1   
+                                  2      679     control       1   
+                                  3      699     control       1   
+                                  4      562     treated       1   
+                                  5      518     treated       1   
+                                  6      496     treated       1   
+                                  7      657     control       2   
+                                  8      594     control       2   
+                                  9      677     control       2   
+                                 10      508     treated       2   
+                                 11      505     treated       2   
+                                 12      539     treated       2   
+                    Two factor, CRD, fixed and random effects - Fat consumption                    2
+                                         ANOVA using MIXED
+
+                                        The Mixed Procedure
+
+                                         Model Information
+
+                       Data Set                     WORK.FAT                 
+                       Dependent Variable           amount                   
+                       Covariance Structure         Variance Components      
+                       Estimation Method            REML                     
+                       Residual Variance Method     Profile                  
+                       Fixed Effects SE Method      Model-Based              
+                       Degrees of Freedom Method    Satterthwaite            
+
+
+                                      Class Level Information
+ 
+                        Class      Levels    Values
+
+                        fat             2    control treated               
+                        machine         2    1 2                           
+
+
+                                            Dimensions
+
+                                Covariance Parameters             3
+                                Columns in X                      3
+                                Columns in Z                      6
+                                Subjects                          1
+                                Max Obs Per Subject              12
+                                Observations Used                12
+                                Observations Not Used             0
+                                Total Observations               12
+
+
+                                         Iteration History
+ 
+                    Iteration    Evaluations    -2 Res Log Like       Criterion
+
+                            0              1       102.43412793                
+                            1              1       101.62632772      0.00000000
+
+
+                                     Convergence criteria met.                    
+
+
+                                   Covariance Parameter Estimates
+ 
+                                                       Standard         Z
+               Cov Parm           Ratio    Estimate       Error     Value        Pr Z
+
+               machine           0.2360      212.00      748.88      0.28      0.3886
+               fat*machine       0.2302      206.81      731.43      0.28      0.3887
+               Residual          1.0000      898.33      449.17      2.00      0.0228
+
+
+                    Two factor, CRD, fixed and random effects - Fat consumption                    3
+                                         ANOVA using MIXED
+
+                                        The Mixed Procedure
+
+                                          Fit Statistics
+
+                               -2 Res Log Likelihood           101.6
+                               AIC (smaller is better)         107.6
+                               AICC (smaller is better)        111.6
+                               BIC (smaller is better)         103.7
+
+
+                                   Type 3 Tests of Fixed Effects
+ 
+                                         Num     Den
+                           Effect         DF      DF    F Value    Pr > F
+
+                           fat             1       1      43.17    0.0962
+
+
+                                        Least Squares Means
+ 
+                               Standard
+ Effect   fat       Estimate      Error     DF   t Value   Pr > |t|    Alpha      Lower      Upper
+
+ fat      control     669.17    18.9506   1.84     35.31     0.0013     0.05     580.43     757.90
+ fat      treated     521.33    18.9506   1.84     27.51     0.0020     0.05     432.60     610.07
+
+
+                                Differences of Least Squares Means
+ 
+                                    Standard
+Effect  fat      _fat     Estimate     Error    DF  t Value  Pr > |t|  Adjustment     Adj P   Alpha
+
+fat     control  treated    147.83   22.5000     1     6.57    0.0962  Tukey-Kramer  0.0962    0.05
+
+                                 Differences of Least Squares Means
+ 
+                                                                      Adj         Adj
+               Effect  fat      _fat        Lower       Upper       Lower       Upper
+
+               fat     control  treated   -138.06      433.72     -138.05      433.72

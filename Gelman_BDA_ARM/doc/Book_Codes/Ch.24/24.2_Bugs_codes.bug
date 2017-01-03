@@ -1,0 +1,115 @@
+# Dogs example 
+
+model {
+  for (i in 1:n.dogs){  
+    n.avoid[j,1] <- 0
+    n.shock[j,1] <- 0
+    for (t in 2:n.trials){  
+      n.avoid[j,t] <- n.avoid[j,t-1] + 1 - y[j,t-1] 
+      n.shock[j,t] <- n.shock[j,t-1] + y[j,t-1] 
+    }
+    for (t in 1:n.trials){  
+      y[j,t] ~ dbin (p[j,t], 1)
+      logit(p[j,t]) <- b.0 + b.1*n.avoid[j,t] + b.2*n.shock[j,t]
+    }
+   }
+  b.0 ~ dnorm (0, .0001)
+  b.1 ~ dnorm (0, .0001)
+  b.2 ~ dnorm (0, .0001)
+}
+
+################################################################################
+
+# Predictive replications in Bugs for the dogs example
+# (same as file "dogs.logit.1.bug")
+
+model {
+for (i in 1:n.dogs){  
+    n.avoid.rep[j,1] <- 0
+    n.shock.rep[j,1] <- 0
+    for (t in 2:n.trials){  
+      n.avoid.rep[j,t] <- n.avoid.rep[j,t-1] + 1 - y.rep[j,t-1] 
+      n.shock.rep[j,t] <- n.shock.rep[j,t-1] + y.rep[j,t-1] 
+    }
+    for (t in 1:n.trials){  
+      y.rep[j,t] ~ dbin (p.rep[j,t], 1)
+      logit(p.rep[j,t]) <- b.0 + b.1*n.avoid.rep[j,t] + b.2*n.shock.rep[j,t]
+    }
+  b.0 ~ dnorm (0, .0001)
+  b.1 ~ dnorm (0, .0001)
+  b.2 ~ dnorm (0, .0001)
+}
+
+################################################################################
+
+# Fitting and cheking a logarithimic regression model the dogs example
+
+model {
+  for (i in 1:n.dogs){  
+    n.avoid[j,1] <- 0
+    n.shock[j,1] <- 0
+    for (t in 2:n.trials){  
+      n.avoid[j,t] <- n.avoid[j,t-1] + 1 - y[j,t-1] 
+      n.shock[j,t] <- n.shock[j,t-1] + y[j,t-1] 
+    }
+    for (t in 1:n.trials){  
+      y[j,t] ~ dbin (p[j,t], 1)
+      log(p[j,t]) <- b.1*n.avoid[j,t] + b.2*n.shock[j,t]
+    }
+   }
+  b.1 ~ dunif (-100, 0)
+  b.2 ~ dunif (100, 0)
+}
+
+################################################################################
+
+# Fitting and cheking a multilevel model with no additional learning
+# from avoidances in the dogs example
+
+model {
+  for (i in 1:n.dogs){  
+    n.avoid[j,1] <- 0
+    n.shock[j,1] <- 0
+    for (t in 2:n.trials){  
+      n.avoid[j,t] <- n.avoid[j,t-1] + 1 - y[j,t-1] 
+      n.shock[j,t] <- n.shock[j,t-1] + y[j,t-1] 
+    }
+    for (t in 1:n.trials){  
+      y[j,t] ~ dbin (p[j,t], 1)
+      log(p[j,t]) <- b[j]*(n.avoid[j,t] + n.shock[j,t])
+    }
+    b[i] <- -b.neg[i]
+    b.neg[i] <- dlnorm (mu.b, tau.b)
+   }
+  mu.b ~ dnorm (0, .0001)
+  tau.b <- pow (sigma.b, -2)
+  sigma.b ~ dunif (0, 100)
+}
+
+################################################################################
+
+# Fitting and cheking athe full multilevel model in the dogs example
+
+model {
+  for (i in 1:n.dogs){  
+    n.avoid[j,1] <- 0
+    n.shock[j,1] <- 0
+    for (t in 2:n.trials){  
+      n.avoid[j,t] <- n.avoid[j,t-1] + 1 - y[j,t-1] 
+      n.shock[j,t] <- n.shock[j,t-1] + y[j,t-1] 
+    }
+    for (t in 1:n.trials){  
+      y[j,t] ~ dbin (p[j,t], 1)
+      log(p[j,t]) <- b.1[j]*n.avoid[j,t] + b.2[j]*n.shock[j,t])
+    }
+    b[i,1:2] <- -b.neg[i,1:2]
+    b.neg[i,1:2] <- dmlnorm (mu.b[1:2], Tau.b[1:2,1:2])
+    b.1[i] <- b.neg[i,1]
+    b.2[i] <- b.neg[i,2]
+   }
+  Tau.b[1:2,1:2] <- inverse(Sigma.b[,])
+  Sigma.b[1,1] <- pow (sigma.b, 2)
+  mu.b[1] ~ dnorm (0, .0001)
+  mu.b[2] ~ dnorm (0, .0001)
+  sigma.b ~ dunif (0, 100)
+}

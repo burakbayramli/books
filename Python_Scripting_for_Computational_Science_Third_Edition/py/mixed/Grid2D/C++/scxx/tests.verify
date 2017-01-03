@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+"""Regression script in src/py/mixed/Grid2D/C++/scxx"""
+
+from scitools.Regression import TestRun
+import os, glob, sys
+
+test = TestRun("tests.v", removepath=os.environ['scripting'])
+
+test.silentrun("./clean.sh", options="")
+test.run("./make_module_1.sh")
+test.run("../../Grid2Deff.py", options="verify1")
+test.run("../../Grid2Deff.py", options="exceptions1")
+test.silentrun("./clean.sh")
+

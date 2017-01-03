@@ -1,0 +1,541 @@
+<html>
+
+<head>
+  <style type="text/css">
+  <!--
+    h2 {font-family: verdana, sans-serif, arial, helvetica }
+    body {font-family: serif, verdana, sans-serif, arial, helvetica }
+    hr {color: sienna}
+    td { vertical-align: top }
+    td.ssc { font-family: verdana, sans-serif, arial, helvetica;
+             vertical-align: middle }
+    th { text-align: left; vertical-align: top;
+         font-family: verdata, sans-serif, arial, helvetica }
+    th.bg  { font-family: serif; background-color: #e0e0ff }
+    th.bgr  { font-family: serif; text-align: right; background-color: #e0e0ff }
+  -->
+  </style>
+
+  <title>
+    MIT 18.335: Introduction to Numerical Methods
+  </title>
+</head>
+
+<body>
+
+<h2 align=center>
+MIT 18.335: Introduction to Numerical Methods (Fall 2007)<br>
+</h2>
+
+<table align=center>
+<tr>
+<th>
+<img src=mit-redgrey-display3.gif>
+</th>
+<td class=ssc>
+Department of Mathematics<br>
+Massachusetts Institute of Technology<br>
+</td>
+</tr>
+</table>
+
+<hr>
+<table cellpadding=12>
+
+<tr>
+<th>Evaluations:</th>
+<td>
+<i>Current students:</i> Please submit the <a href="https://sixweb.mit.edu/student/evaluate/6.337-f2007">online evaluations</a> before Sunday, December 16.
+</td>
+</tr>
+
+<tr>
+<th>Description:</th>
+<td>
+Advanced introduction to numerical linear algebra. Topics include
+direct and iterative methods for linear systems, eigenvalue
+decompositions and QR/SVD factorizations, stability and accuracy of
+numerical algorithms, the IEEE floating point standard, sparse and
+structured matrices, preconditioning, linear algebra software. Problem
+sets require some knowledge of Matlab.
+</td>
+</tr>
+
+<tr>
+<th>Lecturer:</th>
+<td>
+<a href="http://www.mit.edu/~persson"> Per-Olof Persson</a>,
+Room 2-363A, Phone 617-253-4989, E-mail persson 'at' mit.edu, Office hours Tue 2-3pm in Room 2-363A.
+</td>
+</tr>
+
+<tr>
+<th>Lectures:</th>
+<td>
+Room 1-390, MW 9:30-11
+</td>
+</tr>
+
+<tr>
+<th>Teaching Assistant:</th>
+<td>
+Anshul Mohnot, E-mail anshulm 'at' mit.edu, Office hours Mon 4-5pm in Room 34-301.
+</td>
+</tr>
+
+<tr>
+<th>Textbook:</th>
+<td>
+[NLA] Numerical Linear Algebra, Trefethen and Bau, SIAM 1997
+(<a href="http://library.books24x7.com.libproxy.mit.edu/toc.asp?bkid=9436">Books24x7 (MIT only)</a>, <a href="http://web.comlab.ox.ac.uk/oucl/work/nick.trefethen/text.html">Lecture 1-5 Online</a>, <a href="http://www.quantumbooks.com/Merchant2/merchant.mvc?Screen=PROD&Store_Code=qb&Product_Code=0898713617&Category_Code=">Quantum Books</a>, <a href="http://www.amazon.com/exec/obidos/tg/detail/-/0898713617/qid=1125588843/sr=8-1/ref=pd_bbs_1/103-3108464-9607001?v=glance&s=books&n=507846">Amazon</a>, <a href="http://www.ec-securehost.com/SIAM/ot50.html">SIAM</a>)<br>
+</td>
+</tr>
+
+<tr>
+<th>Other Readings:</th>
+<td>
+[Eig] Templates for the Solution of Algebraic Eigenvalue Problems: a Practical Guide, Bai et al, SIAM 2000
+(<a href="http://www.cs.utk.edu/~dongarra/etemplates/index.html">HTML</a>)<br>
+[It] Templates for the Solution of Linear Systems: Building Blocks for Iterative Methods, Barrett et al, SIAM 1993
+(<a href="http://www.netlib.org/templates/templates.ps">PS</a>, <a href="http://www.netlib.org/linalg/html_templates/Templates.html">HTML</a>)<br>
+[CG] An Introduction to the Conjugate Gradient Method Without the Agonizing Pain, Jonathan R. Shewchuk, August 1994
+(<a href="http://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.ps">PS</a>, <a href="http://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">PDF</a>)<br>
+[FP] What Every Computer Scientist Should Know About Floating Point Arithmetic, David Goldberg, ACM Computing Surveys, 1991
+(<a href="http://citeseer.ist.psu.edu/goldberg91what.html">CiteSeer</a>)<br>
+Iterative Krylov-Subspace Solvers, Sivan Toledo (Lecture 21) (<a href="toledo_krylov.pdf">PDF</a>)<br>
+<br>
+Lecture slides will be provided on the course webpages
+</td>
+</tr>
+
+<tr>
+<th>Grading:</th>
+<td>
+Homework assignments (60%), Midterm (40%)
+</td>
+</tr>
+
+<tr>
+<th>Other webpages:</th>
+<td>
+<a href="http://stellar.mit.edu/S/course/18/fa07/18.335">Stellar</a> (announcements, homework submissions, etc)<br>
+<br>
+Fall 2006, Lecturer Per-Olof Persson (<a href="http://www-math.mit.edu/~persson/18.335/fall06">Math</a>, <a href="http://stellar.mit.edu/S/course/18/fa06/18.335">Stellar</a>, <a href="http://ocw.mit.edu/OcwWeb/Mathematics/18-335JFall-2006/CourseHome/index.htm">OCW</a>)<br>
+Fall 2005, Lecturer Per-Olof Persson (<a href="http://www-math.mit.edu/~persson/18.335/fall05">Math</a>, <a href="http://stellar.mit.edu/S/course/18/fa05/18.335">Stellar</a>)<br>
+Fall 2004, Lecturer Plamen Koev (<a href="http://www-math.mit.edu/~plamen/18.335">Math</a>, <a href="http://ocw.mit.edu/OcwWeb/Mathematics/18-335JFall-2004/CourseHome/index.htm">OCW</a>)<br>
+Fall 2001, Lecturer Dan Stefanica (<a href="http://www-math.mit.edu/~dstefan/18.335">Math</a>)<br>
+</td>
+</tr>
+
+<tr>
+<th>Other links:</th>
+<td>
+<a href="http://web.mit.edu/18.06/www/">MIT 18.06 Linear Algebra</a> (for Linear Algebra review)<br>
+<a href="http://web.mit.edu/cdo-program">The MIT CDO Program</a> (Computation for Design and Optimization, this class is one of the four core subjects)<br>
+<a href="http://www.mathworks.com/access/helpdesk/help/techdoc/ref/mldivide.html#1002049">The algorithm for MATLAB's backslash operator</a> (from <a href="http://www.mathworks.com/access/helpdesk/help/helpdesk.html">The Mathworks Online Documentation</a>)<br>
+
+</td>
+</tr>
+
+<tr>
+<th>Policies, etc:</th>
+<td>
+<em>Please start early</em> with the homeworks, it might be hard to get
+help the last few days before they are due. Solutions will be given out
+soon after the due date; therefore there will be <em>no extensions</em>.
+<br><br>
+
+Collaboration on the homeworks is encouraged, but each student must
+write his/her own solutions, understand all the details of them, and be
+prepared to answer questions about them.<br><br>
+
+No books, notes, or calculators are allowed on the Midterm exam.
+</td>
+</tr>
+
+<tr>
+<th>Exams:</th>
+<td>
+Midterm: Wednesday, Nov 7 (in-class: 9:30am-11:00am).
+<a href="midterm.pdf">Problems</a>, <a href="midterm_sol.pdf">Solutions</a><br>
+No books, notes, or calculators are allowed on the Midterm exam.
+<br>
+The midterm will cover:
+<ul>
+<li>Lectures 1-15</li>
+<li>Textbook (Trefethen/Bau) lectures 1-17 and 20-28</li>
+<li>Homeworks 1-4 and solutions</li>
+<li>MATLAB codes on the webpage</li>
+</ul>
+Other preparation material (some more relevant than others):
+<ul>
+<li>Old exams:</li>
+<ul>
+<li>Fall 2006: <a href="midterm18335fall06.pdf">Exam</a>, 
+               <a href="midterm18335fall06solutions.pdf">Solutions</a></li>
+<li>Fall 2005: <a href="midterm18335fall05.pdf">Exam</a>, 
+               <a href="midterm18335fall05solutions.pdf">Solutions</a></li>
+<li>Fall 2004: <a href="http://ocw.mit.edu/NR/rdonlyres/Mathematics/18-335JFall-2004/95F89CC8-D28F-476F-B2D1-DEC80194309A/0/midterm_sample04.pdf">Practice</a>,
+               <a href="http://ocw.mit.edu/NR/rdonlyres/Mathematics/18-335JFall-2004/861497B9-4951-4282-8809-C9CAFDEE6380/0/midtermfall04.pdf">Exam</a> (no solutions)</li>
+</ul>
+<li>Old homework:</li>
+<ul>
+<li>Fall 2004: <a href="http://ocw.mit.edu/OcwWeb/Mathematics/18-335JFall-2004/Assignments/index.htm">Problems and solutions</a></li>
+</ul>
+<li>A few more <a href=review.pdf>problems</a> from the textbook, and the <a href=reviewsol.pdf>solutions</a></li>
+</ul>
+</td>
+</tr>
+
+<tr>
+<th>Homework:</th>
+<td>
+
+<table cellspacing=0 cellpadding=3 border=1>
+
+<tr>
+<th class=bg>HW</th>
+<th class=bg>Due Date</th>
+</tr>
+
+<tr>
+<th class=bgr>1</th>
+<td>Wed 09/19</td>
+</tr>
+
+<tr>
+<th class=bgr>2</th>
+<td>Wed 10/03</td>
+</tr>
+
+<tr>
+<th class=bgr>3</th>
+<td>Mon 10/22</td>
+</tr>
+
+<tr>
+<th class=bgr>4</th>
+<td>Mon 11/05</td>
+</tr>
+
+<tr>
+<th class=bgr>5</th>
+<td>Wed 11/28</td>
+</tr>
+
+<tr>
+<th class=bgr>6</th>
+<td>Wed 12/12</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+<th>Syllabus:</th>
+<td>
+
+<table cellspacing=0 cellpadding=3 border=1>
+
+<tr bgcolor=#e0e0ff>
+<th>Lec</th>
+<th>Date</th>
+<th>Topic</th>
+<th>Slides</th>
+<th>Readings</th>
+<th>Other</th>
+</tr>
+
+<tr>
+<th class=bgr>1</th>
+<td>Wed 09/05</td>
+<td>Introduction, Basic Linear Algebra</td>
+<td><a href="lec1.pdf">Full</a>, <a href="lec1handout2pp.pdf">2pp</a>, <a href="lec1handout6pp.pdf">6pp</a></td>
+<td>NLA 1</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>2</th>
+<td>Mon 09/10</td>
+<td>Orthogonal Vectors and Matrices, Norms</td>
+<td><a href="lec2.pdf">Full</a>, <a href="lec2handout2pp.pdf">2pp</a>, <a href="lec2handout6pp.pdf">6pp</a></td>
+<td>NLA 2,3</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>3</th>
+<td>Wed 09/12</td>
+<td>The Singular Value Decomposition</td>
+<td><a href="lec3.pdf">Full</a>, <a href="lec3handout2pp.pdf">2pp</a>, <a href="lec3handout6pp.pdf">6pp</a></td>
+<td>NLA 4,5</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>4</th>
+<td>Mon 09/17</td>
+<td>The QR Factorization</td>
+<td><a href="lec4.pdf">Full</a>, <a href="lec4handout2pp.pdf">2pp</a>, <a href="lec4handout6pp.pdf">6pp</a></td>
+<td>NLA 6,7</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>5</th>
+<td>Wed 09/19</td>
+<td>Gram-Schmidt Orthogonalization</td>
+<td><a href="lec5.pdf">Full</a>, <a href="lec5handout2pp.pdf">2pp</a>, <a href="lec5handout6pp.pdf">6pp</a></td>
+<td>NLA 8</td>
+<td>HW1 Due</td>
+</tr>
+
+<tr>
+<th class=bgr>&nbsp;</th>
+<td>Mon 09/24</td>
+<td><font color=red>Student holiday - No lecture</font></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>6</th>
+<td>Wed 09/26</td>
+<td>Householder Reflectors and Givens Rotations</td>
+<td><a href="lec6.pdf">Full</a>, <a href="lec6handout2pp.pdf">2pp</a>, <a href="lec6handout6pp.pdf">6pp</a></td>
+<td>NLA 10</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>7</th>
+<td>Mon 10/01</td>
+<td>Least Squares Problems</td>
+<td><a href="lec7.pdf">Full</a>, <a href="lec7handout2pp.pdf">2pp</a>, <a href="lec7handout6pp.pdf">6pp</a></td>
+<td>NLA 11</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>8</th>
+<td>Wed 10/03</td>
+<td>Floating Point Arithmetic, The IEEE Standard</td>
+<td><a href="lec8.pdf">Full</a>, <a href="lec8handout2pp.pdf">2pp</a>, <a href="lec8handout6pp.pdf">6pp</a></td>
+<td>NLA 13, FP</td>
+<td>HW2 Due</td>
+</tr>
+
+<tr>
+<th class=bgr>&nbsp;</th>
+<td>Mon 10/08</td>
+<td><font color=red>Columbus day - No lecture</font></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>9</th>
+<td>Wed 10/10</td>
+<td>Conditioning and Stability I</td>
+<td><a href="lec9.pdf">Full</a>, <a href="lec9handout2pp.pdf">2pp</a>, <a href="lec9handout6pp.pdf">6pp</a></td>
+<td>NLA 12,14,15</td>
+<td>&nbsp;</td>
+</tr>
+
+
+<tr>
+<th class=bgr>10</th>
+<td>Mon 10/15</td>
+<td>Conditioning and Stability II</td>
+<td><a href="lec10.pdf">Full</a>, <a href="lec10handout2pp.pdf">2pp</a>, <a href="lec10handout6pp.pdf">6pp</a></td>
+<td>NLA 16,17</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>11</th>
+<td>Wed 10/17</td>
+<td>Gaussian Elimination, The LU Factorization</td>
+<td><a href="lec11.pdf">Full</a>, <a href="lec11handout2pp.pdf">2pp</a>, <a href="lec11handout6pp.pdf">6pp</a></td>
+<td>NLA 20,21</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>12</th>
+<td>Mon 10/22</td>
+<td>Stability of LU, Cholesky Factorization</td>
+<td><a href="lec12.pdf">Full</a>, <a href="lec12handout2pp.pdf">2pp</a>, <a href="lec12handout6pp.pdf">6pp</a></td>
+<td>NLA 22,23</td>
+<td>HW3 Due</td>
+</tr>
+
+<tr>
+<th class=bgr>13</th>
+<td>Web 10/24</td>
+<td>Eigenvalue Problems</td>
+<td><a href="lec13.pdf">Full</a>, <a href="lec13handout2pp.pdf">2pp</a>, <a href="lec13handout6pp.pdf">6pp</a></td>
+<td>NLA 24,25</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>14</th>
+<td>Mon 10/29</td>
+<td>Hessenberg/Tridiagonal Reduction</td>
+<td><a href="lec14.pdf">Full</a>, <a href="lec14handout2pp.pdf">2pp</a>, <a href="lec14handout6pp.pdf">6pp</a></td>
+<td>NLA 26</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>15</th>
+<td>Wed 10/31</td>
+<td>The QR Algorithm I</td>
+<td><a href="lec15.pdf">Full</a>, <a href="lec15handout2pp.pdf">2pp</a>, <a href="lec15handout6pp.pdf">6pp</a></td>
+<td>NLA 27,28</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>16</th>
+<td>Mon 11/05</td>
+<td>The QR Algorithm II</td>
+<td><a href="lec16.pdf">Full</a>, <a href="lec16handout2pp.pdf">2pp</a>, <a href="lec16handout6pp.pdf">6pp</a></td>
+<td>NLA 29</td>
+<td>HW4 Due</td>
+</tr>
+
+<tr>
+<th class=bgr>&nbsp;</th>
+<td>Wed 11/07</td>
+<td>Midterm</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>Midterm</td>
+</tr>
+
+<tr>
+<th class=bgr>&nbsp;</th>
+<td>Mon 11/12</td>
+<td><font color=red>Veteran's day - No lecture</font></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>17</th>
+<td>Wed 11/14</td>
+<td>Other Eigenvalue Algorithms</td>
+<td><a href="lec17.pdf">Full</a>, <a href="lec17handout2pp.pdf">2pp</a>, <a href="lec17handout6pp.pdf">6pp</a></td>
+<td>NLA 30</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>18</th>
+<td>Mon 11/19</td>
+<td>The Classical Iterative Methods</td>
+<td><a href="lec18.pdf">Full</a>, <a href="lec18handout2pp.pdf">2pp</a>, <a href="lec18handout6pp.pdf">6pp</a></td>
+<td>It 2.2</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>19</th>
+<td>Wed 11/21</td>
+<td>The Conjugate Gradients Algorithm I</td>
+<td><a href="lec19.pdf">Full</a>, <a href="lec19handout2pp.pdf">2pp</a>, <a href="lec19handout6pp.pdf">6pp</a></td>
+<td>NLA 38, Sh</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>20</th>
+<td>Mon 11/26</td>
+<td>Sparse Matrix Algorithms</td>
+<td><a href="lec20.pdf">Full</a>, <a href="lec20handout2pp.pdf">2pp</a>, <a href="lec20handout6pp.pdf">6pp</a></td>
+<td>It 4.3, Eig</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>21</th>
+<td>Wed 11/28</td>
+<td>Preconditioning, Incomplete Factorizations</td>
+<td><a href="lec21.pdf">Full</a>, <a href="lec21handout2pp.pdf">2pp</a>, <a href="lec21handout6pp.pdf">6pp</a></td>
+<td>NLA 40, It 3</td>
+<td>HW5 Due</td>
+</tr>
+
+<tr>
+<th class=bgr>22</th>
+<td>Mon 12/03</td>
+<td>The Conjugate Gradients Algorithm II</td>
+<td><a href="lec22.pdf">Full</a>, <a href="lec22handout2pp.pdf">2pp</a>, <a href="lec22handout6pp.pdf">6pp</a></td
+<td>NLA 38, Sh</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>23</th>
+<td>Wed 12/05</td>
+<td>Arnoldi/Lanczos Iterations</td>
+<td><a href="lec23.pdf">Full</a>, <a href="lec23handout2pp.pdf">2pp</a>, <a href="lec23handout6pp.pdf">6pp</a></td>
+<td>NLA 33,36</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>24</th>
+<td>Mon 12/10</td>
+<td>GMRES, Other Krylov Subspace Methods</td>
+<td><a href="lec24.pdf">Full</a>, <a href="lec24handout2pp.pdf">2pp</a>, <a href="lec24handout6pp.pdf">6pp</a></td>
+<td>NLA 35,39, It 2.3</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<th class=bgr>25</th>
+<td>Wed 12/12</td>
+<td>Linear Algebra Software</td>
+<td><a href="lec25.pdf">Full</a>, <a href="lec25handout2pp.pdf">2pp</a>, <a href="lec25handout6pp.pdf">6pp</a></td>
+<td>Eig</td>
+<td>HW6 Due</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+<th>MATLAB Codes:</th>
+<td>
+Lecture 2, Vector Norms (<a href="lec2mldemo1.m">lec2mldemo1.m</a>), Induced Matrix Norms (<a href="lec2mldemo2.m">lec2mldemo2.m</a>)<br>
+Lecture 5, Classical and Modified Gram-Schmidt (<a href="lec5mldemo1.m">lec5mldemo1.m</a>, <a href="clgs.m">clgs.m</a>, <a href="mgs.m">mgs.m</a>)<br>
+Lecture 6, Householder QR Factorization (<a href="house.m">house.m</a>, <a href="formQ.m">formQ.m</a>)<br>
+Lecture 8, Floating Point Arithmetic (<a href="lec8mldemo1.m">lec8mldemo1.m</a>, <a href="num2bin.m">num2bin.m</a>)<br>
+Lecture 11, LU Factorization (<a href="lec11mldemo1.m">lec11mldemo1.m</a>, <a href="lec11mldemo2.m">lec11mldemo2.m</a>, <a href="mkL.m">mkL.m</a>, <a href="mkP.m">mkP.m</a>)<br>
+Homework 4, Banded Cholesky (<a href="bandtest.m">bandtest.m</a>)<br>
+Lecture 16, Jacobi Algorithm (<a href="lec16mldemo1.m">lec16mldemo1.m</a>, <a href="jacrot.m">jacrot.m</a>)<br>
+Lecture 17, Method of Bisection (<a href="lec17mldemo1.m">lec17mldemo1.m</a>, <a href="sturmcount.m">sturmcount.m</a>), Divide-and-Conquer Algorithm (<a href="lec17mldemo2.m">lec17mldemo2.m</a>)<br>
+Homework 5, Linear Elasticity Utilities (<a href="assemble.m">assemble.m</a>, <a href="elmatrix.m">elmatrix.m</a>, <a href="mkmodel.m">mkmodel.m</a>, <a href="qdplot.m">qdplot.m</a>, <a href="qdanim.m">qdanim.m</a>, <a href="allhw5.zip">allhw5.zip</a>)<br>
+Lecture 19, Conjugate Gradients (<a href="cg.m">cg.m</a>, <a href="cg_stats.m">cg_stats.m</a>)<br>
+Lecture 20, Elimination Movie (<a href="lec20mldemo1.m">lec20mldemo1.m</a>, <a href="realmmd.m">realmmd.m</a>)<br>
+Lecture 22, Conjugate Gradients (<a href="lec22mldemo1.m">lec22mldemo1.m</a>, <a href="steep.m">steep.m</a>, <a href="conjdir.m">conjdir.m</a>, <a href="conjgrad.m">conjgrad.m</a>)<br>
+Lecture 23, Arnoldi Iteration (<a href="arnoldi.m">arnoldi.m</a>)<br>
+</td>
+</tr>
+
+</table>
+
+</body>
+
+</html>

@@ -1,0 +1,212 @@
+
+## Varying-intercept, varying-slope models ##
+
+ # Simple model with no correlation between intercepts and slopes
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (a.hat[j], tau.a)
+    b[j] ~ dnorm (b.hat[j], tau.b)
+    a.hat[j] <- mu.a
+    b.hat[j] <- mu.b
+  }
+  mu.a ~ dnorm (0, .0001)
+  mu.b ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  tau.b <- pow(sigma.b, -2)
+  sigma.a ~ dunif (0, 100)
+  sigma.b ~ dunif (0, 100)
+}
+##############################################################################
+
+ # Modeling the correlation 
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] <- B[j,1]
+    b[j] <- B[j,2]
+    B[j,1:2] ~ dmnorm (B.hat[j,], Tau.B[,])
+    B.hat[j,1] <- mu.a
+    B.hat[j,2] <- mu.b
+  }
+  mu.a ~ dnorm (0, .0001)
+  mu.b ~ dnorm (0, .0001)
+
+  Tau.B[1:2,1:2] <- inverse(Sigma.B[,])
+  Sigma.B[1,1] <- pow(sigma.a, 2)
+  sigma.a ~ dunif (0, 100)
+  Sigma.B[2,2] <- pow(sigma.b, 2)
+  sigma.b ~ dunif (0, 100)
+  Sigma.B[1,2] <- rho*sigma.a*sigma.b
+  Sigma.B[2,1] <- Sigma.B[1,2]
+  rho ~ dunif (-1, 1)
+}
+
+#############################################################################
+ 
+ # Scaled inverse-Wishart model (same as the "wishart1.bug" file that is 
+ # called in the R code
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] <- xi.a*B.raw[j,1]
+    b[j] <- xi.b*B.raw[j,2]
+    B.raw[j,1:2] ~ dmnorm (B.raw.hat[j,], Tau.B.raw[,])
+    B.raw.hat[j,1] <- mu.a.raw
+    B.raw.hat[j,2] <- mu.b.raw
+  }
+  mu.a <- xi.a*mu.a.raw
+  mu.b <- xi.b*mu.b.raw
+  mu.a.raw ~ dnorm (0, .0001)
+  mu.b.raw ~ dnorm (0, .0001)
+
+  xi.a ~ dunif (0, 100)
+  xi.b ~ dunif (0, 100)
+
+  Tau.B.raw[1:2,1:2] ~ dwish(W[,], df)
+  df <- 3
+  Sigma.B.raw[1:2,1:2] <- inverse(Tau.B.raw[,])
+  sigma.a <- xi.a*sqrt(Sigma.B.raw[1,1])
+  sigma.b <- xi.b*sqrt(Sigma.B.raw[2,2])
+  rho <- Sigma.B.raw[1,2]/sqrt(Sigma.B.raw[1,1]*Sigma.B.raw[2,2])
+}
+
+#############################################################################
+ 
+ # Multiple varying coefficients
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- inprod(B[county[i],],X[i,])
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    for (k in 1:K){
+      B[j,k] <- xi[k]*B.raw[j,k]
+    }
+    B.raw[j,1:K] ~ dmnorm (mu.raw[], Tau.B.raw[,])
+  }  
+  for (k in 1:K){
+    mu[k] <- xi[k]*mu.raw[k]
+    mu.raw[k] ~ dnorm (0, .0001)
+    xi[k] ~ dunif (0, 100)
+  }
+  Tau.B.raw[1:K,1:K] ~ dwish(W[,], df)
+  df <- K+1
+  Sigma.B.raw[1:K,1:K] <- inverse(Tau.B.raw[,])
+  for (k in 1:K){
+    for (k.prime in 1:K){
+      rho.B[k,k.prime] <- Sigma.B.raw[k,k.prime]/
+        sqrt(Sigma.B.raw[k,k]*Sigma.B.raw[k.prime,k.prime])
+    }
+    sigma.B[k] <- abs(xi[k])*sqrt(Sigma.B.raw[k,k])
+  }
+}
+
+#############################################################################
+ 
+ # Adding unmodled individual-level coefficient to the multiple 
+ # varying coefficients model
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- inprod(b.0[],X.0[i,]) + inprod(B[county[i],],X[i,])
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    for (k in 1:K){
+      B[j,k] <- xi[k]*B.raw[j,k]
+    }
+    B.raw[j,1:K] ~ dmnorm (mu.raw[], Tau.B.raw[,])
+  }  
+  for (k in 1:K){
+    mu[k] <- xi[k]*mu.raw[k]
+    mu.raw[k] ~ dnorm (0, .0001)
+    xi[k] ~ dunif (0, 100)
+  }
+  Tau.B.raw[1:K,1:K] ~ dwish(W[,], df)
+  df <- K+1
+  Sigma.B.raw[1:K,1:K] <- inverse(Tau.B.raw[,])
+  for (k in 1:K){
+    for (k.prime in 1:K){
+      rho.B[k,k.prime] <- Sigma.B.raw[k,k.prime]/
+        sqrt(Sigma.B.raw[k,k]*Sigma.B.raw[k.prime,k.prime])
+    }
+    sigma.B[k] <- abs(xi[k])*sqrt(Sigma.B.raw[k,k])
+  }
+  for (k in 1:K){
+    b.0[k] ~ dnorm (0, .0001)
+  }
+}
+
+#############################################################################
+ 
+ # Adding unmodled individual-level coefficient to one of the simpler models 
+ # with two varying coefficients model
+
+ # Scaled inverse-Wishart model
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- inprod(b.0[],X.0[i,]) + a[county[i]] + b[county[i]]*x[i]
+  }
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] <- xi.a*B.raw[j,1]
+    b[j] <- xi.b*B.raw[j,2]
+    B.raw[j,1:2] ~ dmnorm (B.raw.hat[j,], Tau.B.raw[,])
+    B.raw.hat[j,1] <- mu.a.raw
+    B.raw.hat[j,2] <- mu.b.raw
+  }
+  mu.a <- xi.a*mu.a.raw
+  mu.b <- xi.b*mu.b.raw
+  mu.a.raw ~ dnorm (0, .0001)
+  mu.b.raw ~ dnorm (0, .0001)
+
+  xi.a ~ dunif (0, 100)
+  xi.b ~ dunif (0, 100)
+
+  Tau.B.raw[1:2,1:2] ~ dwish(W[,], df)
+  df <- 3
+  Sigma.B.raw[1:2,1:2] <- inverse(Tau.B.raw[,])
+  sigma.a <- xi.a*sqrt(Sigma.B.raw[1,1])
+  sigma.b <- xi.b*sqrt(Sigma.B.raw[2,2])
+  rho <- Sigma.B.raw[1,2]/sqrt(Sigma.B.raw[1,1]*Sigma.B.raw[2,2])
+  for (k in 1:K){
+    b.0[k] ~ dnorm (0, .0001)
+  }
+}
+
+
+
+

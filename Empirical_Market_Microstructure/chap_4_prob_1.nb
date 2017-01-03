@@ -1,0 +1,246 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[      6595,        237]
+NotebookOptionsPosition[      5839,        206]
+NotebookOutlinePosition[      6203,        222]
+CellTagsIndexPosition[      6160,        219]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ps", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     SuperscriptBox["a", "2"], ",", 
+     RowBox[{"a", " ", 
+      RowBox[{"(", 
+       RowBox[{"1", "-", "a"}], ")"}]}], ",", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{"1", "-", "a"}], ")"}], "2"], ",", 
+     RowBox[{"a", 
+      RowBox[{"(", 
+       RowBox[{"1", "-", "a"}], ")"}]}], ",", 
+     RowBox[{"a", 
+      RowBox[{"(", 
+       RowBox[{"1", "-", "a"}], ")"}]}], ",", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       RowBox[{"1", "-", "a"}], ")"}], "2"], ",", 
+     RowBox[{"a", 
+      RowBox[{"(", 
+       RowBox[{"1", "-", "a"}], ")"}]}], ",", 
+     SuperscriptBox["a", "2"]}], "}"}]}], ";", " ", 
+  RowBox[{"ps", " ", "=", " ", 
+   RowBox[{"ps", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vtp1", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"1", "-", "p"}], ",", 
+     RowBox[{"1", "-", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "-", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "-", "p"}], ",", 
+     RowBox[{"1", "+", "p"}], ",", 
+     RowBox[{"1", "+", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "+", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "+", "p"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vtp2", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"1", "-", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "-", "p"}], ",", 
+     RowBox[{"1", "+", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "+", "p"}], ",", 
+     RowBox[{"1", "-", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "-", "p"}], ",", 
+     RowBox[{"1", "+", "p"}], ",", 
+     RowBox[{
+      RowBox[{"-", "1"}], "+", "p"}]}], "}"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.542975194829543*^9, 3.5429752657988496`*^9}, 
+   3.542975316236784*^9, {3.5429760715710573`*^9, 3.5429760738523364`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"gamma1", "=", 
+  RowBox[{
+   RowBox[{"Apply", "[", 
+    RowBox[{"Plus", ",", 
+     RowBox[{"ps", " ", "vtp1", " ", "vtp2"}]}], "]"}], "//", 
+   "Simplify"}]}]], "Input",
+ CellChangeTimes->{{3.542975319674328*^9, 3.542975388612358*^9}, {
+  3.542975450987875*^9, 3.542975458237968*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", "4"}], " ", 
+   SuperscriptBox["a", "2"], " ", "p"}], "-", 
+  SuperscriptBox[
+   RowBox[{"(", 
+    RowBox[{"1", "+", "p"}], ")"}], "2"], "+", 
+  RowBox[{"2", " ", "a", " ", 
+   SuperscriptBox[
+    RowBox[{"(", 
+     RowBox[{"1", "+", "p"}], ")"}], "2"]}]}]], "Output",
+ CellChangeTimes->{{3.542975322877494*^9, 3.5429753891592407`*^9}, 
+   3.542975458659848*^9, 3.5429760773366857`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{"gamma1", "\[Equal]", "0"}], ",", "p"}], "]"}]], "Input",
+ CellChangeTimes->{{3.5429754463159404`*^9, 3.542975475613061*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"p", "\[Rule]", 
+     FractionBox["1", 
+      RowBox[{
+       RowBox[{"-", "1"}], "+", 
+       RowBox[{"2", " ", "a"}]}]]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"p", "\[Rule]", 
+     RowBox[{
+      RowBox[{"-", "1"}], "+", 
+      RowBox[{"2", " ", "a"}]}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.5429754693161645`*^9, 3.542975476113056*^9}, 
+   3.5429760803992248`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Apply", "[", 
+   RowBox[{"Plus", ",", 
+    RowBox[{"ps", " ", "vtp1", " ", "vtp1"}]}], "]"}], "//", 
+  "Simplify"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Apply", "[", 
+   RowBox[{"Plus", ",", 
+    RowBox[{"ps", " ", "vtp2", " ", "vtp2"}]}], "]"}], "//", 
+  "Simplify"}]}], "Input",
+ CellChangeTimes->{{3.5429758015063677`*^9, 3.5429758204283686`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"1", "+", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"2", "-", 
+     RowBox[{"4", " ", "a"}]}], ")"}], " ", "p"}], "+", 
+  SuperscriptBox["p", "2"]}]], "Output",
+ CellChangeTimes->{3.542975820818974*^9, 3.5429760823367496`*^9}],
+
+Cell[BoxData[
+ RowBox[{"1", "+", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"2", "-", 
+     RowBox[{"4", " ", "a"}]}], ")"}], " ", "p"}], "+", 
+  SuperscriptBox["p", "2"]}]], "Output",
+ CellChangeTimes->{3.542975820818974*^9, 3.5429760823367496`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Apply", "[", 
+   RowBox[{"Plus", ",", 
+    RowBox[{
+     RowBox[{"ps", " ", "vtp1", " ", 
+      SuperscriptBox["vtp2", "3"]}], "/.", 
+     RowBox[{"{", 
+      RowBox[{"p", "\[Rule]", 
+       RowBox[{
+        RowBox[{"-", "1"}], "+", 
+        RowBox[{"2", " ", "a"}]}]}], "}"}]}]}], "]"}], "//", 
+  "Simplify"}]], "Input",
+ CellChangeTimes->{{3.542975860038085*^9, 3.5429758775694895`*^9}, {
+  3.5429759903359947`*^9, 3.5429760613678017`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "32"}], " ", 
+  SuperscriptBox[
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"-", "1"}], "+", "a"}], ")"}], "2"], " ", 
+  SuperscriptBox["a", "2"], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"-", "1"}], "+", 
+    RowBox[{"2", " ", "a"}]}], ")"}]}]], "Output",
+ CellChangeTimes->{
+  3.5429758778351173`*^9, 3.5429759921328926`*^9, {3.5429760222425117`*^9, 
+   3.54297602641444*^9}, {3.542976057774076*^9, 3.5429760844149013`*^9}, 
+   3.5429761300246487`*^9}]
+}, Open  ]]
+},
+WindowSize->{616, 750},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+ShowSelection->True,
+FrontEndVersion->"7.0 for Microsoft Windows (32-bit) (February 18, 2009)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[545, 20, 1876, 60, 94, "Input"],
+Cell[CellGroupData[{
+Cell[2446, 84, 308, 8, 31, "Input"],
+Cell[2757, 94, 437, 13, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3231, 112, 185, 4, 31, "Input"],
+Cell[3419, 118, 456, 15, 48, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3912, 138, 395, 11, 52, "Input"],
+Cell[4310, 151, 248, 7, 30, "Output"],
+Cell[4561, 160, 248, 7, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4846, 172, 477, 14, 33, "Input"],
+Cell[5326, 188, 497, 15, 30, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

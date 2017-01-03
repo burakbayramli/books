@@ -1,0 +1,3028 @@
+\movetooddpage
+
+\chapter{Web Uygulamalarý} \label{web}
+
+\thischapterhas{
+  \item Bir Web projesinin geliþtirme ve hedef ortamýný kurmak için gerekenler
+  \item Türkçe karakter desteði ve ulusallaþtýrma
+  \item Struts ve JSTL Etiketleri
+  \item Genel Web ihtiyaçlari ve çözümleri
+}
+
+\versal{A}\textsc{yný} anda birçok kullanýcýya hizmet verebilen servis tarafý
+Web teknolojileri, ve dinamik içerik göstermek için kullanýlan Web sayfasý
+etiket dilleri þu anki hâline gelmek için uzun bir evrimden geçti. Dinamik
+içerik, ilk nesilde, Perl, sh, bash, C gibi dillerle yazýlmýþ, Apache Web Server
+tarafýndan iþler kod olarak çaðýrýlan CGI programlarý tarafýndan üretiliyordu.
+
+Java dünyasý, CGI yerine pür Java Uygulama Servisleri tarafýndan çaðýrýlabilen
+Java Servlet'leri yerleþtirdi, ve içerik göstermek için de JSP adlý etiket
+dilini bize sundu. Bu ilk nesilde, görsel {\em olmayan} iþlemleri dahi Servlet
+yerine görsel amaçlý yazýlmýþ JSP'lerden yapmak mümkün oluyordu, ki bu tür
+kullanýma Model I ismi de verilmiþtir. Fakat Model I, aksiyon JSP'leri ile
+içerik JSP'lerini birbirinden ayýrmayarak bakýmý zor mimarilere sebebiyet
+verdiði için, bir süre sonra Model II'ye geçilmiþtir.
+
+Model II, aksiyonlar (veri tabanýndan bilgi almak, hata kontrolü gibi iþlemler)
+için ayrý JSP'ler yazýlmasýný öngörüyordu. Fakat bu mimariden de hâlen eksik
+olan faktör, meselâ bir HTML form'undan bilgi almak, kullanýcýnýn tarayýcýsýný
+baþarý ya da hata sonrasý bir sayfaya gönderebilmek gibi iþlemler için
+saðlanmasý gereken altyapý hizmetleri idi, ve bu iþlemler JSP (ya da Servlet)
+içinden Java kodu yazýlarak programcýya zahmet getiren bir þekilde yapýlmasý
+gerekiyordu.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section{MVC}
+
+Bunun üzerine daha önce masaüstü görsel programlar için baþarýyla kullanýlmýþ
+MVC mimari þekli Web dünyasýna uyarlanmaya baþlandý. MVC mimarileri ve ürünleri,
+görsel bir programý üç ana bölüme ayýrýp her bölüme ayrý altyapý kodlarý ve
+hizmetleri saðlayarak bakýmý kolay kodlar yazmamýza yardým eden
+mimarilerdir. MVC programýnýn ana bölümleri þunlardýr:
+
+\begin{itemize}
+  \item Model
+  \item View
+  \item Controller
+\end{itemize}
+
+\textbf{Model}, hakkýnda program yazdýðýmýz iþ alanýný hakkýndaki kurallarý,
+hesaplarý yaptýrdýðýmýz alan modelini temsil eden nesnelerdir. Meselâ kurumsal
+programýnýzý yazdýðýnýz þirket (müþteriniz) araba kiralama hizmeti veren bir
+þirket olsaydý, bu program içinde \PVerb!Car! nesnesi, {\em modelin} parçasý
+olurdu.
+
+\textbf{View}, görsel iþlevleri yerine getiren kodlardýr. Ekrana bilgi göstermek
+için yapýlan tüm çaðrýlarýn toplamý MVC'nin V'sini (View) oluþturacaktýr.
+
+\textbf{Controller}, yâni kontrolcu, görsel programýnýzýn akýþýný, hangi sayfadan sonra
+hangi sayfaya, hatalardan sonra hangi görsel birime yönlendirileceðini kontrol
+eden kýsýmdýr. Bu birime yönlendirici, ya da trafik polisi ismi de
+verilebilirdi.
+
+Java dünyasýnda MVC mimarisini destekleyen birçok ürün mecuttur. Bu ürünlerden
+en tanýnmýþý ve stabil hâlde olaný, Apache projesi tarafýndan sunulan Struts
+projesidir.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section{Ana Kavramlar}
+
+Görsel Web mimarilerinde çok sýk lazým olan kalýplar, Apache Struts tarafýndan
+MVC altyapýsý çerçevesine koyularak, Jakarta Struts projesi oluþturuldu. Modern
+Web uygulamalarýnda çok ihtiyaç duyulan kodlama gereklilikleri þunlardý:
+
+\begin{itemize}
+\item Giriþ yapýlan Web sayfalarýndan, yani Form'lardan, veri alýp vermeyi
+rahatlaþtýrmak.
+\item JSP'de bir düðme (button) basýþ hareketine tekabül eden bir `iþlemi',
+tekrar kullanýlýr (reusable) bir nesne içinde muhafaza etmek, ve bir Web
+uygulamasýný artýk bu iþlemlerin (action) biraraya konulduðu bir bütün olarak
+görmek.
+\item Sayfalar arasý akýþ tanýmlarýný (flow) Servlet'lerin, yani Java kodunun,
+içinden kurtarýp bir ayar dosyasý içinde tutmak, böylece akýþý deðiþtirmeyi
+kolaylaþtýrmak. Ayrýca bu sayede akýþ içindeki iþlemleri de daha rahat tekrar
+kullanýlýr hale getirmek.
+\end{itemize}
+
+
+\subsection{Form ve Action} \label{web:requirements}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.60}{
+  \includegraphics{./images/struts_request_response_action.eps}
+  }
+}
+\caption{Request, Response ve Struts Action}
+\end{figure}
+
+
+Bir Struts projesi \PVerb!struts-config.xml! denen ayar dosyasý etrafýnda
+döner. Bu dosya, þu þekilde tanýmlar içerir.
+
+\begin{lstlisting}[language=XML, frame=none]
+  <form-beans>
+    <form-bean
+        name="AddCarForm"
+        type="org.apache.struts.action.DynaActionForm">
+      <form-property
+          name="licensePlate"
+          type="java.lang.String"
+          initial=""/>
+      <form-property
+          name="description"
+          type="java.lang.String"
+          initial=""/>
+    </form-bean>
+  </form-beans>
+
+  <action-mappings>
+    <action
+        path="/main"
+        scope="session"
+        type="org.mycompany.kitapdemo.actions.GetCarsAction">
+      <forward name="fail" path="/pages/main.jsp"/>
+      <forward name="success" path="/pages/main.jsp"/>
+    </action>
+    <action
+        path="/add-car"
+        scope="session"
+        type="org.mycompany.kitapdemo.actions.AddCarAction"
+        name="AddCarForm"
+        validate="false">
+      <forward name="success" path="/main.do"/>
+      <forward name="fail" path="/main.do"/>
+    </action>
+
+  </action-mappings>
+\end{lstlisting}
+
+
+Ýki taným herhalde hemen gözünüze çarpmýþtýr. Biri \PVerb!AddCarForm!, öteki
+\PVerb!AddCarAction!. Struts kodu yazarken, ya bir JSP, ya bir Form, ya da bir
+Action yazýyoruzdur. Form, tahmin edileceði gibi veri girilen bir Form
+sayfasýnýn üzerindeki deðerleri tutan bir Java Bean nesnesidir. Üzerinde sadece
+get, set, reset, ya da validate gibi metotlar vardýr. Struts'ýn saðladýðý önemli
+bir rahatlýk, özel etiketler üzerinden sayfanýzdaki alanlarý bu Bean'e otomatik
+olarak baðlamak olacaktýr. Sayfadaki alan deðiþince bu bean'deki eþlenmiþ olan
+deðer de deðiþecektir. Böylece Java sunucu tarafýndaki kodlarýnýz get/set
+kullanarak sayfa verilerine eriþebilmiþ olur. Hattâ en son Struts
+versiyonlarýnda, üzerinde get/set metotlarý olan ayrý bir bean'e bile
+ihtiyacýmýz kalmamýstýr; Artýk bu bean Struts \PVerb!DynaActionForm! kullanýmý
+sayesinde dinamik olarak üretilebilmektedir.
+
+Action (iþlem) ise, bir düðmeye bastýðýmýzda yapýlmasý gereken iþlemi
+kodladýðýmýz yerdir. O da bir Java nesnesidir, ve JSP sayfasý içinde
+(\PVerb!struts-config.xml!'de tanýmlanan ismi üzerinden) caðýrýlmasý gerekir.
+
+
+``Çaðýrýlmasý'' kelimesi tabii Struts için tam uygun bir kelime
+deðildir. Sayfadaki düðmeler ile Action'lar, \PVerb!struts-config.xml! içinde
+``eþlenir'' demek daha uygun olur. Çünkü çâðýrma iþleminin kendisini
+Struts mimarisi kapalý kapýlar arkasýnda yapmaktadýr.
+
+JSP sayfasýnda bir düðme ile Action'ý eþlemek þöyle olur.
+
+\begin{lstlisting}[language=XML, frame=none]
+<html:form action="/add-car.do">
+ ...
+ <td>
+    <html:submit>Araba Ekle</html:submit>
+ </td>
+</html:form>
+\end{lstlisting}
+\PVerb!add-car.do! baðlantýsý ise, sonunda \PVerb!.do! kelimesi içerdiði için
+bir Struts Action baðlantýsýdýr. Struts projenizi kurduðunuzda Web Sunucunuza
+(Tomcat, Weblogic, JBoss) verdiðiniz \PVerb!web.xml! içerisinde, \PVerb!.do!
+adlý soneki, Struts ana iþlemci Servlet'ine baðlanmasý gerektiðini Web
+Sunucusuna belirtmemiz gerekmektedir. Proje bazýnda tüm Action'lar için bir kere
+yapýlmasý yeterli olan bu tanýmý merak edenler, örnek uygulamamýzda
+\PVerb!web.xml! içine bakabilirler; Aþaðýdaki türden bir ibare göreceklerdir.
+
+\begin{lstlisting}[language=XML, frame=none]
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    ...
+  </servlet>
+\end{lstlisting}
+
+\subsection{JSP ve Form Baðlantýlarý}
+
+Struts altyapýsý, Form'lara otomatik deðer aktarabilmek (ve daha baþka görsel
+amaçlar için de) özel Struts etiketleri saðlar. Yâni bir Struts projesinde JSP
+yazarken bildiðimiz \PVerb!jsp:bean! türünden etiketler deðil, Struts
+\PVerb!html:text! gibi etiketler kullanacaðýz. Meselâ, sayfamýza bir metin
+(text) alaný koyup, bu alaný, Form bean'i üzerindeki bir alana baðlamak istesek,
+
+\begin{lstlisting}[language=XML, frame=none]
+<html:text property=``licensePlate''/>
+\end{lstlisting}
+gibi bir ifade kullanmamýz gerekir. \PVerb!licensePlate! (plaka) adý ile
+belirtilen bu metin giriþ alaný ekteki örnek kodlarda \PVerb!AddCarForm!
+nesnesi üzerindeki \PVerb!getLicensePlate!, \PVerb!setLicensePlate! metotlarýna
+eþlenecektir. Yani, Struts altyapýsý tarafýnda çaðýrýlacaktýr. (Tabii
+\PVerb!DynaActionForm! kullanýmý var ise, get/set içeren bean'in varlýðýna bile
+gerek yoktur, dinamik \PVerb!AddCarForm! nesnesinin get/set metotlarý dinamik
+olarak çaðýrýlacaktýr).
+
+Dikkat edelim, get ve set'in ``ikisinin birden'' Struts tarafýndan
+çaðrýlacaðýndan / kullanýlacaðýndan bahsettim. Struts, Form bean'ine sadece tek
+bir zamanda deðer aktarmaz. Deðer aktarýmý ters yön içinde geçerlidir, yani,
+arka planda Java üzerinden Form'da deðiþiklik yapýp bir sayfaya tekrar
+döndügünüzde, sayfadaki deðerin de deðiþtiðini göreceksiniz.
+
+ComboBox, Radio Button gibi görsel birimlerin ayrý ayrý \PVerb!html:! kullanýmý
+vardýr.
+
+\subsection{Action'lardan Sonra Yönlendirme} \label{web:struts:action}
+
+Struts'ýn üstlendiði önemli diðer bir görevde, uygulamanýz için trafik polisliði
+görevidir. Normal Java web uygulamalarýnda bir Servlet'ten öteki Servlet'e aktarým
+\PVerb!redirect! çaðrýsý ile yapýyorduk. Fakat bu yöntem sonraki sayfa
+ismini direk JSP içine gömmesi sebebiyle kod muhafazasý ve bakýmý açýsýndan
+ iyi bir yöntem deðildir.
+
+Struts mimarisi, yönlendirme tanýmlarýný Java kodu içerisinden çýkartarak bir
+ayar dosyasýna koyarak deðiþtirilmesini rahatlatmýþ, ve bu þekilde Java
+kodlarýnýn daha temiz ve modüler olmasýný saðlamýþtýr.
+
+Mesela örnek uygulamamýzda \PVerb!AddCarAction! iþlendikten sonra diðer bir
+Action olan \PVerb!get-cars.do!'ya gitmek istesek, bunun için Java kodu
+yazmamýza gerek yoktur. \PVerb!struts-config.xml! içinde, \PVerb!AddCarAction!
+tanýmý altýnda, bu yönü belirtmemiz yeterlidir. Struts Action class'ý sadece ve
+sadece bir durum kodu döndürmekle yükümlüdür. Bu durum koduna baðlý olarak
+nereye gidileceðinin kararýný \PVerb!struts-config.xml! dosyasý
+verecektir. Örnek Action tanýmýmýzdaki
+
+\begin{lstlisting}[language=XML, frame=none]
+<action
+    path="/add-car"
+  ..
+  <forward name="success" path="/main.do"/>
+  <forward name="fail" path="/main.do"/>
+\end{lstlisting}
+kullanýmý, \PVerb!success! durum kodu döndürüldüðünde \PVerb!/main.do!, hata
+döndürüldüðünde de yine \PVerb!/main.do!'ya gidilmesini belirtmiþtir (durum kodu
+\PVerb!fail! için gidilecek yer deðiþik bir yer de olabilirdi. Bu taným
+programcýya ait bir seçimdir. Genellikle ekleme ekranlarýndaki hatalarý ayný
+sayfada gösterek iyi olduðu için bu yöntem seçilmiþtir). \PVerb!main.do!'nun
+kendisi de nihai olarak bir JSP sayfasýný gösterecektir, böylece Controller
+(Action) aþamasýndan sonra View aþamasýna geldiðimizi görüyoruz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<action
+    path="/main"
+    scope="session"
+    ..
+  <forward name="fail" path="/pages/main.jsp"/>
+  <forward name="success" path="/pages/main.jsp"/>
+</action>
+\end{lstlisting}
+
+\subsection{Action Zincirleme}
+
+Struts teknolojisinin Action ve yönlendirme yeteneði sayesinde kullanýcýnýn
+týklamasý ve bir View içeren (sayfa) gelmesi arasýnda birkaç tane Action'ýn
+zincirleme bir þekilde iþletilmesi bile mümkündür. Modüler tasarým açýsýndan
+bunu yapmak faydalý da olabilir. Struts projelerinizde filanca aksiyona ihtiyaç
+duyup ta ``ah böyle bir Action zâten baþka bir tarafýndan yazýlmýþ, onu
+kullanayým'' diyerek o mevcut Action'ý zincire kattýðýmýz çok olmuþtur. Bu,
+Struts'ýn MVC modüler altyapýsý sayesinde tekrar kullanýlabilir Action'larýn
+yazýlabilmesi sayesinde olmuþtur. Yeni bir Action'ý zincire katmak, Java
+kodlamasý gerektirmediði için, \PVerb!struts-config.xml! seviyesinde yapýlan
+deðiþiklikler yeterli olacaktýr.
+
+Meselâ, elimizde \PVerb!GetGaragesList! adýnda tüm garajlarýn listesini alýp web
+oturumu üzerinde \PVerb!garageList! deðiþkeniyle depolayan bir Action olsun. Bu
+action, normâlde \PVerb!garage-list.do! adýnda garajlarý listeleyen bir sayfa
+\PVerb!garages.jsp! için kullanýlmaktadýr. \PVerb!struts-config.xml!  þöyledir.
+
+\begin{lstlisting}[language=Java, frame=none]
+<action
+    path="/garage-list"
+    scope="session"
+    type="org.mycompany.kitapdemo.actions.GetGaragesAction"
+    validate="false">
+  <forward name="success" path="/pages/garages.jsp"/>
+  <forward name="fail" path="/pages/garages.jsp"/>
+</action>
+\end{lstlisting}
+Fakat diyelim ki, yeni bir sayfa yazýyoruz. Bu \PVerb!newPage.jsp! adýnda yeni
+sayfa için gösterilen bir takým diðer þeylere ek olarak, bir de garaj listesini
+bir seçim listesi (listbox) içinde göstermek gerekiyor. Garaj listesini nereden
+alacaðýz? Yeni Action içinde bir daha garaj sorgulamasý yapmak bir çözüm
+olabilir, fakat buna gerek yok. Daha önce yazdýðýmýz \PVerb!GetGaragesAction!'ý
+kullanabiliriz ve yeni Action'ýmýza zincirleyebiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<action
+    path="/new-action"
+    scope="session"
+    type="org.mycompany.kitapdemo.actions.NewActionX">
+  <forward name="success" path="garage-list-for-x"/>
+  <forward name="fail" path="/pages/error.jsp"/>
+</action>
+
+<action
+    path="/garage-list-for-x"
+    scope="session"
+    type="org.mycompany.kitapdemo.actions.GetGaragesAction"
+    validate="false">
+  <forward name="success" path="/pages/newPage.jsp"/>
+  <forward name="fail" path="/pages/newPage.jsp"/>
+</action>
+\end{lstlisting}
+
+\subsection{Struts ve JSTL}
+
+Apache Struts, mimari açýdan MVC'nin hem Controller, hem View tarafýný
+gerçekleþtiren bir pakettir. Controller, çünkü Struts'ýn önemli bir hizmeti,
+aksiyon birimlerine ve yönlendirme iþlemlerine bir altyapý saðlamasýdýr. View, çünkü
+Form nesneleri ve JSP arasýnda kurulmuþ ilintiler sayesinde View tarafý için de
+verilen hizmetler vardýr.
+
+Tek eksik, Struts'ýn etiketlerinin çok çetrefilli sunum stilleri bazen yetersiz
+kalmasýdýr. Mesela, bir URL'i \PVerb!html:link! ile dinamik olarak oluþtururken,
+{\em birden fazla} URL parametresi kullanamamaktayýz.
+
+Bu ve diðer bazý etkenler yüzünden, pür prezentasyon ihtiyaçlarý için
+kitabýmýzda Struts'ýn Controller ve Form hizmetlerinin üstüne, pür prezentasyon
+amaçlý olarak JSTL adlý etiket dilini kullanmayý seçtik. JSTL, JSP Standart
+Etiket Kütüphanesi (JSP Standart Tag Library) kelimesinin kýsaltýlmýþýdýr. JSTL,
+eski JSP dilinden çok daha güçlü bir dil olarak yeni nesil etiket dillerine
+standart getirmeyi amaçlamýþtýr. Java dünyasýndan standartlarýn her zaman
+baþarýlý olduðu söylenemez, fakat JSTL için ayrýca bir referans gerçekleþtirimi
+(reference implementation) saðlandýðý için ortada bir iþler kod vardýr, ve
+etiket dilinin temizliði tüm bunlara eklenince ortaya Java Web dünyasý için
+tercih edilir bir seçenek çýkmýþtýr.
+
+Bu sebeple, kitabýmýzdaki tüm örneklerde, ve tavsiye ettiðimiz mimari ve ürünsel
+yelpazede JSTL'i bulacaksýnýz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section[Geliþtirme Ortamý][GELÝÞTÝRME ORTAMI]{Geliþtirme Ortamý}\label{web:development}
+
+Kitabýmýzdaki örnek Web kodlarýný iþletmek için JBoss Uygulama Servisi'ni
+kullanacaðýz. JBoss'ta bir web uygulamasýný iþleme koymak için,
+\PVerb!JBOSS/default/deploy!  dizini altýna sonuç kodlarýný göndermek
+gerekir. Fakat bu, \PVerb!.class!  dosyalarýný olduðu gibi \PVerb!deploy! dizini
+altýna kopyalayabiliriz demek deðildir. J2EE standartýnýn mecbur kýldýðý özel
+bir paketleme sistemini takip etmemiz gerekiyor. Bu paketleme çeþitleri
+þunlardýr: EAR, SAR ve WAR.
+
+En üst seviye paket EAR paketidir. EAR'in içine SAR, SAR'ýn içine de WAR
+konur. Eðer uygulamanýzda EJB bileþeni yok ise, sadece EAR ile uðraþmadan direk
+SAR kullanabilirsiniz. Biz, Struts odaklý tüm örnek uygulamalarýmýzda SAR
+paketlemesini kullanacaðýz.
+
+Önemli bir husus, açýk paket vs. kapalý paketleme konusudur. SAR, EAR ve WAR,
+aynen JAR yönteminde olduðu gibi sýkýþtýrýlmýþ bir zip dosyasý olabilirler. Biz
+bu yöntem yerine, sýkýþtýrýlacak dosyalarýn açýk bir þekilde tutulmasýný
+seçtik. JBoss Uygulama Servisi, 3. versiyonundan itibaren, \PVerb!deploy!
+altýnda gördüðü \PVerb!proje.sar! dosyasý ile \PVerb!proje.sar!  {\em dizinini}
+eþdeðer tutmaktadýr. Yâni, bir SAR içine zipleyerek koyacaðýnýz dosyalarý bir
+SAR dizini altýna kopyalarsanýz, JBoss servisi uygulamanýzý fark gözetmeden
+iþleme koyacaktýr.
+
+Niye açýk dizin yapýsýný seçtik? Çünkü sonuç (production) makinasýna kod
+gönderirken bazý ayar dosyalarýnýn o makina için deðiþmesi gerekiyor. Eðer
+kapalý bir SAR, EAR, WAR dosyasý gönderiyor olsaydýk, bu dosyalarýn {\em içinde}
+kalmýþ olan ayar dosyalarýný sonradan deðiþtirmemiz mümkün olmazdý. Tabii ki her
+makina için {\em özel} EAR, SAR, WAR {\em derlemek} mümkündür, fakat sonuç
+ortamý için deðiþik derleme yapmak kesinlikle idare edilebilir bir yöntem
+deðildir. Öncelikle her makina için deðiþik olacak ayar dosyalarýnýn derleme
+sistemine bildirilmesi gerekmektedir. Bu derleme sistemini daha
+karýþtýracaktýr.
+
+Bu sebeple her makina için gerekli ayar dosyalarýný derleme ve kod gönderimden
+{\em sonra} EAR, SAR, WAR {\em içinde} deðiþtirmek (eskisinin üzerine yazmak),
+daha idare edilebilir bir yöntem olmuþtur. En önemlisi, bu yöntemi takip ederek
+sistem admin'lerine ayar dosyalarýný {\em elle bile} deðiþtirme seçeneðini
+saðlamýþ oluyoruz.
+
+Þimdi, veri tabanýna eriþen kurumsal bir Struts uygulamasýný geliþtirmek için
+gereken \textbf{geliþtirme} ve \textbf{hedef} dizin yapýlarýný görelim. Hedef
+Uygulama Servisimiz JBoss 4.0.1, ve hedef dizinleri JBoss'un kuruluþ dizinin
+altýnda alttaki gibi olacaktýr.
+
+\subsection{Geliþtirme Dizinleri} \label{web:devtree}
+
+\begin{lstlisting}[language=XML, frame=none]
++-  StrutsHibSimple
+| +- build.properties
+| +- build.xml
+| | +- dd
+| | | +- jboss-service.xml
+| | | +- struts-config.xml
+| | | +- tiles-defs.xml
+| | | +- validation.xml
+| | | +- validator-rules.xml
+| | | +- web.xml
+| | | +- META-INF
+| | | | +- MANIFEST.MF
+| | | +- tags
+| | | | +- c-rt.tld
+| | | | +- c.tld
+| | | | +- fmt-rt.tld
+| | | | +- fmt.tld
+| | | | +- sql-rt.tld
+| | | | +- sql.tld
+| | | | +- struts-bean.tld
+| | | | +- struts-html.tld
+| | | | +- struts-logic.tld
+| | | | +- struts-nested.tld
+| | | | +- struts-tiles.tld
+| | | | +- x-rt.tld
+| | | | +- x.tld
+| | +- lib
+| | | +- c3p0-0.8.4.5.jar
+| | | ...
+| | | ...
+| | | +- cglib-full-2.0.2.jar
+| | | +- commons-beanutils.jar
+| | | +- hibernate3.jar
+| | | +- xml-apis.jar
+| | +- resources
+| | | +- application.properties
+| | | +- hibernate.cfg.xml
+| | | +- log4j.properties
+| | | +- log4j.xml
+| | | +- oscache.properties
+| | +- src
+| | | +- java
+| | | |+- org
+| | | | +- mycompany
+| | | | | +- kitapdemo
+| | | | | | +- actions
+| | | | | | | +- AddCarAction.java
+| | | | | | | +- GetCarsAction.java
+| | | | | +- dao
+| | | | | | +- Dao.java
+| | | | | +- pojo
+| | | | | | +- Car.hbm.xml
+| | | | | | +- Car.java
+| | | | | +- service
+| | | | | | +- AppStartup.java
+| | | | | | +- AppStartupMBean.java
+| | | | | | +- HibernateSession.java
+| | | | | +- util
+| | | | | | +- AllTest.java
+| | | | | | +- ClassPathFile.java
+| | | | | | +- RequestCharacterEncodingFilter.java
+| | | | | | +- TestUtil.java
+| | | +- pages
+| | | | +- detail.jsp
+| | | | +- main.jsp
+| | | +- sql
+| | | | +- tables_mysql.sql
+\end{lstlisting}
+
+Bu geliþtirme dizin yapýsýnda aranan dosyayý bulmak oldukça rahattýr. En üst
+seviyede \PVerb!src/!, \PVerb!resources/!, \PVerb!dd/! ve \PVerb!lib/!
+dizinleri konulmuþtur. Eðer yeni bir JBoss taným XML'i konmak istense, bunun
+\PVerb!dd/! altýna gideceði bellidir. Ayný þekilde uygulamanýn kendi içinde
+kullandýðý ayarlar için properties ayar dosyalarý ve diðer XML bazlý dosyalar
+\PVerb!resources/!  altýnda gene en üst seviyeden eriþilir hâldedir. Kaynak
+dosya kategorisine giren her þey, \PVerb!src/! altýndadýr: JSP sayfalarý, Java
+kodlarý ve SQL DDL komutlarý gibi kalemler bu dizin altýnda alt dizinler olarak
+bulunacaktýr.
+
+\subsection{Hedef Dizinleri} \label{web:deploytree}
+
+Geliþtirme dizininize gidip, komut satýrýndan \PVerb!ant! komutunu
+iþlettiðinizde, \PVerb!JBOSS/server/default/deploy! altýnda aþaðýdaki dizin
+yapýsýnýn oluþtuðunu göreceksiniz.
+
+\begin{lstlisting}[language=XML, frame=none]
++- kitapdemo.sar
+| +- META-INF
+| | | +- jboss-service.xml
+| | +- conf
+| | | +- log4j.xml
+| | +- kitapdemo.war
+| | |  +- pages
+| | |  | +- detail.jsp
+| | |  | +- main.jsp
+| | |  +- META-INF
+| | |  | +- MANIFEST.MF
+| | |  +- WEB-INF
+| | |  | +- jboss-service.xml
+| | |  | +- struts-config.xml
+| | |  | +- tiles-defs.xml
+| | |  | +- validation.xml
+| | |  | +- validator-rules.xml
+| | |  | +- web.xml
+| | |  | +- classes
+| | |  | |  +- application.properties
+| | |  | |  +- hibernate.cfg.xml
+| | |  | |  +- log4j.properties
+| | |  | |  +- log4j.xml
+| | |  | |  +- oscache.properties
+| | |  | |  +- org
+| | |  | |  | +- mycompany
+| | |  | |  | | +- kitapdemo
+| | |  | |  | | | +- actions
+| | |  | |  | | | | +- AddCarAction.class
+| | |  | |  | | | | +- GetCarsAction.class
+| | |  | |  | | | +- dao
+| | |  | |  | | | | +- Dao.class
+| | |  | |  | | | +- pojo
+| | |  | |  | | | | +- Car.hbm.xml
+| | |  | |  | | | | +- Car.class
+| | |  | |  | | | +- service
+| | |  | |  | | | | +- AppStartup.class
+| | |  | |  | | | | +- AppStartupMBean.class
+| | |  | |  | | | | +- HibernateSession.class
+| | |  | |  | | | +- util
+| | |  | |  | | | | +- AllTest.class
+| | |  | |  | | | | +- ClassPathFile.class
+| | |  | |  | | | | +- RequestCharacterEncodingFilter.class
+| | |  | |  | | | | +- TestUtil.class
+| | |  | +- lib
+| | |  | |  +- activation.jar
+| | |  | |  +- ant-antlr-1.6.2.jar
+| | |  | |  +- antlr-2.7.4.jar
+| | |  | |  +- c3p0-0.8.4.5.jar
+| | |  | |  +- cglib-full-2.0.2.jar
+| | |  | |  +- commons-beanutils.jar
+| | |  | |  +- commons-codec-1.3.jar
+| | |  | |  ...
+| | |  | |  ...
+| | |  | |  +- standard.jar
+| | |  | |  +- struts.jar
+| | |  | |  +- xalan.jar
+| | |  | |  +- xml-apis.jar
+| | |  | +- tags
+| | |  | |  +- c.tld
+| | |  | |  +- c-rt.tld
+| | |  | |  +- struts-html.tld
+\end{lstlisting}
+Bu yapý JBoss tarafýndan iþleme konmaya hazýrdýr. Yapý olarak, görüldüðü gibi
+WAR dizini, SAR dizini içine konmuþtur.
+
+\subsection{Web Ayar Dosyalarý}
+
+Bir SAR paketi içine konulan ayar dosyalarýný teker teker tanýyalým.
+
+\subsubsection{jboss-service.xml} \label{web:config:jbosservice}
+
+Bir SAR paketi JBoss tarafýndan yüklenirken o proje için yapýlmasý gereken
+hazýrlýklar, \PVerb!jboss-service.xml! dosyasýnda belirlenir. JBoss bu dosyayý
+her zaman SAR paketinin \PVerb!META-INF! dizini altýnda arayacaktýr.
+
+Bu dosyada, baþlatýlmasýný istediðimiz MBean class'larýný belirtmemiz gerekir
+(MBean'leri daha yakýndan JMX ile ilgili \ref{deploymonitor:jmx}. bölümde tanýyacaðýz). Bir
+MBean, standart bir arayüzü (interface) gerçekleþtiren (implement) bir Java
+class'ýdýr. Kendi yazdýðýmýz kod olabileceði gibi JBoss, ya da diðer açýk
+yazýlým paketlerinden gelen bir MBean class'ý da olabilir.
+
+\PVerb!StrutsHibSimple! örneðinde, Log4J paketinin baslangýç iþlerinin yapan
+MBean nesnesinin, ve demo'muzun kendi baþlangýç kodlarýnýn olduðu
+\PVerb!AppStartup!  adlý MBean'in baþlatýlmasýný istedik. Bunlarý yapmak için
+gereken \PVerb!jboss-service.xml! þöyle olacaktýr.
+
+\begin{lstlisting}[language=XML, caption=jboss-service.xml]
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server>
+
+<server>
+  <!-- AppStartup adlý class baþlangýç kodlarýmýzý taþýyor. -->
+  <mbean code="org.mycompany.kitapdemo.service.AppStartup"
+         name=":service=AppStartup"/>
+  <!-- Log4J -->
+  <mbean code="org.jboss.logging.Log4jService"
+         name="jboss.system:type=KitapDemoLog4jService,
+	       service=KitapLogging">
+    <!-- Ayar dosyasýnýn yeri ve ismi. -->
+    <attribute name="ConfigurationURL">resource:conf/log4j.xml
+    </attribute>
+    <attribute name="Log4jQuietMode">true</attribute>
+    <!-- Ayar dosyasýnýn ne kadar sýklýkla kontrol edileceði -->
+    <attribute name="RefreshPeriod">60</attribute>
+  </mbean>
+</server>
+\end{lstlisting}
+
+
+\subsubsection{log4j.xml} \label{web:install:log4j}
+
+\PVerb!Log4j.xml!, Log4J loglama sisteminin ayarlarýný yapmak için
+kullanýlýr. Aslýnda, bu ayar dosya ismi isteðe göre deðiþebilir; Hangi ismin
+kullanýlacaðýný \PVerb!jboss-service.xml! içinde \PVerb!resource:<dosya yeri,
+ismi>!  üzerinden belirtmek gerekmektedir. Dosya yeri ve ismi,
+\PVerb!kitapdemo.sar!  referans alýnarak aranacaktýr. Örneðimizde
+\PVerb!jboss-service.xml! içinde \PVerb!conf/log4j.xml!  ayarý kullanýldýðý
+için, \PVerb!kitapdemo.sar/conf/log4.xml! adlý bir dosya aranacaktýr. Ayar
+dosyasý \PVerb!log4j.xml! içinde, hangi Java paketlerinin loglama yapabileceði,
+bu paketlerin {\em hangi seviyede} loglayacaðý (\PVerb!DEBUG!, \PVerb!INFO!, vs)
+ve mesajlarýn yazýldýðý log dosyasýnýn hangi dizinde olduðu gibi ayarlar
+belirlenir.
+
+Demo'muzun yaptýðý \PVerb!log4j.xml! ayarlarý JBoss'un kendi \textbf{ana} Log4J
+ayarlarý ile (\PVerb!server/default/conf/log4j.xml! altýnda) {\em uyumlu}
+çalýþacak þekilde yazýlmýþtýr. Bu kullaným þekli sayesinde, JBoss'un kendine
+özel diðer loglama iþlemleri halâ devam edecektir, fakat bunun üstüne bizim
+uygulamamýza özel log'lar \PVerb!JBOSS/server/default/log/kitapdemo.log! altýna
+gider. Bu tür kullaným çoðu kurumsal uygulama'nýn ihtiyacý olan bir kullaným
+þeklidir. Projelerde genelikle JBoss'un kendi içinden gelen mesajlarýnýn bilinen
+bir log dosyasýna (\PVerb!server/default/log/server.log!) gönderilmesini
+istenir. Ek olarak kendi uygulamamýzýn loglarý ayrý bir dosyaya gitmesi
+beklenir.
+
+\subsubsection{MANIFEST.MF}
+Bu dosyanýn basmakalýp bir içeriði vardýr. Örnek kodlarda göreceðiniz içerik her
+proje için ayný olacaktýr. Olduðu gibi kullanabilirsiniz.
+
+\subsubsection{web.xml}
+
+\ref{web:requirements} bölümünde gördüðümüz gibi, \PVerb!web.xml!'in bir Struts
+projesinde önemli görevlerinden biri Struts'ý kullanmamýzý saðlayan
+\PVerb!ActionServlet! adlý merkezi class'ý JBoss'a tanýtmaktýr. Buna ek olarak
+Servlet filtreleri \PVerb!web.xml! içinde tanýmlanýr. Her uygulama için Servlet
+filtresi gerekmeyebilir. Bizim uygulamamýzda JSP ve Action bazýnda Türkçe
+karakterleri destekleyebilmek için \PVerb!RequestCharacterEncodingFilter! adlý
+filtreyi \PVerb!web.xml! içinde tanýmladýk.
+
+Bunlarýn haricinde, Struts bazlý bir sistem \PVerb!web.xml!'e ihtiyaç
+duymayacaktýr. Struts uygulamalarýnda iþ mantýðý Action nesnelerinde, ve diðer
+tüm Web odaklý ayarlar (akýþ kontrolü, hata muamelesi, vs)
+\PVerb!struts-config.xml! ayar dosyasýnda yapýldýðý için, eski yöntem Model I ve
+II uygulamalarýnda olduðu kadar \PVerb!web.xml! dosyasýna ihtiyaç olmaz.
+
+\subsection{HibernateSessionCloseFilter}
+
+Hibernate'i kapsamlý olarak anlattýðýmýz \ref{hibernate}. bölümde veri tabaný
+ile iþimiz bittiðinde bu durumu \PVerb!HibernateSession.commitTransaction()! ve
+\PVerb!HibernateSession.closeSession()! belirteceðimizi söylemiþtik. Fakat bu
+þekildeki \PVerb!Session! ve \PVerb!Transaction! kullanýmý Web ortamýnda
+problemler doðuruyor.
+
+Problemin çýkýþ noktasý Struts Action'lar ve JSP sayfalarýnýn içeriklerini
+göstermesinde olan iþleyiþ sýrasýdýr. Eðer elimizde \PVerb!Garage! ve onun
+üzerinde bir \PVerb!set! olarak tutulan \PVerb!Car! nesneleri var ise, tipik
+olarak bir Struts Action ile bu listeyi alýrýz ve JSP ile sunum için bir
+\PVerb!HttpSession! üzerine koyarýz. Ve hemen arkasýndan (daha JSP bu listeyi
+görmeden) Hibernate transaction commit edilir ve session kapatýlýr. Bunun
+yapýlma sebebi, elimizdeki son Java kodlama noktasýnýn Action \PVerb!execute!
+metotunun son satýrý olmasýdýr! JSP içine Java komutlarý koyamayýz, çünkü View
+ve Controller kavramlarýný birbirine karýþtýrmamak gerekir.
+
+En sonunda iþlem sýrasý JSP'ye geldiðinde ve sayfanýn listeye bakmasý
+gerektiðinde, elinde daha içerikleri somutlanmamýþ bir \PVerb!Car! listesi
+olacaktýr. Bu listenin içeriðin eriþmeye çalýþtýðýnýz anda, Hibernate
+\PVerb!LazyInitializationException! hatasýný verir
+\cite[sf. 300]{hibernatebook}, çünkü Hibernate elindeki \PVerb!Car! nesnelerinin
+içeriðini doldurmaya uðraþmaktadýr, ama elinde bunu yapacak Hibernate session yoktur.
+
+Bu hatadan kurtulmak için, evet, bazý Hibernate ayarlarýyla oynamak suretiyle
+bir anda yükleme (fetching) seviyesini arttýrabilir, ve \PVerb!Car! listesi
+alýndýðýnda \PVerb!Car! nesnelerinin yüklenmesini zorlayabiliriz. Ya da, listeyi
+alýnca Action içinden elle/zorla bu listeyi {\em gezerek} \PVerb!Car!'larýn
+yüklenmesini zorlayabiliriz. Fakat bu iki seçimden birincisi Web dünyasýnýn bir
+gerekliliðini eþleme dosyalarý üzerine yansýtarak ileride yapabileceðiniz
+performans ayarlarlama (tuning) manevra alanýnýzý kýsýtlar. Ýkinci seçenek ise,
+elle yazýlmýþ, fazla ve gereksiz bir koddur (Kural \#7 ihlâli).
+
+Tavsiyemiz Web'e özel bir problemin Web'e özel ve {\em tek} bir yerde
+çözülmesidir. Servlet filtreleri burada yardýmýmýza yetiþiyor. Altta gösterilen
+filtre Hibernate transaction'ý commit etme ve session'ý kapatma iþini {\em JSP
+gösterimi bittikten sonra} yapar. Servlet iþleyiþ kurallarýna göre,
+\PVerb!chain.doFilter! çaðrýsý geri geldikten sonra, JSP görüntülenmesi bitmiþ
+demektir. Bu nokta da Hibernate kapanýþ iþlemlerini yapmak için en uygun yerdir.
+
+\begin{lstlisting}[language=Java,caption=HibernateCloseSessionFilter.java]
+public class HibernateCloseSessionFilter implements Filter {
+
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain) throws IOException,
+                                                   ServletException
+    {
+        try {
+            chain.doFilter(request, response);
+            HibernateSession.commitTransaction();
+        } finally {
+            HibernateSession.closeSession();
+        }
+    }
+
+    public void destroy() { }
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=XML,caption=web.xml]
+<web-app>
+  ...
+  <filter>
+    <filter-name>HibernateCloseSessionFilter</filter-name>
+    <filter-class>
+      org.mycompany.kitapdemo.util.HibernateCloseSessionFilter
+    </filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>HibernateCloseSessionFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  ...
+</web-app>
+\end{lstlisting}
+Bu ayarlardan sonra, artýk Struts Action kodlarýnda \PVerb!commit! ve
+\PVerb!close!  iþlemlerini yapmamýza gerek kalmaz. Hibernate kapanýþ iþlemleri
+kaç tane Struts Action iþlemiþ olursa olsun JSP sayfasýnýn görüntülenmesi
+bittiðinde hemen devreye sokulacaktýr.
+
+\subsection{Hýzlý Geliþtirme}
+
+Kitap örneklerimizin hepsi geliþtirme ortamýnda Ant programýný kullanmaktadýr
+(Ant hakkýnda ek detaylarý \ref{install:ant} bölümünde bulabilirsiniz). Ant,
+aynen make gibi, bir komut dosyasý kullanýr; \PVerb!build.xml! dosyasýnda
+derleme (compilation), test, deployment gibi geliþtirme sürecinde lazým olacak
+tüm iþlemler yazýlmýþ hâlde bulunur. Demo'muz için hazýrlanan Ant
+\PVerb!build.xml! dosyalarý birçok projeden ders alýnarak hazýrlanmýþtýr (bkz
+\ref{install:samples} bölümü). Pek çok projede gereken hýzlý geliþtirme desteði,
+yâni sadece deðiþen dosyalarýn derlenmesi ve deploy edilmesi
+\PVerb!build.xml!'deki \PVerb!compile! ve \PVerb!dist! hedefleriyle
+saðlanmýþtýr. Sadece deðiþen kodlarýn derlenmesi oldukça açýk olduðu için bu
+konu detayýna girmeyeceðiz. Hýzlý deployment desteði þöyledir: Eðer geliþtirme
+sýrasýnda sadece JSP kodu deðiþtirdiyseniz,
+
+\begin{lstlisting}[language=sh, frame=none]
+> ant dist
+\end{lstlisting}
+komutunu kullanarak sadece deðiþen JSP dosyalarýný hedef JBoss dizinine
+gönderebilirsiniz. JBoss, deðiþen JSP dosyalarýný anýnda iþleme koyabileceði
+için yeni JSP dosyalarýný test etmek için Uygulama Servisi'ni kapatýp/açmanýza
+gerek kalmaz.
+
+Ne yazýk ki ayný tekniði normâl Java kodlarý (\PVerb!class! dosyalarý) için
+kullanamýyoruz (ki bu durum piyasadaki tüm Uygulama Servisleri için
+geçerlidir). Java ClassLoader kullanýmý ile alakalý bir durum yüzünden, yeni
+derlenmiþ Java class kodlarýný JBoss çalýþýrken sonuç dizinine göndermek,
+Uygulama Servisinin yeni kodlarý iþleme koymasýný saðlamaz. Yeni kodlarýn
+görülmesi için, deployment sonrasýnda Uygulama Servisini kapatýp/açmanýz
+gerekmektedir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section[Türkçe Karakter Desteði][TÜRKÇE KARAKTER DESTEÐÝ]{Türkçe Karakter Desteði}
+
+Daha ileri gitmeden ``Web Uygulamarýnda Türkçe Karakter Sorunu'' baþlýklý sorunu
+iþlememiz ve çözmemiz gerekiyor. Her seviyeye ve katmaný ilgilendiren bu sorunu
+çözer çözmez, iþ mantýðý odaklý Struts tekniklerine devam edebileceðiz.
+
+Ýlk önce terminoloji: Literatürde internationalization gibi çok uzun bir kelime
+yerine genelde i18n ibaresi kullanýlýr, çünkü internationalization kelimesinin
+ilk i ve son n harfi arasýndan 18 tane harf vardýr; Kýsaca bu kelimeye i18n
+denmiþtir. Biz de yazýnýn geri kalanýnda i18n kelimesini kullanacaðýz.
+
+i18n, uygulamanýzýn {\em her seviyesinde} ayrý bir þekilde çözmeniz gereken bir
+sorundur. Daha basit olan \PVerb!StrutsHibSimple!  uygulamasýndan daha zor olan
+\PVerb!StrutsHibTag!  uygulamasýna terfi ederken, özel olarak Türkçe karakter
+desteðinin genel olarak i18n probleminin hangi noktalara etki ettiðini teker
+teker göreceðiz. Tüm çözümü birarada \PVerb!StrutsHibTag! örneðinin kodlarýnda
+bulabilirsiniz.
+
+\subsection{Apache}
+
+HTML belgelerinin söylediðinin aksine, HTML sayfalarýmýzýn baþýnda
+
+\begin{lstlisting}[language=Java, frame=none]
+<META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+\end{lstlisting}
+tanýmý kullanmak, \PVerb!utf-8! karakteri kodlamasý kullanmak için yeterli
+olmamaktadýr. Apache'nin her HTML sayfasýný \PVerb!utf-8! ile kodlamasý için,
+\PVerb!httpd.conf! dosyasýndaki \PVerb!<VirtualHost>! etiketi içine
+
+\begin{lstlisting}[language=Java, frame=none]
+AddDefaultCharset utf-8 
+\end{lstlisting}
+satýrýný eklemeniz gerekmektedir. 
+
+\subsection{Http Request}
+
+Bir Web uygulamasýnýn Türkçe karakterleri ile çalýþabilmesi için Java
+seviyesinde \PVerb!request! nesnesi ve JSP sayfalarý üzerinde karakter
+kodlamasýný (character encoding) deðiþtirmemiz gerekiyor. Bu iki kodlamayý
+\PVerb!UTF-8!  bazlý yapmamýz gerekmektedir.
+
+\PVerb!Request! üzerinde yapýlmasý gereken deðiþikliði her Struts Action class'ý
+içinden yapabilirdik, fakat bu ayný kodun çok fazla tekrar etmesi demek
+olacaktýr, ve bu Kural \#7'nýn ihlâli olurdu. Tekrarýn her türlüsünü ortadan
+kaldýrmak istediðimiz için, tüm \PVerb!request! bazlý karakter kodlamasýný tek
+bir Servlet filtresi ile yapabiliriz. Bu filtre
+\PVerb!RequestCharacterEncodingFilter! adlý filtredir (\PVerb!StrutsHibSimple!
+kodlarý içinde bulunabilir). Filtreyi iþleme koymak için \PVerb!web.xml!'de
+alttaki gibi bir deðiþiklik yeterli olacaktýr.
+
+\begin{lstlisting}[language=XML, frame=none]
+<web-app>
+  <display-name>KitapDemo</display-name>
+  <filter>
+    <filter-name>RequestCharacterEncodingFilter</filter-name>
+    <filter-class>
+      org.mycompany.kitapdemo.util.RequestCharacterEncodingFilter
+    </filter-class>
+    <init-param>
+      <param-name>requestCharacterEncoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>RequestCharacterEncodingFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  ....
+</web-app>
+\end{lstlisting}
+
+Java Servlet standartýna göre bir filtre class'ý sistemimizdeki herhangi bir
+Servlet (ve bilahere Struts Action) class'ý iþletilmeden bile {\em önce} iþleme
+konur. Bu an, istediðimiz karakter kodlamasý deðiþikliðini yapmak için harika
+bir andýr. Daha Servlet bile \PVerb!request!  nesnesine bakmadan karakter
+kodlama deðiþikliðini tek bir yerden yapabilmiþ oluruz. Bir Servlet filtresi her
+\PVerb!request! üzerinde iþletilir, bu sebeple kodlama deðiþikliði her Servlet
+ve her Action için otomatik olarak yapýlmýþ olacaktýr. Böylece her Action
+üzerinde sürekli tekrar eden basmakalýp kodlarý yazmaktan kurtulduk (Kural \#7).
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.65}{
+  \includegraphics{./images/filter.eps}
+  }
+}
+\caption{Servlet Filtresi}
+\end{figure}
+
+
+\begin{lstlisting}[language=Java, caption=RequestCharacterEncodingFilter.java]
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.io.IOException;
+
+public class RequestCharacterEncodingFilter implements Filter {
+
+    public static final String REQUEST_CHARACTER_ENCODING =
+       "requestCharacterEncoding";
+
+    private String encoding = null;
+
+    public void init(FilterConfig filterConfig) throws ServletException
+    {
+        encoding = filterConfig.getInitParameter(REQUEST_CHARACTER_ENCODING);
+    }
+
+    private String getInitParameter(FilterConfig filterConfig,
+                                    String parameterName)
+                                    throws ServletException
+    {
+        String value = filterConfig.getInitParameter(parameterName);
+        if (StringUtils.isEmpty(value)) {
+             throw new ServletException(getClass().getName() +
+                 ": " +
+                 parameterName +
+                 " is required");
+        }
+
+        return value;
+    }
+
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain) throws IOException,
+			                           ServletException
+    {
+        request.setCharacterEncoding(encoding);
+        chain.doFilter(request, response);
+    }
+
+    public void destroy() { }
+}
+\end{lstlisting}
+
+Filtre için gereken kodlama parametresi \PVerb!web.xml! içinden (\PVerb!UTF-8!
+deðeri) \PVerb!init-param! kullanýlarak geçilmiþtir. Deðerin ``kod içinden''
+alýnmasýný filtre içindeki \PVerb!getInitParameter! metotu
+hallediyor. Parametrenin ismini aldýktan sonra
+
+\begin{lstlisting}[language=Java, frame=none]
+filterConfig.getInitParameter(``requestCharacterEncoding'')!
+\end{lstlisting}
+çaðrýsýný yaparak, gereken parametre deðeri okunup,
+\PVerb!request.setCharacterEncoding!  ile iþleme konmaktadýr.
+
+\subsection{JSP}
+
+JSP sayfasýnýn Türkçe karakterleri gösterebilmesi için sayfa kodlamasýnýn (page
+encoding) deðiþmesi gerekmektedir. Bu deðiþim, her sayfada yapýlmalýdýr. O zaman
+her sayfanýn baþýna \PVerb!UTF-8! kodlamasýný kullanmak istediðimizi belirten
+bir ibare koymamýz gerekiyor\footnote{Bulut F. Ersavaþ,
+\url{http://www.teknoturk.org/docking/yazilar/tt000144-yazi.htm}.}. Bu da þöyle
+yapýlýr:
+
+\begin{lstlisting}[language=XML, frame=none]
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<%@ page language="java" contentType="text/html;
+          charset=UTF-8" pageEncoding="UTF-8"%>
+\end{lstlisting}
+
+\subsection{Struts Resources}
+
+Struts uygulamalarýnda JSP sayfasýnda dinamik olmayan sabit alan taným deðerleri
+(input labels) (meselâ {\em isim}, {\em soyad} gibi tarif deðerleri) direk JSP
+içine gömülebilir. Fakat, deðiþik dilde müþteriye servis etmemiz gerektiði zaman
+bu taným deðerlerinin de dinamik bir þekilde (dilden dile) deðiþebilmesini
+isteriz. O zaman, taným deðerlerinin her dil için deðiþik bir dosyadan gelmesini
+saðlamamýz gerekiyor.
+
+Struts bu türden bir deðiþimi uygulama seviyesindeki {\em ayar dosyasýnýn
+seçimini} dile baðlý olarak yapabilmekle destekler. \PVerb!StrutsHibSimple!
+örneðinde sonuç dizini \PVerb!WEB-INF\classes! altýnda
+\PVerb!application.resources! adlý dosyada, uygulamamýz için gerekli hata
+mesajlarýný koymuþtuk. Aslýnda bu dosya içine {\em istediðimiz her tanýmý}
+koyabileceðimiz bir yerdir. Gerekli taným, normâlde JSP içine gömülen alan taným
+deðerleri olabilir. Bu yapýlýnca bu dosya içindeki tanýmlara JSP içinden
+\PVerb!bean:message! Struts etiketi ile eriþebiliriz. Daha önce
+
+\begin{lstlisting}[language=XML, frame=none]
+<tr>
+  <td>
+     License Plate
+  </td>
+  <td>
+    <html:text property="licensePlate" size="32" />
+  </td>
+</tr>
+<tr>
+\end{lstlisting}
+gibi gömülmüþ deðer kullanmak yerine, artýk
+
+\begin{lstlisting}[language=XML, frame=none]
+<tr>
+  <td>
+     <bean:message key="main.license.plate"/>
+  </td>
+  <td>
+    <html:text property="licensePlate" size="32" />
+  </td>
+</tr>
+<tr>
+\end{lstlisting}
+kullanabiliriz. JSP kodu, bu sayede, hem Ýngilizce hem Türkçe için ayný
+kalýr.
+
+Bu yapýldýktan sonra,tanýmlarýn deðiþik bir dilde (meselâ Türkçe'de) deðiþik
+çýkmasý için \PVerb!classes! dizini altýna \PVerb!application_tr.properties!
+adýnda yeni bir dosya koyarýz. Bu dosyada, \PVerb!application.properties!'deki
+her label için yeni dildeki karþýlýklar konacaktýr.
+
+Artýk tarayýcýmýzýn dil seçimini deðiþtirdiðimiz anda, meselâ \PVerb!en!
+English'den \PVerb!tr! Türkçe'ye geçtiðimiz zaman, Struts otomatik bir þekilde
+\PVerb!application.properties! yerine \PVerb!application_tr.properties!
+dosyasýný seçmesi gerektiðini bilecektir.
+
+Örnek olarak \PVerb!main.license.plate! tanýmýný alalým. Ýngilizce ve Türkçe
+için iki ayrý dosya þöyle gözükecektir.
+
+\begin{lstlisting}[language=XML,frame=none,caption=application.properties]
+main.license.plate=License Plate
+\end{lstlisting}
+\begin{lstlisting}[language=XML,frame=none,caption=application\_tr.properties]
+main.license.plate=Plaka
+\end{lstlisting}
+Tarayýcýnýzda gerekli deðiþikliði yapýp, tarayýcýyý açýp kapattýðýnýzda ve
+JSP'yi tekrar yüklediðinizde, Ýngilizce yerine Türkçe mesajlarýn çýktýðýný
+göreceksiniz.
+
+\subsubsection{Resources Dosyasý Ýçinde Türkçe Karakterler}\label{web:tr:resources}
+
+Resources dosyasý hakkýnda aþýlmasý gereken bir daha handikap vardýr.
+\PVerb!application_tr.properties! dosyasý içinde ne yazýk ki üðiþçö harflerinden
+sadece ü, ç, ve ö harflerini direk kullanabiliyoruz. Diðer Türkçe karakterler
+Struts tarafýndan ekrana yanlýþ basýlmaktadýr.  Bu harflerin yerine
+\ref{web:table:resources} tablosundaki kod deðerlerini kullanmak zorundayýz.
+
+\begin{table}[!hbp]
+\centering
+\caption{Kodlar}\label{web:table:resources}
+\begin{tabular}{ll} \hline
+Þ & \PVerb!\u015E! \\
+þ & \PVerb!\u015f! \\
+ü & \PVerb!\u00FC! \\
+ð & \PVerb!\u011f! \\
+ö & \PVerb!\u00F6! \\
+Ü & \PVerb!\u00DC! \\
+Ö & \PVerb!\u00D6! \\
+ý & \PVerb!\u0131! \\
+Ý & \PVerb!\u0130! \\
+ç & \PVerb!\u00e7! \\
+Ç & \PVerb!\u00c7! \\
+\hline
+\end{tabular}
+\end{table}
+
+Bu kod deðeri dönüþümlerini komut satýrýndan \PVerb!native2ascii! programýný
+kullanarak otomatik olarak yaptýrabiliriz. JDK'nizin \PVerb!bin! dizini altýnda
+olan bu program (\PVerb!javac! ile ayný dizin) eðer içinde türkçe karakterler
+olan bir resources dosyasý üzerinde iþletilirse \ref{web:table:resources}
+tablosundaki dönüþümleri yapýp ekrana basacaktýr. Bu sonuçlarý herhangi bir yeni
+dosyaya yönlendirmeniz (pipe) komut satýrýndan çok basittir. Örnek olarak
+\PVerb!application_tr.properties! içindeki türkçe karakterleri dönüþtürmek
+istersek:
+
+\begin{lstlisting}[language=Java, frame=none]
+native2ascii application_tr.properties > application_tr_new.properties
+\end{lstlisting}
+Yeni kodlarýn olduðu dosya, \PVerb!application_tr_new.properties! dosyasýdýr.
+
+\subsection{Hibernate}
+
+Hibernate'in UTF-8 bazlý karakter kodlamasý ile çalýþabilmesi için UTF-8
+kodlamasýnýn Hibernate baðlantýsý üzerinde set edilmesi gerekmektedir. Bu taným
+yapýldýktan sonra Hibernate bu deðeri aynen alýp JDBC veri taban baðlantýsý
+üzerinde set edecektir.
+
+Hibernate için gereken ekler \ref{hibernate:cfg} kod listesinde gösterilen
+tanýmlara ek olarak \PVerb!hibernate.connection! ayarý içeren alttaki iki
+satýrýn eklenmesi demektir\footnote{\url{http://www.hibernate.org/74.html}.}.
+
+\begin{lstlisting}[language=XML, frame=none]
+<hibernate-configuration>
+  <session-factory name="foo">
+    ...
+    <property name="hibernate.connection.useUnicode">
+       true
+    </property>
+    <property name="hibernate.connection.characterEncoding">
+       UTF-8
+    </property>
+    ...
+  </session-factory>
+</hibernate-configuration>
+\end{lstlisting}
+
+\subsection{Veri Tabaný}
+
+\subsubsection{MySQL}
+
+Versiyon 4.0'dan itibaren, MySQL'de Türkçe karakter depolamak için yapýlmasý
+gereken özel hiçbir þey yoktur. Paketi olduðu gibi kurabilir, baþlatabilir, ve
+eðer tariflerimizin geri kalanýný takip ettiyseniz hemen kullanmaya
+baþlayabilirsiniz.
+
+\subsubsection{Oracle}
+
+Testlerimizi yaptýðýmýz Oracle 10g üzerinde, Oracle kuruluþ aþamasýnýn kendi
+olaðan deðerlerini kullanarak yarattýðý veri tabanýnda Türkçe karakter problemi
+meydana gelecektir. Oracle'da Türkçe karakter desteði için, {\em veri tabanýný
+yaratýrken} ``character set'' için \PVerb!AL32UTF8! ve ``national character
+set'' için \PVerb!AL16UTF16!  kullanmanýz gerekiyor. Bunlar yapýldýktan sonra,
+hem OCI hem de Thin JDBC sürücülerini kullanarak Oracle ile Türkçe karakter
+alýþveriþi yapabilirsiniz. Oracle kuruluþunda seçilmesi gereken karakter setini
+gösteren ekran görüntüsünü ve diðer kuruluþ ile ilgili detaylarý
+\ref{database:linux:oracle} bölümünde bulabilirsiniz.
+
+\subsubsection{PostgreSQL}
+
+PostgreSQL ile Türkçe karakter kullanmak için hem ilk kuruluþ ve veri tabaný
+yaratma aþamasýnda \PVerb!UNICODE! karakter seti kullanýlmasý PostgreSQL
+servisinde belirtilmelidir. Bu komutlar sýrasýyla
+
+\begin{lstlisting}[language=sh, frame=none]
+> initdb -E UNICODE
+..
+> createdb test
+\end{lstlisting}
+Diðer kuruluþ detaylarý için \ref{database:linux:postgres} bölümüne bakýnýz.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section[Etiketler][ETÝKETLER]{Etiketler}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/car-web.eps}
+  }
+}
+\caption{Örnek Sayfa}
+\end{figure}
+
+
+\subsection{Form Alâkalý Etiketler}
+
+Struts/JSTL uygulamamýzda görsel dünya ile alýþveriþ elimizdeki görsel veriyi
+iþlemek, ve ekrana basmak için birçok etiket türünün kullanýldýðýný
+göreceksiniz. Etiketleri ana amaçlar baðlamýnda iki büyük guruba ayýrabiliriz:
+Form, yâni kullanýcýdan bilgi almaya yarayan etiketler, ve pür prezentasyon
+amaçlý etiketler.
+
+Form ile bilgi alýþveriþinde Struts'ýn kendi etiketlerini kullanacaðýmýzý
+söylemiþtik. Pür prezentasyon için, birkaç Struts etiketi dýþýnda aðýrlýkla JSTL
+etiketlerini kullanacaðýz.
+
+\subsubsection{Checkbox}
+
+JSP sayfasýnda checkbox (seçim kutusu) kullanýmý için \PVerb!DynaActionForm!
+üzerinde \PVerb!java.lang.Boolean! tipli bir öðe tanýmlamamýz gerekiyor.
+
+\begin{lstlisting}[language=XML, frame=none]
+<form-beans>
+  <form-bean name="AddCarForm"
+             type="org.apache.struts.action.DynaActionForm">
+    <form-property name="available"
+        type="java.lang.Boolean" initial=""/>
+    ...
+</form-beans>
+\end{lstlisting}
+Bu öðeyi Form'a baðlamak için, JSP içinde \PVerb!html:checkbox! etiketi
+kullanýlmalý.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <html:checkbox property="available"/>
+</td>
+\end{lstlisting}
+
+\subsubsection{Düz Metin Giriþi}
+Bu tür giriþ için Form üzerinde \PVerb!String! alaný tanýmlamak yeterlidir.
+
+\begin{lstlisting}[language=XML, frame=none]
+<form-beans>
+  <form-bean name="AddCarForm"
+             type="org.apache.struts.action.DynaActionForm">
+    <form-property name="licensePlate"
+                   type="java.lang.String" initial=""/>
+    ...
+  </form-bean>
+</form-beans>
+\end{lstlisting}
+JSP içinde ise, \PVerb!html:text! kullanýlýr.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <html:text property="licensePlate" size="32" />
+</td>
+\end{lstlisting}
+
+\subsubsection{Çoklu Checkbox}
+
+Birden fazla checkbox'ý gurup hâlinde iþleyebilmek için Struts multibox
+yaklaþýmýný kullanabiliriz. Bu yaklaþýmda her seçim için ayrý checkbox yaratmak
+yerine, Form nesnesi üzerinde tek tanýmladýðýmýz \PVerb!String[]! dizisi içine,
+her seçilen checkbox için daha önceden bizim tanýmladýðýmýz bir kimlik deðeri
+Action nesnemize gelecektir. Bu yaklaþým çoklu checkbox iþlemesini büyük ölçüde
+rahatlatmaktadýr.
+
+Kullaným için Form üzerinde \PVerb!String[]! tanýmýný yapmalýyýz.
+
+\begin{lstlisting}[language=XML, frame=none]
+  <form-beans>
+    <form-bean name="AddCarForm"
+               type="org.apache.struts.action.DynaActionForm">
+      <form-property name="selectedItems"
+          type="java.lang.String[]" initial=""/>
+      ...
+    </form-bean>
+  </form-beans>
+\end{lstlisting}
+JSP içinde her seçilen checkbox'ý ötekilerden ayýracak bir kimlik tanýmý
+\PVerb!<html:multibox>...</html:multibox>! içinde basýlmalýdýr. Örneðimizde bu
+kimlik, \PVerb!Car! nesnesi için tekil olan \PVerb!licensePlate! öðesidir.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <html:multibox property="selectedItems">
+    <c:out value="\${car.licensePlate}"/>
+  </html:multibox>
+</td>
+\end{lstlisting}
+Kullanýcý seçimi yaptýktan ve Form'u Struts Action'a gönderdiðinde (yâni
+``gönder'' düðmesine basýldýðýnda), Action seçilmiþ olan checkbox'larý þu
+þekilde iþleyecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+public ActionForward execute(ActionMapping mapping,
+                             ActionForm form,
+                             HttpServletRequest request,
+                             HttpServletResponse response)
+    throws Exception {
+
+    DynaActionForm daf = (DynaActionForm) form;
+    String selectedItems[] = (String[])daf.get("selectedItems");
+    for (int i=0;i<selectedItems.length;i++) {
+      ...
+      // selectedItems[i], seçilmiþ bir checkbox'dan gelen
+      // kimlik deðerini taþýr
+      ...
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Giriþ Olarak Liste}
+
+Liste (dropdown box) için Form üzerinde bu listeden seçilecek deðerin tipi
+belirlenmelidir. Bu genelikle \PVerb!java.lang.String! olacaktýr.
+
+\begin{lstlisting}[language=XML, frame=none]
+<form-beans>
+  <form-bean name="AddCarForm"
+             type="org.apache.struts.action.DynaActionForm">
+    <form-property name="size"
+        type="java.lang.String" initial=""/>
+    ...
+  </form-bean>
+</form-beans>
+\end{lstlisting}
+Örneðimizde daha önceden belli üç araba ölçüsü (size) için üç kod
+tanýmlamýþýz: Küçük için \PVerb!s! (small), orta için \PVerb!m! (medium) ve
+büyük için \PVerb!l! (large). Bu kodlarý JSP sayfasýnda kullanýcý tarafýndan
+okunabilir bir tarif ile ilintilendirmemiz gerekiyor. Bunu da
+\PVerb!html:select! ve \PVerb!html:option! ile yapacaðýz.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <html:select property="size" size="1">
+    <html:option value=""/>
+    <html:option value="s" key="car.size.small" />
+    <html:option value="m" key="car.size.medium" />
+    <html:option value="l" key="car.size.large" />
+  </html:select>
+</td>
+\end{lstlisting}
+Gördüðümüz gibi kodu \PVerb!html:option! etiketinin \PVerb!value! tabiri
+tanýmlýyoruz. Fakat \PVerb!key! de ne? Bu deðer, yâni \PVerb!key=``..''! içinde
+olacak deðer, \PVerb!application.properties! dosyanýzdan alýnacak deðerin
+anahtarýdýr. Bu deðer, seçim listesinin kullanýcýya dönük olan tarafý olduðu
+için \PVerb!html:option!'ýn \PVerb!application.properties!'den gelmesi gerekiyor
+(ya da \PVerb!application_tr.properties!).
+
+\begin{lstlisting}[language=XML, caption=application.properties]
+car.size.small=Small
+car.size.medium=Medium
+car.size.large=Large
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption=application\_tr.properties]
+car.size.small=Küçük
+car.size.medium=Orta
+car.size.large=Büyük
+\end{lstlisting}
+
+\subsection{Prezentasyon ve Ýþlem Amaçlý Etiketler}
+
+\subsubsection{Resim Göstermek}
+
+Resim göstermek için \PVerb!html:img! Struts etiketini kullanabilirsiniz. Resmin
+boyutlarýný ayarlamak için \PVerb!width! adlý deðiþken kullanýlir. Width, sadece
+geniþlik ayarýný yapsa da boy ölçüsü geniþliðe göre deðiþeceði için tek
+parametre yeterli olmuþtur.
+
+\begin{lstlisting}[language=XML, frame=none]
+<html:img page="/pages/images/green.jpg" width="10"/>
+\end{lstlisting}
+
+\subsubsection{URL Hazýrlamak}
+
+Dinamik olarak URL üretmek için JSTL \PVerb!c:url! etiketini kullanmamýz
+gerekiyor. \PVerb!c:url! birden fazla parametreyi ekleme yeteneðine
+sahiptir. Kullanýmý:
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <a href="<c:url value="/struts-action-vesaire.do">
+    <c:param name="param1" value="\${object.value1}"/>
+    <c:param name="param2" value="\${object.value2}"/>
+    ...
+    </c:url>">
+    <c:out value="\${object.description}"/>
+  </a>
+</td>
+\end{lstlisting}
+Bu url, üretildikten sonra,
+\PVerb!http://host/struts-action-vesaire.do?param1=xxx&param2=yyy! gibi bir
+deðeri taþýyacaktýr. Url üzerinde olan xxx ve yyy deðerleri,
+\PVerb!object.value1! ve \PVerb!object.value2! hangi deðerleri taþýyorsa, onlar
+olacaktýr. Deðiþken \PVerb!object!, genelde bir \PVerb!c:forEach! komutundan
+gelir.
+
+\subsubsection{Liste Gezmek}
+
+Veri tabanýndan gelen sonuçlarý göstermesi gereken bir JSP sayfasýna çoðu zaman
+tek bir sonuç yerine, içinde birçok sonucun olduðu bir {\em liste} gelir. Bu
+listeyi JSTL kütüphanesinin bir etiketi olan \PVerb!c:forEach! ile hiç etiket
+dilinin dýþýna çýkmadan gezebilir, ve görsel olarak kullanýcýya sunabiliriz.
+
+Örnek olarak \PVerb!StrutsHibTags! örneðindeki \PVerb!GetCarsAction! Action'ýný
+alalým. Bu Struts Action, Hibernate kullanarak (\PVerb!CarDAO.java! üzerinden)
+veri tabanýndan bir \PVerb!Car! listesi alýr. Bu liste, bir
+\PVerb!java.util.List!  üzerindedir. Bu liste, aynen olduðu þekilde JSP
+sayfasýna verilebilir. Bunu yapmak için listeyi \PVerb!Session! üzerinde koymak
+yeterlidir.
+
+\begin{lstlisting}[language=Java, frame=none]
+CarDAO dao = new CarDAO();
+request.getSession().setAttribute("carList", dao.fetchCarList());
+\end{lstlisting}
+Bu kod parçasý Hibernate'den gelen listeyi \PVerb!carList! adlý \PVerb!Session!
+deðiþkeni üzerine koymuþtur. Bu yapýldýktan ve kontrol JSP sayfasýna geçtikten
+sonra listeyi pür etiket kullanarak gösterebiliriz.
+
+\begin{lstlisting}[language=XML, frame=none]
+<c:forEach var="car" items="\${sessionScope.carList}">
+ <tr>
+   <td>
+     <c:out value="\${car.licensePlate}"/>
+	</td>
+	<td>
+     <c:out value="\${car.description}"/>
+   </td>
+  </tr>
+</c:forEach>
+\end{lstlisting}
+Bir Struts Action'ýn \PVerb!request.getSession().setAttribute! ile
+\PVerb!Session! üzerine koyduðu bir deðere \PVerb!JSTL!'in nasýl eriþtiðine
+dikkat ediniz: \PVerb!sessionScope! adlý JSTL komutu kullanýlmýþtýr. Bu sayede
+\PVerb!Session! üzerine konan herhangi bir deðiþkene eriþmek mümkün olmaktadýr.
+
+Üstte görülen \PVerb!c:forEach! komutuna göre, \PVerb!carList! listesi
+gezilecek, ve listedeki her eleman için \PVerb!car! deðiþkenine listede sýrasý
+gelen eleman konulacaktýr. Bu eleman için \PVerb!c:forEach!'in altýnda olan tüm
+diðer etiket iþlemleri gerçekleþtirilir. Üstte bu iþlemler \PVerb!<tr>!,
+\PVerb!<td>! ve \PVerb!c:out! gibi etiket iþlemleridir. JSTL \PVerb!c:out!,
+\PVerb!car! nesnesine eriþtiðinde (\PVerb!car.description! ile meselâ) o anda
+listede sýrasý gelmiþ olan \PVerb!Car! nesnesine bakýyor olacaktýr.
+
+\subsubsection{Basit Deðerleri Basmak}
+
+Basit tipli bir Java deðiþkenini akrana basmak için \PVerb!c:out! etiketini
+kullanabilirsiniz. Meselâ elimizde \PVerb!car! referansý var ise, bu
+referanstan eriþilebilen \PVerb!licensePlate! deðerini \PVerb!<c:out
+value="\${car.licensePlate}"/>! ile basabiliriz.
+
+JSTL, \PVerb!\$! iþareti ile \PVerb!String!, \PVerb!Integer! ya da
+\PVerb!Boolean! bazlý tüm deðerleri dinamik olarak String'e çevirme yeteneðine
+sahiptir. Bu yetenek diðer JSTL deðer okuyucu ve karþýlaþtýrýcý etiketler için
+de geçerlidir. Bu açýdan JSTL, Perl ve Ruby dilleri gibi {\em dinamik} bir dil
+kategorisine girer. Java dili gibi güçlü tip kontrolleri yapmaz. Bir tipi
+gereken diðer bir tipe anýnda çevirir.
+
+\subsubsection{Deðer Karþýlaþtýrmalarý}
+
+Basit þekilde bir \PVerb!if! karþýlaþtýrmasý için JSTL \PVerb!<c:if>! etiketi
+kullanýlýr. Meselâ \PVerb!StrutsHibTags! örneðindeki \PVerb!detail.jsp!
+dosyamýzda bu þekilde bir karþýlaþtýrma kullandýk. Eðer \PVerb!car.available!
+\PVerb!true! ise bir renk, deðil ise diðer bir renk resim ekrana basýlýyor.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <c:if test='\${car.available == "false"}'>
+    <html:img page="/pages/images/red.jpg" width="10"/>
+  </c:if>
+  <c:if test='\${car.available == "true"}'>
+    <html:img page="/pages/images/green.jpg" width="10"/>
+  </c:if>
+</td>
+\end{lstlisting}
+Daha önce bahsedilen dinamik tip çevirebilme yeteneðini burada da kullanýldýðýna
+dikkat çekmek isteriz. \PVerb!Boolean! olduðunu bildiðimiz bir öðeyi direk
+\PVerb!true! ya da \PVerb!false! \PVerb!String! deðerleri ile
+karþýlaþtýrabilmemizi bu yeteneðe borçluyuz.
+
+\subsubsection{Kademeli Karsýlaþtýrma}
+
+Java dilinde \PVerb!switch...case! kullanýmýnýn JSP içinde kullanabileceðimiz
+karþýlýðý JSTL dilinin \PVerb!<c:choose>...<c:when>! kullanýmýdýr. Mesela, bir
+\PVerb!Car! nesnesinin üzerinde olan \PVerb!Boolean! tipli deðer
+\PVerb!available!'ýn doðru ya da yanlýþ olma þartýna göre bir karþýlaþtýrma
+þöyle yazýlabilir.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <c:choose>
+    <c:when test='\${car.available == "false"}'>
+      <html:img page="/pages/images/red.jpg" width="10"/>
+    </c:when>
+    <c:when test='\${car.available == "true"}'>
+      <html:img page="/pages/images/green.jpg" width="10"/>
+    </c:when>
+    <c:otherwise>
+      <html:img page="/pages/images/gray.jpg" width="10"/>
+    </c:otherwise>
+  </c:choose>
+</td>
+\end{lstlisting}
+Eðer \PVerb!car.available! \PVerb!false! ise kýrmýzý bir jpeg gösterilecek, eðer
+\PVerb!true! ise yeþil bir jpeg gösterilecektir. Eðer bu þartlardan hiçbiri
+doðru deðil ise \PVerb!c:otherwise! þartýna düþeriz, bu durumda gri renkli bir
+resim ekrana basýlacaktýr (tabii bir \PVerb!Boolean! öðenin deðeri kesinlikle ya
+\PVerb!true! ya da \PVerb!false! olebileceði için,
+\PVerb!otherwise!  þartýna düþmek imkansýzdýr).
+
+\subsubsection{Komutlar, Form Göndermek}
+
+Kullanýcý bir Form üzerinden giriþ yaptýktan sonra girilen deðerleri
+gönderebilmesi için ``Gönder (submit)'' gibi bir düðmeye ihtiyacý vardýr. Bu
+düðmeyi kodlamak için deðiþik yöntemler mevcuttur.
+
+Ýlk (ve tavsiye etmediðimiz) yöntem JSP baþýnda \PVerb!<html:form
+action=``/add-car.do''>! gibi bir Struts hedefi tanýmlamak ve gönderme düðmesini
+\PVerb!<html:submit>Ekle</html:submit>! gibi bir tanýmdan ibaret býrakmaktýr. Bu
+yöntem oldukça basit olsa da, bazý sorunlara sebebiyet verecektir. Birincisi,
+ayný form altýnda olan ama deðiþik Struts hedeflerine gönderme yapmasý gereken
+düðmeler yanyana olunca çýkar. Eðer bu düðmeler sayfanýn çok deðiþik yerlerinde
+iseler, parça parça \PVerb!<html:form>! açýp sonra hemen kapatýp yerine bir tane
+daha açmak (her deðiþik hedef için) mümkün olabilir, fakat çoðu zaman HTML
+dizayný buna izin vermemektedir.
+
+Hep iþe yarayacak {\em tek} bir yöntem öðrenmenin yararlarý ortada olduðu için
+tavsiyemiz, \PVerb!html:form!'un belirlediði hedefi dikkate almayan, ve kendi
+hedefini kendi belirleyen ``düðmeler'' kullanmanýzdýr. Bunun için
+\PVerb!html:submit!  yerine, \PVerb!html:link! ve JavaScript'in bir birleþimi
+olan aþaðýdaki stili kullanacaðýz.
+
+\begin{lstlisting}[language=XML, frame=none]
+<html:link href=``'' styleClass=``action''
+           onclick=``document.AddCarForm.action=add-car.do';
+           document.AddCarForm.submit();return false;''>
+  Ekle
+</html:link>
+\end{lstlisting}
+Kendi kodlarýza uyarlamak için bu örnekte deðiþtirmeniz gereken iki yer,
+\PVerb!AddCarForm! yerine kendi formunuz, ve \PVerb!add-car.do! Struts hedefi
+yerine kendi hedefinizdir.
+
+Bu komut JSP sayfasýnda bir URL görüntüsü basar. Eðer URL görüntüsü yerine daha
+``düðmevari'' bir görüntü istiyorsanýz, \PVerb!html:img!  ile bir JPG düðme
+görüntüsü yaratýp onu kullanabilirsiniz. Fakat prensip olarak kullanýlan teknik
+\PVerb!html:link! örneðine çok benzer.
+
+\begin{lstlisting}[language=XML, frame=none]
+<td>
+  <html:img page="/pages/images/add.jpg" styleClass="action"
+            onclick="document.AddCarForm.action='add-car.do';
+                     document.AddCarForm.submit();return false;"/>
+</td>
+\end{lstlisting}
+Burada düðme görüntüsü \PVerb!/pages/images/add.jpg! adlý dosyadan alýnarak, JSP
+sayfasýna konmuþtur. Bu görüntü týklandýðýnda JavaScript üzerinden
+\PVerb!onclick! ile Struts \PVerb!add-car.do! hedefi çaðýrýlacaktýr.
+
+Bu yaklaþýmýn tek dezavantajý düðme üzerindeki metni artýk \PVerb!String! bazlý
+deðil ama bir JPG resimden aldýðýmýz için, dil deðiþtirdiðimizde (Ýngilizce
+yerine Türkçe gibi), görüntü deðiþtirmek için {\em baþka bir JPG} kullanmak
+zorunda kalmamýzdýr. Bunun için sayfa dilini JSP içinden alýp \PVerb!<c:if>!
+ile deðiþik diller için hazýrlanmýþ JPG görüntüleri arasýndan bir seçim
+yapabilirsiniz. Fakat bu kullaným, i18n baðlamýnda, String bazlý kullaným kadar
+temiz olmayacaktýr. Tavsiyemiz \PVerb!html:link!'i kullanýp URL görüntüsünün
+fontlarý ve belki alt çizgisi ile oynayarak, (meselâ iptal ederek) düðmeye benzer
+þekle getirmeniz, ve Struts'ýn mevcut i18n desteðinden faydalanmanýzdýr.
+
+\subsubsection{Sayfa Ýçine Sayfa Eklemek}
+
+Eðer bazý JSP kodlama kalýplarý birçok sayfa içinde tekrar ediyorsa, bu tekrar
+eden kodlarý tek bir JSP dosyasý içine koymak, ve gereken yerde sadece bu tek
+dosyayý tek bir komutla dahil etmek kod idaresi açýsýndan yararlý bir
+davranýþtýr. Bunun için, JSP etiketi \PVerb!<%@ include file ..%>! komutunu
+kullanabilirsiniz. Kullanýlýþ þekli çok basit:
+
+\begin{lstlisting}[language=XML, frame=none]
+<%@ include file="/pages/common.inc"%>
+\end{lstlisting}
+Bu örnekte \PVerb!common.inc! adlý sayfa, çok tekrar eden kodlarý içeren merkezi
+sayfadýr. Gereken yerden \PVerb!<%@include file>! ile dahil edilmiþtir. Sonek
+\PVerb!.jsp! yerine \PVerb!.inc! kullanýlmasýnýn sebebi, tek baþýna
+çalýþamayacak JSP kodlarýný (\PVerb!.inc!) diðer sayfa kodlarýndan ayýrmaktýr.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\section{Tiles}
+
+Tiles (kiremit, fayans) kavramý, bütün sayfalarýn þablonunu merkezi olarak
+tanýmladýktan sonra, her sayfa için boþluklarý doldurma suretiyle ekran
+yaratma tekniðidir. Her parça bir tile (kiremit) olarak görülebilir.
+
+Bilgi iþlem dünyasýndaki Web sayfalarýn çoðunun belli bir þablonu takip
+ettiðini görmüþsünüzdür. En karmaþýk, görsel birçok þey içeren
+alýþveriþ sitesinde bile sayfalar arasýndaki benzerlikten hangi
+boþluklarýn ne zaman dolduðuna dikkat ederek bu þablonun niteliðini takip
+edebilirsiniz.
+
+En basit þablon türü þöyledir: Üst bir reklam panosu, solda seçim
+menüsü, altta gün, ay, site kopya haklarýný belirten bir ibare ve tam
+ortada içerik.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{0.60}{
+    \includegraphics{./images/frame3.eps}
+    }
+  }
+  \caption{\label{frame3} Örnek Tiles Kullanýmý}
+\end{figure}
+
+Bu yazýmýzda Struts Tiles teknolojisini kullanarak þablon, ve
+þablon kullanarak sayfa yaratma tekniklerini göreceðiz. Bu bölüm için yazýlan
+kodlarý \PVerb!StrutsTiles! dizini altýnda bulabilirsiniz.
+
+\subsection{Kurmak}
+
+Ýlk önce \PVerb!struts-config.xml! dosyasýna þu ifadeyi ekleyin.
+
+\begin{lstlisting}[language=XML, frame=none]
+<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+   <set-property property="definitions-config"
+        value="/WEB-INF/tiles-defs.xml" />
+   <set-property property="definitions-parser-validate" value="true" />
+   <set-property property="moduleAware" value="true" />
+</plug-in>
+\end{lstlisting}
+Þimdi, (eðer yoksa) \PVerb!struts-config.xml! ile ayný dizin seviyesinde
+tiles-defs.xml adlý bir dosya yaratýn. Þablonu kullanarak her sayfayý
+teker teker tanýmladýðýmýz yer burasý olacak. Dikkat edin, þablonu
+burada tanýmlamýyoruz. Þablon kullanarak sayfalarý hayata geçiriyoruz,
+ve onlara bir isim veriyoruz. \PVerb!Tiles-defs.xml! sözdizimi detaylarýný
+ileride vereceðiz.
+
+\subsection{Þablon}
+
+Þablon için \PVerb!sablon.jsp! adýnda bir JSP sayfasý yaratalým.
+
+\begin{lstlisting}[language=XML, frame=none]
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+
+<%@ taglib uri="/WEB-INF/tags/struts-tiles.tld" prefix="tiles" %>
+<%@ taglib uri="/WEB-INF/tags/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/tags/struts-bean.tld" prefix="bean" %>
+
+<tiles:importAttribute name="menuSecim" scope="request"/>
+...
+....
+<body>
+  <tiles:insert attribute="ustkisim"/>
+  <table cellpadding="5" cellspacing="0">
+    <tr>
+      <td>
+        <table width="250">
+          <tr width="100%">
+            <td valign="top">
+              <br/>
+              <tiles:insert attribute="menu"/>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="top">
+        <table>
+          <tr>
+            <td>
+              <br/>
+              <tiles:insert attribute="icerik"/>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <tiles:insert attribute="altkisim" />
+</body>
+</html>
+\end{lstlisting}
+\PVerb!tiles:insert attribute! ifadesine dikkat edelim. Ýþte bu ifade, þablon
+içinde bir "boþluk" tanýmlayan ifadedir. Þablon dosyasý bir sayfanýn ana
+hatlarýný belirlemekte, fakat her sayfa için deðiþik olacak yerlere bir isim
+vererek boþ býrakmaktadýr.
+
+Üstteki örnekte \PVerb!menu!, \PVerb!icerik!, \PVerb!altkisim!, \PVerb!ustkisim!
+gibi bos yerler var. Buraya \PVerb!tiles-defs.xml! dosyasý her sayfa için
+gereken ``gerçek'' JSP içeriðini koyacak.
+
+Bunun da bir örneðini görelim.
+
+\begin{lstlisting}[language=XML, frame=none]
+<definition name="ornek@ekran" extends="dizim">
+    <put name="icerik" value="/sayfa123.jsp"/>
+    <put name="menuSecim" value="kategori_1"/>
+</definition>
+\end{lstlisting}
+Bu örnek sayfayý göstermek istiyorsak, \PVerb!struts-config.xml! içinde bir Action
+üzerinden tarayýcýyý bu sayfaya yöneltmemiz lazým. Hemen yapalým:
+
+\begin{lstlisting}[language=XML, frame=none]
+<action path="/ornek_Sayfa123Goster"
+    type="com.sirket.filanca.GosterAction"
+    name="OrnekForm">
+    <forward name="basari" path="ornek@ekran"/>
+    <forward name="hata" path="/hata.jsp"/>
+</action>
+\end{lstlisting}
+\PVerb!Ornek@ekran! ifadesi, sayfamýza \PVerb!tiles-defs.xml! içinde verdiðimiz
+"isimdir". Tarayýcýnýn tanýdýðý öteki "ismi de" \PVerb!struts-config.xml!'de
+tanýmladýktan. Ýþimizi bitti, artýk tarayýcýmýzdan
+
+\begin{lstlisting}[language=XML, frame=none]
+http://localhost:8080/kitapdemo/ornek_Sayfa123Goster.do
+\end{lstlisting}
+yazdýðýmýz zaman, ekranýmýzý görebileðiz.
+
+\subsection{Þablonda Olaðan Deðer Tanýmlamak}
+
+Þablonumuzun birçok tiles tanýmladýðýný gördük. Her sayfa için bu boþ yerlere
+her seferinde bir deðer atamaktan kurtulmak için, Tiles teknolojisi olaðan
+deðerler tanýma imkaný vermiþtir. Sayfadan sayfaya fazla deðiþmeyen þablon
+deðerlerini bir sözde sayfa olarak tanýmlayabiliriz. Sonra, öteki ``gerçek''
+sayfalar bu sayfadan kalýtým suretiyle bu deðerleri alýrlar.
+
+Altta bunun örneðini görüyoruz. \PVerb!Dizim! adý verilen sözde sayfa, fazla
+deðiþmeyen deðerleri tanýmlýyor, ve kalýtým yolu ile sayfa123 bu deðerleri
+alýyor.
+
+\begin{lstlisting}[language=XML, frame=none]
+...
+<definition name="dizim" path="/sablon.jsp">
+    <put name="icerik" value="/bos.jsp"/>
+    <put name="menuSecim" value="baslangic"/>
+    <put name="ustkisim" value="/ust123.jsp"/>
+    <put name="menu" value="/menu123.jsp"/>
+    <put name="icerik" value="/bos.jsp"/>
+    <put name="altkisim" value="/alt123.jsp"/>
+</definition>
+...
+...
+<definition name="ornek@ekran" extends="dizim">
+    <put name="icerik" value="/sayfa123.jsp"/>
+    <put name="menuSecim" value="kategori_1"/>
+</definition>
+\end{lstlisting}
+
+\subsubsection{JSP Sayfalara Parametre Geçmek}
+
+Tiles teknolojisinin diðer özelliði her sayfaya JSP bazýnda ``okunabilen'' bir
+parametreyi \PVerb!tiles-defs.xml! tarafýndan geçilebilmesidir. Bunun faydalarý,
+mesele, dinamik bir menü gösterirken ortaya çýkmaktadýr: Bir menünün gösterdiði
+kategori baðlantýsýna ya da bir sayfa baðýna týkladýðýmýzda \PVerb!menu.jsp!
+tile'ýnýn hangi kategoride olduðunu bilmesi gereklidir. Çünkü \PVerb!menu.jsp!
+tek bir tile'dýr, ama farkli sayfalara göre farklý görüntüler vermesi
+gerekmektedir.
+
+Bunun çözümü sablon.jsp içinde en üsste yaptýðýmýz
+
+\begin{lstlisting}[language=XML, frame=none]
+<tiles:importAttribute name="menuSecim" scope="request"/>
+\end{lstlisting}
+ifadesidir. Böylece tiles-defs'da her sayfa için tanýmlayabildiðimiz
+
+\begin{lstlisting}[language=XML, frame=none]
+<put name="menuSecim" value="kategori_1"/>
+\end{lstlisting}
+ifadesi yetecektir. Üstteki örnek menuSecim olarak kategori\_1 deðerini
+gönderiyor. Bu deðer \PVerb!menu.jsp! tarafýndan okunarak, \PVerb!logic:equal!
+ile test edilerek dinamik JSP göstermesi mümkün olacaktýr.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hata Mesajlarý Ýdaresi} \label{web:errors}
+
+Struts Action'larýný yazarken bu nesnelerin Hibernate veya diðer alt tabaka
+kalýcýlýk (persistence) programlarýndan, ya da kullanýcýnýn veri girerken
+yaptýðý hatalarý yakalamak için en iyi yer olduðunu unutmamamýz
+gerekir. Programýmýzýn Java istisnasý (exception) olarak fýrlatabileceði
+hatalarýnýn Action'ýndan yukarýya çýkmasýna izin vermememiz, bu hatalarý
+yakalayýp, kullanýcýya daha anlamlý mesajlar aktarmamýz gerekir. Tabii bütün
+Action execute islevini koskoca bir \PVerb!try {} catch(Exception ..)! ile
+çevrelemek de fazla genelci olabilir; En iyisi ilgilendiðimiz Exception'larý
+ilgilendiðimiz tip seviyesinde yakalamamýz ve onlara özel hatalar
+göstermemizdir.
+
+Kullanýcýya güzel formatlanmýþ þekilde gösterilecek hatalar gerektiði zaman
+þu Struts kod kalýbýný kullanabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public ActionForward execute(ActionMapping mapping,
+                             ActionForm form,
+                             HttpServletRequest request,
+                             HttpServletResponse response) {
+   ...
+   ActionErrors errors=new ActionErrors();
+   try {
+
+     // Hibernate ile iþlemler, iþlem mantýðý vs..
+
+   } catch (RecordNotFoundException e) {
+     errors.add(ActionMessages.GLOBAL_MESSAGE,
+                new ActionError("kayit.yok.hatasi"));
+     saveErrors(request,errors);
+     return mapping.findForward("fail");
+   }
+
+\end{lstlisting}
+Bunu yaptýktan sonra ve kontrol, hata durumundan sonra JSP sayfasýna
+geçince, hata þu ibare ile ekrana basýlabilecektir.
+
+\begin{lstlisting}[language=XML, frame=none]
+<html:errors/>
+\end{lstlisting}
+
+\subsubsection{application.properties}
+
+\PVerb!kayit.yok.hatasi! adý verilen cümle, \PVerb!application.properties!
+dosyanýzýn içinde tanýmlanmýþ bir hata mesajýdýr. Bu mesaj þu þekilde
+gözükebilir.
+
+\begin{lstlisting}[language=XML, frame=none]
+kayit.yok.hatasi=Kay\\u0131t Bulunamad\\u0131
+\end{lstlisting}
+Hata mesajýnde içinde Türkçe karakterler olduðu için, \ref{web:tr:resources}
+bölümünde öðrendiðimiz üzere, esas karakter yerine onun ascii kodlamasý
+kullanýlmýþtýr.
+
+\subsection{Parametre Gerektiren Hata Mesajlarý}
+
+Statik (deðiþmeyen) hata mesajlarý, her durumda yeterli olmayabilir. Mesela eðer
+veri tabanýnda bir ürün bulamamýþsak, hangi ürünün bulunamadýðýný kullanýcýya
+bildirmek isteyebiliriz. Bunun için, uygulamamýzýn \PVerb!properties! dosyasýnda
+Struts \PVerb!{0}! kullanýmý iþimize yarayacaktýr.
+
+\begin{lstlisting}[language=XML, frame=none]
+urun.yok=Ürün kodu {0} veri tabanýnda bulunamadý.
+\end{lstlisting}
+Bu boþ býrakýlan yer içine, gerçek ürün deðerini Struts Action içinden
+doldurabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+ActionErrors errors=new ActionErrors();
+...
+try {
+  ...
+} catch (UrunBulunamadiException e) {
+  errors.add(ActionMessages.GLOBAL_MESSAGE,
+             new ActionError("urun.yok", form.getUrunKodu()));
+  saveErrors(request,errors);
+  return mapping.findForward("fail");
+}
+\end{lstlisting}
+Bu örnek, veri tabanýnda ürün bulunamamasý halinde
+\PVerb!UrunBulunamadiException!  atýldýðýný, ve ActionForm üzerinde
+\PVerb!getUrunKodu! adlý bir alanýn varlýðýný varsaymaktadýr.
+
+\subsection{Action'larda Muamele Görmeyen Hatalar}
+
+Kodunuz içine \PVerb!catch! koymanýzý gerektirmeyecek bazý hatalar
+olabilir. Mesela kullanýcýnýn oturum zamaný tükenmiþtir (expire) ve bu durum
+sürekli \PVerb!NullPointerException!'a sebebiyet veriyordur. Bu Exception'ýn
+nereden ne zaman geleceði belli olmadýðý gibi, bütün Action'larý sýrf bu nadir
+hata için \PVerb!try {} catch!'lere boðmak yanlýþ olur. Struts, kodlamadan
+ziyade ayarlar ile birçok iþi yapmanýzý saðlar. Hiçbir Action'ýn yakalamamýþ
+olduðu hatalarý yakalamak için \PVerb!struts-config.xml!'de genel bir taným ile
+kullanýcýyý \textbf{bütün} bu yakalanmamýþ Exception'lar için belli bir sayfaya
+gönderebilirsiniz.
+
+\begin{lstlisting}[language=XML, frame=none]
+
+<struts-config>
+  ...
+  <global-exceptions>
+    <exception
+      key="global.error.message"
+      type="java.lang.Exception"
+      handler="org.mycompany.kitapdemo.util.ErrorHandler"/>
+  </global-exceptions>
+  ...
+</struts-config>
+\end{lstlisting}
+Bu tanýma göre her Action'da muamele görmeyen Exception'lar için kullanýcýyý
+\PVerb!ErrorHandler! adlý bir nesneye gönderiyoruz. Bu nesne bizim tanýmladýðýmýz
+ve \PVerb!ExceptionHandler! adlý nesneyi uzatan bir nesnedir. Kodunu
+\PVerb!StrutsHibAdv! altýnda bulabilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class ErrorHandler extends ExceptionHandler {
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public ActionForward execute(Exception ex,
+                                 ExceptionConfig ae,
+                                 ActionMapping mapping,
+                                 ActionForm formInstance,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws ServletException {
+
+        logger.error("Struts Error", ex);
+
+        return mapping.findForward("error");
+    }
+}
+\end{lstlisting}
+Bu kod sadece yakalanan genel \PVerb!Exception!'ý Log4J ile loglayýp, ve sonra
+\PVerb!error! adý verilen bir \PVerb!ActionForward! geriye dönmektedir. Siz
+kendi uygulamanýz için, \PVerb!ActionForward! dönmeden önce daha fazla
+``kurtarýcý iþler'' yapan kodlar yazabilirsiniz.
+
+\PVerb!ErrorHandler!'dan ismi \PVerb!error! adýnda bir \PVerb!ActionForward!
+dönüleceðine göre, bu forward'ý belirleyen bir \PVerb!struts-config.xml! tanýmý
+daha yapmamýz gerekiyor. Bunu da \PVerb!global-forwards! altýnda yapabiliriz.
+
+\begin{lstlisting}[language=XML, frame=none]
+  <global-forwards type="org.apache.struts.action.ActionForward">
+    <forward name="error" path="/pages/error.jsp">
+    </forward>
+  </global-forwards>
+\end{lstlisting}
+Bu forward'a göre, \PVerb!error! kodu \PVerb!error.jsp! adlý sayfaya
+yönlendirilecektir. Bu sayfa üzerinde genellikle kullanýcýya sistem bakýcýsýna
+baþvurmasý gerektiði gibi genel mesajlar verilir.
+
+Bu tür hata muamelesinin bütün Exception'lar için devreye gireceðini biliyoruz,
+çünkü Java nesnesel hiyerarþisine göre, bütün Exception'lar
+\PVerb!java.lang.Exception!  adlý nesneyi uzatmak durumundadýr.
+
+\PVerb!<global-exceptions>! altýnda \PVerb!exception! etiketini ayný
+\PVerb!struts-config.xml!  içinde birden fazla kullanabilirsiniz. Burada her
+özel Exception için bir yakalayýcý tanýmlayabilirsiniz, Struts sistemi, elinde
+muamele görmemiþ bir Exception olunca, özelden genele doðru bütün yakalayýcýlarý
+teker teker kontrol edecektir. Hiç bir özel yakalayýcý yoksa, \PVerb!Exception!
+için olan en genel yakalayýcý iþleme konur (eðer varsa).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Web Kodlama Kalýplarý][WEB KODLAMA KALIPLARI]{Web Kodlama Kalýplarý}
+
+Struts temellerinin ve görsel birimlerin anlatýlmasý tamamlandýðýna göre, örnek
+kurumsal uygulamamýz olan \textbf{bu pasta} üzerinden dikey dilimler kesmeye
+baþlayabiliriz. Pastanýn dilimlerinden her biri tüm katmanlara bir kez dokunan
+iþlevler/görevler olacaklar. Her deðiþik dikey dilim ile deðiþik bir Kurumsal
+Web kodlama kalýbýný göstermeye uðraþacaðýz.
+
+\subsection{Tek Nesne Yükle ve Göster} \label{web:patterns:loadshow}
+
+Bu pasta diliminde detayý istenen bir nesnenin seçilmesi, yüklenmesi,
+gösterilmesi görevini yerine getireceðiz. Yükle ve göster iþlevi genellikle bir
+JSP URL'inden nesne üzerine týklanmasý ile baþlar. Yüklemek ile görevli Struts
+Action'ý ile gereken yüklenir ve JSP ile gereken bilgiler ekrana basýlýr.
+
+Üzerine týklanan URL'in \PVerb!main.jsp! sayfasýndaki listede hazýrlanmýþ
+olduðunu farz ediyoruz. Bu baðlantý URL parametresi olarak bir arabayý tekil
+olarak kimliklendirebilmemiz için gereken \PVerb!licensePlate! parametresinin
+taþýmaktadýr. Eðer \PVerb!main.do! hedefini yükledikten sonra tarayýcýnýzda
+\PVerb!View | Page Source! seçeneðini kullansanýz, aþaðýdaki gibi HTML kodlarýný
+göreceksiniz.
+
+\begin{lstlisting}[language=XML, frame=none]
+<table>
+  ...
+  <tr>
+      ...
+      <td>
+        <a href="/kitapdemo/show-car-details.do?licensePlate=plate123">
+          plate1:tarif123
+        </a>
+      </td>
+      ...
+   </tr>
+</table>
+\end{lstlisting}
+URL'e bakarsanýz, tarif olarak \PVerb!plate1:tarif123! metnini taþýyan URL'e
+týklanýnca \PVerb!/kitapdemo/show-car-details.do! Struts Action'ýna
+\PVerb!licensePlate! parametresi için \PVerb!plate123! deðerinin geçileceðini
+görüyoruz. Struts Action'larýn nasýl tanýmlandýðýný \ref{web:struts:action}
+bölümünde görmüþtük.
+
+Struts \PVerb!show-car-details.do! hedefinin muamale (handle) edilmesi için bir
+Action yazmamýz gerekiyor. Bu Action tanýmý ve Java kodlarý
+(\PVerb!StrutsHibTag! projesi) þöyle gözükecektir.
+
+\begin{lstlisting}[language=XML, caption=struts-config.xml]
+<struts-config>
+  <action-mappings>
+    <action
+        path="/show-car-details"
+        scope="session"
+        type="org.mycompany.kitapdemo.actions.ShowCarDetailAction"
+        validate="false">
+      <forward name="success" path="/pages/detail.jsp"/>
+      <forward name="fail" path="/main.do"/>
+    </action>
+    ...
+  </action-mappings>
+</struts-config>
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Java,numbers=left,numberstyle=\tiny,caption=ShowCarDetailAction.java]
+package org.mycompany.kitapdemo.actions;
+
+public class ShowCarDetailAction extends Action
+{
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        String licensePlate = request.getParameter("licensePlate");
+
+
+        Session s = HibernateSession.openSession();
+        HibernateSession.beginTransaction();
+
+        Car car = (Car)s.get(Car.class, licensePlate);
+        request.getSession().setAttribute("car", car);
+
+        return mapping.findForward("success");
+    }
+}
+\end{lstlisting}
+Satýr satýr açýklama:
+
+\begin{itemize}
+\item \textbf{13}: Action'a gelen ve \PVerb!HttpServletRequest! üzerinde olan
+  \PVerb!licensePlate! deðiþkenine eriþmek için, \PVerb!getParameter! çaðrýsý
+  kullanýlmýþtýr. Bu çaðrý, pür servlet (Struts olmayan) ortamdan tanýdýk
+  gelebilecek bir çaðrýdýr. Deðiþkenin deðeri, yine ayný ismi taþýyan bir yerel
+  deðiþken üzerinde saklanýr.
+\item \textbf{16-17}: Hibernate Session açýlýr ve yeni bir transaction
+  baþlatýlýr.
+\item \textbf{19}: Reguest'den gelen parametre kullanýlarak, Hibernate
+  \PVerb!get! çaðrýsý ile \PVerb!licensePlate!'e sahip olan \PVerb!Car!
+  nesnesi yüklenir.
+\item \textbf{22}: Baþarý kodu olan \PVerb!success! geri döndürülür. Buna
+  dayanarak, \PVerb!strust-config.xml!'deki ayar, iþlem sýrasýný
+  \PVerb!detail.jsp! adlý sayfaya devam ettirecektir.
+\end{itemize}
+
+Kontrol, JSP sayfasýna gelince \PVerb!c:out!, \PVerb!c:when!, \PVerb!c:if! gibi
+etiketler kullanýlarak eriþilen \PVerb!\${car.licensePlate}!,
+\PVerb!\${car.carSize}! gibi deðerler kullanýcýya sunulabilir.
+
+\subsection{Nesne Ekle}
+
+Bu kodlarda bir \PVerb!Car! nesnesinin sisteme eklenmesi örneðini göreceðiz. Tüm
+kodlarý \PVerb!StrutsHibAdv! kodlarý projesinde görebilirsiniz. Eklenmesi
+gereken \PVerb!Car! formunda, arabanýn plakasý, tarifi gibi
+\PVerb!StrutsHibTags!  projesindeki öðelere ek olarak, arabanýn elde olup
+olmadýðý, ölçüsü gibi yeni öðeleri ekledik. Bu öðeler JSP sayfasýnda yeni Form
+\PVerb!html:!  etiketleri olarak ortaya çýkacaklar. Ayar dosyasý
+\PVerb!struts-config.xml!  içinde ayný þekilde JSP'deki forma uygun bir Struts
+\PVerb!DynaActionForm!  nesnesi yaratmamýz gerekiyor.
+
+\begin{lstlisting}[language=XML, caption=Form Bean'leri]
+<struts-config>
+  <form-beans>
+    <form-bean
+        name="AddCarForm"
+        type="org.apache.struts.action.DynaActionForm">
+      <form-property
+          name="licensePlate"
+          type="java.lang.String"
+          initial=""/>
+      <form-property
+          name="description"
+          type="java.lang.String"
+          initial=""/>
+      <form-property
+          name="available"
+          type="java.lang.Boolean"
+          initial=""/>
+      <form-property
+          name="size"
+          type="java.lang.String"
+          initial=""/>
+      ...
+    </form-bean>
+  </form-beans>
+  ...
+  <action
+      path="/add-car"
+      scope="session"
+      type="org.mycompany.kitapdemo.actions.AddCarAction"
+      name="AddCarForm"
+      validate="false">
+    <forward name="success" path="/main.do"/>
+    <forward name="fail" path="/main.do"/>
+  </action>
+
+</struts-config>
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,numbers=left,numberstyle=\tiny,caption=AddCarAction.java]
+package org.mycompany.kitapdemo.actions;
+...
+public class AddCarAction extends Action
+{
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        DynaActionForm daf = (DynaActionForm) form;
+
+        Car car = new Car ();
+        BeanUtils.copyProperties(car, daf);
+
+
+        Session s = HibernateSession.openSession();
+        HibernateSession.beginTransaction();
+        s.save(car);
+
+        // form icindeki degerleri sil
+        HttpSession session = request.getSession();
+        session.removeAttribute(mapping.getAttribute());
+
+        return mapping.findForward("success");
+    }
+}
+\end{lstlisting}
+
+
+Satýr satýr açýklama:
+
+\begin{itemize}
+\item \textbf{13}: Struts \PVerb!execute! metotundan gelen \PVerb!ActionForm!,
+  \PVerb!DynaActionForm! nesnesine çevirilir (casting).
+\item \textbf{16}: Struts, JSP ile Form nesnesinin içindeki deðerleri birbirine
+  eþitleyebildiði için, eldeki \PVerb!DynaActionForm!, kullanýcýnýn doldurduðu
+  bilgilerle dolu gelmiþtir. Bu bilgileri boþ olarak yarattýðýmýz \PVerb!Car!
+  nesnesine taþýmak için, \PVerb!BeanUtils! yardýmcý nesnesindeki
+  \PVerb!copyProperties! komutunu kullandýk. Bu çaðrý, arka planda {\em dinamik
+  olarak} metot keþfedebilen ve çaðýrabilen Java Reflection teknolojisini
+  kullanarak, iki nesne arasýndaki {\em isimleri ayný olan öðeleri} birbirine
+  set etme özelliðine sahiptir. Struts ActionForm ve Hibernate POJO arasýndaki
+  veri taþýmalarý için vazgeçilmez bir yardýmcý araçtýr.
+\item \textbf{18-27}: \PVerb!Car! nesnesini veri tabanýna eklemek için gereken
+  Hibernate iþlemleri.
+\item \textbf{24-25}: ActionForm nesnesinin oturumdan (session)
+  çýkartýlmasý. Bunun yapýlma sebebi, ekleme iþlemi bittikten ve \PVerb!main.do!
+  hedefine (bilahere \PVerb!main.jsp! sayfasýna) tekrar gelindiðinde, formda
+  biraz önce girdiðimiz deðerlerin tekrar gözükmemesini saðlamaktýr. Bildiðimiz
+  gibi \PVerb!struts-config.xml!'de \PVerb!AddCarForm!, session-süreli (scope)
+  olarak tanýmlanmýþtý, bu yüzden, eðer session'dan özellikle atýlmazsa, session
+  ortada olduðu sürece orada kalacak, ve bir önceki ekleme iþleminin deðerlerini
+  sürekli gösterecektir.
+\end{itemize}
+
+\subsection{Tek Nesne Yükle ve Deðiþtir} \label{web:patterns:update}
+
+\ref{web:patterns:loadshow} bölümünde bir nesneyi \PVerb!ShowCarDetailAction! ile
+yükleyip, arkasýndan Struts ile \PVerb!detail.jsp! adlý sayfaya gösterim için
+göndermiþtik. Þimdi, \PVerb!detail.jsp! gösterimi yerine \PVerb!edit.jsp! adlý
+bir {\em güncelleme sayfasýna} yönlendirme yapacaðýz (yâni Struts ayarlarý biraz
+deðiþecek), ve bu sayfa üzerinden, kullanýcý ``güncelle'' düðmesine týkladýðýnda
+iþlemesi gereken yeni bir güncelleme aksiyonunu, \PVerb!UpdateCarAction!
+kodlarýný tanýyacaðýz. Fakat ilk önce, güncelleme gündeme gelince çok meydana
+çýkan bir sorundan bahsetmemiz gerekmektedir: Çakýþan Güncelleme Sorunu.
+
+
+\subsubsection{Çakýþan Güncellemeler}
+
+Çok kullanýcýlý kurumsal uygulamalarda ``güncelleme'' sözü telâfuz edilince
+hemen akla gelen bir yan sorun ortaya çýkar; Çakýþan Güncelleme. Bu sorun hasýr
+altýna atýlabilecek bir sorun deðildir, çünkü sistemin doðru çalýþmasý bu
+sorunun doðru çözülebilmesine baðlýdýr.
+
+Sorunu anlayabilmek için þöyle bir senaryo hayal edin: Kullanýcý A ve B, ayný
+kayýt \#123'e eriþiyorlar. Ýkisi de bu kayýda önce ekranýnda þöyle bir
+bakýyor. Daha sonra, ikisi de bu kayýdý kendine göre deðiþtiriyor (diyelim ki bu
+deðiþtirme haklarý sistemde tanýnmýþ). Güncelleme aksiyonuna gelince,
+kullanýcýlardan biri, ``güncelle'' düðmesine basýyor, öteki kullanýcý kahve
+molasý için kalkýyor, ve ayný düðmeye 20 saniye sonra basmýþ oluyor. (Ya da,
+tamamen raslantý sonucu bir kullanýcý düðmeye ötekinden 2 milisaniye önce
+basýyor, sonuç ayný olacaktýr). Bu durumda, düðmeye en son basan kullanýcýnýn
+deðiþiklikleri sisteme girmiþ, bir öncekinin deðiþiklikleri yokolmuþ olacaktýr.
+
+Burada diyebilirsiniz ki ``güzel, zaten en güncel veriyle çalýþmak doðru deðil
+midir?''. Fakat duruma iyice bir bakmak gerekir: Tarif edilen türden bir sistem
+en son verinin ne olduðunu {\em tamamen raslantýsal bir þekilde} seçmiþtir, ve
+bu türden bir iþ süreci çoðu (hatta hiçbir) þirket için kabul edilir
+deðildir. Kullanýcý A'nýn deðiþiklikleri, ona hiçbir haber verilmeden {\em
+yokedilmiþtir} ve kullanýcý B'nin de bu önemli deðiþikliklerden haberi
+olmamýþtýr. Evet belki de, ayný deðiþikliklerin ``bazýlarýný'' B'de yapmýþtýr,
+fakat B'nin yapmadýðý ama A'nýn yapmýþ olduðu bazý güncellemeler B için
+lazýmdýr.
+
+Çakýþan güncelleme sorununu (kurumsal bir uygulama olmasa da) meselâ CVS gibi
+kaynak kod idare sistemleri için de geçerlidir. Ve dikkatinizi çekerim, {\em
+dosya} bazlý çalýsan bu sistemlerde bile, bir önceki deðiþiklik, kaybedilmez.
+
+Veri tabaný uygulamalarýnda çözüm kitleme tekniðini kullanmaktan geçer. Modern
+mimarilerde bu kitlemeyi gerçekleþtirmenin iki yolu vardýr: Ýyimser Kitleme ve
+Kötümser Kitleme.
+
+\subsubsection{Kötümser Kitleme}
+
+Kötümser kitleme bir kayýda eriþen ilk kullanýcýnýn o kayýdý kitlemesi anlamýna
+gelir. Arkadan gelen diðer kullanýcýlar ayný kayda eriþtiklerinde (yâni okumak
+için bile) en iyi ihtimalde bekler, en kötü ihtimalle bunu yapamayacaklarýna
+dair bir mesaj görürler. Eðer o kaydý deðiþtirmek istiyorlarsa, ilk kullanýcýnýn
+o kayýt ile iþinin bitmesine kadar beklemeleri gerekir. Ýlk kullanýcýnýn iþi
+bitince kilit çözülür, ve diðer kullanýcýlar deðiþen kaydý en son hâliyle görmüþ
+olurlar. Bu noktadan sonra eðer halâ ayný kaydý deðiþtirmek istiyorlarsa
+kendileri kayda girip kitlemiþ olurlar (tabii ki halâ bunu sadece bir tanesi
+yapabilir) güncelleme iþlemlerine baþlarlar. Bu tür kitlemeye ``kötümser''
+denmesinin sebebi, her an bir baþkasýnýn ayný kayýda gireceði beklentisiyle
+kilidin en baþtan alýnmasý, ve öteki kullanýcýlarýn dýþarýda tutulmasýdýr.
+
+Yukarýda tarif edilen türden bir kilit Web mimarisinde request bittikten sonra
+bile tutulmasý gerekeceði için, kitlemenin tabloda ayrý bir kolon, ya da merkezi
+bir kilit idarecisi tarafýndan kontrol edilmesi gerekmektedir, çünkü veri
+tabanlarýnýn iç kilit sistemleri bir veri taban baðlantýsý ve o baðlantýdaki
+transaction kavramýna yakýndan baðlýdýr, ve request'ler arasý taban baðlantýsýný
+hiçbir zaman baðlý tutmamamýz gerektiðini biliyoruz. Yoksa sistemi ölçekleme
+sýrasýnda problemler yaþarýz.
+
+Bu tür bir kitlemenin iþ süreçleri açýsýndan kesin gerekli olduðu yerler
+vardýr. Fakat, kilit üzerinde bekleme merkezi bir kilit idarecisine gitme gibi
+basamaklarý içerdiði için, yüksek ölçekli kurumsal uygulamalarda tercih
+edilmeyen bir seçenektir. Daha iyi ölçeklenebilen ve kullaným açýsýndan veri
+doðruluðunu bozmayan diðer bir seçenek, Ýyimser Kitleme tekniðidir.
+
+\subsubsection{Ýyimser Kitleme} \label{web:patterns:update:optimistic}
+
+Bu kitleme tekniðinde bir kayýda eriþen her iki kullanýcýnýn ``güncelle''
+düðmesine basmasýna izin verilir (kilit önceden alýnmaz), fakat güncelleme
+iþlemi veri tabanýna \textbf{ikinci} eriþen kullanýcý bir hata mesajý görür. Bu
+mesaj, ona, kayýdýn o yeni bilgileri girmekteyken deðiþtiðini söyler, ve ikinci
+kullanýcý kayýdýn son hâlini tekrar yükleyip, deðiþikliklerini tekrar
+yapmalýdýr. Bazý önyüz dizaynlarýnda kaydýn en son hâli ile ikinci kullanýcýnýn
+deðiþiklikleri merge edilerek verilebilir, yâni çetrefil bir seç/beðen türünden
+birleþtirim ekraný saðlanabilir. Envai türden seçeneklerin arasýnda en basit
+olaný bir hata mesajýdýr. Arka planda, yâni veri tabaný ve uygulama servisi
+seviyesinde iyimser kitleme tekniðinin gerçekleþtirimi birkaç türlü olabilir.
+
+\begin{enumerate}
+\item Uygulama servisi seviyesinde bir kayýt ekranda gösterilir gösterilmez
+hemen o deðerler kullanýcýnýn oturumu (\PVerb!HttpSession!) üzerine
+kopyalanýr. Daha sonra, kullanýcý güncelle düðmesine bastýðýnda o kaydýn veri
+tabanýndaki son hâli \PVerb!SELECT! ile {\em bir daha} alýnýr, ve oturum
+üzerindeki deðerler ile \PVerb!if! kullanýlarak karþýlaþtýrmalarý yapýlýr. Eðer
+uyuþmazlýk var ise, hata verilir.
+\item Gösterilen kayýdýn deðerleri oturumda kopyalanýr, fakat bu sefer
+  güncelleme sýrasýnda veri tabanýna gönderilen \PVerb!UPDATE! komutuna bu
+  deðerler \PVerb!WHERE! altýnda filtre parametresi olarak verilir. Eðer o
+  deðerler tabanda çoktan deðiþmiþ ise \PVerb!UPDATE! komutu baþarýsýz
+  olacaktýr, çünkü filtre deðerleri hiçbir kayýt bulamaz. \PVerb!UPDATE!'den
+  geri gelen satýr sayýsý (JDBC bunu kontrol edebiliyor) sýfýr ise hata mesajý
+  verilebilir.
+\item Veri tabanýndaki her tabloda \PVerb!int! tipinde bir \textbf{versiyon}
+kolonu bulunur, ve bu kolonunu deðeri her satýr için sýfýrdan baþlar. Her
+\PVerb!UPDATE! iþleminde bu kolon bir arttýrýlýr. Her okuma sýrasýnda da bu
+versiyon tabii ki okunur, ve \PVerb!UPDATE! sorgularýna \PVerb!WHERE! olarak
+eklenir. Bu yöntemin öncekine göre bir avantajý \PVerb!WHERE! filtresinin
+gereksiz þekilde çok büyüyecek olmamasýdýr. Tek bir ekstra kolon ile iþ
+halledilir.
+\end{enumerate}
+
+Hibernate altyapýsý 2 ve 3. seçenekleri desteklemektedir. Hiç fazladan kod
+yazmadan, özel Hibernate komutlarýný kullanarak bu yöntemleri
+kullanabiliriz. Bizim tavsiyemiz en basit ve etkili olan 3. yöntemi
+kullanmanýzdýr. Eðer mevcut bir þema ile çalýþýyor ve bu þemada istediðiniz
+kolonlara yeni bir versiyon kolonu eklemenize izin verilmiyor ise 2. yöntemi
+kullanabilirsiniz. Bu yöntem için \cite[sf. 174]{hibernatebook}'e
+danýþabilirsiniz. Biz altta 3. yöntemi tarif edeceðiz. \PVerb!StrutsHibAdv!
+kodlarý içinde versiyon bazlý iyimser kitleme kullanan kodlarý bulabilirsiniz.
+
+\subsubsection{Kopuk Nesneler ile Güncelleme}
+
+Kodun detayýna inmeden önce son anlatmamýz gereken konu ``kopuk (disconnected)''
+bir Hibernate nesnesi ile güncelleme yapmaktýr. Web uygulamalarýnda \PVerb!Car!
+ya da \PVerb!Garage! gibi nesneleri detay ekranýnda gösterdikten sonra
+Hibernate oturumunu kapatýrýz ve detay için kullandýðýmýz nesne kopuk
+(disconnected) bir nesne haline gelir.
+
+Ayný þekilde Form'dan güncellenmiþ bir veri aldýðýmýzda yeni bir \PVerb!Car!
+nesnesini \PVerb!new! ile yaratýrýz, ve içini form'dan gelen deðerler ile
+doldururuz. Bu nesne de kopuk bir Hibernate nesnesi olarak kabul edilir.
+
+Tek problem, kopuk bir nesnenin direk alýnarak \PVerb!saveOrUpdate! çaðýrýlmasý
+durumunda ortaya çýkacaktýr; Hibernate, o anda ayný oturum içinde ayný kimliði
+taþýyan baþka bir \PVerb!Car! nesnesini oturumda tutuyorsa yeni bir \PVerb!Car!
+nesnesi üzerinde güncelleme isteðine \PVerb!NonUniqueObjectException! hatasýný
+verir. Bunu yapmasýnýn sebebi Hibernate'in iç iþleyiþi ile alâkalýdýr, her tekil
+nesneden oturum üzerinde bir tane tutmak, Hibernate mekanizmasý açýsýndan
+verilmiþ bir mimari karardýr. Fakat Web mimarilerinde de dýþarýdan gelen kopuk
+nesne oldukça kullanýlan bir kodlama kalýbý olduðu için bu kullanýma izin
+vermek için, Hibernate programcýlarý bize \PVerb!merge! adlý yeni bir metot
+saðlamýþlardýr. Eðer kopuk bir nesneyi alýp direk güncelleme yapmak
+istiyorsanýz, \PVerb!saveOrUpdate!  yerine \PVerb!merge! fonksiyonunu
+kullanmanýz gerekiyor.
+
+Evet! Artýk güncelleme kodlarýnýn kendisine ilerleyebiliriz.
+
+\subsubsection{Kodlar}
+
+Ýlk önce yapýlmasý gereken, eski tablomuza bir ``versiyon'' kolonu eklemektir.
+
+\begin{lstlisting}[language=SQL, frame=none]
+DROP TABLE IF EXISTS car;
+CREATE TABLE car (
+  version int(10),
+  license_plate varchar(30) default '',
+  description varchar(30) default '',
+  available int(1) default 0,
+  car_size varchar(1) default ''
+) ;
+\end{lstlisting}
+\PVerb!Car! POJO'su üzerinde ayný þekilde yeni bir versiyon kolonu gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class Car {
+
+    int version = -1;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int newVersion) {
+        this.version = newVersion;
+    }
+
+    ...
+}
+\end{lstlisting}
+Eþleme dosyasý \PVerb!Car.hbm.xml!'da, \PVerb!<version>! adýnda özel bir etiket
+kullanýlmasý gerekiyor. Bu etiket, Hibernate'e, ``versiyon kontrollü'' güncelleme
+yapmasý için direktif verecektir.
+
+\begin{lstlisting}[language=XML, frame=none]
+<hibernate-mapping  package="org.mycompany.kitapdemo.pojo">
+  <class name="Car" table="car">
+    <id name="licensePlate" column="license_plate">
+      <generator class="assigned"/>
+    </id>
+    <version name="version" column="VERSION" unsaved-value="negative" />
+    <property name="description" column="description"/>
+    <property name="available" column="available"/>
+    <property name="size" column="car_size"/>
+  </class>
+</hibernate-mapping>
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Dikkat:} \PVerb!version! komutunun \PVerb!id! etiketinden hemen sonra
+gelmesi mecburidir.
+\end{quote}
+
+Etiket \PVerb!unsaved-value!'nun \PVerb!id! etiketinde deðil \PVerb!version!
+etiketinde altýnda kullanýlmýþ olmasýnýn sebebi þudur: Eðer bir nesnenin
+kimlikleme yöntemi \PVerb!assigned! ise Hibernate bir POJO'nun iç verisine
+bakarak o POJO'nun veri tabanýna yazýlýp yazýlmadýðýný anlayamaz, çünkü kimlik
+POJO'nun içinde hep olacaktýr. Kimlik ``üretiliyor'' olsaydý, kimlik
+``olmadýðý'' zaman Hibernate bu nesnenin tabana daha yazýlmadýðýný anlardý.
+
+Peki bunu anlamak niçin önemlidir? Çünkü Hibernate \PVerb!saveOrUpdate! ya da
+\PVerb!merge!, bir nesnenin yeni mi eski mi olduðunu ``bir þeylere bakarak''
+anlayabilmelidir. Bu bilgiye dayanarak arka planda eski nesne için
+\PVerb!UPDATE!, yeni nesne için \PVerb!INSERT! üretilecektir.
+
+Versiyon kullanýmýnda nesnenin yeniliði ya da eskiliði \PVerb!version! öðesine
+bakarak anlaþýlabilir. Versiyon deðerleri sýfýrdan baþladýðý için, yeni nesne
+iþareti -1 olur. Hibernate yeni/eski olmanýn kriteri olarak \PVerb!<version>!
+etiketi altýnda \PVerb!negative! tanýmlamamýza izin veriyor. O zaman her yeni
+POJO \PVerb!Car! için \PVerb!version!'un olaðan deðeri de \PVerb!-1!  olmalýdýr
+ki böylece nesne hafýzada ilk \PVerb!new! ile yaratýldýðýnda \PVerb!version!
+deðeri \PVerb!-1!  olur, ve Hibernate bu nesnenin veri tabanýnda mevcut
+olmadýðýný hemen anlar. Eðer bu nesne üzerinde \PVerb!saveOrUpdate! ya da
+\PVerb!merge! komutu kullanýrsak, \PVerb!UPDATE!  deðil, \PVerb!INSERT!
+üretilecektir.
+
+Son olarak versiyon bilgisini kullanýcý düþünme zamaný (think time) sýrasýnda,
+yâni detay gösterme ve güncelleme ekranlarý arasýnda, tutacak bir yere
+ihtiyacýmýz var: Bu yer, Form nesnesi olabilir. Nasýl olsa Form üzerindeki her
+öðenin gösterilebilir türden olmasý gerekmiyor. O zaman
+\PVerb!struts-config.xml! þöyle deðiþecek.
+
+\begin{lstlisting}[language=Java, frame=none]
+<form-beans>
+  <form-bean
+      name="AddCarForm"
+      type="org.apache.struts.action.DynaActionForm">
+    ....
+    <form-property
+        name="version"
+        type="int"
+        initial="-1"/>
+    ....
+  </form-bean>
+</form-beans>
+\end{lstlisting}
+Ýlk deðer (\PVerb!initial!) olarak -1 deðerini {\em form üzerinden de} vermiþ
+olmamýzýn sebebi, \PVerb!AddCarAction! durumunda yeni \PVerb!Car! nesnesine bu
+deðerin yazýlmasýný zorlamaktýr. Eðer bunu yapmasaydýk, ilk deðer 0 olacak
+(Struts tarafýndan verilir) ve \PVerb!0! deðeri bu \PVerb!Car! nesnesinin ``yeni
+bir nesne'' olduðunu göstermeyecekti.
+
+Son olarak, \PVerb!UpdateCarAction! kodunu görelim.
+
+\begin{lstlisting}[language=Java,numbers=left,numberstyle=\tiny,caption=UpdateCarAction.java]
+public class UpdateCarAction extends Action
+{
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        DynaActionForm daf = (DynaActionForm) form;
+
+        ActionErrors errors=new ActionErrors();
+
+        String id = "";
+        String result = "";
+
+        try {
+            Session s = HibernateSession.openSession();
+            HibernateSession.beginTransaction();
+
+            Car car = new Car();
+            id = car.getLicensePlate();
+            BeanUtils.copyProperties(car, daf);
+            s.merge(car);
+
+            result = "success";
+
+        } catch (org.hibernate.StaleObjectStateException e) {
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                       new ActionError("optimistic.car.update.failed", id));
+            saveErrors(request,errors);
+            HibernateSession.rollbackTransaction();
+            result = "fail";
+        }
+
+
+
+        // form icindeki degerleri sil
+        HttpSession session = request.getSession();
+        session.removeAttribute(mapping.getAttribute());
+        return mapping.findForward(result);
+    }
+}
+\end{lstlisting}
+
+Satýr satýr açýklama:
+
+\begin{itemize}
+\item \textbf{11}: \PVerb!ActionForm! nesnesi \PVerb!DynaFormAction! nesnesine
+  çevirilir (cast).
+\item \textbf{19-20}: Hibernate Session ve yeni bir transaction baþlatýlýr.
+\item \textbf{22}: Güncellenmesi istenen nesne, boþ olarak yaratýlýr.
+\item \textbf{24}: \PVerb!BeanUtils! metotlarýndan \PVerb!copyProperties! ile
+  form üzerindeki deðerler otomatik olarak \PVerb!Car! üzerine taþýnýr. Versiyon
+  deðeri de bu taþýma sýrasýnda detay gösterme anýndaki hâli ile geri
+  gelecektir, çünkü form üzerinde hatýrlanan hali odur.
+\item \textbf{25}: Hibernate'in güncellemeyi baþlatmasý için
+  \PVerb!merge! çaðýrýlýr. Hibernate, versiyon numarasýna bakarak bu
+  iþlemin bir \PVerb!INSERT! deðil, \PVerb!UPDATE! olduðunu anlayacaktýr, ve
+  ayrýca \PVerb!version! deðerini \PVerb!WHERE! filtresi içinde kullanarak
+  güncelleme çakýþmasý sorununu çözecektir.
+\item \textbf{27}: Bu Action sonunda dönülecek durum kodu bu aþamada
+  \PVerb!success! olarak seçiliyor, çünkü bu noktaya gelmiþsek exception
+  atýlmamýþ demektir.
+\item \textbf{29-35}: Eðer güncelleme çakýsmasý olursa, Hibernate bu durumu
+  \PVerb!StaleObjectStateException! hatasý ile belirtecektir. ``Stale'' kelimesi
+  Ýngilizcede ``eskimiþ'' anlamýna gelir, yâni üzerinden güncelleme yaptýðýmýz
+  nesnenin ``eskimiþ'' deðerleri taþýdýðý bize söylenmeye çalýþýlmaktadýr. Bu
+  hatayý yakalayýnca, ilk önce veri tabanýndaki transaction'ý geriye
+  sarmamýz/iptal etmemiz (rollback) gerekir, ve, hatalý durumdan kullanýcýyý
+  haberdar etmemiz gerekir. Biz de \PVerb!application.properties! üzerinde
+  tanýmlanmýþ \PVerb!optimistic.car.update.failed! hatasýný kullanarak bu durumu
+  rapor edeceðiz. Struts'ta hata mesajlarýnýn tanýmlanmasý ve kullanýlmasý için
+  \ref{web:errors} bölümüne bakýnýz. Veri tabanlarý kavramlarý için \ref{db}
+  bölümüne danýþabilirsiniz.
+\item \textbf{35-41}: Form deðerleri oturum üzerinden çýkartýlýr.
+\item \textbf{42}: Durum kodu geri döndürülür.
+\end{itemize}
+
+\subsection{Büyük Sonuç Listelerini Sayfa Sayfa Göstermek}
+
+Kullanýcýlar, eðer uygulamadaki herhangi bir nesnenin listesini görmek isterler
+ve bu liste tek sayfaya sýðmayacak kadar büyük olmasý mümkün ise, programcýlar
+listeyi bölüm bölüm gösterecek teknik stratejiler geliþtirmelidir. Aslýnda bu
+soruna teknik {\em olmayan} basit bir çözüm, müþteriye ``filtreleme
+seçenekleri'' saðlayarak sonuç listesini küçültülmekten geçer. Meselâ
+demo'muzdaki \PVerb!Car! nesneleri, büyük bir sistemde 10,000 sayýsýna ulaþmýþ
+ise, bu kadar arabayý hiçbir kullanýcý hiçbir listeleme þekliyle görmek
+istemeyecektir!  Bu tür bir liste filtreleme ile küçültülmelidir. Ama filtre
+sonrasý bile elimizde çok sayýda nesne varsa sayfalama tekniklerini kullanmak
+zorundayýz.
+
+Hibernate, sayfalama için \PVerb!Query! nesnesi üzerinde set edilebilecek
+\PVerb!setFirstResult! ve \PVerb!setMaxResults! çaðrýlarýný destekler.
+
+\begin{lstlisting}[language=Java, frame=none]
+Query query = ..
+query.setFirstResult(0);
+query.setMaxResults(20);
+List l = query.list();
+\end{lstlisting}
+Bu iki çaðrýya verilen \PVerb!int! parametresi, sýrasýyla, {\em kaçýncý
+satýrdan} itibaren, {\em kaç tane} satýr gösterileceðini belirler. Ýstediðimiz
+büyük sonuç listesinden daha fazla parça görmek istersek, ``kaçýncý satýr''
+parametresine yeni bir deðer vererek ayný \PVerb!maxResults! parametresi ile
+\PVerb!Query!'den yeni bir \PVerb!List! almalýyýz. Her yeni sayfa, veri tabaný
+üzerinde yeni bir SQL iþletilmesi demek olacaktýr.
+
+Arka planda üretilecek SQL komutu her ticari veri taban ürünü için
+farklýdýr. Hibernate kullanmamýzýn faydasýný burada hemen görmuþ oluyoruz, çünkü
+Hibernate, her taban için lâzým olan SQL komutunu bilir, ve SQL üretimini ona
+göre yapar. Böylece bizim iþlem Java kodumuzun tabandan tabana deðiþmesi
+gerekmez.
+
+Tekniðin Struts/JSTL ortamýnda kullanýlmasýný görmek için \PVerb!StrutsHibAdv!
+kodlarýna bakabiliriz. Bu örnekte \PVerb!list.jsp! sayfasý, büyük bir listeyi
+0'ýncý ilk sayfadan baþlayarak ekrana basmaktadýr. Veri tabanýna çok miktarda
+veri yüklemek için \PVerb!sample_paging.sql! dosyasýndaki örnek verileri
+kullanabilirsiniz. Kullanýcý komutunu karþýlayan Struts Action,
+\PVerb!ListCarPageAction! içinde görülebilir.
+
+\subsubsection{Page (Sayfa) Nesnesi}
+
+Þimdiye kadar takip ettiðimiz kod kalýplarýnda action'a git, liste üret, sayfaya
+dön zincirlemesini yapmýstýk. Bu üçlüyü sayfalama için deðiþtirmemiz
+gerekecek. \PVerb!ListCarPageAction! içinden \PVerb!List! dönmek yerine yeni
+yazacaðýmýz bir \PVerb!Page! nesnesi döneceðiz. Bunu yapmamýzýn sebebi,
+listeleme sayfalarýnda çokça kullanýlan \textbf{sonraki}, \textbf{önceki}
+türünden düðmelerin ne zaman aktif ne zaman pasif olacaðýný bilebilmek için
+soru soracaðýmýz bir nesnenin gerekliliðidir. Eðer sadece \PVerb!List! döndürmüþ
+olsaydýk, bu sorularý soramazdýk, çünkü \PVerb!List!, içinden geldiði
+\PVerb!Query! nesnesi ile tüm alakasýný o noktada kaybetmiþ olurdu. Yeni
+yazacaðýmýz \PVerb!Page! class'ý sonuç listesi \PVerb!List!'i içinde
+barýndýracak, ayrýca JSP sayfasýnýn ``hangi sayfa'', ``daha kayýt var mý?'' gibi
+sorularý sorabilmesini yardýmcý fonksiyonlarý sayesinde saðlayacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none, caption=Page.java]
+public class Page   {
+
+    private List results;
+    private int pageSize;
+    private int page;
+
+    public Page(Query query, int page, int pageSize) {
+        this.page = page;
+        this.pageSize = pageSize;
+        results = query.setFirstResult(page * pageSize)
+            .setMaxResults(pageSize+1)
+            .list();
+    }
+
+    public boolean isNextPage() {
+        return results.size() > pageSize;
+    }
+
+    public boolean isPreviousPage() {
+        return page > 0;
+    }
+
+    public List getList() {
+        return isNextPage() ?
+            results.subList(0, pageSize-1) :
+            results;
+    }
+
+    public Integer getNextPageCount() {
+        return new Integer(page + 1);
+    }
+
+    public Integer getPreviousPageCount() {
+        return new Integer(page - 1);
+    }
+}
+\end{lstlisting}
+\PVerb!Page! class'ýnýn kullanýmý \PVerb!setFirstResult! ve
+\PVerb!setMaxResults!'dan bile rahat, çünkü \PVerb!Page! nesnesine geçilen
+parametre, ``kaçýncý satýr'' yerine `kaçýncý sayfa'' deðeri olacaktýr. Sayfadan
+hareketle gerekli satýr hesaplarý arka planda \PVerb!Page! tarafýndan
+yapýlýr. \PVerb!CarDAO! kodlarýndaki \PVerb!fetchCar! sorgu metotu
+\PVerb!Page!'i þöyle kullanýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+public Page fetchCar(String currPage, String nextPage) {
+    Session s = HibernateSession.openSession();
+    return new Page(s.createQuery("from Car"),
+                    new Integer(currPage).intValue(),
+                    new Integer(nextPage).intValue());
+}
+\end{lstlisting}
+CarDAO'yu kullanan Struts Action ise þöyle olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class ListCarPageAction extends Action
+{
+    private static Logger logger = Logger.getLogger("appLogger");
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        String currPage = request.getParameter("currPage");
+        String maxPage = request.getParameter("maxPage");
+
+        CarDAO dao = new CarDAO();
+
+        request.getSession().setAttribute("page", dao.fetchCar(currPage,
+                                                               maxPage));
+        request.getSession().setAttribute("maxPage", maxPage);
+
+        return mapping.findForward("success");
+    }
+}
+
+\end{lstlisting}
+Metot \PVerb!execute! içinde ilk yapýlan iþ hangi veri sayfasýnýn ve bu sayfada
+kaç tane satýr görüntülemek istenildiðine dair (\PVerb!currPage! ve
+\PVerb!maxPage!) adýndaki parametrelerin okunmasýdýr. Bundan  sonra 
+\PVerb!CarDAO!'yu yaratýp bu parametreleri geçerek \PVerb!fetchCar! çaðrýsýný
+yapabiliyoruz. Geriye geri gelen sonuç \PVerb!Page! nesnesini alýp session
+üzerine yerleþtiriyoruz. Artýk JSP sayfasý session üzerinden \PVerb!page!
+referansýný kullanarak sonuç nesnemizi bulabilecektir. JSP sayfasý þöyle
+olacaktýr (kýsaltýlmýþ kod olarak).
+
+\begin{lstlisting}[language=XML,numbers=left,numberstyle=\tiny,caption=list.jsp]
+<table>
+  <tr>
+    <td>
+      <c:if test='\${sessionScope.page.previousPage == "true"}'>
+        <a href="<c:url value="/car-list.do">
+          <c:param name="currPage"
+	           value="\${sessionScope.page.previousPageCount}"/>
+          <c:param name="maxPage"
+	           value="\${sessionScope.maxPage}"/>
+          </c:url>">
+          <bean:message key="main.previous.page"/>
+        </a>
+      </c:if>
+      <c:if test='\${sessionScope.page.previousPage == "false"}'>
+        <bean:message key="main.previous.page"/>
+      </c:if>
+    </td>
+    <!---- ayni þeyi sonraki düðmesi için de yap ---->
+    ...
+  </tr>
+</table>
+<html:form action="/add-car.do">
+  <table>
+    ...
+    <c:forEach var="car" items="\${sessionScope.page.list}">
+      <tr>
+        ...
+        <td>
+          <a href="<c:url value="/edit-car-details.do">
+            <c:param name="licensePlate" value="\${car.licensePlate}"/>
+            </c:url>">
+            <c:out value="\${car.licensePlate}"/>
+            :
+            <c:out value="\${car.description}"/>
+          </a>
+        </td>
+      </tr>
+    </c:forEach>
+  </table>
+</html:form>
+\end{lstlisting}
+
+Satýr satýr açýklama:
+
+\begin{itemize}
+\item \textbf{4-13}: ``Önceki'' düðmesinin gösterilmesi. Bu düðmenin
+  \PVerb!c:if! koþulu üzerinden gösterilmesini sebebi, sadece gösterilecek sayfa
+  var ise üzerine týklanan ``önceki'' baðlantýsýna ihtiyaç
+  olmasýdýr. \PVerb!c:if! ile yapýlan kontrolün \PVerb!sessionScope! üzerinden
+  session'a eriþtiðini görüyoruz. Ýlginç bir kullaným daha var: Session'daki
+  \PVerb!page! üzerinden geride sayfa olup olmadýðý sorusu. Bunu \PVerb!Page!
+  class'ýnýn \PVerb!isPreviousPage! metotunu çaðýrarak yapýyoruz. Zincirleme
+  olarak çaðrý yapabilmek JSTL'in faydalý bir özelliðidir,
+  \PVerb!sessionScope.page.previousPage! gibi. Bu çaðrýdan geriye gelen cevap
+  bize daha fazla veri sayfasý olup olmadýðýný söyleyecek. Bu satýrlar arasýnda,
+  daha fazla sayfa olmasý sorusuna \PVerb!true! cevabý gelmesi planlandýðýmýza
+  göre, o zaman, \PVerb!c:url! ile ``önceki'' düðmesini gösterebiliriz. Peki bu
+  düðme hangi URL deðerlerini taþýyacak? Eðer biz \PVerb!currPage=3! üzerinde
+  isek, ``önceki'' URL'i \PVerb!currPage=2!'yi göstermeli. Bu \PVerb!-1!
+  iþlemini yaptýrmak için \PVerb!Page! class'ýna \PVerb!getPreviousPageCount!
+  adlý bir metot koymuþtuk. O komut iþte burada iþe yarayacak:
+
+  \begin{lstlisting}[language=XML, frame=none]
+    <a href="<c:url value="/car-list.do">
+       <c:param name="currPage"
+                value="\${sessionScope.page.previousPageCount}"/>
+  \end{lstlisting}
+  ile URL'imizi bir önceki sayfaya iþaret edecek þekilde gösterebiliriz. Niye
+  \PVerb!-1! gibi basit bir iþlemi hemen sayfa üzerinde yapmadýk? Çünkü prensip
+  olarak JSP üzerinde (\PVerb!<% %>! ile) Java kullanmaktan kaçýnmamýz
+  gerekiyor. Bu tür kodlar, görsel mantýk ile iþlem mantýðýný birbirine
+  karýþtýrýrlar ve bakýmý zor kodlara sebebiyet verirler. Eksiltme ve çoðaltma,
+  tek bir yerde, ve bir Java class'ýnýn içindedir ve ait olduðu yer de
+  orasýdýr.
+
+\item \textbf{14-17}: Buradaki \PVerb!c:if! þartý, geriye gitme iþlemi için veri
+  satýrý olmamasý durumunu kontrol eder. Eðer \PVerb!Page! nesnesi bize geride
+  daha fazla satýr yok diyor ise, bu noktada ``önceki'' baðlantýsý yerine,
+  ``önceki'' kelimesini String olarak basarýz, ama týklanabilir bir baðlantý
+  vermeyiz. Böylece kullanýcý geriye gitme iþlemini yapamayacaktýr.
+
+\item \textbf{18}: Aþaðý yukarý ayný iþlemleri bu sefer ``sonraki'' düðmesi için
+  yapýlýr. Tekrardan kaçýnmak için bu kodlarý göstermedik. Fakat,
+  \PVerb!previousPage! yerine \PVerb!nextPage!, ve \PVerb!previousPageCount!
+  yerine \PVerb!nextPageCount! çaðrýlarý kullanýlýr. Bu metotlarýn
+  tanýmlarý için \PVerb!Page! class'ýna bakabilirsiniz.
+
+\item \textbf{25-38}: Önceki ve sonraki düðmeleri sayfanýn üstünde yer
+  alýr. Hemen altýnda, listenin gösterimi yapýlýr. Artýk tanýdýk olan
+  \PVerb!c:forEach! ile \PVerb!\${sessionScope.page.list}! deðiþkenini
+  geziyoruz. \PVerb!Page! nesnesi üzerinde \PVerb!CarDAO!'dan gelen sonuçlarýn
+  bir \PVerb!List! olarak tutulduðunu belirtmiþtik. Listeyi göstermek için
+  eriþimin yapýldýðý her burasýdýr.
+
+\end{itemize}
+
+\subsection{Dosya Yüklemek (File Upload)}
+
+Uygulamamýz için, bazen, sadece kullanýcý tarafýndan yüklenebilecek bir dosyanýn
+sisteme alýnmasý gerekir. Bu dosya, bir JPEG resmi, bir PDF dosyasý, ya da bir
+text düz metni olabilir.
+
+Struts ile dosya yüklemesi gerçekleþtirmek için, Commons FileUpload projesini
+kullanmamýz gerekiyor. Bu projenin jar'ý ve bu jar'ý kullanan örnek dosya
+yükleme iþlemi gerçekleþtiren kodlarý, \PVerb!StrutsUpload! projesinde
+bulabilirsiniz.
+
+Projede gösterildiði þekilde bir dosya yükleyebilmek için, öncelikle, dosya
+ismini kullanýcýya soran bir JSP sayfasý yazmamýz gerekiyor.
+
+\begin{lstlisting}[language=Java, frame=none]
+<html:form action="/upload.do" enctype="multipart/form-data">
+  Please enter the file you want to upload:<br/>
+  <html:file property="formFile" /><br/><br/>
+  <html:submit/>
+</html:form>
+\end{lstlisting}
+Etiket \PVerb!<html:form>! içindeki \PVerb!<html:file>! ile, sayfa üzerinde
+kullanýcýya bir dosya seçmesini saðlayan bir öðenin yerleþtirilmesini
+saðlýyoruz. Form'un gönderileceði yer olarak ta \PVerb!/upload! adlý bir Struts
+Action'ý tanýmladýk. Bu Action, bizim yazdýðýmýz (ve her proje içinde olduðu
+gibi kullanýlabilecek) \PVerb!UploadAction! kodudur. Ayar dosyasý
+\PVerb!struts-config.xml! içindeki tanýmý aþaðýdaki gibidir:
+
+\begin{lstlisting}[language=Java, frame=none]
+<action path="/upload"
+        type="org.mycompany.kitapdemo.actions.UploadAction"
+        name="UploadForm">
+  <forward name="success" path="/pages/success.jsp"/>
+  <forward name="error" path="/pages/error.jsp"/>
+</action>
+\end{lstlisting}
+Gördüðümüz gibi Action, form olarak \PVerb!UploadForm! alýyor. Bu form'un içinde
+sisteme yüklenmiþ olan dosya binary olarak taþýnmaktadýr.  Zaten bu sebeple
+\PVerb!<html:form>! içinde \PVerb!UploadAction!'ýn çaðýrýmýnda \PVerb!enctype!
+kullandýk. Bunun yapýlma sebebi, \PVerb!UploadAction!'a verilen form'un, üzerinde
+basit tipler olan bir form deðil, bütün bir dosya taþýyor olmasýdýr.
+
+Action, bu bütün dosyayý binary olarak alýnca tek yapmasý gereken belli bir
+dizinde bir dosya açýp, dosyayý o dizine yazmasýdýr. Dosya yazýlmasý bitip
+geriye baþarý kodu dönülünce, önceden \PVerb!UploadAction! içinde tanýmlanmýþ
+olan dizin içinde yeni bir dosya olduðu görülecektir.
+
+Eðer bu yeni yüklenen dosya üzerinde ek iþlemler yapýlmasýný istiyorsak,
+Struts'ýn modüler zincirleme yapýsýný kullanarak yeni bir Action yazýp Struts
+çaðrý zincirine dahil edebiliriz. Yâni, meselâ bir
+\PVerb!UploadedFileProcessorAction! yazarak \PVerb!struts-config.xml!'de tanýmlarýz
+
+\begin{lstlisting}[language=Java, frame=none]
+<action path="/process-upload"
+        type="org.mycompany.kitapdemo.actions.UploadedFileProcessorAction"
+        name="UploadForm">
+  <forward name="success" path="/pages/success.jsp"/>
+  <forward name="error" path="/pages/error.jsp"/>
+</action>
+\end{lstlisting}
+ve önceki \PVerb!/upload! zincirine þu þekilde ekleriz
+
+\begin{lstlisting}[language=Java, frame=none]
+<action path="/upload"
+        type="org.mycompany.kitapdemo.actions.UploadAction"
+        name="UploadForm">
+  <forward name="success" path="/process-upload.do"/>
+  <forward name="error" path="/pages/error.jsp"/>
+</action>
+\end{lstlisting}
+Görüldüðü gibi \PVerb!UploadAction! baþarý (success) kodu artýk JSP sayfasý
+yerine, yeni iþleyici Action'a yönlendirilmiþtir. Nihai JSP sayfasýna
+yönlendirmeye yapan, iþleyici iþlemleri bittikten sonra,
+\PVerb!UploadedFileProcessorAction! class'ý olacaktýr. Ýþleyici yeni Action
+kodu altta görülebilir. Kodun tek ihtiyacý olan yeni yüklenen dosyanýn yeri ve
+ismidir. Bu bilgileri kendisine gecilecek olan \PVerb!UploadForm! üzerinden
+hemen alýnýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class UploadedFileProcessorAction extends Action {
+
+    public UploadedFileProcessorAction() { }
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        UploadForm newForm = (UploadForm) form;
+
+        String uploadedFile = newForm.getUploadedFileName();
+        // yeni yüklenmiþ uploadedFile ile istediðimiz iþlemleri
+        // burada yapabiliriz
+        // ..
+
+        return mapping.findForward("success");
+    }
+}
+\end{lstlisting}
+
+\subsection{Kullanýcý Ýsim ve Þifre Kontrolü (Login)}
+
+Kurumsal uygulamalarda çok ihtiyaç duyulan kodlama kalýplarýndan biri sisteme
+giriþ kontrolü için kullanýcý ismi ve þifre istenmesi ve kullanýcý ismine
+dayanarak kullanýcýya daha önce admin tarafýndan verilen roller ýþýðýnda,
+kullanýcýnýn deðiþik içerik görmesini saðlamaktýr. Meselâ bir finans
+uygulamasýnda banka hesaplarýný sadece {\em görebilen} kullanýcýlar olabilir, ve
+bu hesap bilgilerini hem görebilen hem de {\em deðiþtirebilen} kullanýcýlar
+olabilir.
+
+Login kodlama kalýbýný gerçekleþtirmek için, kullanýcý, þifre ve rol bilgisi
+idaresini Hibernate üzerinden yapacaðýz. Kullanýcý için \PVerb!User!, rol için
+\PVerb!Role! adlý iki POJO yaratýlacak. Her \PVerb!User!'ýn birden fazla
+\PVerb!Role! altýnda olabileceðini ve her \PVerb!Role!'un birden fazla kullanýcý
+olabileceði gerekliliðinden hareketle, bu iki nesne arasýnda çoka çok
+(\ref{hibernate:rels:manytomany} bölümü) türünden bir nicelik iliþkisi
+kuracaðýz.
+
+Rol odaklý dinamik içerik için özel etiket (custom tag) teknolojisini
+kullanacaðýz. Aynen Struts \PVerb!html:!, ya da JSTL \PVerb!c:! etiketlerin
+gibi, biz de kendimize özel bir etiket kütüphanesi yaratabiliriz. Bu etiket
+kütüphanesine \PVerb!mycompany:! etiketi üzerinden eriþeceðiz. Etikette tanýmlý
+\PVerb!inRole! gibi bir soru ile, o anda sayfaya bakmakta olan kullanýcýnýn bir
+rol içinde olup olmadýðý sorusunu sorabileceðiz.
+
+\begin{lstlisting}[language=Java, frame=none]
+<mycompany:inRole role="Admin">
+  Bunu sadece admin'ler görebilir
+</mycompany:inRole>
+\end{lstlisting}
+Bu örneðe göre kullanýcý ``Admin'' rolünde bir kullanýcý ise, ``bunu sadece
+admin görebilir'' mesajýný görebilecektir.
+
+Bu kodun doðru çalýþabilmesi için \PVerb!inRole! etiketinin kullanýcý bilgisine
+eriþmesi gerekir. O zaman, etiket iþleme konmadan önce bir baþka kodun kullanýcý
+bilgisini daha önceden eriþilebilir, merkezi bir yere yerleþtirmiþ olmasý
+gerekmektedir. Bu kod parçasý \PVerb!login.jsp!  adlý bir sayfanýn gideceði
+\PVerb!LoginAction! adlý bir Struts Action olabilir. Bu kod içine gelen
+\PVerb!LoginForm!'daki kullanýcý ve þifre, veri tabanýnda (Hibernate ile)
+kontrol edilir, ve eðer kullanýcý giriþine izin verilirse, session'a o
+kullanýcýya ait \PVerb!User! konabilir. Böylece daha sonra iþleme konacak olan
+\PVerb!mycompany:inRole! etiketleri, session üzerinden alacaklarý
+\PVerb!User!'dan, \PVerb!Role!'larýný vermesini isteyerek, sorulan rol altýnda
+olup olmadýklarýný kontrol edebilirler.
+
+\subsubsection{Tag Library Yaratmak}
+Üstte tarif edilen tasarýmýn kodlanmýþ hâlini \PVerb!StrutsHibLogin! projesinde
+bulabilirsiniz. Bu kodu parça parça açýklayalým. Bir etiket kütüphanesi (tab
+library) yaratmak için, etiket Java kodu, etiket taným dosyasý (tld), ve
+\PVerb!web.xml!'de deðiþiklikler gerekir. Etiket kodu, alttaki gibi olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class InRoleTag  extends TagSupport {
+
+    String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String newRole) {
+        this.role = newRole;
+    }
+
+    public int doStartTag() throws JspException {
+        HttpServletRequest request =
+                (HttpServletRequest)pageContext.getRequest();
+        HttpSession session = request.getSession();
+
+        User user = (User)session.getAttribute("user");
+
+        Set roles = user.getRoles();
+
+        boolean inRole = false;
+        for (Iterator it = roles.iterator(); it.hasNext();) {
+            Role role = (Role)it.next();
+            if (role.getRoleName().equals(this.role)) {
+                inRole = true;
+            }
+        }
+
+        if (inRole == true) {
+            return EVAL_BODY_INCLUDE;
+        } else {
+            return SKIP_BODY;
+        }
+    }
+}
+\end{lstlisting}
+JSP sayfasýnda etiket yüklendiði zaman çaðýrýlan kod önce \PVerb!setRole! daha
+sonra \PVerb!doStartTag!  kodudur. Etiketin \PVerb!role=``..''!  parametresini
+kullanmasý Java kodu üzerinde \PVerb!setRole! metotunun çaðýrýlmasýný
+tetikler. Tüm parametreler set edildikten sonra (bizim þartlarýmýzda bir tane),
+sýra \PVerb!doStartTag! metotuna gelir. Bu metot içinde etiket altýna düþen
+HTML'in gözüküp gözükmeme kararýný vermemiz gerekiyor. Bunlardan birincisi için
+\PVerb!EVAL_BODY_INCLUDE!, diðeri için \PVerb!SKIP_BODY! sabit deðerlerini
+döndürmemiz yeterlidir.
+
+Bu karar verilirken session üzerinden \PVerb!User! nesnesinin alýndýðýna dikkat
+ediniz. O zaman önceden \PVerb!User!'ý oraya koyan (þifresini kontrol ettikten
+sonra) birileri olmalý. Bu kod, yâni \PVerb!LoginAction!, þöyle olabilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class LoginAction extends Action
+{
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+
+        HttpSession session = request.getSession();
+
+        Session s = HibernateSession.openSession();
+        HibernateSession.beginTransaction();
+
+        DynaActionForm daf = (DynaActionForm) form;
+        if (logger.isDebugEnabled()) logger.debug("daf=" + daf);
+
+        User user = (User)s.get(User.class, (String)daf.get("userName"));
+
+        if (user.getPassword().equals((String)daf.get("password"))) {
+            if (logger.isDebugEnabled())
+                 logger.debug("user is authenticated");
+            session.setAttribute("user", user);
+        }
+
+        // form icindeki degerleri sil
+        session.removeAttribute(mapping.getAttribute());
+
+        // geri don
+        return mapping.findForward("success");
+    }
+}
+
+\end{lstlisting}
+Bu kodun görevi form'dan kullanýcý ve þifreyi almak, kontrol edip
+\PVerb!session.setAttribute("user", user)! çaðrýsýný kullanarak session üzerine
+bir kullanýcý nesnesi koymaktýr. Bu Action'ý çaðýran \PVerb!login.jsp! adlý bir
+giriþ sayfasý olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+...
+<html:form action="/login.do">
+
+   <html:text property="userName" size="20" />
+	...
+   <html:password property="password" size="20"/>
+
+</html:form>
+\end{lstlisting}
+Þifre girilen form alaný, yazýlýrken gözükmemesi için \PVerb!html:text! ile
+deðil, \PVerb!html:password! komutu ile alýnmýþtýr. Bu etiket özel bir Struts
+etiketidir, ve þifre alanlarý için kullanýlýr. Ýçine yazýlan bilgiler kullanýcý
+yazarken yýldýz (`*') olarak gözükecektir.
+
+\subsubsection{Etiket Kütüphanesi Tanýmý (TLD)}
+
+Bir etiket kütüphanesini JSP sayfalarýna tanýtmak için üç iþlem yapmamýz
+gerekir:
+
+\begin{enumerate}
+   \item TLD dosyasýný yaratmak
+   \item web.xml'den bu TLD'ye referans etmek
+   \item JSP sayfasý içinde tablib'i tanýmlamak
+\end{enumerate}
+TLD dosyasý, alttaki gibi olacaktýr.
+
+\begin{lstlisting}[language=Java, frame=none]
+<taglib>
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>mycompany</short-name>
+  <uri>http://www.mycompany.com</uri>
+  <display-name>Bilgidata TLD</display-name>
+  <description>Bilgidata Tag Library (taglib)</description>
+  <tag>
+    <name>inRole</name>
+    <tag-class>org.mycompany.kitapdemo.util.InRoleTag</tag-class>
+    <attribute>
+      <name>role</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+</taglib>
+\end{lstlisting}
+Etiket kodunun \PVerb!<tag-class>! ve parametrelerin \PVerb!<attribute>!
+altýnda tanýmlanmasý gerekmektedir; \PVerb!inRole! parametresi (Java koduna
+tekabül edecek þekilde) \PVerb!<attribute>! altýda \PVerb!<name>! alt etiketi
+ile tanýmlanmýþtýr. Bu ayar dosyasýný \PVerb!web.xml!'e etiket kütüphanesi
+olarak tanýtmak için:
+
+\begin{lstlisting}[language=Java, frame=none]
+<web-app>
+  ....
+  <taglib>
+    <taglib-uri>/tags/mycompany</taglib-uri>
+    <taglib-location>/WEB-INF/tags/mycompany.tld</taglib-location>
+  </taglib>
+</web-app>
+\end{lstlisting}
+Ve son olarak, JSP'den tld'mizi yükleyip kullanmak için
+
+
+\begin{lstlisting}[language=Java, frame=none]
+<%@ taglib uri="/tags/mycompany" prefix="mycompany" %>
+...
+<table>
+  <tr>
+    <td>
+      <mycompany:inRole role="Admin">
+        Bunu sadece admin'ler görebilir
+      </mycompany:inRole>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <mycompany:inRole role="Regular User">
+        Bunu sadece normal kullanýcýlar görebilir
+      </mycompany:inRole>
+    </td>
+  </tr>
+</table>
+\end{lstlisting}
+kullanýmý gerekir. Geliþtirme dizin yapýsý altta görülebilir.
+
+\begin{lstlisting}[language=Java, frame=none]
++- StrutsHibLogin
+| +- dd
+| | +- META-INF
+| | +- tags
+| | | +- mycompany.tld
+| | | +- c-rt.tld
+| | | ..
+| | +- jboss-service.xml
+| | +- struts-config.xml
+| | +- web.xml
+| | +- ..
+| +- etc
+| +- lib
+| +- resources
+| | +- application.properties
+| | +- application_tr.properties
+| | +- hibernate.cfg.xml
+| | +- log4j.properties
+| | +- log4j.xml
+| | +- oscache.properties
+| +- src
+| | +- java
+| | | +- org
+| | | | +- mycompany
+| | | | | +- kitapdemo
+| | | | | | +- actions
+| | | | | | | +- LoginAction.java
+| | | | | | +- pojo
+| | | | | | | +- Role.hbm.xml
+| | | | | | | +- Role.java
+| | | | | | | +- SimpleUserTest.java
+| | | | | | | +- User.hbm.xml
+| | | | | | | +- User.java
+| | | | | | +-  service
+| | | | | | +- util
+| | | | | | | +- InRoleTag.java
+| | | | | | | +- ...
+| | +- pages
+| | | +- login.jsp
+| | | +- main.jsp
+| | +- sql
+| | | +- sample_data.sql
+| | | +- tables_mysql.sql
+| +- build.properties
+| +- build.xml
+\end{lstlisting}
+
+\section{Özet}
+
+Web uygulamalarý yazmak için gerekli geliþtirme ortamýný, MVC kavramlarýný bu
+bölümde iþledik. JSTL, Struts etiketleri ve Struts Action'larý beraber
+kullanýlýnca çok güçlü bir üçlü oluþturmaktadýrlar, zannediyorum bu potansiyeli
+gösterebilmiþ olduk. Sürekli ortaya çýkan Web programlama kalýplarýný, destek
+kodlarý ile sunduk; Bu kalýplar güncelleme, büyük sonuç listelerini sayfalama
+ile gösterme, kayýt ekleme gibi kalýplardýr. Hatalý durumlarý idare etmek diðer
+önemli bir husustur. Hem genelci, hem de sayfa/action baþýna özel durumlarda
+nasýl yapýlacaðý bu bölümde açýklanmýþtýr. Türkçe karakterleri idare edebilmek,
+ve ayný uygulamadan deðiþik dilleri destekleyebilme hakkýnda yazýlanlar
+Türkiye'deki yazýlýmcýlar için oldukça faydalý olacaktýr zannediyorum. Bu
+bölümde iþlenen kodlarý \PVerb!StrutsTiles!, \PVerb!StrutsHibSimple!,
+\PVerb!StrutsHibTag! ve \PVerb!StrutsHibAdv! altýnda bulabilirsiniz. Projenize
+örnek almanýz için en ideal kodlar \PVerb!StrutsHibAdv! projesi olacaktýr.
+

@@ -1,0 +1,143 @@
+Bu kitabin olculeri daha buyuk olacak
+		
+* 2. Baskiya Onsoz
+  * Ajax, Hibernate Annotation'larin seciminin nasil Kural'lara uydugunu acikla.
+  * Spring'in nasil obsolate olacagindan bahset.
+
+* Giris
+  * Kurallari acikla
+
+* Hibernate
+  * Hersey Annotation'a gecirilecek (ornekler)
+  * Java 5 ozelliklerini kullan set<Car> gibi
+  * CompositeId uzerindeki property'leri degistirmek istersek, bu adamlarin
+    belki composite id olmamasi gerekiyor.
+  * Iki nesne arasinda relation yoksa, nasil HQL kullanilir (theta ile ornek
+  goster)
+  * HttpSession uzerine konan nesnelerin LAZY iliskileri var ise, mesela bir
+    liste gezerken, Filter Session'i kapattigi icin, listenin ikinci ucuncu
+    sayfalarindan "session was closed" hatasi gelebiliyor. Bunun icin cozum
+    HttpSession'a koymadan once objenin tum iliskilerini aktive etmektir. 
+      
+* Proje Idaresi
+  * Prosedur takibi (kurallar takip edilmelidir, cunku takip edildikleri zaman
+    hiz kazandirirlar, kurallar, genis iletisimin bir parcasidir)
+  * CASE araclari
+  * Subversion ekle
+  * CVS kullaninini komut satirindan iyice acikla
+  * CVS ile cakismayi nasil halledelim; Kilitsiz calismak niye daha iyi
+  * Bir projede zaman cizgisini goster
+  * Ornek UGB yaz
+  * <gerisi slaytlarda>
+
+* Araclar
+  * Java 5 nasil kurulur
+  * JBoss GA nasil kurulur
+  * EncodingChanger programini anlat. Kod verebilirsin.
+  
+* JBoss Seam
+  * /kitapdemo /images vs. nasil halledilir. html:rewrite kullanilmamasini
+    tembih et.  
+  * Veri tabanindan dropdown liste doldurmak eksik
+  * DisplayTag kullanimi (kesinlikle request bazli kullanilmali)
+  * MySQL FULLTEXT SQL komutunu Hibernate uzerinden cagirmayi goster.
+  * DisplayTag'in requestURI ile sayfalama yapabilmesi. DtPage class'i.
+  * Nested html:iterate (ya da JSTL versiyonu)
+  * DWR Kurulumu
+  * Seam + Ajax kullanimi
+  * Ornekler
+     * Ikili dropdown
+  * native2ascii -encoding "UTF-8" messages_tr.properties yeni
+       
+* Distributed Objects
+  * EJB'leri Annotation ile yap, Spring ve RMI bolumunu cikart
+  * Command pattern sadece JMS icin kullanilmali, EJB'ye gecirilebileceginden
+    bahsedilmeli, ama EJB'deki tum ornekler normal olmali.
+  * <gerisi slaytlarda>
+
+* Performance
+  * OsCache, EhCache icin equals metodunun tanimlanmasi mecburi!
+  * oscache.properties'de region tanimlanabiliyor
+  * Onbelleklenen sorgular:
+    Date iceren sorgularda todaysdate kullanimi var ise, saniye farkindan
+    Hibernate onbellegindeki sorgular surekli degisebiliyor. Bunun icin
+    gunun basina gore "saniyesiz" todaysdate kullanilmasi gerekli.
+  
+* Test
+  * Birim testleri icinden nasil log yapilir (static blok vs)
+  * jMock icin iki jar gerektigini yaz (jmock ve jmock-cglib).
+  * Yeni jMock grafiklerini ekle
+  * JBoss Seam iceren uygulama nasil test edilir.
+  * TestNG
+
+* DB 
+  * MySQL'in FULLTEXT usulu arama yapmasi, xx_SEARCH tablolari
+  * WHERE EXISTS icin daha fazla ornek
+  * MySQL ve trigger kullanimi
+  * MySQL komut satirinin iyice anlat "mysql < xx.sql" usulu, -u, -h, -p kullanimi  
+  * create database cars default character set utf8;
+  
+* Proje idaresi (Errata - Internet)
+  * ITracker kurulumunu standalone/MySQL stiline gecir
+
+* Genel
+  Hata Bulma:
+  * Yarinin yarisi, vs. ile deneme yanilma problemi (CSS ornegini ver)
+    
+* Unix
+  * rc.local'dan baslangicta uygulama baslatma numarasi
+  * Perl icin 
+   open IN, $ARGV[0];
+   undef $/;
+   $_ = <IN>;
+   if (m/laskdfsaf(.*)sdkfalsdf/sg) {
+      ...
+   kalibi. find ile alinan liste bu Perl script'e verilir. 
+  
+
+* Appendix
+  * Java ile mail nasil gonderilir? mail.sirket.com uzerinde her zaman bir
+    mail server'in oldugundan bahset. Guvenlik kontrolu yoktur (ayni net'te
+    olmak yeterli). Test sirasinda disari mail atilmamasi onemli degil; Relay
+    problemi cikabilir, production'da bu dert olmaz.
+
+* Regex ve Ant
+
+ <taskdef  resource = "net/sf/antcontrib/antlib.xml"/>
+
+  <!-- Change ports of the jboss installation in the remote.   -->
+  <!-- machine.                                                -->
+  <target name="change-cluster-ports">
+    <echo>--------------------------------------------------------</echo>
+    <echo>Usage: ant change-cluster-ports -Dcluster=[cluster-properties-file-name]</echo>
+    <echo>---------------------------------------------------------</echo>
+    <echo></echo>
+    <property file="./resources/etc/${cluster}/settings.properties"/>    
+    <for list="${remotedirs}" param="remote.dir">
+      <sequential>
+        <echo>Changing ports of @{remote.dir}</echo>
+        <!--         node[..] kelimesinin icindeki sayiyi al ve -->
+        <!--         yeni portun basina koy -->
+        <propertyregex property="port.prefix"
+                       override="yes"
+                       input="@{remote.dir}"
+                       regexp="node(\d+)"
+                       select="\1"
+                       casesensitive="false" />
+        <exec executable="ssh">
+          <arg line="${remote.host}"/>
+          <arg line="-l"/>
+          <arg line="${remote.user}"/>
+          <arg line="perl"/>
+          <arg line="-pi"/>
+          <arg line="-e"/>
+          <arg line="s/8080/${port.prefix}8080/sg"/>
+          <arg line="@{remote.dir}/../deploy/jboss-web.deployer/server.xml"/>
+        </exec>
+        
+      </sequential>
+    </for>
+  </target>  
+
+    
+  

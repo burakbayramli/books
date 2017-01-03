@@ -1,0 +1,808 @@
+\documentclass[landscape]{slides}
+%\usepackage{defscup}
+
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage[stable]{footmisc}
+\setlength\hoffset{0in} \setlength{\textwidth}{9in}
+\setlength\voffset{-1in} \setlength{\textheight}{7.2in}
+%\def\blue#1{{\color{blue} #1}}
+\def\eps{\varepsilon}
+\newcommand{\tab}{\hspace{5mm}}
+\newcommand{\fc}{\footnote} 
+\DefineVerbatimEnvironment%
+  {verbcode}{Verbatim}{xleftmargin=2.5mm}
+\DefineVerbatimEnvironment%
+  {verbout}{Verbatim}{xleftmargin=2.5mm}
+\DefineVerbatimEnvironment%
+  {verbrun}{Verbatim}{xleftmargin=2.5mm} 
+\VerbatimFootnotes
+
+\newcommand{\red}[0]{\color{Red}}
+\newcommand{\blue}[0]{\color{Blue}}
+\newcommand{\header}[1]{
+    \red
+    #1\\
+    \rule[1in]{\textwidth}{.01in}
+    \vspace{-1.5in}
+    \blue
+}
+
+
+\begin{document}
+
+%\addcontentsline{toc}{chapter}{Introduction}
+
+\begin{slide}
+\header{Introduction}
+\begin{itemize} 
+\item The goal of data analysis is to highlight the information 
+in given data. 
+\item Exploratory Data Analysis -- a graphical and
+numerical exploration of the  data 
+\item Modelling -- using
+mathematics, in conjunction with subject-area theory, 
+to explain the data
+\item Computing 
+\item Reporting -- presenting results clearly, using 
+graphs as appropriate
+\end{itemize} 
+\end{slide}
+
+\begin{slide}
+\header{Data Frames in R} 
+\begin{itemize}
+\item
+An important class of R object is the data frame. R uses data 
+frames to
+store rectangular arrays in which the columns may be vectors of
+numbers or factors or text strings.  A
+data frame is like a matrix, where the rows are observations
+and the columns are variables.
+\item 
+For example, try
+\begin{verbatim}
+> head(cars) # shows the first rows of the data frame cars
+  speed dist
+1     4    2
+2     4   10
+3     7    4
+4     7   22
+5     8   16
+6     9   10
+\end{verbatim}
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\header{Use of \texttt{summary}}
+\begin{itemize}
+\item 
+\begin{verbatim}
+> summary(cars)   # computes summary statistics
+     speed           dist
+ Min.   : 4.0   Min.   :  2.00
+ 1st Qu.:12.0   1st Qu.: 26.00
+ Median :15.0   Median : 36.00
+ Mean   :15.4   Mean   : 42.98
+ 3rd Qu.:19.0   3rd Qu.: 56.00
+ Max.   :25.0   Max.   :120.00
+\end{verbatim}
+\item We can immediately see that the range of speeds (first 
+column)
+is from 4 mph to 25 mph, and that the range of distances (second
+column) is from 2 feet to 120 feet.
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\header{Entry of data at the command line}\label{dataentry}
+\begin{itemize}
+\item
+The following table gives, 
+the distance that
+the band traveled when released,
+for each amount by which an
+elastic band is stretched over the end of a ruler, 
+\begin{verbatim}
+Stretch (mm)  Distance (cm)
+      46      148
+      54      182
+      48      173
+      50      166
+      44      109
+      42      141
+      52      166
+\end{verbatim}
+\item We can use \verb+data.frame()+ to input these (or other) 
+data directly at the command line. We will assign the name
+\verb+elasticband+ to the data frame:
+\end{itemize}
+\end{slide}
+\begin{slide}
+\header{Using data.frame() at the command line}
+\begin{itemize}
+\item[ ]
+\begin{verbatim}
+elasticband <- data.frame(stretch=c(46,54,48,50,44,42,52),
+               distance=c(148,182,173,166,109,141,166))
+\end{verbatim}
+\end{itemize}
+\end{slide}
+\end{document}
+
+
+
+
+\subsection{Retaining objects between sessions}
+
+Note the commands
+\verb!save.image()! for saving the current workspace,
+\verb!rm(list=ls())!  for clearing the workspace, \verb!setwd()! for
+changing the working directory, and \verb!load()! for loading an
+existing workspace.  
+
+Type
+\verb+ls()+ to get a complete list of objects. Then remove unwanted
+objects using
+\begin{verbatim}
+rm(<obj1>, <obj2>,...)
+\end{verbatim}
+For example, to remove the objects \verb+ACTpop+ and \verb+elasticband+ from the
+workspace image before quitting, type
+
+\begin{verbatim}
+rm(ACTpop, elasticband)
+q()
+\end{verbatim}
+
+\newpage
+\section{Vectors in R}
+Vectors may have mode logical, numeric or character.
+ Examples of vectors are
+\begin{verbatim}
+> c(2,3,5,2,7,1)
+[1] 2 3 5 2 7 1
+
+> 3:10 # The numbers 3, 4,.., 10
+[1] 3 4 5 6 7 8 9 10
+
+> c(T, F, F, F, T, T, F)
+[1] TRUE FALSE FALSE FALSE TRUE TRUE FALSE
+
+> c("Canberra", "Sydney", "Canberra", "Sydney")
+[1] "Canberra" "Sydney"   "Canberra" "Sydney"
+\end{verbatim}
+The first two vectors above are numeric, the third is logical
+(i.e. a vector with elements of mode logical), and the fourth
+is a string vector (i.e. a vector with elements of mode character).
+\newpage
+\subsection{Concatenation -- joining vector objects}
+The \verb+c+ in \verb+c(2, 3, 5, 2, 7, 1)+ is an acronym for `concatenate'.
+The meaning is: `Collect these numbers together to form a vector'.
+We can concatenate two vectors. In the following, we form numeric
+vectors \verb+x+ and \verb+y+, that we then concatenate to form
+a vector \verb+z+:
+
+\begin{verbatim}
+> x <- c(2,3,5,2,7,1)
+> x
+[1] 2 3 5 2 7 1
+> y <- c(10,15,12)
+> y
+[1] 10 15 12
+> z <- c(x, y)
+> z
+[1] 2 3 5 2 7 1 10 15 12
+\end{verbatim}
+\newpage
+\subsection{Subsets of vectors}
+Note three common ways to extract subsets of vectors.
+
+\begin{enumerate}
+\item Specify the indices of the elements that are to be extracted,
+e.g.,
+\begin{verbatim}
+> x <- c(3,11,8,15,12) # Assign to x the values 3, 11, 8, 15, 12
+> x[c(2,4)]            # Extract the elements in positions 2 and 4
+[1] 11 15
+\end{verbatim}
+\item Use negative subscripts to omit the elements in nominated subscript
+positions:\footnote{Take care not to mix positive and negative subscripts.}
+\begin{verbatim}
+> x[-c(2,3)] # Remove the elements in positions 2 and 3
+[1] 3 15 12
+\end{verbatim}
+\item Specify a vector of logical values. The elements that are
+extracted are those for which the logical value is \verb+TRUE+.
+Thus, suppose we want to extract values of \verb+x+ that are greater
+than 10.
+\begin{verbatim}
+> x > 10
+[1] FALSE TRUE FALSE TRUE TRUE
+> x[x>10]
+[1] 11 15 12
+\end{verbatim}
+\end{enumerate}
+\newpage
+
+\subsection{Missing values}
+The missing value symbol is \verb!NA!.  As an example, we may set:
+\begin{verbatim}
+y <- c(1, NA, 3, 0, NA)
+\end{verbatim}
+Note that any arithmetic operation or relation that involves \verb+NA+
+generates an \verb+NA+.  Specifically, be warned that
+\verb+y[y==NA] <- 0+ leaves \verb+y+ unchanged.  The reason is that
+all elements of \verb+y==NA+ evaluate to \verb+NA+.  This does not
+identify an element of \verb+y+, and there is no assignment.  To
+replace all \verb+NA+s by 0, use the function \verb+is.na()+, thus
+\begin{verbatim}
+> y[is.na(y)] <- 0
+> y
+[1] 1 0 3 0 0
+\end{verbatim}
+The functions \verb+mean()+, \verb+median()+, \verb+range()+, and a
+number of other functions, take the argument \verb+na.rm=TRUE+; i.e.
+remove \verb+NA+s, then proceed with the calculation.  By default,
+these and related functions will fail when there are \verb+NA+s.  By
+default, the \verb+table()+ function ignores \verb+NA+s.
+\newpage
+
+\subsubsection*{Setting the number of decimal places in output}
+
+The \verb!options()! function can be
+used to change to make a global change to the number of significant
+digits that are printed.  For example:
+\begin{verbatim}
+> sqrt(10)
+[1] 3.162278
+options(digits=2)   # Change until further notice
+> sqrt(10)
+[1] 3.2
+\end{verbatim}
+
+\subsection{Factors}
+A factor is a special type of vector, stored internally as a
+numeric vector with values 1, 2, 3,\dots $k$. The value $k$ is the number
+of levels.
+
+Consider a survey that has data on 691 females and 692 males.
+If the first 691 are females and the next 692 males, we can create
+a vector of strings that that holds the values thus:
+\begin{verbatim}
+gender <- c(rep("female",691), rep("male",692))
+\end{verbatim}
+We can change this vector to a factor, by entering:
+\begin{verbatim}
+gender <- factor(gender)
+\end{verbatim}
+Internally, the factor \verb+gender+ is stored as 691 1's, followed
+by 692 2's. It has stored with it a table that holds the information:
+
+\smallskip
+\begin{tabular}{|l|l|}
+\hline
+ 1 & female \\
+\hline
+ 2 & male \\
+\hline
+\end{tabular}
+\smallskip
+
+The
+1 is translated into \verb!female! and the 2 into \verb!male!. The values
+\verb!female! and \verb!male! are the levels of the factor. By default,
+the levels are chosen to be in alphanumeric order, so that \verb!female!
+precedes \verb!male!. Hence:
+\begin{verbatim}
+> levels(gender)
+[1] "female" "male"
+\end{verbatim}
+Note that if \verb+gender+ had been an ordinary character vector, the outcome
+of the above \verb+levels+ command would have been \verb+NULL+.
+The order of the factor levels determines the order of appearance of
+the levels in graphs and tables that use this information.  To cause
+\verb!male! to come before \verb!female!, use
+\begin{verbatim}
+gender <- factor(gender, levels=c("male", "female"))
+\end{verbatim}
+This syntax is available both when the factor is first created, or
+later to change the order in an existing factor.  Take care that the
+level names are correctly spelled.  For example, specifying
+\verb!"Male"! in place of \verb!"male"! in the \verb!levels!
+argument will cause all values that were \verb!"male"!
+to be coded as missing.
+
+For an existing factor, a better way to change the order is:
+\begin{verbatim}
+levels(gender) <- c("male", "female")
+\end{verbatim}
+
+One advantage of factors is that the memory required for storage is 
+usually less than for the corresponding character vector.
+
+\section{Data Frames}\label{dataframes}
+A data frame is a generalization of a matrix,
+in which different columns may have different modes. All elements
+of any column must, however, have the same mode, i.e.\ all numeric
+or all factor, or all character, or all logical.
+
+Included with our data sets is \verb+Cars93.summary+,
+created from the \verb+Cars93+ data set in the Venables and
+Ripley \textit{MASS} package, and included in our \textit{DAAG}
+library.  In order to access it, we need to load it into the
+workspace, thus:
+\begin{verbatim}
+> library{daag}          # load the DAAG library
+> data(Cars93.summary)   # copy Cars93.summary into the workspace
+> Cars93.summary
+        Min.passengers Max.passengers No.of.cars abbrev
+Compact              4              6         16      C
+Large                6              6         11      L
+Midsize              4              6         22      M
+Small                4              5         21     Sm
+Sporty               2              4         14     Sp
+Van                  7              8          9      V
+\end{verbatim}
+
+The data frame has row labels (accessed using
+\verb+row.names(Cars93.summary)+) \verb!Compact!, \verb!Large!,... The
+column names (accessed using \verb+names(Cars93.summary)+) are
+\verb+Min.passengers+ (i.e. the minimum number of passengers for cars
+in this category), \verb+Max.passengers+, \verb+No.of.cars+, and
+\verb+abbrev+. The first three columns have mode numeric, and the
+fourth has mode character.  The column \verb+abbrev+ could equally
+well be stored as a factor.
+
+There are several ways to access the columns of a data frame.
+Any of the following\footnote{Also allowed is \texttt{Cars93.summary[4]}.
+This gives a data frame with the single column \texttt{abbrev}.}
+will pick out the fourth column of the data frame \verb+Cars93.summary+
+and store it in the vector \verb+type+.
+\begin{verbatim}
+type <- Cars93.summary$abbrev
+type <- Cars93.summary[,4]
+type <- Cars93.summary[,"abbrev"]
+type <- Cars93.summary[[4]] # Take the object that is stored
+                            # in the fourth list element.
+\end{verbatim}
+In each case, one can view the contents of the object \verb!type!:
+\begin{verbatim}
+> type
+[1] C  L  M  Sm Sp V
+Levels:  C L M Sm Sp V
+\end{verbatim}
+
+It is often convenient to use the \verb!attach()! function:
+\begin{verbatim}
+> attach(Cars93.summary)
+  # R can now access the columns of Cars93.summary directly
+> abbrev
+[1] C  L  M  Sm Sp V
+Levels:  C L M Sm Sp V
+> detach("Cars93.summary")
+  # Not strictly necessary, but tidiness is a good habit!
+  # detach(Cars93.summary) is an acceptable alternative
+\end{verbatim}
+Detaching data frames that are no longer in use reduces the risk
+of a clash of variable names, e.g., two different attached
+data frames that have a column with the name \verb!abbrev!,
+or an \verb!abbrev! both in the workspace and in an attached
+data frame.
+
+\newpage
+In Windows versions, use of \verb+edit()+ allows access to a
+spreadsheet-like display of a data frame or of a vector.  One can then
+directly manipulate individual entries or perform data entry
+operations as with a spreadsheet.  For example,
+\begin{verbatim}
+Cars93.summary <- edit(Cars93.summary)
+\end{verbatim}
+To close the spreadsheet, click on the \textbf{File} menu and then on
+\textbf{Close}.
+
+\newpage
+\subsection{Variable names}
+The \verb!names()! function can be used to determine variable names in
+a data frame.  As an example, consider the New York air quality data
+frame that is included with the base R package.  To determine the
+variables in this data frame, type
+\begin{verbatim}
+data(airquality)
+names(airquality)
+[1] "Ozone"   "Solar.R" "Wind"    "Temp"    "Month"   "Day"
+\end{verbatim}
+The \verb!names()! function serves a second purpose.  To change the
+name of the \verb!abbrev! variable (the fourth column) in the
+\verb!Cars93.summary!  data frame to \verb!code!, type
+\begin{verbatim}
+names(Cars93.summary)[4] <- "code"
+\end{verbatim}
+If we want to change all of the names, we could do something like
+\begin{verbatim}
+names(Cars93.summary) <- c("minpass","maxpass","number","code")
+\end{verbatim}
+
+\newpage
+\subsection{Applying a function to the columns of a dataframe}
+\label{ssec:sapply}
+The \verb!sapply()! function is a useful tool for calculating
+statistics for each column of a data frame.  The first argument to
+\verb!sapply()! is a data frame.  The second argument is the name of a
+function that is to be applied to each column.  Consider the
+\verb!women! data frame.
+\begin{verbatim}
+> data(women)
+> women    # Display the data
+   height weight
+1      58    115
+2      59    117
+3      60    120
+................
+15     72    164
+\end{verbatim}
+In order to compute averages of each column, type:
+\begin{verbatim}
+> sapply(women, mean)    # Apply mean() to each of the columns
+height weight
+  65.0  136.7
+\end{verbatim}
+\newpage
+\section{R packages}\label{sec:packages}
+The default R distribution includes a number of packages in its
+library.  Note in particular \textit{base}, \textit{eda}, \textit{ts}
+(time series), \textit{boot} and \textit{MASS}. 
+
+Installed packages, unless loaded automatically, must then be
+\textit{load}ed prior to use.  The \textit{base} package is
+automatically loaded at the beginning of the session. To load any
+other installed package, use the \verb+library()+ function.  For
+example,
+\begin{verbatim}
+library(mass)    # Loads the MASS library
+\end{verbatim}
+The \verb!require()! function has the same effect as the \verb!library()!
+function.
+
+\addtocounter{section}{1}
+
+\section{R Graphics}\label{plotting}
+The functions \verb+plot()+, \verb+points()+, \verb+lines()+, \verb+text()+,
+\verb+mtext()+, \verb+axis()+, \verb+identify()+, etc. form a suite that 
+plot graphs and
+add features to the graph. To see some of the possibilities that
+R offers, enter
+\begin{verbatim}
+demo(graphics)
+\end{verbatim}
+Press the Enter key to move to each new graph.
+\newpage
+\subsection{plot( ) and allied functions}\label{plotallies}
+The basic command is
+\begin{verbatim}
+plot(y ~ x)
+\end{verbatim}
+or
+\begin{verbatim}
+plot(x, y)
+\end{verbatim}
+where \verb!x! and \verb!y! must be the same length.
+
+Here are two examples.
+\begin{verbatim}
+attach(elasticband)     
+plot(stretch, distance) # Alternative: plot(distance ~ stretch)
+detach(elasticband)
+
+attach(austpop)
+plot(year, ACT, type="l") # Join the points ("l" = "line")
+detach(austpop)
+\end{verbatim}
+\newpage
+\subsubsection{Fine control -- parameter settings}
+When it is necessary to change the default parameter settings, use the
+\verb+par()+ function.  We have already used \verb!par(mfrow=c(m, n))!
+to get an $m$ by $n$ layout of graphs on a page.
+Here is another example:
+\begin{verbatim}
+ par(cex=1.25, mex=1.25)
+\end{verbatim}
+increases the text and plot symbol size 25\% above the default.
+Adding \verb+mex=1.25+ makes room in the margin to accommodate
+the increased text size.
+
+One can store the existing settings, so that they can be restored
+later. For this, specify, e.g.,
+\begin{verbatim}
+ oldpar <- par(cex=1.25, mex=1.25) # Use par(oldpar) to restore
+\end{verbatim}
+The size of the axis annotation can be controlled, independently of the setting of \verb!cex!,
+by specifying a value for \verb!cex.axis!.  Similarly, \verb!cex.labels!
+ may be used to control the size of the
+axis labels.
+
+Type in \verb+help(par)+ to get a list of all the parameter settings
+that are available with \verb+par()+.
+
+\newpage
+\subsubsection*{Adding points, lines, text and axis annotation}
+Use the \verb+points()+ function to add points to a plot. Use
+the \verb+lines()+ function to add lines to a plot.\footnote{Actually
+these functions are identical, differing only in the default
+setting for the parameter \verb!type!. The default setting
+for \verb!points()! is \verb!type = "p"!, and for \verb!lines()!
+is \verb!type = "l"!.  Explicitly setting \verb!type = "p"!
+causes either function to plot points, \verb!type = "l"! gives lines.}
+The \verb+text()+ function
+places text anywhere on the plot.
+
+The function \verb+mtext(text, side, line, ..)+ adds text in the margin of
+the current plot. The sides are numbered 1(x-axis), 2(y-axis),
+3(top) and 4(right vertical axis).
+
+The \verb+axis()+ function gives fine control over axis ticks
+and labels.
+\newpage
+\subsubsection*{Labeling points -- an example}
+Figure \ref{fig:primateplot} presents a scatterplot of the data from
+the \verb+primates+ data frame.  Notice from the listing below that
+the species names are held as row names, which we can access using the
+function \verb+row.names()+:
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Pictures/g1-2.pdf}
+\caption{Brain weight versus body weight, for
+the primates data frame.}\label{fig:primateplot}
+\end{center}
+\end{figure}
+
+\newpage
+We begin with code that will give a crude version of Figure
+\ref{fig:primateplot}.  We use the function \verb+text()+ to add text
+labels to the points on a plot.
+
+\begin{verbatim}
+data(primates)    # The DAAG package must be loaded
+attach(primates)  # Needed if primates is not already attached.
+plot(Bodywt, Brainwt, xlim=c(5, 250))
+# Specify xlim so that there is room for the labels
+text(x=Bodywt, y=Brainwt, labels=row.names(primates), adj=0)
+# adj=0 implies left adjusted text
+detach(primates)
+\end{verbatim}
+
+The resulting graph would be adequate for identifying points,
+but it is not a presentation quality graph. We now note the changes
+that are needed to get Figure \ref{fig:primateplot}.
+
+In Figure \ref{fig:primateplot} we use the \verb+xlab+ (x-axis) and
+\verb+ylab+ (y-axis) parameters to specify meaningful axis titles. We
+move the labeling to one side of the points by including appropriate
+horizontal and vertical offsets. We multiply
+\verb+chw <- par()$cxy[1]+ by 0.1 to get an horizontal offset that is
+one tenth of a character width, and similarly for
+\verb+chh <- par()$cxy[2]+ in a vertical direction.  We use
+\verb+pch=16+ to make the plot character a heavy black dot. This helps
+make the points stand out against the labeling.
+
+\newpage
+Here is the R code for Figure \ref{fig:primateplot}:
+
+\begin{verbatim}
+attach(primates)
+plot(x=Bodywt, y=Brainwt, pch=16,
+       xlab="Body weight (kg)", ylab="Brain weight (g)",
+       xlim=c(5,300), ylim=c(0,1500))
+chw <- par()$cxy[1]
+chh <- par()$cxy[2]
+text(x=Bodywt+chw, y=Brainwt+c(-.1,0,0,.1,0)*chh,
+       labels=row.names(primates), adj=0)
+detach(primates)
+\end{verbatim}
+
+\newpage
+\subsubsection*{Rug plots}
+
+The function \verb+rug()+ adds vertical bars, showing the distribution
+of data values, along one or both of the $x$ and $y$ axes of an
+existing plot.  Figure \ref{fig:milkrug}. has rugs on both the $x$ and
+$y$ axes.  The code that produced Figure \ref{fig:milkrug} is:
+\begin{verbatim}
+data(milk)
+xyrange <- range(milk)
+plot(four ~ one, data = milk, xlim = xyrange, ylim = xyrange, pch = 16)
+rug(milk$one)
+rug(milk$four, side = 2)
+abline(0, 1)
+\end{verbatim}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Pictures/g1-3.pdf}
+\caption{Each of 17 panelists compared two milk samples
+for sweetness. The $y$-ordinate is the assessment for four units
+of additive, while the $x$-ordinate is the assessment for one unit
+of additive. 
+}\label{fig:milkrug}
+\end{center}
+\end{figure}
+
+\addtocounter{subsection}{2}
+\subsection{Identification and location on the figure region}
+Two functions are available for this purpose.  Draw the graph first,
+then call one or other of these functions:
+\begin{itemize}
+\item[$\circ$] \verb!identify()! labels
+points.  One positions the cursor near the point that is to be
+identified, and clicks the left mouse button.
+\item[$\circ$] \verb!locator()! prints out
+the co-ordinates of points.
+\end{itemize}
+The user positions the cursor at the location for which coordinates are
+required, and clicks the left mouse button.  A click with the right
+mouse button signifies that the identification or location task is
+complete, unless the setting of the parameter \verb!n! is reached
+first.  For \verb!identify()! the default setting of \verb!n! is the
+number of data points, while for \verb!locator()! the default setting
+is \verb!n! = 500.
+
+As an example, try to identify two of the plotted points on
+the \verb!primates! scatterplot:
+
+\begin{verbatim}
+attach(primates)
+plot(Bodywt, Brainwt)
+identify(Bodywt, Brainwt, n=2) # now click near 2 plotted points
+detach(primates)
+\end{verbatim}
+
+\newpage
+\subsection{Plotting mathematical symbols}
+Both \verb+text()+ and \verb+mtext()+ allow replacement of the
+text string by a mathematical expression. In \verb+plot()+,
+either or both of \verb+xlab+ and \verb+ylab+ can be an algebraic
+expression. Figure \ref{fig:mathexpplot} was produced with
+
+\begin{verbatim}
+p <- (0:100)/100
+plot(p, sqrt(p*(1-p)), ylab=expression(sqrt(p(1-p))), type="l")
+\end{verbatim}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Pictures/g1-4.pdf}
+\caption{The y-axis label is a mathematical expression.}\label{fig:mathexpplot}
+\end{center}
+\end{figure}
+
+Type \verb+help(plotmath)+ to get details of available forms of mathematical
+expression. The final plot from \verb+demo(graphics)+
+shows some of the possibilities for plotting mathematical symbols.
+\newpage
+\subsection{Row by column layouts of plots}
+There are several ways to do this.  Here, we will demonstrate two of
+them.  
+
+\subsubsection*{Multiple plots, each with its own margins}
+As noted in earlier sections, the parameter \verb+mfrow+ can be used
+to configure the graphics sheet so that subsequent plots appear row by
+row, one after the other in a rectangular layout, on the one page. For
+a column by column layout, use \verb+mfcol+. The following example
+gives a plot that displays four different transformations of the
+\verb!Animals!  data.
+
+\begin{verbatim}
+par(mfrow=c(2,2))
+require(mass)       # Animals is in the MASS package
+data(Animals)       # Needed if Animals is not already loaded
+attach(Animals)
+plot(body, brain)
+plot(sqrt(body), sqrt(brain))
+plot((body)^0.1, (brain)^0.1)
+plot(log(body), log(brain))
+detach("Animals")
+par(mfrow=c(1,1))   # Restore to 1 figure per page
+\end{verbatim}
+
+\newpage
+\subsubsection*{Multiple panels -- xyplot()}
+
+The function \verb+xyplot()+ allows for an $x$ by $y$ layout of panels
+in which the axis labeling appears in the outer margins. The
+\textit{lattice} package substantially extends the abilities that are
+available using the older function \verb+coplot()+. 
+
+Try
+
+\begin{verbatim}
+> library(lattice)
+> data(possum)      # DAAG must be loaded
+> table(possum$Pop,  possum$sex)  # Graph reflects layout of this table
+    Vic other
+  f  24    19
+  m  22    39
+> xyplot(totlngth ~ age|sex*Pop, data=possum)
+\end{verbatim}
+
+The missing rows are due to missing values for the \verb+age+ variable.  Note
+that the plot is constructed anyway, using the nonmissing data.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics{Pictures/possum1.pdf}
+\caption{Total length of possums versus age, for each
+combination of population (the Australian state of Victoria or
+elsewhere) and sex (female or male).} 
+\end{center}
+\end{figure}
+\newpage
+\subsection{Graphs -- additional notes}
+\subsubsection*{The shape of the graph sheet}
+It is often desirable to control the shape of the graph page.  For
+example, we might want the individual plots to be rectangular rather
+than square. The function \verb!x11()! sets up a graphics page on the
+screen display. It takes arguments \verb!width! (in inches),
+\verb!height!  (in inches) and \verb!pointsize! (in 1/72 of an inch).
+The setting of \verb!pointsize! (default =12) determines character
+heights.\footnote{It is the relative sizes of these parameters that
+  matter for screen display or for incorporation into Word and similar
+  programs.  Once pasted (from the clipboard) or imported into Word,
+  graphs can be enlarged or shrunk by pointing at one corner, holding
+  down the left mouse button, and pulling.}
+\newpage
+\subsubsection{Plot methods for objects other than vectors}
+We have seen how to plot a numeric vector \verb+y+ against a numeric
+vector \verb+x+.  The plot function is a generic function that also
+has special methods for `plotting' various different classes of
+object. For example, one can give a data frame as the argument to
+\verb+plot+. Try
+
+\begin{verbatim}
+data(trees)    # Load data frame trees (base package)
+plot(trees)    # Has the same effect as pairs(trees)
+\end{verbatim}
+
+The \verb!pairs()! function will be important when we come to discuss
+multiple regression.  
+\newpage
+\subsubsection*{Good and bad graphs}
+
+Draw graphs so that they are unlikely to mislead, make sure that they
+focus the eye on features that are important, and avoid distracting
+features.  In scatterplots, the intention is typically to draw
+attention to the points. If there are not too many of them, drawing
+them as heavy black dots or other symbols will focus attention on the
+points, rather than on a fitted line or curve or on the axes.  If they
+are numerous, dots are likely to overlap. It then makes sense to use
+open symbols. Where there are many points that overlap, the ink will
+be denser.  If there are many points, it can be helpful to plot
+points in a shade of gray.\fc{For example, try:
+
+\begin{BVerbatim}
+plot(1:4, 1:4, pch=16, col=c("gray20","gray40","gray60","gray40"))
+\end{BVerbatim}
+}
+
+Where the horizontal scale is continuous, patterns of change
+that are important to identify should have an angle of slope in the
+approximate range 20$^\circ$ to 70$^\circ$.  
+
+There is a huge choice and range of colors.  Colors, or gray scales,
+can often be used to useful effect to distinguish groupings in the
+data.  Bear in mind that the eye has difficulty in focusing
+simultaneously on widely separated colors that appear close together
+on the same graph.
+
+
+
+
+
+
+\end{document}

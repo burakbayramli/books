@@ -1,0 +1,90 @@
+
+## Hierarchical regression with varying intercepts for schools
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y)
+    y.hat[i] <- a[school[i]] + b*x[i]
+  }
+  b ~ dnorm (0, .0001)
+  tau.y <- pow(sigma.y, -2)
+  sigma.y ~ dunif (0, 100)
+
+  for (j in 1:J){
+    a[j] ~ dnorm (a.hat[j], tau.a)
+    a.hat[j] <- g.0 + g.1*T[j]
+  }
+  g.0 ~ dnorm (0, .0001)
+  g.1 ~ dnorm (0, .0001)
+  tau.a <- pow(sigma.a, -2)
+  sigma.a ~ dunif (0, 100)
+}
+
+## Nonlinear and nonadditive models
+
+y.hat[i] <- a[school[i]] + b[1]*x[i] + b[2]*pow(x[i],2) + b[3]*T[school[i]]*x[i]
+
+ # or, use the transformed variable defined in R
+
+y.hat[i] <- a[school[i]] + b[1]*x[i] + b[2]*x.sq[i]
+
+
+## Nonlinear functions of data and parameters
+
+y.hat[i] <- a[school[i]] + b*exp(-g*x[i])
+
+ # or
+
+y.hat[i] <- a[school[i]] + b[1]*exp(-g[1]*x1[i]) + b[2]*exp(-g[2]*x2[i])
+
+ # or
+
+y.hat[i] <- (a + b*x1[i])/(1 + g[2]*x2[i])
+
+
+## Different variances for treated and control units
+
+y[i] ~ dnorm (y.hat[i], tau.y[T[school[i]+1]])
+
+for (k in 1:2){
+  tau.y[k] ~ pow(sigma.y[k], -2)
+  sigma.y[k] ~ dunif (0, 100)
+}
+
+## Different variances within each group
+
+y[i] ~ dnorm (y.hat[i], tau.y[school[i]])
+
+for (j in 1:J){
+  tau.y[j] ~ pow(sigma.y[j], -2)
+  sigma.y[j] ~ dunif (0, 100)
+}
+
+## Modeling the varying variances
+
+for (j in 1:J){
+  tau.y[j] ~ pow(sigma.y[j], -2)
+  sigma.y[j] ~ dlnorm (mu.lsigma.y, tau.lsigma.y)
+}
+
+mu.lsigma.y <- dnorm (0, .0001)
+tau.lsigma.y <- pow(sigma.lsigma.y, -2)
+sigma.lsigma.y <- dunif (0, 100)
+
+## Variances that differ sustematically between treatment and control
+
+tau.y[j] <- pow(sigma.y[j], -2)
+sigma.y[j] ~ dlnorm (log.sigma.hat[j], sigma.log.sigma.y)
+log.sigma.hat[j] <- d.0 + d.1*T[j]
+
+## Other distributional forms
+
+y[i] ~ dt (y.hat[i], tau.y, nu.y)
+nu.y <- 1/nu.inv.y
+nu.inv.y ~ dunif (0, .5)
+
+
+
+
+
+

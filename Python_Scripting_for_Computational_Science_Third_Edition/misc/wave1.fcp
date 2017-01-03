@@ -1,0 +1,32 @@
+#include <macros.i>
+
+C234567 column numbers 1-7 are important in F77!
+      SUBROUTINE WAVE1(SOL, SOL_PREV, SOL_PREV2, NX, NY,
+     &                 DX, DY, DT)
+C     variable declarations:
+      INTEGER NX, NY     /* no of points in x and y dir */
+      REAL*8 DX, DY, DT  /* cell and time increments */
+      REAL*8 SOL(NX,NY), SOL_PREV(NX,NY), SOL_PREV2(NX,NY)
+
+C     update SOL:
+      DO 20 J=1, NY
+        DO 10 I=1, NX
+        /*
+          a 2nd-order time difference combined with
+          2nd-order differences in space results in
+          the standard explicit finite difference scheme
+          for the wave equation:
+        */
+          SOL(I,J) = 2*SOL_PREV1(I,J) - SOL_PREV2(I,J) +
+     &               DT*DT*(DDx(SOL_PREV, I, J, DX) +
+     &                      DDy(SOL_PREV, I, J, DY))
+#ifdef DEBUG
+          WRITE(*,*) 'SOL(',I,',',J,')=',SOL(I,J)
+#endif
+ 10     CONTINUE
+ 20   CONTINUE
+
+      RETURN
+      END
+
+

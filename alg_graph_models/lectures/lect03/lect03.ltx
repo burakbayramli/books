@@ -1,0 +1,229 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb,url}
+
+\newcommand{\lecnum}{AGM-03}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Python: Object-orientation}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/15 15:30:11 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Everything is an object}
+
+  \begin{itemize}
+  \item Builtin types: string, dictionary, set, file, function etc.
+  \item Much of their functionality accessed via \emph{methods}.
+  \item User-defined types: classes
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{But first: modules}
+  
+  \begin{itemize}
+  \item Every Python object lives in some \emph{module}.
+  \item Even objects created with the interpreter live in a special
+    module called \verb+__main__+ (this is also the module for objects
+    in the top-level script)
+  \item Normal modules are just Python source files.
+  \item The module \texttt{foo} will be in the file \texttt{foo.py}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Importing modules}
+  
+  \begin{itemize}
+  \item The statement \texttt{import math} imports the builtin module
+    \texttt{math} into your \emph{namespace}.
+  \item You can then get to the objects defined within that module:
+  \end{itemize}
+\begin{verbatim}
+>>> math.sqrt(2)
+1.4142135623730951
+\end{verbatim}
+  \begin{itemize}
+  \item \texttt{sqrt}, a function, is an \emph{attribute} of the
+    \texttt{math} module.
+  \item Use \texttt{dir(math)}  to get all its
+    attributes.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Another way to import}
+  
+  \begin{itemize}
+  \item Can also do \texttt{from math import sqrt} to put the
+    \texttt{sqrt} function (but not the module) directly into your namespace.
+  \item \texttt{from math import *} grabs everything.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Rolling your own: creating new datatypes}
+
+  \begin{small}
+\begin{verbatim}
+class Point(object):          # An object of class Point is an object 
+    'Simple class to define points' # Documentation
+    def __init__(self,xval,yval):   # __init__ called when a new ...
+        self.x = float(xval)        # ...Point object (self) is created
+        self.y = float(yval)        # x and y are attributes for self
+\end{verbatim}
+  \end{small}
+
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Creating instances}
+  
+\begin{verbatim}
+>>> from pt import Point
+>>> type(Point)
+<type 'type'>
+>>> p = Point(3.2,3.4)  # __init__ is called here
+>>> p.x
+3.2000000000000002
+>>> type(p)
+<class 'pt.Point'>
+>>> type(p.x)
+<type 'float'>
+>>> dir(p)
+['__class__', '__delattr__', '__dict__', '__doc__',
+'__getattribute__', '__hash__', '__init__', '__module__', '__new__',
+'__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__str__',
+'__weakref__', 'x', 'y'] 
+\end{verbatim}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Special method names}
+
+Can get user-defined classes to behave like builtins by defining methods
+with special names.
+
+\begin{verbatim}
+class Point(object)
+   ....
+   def __add__(self,other):
+       return Point(self.x+other.x,self.y+other.y)
+
+   def __str__(self):
+       return '(%f,%f)' % (self.x,self.y)
+\end{verbatim}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The effect of special method names}
+  
+\begin{verbatim}
+>>> from pt import Point
+>>> p1=Point(2,3)
+>>> p2=Point(1,4)
+>>> p1+p2
+<pt.Point object at 0x403f8a8c>
+>>> print p1+p2
+(3.000000,7.000000)
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Normal methods}
+\begin{verbatim}
+    def norm(self):
+        from math import sqrt
+        return sqrt(self.x**2 + self.y**2)
+\end{verbatim}
+\begin{verbatim}
+>>> from pt import Point
+>>> p1=Point(2,3)
+>>> p1.norm()
+3.6055512754639891
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Adding attributes on the fly}
+\begin{verbatim}
+>>> class Foo(object):
+...  pass
+... 
+>>> x=Foo()
+>>> x.onthefly = 'blah'
+>>> x.onthefly
+'blah'
+>>> del x.onthefly
+>>> x.onthefly
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+AttributeError: 'Foo' object has no attribute 'onthefly'
+\end{verbatim}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Objects you can see!}
+  
+\begin{verbatim}
+>>> from Tkinter import *
+>>> root=Tk()
+>>> root.title('example')
+''
+>>> lab = Label(root,text='hello')
+>>> lab.pack()
+>>> but = Button(root,text='die',command=x.destroy)
+>>> but.pack()
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Inheritance}
+  
+  \begin{itemize}
+  \item A class can inherit all the methods, attributes from some parent class
+  \item And then override some of them, and add new ones.
+  \end{itemize}
+
+Here's the syntax:
+\begin{verbatim}
+class GraphCanvas(Canvas):
+    << methods etc>> go here
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{More on inheritance}
+  
+  \begin{itemize}
+  \item Can have \emph{class attributes} inherited by all instances of
+    a class.
+  \item An instance can override class attributes to have its own
+    private attribute.
+  \item Can call parent methods directly if needed.
+  \end{itemize}
+\begin{verbatim}
+    def __init__(self, parent=None, **config):
+        # parent class initialiser ...
+        Canvas.__init__(self,parent,config)   
+        # key bindings
+        self.bind('<ButtonPress-1>', self.sel_or_new) 
+\end{verbatim}
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Inheritance by example}
+
+Let's have a look at \texttt{colouring.py}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

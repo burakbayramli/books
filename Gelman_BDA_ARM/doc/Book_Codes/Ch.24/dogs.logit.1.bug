@@ -1,0 +1,20 @@
+# Predictive replications in Bugs for the dogs example
+
+model {
+for (i in 1:n.dogs){  
+    n.avoid.rep[j,1] <- 0
+    n.shock.rep[j,1] <- 0
+    for (t in 2:n.trials){  
+      n.avoid.rep[j,t] <- n.avoid.rep[j,t-1] + 1 - y.rep[j,t-1] 
+      n.shock.rep[j,t] <- n.shock.rep[j,t-1] + y.rep[j,t-1] 
+    }
+    for (t in 1:n.trials){  
+      y.rep[j,t] ~ dbin (p.rep[j,t], 1)
+      logit(p.rep[j,t]) <- b.0 + b.1*n.avoid.rep[j,t] + b.2*n.shock.rep[j,t]
+    }
+  b.0 ~ dnorm (0, .0001)
+  b.1 ~ dnorm (0, .0001)
+  b.2 ~ dnorm (0, .0001)
+}
+
+

@@ -1,0 +1,19 @@
+begin macro mymacro(a, b, c)
+    a = some(a, b, a-b)
+    c = 2
+end
+
+begin macro update(uold, unew, ic, jc, ip1, im1, jp1, jm1)
+    unew[ic,jc] = uold[ic, jc] + dt*((uold[ip1,jc] - uold[ic,jc])/dx2 \
+                                  -  (uold[ic,jc] - uold[im1,jc])/dx2) \
+                               + dt*((uold[ic,jp1] - uold[ic,jc])/dy2 \
+                                  -  (uold[ic,jc) - uold[ic,jm1])/dy2)
+end
+
+begin macro trouble (u, i, j, k, im1, jm1, km1)
+for (i=1; i<nx; i++)
+  for (j=1; j<nx; j++)
+    for (k=1; k<nx; k++)
+      up[i][j][k] = u[im1][jm1][km1]
+end
+

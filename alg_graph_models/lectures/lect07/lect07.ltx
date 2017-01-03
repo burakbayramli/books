@@ -1,0 +1,348 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb}
+
+\newcommand{\lecnum}{AGM-07}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\newcommand{\variables}{\ensuremath{\Delta}}
+\newcommand{\variable}{\ensuremath{\delta}}
+\newcommand{\cell}{\ensuremath{i}}
+\newcommand{\table}{\ensuremath{{\cal I}}}
+\newcommand{\values}{\ensuremath{{\cal I}_\delta}}
+\newcommand{\reals}{\ensuremath{{\cal R}}}
+\newcommand{\hg}{\ensuremath{{\cal H}}}
+\newcommand{\gr}{\ensuremath{{\cal G}}}
+\newcommand{\ci}[3]{\ensuremath{#1 \perp #2 | #3}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Variable elimination}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/16 10:18:07 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{In this lecture}
+
+  \begin{itemize}
+  \item Variable elimination
+  \item Cluster Forests
+  \end{itemize}
+
+\end{titledslide}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Computing marginal distributions}
+
+  \begin{itemize}
+  \item The basic inference problem: Given a joint distribution
+    compute the marginal distribution for a given variable.
+  \item One option (which is only useful conceptually) is to multiply
+    all factors to get one (often enormous) factor and then
+    marginalise on that factor as previously explained.
+  \item For factored distributions it is better to \emph{interleave}
+    multiplication and addition, this is the basis of the
+    \emph{variable elimination} algorithm.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Exploiting common factors}
+  
+  \begin{itemize}
+  \item Suppose we had to compute $xy + xw + xz + xu$.
+  \item Doing so `directly' involves 4 multiplications and 3 additions.
+  \item Rewriting as $x(y+w+z+u)$ involves only 1 multiplication and 3
+    additions.
+  \item This is the elementary arithmetic fact that variable
+    elimination exploits.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Principles of variable elimination}
+  
+  \begin{enumerate}
+  \item Replacing several factors by the single factor which is their
+    product does not alter the distribution
+    represented. (Multiplication is associative.)
+  \item To sum out several variables we can sum them out---`eliminate
+    them'---one at a time. (Addition is associative.)
+  \item If a variable appears in \emph{only one} factor then to sum it out of
+    the distribution it is enough to sum it out of that factor. (This
+    is the key to variable elimination \dots)
+  \end{enumerate}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Summing out a variable occurring in only one factor}
+  
+  \begin{itemize}
+  \item Let $P = \prod_{i=1}^{m} f_{i}$ involve variables $X_{1},
+    X_{2}, \dots X_{n}$. Suppose wlog that we want to sum out $X_{1}$
+    and that $X_{1}$ only appears in factor $f_{1}$.
+  \item Informally, write the desired marginal distribution as:\\
+    $P(X_{2}, \dots, X_{n}) = \sum_{X_{1}} P(X_{1},X_{2},\dots X_{n})$
+  \item Claim: $P(X_{2}, \dots, X_{n}) = (\sum_{X_{1}}f_{1}) \times
+    (\prod_{i=2}^{m} f_{i}) $
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Summing out a variable occurring in only one
+    factor (ctd)}
+  \begin{eqnarray*}
+    \lefteqn{P(X_{2}=x_{2},X_{3}=x_{3},\dots,X_{n} = x_{n})} && \\
+    & = & \sum_{x_{1} \in \table_{X_{1}}}
+    P(X_{1}=x_{1},X_{2}=x_{2},\dots,X_{n} = x_{n})\mbox{ [by
+      definition]} \\
+    & = & \sum_{x_{1} \in \table_{X_{1}}} \left[
+    f_{1}(X_{1}=x_{1},\dots
+    X_{n}=x_{n})\prod_{i=2}^{m}f_{i}(X_{2}=x_{2}\dots X_{n}=x_{n}) \right]\\
+    %& = & \prod_{i=2}^{m}f_{i}(X_{2}=x_{2}\dots X_{n}=x_{n}) \sum_{x_{1} \in \table_{X_{1}}}
+    %f_{1}(X_{1}=x_{1},\dots X_{n}=x_{n})
+  & = & \left[\sum_{x_{1} \in \table_{X_{1}}} 
+    f_{1}(X_{1}=x_{1},\dots
+    X_{n}=x_{n}) \right] \left[\prod_{i=2}^{m}f_{i}(X_{2}=x_{2}\dots X_{n}=x_{n}) \right]\\
+  \end{eqnarray*}
+  So $P(X_{2},\dots,X_{n}) = 
+  (\sum_{X_{1}}f_{1}) \times (\prod_{i=2}^{m} f_{i})  $
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{How to eliminate a single variable}
+  
+  \begin{enumerate}
+  \item Grab all the factors containing the variable.
+  \item Compute their product factor and then delete them.
+  \item Marginalise away the variable from the product factor and add
+    the resulting factor to the distribution.
+  \end{enumerate}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{(Simplified) gPy source \dots}
+  
+\begin{verbatim}
+# A method of the FR class
+def eliminate_variable(self,variable):
+  prod_factor = 1
+  hyperedges = self._hypergraph.star(variable)
+  for hyperedge in hyperedges:
+    prod_factor *= self.factor(hyperedge)
+    self.remove(hyperedge)
+  message = prod_factor.sumout([variable])
+  self *= message
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{gPy specific stuff}
+  
+  \begin{itemize}
+  \item Factored distributions are \texttt{Models.FR} objects.
+  \item Each object is determined by two attributes: a hypergraph
+    \verb+_hypergraph+ and a dictionary \verb+_factors+.
+  \item The \verb+_factors+ dictionary maps each hyperedge to its
+    corresponding factor.
+  \item (It's a bit more complex if we allow different factors to use
+    exactly the same variables.)
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{The variable elimination algorithm}
+
+\begin{verbatim}
+# A method of the FR class
+def variable_elimination(self,variables,naive=True):
+  """Alter a factored distribution by summing out variables"""
+  for variable in variables:
+    # code for when naive=False goes here
+    self.eliminate_variable(variable)
+\end{verbatim}
+
+
+  \begin{itemize}
+  \item Not that complicated really.
+  \item If you need to keep the original distribution, you need to store
+    a copy first.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Elimination orderings}
+  
+  \begin{itemize}
+  \item The order in which variables are summed out is called an
+    \emph{elimination ordering}.
+  \item The choice of elimination ordering makes no difference to the
+    final result (commutativity of addition).
+  \item But makes an immense difference to the \emph{efficiency} of
+    the variable elimination algorithm.
+  \item Cue \verb+ve_demo+ from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Visualising variable elimination: cluster forests}
+  
+  \begin{itemize}
+  \item For any given elimination ordering, the variable elimination
+    algorithm can be used to generate a \emph{cluster forest}.
+  \item For each variable summed out, there is a `\verb+prod_factor+'
+    (see slide 9), whose variables we will call
+    \verb+prod_factor.variables()+. These sets of variables
+    (`clusters') are the nodes of the cluster forest.
+  \item There is an arrow from \verb+prod_factor_1.variables()+\\ to
+    \verb+prod_factor2.variables()+ if the `\verb+message+' (see slide 9
+    again) produced by \verb+prod_factor_1+ is one of the products in
+    \verb+prod_factor2+.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Properties of cluster forests}
+  
+  \begin{itemize}
+  \item Cue \verb+cluster_tree+ from \texttt{gPy.Examples}.
+  \item A \emph{forest} is a collection of trees. A \emph{tree} is a
+    graph with no cycles.
+  \item Since (1) each cluster produces exactly one message and (2) a
+    message is deleted once it is used in another cluster \dots
+  \item \dots this is enough to ensure that the cluster forest is
+    indeed a forest.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Cluster forests and hypergraphs}
+  
+  \begin{itemize}
+  \item Clusters are, of course, nothing more than hyperedges.
+  \item The nodes of a cluster forest thus form a
+    hypergraph---generally with a lot of redundancy.
+  \item Hypergraphs whose hyperedges form the nodes of forests will
+    prove to be the key data structure for probabilistic inference in
+    factored distributions.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Inference with evidence}
+  
+  \begin{itemize}
+  \item The general inference problem: Given a joint distribution
+    \textbf{and some observed evidence} compute the marginal
+    distribution for a given variable.
+  \item How to compute\\ $P(Cancer|XRay=abnormal,Smoking=absent)$?
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Delaying normalisation}
+
+  By definition we have:
+  \begin{eqnarray*}
+    \lefteqn{P(L, A, T, X,  D, B, 
+      S, E|X=abnormal,S=absent)} && \\
+    & = & \frac{P(L, A, T, X=abnormal,  D, B, 
+      S=absent, E)}{P(X=abnormal,S=absent)}
+  \end{eqnarray*}
+
+  So can work with
+  \[P(L, A, T, X=abnormal, D, B, S=absent, E)\] and delay normalising until the last moment.
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Setting zeroes}
+  
+  \begin{itemize}
+  \item Imagine that $P(L, A, T, X=abnormal, D, B, S=absent, E)$ were
+    represented by one (enormous) factor.
+  \item This factor has the same value as $P(L, A, T, X, D, B, S, E)$
+    for those rows where $X=abnormal$ and $S=absent$.
+  \item But has a value of zero for those rows where it is not the
+    case that $X=abnormal$ and $S=absent$.
+  \item Rows for instantiations which contradict the evidence have a
+    value of 0.
+  \end{itemize}
+
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Setting zeroes in factors}
+  
+  \begin{itemize}
+  \item We can define the same (unnormalised) distribution by altering
+    the original factors:
+  \item In each factor just set any row corresponding to an
+    instantiation contradicting the evidence to zero and leave the
+    other rows as they were.
+  \item Then just run variable elimination as before.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Avoiding pointless multiplication}
+  
+  \begin{itemize}
+  \item Multiplying by zero is basically a waste of time.
+  \item So it's a bit neater to simply delete any rows which are
+    inconsistent with the evidence. Cue \verb+cond_demo+ from \texttt{gPy.Examples}
+  \item This amounts to not even acknowledging the existence of values
+    which contradict the evidence!
+  \item This is informal---in the real conditional distribution values
+    don't just disappear---but is better algorithmically.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Variable elimination with evidence}
+  
+  \begin{itemize}
+  \item Cue \verb+ve_demo2+ from \texttt{gPy.Examples}
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{gPy specifics}
+  
+If you want to recover the original unconditioned distribution you need to
+save a copy first, since conditioning alters the distribution  to
+which it is applied:
+\begin{verbatim}
+from Examples import asia
+as = asia.copy(copy_domain=True)
+asia.condition({'Bronchitis':['absent'],'XRay':['normal']})
+print as
+print '***********'
+print asia
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{On not being na\"{\i}ve}
+  
+  \begin{itemize}
+  \item The variable elimination algorithm presented here is overly
+    simple, since it does not take advantage of any (conditional)
+    independence relations.
+  \item Suppose we want the marginal distribution of $X$.
+  \item If some factor contains only variables independent of $X$
+    (perhaps because we have conditioned on some evidence) then just
+    delete that factor.
+  \item It's not too difficult to concoct scenarios where this gives
+    you a massive speed-up. See the assessment from 06-07.
+  \end{itemize}
+
+\end{titledslide}
+
+\end{document}

@@ -1,0 +1,100 @@
+% ----------------------------------------------------------------
+% Book Class (This is a LaTeX2e document)  ***********************
+% ----------------------------------------------------------------
+\documentclass[11pt,twoside,a4paper]{book}
+
+\usepackage{amsfonts}
+\usepackage{amsmath,amsthm}
+\usepackage[english]{babel}
+\usepackage{caption}
+\usepackage{changepage}
+\usepackage{color}
+\usepackage{courier}
+\usepackage{float}
+\usepackage[margin=1.0in]{geometry}
+\usepackage[pdftex]{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{multirow}
+%\usepackage{makeidx}
+\usepackage{multind}
+\usepackage{subcaption}
+\usepackage{xr}
+
+\lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         %numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+    	 frame=n,                     % "b" = bottom, "n" = none
+         stringstyle=\color{blue}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ?
+         language=Python
+}
+\lstloadlanguages{ Python }
+
+% Settings for package "caption"
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+% Settings for package "xr"
+\externaldocument{Basics}
+\externaldocument{Distributions}
+\externaldocument{Tests_Continuous}
+\externaldocument{Relations}
+\externaldocument{Models}
+\externaldocument{Multivar}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand*{\PyImg}{\raisebox{-0.35\height}{\includegraphics[scale=0.25]{../Images/python.jpg}} \textbf{Code:} }%
+%\newcommand{\py}[1]{\lstinputlisting[label=py_{#1},caption={#1},language=Python]{C:/Users/p20529/Documents/Teaching/Master_FH/Stats/dist/Code/{#1}}}
+
+\makeindex{general}
+\makeindex{python}
+
+%\includeonly{Models}
+
+% ----------------------------------------------------------------
+\begin{document}
+\input{./title.tex}
+
+\tableofcontents
+
+\include{Preface}
+\include{Introduction}
+\include{Basics}
+\include{Distributions}
+\include{DataAnalysis}
+\include{Tests_Continuous}
+\include{Tests_Discrete}
+\include{Tests_Categorical}
+\include{Relations}
+\include{Multivar}
+\include{Models}
+\include{Survival}
+\include{AdvancedStatistics}
+\include{Appendix}
+
+\clearpage
+
+\bibliographystyle{plainnat}
+\bibliography{thomas}
+
+\printindex{general}{Index Topics}
+\printindex{python}{Python Programs}
+
+\end{document}
+% ----------------------------------------------------------------

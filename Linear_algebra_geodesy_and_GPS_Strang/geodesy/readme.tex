@@ -1,0 +1,304 @@
+%
+%            LINEAR ALGEBRA, GEODESY, AND GPS
+%
+%
+% This is a package of M-files to use with MATLAB. They are ordered into
+% the following subdirectories
+%
+%          \ash_base
+%          \bancroft
+%          \filters
+%          \geodesy
+%          \proc_dd
+%          \sat_cons
+%          \strang
+%
+% All files are compatible with MATLAB version 5.0. They are coordinated
+% with the text
+%
+%          Linear Algebra, Geodesy, and GPS
+%          by Gilbert Strang and Kai Borre (1997)
+%          Wellesley-Cambridge Press   Box 812060   Wellesley MA 02181
+%          gs@math.mit.edu  (617) 431-8488   fax (617) 253-4358
+%
+% The Teaching Codes in \strang are related to part I of our book.
+% They are identical to codes published along with Introduction to Linear
+% Algebra by the first author in 1993, except for an update to MATLAB
+% version 5.0.
+%
+% The codes in subdirectory \geodesy are related to part II of our book,
+% while all other subdirectories are related to part III and thus deal 
+% with GPS.
+% 
+% The code may not be completely general as it is only tested with the
+% included data sets. Intentionally it is without a common GUI. This
+% happens in order not to obscure the ideas of the single program. We
+% have never had the intention to write professional code, especially
+% for GPS. We have not dealt with the problem of cycle slips and the 
+% code proc_dd demonstrates how often these occur.
+%
+% On this background we cannot take responsibility for the completeness
+% and correctness of the code. It should not be relied on for a problem
+% whose incorrect solution could result in injury or loss of property. 
+% The authors disclaim all liability for damages resulting from the use
+% of these programs.
+%
+% These codes can be picked up at the Web page
+%
+%          http://www.i4.auc.dk/borre/matlab
+%
+% Next follows a list of the M-files and the pages in the book where they
+% are explicitly mentioned:
+%
+%   abs_pos 503
+%   accum0 495
+%   anheader 494
+%   ash_base
+%   ash_dd 489, 495
+%   autocorr 529
+%   b_clock
+%   b_point 501, 502
+%   b_row 580
+%   backtrac
+%   bancroft 481, 482, 500, 502
+%   bdata 489
+%   c2g 470, 472
+%   c2gm 470
+%   call_lam
+%   check_t 487
+%   chistart
+%   collects
+%   comptime
+%   corrdemo 326
+%   dout
+%   doy
+%   dw 393
+%   e_r_corr 502
+%   edata 489
+%   elimnor 397
+%   elimobs 400
+%   ellaxes 342
+%   enu2xyz
+%   errell 337
+%   fepoch_0 494
+%   fig15_6
+%   fig16_5
+%   find_eph 488, 489, 501
+%   findloop 302
+%   findnode 302
+%   findpiv
+%   fixed2
+%   fixing1 581
+%   fixing2 582
+%   fobs_typ
+%   frgeod 368
+%   g2c 470
+%   gauss1 471
+%   gauss2 471
+%   geoid
+%   get_eph 486, 488, 489, 501
+%   get_rho
+%   gmproc 520
+%   gps_time 487
+%   grabdata 494
+%   incorrec
+%   intout
+%   julday 487
+%   k_clock
+%   k_dd3 506, 507
+%   k_dd4 507
+%   k_point 502, 580
+%   k_row 580
+%   k_simul 578
+%   k_ud 502
+%   k_update
+%   k_updatx
+%   kalclock 510
+%   kleus 505
+%   kud 580
+%   l_inv
+%   lambda
+%   lev 286
+%   locate 495
+%   looplist 302
+%   lor 444
+%   lorentz 500, 502
+%   ltdl
+%   mangouli 541
+%   model_g 539
+%   model
+%   n_locate
+%   normals 502, 580
+%   null 302
+%   offset
+%   one_way 495, 512
+%   one_wayd
+%   oned 330
+%   oneway_i 535
+%   outlier
+%   plu 302
+%   proc_dd 494
+%   qr 371
+%   re_order
+%   rec_lsq
+%   recclock 509
+%   recpos 481, 488
+%   ref 302
+%   relellip 342
+%   repair 322
+%   rinexe 486, 494
+%   rts 571
+%   satconst
+%   satpos 486, 501, 502
+%   satposin 486
+%   sdata 489
+%   search
+%   sets 441
+%   simil 419
+%   smoother 572
+%   stores
+%   sum_norm
+%   support 339
+%   togeod 368, 501, 502
+%   topocent 501
+%   tropo 456, 475, 491, 493, 501
+%   tropp 501
+%   twod 311
+%   v_loops 303, 493
+%   vectors 303
+%   wc 581
+%   whitenoi
+%   ztransi
+%
+%   For the reader's convenience we list the DATA files in the various
+%   directories. The file extensions indicate the data formats used:
+%
+%   *.dat   (MATLAB) binary data file
+%   *.**o   RINEX (ascii) observation file
+%   *.**n   RINEX (ascii) navigation file
+%   *.nav   (MATLAB) binary navigation file
+%   b*.076  binary observation file (Ashtech), may be read by bdata.m
+%   e*.076  binary navigation file (Ashtech), may be read by edata.m
+%   s*.076  ascii site file (Ashtech), may be read by sdata.m
+%
+%   \ash_base
+%
+%   b0005a94.076
+%   b0810a94.076
+%   bdata.dat
+%   dds26_16.dat
+%   dds26_2.dat
+%   dds26_23.dat
+%   dds26_27.dat
+%   dds26_9.dat
+%   e0810a94.076
+%   edata.dat
+%   s0005a94.076
+%   s0810a94.076
+%   sdata.dat
+%
+%   \bancroft
+%
+%   pta.nav
+%
+%   \filters
+%
+%   00050761.94o
+%   08100761.94o
+%   b0005a94.076
+%   clock.dat
+%   fjellera.nav
+%   one_m16.dat
+%   one_m2.dat
+%   one_m23.dat
+%   one_m26.dat
+%   one_m27.dat
+%   one_m9.dat
+%   one_r16.dat
+%   one_r2.dat
+%   one_r23.dat
+%   one_r26.dat
+%   one_r27.dat
+%   one_r9.dat
+%   one_w16.dat
+%   one_w2.dat
+%   one_w23.dat
+%   one_w26.dat
+%   one_w27.dat
+%   one_w9.dat
+%   one_y16.dat
+%   one_y2.dat
+%   one_y23.dat
+%   one_y26.dat
+%   one_y27.dat
+%   one_y9.dat
+%   pta.96o
+%   pta.nav
+%   ptb.96o
+%
+%   \geodesy
+%
+%   lev.dat
+%   levfix.dat
+%   levfix1.dat
+%   levfix2.dat
+%   levfix3.dat
+%   levfree.dat
+%   levfree1.dat
+%   levfree2.dat
+%   levfree3.dat
+%   levobs.dat
+%   levobs1.dat
+%   levobs2.dat
+%   levobs3.dat
+%   sim.dat
+%   sim1.dat
+%   sim2.dat
+%   sim3.dat
+%
+%   \proc_dd
+%
+%   00050761.94o
+%   08100761.94n
+%   08100761.94o
+%   covar.dat
+%   fjellera.nav
+%   pta.96n
+%   pta.96o
+%   pta.nav
+%   ptb.96n
+%   ptb.96o
+%   rinex_n.dat
+%   site1.96n
+%   site1.96o
+%   site1.nav
+%   site2.96n
+%   site2.96o
+%
+%   \sat_cons
+%
+%   pta.96n
+%   pta.nav
+%%%%%%%%%%%%%% end readme.tex  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

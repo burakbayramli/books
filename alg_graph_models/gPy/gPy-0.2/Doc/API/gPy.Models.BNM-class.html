@@ -1,0 +1,1018 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gPy.Models.BNM</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="gPy-module.html">Package&nbsp;gPy</a> ::
+        <a href="gPy.Models-module.html">Module&nbsp;Models</a> ::
+        Class&nbsp;BNM
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript: void(0);" class="privatelink"
+    onclick="toggle_private();">hide private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gPy.Models.BNM-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class BNM</h1><span class="codelink"><a href="gPy.Models-pysrc.html#BNM">source&nbsp;code</a></span><br /><br />
+<pre class="base-tree">
+      object --+                
+               |                
+<a href="gPy.Variables.Domain-class.html">Variables.Domain</a> --+            
+                   |            
+ <a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a> --+        
+                       |        
+                      <a href="gPy.Models.HM-class.html">HM</a> --+    
+                           |    
+                          <a href="gPy.Models.GM-class.html">GM</a> --+
+                               |
+                              <strong class="uidshort">BNM</strong>
+</pre>
+
+<hr />
+<p>Bayesian network model</p>
+  <p>A GM where the factors consist of a CPT for each variable.</p>
+  Joint is thus exactly the product of the factors<br /><br />
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">factors</span>=<span class="summary-sig-default">()</span>,
+        <span class="summary-sig-arg">domain</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">new_domain_variables</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">must_be_new</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">check</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">adg</span>=<span class="summary-sig-default">None</span>)</span><br />
+      BNM constructor.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Parameters.CPT-class.html" class="link">CPT</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#__getitem__" class="summary-sig-name">__getitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">key</span>)</span><br />
+      Return the CPT (not a copy) corresponding to <code>key</code>
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">String</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#__repr__" class="summary-sig-name">__repr__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Formal string representation of a BNM
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">String</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#__str__" class="summary-sig-name">__str__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Print each CPT separately
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#add" class="summary-sig-name">add</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">factor</span>)</span><br />
+      Include a factor in a BN
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Structures.ADG-class.html" 
+      class="link">Structures.ADG</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#adg" class="summary-sig-name">adg</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return the ADG associated with BNM
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#add_cpts" class="summary-sig-name">add_cpts</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">cpts</span>)</span><br />
+      Adds CPTs to a BNM, if possible
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Tuple</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#bdeu_score" class="summary-sig-name">bdeu_score</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>)</span><br />
+      Return the BDeu score of <code>self</code> (and its component 
+      scores) on <code>data</code>.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Tuple</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#bdeu_score_using_other" class="summary-sig-name">bdeu_score_using_other</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">other</span>,
+        <span class="summary-sig-arg">other_score</span>,
+        <span class="summary-sig-arg">other_variable_scores</span>)</span><br />
+      Return the BDeu score of <code>self</code> (and its component 
+      scores) on <code>data</code> using the existing BDeu score (and 
+      component scores) for <code>other</code> computed on 
+      <code>data</code> previously.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Models.BNM-class.html" class="link">BNM</a></code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#copy" class="summary-sig-name">copy</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">copy_domain</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Return a copy
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#eliminate_variable" class="summary-sig-name">eliminate_variable</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">variable</span>,
+        <span class="summary-sig-arg">trace</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Alter a Bayesian network by summing out a variable
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">Frozenset</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#family_hyperedge" class="summary-sig-name">family_hyperedge</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">child</span>)</span><br />
+      Return the hyperedge corresponding to the CPT with 
+      <code>child</code> as child
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#from_dnet" class="summary-sig-name">from_dnet</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">info</span>)</span><br />
+      Add CPTs from a <code>.dnet</code> file
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">&nbsp;</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#remove" class="summary-sig-name">remove</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">key</span>)</span><br />
+      Remove a CPT where <code>key</code> is either the child or a tuple
+      giving the family for the CPT.
+  </td>
+</tr>
+<tr>
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type">List</code>
+  </td><td class="summary">
+    <span class="summary-sig"><a href="gPy.Models.BNM-class.html#topological_order" class="summary-sig-name">topological_order</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      A topological ordering of the associated acyclic digraph
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Models.HM-class.html">HM</a></code></b>:
+      <code><a href="gPy.Models.HM-class.html#__iter__">__iter__</a></code>,
+      <code><a href="gPy.Models.HM-class.html#__len__">__len__</a></code>,
+      <code><a href="gPy.Models.HM-class.html#add_ident">add_ident</a></code>,
+      <code><a href="gPy.Models.HM-class.html#condition">condition</a></code>,
+      <code><a href="gPy.Models.HM-class.html#factors">factors</a></code>,
+      <code><a href="gPy.Models.HM-class.html#factors_containing_variable">factors_containing_variable</a></code>,
+      <code><a href="gPy.Models.HM-class.html#gui_display">gui_display</a></code>,
+      <code><a href="gPy.Models.HM-class.html#hypergraph">hypergraph</a></code>,
+      <code><a href="gPy.Models.HM-class.html#inc_from_rawdata">inc_from_rawdata</a></code>,
+      <code><a href="gPy.Models.HM-class.html#interaction_graph">interaction_graph</a></code>,
+      <code><a href="gPy.Models.HM-class.html#items">items</a></code>,
+      <code><a href="gPy.Models.HM-class.html#make_decomposable">make_decomposable</a></code>,
+      <code><a href="gPy.Models.HM-class.html#marginal">marginal</a></code>,
+      <code><a href="gPy.Models.HM-class.html#marginalise_away">marginalise_away</a></code>,
+      <code><a href="gPy.Models.HM-class.html#markov_blanket">markov_blanket</a></code>,
+      <code><a href="gPy.Models.HM-class.html#num_factors_containing_variable">num_factors_containing_variable</a></code>,
+      <code><a href="gPy.Models.HM-class.html#red">red</a></code>,
+      <code><a href="gPy.Models.HM-class.html#reduced">reduced</a></code>,
+      <code><a href="gPy.Models.HM-class.html#sumout">sumout</a></code>,
+      <code><a href="gPy.Models.HM-class.html#variable_elimination">variable_elimination</a></code>,
+      <code><a href="gPy.Models.HM-class.html#variable_elimination_trace">variable_elimination_trace</a></code>,
+      <code><a href="gPy.Models.HM-class.html#z">z</a></code>,
+      <code><a href="gPy.Models.HM-class.html#zero">zero</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#__div__">__div__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__idiv__">__idiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__imul__">__imul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__mul__">__mul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rdiv__">__rdiv__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#__rmul__">__rmul__</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#inst2index">inst2index</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#insts">insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#marginalise_onto">marginalise_onto</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#variables">variables</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_get_result_variables">_get_result_variables</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_insts">_insts</a></code>,
+      <code><a href="gPy.Variables.SubDomain-class.html#_pointwise_op">_pointwise_op</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b>:
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variable">add_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables">add_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#add_domain_variables_from_rawdata">add_domain_variables_from_rawdata</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variable">change_domain_variable</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#change_domain_variables">change_domain_variables</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#common_domain">common_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#numvals">numvals</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#values">values</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== STATIC METHODS ==================== -->
+<a name="section-StaticMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Static Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-StaticMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b>:
+      <code><a href="gPy.Variables.SubDomain-class.html#clear_default_domain">clear_default_domain</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_default_domain">_default_domain</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+  <td width="15%" align="right" valign="top" class="summary">
+    <code class="summary-type"><a href="gPy.Structures.ADG-class.html" class="link">ADG</a> 
+      object</code>
+  </td><td class="summary">
+    <a href="gPy.Models.BNM-class.html#_adg">_adg</a><br />
+      The acyclic digraph giving the BN's structure
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Models.HM-class.html">HM</a></code></b> (private):
+      <code><a href="gPy.Models.HM-class.html#_factors">_factors</a></code>,
+      <code><a href="gPy.Models.HM-class.html#_hypergraph">_hypergraph</a></code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.SubDomain-class.html">Variables.SubDomain</a></code></b> (private):
+      <code><a href="gPy.Variables.SubDomain-class.html#_variables">_variables</a></code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="gPy.Variables.Domain-class.html">Variables.Domain</a></code></b> (private):
+      <code><a href="gPy.Variables.Domain-class.html#_domain">_domain</a></code>,
+      <code><a href="gPy.Variables.Domain-class.html#_numvals">_numvals</a></code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<br />
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">factors</span>=<span class="sig-default">()</span>,
+        <span class="sig-arg">domain</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">new_domain_variables</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">must_be_new</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">check</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">adg</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.__init__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>BNM constructor. Each factor has its domain expanded to be the domain 
+  of the model, if necessary.</p>
+  Each factor is a CPT object, but there is no check that child values 
+  sum to one. The assumption is that this was done when the CPTs were 
+  created.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>factors</code></strong> (<code>Sequence</code>) - The factors in the hierarchical model.</li>
+        <li><strong class="pname"><code>domain</code></strong> (<code><a href="gPy.Variables.Domain-class.html" 
+          class="link">Variables.Domain</a> or None</code>) - A domain for the model. If None the internal default domain is
+          used.</li>
+        <li><strong class="pname"><code>new_domain_variables</code></strong> (<code>Dict or None</code>) - A dictionary containing a mapping from any new variables to 
+          their values. <code>domain</code> is updated with these 
+          values</li>
+        <li><strong class="pname"><code>must_be_new</code></strong> (<code>Boolean</code>) - Whether domain variables in <code>new_domain_variables</code> 
+          have to be new</li>
+        <li><strong class="pname"><code>check</code></strong> (<code>Boolean</code>) - Whether to check that all variables exist in 
+          <code>domain</code></li>
+        <li><strong class="pname"><code>adg</code></strong> (<code><a href="gPy.Structures.ADG-class.html" 
+          class="link">Structures.ADG</a></code>) - The acyclic digraph for the BNM. This is simply <b>assumed</b>
+          to be the correct ADG, no check is made. If <code>adg</code> is 
+          not supplied the correct ADG is created if possible, otherwise a 
+          <code>DirectedCycleError</code> is raised.</li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>VariableError</strong></code> - If a variable in <code>new_domain_variables</code> already 
+        exists with values different from its values in 
+        <code>new_domain_variables</code>; Or if <code>must_be_new</code> 
+        is set and the variable already exists. Or if <code>check</code> is
+        set and a variable in <code>variables</code> is not in the 
+        domain</li>
+        <li><code><strong class='fraise'>AttributeError</strong></code> - If <code>adg</code> was not supplied and any of the supplied 
+        factors are not <a href="gPy.Parameters.CPT-class.html" 
+        class="link">Parameters.CPT</a> objects.</li>
+        <li><code><strong class='fraise'>DirectedCycleError</strong></code> - If <code>adg</code> was not supplied and there is no ADG 
+        consistent with the CPTs provided.</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#__init__">HM.__init__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__getitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__getitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">key</span>)</span>
+    <br /><em class="fname">(Indexing operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.__getitem__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return the CPT (not a copy) corresponding to <code>key</code></p>
+  <code>key</code> can be all variables in CPT or just the child 
+  variable. The former is quicker.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>key</code></strong> (<code>Iterable</code>) - Family or child variable</li>
+    </ul>
+    <dl><dt>Returns: <code><a href="gPy.Parameters.CPT-class.html" class="link">CPT</a></code></dt>
+        <dd>The CPT for var</dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>KeyError</strong></code> - If there is no corresponding CPT.</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#__getitem__">HM.__getitem__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__repr__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__repr__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.__repr__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Formal string representation of a BNM
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>String</code></dt>
+        <dd>Formal string representation of a BNM</dd></dl>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#__repr__">HM.__repr__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="__str__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__str__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Informal representation operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.__str__">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Print each CPT separately</p>
+  Use lexicographical order on child name
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>String</code></dt>
+        <dd>Pretty representation of a <a href="gPy.Models.BNM-class.html"
+          class="link">BNM</a></dd></dl>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#__str__">HM.__str__</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="add"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">factor</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.add">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Include a factor in a BN</p>
+  If the factor is a CPT, its child is a new variable and all its 
+  parents are existing variables, then <code>self</code> remains a BN, 
+  otherwise it becomes a <a href="gPy.Models.HM-class.html" 
+  class="link">HM</a> object
+  <dl><dt></dt><dd>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#add">HM.add</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="adg"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">adg</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.adg">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Return the ADG associated with BNM</p>
+  A copy of the BNM's ADG is returned.
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code><a href="gPy.Structures.ADG-class.html" 
+      class="link">Structures.ADG</a></code></dt>
+        <dd>The ADG associated with BNM</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="add_cpts"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_cpts</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">cpts</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.add_cpts">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Adds CPTs to a BNM, if possible</p>
+  The list <code>cpts</code> is destroyed by this process
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>cpts</code></strong> (<code>list</code>) - CPTs to add</li>
+    </ul>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>AttributeError</strong></code> - If any of the <code>cpts</code> is not a <a 
+        href="gPy.Parameters.CPT-class.html" 
+        class="link">Parameters.CPT</a> object</li>
+        <li><code><strong class='fraise'>ValueError</strong></code> - If by adding these CPTs <code>self</code> would no longer be a 
+        BN.</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="bdeu_score"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bdeu_score</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.bdeu_score">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the BDeu score of <code>self</code> (and its component scores) 
+  on <code>data</code>.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>data</code></strong> (<code><a href="gPy.Parameters.CompactFactor-class.html" 
+          class="link">Parameters.CompactFactor</a></code>) - The data</li>
+    </ul>
+    <dl><dt>Returns: <code>Tuple</code></dt>
+        <dd><code>(score,variable_scores)</code> where <code>score</code> 
+          is the BDeu score and <code>variable_scores</code> is a list of 
+          component scores, one for each variable (in order) in 
+          <code>self</code>.</dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>NameError</strong></code> - If <a href="gPy.gPyC-module.html" class="link">gPyC</a> was not 
+        successfully imported</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="bdeu_score_using_other"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bdeu_score_using_other</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>,
+        <span class="sig-arg">other</span>,
+        <span class="sig-arg">other_score</span>,
+        <span class="sig-arg">other_variable_scores</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.bdeu_score_using_other">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the BDeu score of <code>self</code> (and its component scores) 
+  on <code>data</code> using the existing BDeu score (and component scores)
+  for <code>other</code> computed on <code>data</code> previously.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>data</code></strong> (<code><a href="gPy.Parameters.CompactFactor-class.html" 
+          class="link">Parameters.CompactFactor</a></code>) - The data</li>
+        <li><strong class="pname"><code>other</code></strong> (<code><a href="gPy.Models.BNM-class.html" class="link">BNM</a></code>) - Previously scored BNM</li>
+        <li><strong class="pname"><code>other_score</code></strong> (<code>Float</code>) - The BDeu score of <code>other</code> on <code>data</code></li>
+        <li><strong class="pname"><code>other_variable_scores</code></strong> (<code>List</code>) - For each variable (in order) in <code>other</code>, the 
+          component of the BDeu score for that variable</li>
+    </ul>
+    <dl><dt>Returns: <code>Tuple</code></dt>
+        <dd><code>(score,variable_scores)</code> where <code>score</code> 
+          is the BDeu score and <code>variable_scores</code> is a list of 
+          component scores, one for each variable in <code>self</code>.</dd></dl>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>NameError</strong></code> - If <a href="gPy.gPyC-module.html" class="link">gPyC</a> was not 
+        successfully imported</li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="copy"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">copy_domain</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.copy">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return a copy
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code><a href="gPy.Models.BNM-class.html" class="link">BNM</a></code></dt>
+        <dd>A copy of <code>self</code></dd></dl>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#copy">HM.copy</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="eliminate_variable"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">eliminate_variable</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">variable</span>,
+        <span class="sig-arg">trace</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.eliminate_variable">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Alter a Bayesian network by summing out a variable</p>
+  <code>self</code> will cease to be a <a 
+  href="gPy.Models.BNM-class.html" class="link">BNM</a> object unless 
+  <code>variable</code> has no children.
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>variable</code></strong> (<code>String</code>) - The variable to eliminate</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#eliminate_variable">HM.eliminate_variable</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="family_hyperedge"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">family_hyperedge</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">child</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.family_hyperedge">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Return the hyperedge corresponding to the CPT with <code>child</code> 
+  as child
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>child</code></strong> (<code>Immutable</code>) - Variable</li>
+    </ul>
+    <dl><dt>Returns: <code>Frozenset</code></dt>
+        <dd>Hyperedge corresponding to the CPT with <code>child</code> as 
+          child</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="from_dnet"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">from_dnet</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">info</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.from_dnet">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  Add CPTs from a <code>.dnet</code> file
+  <dl><dt></dt><dd>
+    <dl><dt>Parameters:</dt></dl>
+    <ul class="nomargin">
+        <li><strong class="pname"><code>info</code></strong> (<code>Tuple</code>) - Output from <a href="gPy.IO-module.html#read_dnet" 
+          class="link">IO.read_dnet</a></li>
+    </ul>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="remove"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">remove</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">key</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.remove">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>Remove a CPT where <code>key</code> is either the child or a tuple 
+  giving the family for the CPT.</p>
+  Using the child as key is faster.
+  <dl><dt></dt><dd>
+    <dl><dt>Raises:</dt></dl>
+    <ul class="nomargin">
+        <li><code><strong class='fraise'>TypeError</strong></code> - If <code>key</code> is neither a variable or a family</li>
+    </ul>
+    <dl><dt>Overrides:
+      <a href="gPy.Models.HM-class.html#remove">HM.remove</a>
+    </dt></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<a name="topological_order"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">topological_order</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="gPy.Models-pysrc.html#BNM.topological_order">source&nbsp;code</a></span>&nbsp;</span
+    ></td>
+  </table>
+  
+  <p>A topological ordering of the associated acyclic digraph</p>
+  Children come after their parents in the ordering
+  <dl><dt></dt><dd>
+    <dl><dt>Returns: <code>List</code></dt>
+        <dd>A topological ordering of the vertices</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="_adg"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">_adg</h3>
+  The acyclic digraph giving the BN's structure
+  <dl><dt></dt><dd>
+    <dl><dt>Type:</dt>
+      <dd><a href="gPy.Structures.ADG-class.html" class="link">ADG</a> 
+      object</dd></dl>
+  </dd></dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="gPy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.cs.york.ac.uk/~jc/teaching/agm/gPy">gPy</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">Generated by Epydoc
+        3.0alpha3 on Mon Feb 19 17:05:00 2007</td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,3292 @@
+-----------------------------------------------------------------------------------------
+       log:  C:\bdm2s2\data\May2002\output\Bdm2S2_ch5_International_policy.log
+  log type:  text
+ opened on:  13 Feb 2003, 11:05:03
+
+.  /*************************************************************************************
+> **********/
+> /************ ANALYSIS*****************************************************************
+> ******/
+> /**************************************************************************************
+> *********/
+> global fe "regyr";
+
+.   xtlogit EX_WAR demaut, fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 1063 groups (9104 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -789.41136
+Iteration 1:   log likelihood = -765.26137
+Iteration 2:   log likelihood = -765.24986
+
+Conditional fixed-effects logit                 Number of obs      =      4033
+Group variable (i) : regyr                      Number of groups   =       179
+
+                                                Obs per group: min =         3
+                                                               avg =      22.5
+                                                               max =        42
+
+                                                LR chi2(1)         =     49.89
+Log likelihood  = -765.24986                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demaut |   1.432403   .2070476     6.92   0.000     1.026597    1.838209
+------------------------------------------------------------------------------
+
+. xtlogit EX_WAR W , fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 1058 groups (12886 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -946.12512
+Iteration 1:   log likelihood = -926.97813
+Iteration 2:   log likelihood = -926.97773
+
+Conditional fixed-effects logit                 Number of obs      =      5527
+Group variable (i) : regyr                      Number of groups   =       185
+
+                                                Obs per group: min =         3
+                                                               avg =      29.9
+                                                               max =        50
+
+                                                LR chi2(1)         =     39.33
+Log likelihood  = -926.97773                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   1.344651   .2167187     6.20   0.000     .9198904    1.769412
+------------------------------------------------------------------------------
+
+. xtlogit EX_WAR W demres, fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 846 groups (7325 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -695.32963
+Iteration 1:   log likelihood = -677.43291
+Iteration 2:   log likelihood = -677.41775
+Iteration 3:   log likelihood = -677.41775
+
+Conditional fixed-effects logit                 Number of obs      =      3234
+Group variable (i) : regyr                      Number of groups   =       174
+
+                                                Obs per group: min =         2
+                                                               avg =      18.6
+                                                               max =        42
+
+                                                LR chi2(2)         =     36.69
+Log likelihood  = -677.41775                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   1.502982   .2520961     5.96   0.000     1.008883    1.997081
+      demres |  -.1128793   .4105235    -0.27   0.783    -.9174905    .6917319
+------------------------------------------------------------------------------
+
+. global model1 "lagW IS_WAR war_lagW ";
+
+. global model2 "lagW IS_WAR war_lagW  even evenW ";
+
+. global model3 "lagW EX_WAR EX_WARW ";
+
+. global model4 "demlag IS_WAR war_lagD ";
+
+. global model5 "demlag IS_WAR war_lagD  even evenD lagdemres";
+
+. global model6 "demlag EX_WAR EX_WARD";
+
+. heckman  lmilex laglmilex lagW IS_WAR war_lagW lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -13973.205  
+Iteration 1:   log likelihood = -13969.978  
+Iteration 2:   log likelihood = -13969.977  
+Iteration 3:   log likelihood = -13969.977  
+
+Heckman selection model                         Number of obs      =     17743
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      7587
+
+                                                Wald chi2(6)       = 304693.61
+Log likelihood = -13969.98                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9740936   .0027088   359.60   0.000     .9687845    .9794027
+        lagW |  -.0565825   .0156616    -3.61   0.000    -.0872786   -.0258864
+      IS_WAR |   .1543069   .0337062     4.58   0.000      .088244    .2203698
+    war_lagW |   .1356121   .0553735     2.45   0.014     .0270819    .2441422
+       lpopA |  -.0089205   .0041252    -2.16   0.031    -.0170058   -.0008352
+logenergycap |   .0183721   .0032952     5.58   0.000     .0119136    .0248307
+       _cons |   .4879825   .0560614     8.70   0.000     .3781041    .5978609
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0082886   .0002022    41.00   0.000     .0078923    .0086849
+      europe |   .5080669   .0228891    22.20   0.000      .463205    .5529287
+         usa |   1.888216   .1260066    14.99   0.000     1.641247    2.135184
+       _cons |  -16.42055   .3941547   -41.66   0.000    -17.19308   -15.64802
+-------------+----------------------------------------------------------------
+     /athrho |  -.3699695   .0660126    -5.60   0.000    -.4993518   -.2405872
+    /lnsigma |   -.985848   .0160989   -61.24   0.000    -1.017401   -.9542948
+-------------+----------------------------------------------------------------
+         rho |   -.353965   .0577418                     -.4616073   -.2360503
+       sigma |   .3731227   .0060069                      .3615332    .3850836
+      lambda |  -.1320724   .0234055                     -.1779464   -.0861984
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    25.57   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagW = 0.0
+
+           chi2(  1) =   80.55
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagW = 0.0
+
+           chi2(  2) =  161.80
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+
+           chi2(  1) =   20.96
+         Prob > chi2 =    0.0000
+
+
+. heckman  lmilex laglmilex demlag IS_WAR war_lagD lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood =  -12980.42  
+Iteration 1:   log likelihood = -12974.198  
+Iteration 2:   log likelihood = -12974.027  
+Iteration 3:   log likelihood = -12974.026  
+
+Heckman selection model                         Number of obs      =     17116
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      6960
+
+                                                Wald chi2(6)       = 297453.66
+Log likelihood = -12974.03                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |    .974588   .0027622   352.83   0.000     .9691742    .9800018
+      demlag |  -.0701458   .0131602    -5.33   0.000    -.0959394   -.0443523
+      IS_WAR |   .1347168   .0325762     4.14   0.000     .0708687    .1985649
+    war_lagD |   .1697401   .0495084     3.43   0.001     .0727055    .2667747
+       lpopA |  -.0118685   .0042461    -2.80   0.005    -.0201907   -.0035463
+logenergycap |   .0207302   .0034373     6.03   0.000     .0139932    .0274671
+       _cons |   .4954655   .0580975     8.53   0.000     .3815964    .6093345
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0083338   .0002079    40.08   0.000     .0079263    .0087413
+      europe |   .4735451   .0228657    20.71   0.000     .4287292     .518361
+         usa |   1.958992   .1252279    15.64   0.000      1.71355    2.204434
+       _cons |   -16.5509   .4053441   -40.83   0.000    -17.34536   -15.75644
+-------------+----------------------------------------------------------------
+     /athrho |  -.3025072   .0612623    -4.94   0.000    -.4225792   -.1824353
+    /lnsigma |   -1.03385   .0140109   -73.79   0.000    -1.061311    -1.00639
+-------------+----------------------------------------------------------------
+         rho |  -.2936054   .0559813                      -.399101   -.1804379
+       sigma |    .355635   .0049828                      .3460018    .3655364
+      lambda |  -.1044164   .0210927                     -.1457574   -.0630754
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    24.61   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagD = 0.0
+
+           chi2(  1) =  107.46
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagD = 0.0
+
+           chi2(  2) =  160.36
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+
+           chi2(  1) =   17.10
+         Prob > chi2 =    0.0000
+
+
+. heckman  lmilex laglmilex lagW IS_WAR war_lagW even evenW lpopA, select(year europe usa
+>   );
+
+Iteration 0:   log likelihood = -15929.984  
+Iteration 1:   log likelihood = -15926.909  
+Iteration 2:   log likelihood = -15926.907  
+
+Heckman selection model                         Number of obs      =     18826
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      8670
+
+                                                Wald chi2(7)       = 328114.04
+Log likelihood = -15926.91                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9864239   .0022385   440.66   0.000     .9820365    .9908113
+        lagW |  -.0068151   .0141947    -0.48   0.631    -.0346361     .021006
+      IS_WAR |    .271431   .0666707     4.07   0.000     .1407588    .4021032
+    war_lagW |  -.0316876   .1141681    -0.28   0.781     -.255453    .1920777
+        even |  -.2105151   .1198397    -1.76   0.079    -.4453965    .0243663
+       evenW |   .2975765   .2208381     1.35   0.178    -.1352582    .7304112
+       lpopA |    .001913   .0034552     0.55   0.580    -.0048591    .0086851
+       _cons |   .2893058   .0533293     5.42   0.000     .1847823    .3938293
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0059163    .000182    32.50   0.000     .0055595    .0062731
+      europe |   .4895851   .0231521    21.15   0.000     .4442078    .5349624
+         usa |   1.655487   .1242558    13.32   0.000     1.411951    1.899024
+       _cons |  -11.70849   .3534741   -33.12   0.000    -12.40128   -11.01569
+-------------+----------------------------------------------------------------
+     /athrho |  -.3561516   .0831586    -4.28   0.000    -.5191395   -.1931636
+    /lnsigma |  -.9536345   .0183782   -51.89   0.000     -.989655    -.917614
+-------------+----------------------------------------------------------------
+         rho |  -.3418197   .0734423                     -.4770356   -.1907965
+       sigma |    .385338   .0070818                      .3717049    .3994711
+      lambda |  -.1317161   .0305208                     -.1915357   -.0718965
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    18.32   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagW = 0.0
+
+           chi2(  1) =   12.67
+         Prob > chi2 =    0.0004
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagW = 0.0
+
+           chi2(  2) =   53.16
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+
+           chi2(  1) =   16.57
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW even evenW;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagW = 0.0
+ ( 3)  [lmilex]even = 0.0
+ ( 4)  [lmilex]evenW = 0.0
+
+           chi2(  4) =  124.87
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagW +even +evenW = 0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagW + [lmilex]even + [lmilex]evenW = 0.0
+
+           chi2(  1) =   12.66
+         Prob > chi2 =    0.0004
+
+
+. test IS_WAR +war_lagW +even +evenW =IS_WAR+even;
+
+ ( 1)  [lmilex]war_lagW + [lmilex]evenW = 0.0
+
+           chi2(  1) =    3.43
+         Prob > chi2 =    0.0639
+
+
+. heckman  lmilex laglmilex lagW IS_WAR war_lagW even evenW lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -13787.477  
+Iteration 1:   log likelihood = -13784.295  
+Iteration 2:   log likelihood = -13784.294  
+
+Heckman selection model                         Number of obs      =     17629
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      7473
+
+                                                Wald chi2(8)       = 305068.11
+Log likelihood = -13784.29                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9744994   .0027082   359.84   0.000     .9691915    .9798074
+        lagW |  -.0551682   .0155674    -3.54   0.000    -.0856798   -.0246567
+      IS_WAR |   .2999426   .0689139     4.35   0.000     .1648738    .4350114
+    war_lagW |  -.0563553   .1144492    -0.49   0.622    -.2806716    .1679609
+        even |  -.2286261   .1224359    -1.87   0.062     -.468596    .0113439
+       evenW |   .3200214   .2205414     1.45   0.147    -.1122319    .7522746
+       lpopA |  -.0076483   .0041259    -1.85   0.064    -.0157349    .0004382
+logenergycap |   .0168406   .0033034     5.10   0.000      .010366    .0233151
+       _cons |   .4835262   .0559388     8.64   0.000     .3738881    .5931644
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0082836   .0002024    40.92   0.000     .0078868    .0086803
+      europe |   .5057908   .0230301    21.96   0.000     .4606528    .5509289
+         usa |   1.879079   .1267608    14.82   0.000     1.630633    2.127526
+       _cons |   -16.4196    .394681   -41.60   0.000    -17.19316   -15.64604
+-------------+----------------------------------------------------------------
+     /athrho |  -.3986991   .0655464    -6.08   0.000    -.5271677   -.2702304
+    /lnsigma |  -.9864453    .016815   -58.66   0.000    -1.019402   -.9534884
+-------------+----------------------------------------------------------------
+         rho |  -.3788353   .0561395                     -.4832131   -.2638392
+       sigma |   .3728999   .0062703                      .3608106    .3853942
+      lambda |  -.1412676   .0230388                     -.1864229   -.0961124
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    26.45   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagW = 0.0
+
+           chi2(  1) =   13.67
+         Prob > chi2 =    0.0002
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagW = 0.0
+
+           chi2(  2) =   58.15
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+
+           chi2(  1) =   18.94
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW even evenW;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagW = 0.0
+ ( 3)  [lmilex]even = 0.0
+ ( 4)  [lmilex]evenW = 0.0
+
+           chi2(  4) =  136.39
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagW +even +evenW = 0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagW + [lmilex]even + [lmilex]evenW = 0.0
+
+           chi2(  1) =   13.75
+         Prob > chi2 =    0.0002
+
+
+. test IS_WAR +war_lagW +even +evenW =IS_WAR+even;
+
+ ( 1)  [lmilex]war_lagW + [lmilex]evenW = 0.0
+
+           chi2(  1) =    3.39
+         Prob > chi2 =    0.0656
+
+
+. heckman  lmilex laglmilex demlag IS_WAR war_lagD even evenD lpopA , select(year europe 
+> usa  );
+
+Iteration 0:   log likelihood =  -14780.22  
+Iteration 1:   log likelihood = -14772.092  
+Iteration 2:   log likelihood = -14771.571  
+Iteration 3:   log likelihood = -14771.569  
+Iteration 4:   log likelihood = -14771.569  
+
+Heckman selection model                         Number of obs      =     18034
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      7878
+
+                                                Wald chi2(7)       = 341534.00
+Log likelihood = -14771.57                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9874252   .0021186   466.08   0.000     .9832729    .9915775
+      demlag |  -.0183712   .0117084    -1.57   0.117    -.0413193    .0045769
+      IS_WAR |   .0934688    .064256     1.45   0.146    -.0324706    .2194082
+    war_lagD |   .2222899    .101347     2.19   0.028     .0236534    .4209263
+        even |   .0504936   .1173291     0.43   0.667    -.1794671    .2804544
+       evenD |  -.0599268   .2027061    -0.30   0.768    -.4572235    .3373699
+       lpopA |   .0001793    .003612     0.05   0.960    -.0069001    .0072587
+       _cons |   .2907446   .0532025     5.46   0.000     .1864697    .3950196
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0060685   .0001866    32.52   0.000     .0057028    .0064342
+      europe |    .442311   .0218411    20.25   0.000     .3995033    .4851188
+         usa |   1.729172   .1229096    14.07   0.000     1.488274     1.97007
+       _cons |  -12.04678   .3626199   -33.22   0.000     -12.7575   -11.33605
+-------------+----------------------------------------------------------------
+     /athrho |  -.2686259   .0661174    -4.06   0.000    -.3982136   -.1390382
+    /lnsigma |  -.9959433   .0134103   -74.27   0.000    -1.022227   -.9696596
+-------------+----------------------------------------------------------------
+         rho |  -.2623458   .0615669                     -.3784194   -.1381491
+       sigma |   .3693748   .0049534                      .3597927    .3792121
+      lambda |  -.0969039   .0237993                     -.1435497   -.0502582
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    19.06   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagD = 0.0
+
+           chi2(  1) =   25.75
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagD = 0.0
+
+           chi2(  2) =   34.86
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+
+           chi2(  1) =    2.12
+         Prob > chi2 =    0.1458
+
+
+. test IS_WAR war_lagD even evenD;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagD = 0.0
+ ( 3)  [lmilex]even = 0.0
+ ( 4)  [lmilex]evenD = 0.0
+
+           chi2(  4) =  107.90
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD = 0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagD + [lmilex]even + [lmilex]evenD = 0.0
+
+           chi2(  1) =   12.02
+         Prob > chi2 =    0.0005
+
+
+. test IS_WAR +war_lagD +even +evenD =IS_WAR+even;
+
+ ( 1)  [lmilex]war_lagD + [lmilex]evenD = 0.0
+
+           chi2(  1) =    1.47
+         Prob > chi2 =    0.2254
+
+
+. heckman  lmilex laglmilex demlag IS_WAR war_lagD even evenD lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -12804.993  
+Iteration 1:   log likelihood = -12799.778  
+Iteration 2:   log likelihood = -12799.662  
+Iteration 3:   log likelihood = -12799.662  
+
+Heckman selection model                         Number of obs      =     17010
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      6854
+
+                                                Wald chi2(8)       = 290057.39
+Log likelihood = -12799.66                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9754853   .0027892   349.74   0.000     .9700186    .9809521
+      demlag |  -.0676551   .0131003    -5.16   0.000    -.0933313   -.0419789
+      IS_WAR |   .1224895   .0667954     1.83   0.067    -.0084271    .2534061
+    war_lagD |   .1633683   .1006593     1.62   0.105    -.0339203    .3606569
+        even |   .0437836    .118473     0.37   0.712    -.1884193    .2759864
+       evenD |   .0254338   .1978002     0.13   0.898    -.3622476    .4131152
+       lpopA |  -.0113624   .0042581    -2.67   0.008    -.0197082   -.0030167
+logenergycap |   .0190935   .0034401     5.55   0.000      .012351    .0258361
+       _cons |   .4929445   .0582478     8.46   0.000     .3787809    .6071081
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0083197   .0002086    39.88   0.000     .0079109    .0087286
+      europe |   .4748793   .0230626    20.59   0.000     .4296775    .5200811
+         usa |   1.957853   .1259618    15.54   0.000     1.710972    2.204733
+       _cons |  -16.53363    .406659   -40.66   0.000    -17.33066   -15.73659
+-------------+----------------------------------------------------------------
+     /athrho |  -.3126443   .0645541    -4.84   0.000     -.439168   -.1861207
+    /lnsigma |  -1.039064   .0148111   -70.15   0.000    -1.068093   -1.010035
+-------------+----------------------------------------------------------------
+         rho |  -.3028408   .0586336                     -.4129545   -.1840009
+       sigma |   .3537857     .00524                      .3436632    .3642063
+      lambda |  -.1071408   .0220595                     -.1503765    -.063905
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    24.14   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagD = 0.0
+
+           chi2(  1) =   22.78
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagD = 0.0
+
+           chi2(  2) =   32.93
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+
+           chi2(  1) =    3.36
+         Prob > chi2 =    0.0667
+
+
+. test IS_WAR war_lagD even evenD;
+
+ ( 1)  [lmilex]IS_WAR = 0.0
+ ( 2)  [lmilex]war_lagD = 0.0
+ ( 3)  [lmilex]even = 0.0
+ ( 4)  [lmilex]evenD = 0.0
+
+           chi2(  4) =  121.47
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD = 0;
+
+ ( 1)  [lmilex]IS_WAR + [lmilex]war_lagD + [lmilex]even + [lmilex]evenD = 0.0
+
+           chi2(  1) =   17.23
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD =IS_WAR+even;
+
+ ( 1)  [lmilex]war_lagD + [lmilex]evenD = 0.0
+
+           chi2(  1) =    2.10
+         Prob > chi2 =    0.1469
+
+
+. heckman  lmilex laglmilex lagW EX_WAR EX_WARW lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -14049.111  
+Iteration 1:   log likelihood =  -14046.97  
+Iteration 2:   log likelihood = -14046.956  
+Iteration 3:   log likelihood = -14046.956  
+
+Heckman selection model                         Number of obs      =     17743
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      7587
+
+                                                Wald chi2(6)       = 295632.62
+Log likelihood = -14046.96                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9767452   .0027016   361.55   0.000     .9714502    .9820402
+        lagW |   -.051627   .0156271    -3.30   0.001    -.0822556   -.0209983
+      EX_WAR |  -.0558096   .0523183    -1.07   0.286    -.1583515    .0467324
+     EX_WARW |  -.0053446   .0796476    -0.07   0.946     -.161451    .1507617
+       lpopA |  -.0052978   .0041653    -1.27   0.203    -.0134616    .0028661
+logenergycap |   .0197577   .0033625     5.88   0.000     .0131673     .026348
+       _cons |   .3696064   .0566398     6.53   0.000     .2585944    .4806185
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0082146   .0002026    40.55   0.000     .0078175    .0086117
+      europe |   .5227634   .0225441    23.19   0.000     .4785778     .566949
+         usa |   1.927981   .1246698    15.46   0.000     1.683633    2.172329
+       _cons |   -16.2819    .394952   -41.23   0.000    -17.05599   -15.50781
+-------------+----------------------------------------------------------------
+     /athrho |  -.2564098   .0675009    -3.80   0.000     -.388709   -.1241105
+    /lnsigma |  -.9966368   .0131577   -75.75   0.000    -1.022425   -.9708481
+-------------+----------------------------------------------------------------
+         rho |  -.2509344   .0632505                     -.3702468   -.1234772
+       sigma |   .3691188   .0048568                      .3597214    .3787617
+      lambda |  -.0926246   .0243178                     -.1402867   -.0449625
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    15.16   Prob > chi2 = 0.0001
+------------------------------------------------------------------------------
+
+. test EX_WAR+EX_WARW=0;
+
+ ( 1)  [lmilex]EX_WAR + [lmilex]EX_WARW = 0.0
+
+           chi2(  1) =    2.39
+         Prob > chi2 =    0.1220
+
+
+. test EX_WAR EX_WARW;
+
+ ( 1)  [lmilex]EX_WAR = 0.0
+ ( 2)  [lmilex]EX_WARW = 0.0
+
+           chi2(  2) =    6.82
+         Prob > chi2 =    0.0331
+
+
+. test EX_WAR;
+
+ ( 1)  [lmilex]EX_WAR = 0.0
+
+           chi2(  1) =    1.14
+         Prob > chi2 =    0.2861
+
+
+. heckman  lmilex laglmilex lagW EX_WAR EX_WARD lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -13056.445  
+Iteration 1:   log likelihood = -13051.747  
+Iteration 2:   log likelihood = -13051.594  
+Iteration 3:   log likelihood = -13051.593  
+
+Heckman selection model                         Number of obs      =     17116
+(regression model with sample selection)        Censored obs       =     10156
+                                                Uncensored obs     =      6960
+
+                                                Wald chi2(6)       = 301228.68
+Log likelihood = -13051.59                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilex       |
+   laglmilex |   .9786158   .0026591   368.02   0.000      .973404    .9838276
+        lagW |  -.0574323    .015778    -3.64   0.000    -.0883565    -.026508
+      EX_WAR |   .0078992   .0448189     0.18   0.860    -.0799442    .0957426
+     EX_WARD |   -.097009   .0656985    -1.48   0.140    -.2257757    .0317577
+       lpopA |  -.0080955    .004349    -1.86   0.063    -.0166193    .0004283
+logenergycap |   .0198796   .0034317     5.79   0.000     .0131537    .0266056
+       _cons |   .3887255   .0604326     6.43   0.000     .2702798    .5071713
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0082742   .0002075    39.87   0.000     .0078674     .008681
+      europe |   .4815756   .0226429    21.27   0.000     .4371964    .5259548
+         usa |   1.980963   .1242751    15.94   0.000     1.737388    2.224537
+       _cons |  -16.43783   .4046707   -40.62   0.000    -17.23097   -15.64469
+-------------+----------------------------------------------------------------
+     /athrho |  -.2274907    .056956    -3.99   0.000    -.3391225   -.1158589
+    /lnsigma |  -1.035097   .0116929   -88.52   0.000    -1.058014   -1.012179
+-------------+----------------------------------------------------------------
+         rho |  -.2236459   .0541073                     -.3266938   -.1153432
+       sigma |   .3551921   .0041532                      .3471445    .3634263
+      lambda |  -.0794372   .0198701                     -.1183819   -.0404926
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    15.62   Prob > chi2 = 0.0001
+------------------------------------------------------------------------------
+
+. test EX_WAR+EX_WARD=0;
+
+ ( 1)  [lmilex]EX_WAR + [lmilex]EX_WARD = 0.0
+
+           chi2(  1) =    6.32
+         Prob > chi2 =    0.0120
+
+
+. test EX_WAR EX_WARD;
+
+ ( 1)  [lmilex]EX_WAR = 0.0
+ ( 2)  [lmilex]EX_WARD = 0.0
+
+           chi2(  2) =    6.80
+         Prob > chi2 =    0.0334
+
+
+. test EX_WAR;
+
+ ( 1)  [lmilex]EX_WAR = 0.0
+
+           chi2(  1) =    0.03
+         Prob > chi2 =    0.8601
+
+
+. heckman  lmilper laglmilper lagW EX_WAR EX_WARD lpopA , select(year europe usa  );
+
+Iteration 0:   log likelihood = -13297.105  
+Iteration 1:   log likelihood = -13294.948  
+Iteration 2:   log likelihood = -13294.838  
+Iteration 3:   log likelihood = -13294.838  
+
+Heckman selection model                         Number of obs      =     17746
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      9426
+
+                                                Wald chi2(5)       = 394798.85
+Log likelihood = -13294.84                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9540735   .0028011   340.61   0.000     .9485835    .9595634
+        lagW |  -.0452789   .0095139    -4.76   0.000    -.0639258    -.026632
+      EX_WAR |   .0495029    .031912     1.55   0.121    -.0130435    .1120494
+     EX_WARD |  -.0656313   .0487146    -1.35   0.178    -.1611102    .0298475
+       lpopA |   .0449137    .003373    13.32   0.000     .0383028    .0515246
+       _cons |  -.4198693   .0469532    -8.94   0.000    -.5118959   -.3278426
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0033816   .0001731    19.53   0.000     .0030423    .0037209
+      europe |   .1962555   .0202519     9.69   0.000     .1565625    .2359486
+         usa |   1.307223   .1198788    10.90   0.000     1.072265    1.542181
+       _cons |   -6.52531   .3356929   -19.44   0.000    -7.183256   -5.867364
+-------------+----------------------------------------------------------------
+     /athrho |  -.3955124   .0425566    -9.29   0.000    -.4789218    -.312103
+    /lnsigma |  -1.237102   .0117897  -104.93   0.000    -1.260209   -1.213994
+-------------+----------------------------------------------------------------
+         rho |  -.3761027   .0365368                     -.4453797    -.302349
+       sigma |   .2902242   .0034217                      .2835947    .2970086
+      lambda |  -.1091541   .0116431                     -.1319742   -.0863339
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    25.71   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test EX_WAR+EX_WARD=0;
+
+ ( 1)  [lmilper]EX_WAR + [lmilper]EX_WARD = 0.0
+
+           chi2(  1) =    0.34
+         Prob > chi2 =    0.5600
+
+
+. test EX_WAR EX_WARD;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+ ( 2)  [lmilper]EX_WARD = 0.0
+
+           chi2(  2) =    2.41
+         Prob > chi2 =    0.2995
+
+
+. test EX_WAR;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+
+           chi2(  1) =    2.41
+         Prob > chi2 =    0.1208
+
+
+. heckman  lmilper laglmilper lagW EX_WAR EX_WARD lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -11181.163  
+Iteration 1:   log likelihood = -11181.163  
+
+Heckman selection model                         Number of obs      =     15654
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      7334
+
+                                                Wald chi2(6)       = 301363.99
+Log likelihood = -11181.16                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9481929   .0033327   284.51   0.000     .9416609    .9547248
+        lagW |  -.0827942   .0129624    -6.39   0.000    -.1082001   -.0573883
+      EX_WAR |      .0388   .0362985     1.07   0.285    -.0323437    .1099437
+     EX_WARD |  -.0695845   .0531552    -1.31   0.191    -.1737668    .0345979
+       lpopA |   .0379812    .003998     9.50   0.000     .0301453    .0458171
+logenergycap |   .0135165   .0024078     5.61   0.000     .0087974    .0182356
+       _cons |  -.4521323    .057175    -7.91   0.000    -.5641933   -.3400713
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0075652   .0002117    35.74   0.000     .0071503    .0079801
+      europe |   .3417467   .0225122    15.18   0.000     .2976237    .3858698
+         usa |   1.783779   .1231471    14.48   0.000     1.542415    2.025143
+       _cons |  -14.87205   .4129764   -36.01   0.000    -15.68146   -14.06263
+-------------+----------------------------------------------------------------
+     /athrho |   .0034724   .0909162     0.04   0.970    -.1747202    .1816649
+    /lnsigma |  -1.260304   .0082591  -152.60   0.000    -1.276491   -1.244116
+-------------+----------------------------------------------------------------
+         rho |   .0034723   .0909151                     -.1729637    .1796925
+       sigma |   .2835679    .002342                      .2790146    .2881955
+      lambda |   .0009846   .0257808                     -.0495448    .0515141
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =     0.00   Prob > chi2 = 0.9693
+------------------------------------------------------------------------------
+
+. test EX_WAR+EX_WARD=0;
+
+ ( 1)  [lmilper]EX_WAR + [lmilper]EX_WARD = 0.0
+
+           chi2(  1) =    1.13
+         Prob > chi2 =    0.2869
+
+
+. test EX_WAR EX_WARD;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+ ( 2)  [lmilper]EX_WARD = 0.0
+
+           chi2(  2) =    1.72
+         Prob > chi2 =    0.4222
+
+
+. test EX_WAR;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+
+           chi2(  1) =    1.14
+         Prob > chi2 =    0.2851
+
+
+. heckman  lmilper laglmilper lagW EX_WAR EX_WARW lpopA , select(year europe usa  );
+
+Iteration 0:   log likelihood = -14432.528  (not concave)
+Iteration 1:   log likelihood = -14431.332  
+Iteration 2:   log likelihood = -14414.996  
+Iteration 3:   log likelihood = -14414.891  
+Iteration 4:   log likelihood = -14414.891  
+
+Heckman selection model                         Number of obs      =     19019
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =     10699
+
+                                                Wald chi2(5)       = 469806.69
+Log likelihood = -14414.89                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9513712   .0026923   353.37   0.000     .9460945     .956648
+        lagW |  -.0413631    .009195    -4.50   0.000     -.059385   -.0233412
+      EX_WAR |   .0088108   .0360499     0.24   0.807    -.0618457    .0794674
+     EX_WARW |   .0020069   .0574724     0.03   0.972    -.1106369    .1146508
+       lpopA |   .0458339   .0030848    14.86   0.000     .0397878      .05188
+       _cons |  -.4069475   .0416661    -9.77   0.000    -.4886116   -.3252834
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0030374   .0001643    18.48   0.000     .0027153    .0033595
+      europe |   .2416782     .01929    12.53   0.000     .2038706    .2794859
+         usa |    1.21996   .1201584    10.15   0.000     .9844541    1.455466
+       _cons |  -5.799636   .3187345   -18.20   0.000    -6.424344   -5.174928
+-------------+----------------------------------------------------------------
+     /athrho |  -.5266571     .03055   -17.24   0.000    -.5865339   -.4667803
+    /lnsigma |  -1.192136   .0105615  -112.88   0.000    -1.212836   -1.171436
+-------------+----------------------------------------------------------------
+         rho |  -.4828216   .0234282                     -.5273982   -.4355942
+       sigma |    .303572   .0032062                      .2973526    .3099215
+      lambda |  -.1465711   .0083525                     -.1629418   -.1302005
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    70.37   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test EX_WAR+EX_WARW=0;
+
+ ( 1)  [lmilper]EX_WAR + [lmilper]EX_WARW = 0.0
+
+           chi2(  1) =    0.13
+         Prob > chi2 =    0.7208
+
+
+. test EX_WAR EX_WARW;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+ ( 2)  [lmilper]EX_WARW = 0.0
+
+           chi2(  2) =    0.36
+         Prob > chi2 =    0.8332
+
+
+. test EX_WAR;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+
+           chi2(  1) =    0.06
+         Prob > chi2 =    0.8069
+
+
+. heckman  lmilper laglmilper lagW EX_WAR EX_WARW lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -12157.463  
+Iteration 1:   log likelihood = -12156.415  (not concave)
+Iteration 2:   log likelihood = -12155.027  (not concave)
+Iteration 3:   log likelihood = -12154.451  (not concave)
+Iteration 4:   log likelihood = -12154.023  (not concave)
+Iteration 5:   log likelihood = -12153.583  (not concave)
+Iteration 6:   log likelihood = -12149.971  
+Iteration 7:   log likelihood = -12143.224  
+Iteration 8:   log likelihood = -12141.405  
+Iteration 9:   log likelihood = -12141.403  
+Iteration 10:  log likelihood = -12141.403  
+
+Heckman selection model                         Number of obs      =     16518
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      8198
+
+                                                Wald chi2(6)       = 357747.07
+Log likelihood =  -12141.4                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9440883    .003223   292.92   0.000     .9377714    .9504052
+        lagW |  -.0517853   .0122713    -4.22   0.000    -.0758365    -.027734
+      EX_WAR |  -.0287745   .0410642    -0.70   0.483    -.1092589    .0517098
+     EX_WARW |   .0167455   .0629383     0.27   0.790    -.1066113    .1401023
+       lpopA |   .0377225   .0037435    10.08   0.000     .0303853    .0450597
+logenergycap |   .0170412   .0020883     8.16   0.000     .0129482    .0211342
+       _cons |  -.5968112   .0493753   -12.09   0.000     -.693585   -.5000375
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0073126    .000206    35.50   0.000     .0069089    .0077162
+      europe |   .3623033   .0211394    17.14   0.000     .3208708    .4037357
+         usa |   1.718942   .1218047    14.11   0.000     1.480209    1.957674
+       _cons |  -14.32468   .4016384   -35.67   0.000    -15.11187   -13.53748
+-------------+----------------------------------------------------------------
+     /athrho |   .5663172   .0381816    14.83   0.000     .4914826    .6411518
+    /lnsigma |  -1.147602   .0129201   -88.82   0.000    -1.172925   -1.122279
+-------------+----------------------------------------------------------------
+         rho |   .5126495   .0281471                      .4553924    .5656833
+       sigma |   .3173968   .0041008                      .3094603    .3255369
+      lambda |   .1627133   .0106824                      .1417761    .1836505
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    32.40   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test EX_WAR+EX_WARW=0;
+
+ ( 1)  [lmilper]EX_WAR + [lmilper]EX_WARW = 0.0
+
+           chi2(  1) =    0.15
+         Prob > chi2 =    0.7033
+
+
+. test EX_WAR EX_WARW;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+ ( 2)  [lmilper]EX_WARW = 0.0
+
+           chi2(  2) =    1.19
+         Prob > chi2 =    0.5526
+
+
+. test EX_WAR;
+
+ ( 1)  [lmilper]EX_WAR = 0.0
+
+           chi2(  1) =    0.49
+         Prob > chi2 =    0.4835
+
+
+. heckman  lmilper laglmilper lagW IS_WAR war_lagW lpopA , select(year europe usa  );
+
+Iteration 0:   log likelihood = -14318.505  (not concave)
+Iteration 1:   log likelihood = -14309.994  
+Iteration 2:   log likelihood = -14298.569  
+Iteration 3:   log likelihood = -14294.567  
+Iteration 4:   log likelihood = -14294.548  
+Iteration 5:   log likelihood = -14294.548  
+
+Heckman selection model                         Number of obs      =     19019
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =     10699
+
+                                                Wald chi2(5)       = 479706.16
+Log likelihood = -14294.55                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9447887     .00269   351.22   0.000     .9395163    .9500611
+        lagW |  -.0492353   .0092084    -5.35   0.000    -.0672835   -.0311871
+      IS_WAR |   .1165064   .0220565     5.28   0.000     .0732765    .1597364
+    war_lagW |   .1473411    .038716     3.81   0.000     .0714591    .2232231
+       lpopA |    .048063   .0030567    15.72   0.000     .0420719    .0540541
+       _cons |  -.4159137    .041089   -10.12   0.000    -.4964467   -.3353807
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0030401    .000163    18.65   0.000     .0027207    .0033595
+      europe |   .2490816   .0191194    13.03   0.000     .2116084    .2865549
+         usa |   1.175134   .1200247     9.79   0.000     .9398903    1.410379
+       _cons |   -5.80962   .3161017   -18.38   0.000    -6.429168   -5.190072
+-------------+----------------------------------------------------------------
+     /athrho |  -.5862476   .0281945   -20.79   0.000    -.6415079   -.5309873
+    /lnsigma |  -1.187354   .0104973  -113.11   0.000    -1.207929    -1.16678
+-------------+----------------------------------------------------------------
+         rho |  -.5271915   .0203584                     -.5659254   -.4861354
+       sigma |   .3050272   .0032019                      .2988156    .3113679
+      lambda |  -.1608077    .007571                     -.1756467   -.1459688
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =   102.65   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagW = 0.0
+
+           chi2(  1) =  122.00
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagW = 0.0
+
+           chi2(  2) =  241.23
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =   27.90
+         Prob > chi2 =    0.0000
+
+
+. heckman  lmilper laglmilper lagW IS_WAR war_lagW lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -12065.671  
+Iteration 1:   log likelihood = -12065.662  
+Iteration 2:   log likelihood = -12065.662  
+
+Heckman selection model                         Number of obs      =     16518
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      8198
+
+                                                Wald chi2(6)       = 362690.37
+Log likelihood = -12065.66                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9379958   .0032398   289.52   0.000     .9316459    .9443458
+        lagW |  -.0745023   .0124472    -5.99   0.000    -.0988984   -.0501063
+      IS_WAR |   .1033102   .0267864     3.86   0.000     .0508099    .1558105
+    war_lagW |   .1672415   .0443273     3.77   0.000     .0803616    .2541213
+       lpopA |   .0430379   .0037898    11.36   0.000       .03561    .0504657
+logenergycap |   .0124563   .0022939     5.43   0.000     .0079604    .0169522
+       _cons |  -.5089554   .0511475    -9.95   0.000    -.6092026   -.4087083
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0076457   .0002062    37.07   0.000     .0072415      .00805
+      europe |   .3668916   .0219908    16.68   0.000     .3237904    .4099927
+         usa |   1.731578   .1233732    14.04   0.000     1.489771    1.973385
+       _cons |  -14.96718   .4024733   -37.19   0.000    -15.75602   -14.17835
+-------------+----------------------------------------------------------------
+     /athrho |   .0373727   .0938415     0.40   0.690    -.1465532    .2212987
+    /lnsigma |  -1.239694   .0080788  -153.45   0.000    -1.255528    -1.22386
+-------------+----------------------------------------------------------------
+         rho |   .0373554   .0937105                     -.1455129    .2177555
+       sigma |   .2894728   .0023386                      .2849253    .2940928
+      lambda |   .0108134   .0271491                      -.042398    .0640247
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =     0.18   Prob > chi2 = 0.6682
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagW = 0.0
+
+           chi2(  1) =  107.66
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagW = 0.0
+
+           chi2(  2) =  185.69
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =   14.88
+         Prob > chi2 =    0.0001
+
+
+. heckman  lmilper laglmilper demlag IS_WAR war_lagD lpopA , select(year europe usa  );
+
+Iteration 0:   log likelihood =  -13171.56  
+Iteration 1:   log likelihood = -13169.957  
+Iteration 2:   log likelihood = -13165.312  
+Iteration 3:   log likelihood =  -13165.22  
+Iteration 4:   log likelihood =  -13165.22  
+
+Heckman selection model                         Number of obs      =     17746
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      9426
+
+                                                Wald chi2(5)       = 406068.18
+Log likelihood = -13165.22                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9466094   .0027891   339.39   0.000     .9411428     .952076
+      demlag |  -.0544573   .0081886    -6.65   0.000    -.0705067   -.0384079
+      IS_WAR |   .0945982   .0207582     4.56   0.000      .053913    .1352835
+    war_lagD |   .2210236   .0350848     6.30   0.000     .1522586    .2897886
+       lpopA |   .0480985   .0033375    14.41   0.000     .0415571    .0546399
+       _cons |  -.4433218   .0459081    -9.66   0.000       -.5333   -.3533435
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0033627   .0001721    19.54   0.000     .0030253       .0037
+      europe |   .2061747   .0201409    10.24   0.000     .1666992    .2456501
+         usa |   1.269048   .1199758    10.58   0.000       1.0339    1.504196
+       _cons |  -6.493214   .3337245   -19.46   0.000    -7.147302   -5.839126
+-------------+----------------------------------------------------------------
+     /athrho |  -.4533902   .0388974   -11.66   0.000    -.5296277   -.3771527
+    /lnsigma |  -1.237793   .0118969  -104.04   0.000     -1.26111   -1.214475
+-------------+----------------------------------------------------------------
+         rho |  -.4246818   .0318821                     -.4850965   -.3602322
+       sigma |   .2900237   .0034504                      .2833393    .2968658
+      lambda |  -.1231678   .0104438                     -.1436373   -.1026982
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    36.93   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagD = 0.0
+
+           chi2(  1) =  188.04
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagD = 0.0
+
+           chi2(  2) =  265.40
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =   20.77
+         Prob > chi2 =    0.0000
+
+
+. heckman  lmilper laglmilper demlag IS_WAR war_lagD lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -11078.118  (not concave)
+Iteration 1:   log likelihood = -11078.096  (not concave)
+Iteration 2:   log likelihood = -11078.084  (not concave)
+Iteration 3:   log likelihood = -11078.067  (not concave)
+Iteration 4:   log likelihood = -11078.059  (not concave)
+Iteration 5:   log likelihood = -11078.026  (not concave)
+Iteration 6:   log likelihood =     -11078  (not concave)
+Iteration 7:   log likelihood = -11077.975  (not concave)
+Iteration 8:   log likelihood = -11077.954  (not concave)
+Iteration 9:   log likelihood = -11077.931  (not concave)
+Iteration 10:  log likelihood = -11077.888  (not concave)
+Iteration 11:  log likelihood = -11072.271  (not concave)
+Iteration 12:  log likelihood = -11064.772  (not concave)
+Iteration 13:  log likelihood = -11062.074  (not concave)
+Iteration 14:  log likelihood = -11059.387  (not concave)
+Iteration 15:  log likelihood = -11053.777  
+Iteration 16:  log likelihood = -11039.204  
+Iteration 17:  log likelihood =  -11034.57  
+Iteration 18:  log likelihood = -11034.539  
+Iteration 19:  log likelihood = -11034.539  
+
+Heckman selection model                         Number of obs      =     15654
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      7334
+
+                                                Wald chi2(6)       = 321710.72
+Log likelihood = -11034.54                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9372351   .0032653   287.03   0.000     .9308354    .9436349
+      demlag |  -.0881246   .0102492    -8.60   0.000    -.1082126   -.0680366
+      IS_WAR |    .089066   .0253612     3.51   0.000     .0393591     .138773
+    war_lagD |   .1806326   .0392688     4.60   0.000     .1036672     .257598
+       lpopA |   .0374047   .0038832     9.63   0.000     .0297938    .0450156
+logenergycap |    .022704   .0021262    10.68   0.000     .0185368    .0268712
+       _cons |  -.6374469   .0519214   -12.28   0.000    -.7392109   -.5356828
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0070782   .0002082    34.00   0.000     .0066702    .0074861
+      europe |   .3215512   .0213407    15.07   0.000     .2797242    .3633782
+         usa |    1.72857   .1217957    14.19   0.000     1.489855    1.967285
+       _cons |  -13.92898   .4058677   -34.32   0.000    -14.72446   -13.13349
+-------------+----------------------------------------------------------------
+     /athrho |   .6951692   .0318576    21.82   0.000     .6327295    .7576089
+    /lnsigma |   -1.15788   .0129077   -89.70   0.000    -1.183178   -1.132581
+-------------+----------------------------------------------------------------
+         rho |   .6012925   .0203394                      .5599288    .6396664
+       sigma |   .3141516    .004055                      .3063036    .3222006
+      lambda |    .188897   .0084061                      .1724214    .2053726
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    87.92   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagD = 0.0
+
+           chi2(  1) =  123.74
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagD = 0.0
+
+           chi2(  2) =  166.48
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =   12.33
+         Prob > chi2 =    0.0004
+
+
+. heckman  lmilper laglmilper lagW IS_WAR war_lagW even evenW lpopA , select(year europe 
+> usa  );
+
+Iteration 0:   log likelihood = -14034.895  (not concave)
+Iteration 1:   log likelihood = -14021.526  
+Iteration 2:   log likelihood = -13994.562  
+Iteration 3:   log likelihood = -13993.387  
+Iteration 4:   log likelihood = -13993.383  
+Iteration 5:   log likelihood = -13993.383  
+
+Heckman selection model                         Number of obs      =     18878
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =     10558
+
+                                                Wald chi2(7)       = 490312.11
+Log likelihood = -13993.38                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9453995   .0026677   354.38   0.000     .9401709    .9506281
+        lagW |  -.0508322    .009036    -5.63   0.000    -.0685425   -.0331219
+      IS_WAR |  -.0575428   .0428083    -1.34   0.179    -.1414455    .0263598
+    war_lagW |   .3948787     .07838     5.04   0.000     .2412567    .5485006
+        even |   .4090063   .0806447     5.07   0.000     .2509456     .567067
+       evenW |  -.5861544   .1559797    -3.76   0.000     -.891869   -.2804399
+       lpopA |   .0473209   .0030229    15.65   0.000     .0413961    .0532456
+       _cons |  -.3969237   .0405193    -9.80   0.000    -.4763401   -.3175074
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0030097    .000162    18.58   0.000     .0026923    .0033271
+      europe |   .2519379   .0190039    13.26   0.000     .2146909    .2891848
+         usa |   1.163667   .1212383     9.60   0.000     .9260447     1.40129
+       _cons |  -5.762694   .3141428   -18.34   0.000    -6.378402   -5.146985
+-------------+----------------------------------------------------------------
+     /athrho |  -.6438238   .0261005   -24.67   0.000    -.6949798   -.5926678
+    /lnsigma |  -1.189725   .0104225  -114.15   0.000    -1.210153   -1.169298
+-------------+----------------------------------------------------------------
+         rho |  -.5674975   .0176947                     -.6011716   -.5318116
+       sigma |   .3043048   .0031716                      .2981517     .310585
+      lambda |  -.1726922   .0068401                     -.1860986   -.1592859
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =   143.01   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagW = 0.0
+
+           chi2(  1) =   47.48
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagW = 0.0
+
+           chi2(  2) =   51.59
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =    1.81
+         Prob > chi2 =    0.1789
+
+
+. test IS_WAR war_lagW even evenW;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagW = 0.0
+ ( 3)  [lmilper]even = 0.0
+ ( 4)  [lmilper]evenW = 0.0
+
+           chi2(  4) =  215.57
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagW +even +evenW = 0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagW + [lmilper]even + [lmilper]evenW = 0.0
+
+           chi2(  1) =    5.78
+         Prob > chi2 =    0.0162
+
+
+. test IS_WAR +war_lagW +even +evenW =IS_WAR+even;
+
+ ( 1)  [lmilper]war_lagW + [lmilper]evenW = 0.0
+
+           chi2(  1) =    3.45
+         Prob > chi2 =    0.0632
+
+
+. heckman  lmilper laglmilper lagW IS_WAR war_lagW even evenW lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -11908.301  
+Iteration 1:   log likelihood = -11908.291  
+Iteration 2:   log likelihood = -11908.291  
+
+Heckman selection model                         Number of obs      =     16407
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      8087
+
+                                                Wald chi2(8)       = 363212.79
+Log likelihood = -11908.29                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9379434     .00325   288.60   0.000     .9315736    .9443132
+        lagW |   -.072975   .0123779    -5.90   0.000    -.0972352   -.0487147
+      IS_WAR |  -.0597088   .0531505    -1.12   0.261    -.1638818    .0444642
+    war_lagW |   .4200605   .0896384     4.69   0.000     .2443724    .5957486
+        even |   .3370884   .0956386     3.52   0.000     .1496403    .5245365
+       evenW |   -.479053   .1747617    -2.74   0.006    -.8215796   -.1365264
+       lpopA |   .0435375   .0037901    11.49   0.000     .0361091     .050966
+logenergycap |   .0118843   .0023155     5.13   0.000     .0073459    .0164226
+       _cons |  -.5128533   .0512428   -10.01   0.000    -.6132873   -.4124193
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0076314   .0002067    36.91   0.000     .0072262    .0080366
+      europe |   .3679481   .0220706    16.67   0.000     .3246907    .4112056
+         usa |   1.735292   .1238825    14.01   0.000     1.492486    1.978097
+       _cons |  -14.94823   .4034418   -37.05   0.000    -15.73896    -14.1575
+-------------+----------------------------------------------------------------
+     /athrho |   .0368217   .0962778     0.38   0.702    -.1518793    .2255227
+    /lnsigma |  -1.247756   .0081377  -153.33   0.000    -1.263706   -1.231806
+-------------+----------------------------------------------------------------
+         rho |   .0368051   .0961474                     -.1507222    .2217755
+       sigma |   .2871484   .0023367                      .2826048     .291765
+      lambda |   .0105685   .0276308                     -.0435869     .064724
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =     0.17   Prob > chi2 = 0.6819
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagW=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagW = 0.0
+
+           chi2(  1) =   46.91
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagW;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagW = 0.0
+
+           chi2(  2) =   51.22
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =    1.26
+         Prob > chi2 =    0.2613
+
+
+. test IS_WAR war_lagW even evenW;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagW = 0.0
+ ( 3)  [lmilper]even = 0.0
+ ( 4)  [lmilper]evenW = 0.0
+
+           chi2(  4) =  170.15
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagW +even +evenW = 0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagW + [lmilper]even + [lmilper]evenW = 0.0
+
+           chi2(  1) =    8.97
+         Prob > chi2 =    0.0027
+
+
+. test IS_WAR +war_lagW +even +evenW =IS_WAR+even;
+
+ ( 1)  [lmilper]war_lagW + [lmilper]evenW = 0.0
+
+           chi2(  1) =    0.26
+         Prob > chi2 =    0.6079
+
+
+. heckman  lmilper laglmilper demlag IS_WAR war_lagD even evenD lpopA , select(year europ
+> e usa  );
+
+Iteration 0:   log likelihood = -12894.148  (not concave)
+Iteration 1:   log likelihood = -12890.266  
+Iteration 2:   log likelihood = -12882.075  
+Iteration 3:   log likelihood = -12880.782  
+Iteration 4:   log likelihood = -12880.782  
+
+Heckman selection model                         Number of obs      =     17619
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      9299
+
+                                                Wald chi2(7)       = 416465.55
+Log likelihood = -12880.78                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9473334   .0027667   342.40   0.000     .9419107    .9527561
+      demlag |  -.0555993   .0080197    -6.93   0.000    -.0713175   -.0398811
+      IS_WAR |   .0523804   .0411676     1.27   0.203    -.0283067    .1330674
+    war_lagD |   .2353083   .0711728     3.31   0.001     .0958122    .3748044
+        even |     .15722   .0787131     2.00   0.046     .0029452    .3114947
+       evenD |  -.1258682    .146405    -0.86   0.390    -.4128168    .1610804
+       lpopA |    .047489   .0032985    14.40   0.000      .041024    .0539539
+       _cons |  -.4225014   .0450177    -9.39   0.000    -.5107344   -.3342684
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0033262   .0001711    19.44   0.000     .0029909    .0036615
+      europe |   .2121275   .0199799    10.62   0.000     .1729676    .2512874
+         usa |   1.258705   .1208127    10.42   0.000     1.021917    1.495494
+       _cons |  -6.435479   .3316748   -19.40   0.000     -7.08555   -5.785408
+-------------+----------------------------------------------------------------
+     /athrho |  -.5298263   .0336641   -15.74   0.000    -.5958067   -.4638459
+    /lnsigma |  -1.238579   .0117333  -105.56   0.000    -1.261576   -1.215582
+-------------+----------------------------------------------------------------
+         rho |  -.4852483   .0257373                      -.534059   -.4332135
+       sigma |   .2897958   .0034003                      .2832075    .2965374
+      lambda |  -.1406229   .0088071                     -.1578846   -.1233612
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    62.97   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagD = 0.0
+
+           chi2(  1) =   36.97
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagD = 0.0
+
+           chi2(  2) =   47.05
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =    1.62
+         Prob > chi2 =    0.2032
+
+
+. test IS_WAR war_lagD even evenD;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagD = 0.0
+ ( 3)  [lmilper]even = 0.0
+ ( 4)  [lmilper]evenD = 0.0
+
+           chi2(  4) =  204.96
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD = 0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagD + [lmilper]even + [lmilper]evenD = 0.0
+
+           chi2(  1) =   23.25
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD =IS_WAR+even;
+
+ ( 1)  [lmilper]war_lagD + [lmilper]evenD = 0.0
+
+           chi2(  1) =    1.25
+         Prob > chi2 =    0.2638
+
+
+. heckman  lmilper laglmilper demlag IS_WAR war_lagD even evenD lpopA  
+> logenergycap , select(year europe usa  );
+
+Iteration 0:   log likelihood = -10921.715  
+Iteration 1:   log likelihood =  -10915.08  (not concave)
+Iteration 2:   log likelihood = -10911.141  (not concave)
+Iteration 3:   log likelihood = -10907.412  (not concave)
+Iteration 4:   log likelihood =  -10903.97  
+Iteration 5:   log likelihood =  -10891.01  
+Iteration 6:   log likelihood = -10886.933  
+Iteration 7:   log likelihood = -10886.929  
+Iteration 8:   log likelihood = -10886.929  
+
+Heckman selection model                         Number of obs      =     15551
+(regression model with sample selection)        Censored obs       =      8320
+                                                Uncensored obs     =      7231
+
+                                                Wald chi2(8)       = 321653.82
+Log likelihood = -10886.93                      Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+lmilper      |
+  laglmilper |   .9368467    .003282   285.45   0.000      .930414    .9432794
+      demlag |  -.0874965   .0101933    -8.58   0.000     -.107475    -.067518
+      IS_WAR |   .0835975   .0518485     1.61   0.107    -.0180236    .1852186
+    war_lagD |   .2087603   .0805674     2.59   0.010      .050851    .3666696
+        even |   .0536947   .0923894     0.58   0.561    -.1273852    .2347747
+       evenD |  -.0389935   .1597537    -0.24   0.807     -.352105    .2741181
+       lpopA |   .0381131   .0038816     9.82   0.000     .0305053    .0457209
+logenergycap |   .0222047    .002136    10.40   0.000     .0180183    .0263912
+       _cons |  -.6371804    .051941   -12.27   0.000     -.738983   -.5353778
+-------------+----------------------------------------------------------------
+select       |
+        year |   .0070997   .0002095    33.89   0.000     .0066892    .0075103
+      europe |   .3251489   .0215152    15.11   0.000     .2829799    .3673179
+         usa |   1.749296    .121892    14.35   0.000     1.510392      1.9882
+       _cons |  -13.97999   .4084236   -34.23   0.000    -14.78048   -13.17949
+-------------+----------------------------------------------------------------
+     /athrho |   .6620341    .033725    19.63   0.000     .5959342    .7281339
+    /lnsigma |   -1.17578   .0132192   -88.94   0.000    -1.201689   -1.149871
+-------------+----------------------------------------------------------------
+         rho |   .5797155   .0223911                      .5341502    .6219224
+       sigma |   .3085781   .0040792                      .3006858    .3166776
+      lambda |   .1788875   .0088703                      .1615021    .1962729
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0):   chi2(1) =    70.04   Prob > chi2 = 0.0000
+------------------------------------------------------------------------------
+
+. test IS_WAR+war_lagD=0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagD = 0.0
+
+           chi2(  1) =   34.45
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR war_lagD;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagD = 0.0
+
+           chi2(  2) =   44.82
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+
+           chi2(  1) =    2.60
+         Prob > chi2 =    0.1069
+
+
+. test IS_WAR war_lagD even evenD;
+
+ ( 1)  [lmilper]IS_WAR = 0.0
+ ( 2)  [lmilper]war_lagD = 0.0
+ ( 3)  [lmilper]even = 0.0
+ ( 4)  [lmilper]evenD = 0.0
+
+           chi2(  4) =  147.56
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD = 0;
+
+ ( 1)  [lmilper]IS_WAR + [lmilper]war_lagD + [lmilper]even + [lmilper]evenD = 0.0
+
+           chi2(  1) =   19.05
+         Prob > chi2 =    0.0000
+
+
+. test IS_WAR +war_lagD +even +evenD =IS_WAR+even;
+
+ ( 1)  [lmilper]war_lagD + [lmilper]evenD = 0.0
+
+           chi2(  1) =    2.58
+         Prob > chi2 =    0.1080
+
+
+. xtreg lmilex laglmilex $model1 , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8896
+Group variable (i) : regyr                      Number of groups   =       853
+
+R-sq:  within  = 0.9679                         Obs per group: min =         1
+       between = 0.9811                                        avg =      10.4
+       overall = 0.9841                                        max =        42
+
+                                                F(4,8039)          =  60579.90
+corr(u_i, Xb)  = 0.2520                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9742886    .002035   478.77   0.000     .9702995    .9782777
+        lagW |   .0227651   .0143423     1.59   0.112    -.0053495    .0508797
+      IS_WAR |   .1355915   .0343562     3.95   0.000     .0682443    .2029386
+    war_lagW |   .1137088   .0553328     2.05   0.040     .0052421    .2221754
+       _cons |   .3241073   .0224215    14.46   0.000     .2801553    .3680593
+-------------+----------------------------------------------------------------
+     sigma_u |  .32293297
+     sigma_e |  .34109684
+         rho |  .47266644   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(852, 8039) =     3.19           Prob > F = 0.0000
+
+. test IS_WAR + war_lagW = 0;
+
+ ( 1)  IS_WAR + war_lagW = 0.0
+
+       F(  1,  8039) =   55.62
+            Prob > F =    0.0000
+
+
+. test IS_WAR war_lagW  ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagW = 0.0
+
+       F(  2,  8039) =   51.03
+            Prob > F =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  IS_WAR = 0.0
+
+       F(  1,  8039) =   15.58
+            Prob > F =    0.0001
+
+
+. test IS_WAR=war_lagW;
+
+ ( 1)  IS_WAR - war_lagW = 0.0
+
+       F(  1,  8039) =    0.07
+            Prob > F =    0.7988
+
+
+. xtreg lmilper laglmilper $model1  , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =     10879
+Group variable (i) : regyr                      Number of groups   =       948
+
+R-sq:  within  = 0.9740                         Obs per group: min =         1
+       between = 0.9729                                        avg =      11.5
+       overall = 0.9779                                        max =        46
+
+                                                F(4,9927)          =  93035.54
+corr(u_i, Xb)  = 0.0291                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+     lmilper |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  laglmilper |   .9816338   .0016684   588.36   0.000     .9783633    .9849042
+        lagW |  -.0172599   .0104964    -1.64   0.100     -.037835    .0033153
+      IS_WAR |   .0680165   .0238334     2.85   0.004     .0212981    .1147349
+    war_lagW |   .1321623   .0406713     3.25   0.001     .0524383    .2118862
+       _cons |   .0864078   .0086809     9.95   0.000     .0693915    .1034241
+-------------+----------------------------------------------------------------
+     sigma_u |  .17955401
+     sigma_e |  .27164096
+         rho |  .30406595   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(947, 9927) =     1.97           Prob > F = 0.0000
+
+. test IS_WAR + war_lagW = 0;
+
+ ( 1)  IS_WAR + war_lagW = 0.0
+
+       F(  1,  9927) =   62.43
+            Prob > F =    0.0000
+
+
+. test IS_WAR war_lagW ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagW = 0.0
+
+       F(  2,  9927) =   50.41
+            Prob > F =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  IS_WAR = 0.0
+
+       F(  1,  9927) =    8.14
+            Prob > F =    0.0043
+
+
+. test IS_WAR=war_lagW;
+
+ ( 1)  IS_WAR - war_lagW = 0.0
+
+       F(  1,  9927) =    1.08
+            Prob > F =    0.2983
+
+
+. xtreg lmilex laglmilex $model2  , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8759
+Group variable (i) : regyr                      Number of groups   =       845
+
+R-sq:  within  = 0.9681                         Obs per group: min =         1
+       between = 0.9817                                        avg =      10.4
+       overall = 0.9843                                        max =        42
+
+                                                F(6,7908)          =  40009.61
+corr(u_i, Xb)  = 0.2620                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9737331   .0020495   475.11   0.000     .9697156    .9777506
+        lagW |   .0230247   .0143061     1.61   0.108    -.0050191    .0510684
+      IS_WAR |   .2504309   .0684125     3.66   0.000     .1163244    .3845374
+    war_lagW |  -.0230563   .1153926    -0.20   0.842    -.2492562    .2031436
+        even |  -.1686393   .1204209    -1.40   0.161    -.4046961    .0674175
+       evenW |   .2356602   .2215317     1.06   0.287    -.1986003    .6699208
+       _cons |   .3288144    .022559    14.58   0.000     .2845927     .373036
+-------------+----------------------------------------------------------------
+     sigma_u |  .31775108
+     sigma_e |   .3399221
+         rho |  .46632697   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(844, 7908) =     3.10           Prob > F = 0.0000
+
+. test IS_WAR + war_lagW + even + evenW = 0;
+
+ ( 1)  IS_WAR + war_lagW + even + evenW = 0.0
+
+       F(  1,  7908) =   10.39
+            Prob > F =    0.0013
+
+
+. test IS_WAR war_lagW even evenW ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagW = 0.0
+ ( 3)  even = 0.0
+ ( 4)  evenW = 0.0
+
+       F(  4,  7908) =   24.29
+            Prob > F =    0.0000
+
+
+. test IS_WAR even;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  even = 0.0
+
+       F(  2,  7908) =   10.76
+            Prob > F =    0.0000
+
+
+. test IS_WAR=war_lagW;
+
+ ( 1)  IS_WAR - war_lagW = 0.0
+
+       F(  1,  7908) =    2.38
+            Prob > F =    0.1229
+
+
+. test even=evenW;
+
+ ( 1)  even - evenW = 0.0
+
+       F(  1,  7908) =    1.50
+            Prob > F =    0.2204
+
+
+. test IS_WAR+even=war_lagW+evenW;
+
+ ( 1)  IS_WAR - war_lagW + even - evenW = 0.0
+
+       F(  1,  7908) =    0.39
+            Prob > F =    0.5346
+
+
+. xtreg lmilper laglmilper $model2 , fe i($fe) ;
+
+Fixed-effects (within) regression               Number of obs      =     10738
+Group variable (i) : regyr                      Number of groups   =       948
+
+R-sq:  within  = 0.9747                         Obs per group: min =         1
+       between = 0.9747                                        avg =      11.3
+       overall = 0.9786                                        max =        46
+
+                                                F(6,9784)          =  62936.47
+corr(u_i, Xb)  = 0.0300                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+     lmilper |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  laglmilper |   .9818685   .0016613   591.03   0.000      .978612    .9851249
+        lagW |  -.0189613   .0103624    -1.83   0.067    -.0392738    .0013512
+      IS_WAR |  -.1016678   .0451569    -2.25   0.024    -.1901847   -.0131509
+    war_lagW |   .2983358   .0813108     3.67   0.000     .1389499    .4577217
+        even |   .3644925   .0836477     4.36   0.000     .2005257    .5284593
+       evenW |  -.3421312   .1597917    -2.14   0.032    -.6553559   -.0289064
+       _cons |    .086178   .0086034    10.02   0.000     .0693136    .1030425
+-------------+----------------------------------------------------------------
+     sigma_u |  .17445664
+     sigma_e |  .26781662
+         rho |  .29791369   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(947, 9784) =     1.89           Prob > F = 0.0000
+
+. test IS_WAR + war_lagW + even + evenW = 0;
+
+ ( 1)  IS_WAR + war_lagW + even + evenW = 0.0
+
+       F(  1,  9784) =   10.37
+            Prob > F =    0.0013
+
+
+. test IS_WAR war_lagW even evenW ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagW = 0.0
+ ( 3)  even = 0.0
+ ( 4)  evenW = 0.0
+
+       F(  4,  9784) =   25.91
+            Prob > F =    0.0000
+
+
+. test IS_WAR even;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  even = 0.0
+
+       F(  2,  9784) =   12.01
+            Prob > F =    0.0000
+
+
+. test IS_WAR=war_lagW;
+
+ ( 1)  IS_WAR - war_lagW = 0.0
+
+       F(  1,  9784) =   10.85
+            Prob > F =    0.0010
+
+
+. test even=evenW;
+
+ ( 1)  even - evenW = 0.0
+
+       F(  1,  9784) =    9.11
+            Prob > F =    0.0026
+
+
+. test IS_WAR+even=war_lagW+evenW;
+
+ ( 1)  IS_WAR - war_lagW + even - evenW = 0.0
+
+       F(  1,  9784) =    4.02
+            Prob > F =    0.0450
+
+
+. xtreg lmilex laglmilex $model3 , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8896
+Group variable (i) : regyr                      Number of groups   =       853
+
+R-sq:  within  = 0.9675                         Obs per group: min =         1
+       between = 0.9803                                        avg =      10.4
+       overall = 0.9838                                        max =        42
+
+                                                F(4,8039)          =  59809.75
+corr(u_i, Xb)  = 0.2207                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9779201    .002049   477.27   0.000     .9739036    .9819366
+        lagW |   .0277102   .0142578     1.94   0.052    -.0002387    .0556592
+      EX_WAR |   .0178805   .0479231     0.37   0.709    -.0760611    .1118222
+     EX_WARW |   .0200594   .0748947     0.27   0.789    -.1267536    .1668723
+       _cons |   .2934452   .0226719    12.94   0.000     .2490024     .337888
+-------------+----------------------------------------------------------------
+     sigma_u |  .32841601
+     sigma_e |  .34321497
+         rho |  .47797633   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(852, 8039) =     3.25           Prob > F = 0.0000
+
+. test EX_WAR + EX_WARW = 0;
+
+ ( 1)  EX_WAR + EX_WARW = 0.0
+
+       F(  1,  8039) =    0.95
+            Prob > F =    0.3291
+
+
+. test EX_WAR EX_WARW  ;
+
+ ( 1)  EX_WAR = 0.0
+ ( 2)  EX_WARW = 0.0
+
+       F(  2,  8039) =    0.94
+            Prob > F =    0.3899
+
+
+. test EX_WAR;
+
+ ( 1)  EX_WAR = 0.0
+
+       F(  1,  8039) =    0.14
+            Prob > F =    0.7091
+
+
+. test EX_WAR=EX_WARW;
+
+ ( 1)  EX_WAR - EX_WARW = 0.0
+
+       F(  1,  8039) =    0.00
+            Prob > F =    0.9855
+
+
+. xtreg lmilper laglmilper $model3 , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =     10879
+Group variable (i) : regyr                      Number of groups   =       948
+
+R-sq:  within  = 0.9738                         Obs per group: min =         1
+       between = 0.9717                                        avg =      11.5
+       overall = 0.9776                                        max =        46
+
+                                                F(4,9927)          =  92097.74
+corr(u_i, Xb)  = 0.0290                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+     lmilper |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  laglmilper |   .9846154   .0016732   588.47   0.000     .9813356    .9878952
+        lagW |  -.0062001   .0104451    -0.59   0.553    -.0266747    .0142745
+      EX_WAR |   .0404251   .0368335     1.10   0.272     -.031776    .1126262
+     EX_WARW |  -.0280896   .0581341    -0.48   0.629    -.1420443    .0858651
+       _cons |   .0769993   .0087252     8.82   0.000     .0598962    .0941023
+-------------+----------------------------------------------------------------
+     sigma_u |  .18342826
+     sigma_e |  .27298436
+         rho |  .31105714   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(947, 9927) =     2.06           Prob > F = 0.0000
+
+. test EX_WAR + EX_WARW = 0;
+
+ ( 1)  EX_WAR + EX_WARW = 0.0
+
+       F(  1,  9927) =    0.16
+            Prob > F =    0.6858
+
+
+. test EX_WAR EX_WARW  ;
+
+ ( 1)  EX_WAR = 0.0
+ ( 2)  EX_WARW = 0.0
+
+       F(  2,  9927) =    1.18
+            Prob > F =    0.3074
+
+
+. test EX_WAR;
+
+ ( 1)  EX_WAR = 0.0
+
+       F(  1,  9927) =    1.20
+            Prob > F =    0.2724
+
+
+. test EX_WAR=EX_WARW;
+
+ ( 1)  EX_WAR - EX_WARW = 0.0
+
+       F(  1,  9927) =    0.55
+            Prob > F =    0.4585
+
+
+. xtreg lmilex laglmilex $model4 , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8086
+Group variable (i) : regyr                      Number of groups   =       849
+
+R-sq:  within  = 0.9661                         Obs per group: min =         1
+       between = 0.9834                                        avg =       9.5
+       overall = 0.9843                                        max =        39
+
+                                                F(4,7233)          =  51608.39
+corr(u_i, Xb)  = 0.2655                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |    .972901   .0022044   441.35   0.000     .9685798    .9772222
+      demlag |   .0169009   .0122625     1.38   0.168    -.0071371    .0409389
+      IS_WAR |   .1143545   .0316303     3.62   0.000     .0523498    .1763592
+    war_lagD |   .1443332   .0505333     2.86   0.004     .0452732    .2433932
+       _cons |   .3479942   .0238605    14.58   0.000     .3012207    .3947678
+-------------+----------------------------------------------------------------
+     sigma_u |  .31173738
+     sigma_e |  .33326691
+         rho |  .46665824   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(848, 7233) =     2.93           Prob > F = 0.0000
+
+. test IS_WAR + war_lagD = 0;
+
+ ( 1)  IS_WAR + war_lagD = 0.0
+
+       F(  1,  7233) =   59.81
+            Prob > F =    0.0000
+
+
+. test IS_WAR war_lagD  ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagD = 0.0
+
+       F(  2,  7233) =   44.04
+            Prob > F =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  IS_WAR = 0.0
+
+       F(  1,  7233) =   13.07
+            Prob > F =    0.0003
+
+
+. test IS_WAR=war_lagD;
+
+ ( 1)  IS_WAR - war_lagD = 0.0
+
+       F(  1,  7233) =    0.15
+            Prob > F =    0.6985
+
+
+. xtreg lmilper laglmilper $model4  , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      9568
+Group variable (i) : regyr                      Number of groups   =       938
+
+R-sq:  within  = 0.9721                         Obs per group: min =         1
+       between = 0.9779                                        avg =      10.2
+       overall = 0.9771                                        max =        42
+
+                                                F(4,8626)          =  75066.04
+corr(u_i, Xb)  = 0.0472                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+     lmilper |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  laglmilper |   .9796934   .0018596   526.82   0.000     .9760481    .9833387
+      demlag |  -.0208057   .0093961    -2.21   0.027    -.0392244    -.002387
+      IS_WAR |    .087586   .0224553     3.90   0.000     .0435682    .1316038
+    war_lagD |   .1253901   .0375488     3.34   0.001     .0517855    .1989947
+       _cons |   .0966301   .0085077    11.36   0.000     .0799529    .1133072
+-------------+----------------------------------------------------------------
+     sigma_u |  .15947655
+     sigma_e |  .26702496
+         rho |  .26291148   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(937, 8626) =     1.79           Prob > F = 0.0000
+
+. test IS_WAR + war_lagD = 0;
+
+ ( 1)  IS_WAR + war_lagD = 0.0
+
+       F(  1,  8626) =   70.84
+            Prob > F =    0.0000
+
+
+. test IS_WAR war_lagD ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagD = 0.0
+
+       F(  2,  8626) =   53.61
+            Prob > F =    0.0000
+
+
+. test IS_WAR;
+
+ ( 1)  IS_WAR = 0.0
+
+       F(  1,  8626) =   15.21
+            Prob > F =    0.0001
+
+
+. test IS_WAR=war_lagD;
+
+ ( 1)  IS_WAR - war_lagD = 0.0
+
+       F(  1,  8626) =    0.45
+            Prob > F =    0.5032
+
+
+. xtreg lmilex laglmilex $model5  , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      7386
+Group variable (i) : regyr                      Number of groups   =       790
+
+R-sq:  within  = 0.9663                         Obs per group: min =         1
+       between = 0.9846                                        avg =       9.3
+       overall = 0.9842                                        max =        39
+
+                                                F(7,6589)          =  26969.29
+corr(u_i, Xb)  = 0.2470                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9737676   .0022966   424.01   0.000     .9692656    .9782696
+      demlag |    .015345   .0152035     1.01   0.313    -.0144588    .0451487
+      IS_WAR |   .1356788   .0732376     1.85   0.064    -.0078906    .2792482
+    war_lagD |   .1570899   .1161254     1.35   0.176    -.0705535    .3847333
+        even |    .028861   .1300944     0.22   0.824    -.2261662    .2838881
+       evenD |  -.0981014   .2305971    -0.43   0.671    -.5501465    .3539436
+   lagdemres |   .0022091   .0262353     0.08   0.933    -.0492207    .0536388
+       _cons |   .3424509   .0253786    13.49   0.000     .2927007    .3922011
+-------------+----------------------------------------------------------------
+     sigma_u |  .29362161
+     sigma_e |   .3299482
+         rho |  .44194119   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(789, 6589) =     2.74           Prob > F = 0.0000
+
+. test IS_WAR + war_lagD + even + evenD = 0;
+
+ ( 1)  IS_WAR + war_lagD + even + evenD = 0.0
+
+       F(  1,  6589) =    4.66
+            Prob > F =    0.0309
+
+
+. test IS_WAR war_lagD even evenD ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagD = 0.0
+ ( 3)  even = 0.0
+ ( 4)  evenD = 0.0
+
+       F(  4,  6589) =   17.08
+            Prob > F =    0.0000
+
+
+. test IS_WAR even;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  even = 0.0
+
+       F(  2,  6589) =    7.65
+            Prob > F =    0.0005
+
+
+. test IS_WAR=war_lagD;
+
+ ( 1)  IS_WAR - war_lagD = 0.0
+
+       F(  1,  6589) =    0.01
+            Prob > F =    0.9054
+
+
+. test even=evenD;
+
+ ( 1)  even - evenD = 0.0
+
+       F(  1,  6589) =    0.14
+            Prob > F =    0.7113
+
+
+. test IS_WAR+even=war_lagD+evenD;
+
+ ( 1)  IS_WAR - war_lagD + even - evenD = 0.0
+
+       F(  1,  6589) =    0.24
+            Prob > F =    0.6278
+
+
+. xtreg lmilper laglmilper $model5 , fe i($fe) ;
+
+Fixed-effects (within) regression               Number of obs      =      8570
+Group variable (i) : regyr                      Number of groups   =       875
+
+R-sq:  within  = 0.9803                         Obs per group: min =         1
+       between = 0.9806                                        avg =       9.8
+       overall = 0.9843                                        max =        42
+
+                                                F(7,7688)          =  54745.61
+corr(u_i, Xb)  = 0.0539                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+     lmilper |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  laglmilper |   .9837232   .0016527   595.21   0.000     .9804834    .9869631
+      demlag |  -.0193888   .0097969    -1.98   0.048    -.0385934   -.0001842
+      IS_WAR |  -.0865086   .0427103    -2.03   0.043    -.1702325   -.0027847
+    war_lagD |   .1650223   .0729956     2.26   0.024     .0219311    .3081135
+        even |   .4121481   .0794722     5.19   0.000     .2563608    .5679353
+       evenD |  -.3652032   .1480911    -2.47   0.014    -.6555021   -.0749042
+   lagdemres |   .0072265   .0160675     0.45   0.653    -.0242702    .0387232
+       _cons |   .0853298   .0081551    10.46   0.000     .0693436     .101316
+-------------+----------------------------------------------------------------
+     sigma_u |  .15058782
+     sigma_e |  .22381491
+         rho |  .31162226   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(874, 7688) =     1.59           Prob > F = 0.0000
+
+. test IS_WAR + war_lagD + even + evenD = 0;
+
+ ( 1)  IS_WAR + war_lagD + even + evenD = 0.0
+
+       F(  1,  7688) =    3.49
+            Prob > F =    0.0617
+
+
+. test IS_WAR war_lagD even evenD ;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  war_lagD = 0.0
+ ( 3)  even = 0.0
+ ( 4)  evenD = 0.0
+
+       F(  4,  7688) =   20.28
+            Prob > F =    0.0000
+
+
+. test IS_WAR even;
+
+ ( 1)  IS_WAR = 0.0
+ ( 2)  even = 0.0
+
+       F(  2,  7688) =   22.71
+            Prob > F =    0.0000
+
+
+. test IS_WAR=war_lagD;
+
+ ( 1)  IS_WAR - war_lagD = 0.0
+
+       F(  1,  7688) =    5.27
+            Prob > F =    0.0217
+
+
+. test even=evenD;
+
+ ( 1)  even - evenD = 0.0
+
+       F(  1,  7688) =   12.92
+            Prob > F =    0.0003
+
+
+. test IS_WAR+even=war_lagD+evenD;
+
+ ( 1)  IS_WAR - war_lagD + even - evenD = 0.0
+
+       F(  1,  7688) =   14.04
+            Prob > F =    0.0002
+
+
+. xtreg lmilex laglmilex $model6 , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8086
+Group variable (i) : regyr                      Number of groups   =       849
+
+R-sq:  within  = 0.9658                         Obs per group: min =         1
+       between = 0.9824                                        avg =       9.5
+       overall = 0.9840                                        max =        39
+
+                                                F(4,7233)          =  50989.71
+corr(u_i, Xb)  = 0.2350                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |    .976496   .0022273   438.42   0.000     .9721299    .9808622
+      demlag |   .0235367    .012235     1.92   0.054    -.0004474    .0475208
+      EX_WAR |    .052906   .0420209     1.26   0.208    -.0294672    .1352793
+     EX_WARD |  -.0232074   .0636896    -0.36   0.716    -.1480577    .1016429
+       _cons |   .3158515   .0242382    13.03   0.000     .2683376    .3633655
+-------------+----------------------------------------------------------------
+     sigma_u |  .32033425
+     sigma_e |  .33521383
+         rho |  .47731376   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(848, 7233) =     3.01           Prob > F = 0.0000
+
+. test EX_WAR + EX_WARD = 0;
+
+ ( 1)  EX_WAR + EX_WARD = 0.0
+
+       F(  1,  7233) =    0.68
+            Prob > F =    0.4108
+
+
+. test EX_WAR EX_WARD  ;
+
+ ( 1)  EX_WAR = 0.0
+ ( 2)  EX_WARD = 0.0
+
+       F(  2,  7233) =    1.64
+            Prob > F =    0.1939
+
+
+. test EX_WAR;
+
+ ( 1)  EX_WAR = 0.0
+
+       F(  1,  7233) =    1.59
+            Prob > F =    0.2081
+
+
+. test EX_WAR=EX_WARD;
+
+ ( 1)  EX_WAR - EX_WARD = 0.0
+
+       F(  1,  7233) =    0.56
+            Prob > F =    0.4542
+
+
+. xtreg lmilper laglmilper $model6 , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      9568
+Group variable (i) : regyr                      Number of groups   =       938
+
+R-sq:  within  = 0.9717                         Obs per group: min =         1
+       between = 0.9759                                        avg =      10.2
+       overall = 0.9766                                        max =        42
+
+                                                F(4,8626)          =  74146.08
+corr(u_i, Xb)  = 0.0419                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+     lmilper |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  laglmilper |   .9833498   .0018739   524.76   0.000     .9796764    .9870231
+      demlag |  -.0090621   .0093801    -0.97   0.334    -.0274495    .0093252
+      EX_WAR |   .0550903    .032818     1.68   0.093    -.0092408    .1194214
+     EX_WARD |  -.0547245   .0501677    -1.09   0.275    -.1530652    .0436161
+       _cons |   .0858024   .0086029     9.97   0.000     .0689386    .1026661
+-------------+----------------------------------------------------------------
+     sigma_u |  .16641288
+     sigma_e |  .26862987
+         rho |   .2773339   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(937, 8626) =     1.91           Prob > F = 0.0000
+
+. test EX_WAR + EX_WARD = 0;
+
+ ( 1)  EX_WAR + EX_WARD = 0.0
+
+       F(  1,  8626) =    0.00
+            Prob > F =    0.9898
+
+
+. test EX_WAR EX_WARD  ;
+
+ ( 1)  EX_WAR = 0.0
+ ( 2)  EX_WARD = 0.0
+
+       F(  2,  8626) =    1.59
+            Prob > F =    0.2035
+
+
+. test EX_WAR;
+
+ ( 1)  EX_WAR = 0.0
+
+       F(  1,  8626) =    2.82
+            Prob > F =    0.0933
+
+
+. test EX_WAR=EX_WARD;
+
+ ( 1)  EX_WAR - EX_WARD = 0.0
+
+       F(  1,  8626) =    1.89
+            Prob > F =    0.1689
+
+
+. /* xtreg lmilpertroop laglmilpertroop lagW is_war_start  is_war_startW , fe i($fe);
+> test IS_WAR+war_lagW=0;
+> 
+> xtreg lmilpertroop laglmilpertroop lagW is_war_start  is_war_startW contest3070 contest
+> 3070W, fe i($fe);
+> test IS_WAR+war_lagW=0;
+> test contest3070 + contest3070W=0;
+> xtreg lmilpertroop laglmilpertroop lagW is_war_start  is_war_startW highprob highprobW,
+>  fe i($fe);
+> test IS_WAR+war_lagW=0;
+> test highprob+highprobW=0;
+> 
+> xtreg lmilpertroop laglmilpertroop lagW is_war_start  is_war_startW contest contestW, f
+> e i($fe);
+> test IS_WAR+war_lagW=0;
+> test contest+contestW=0;
+> 
+> 
+> xtreg dmilpertroop lagdmilpertroop lagW is_war_start  is_war_startW , fe i($fe);
+> test IS_WAR+war_lagW=0;
+> 
+> 
+> xtreg dmilpertroop lagdmilpertroop lagW is_war_start  is_war_startW contest3070 contest
+> 3070W  , fe i($fe);
+> test IS_WAR+war_lagW=0;
+> test contest3070 + contest3070W=0;
+> 
+> xtreg dmilpertroop lagdmilpertroop lagW is_war_start  is_war_startW highprob highprobW,
+>  fe i($fe);
+> test IS_WAR+war_lagW=0;
+> test highprob+highprobW=0;
+> 
+> xtreg dmilpertroop lagdmilpertroop lagW is_war_start  is_war_startW contest contestW, f
+> e i($fe);
+> test IS_WAR+war_lagW=0;
+> test contest+contestW=0;
+> 
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW  lpop_WB laglgdpWB, fe i($fe);
+> test IS_WAR +war_lagW=0;
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW , fe i($fe);
+> test IS_WAR +war_lagW=0;
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW   warcapabilityRatio warcapabi
+> lityRatio2 , fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test warcapabilityRatio  warcapabilityRatio2  ;  /* nations try hardest when war is 50:
+> 50 */
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW   warcapabilityRatio warcapabi
+> lityRatioW 
+>                                                         warcapabilityRatio2 warcapabili
+> tyRatioW2, fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test warcapabilityRatio warcapabilityRatioW warcapabilityRatio2 warcapabilityRatioW2;
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW   highprob highprobW,  fe i($f
+> e);
+> test IS_WAR +war_lagW=0;
+> test highprob+highprobW=0;
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW  contest contestW,  fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test contest +contestW=0;
+> 
+> xtreg lmilex laglmilex  lagW is_war_start  is_war_startW  contest3070 contest3070W,  fe
+>  i($fe);
+> test IS_WAR +war_lagW=0;
+> test contest3070+ contest3070W=0;
+> 
+> 
+> /* Look for escalation of effort in first and second years of the war (once full effort
+>  is being made subsequent war years should see no more effort)*/
+> 
+> xtreg lmilex laglmilex  lagW is_war_start is_war_startW secondyearofwar secondyearofwar
+> W, fe i($fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> 
+> xtreg lmilex laglmilex  lagW is_war_start is_war_startW secondyearofwar secondyearofwar
+> W
+>                                         warcapabilityRatio warcapabilityRatio2 , fe i($
+> fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> test warcapabilityRatio +warcapabilityRatio2 =0;
+> 
+> 
+> xtreg lmilex laglmilex  lagW is_war_start is_war_startW secondyearofwar secondyearofwar
+> W
+>                         warcapabilityRatio warcapabilityRatio2 warcapabilityRatioW warc
+> apabilityRatioW2 , fe i($fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> test warcapabilityRatio +warcapabilityRatio2 =0;
+> test warcapabilityRatio+ warcapabilityRatio2 +warcapabilityRatioW +warcapabilityRatioW2
+> =0;
+> 
+> 
+> /* percentage change in military expenditure */
+> 
+> 
+> xtreg dmil  lagW is_war_start  is_war_startW  lpop_WB laglgdpWB, fe i($fe);
+> test IS_WAR +war_lagW=0;
+> 
+> xtreg dmil lagW is_war_start  is_war_startW , fe i($fe);
+> test IS_WAR +war_lagW=0;
+> 
+> xtreg dmil lagW is_war_start  is_war_startW   warcapabilityRatio warcapabilityRatio2 , 
+> fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test warcapabilityRatio  warcapabilityRatio2  ;  /* nations try hardest when war is 50:
+> 50 */
+> 
+> xtreg dmil  lagW is_war_start  is_war_startW   warcapabilityRatio warcapabilityRatioW 
+>                                                         warcapabilityRatio2 warcapabili
+> tyRatioW2, fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test warcapabilityRatio warcapabilityRatioW warcapabilityRatio2 warcapabilityRatioW2;
+> 
+> xtreg dmil  lagW is_war_start  is_war_startW   highprob highprobW,  fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test highprob+highprobW=0;
+> 
+> xtreg dmil  lagW is_war_start  is_war_startW  contest contestW,  fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test contest +contestW=0;
+> 
+> xtreg dmil lagW is_war_start  is_war_startW  contest3070 contest3070W,  fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test contest3070+ contest3070W=0;
+> 
+> 
+> /* Look for escalation of effort in first and second years of the war (once full effort
+>  is being made subsequent war years should see no more effort)*/
+> 
+> xtreg dmil lagW is_war_start is_war_startW secondyearofwar secondyearofwarW, fe i($fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> 
+> xtreg dmil lagW is_war_start is_war_startW secondyearofwar secondyearofwarW
+>                                         warcapabilityRatio warcapabilityRatio2 , fe i($
+> fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> test warcapabilityRatio +warcapabilityRatio2 =0;
+> 
+> 
+> xtreg dmil  lagW is_war_start is_war_startW secondyearofwar secondyearofwarW
+>                         warcapabilityRatio warcapabilityRatio2 warcapabilityRatioW warc
+> apabilityRatioW2 , fe i($fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> test warcapabilityRatio +warcapabilityRatio2 =0;
+> test warcapabilityRatio+ warcapabilityRatio2 +warcapabilityRatioW +warcapabilityRatioW2
+> =0;
+> 
+> 
+> 
+> 
+> /**********************************************************/
+> /**** Percentage change in TOTAL expenditure with war******/
+> /**********************************************************/
+> 
+> xtreg changeTOTspending  lagW is_war_start  is_war_startW  lpop_WB laglgdpWB, fe i($fe)
+> ;
+> test IS_WAR +war_lagW=0;
+> 
+> xtreg changeTOTspending lagW is_war_start  is_war_startW , fe i($fe);
+> test IS_WAR +war_lagW=0;
+> 
+> xtreg changeTOTspending lagW is_war_start  is_war_startW   warcapabilityRatio warcapabi
+> lityRatio2 , fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test warcapabilityRatio  warcapabilityRatio2  ;  /* nations try hardest when war is 50:
+> 50 */
+> 
+> xtreg changeTOTspending  lagW is_war_start  is_war_startW   warcapabilityRatio warcapab
+> ilityRatioW 
+>                                                         warcapabilityRatio2 warcapabili
+> tyRatioW2, fe i($fe);
+> test IS_WAR +war_lagW=0;
+> test warcapabilityRatio warcapabilityRatioW warcapabilityRatio2 warcapabilityRatioW2;
+> 
+> xtreg changeTOTspending  lagW is_war_start  is_war_startW   highprob highprobW,  fe i($
+> fe);
+> test IS_WAR +war_lagW=0;
+> test highprob+highprobW=0;
+> 
+> xtreg changeTOTspending  lagW is_war_start  is_war_startW  contest contestW,  fe i($fe)
+> ;
+> test IS_WAR +war_lagW=0;
+> test contest +contestW=0;
+> 
+> xtreg changeTOTspending lagW is_war_start  is_war_startW  contest3070 contest3070W,  fe
+>  i($fe);
+> test IS_WAR +war_lagW=0;
+> test contest3070+ contest3070W=0;
+> 
+> 
+> /* Look for escalation of effort in first and second years of the war (once full effort
+>  is being made subsequent war years should see no more effort)*/
+> 
+> xtreg changeTOTspending lagW is_war_start is_war_startW secondyearofwar secondyearofwar
+> W, fe i($fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> 
+> xtreg changeTOTspending lagW is_war_start is_war_startW secondyearofwar secondyearofwar
+> W
+>                                         warcapabilityRatio warcapabilityRatio2 , fe i($
+> fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> test warcapabilityRatio +warcapabilityRatio2 =0;
+> 
+> 
+> xtreg changeTOTspending  lagW is_war_start is_war_startW secondyearofwar secondyearofwa
+> rW
+>                         warcapabilityRatio warcapabilityRatio2 warcapabilityRatioW warc
+> apabilityRatioW2 , fe i($fe);
+> test is_war_start+ is_war_startW=0; test secondyearofwar+ secondyearofwarW=0; 
+> test is_war_start+ is_war_startW+ secondyearofwar+ secondyearofwarW=0;
+> test warcapabilityRatio +warcapabilityRatio2 =0;
+> test warcapabilityRatio+ warcapabilityRatio2 +warcapabilityRatioW +warcapabilityRatioW2
+> =0;
+> 
+> */
+> 
+> /*************** Extra-State Wars (little extra effort required?) ***************/
+> 
+> xtreg lmilex laglmilex  lagW EX_WAR EX_WARW  lpop_WB laglgdpWB, fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      3321
+Group variable (i) : regyr                      Number of groups   =       220
+
+R-sq:  within  = 0.9772                         Obs per group: min =         1
+       between = 0.9886                                        avg =      15.1
+       overall = 0.9846                                        max =        35
+
+                                                F(6,3095)          =  22141.76
+corr(u_i, Xb)  = 0.0007                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9289747   .0058432   158.98   0.000     .9175177    .9404318
+        lagW |  -.0482735   .0230719    -2.09   0.036    -.0935113   -.0030358
+      EX_WAR |   -.011629   .1091733    -0.11   0.915    -.2256883    .2024304
+     EX_WARW |   .1022765   .1999712     0.51   0.609    -.2898133    .4943662
+     lpop_WB |   .0677613   .0076743     8.83   0.000     .0527141    .0828086
+   laglgdpWB |   .0747199   .0071005    10.52   0.000     .0607978     .088642
+       _cons |  -.6637743   .1028571    -6.45   0.000    -.8654494   -.4620993
+-------------+----------------------------------------------------------------
+     sigma_u |  .16773192
+     sigma_e |  .30369363
+         rho |  .23374131   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(219, 3095) =     2.44           Prob > F = 0.0000
+
+. test EX_WAR +EX_WARW=0;
+
+ ( 1)  EX_WAR + EX_WARW = 0.0
+
+       F(  1,  3095) =    0.69
+            Prob > F =    0.4059
+
+
+. xtreg lmilex laglmilex  lagW EX_WAR EX_WARW , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8896
+Group variable (i) : regyr                      Number of groups   =       853
+
+R-sq:  within  = 0.9675                         Obs per group: min =         1
+       between = 0.9803                                        avg =      10.4
+       overall = 0.9838                                        max =        42
+
+                                                F(4,8039)          =  59809.75
+corr(u_i, Xb)  = 0.2207                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9779201    .002049   477.27   0.000     .9739036    .9819366
+        lagW |   .0277102   .0142578     1.94   0.052    -.0002387    .0556592
+      EX_WAR |   .0178805   .0479231     0.37   0.709    -.0760611    .1118222
+     EX_WARW |   .0200594   .0748947     0.27   0.789    -.1267536    .1668723
+       _cons |   .2934452   .0226719    12.94   0.000     .2490024     .337888
+-------------+----------------------------------------------------------------
+     sigma_u |  .32841601
+     sigma_e |  .34321497
+         rho |  .47797633   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(852, 8039) =     3.25           Prob > F = 0.0000
+
+. test EX_WAR +EX_WARW=0;
+
+ ( 1)  EX_WAR + EX_WARW = 0.0
+
+       F(  1,  8039) =    0.95
+            Prob > F =    0.3291
+
+
+. xtreg lmilex laglmilex  lagW EX_WAR EX_WARW is_war_start  is_war_startW  lpop_WB laglgd
+> pWB, fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      3321
+Group variable (i) : regyr                      Number of groups   =       220
+
+R-sq:  within  = 0.9773                         Obs per group: min =         1
+       between = 0.9886                                        avg =      15.1
+       overall = 0.9846                                        max =        35
+
+                                                F(8,3093)          =  16670.29
+corr(u_i, Xb)  = 0.0011                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9275527   .0058457   158.67   0.000     .9160908    .9390145
+        lagW |   -.049331   .0230937    -2.14   0.033    -.0946114   -.0040505
+      EX_WAR |  -.0090399   .1089801    -0.08   0.934    -.2227206    .2046407
+     EX_WARW |     .10107   .1996183     0.51   0.613    -.2903278    .4924677
+is_war_start |   .2563031   .1171053     2.19   0.029     .0266911     .485915
+is_war_sta~W |  -.0980431   .1744841    -0.56   0.574    -.4401596    .2440733
+     lpop_WB |   .0684253   .0076628     8.93   0.000     .0534005      .08345
+   laglgdpWB |   .0759443    .007095    10.70   0.000     .0620328    .0898557
+       _cons |  -.6683707   .1027452    -6.51   0.000    -.8698264    -.466915
+-------------+----------------------------------------------------------------
+     sigma_u |  .16775263
+     sigma_e |  .30312587
+         rho |  .23445661   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(219, 3093) =     2.42           Prob > F = 0.0000
+
+. test is_war_start+is_war_startW=0;
+
+ ( 1)  is_war_start + is_war_startW = 0.0
+
+       F(  1,  3093) =    3.15
+            Prob > F =    0.0761
+
+
+. test EX_WAR +EX_WARW=0;
+
+ ( 1)  EX_WAR + EX_WARW = 0.0
+
+       F(  1,  3093) =    0.71
+            Prob > F =    0.3979
+
+
+. xtreg lmilex laglmilex  lagW EX_WAR EX_WARW IS_WAR war_lagW , fe i($fe);
+
+Fixed-effects (within) regression               Number of obs      =      8896
+Group variable (i) : regyr                      Number of groups   =       853
+
+R-sq:  within  = 0.9679                         Obs per group: min =         1
+       between = 0.9811                                        avg =      10.4
+       overall = 0.9841                                        max =        42
+
+                                                F(6,8037)          =  40382.35
+corr(u_i, Xb)  = 0.2564                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+      lmilex |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   laglmilex |   .9738967   .0020761   469.09   0.000     .9698269    .9779664
+        lagW |   .0228201   .0144961     1.57   0.115    -.0055961    .0512363
+      EX_WAR |   .0311489   .0476632     0.65   0.513    -.0622833    .1245811
+     EX_WARW |  -.0152172   .0746198    -0.20   0.838    -.1614914     .131057
+      IS_WAR |   .1364765   .0343889     3.97   0.000     .0690654    .2038876
+    war_lagW |   .1114021   .0555118     2.01   0.045     .0025847    .2202195
+       _cons |   .3274225   .0228218    14.35   0.000     .2826859    .3721591
+-------------+----------------------------------------------------------------
+     sigma_u |  .32306991
+     sigma_e |  .34111556
+         rho |  .47285046   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(852, 8037) =     3.18           Prob > F = 0.0000
+
+. test IS_WAR +war_lagW=0;
+
+ ( 1)  IS_WAR + war_lagW = 0.0
+
+       F(  1,  8037) =   54.55
+            Prob > F =    0.0000
+
+
+. test EX_WAR +EX_WARW=0;
+
+ ( 1)  EX_WAR + EX_WARW = 0.0
+
+       F(  1,  8037) =    0.17
+            Prob > F =    0.6813
+
+
+. /*********************************************/
+> /***** COLONIAL AND IMPERIAL WARS ***/
+> /*********************************************/
+> /* DEMOCRACIES NOT IMMUNE FROM FIGHTING THE WEAK*/
+> 
+> des  EX_war_start EX_WAR;
+
+              storage  display     value
+variable name   type   format      label      variable label
+-------------------------------------------------------------------------------
+EX_war_start    byte   %9.0g                  COW: Does an extrastate war
+                                                start this year? (1/0)
+EX_WAR          byte   %9.0g                  COW: Extrastate War (1/0)
+
+. replace EX_WAR=0 if EX_WAR==. & year >1815 &year<=1997;
+(0 real changes made)
+
+. xtlogit EX_WAR demaut, fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 1063 groups (9104 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -789.41136
+Iteration 1:   log likelihood = -765.26137
+Iteration 2:   log likelihood = -765.24986
+
+Conditional fixed-effects logit                 Number of obs      =      4033
+Group variable (i) : regyr                      Number of groups   =       179
+
+                                                Obs per group: min =         3
+                                                               avg =      22.5
+                                                               max =        42
+
+                                                LR chi2(1)         =     49.89
+Log likelihood  = -765.24986                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demaut |   1.432403   .2070476     6.92   0.000     1.026597    1.838209
+------------------------------------------------------------------------------
+
+. xtlogit EX_WAR W, fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 1058 groups (12886 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -946.12512
+Iteration 1:   log likelihood = -926.97813
+Iteration 2:   log likelihood = -926.97773
+
+Conditional fixed-effects logit                 Number of obs      =      5527
+Group variable (i) : regyr                      Number of groups   =       185
+
+                                                Obs per group: min =         3
+                                                               avg =      29.9
+                                                               max =        50
+
+                                                LR chi2(1)         =     39.33
+Log likelihood  = -926.97773                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   1.344651   .2167187     6.20   0.000     .9198904    1.769412
+------------------------------------------------------------------------------
+
+. xtlogit EX_WAR demaut lgdpWB lpop_WB  , fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 223 groups (3163 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -148.15684
+Iteration 1:   log likelihood =  -121.3744
+Iteration 2:   log likelihood =  -119.2542
+Iteration 3:   log likelihood =  -119.2295
+Iteration 4:   log likelihood =  -119.2295
+
+Conditional fixed-effects logit                 Number of obs      =       882
+Group variable (i) : regyr                      Number of groups   =        40
+
+                                                Obs per group: min =        11
+                                                               avg =      22.1
+                                                               max =        39
+
+                                                LR chi2(3)         =     58.89
+Log likelihood  =  -119.2295                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demaut |   -2.50569   .5531865    -4.53   0.000    -3.589915   -1.421464
+      lgdpWB |   .7606305   .1662953     4.57   0.000     .4346977    1.086563
+     lpop_WB |   .9256989   .1494126     6.20   0.000     .6328556    1.218542
+------------------------------------------------------------------------------
+
+. xtlogit EX_WAR W w2, fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 1058 groups (12886 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -946.14136
+Iteration 1:   log likelihood =  -924.6412
+Iteration 2:   log likelihood = -924.16803
+Iteration 3:   log likelihood = -924.16725
+
+Conditional fixed-effects logit                 Number of obs      =      5527
+Group variable (i) : regyr                      Number of groups   =       185
+
+                                                Obs per group: min =         3
+                                                               avg =      29.9
+                                                               max =        50
+
+                                                LR chi2(2)         =     44.95
+Log likelihood  = -924.16725                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   3.113205   .8024732     3.88   0.000     1.540386    4.686023
+          w2 |  -1.635611   .7057219    -2.32   0.020    -3.018801   -.2524216
+------------------------------------------------------------------------------
+
+. xtlogit EX_WAR W w2 lgdpWB lpop_WB , fe i($fe);
+
+note: multiple positive outcomes within groups encountered.
+note: 223 groups (3896 obs) dropped due to all positive or
+      all negative outcomes.
+Iteration 0:   log likelihood = -158.42397
+Iteration 1:   log likelihood = -120.53765
+Iteration 2:   log likelihood = -118.64983
+Iteration 3:   log likelihood = -118.62633
+Iteration 4:   log likelihood = -118.62632
+
+Conditional fixed-effects logit                 Number of obs      =      1014
+Group variable (i) : regyr                      Number of groups   =        42
+
+                                                Obs per group: min =        12
+                                                               avg =      24.1
+                                                               max =        43
+
+                                                LR chi2(4)         =     80.86
+Log likelihood  = -118.62632                    Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+      EX_WAR |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+           W |   10.43785   2.713951     3.85   0.000     5.118599    15.75709
+          w2 |  -11.75866    2.43725    -4.82   0.000    -16.53558   -6.981737
+      lgdpWB |   .8795535   .1602849     5.49   0.000     .5654008    1.193706
+     lpop_WB |   .8052948   .1350844     5.96   0.000     .5405342    1.070055
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. #delimit ;
+delimiter now ;
+. /******* Code for bilateral wars and bilateral wars between near neighbors ******/
+> gen bilateral=0 if warno~=.;
+(18882 missing values generated)
+
+.  replace bilateral=1 if warno==1 | warno==4 | warno==7 | warno==13 | warno==25 |warno==
+> 31|
+>         warno==34| warno==37 | warno==40 | warno==43 | warno==60 | warno==61 |warno==65
+>  |
+>         warno==67 | warno==70 | warno==72 | warno==73 | warno==76 | warno==79 | warno==
+> 83| 
+>         warno==85 | warno==94 | warno==97 | warno==116 | warno==117 | warno==118 |
+>         warno==121 | warno==124 | warno==125 | warno==127 | warno==130 | warno==133 |
+>         warno==142 | warno==145 | warno==147 | warno==154 | warno==160 | warno==166 | 
+>         warno==172 | warno==175 | warno==178 | warno==184 | warno==187 | warno==193 | 
+>         warno==199 | warno==202 | warno==205 | warno==208;
+(174 real changes made)
+
+.  gen near_bilateral=0 if warno~=.;
+(18882 missing values generated)
+
+. replace near_bilateral =1 if warno==1 | warno==4 | warno==7 | warno==13 | warno==31 |
+>         warno==34 |warno==37 |  warno==43 |warno==60 | warno==61 |warno==65 |
+>          warno==70 |  warno==73 | warno==76 | warno==83| warno==85 | warno==94 |  
+>         warno==117 | warno==118 | warno==121 | warno==124 | warno==125 | warno==130 | 
+>         warno==142 | warno==147 | warno==154 | warno==160 | warno==166 | 
+>         warno==172 | warno==175 | warno==178 | warno==184 | warno==187 | warno==193 | 
+>         warno==199 |  warno==205 | warno==208;
+(133 real changes made)
+
+.  global model1 "lagW IS_WAR war_lagW ";
+
+. global model2 "lagW IS_WAR war_lagW  even evenW ";
+
+. global model3 "lagW EX_WAR EX_WARW ";
+
+. global model4 "demlag IS_WAR war_lagD ";
+
+. global model5 "demlag IS_WAR war_lagD  even evenD lagdemres";
+
+. global model6 "demlag EX_WAR EX_WARD";
+
+.  gen test_cond = 1;
+
+.  replace test_cond = 0 if IS_WAR==1 & bilateral==0;
+(460 real changes made)
+
+.  gen test_condA = 1;
+
+.  replace test_condA = 0 if IS_WAR==1 & near_bilateral==0;
+(501 real changes made)
+
+.  tsset ccode year;
+       panel variable:  ccode, 2 to 990
+        time variable:  year, 1763 to 2000, but with gaps
+
+. gen existing=0;
+
+.  replace existing =1 if IS_WAR==1 & L.IS_WAR==1;
+(389 real changes made)
+
+. gen existingW=existing*lagW;
+(246 missing values generated)
+
+.  gen end=0;
+
+. replace end=1 if IS_WAR==0 & L.IS_WAR==1;
+(240 real changes made)
+
+. gen endW=end*lagW;
+(246 missing values generated)
+
+.  gen end2=0;
+
+. replace end2=1 if IS_WAR==0 & L.IS_WAR==0& L2.IS_WAR==1;
+(229 real changes made)
+
+. gen end2W=end2*lagW;
+(246 missing values generated)
+
+.  gen end3=0;
+
+.  replace end3=1 if IS_WAR==0 & L.IS_WAR==0& L2.IS_WAR==0 & L3.IS_WAR==1;
+(217 real changes made)
+
+. gen end3W=end3*lagW;
+(246 missing values generated)
+
+.  gen prewar=0;
+
+. replace prewar=1 if IS_WAR==0 &F.IS_WAR==1;
+(244 real changes made)
+
+.  gen prewarW=prewar*lagW;
+(246 missing values generated)
+
+. gen conIS=contest3070*IS_WAR;
+(1103 missing values generated)
+
+. gen conISW=contest3070*war_lagW;
+(1306 missing values generated)
+
+. gen conexist=contest3070*existing;
+
+. gen conexistW=contest3070*existingW;
+(246 missing values generated)
+
+. gen tough=0 ;
+
+.  replace tough=1 if warcapabilityRatio<0.7 &IS_WAR==1;
+(307 real changes made)
+
+.  gen Wtough=tough*lagW;
+(246 missing values generated)
+
+.  gen easyWAR=IS_WAR*(1-tough);
+(1103 missing values generated)
+
+.  gen WeasyWAR=war_lagW*(1-tough);
+(1306 missing values generated)
+
+.  gen win=0;
+
+.  replace win=1 if outcome==1;
+(283 real changes made)
+
+. tsset ccode year;
+       panel variable:  ccode, 2 to 990
+        time variable:  year, 1763 to 2000, but with gaps
+
+. gen endwin=end*L.win;
+(248 missing values generated)
+
+. gen endwin2=end2*L2.win;
+(483 missing values generated)
+
+. gen endwinW=endwin*L.W;
+(248 missing values generated)
+
+. gen endwin2W=endwin2*L2.W;
+(483 missing values generated)
+
+. gen war1=0;
+
+.  replace war1=1 if IS_WAR==1 & L.IS_WAR==0;
+(244 real changes made)
+
+.  gen war2=0;
+
+.  replace war2=1 if IS_WAR==1 & L1.IS_WAR==1 & L2.IS_WAR==0;
+(124 real changes made)
+
+. gen warMORE=0;
+
+.  replace warMORE=1 if IS_WAR==1 & war1==0 &war2==0;
+(266 real changes made)
+
+. gen war1W=war1*lagW;
+(246 missing values generated)
+
+.  gen war2W=war2*lagW;
+(246 missing values generated)
+
+.  gen warMOREW=warMORE*lagW;
+(246 missing values generated)
+
+. tsset, clear;
+
+. tsset, clear;
+
+. gen UK = lmilex if ccode==200;
+(19338 missing values generated)
+
+.  label var UK "UK: Log Military Expenditure";
+
+. gen FRN = lmilex if ccode==220;
+(19339 missing values generated)
+
+.  label var FRN "France: Log Military Expenditure";
+
+. gen GMY = lmilex if ccode==255;
+(19383 missing values generated)
+
+.  label var GMY "Germany: Log Military Expenditure";
+
+. gen RUS = lmilex if ccode==365;
+(19338 missing values generated)
+
+.  label var RUS "Russia: Log Military Expenditure";
+
+. gen US = lmilex if ccode==2;
+(19338 missing values generated)
+
+.  label var US "US: Log Military Expenditure";
+
+. gen ITA = lmilex if ccode==325;
+(19338 missing values generated)
+
+.  label var ITA "Italy: Log Military Expenditure";
+
+. gr UK  GMY RUS US ITA year if year>1934 & year<1946  , 
+>         xlabel(1935, 1936, 1937, 1938, 1939, 1940, 1941,1942,1943,1944, 1945 ) c(lllll)
+> ;
+
+. gr UK  GMY RUS FRN US ITA year if year>1910 & year<1921  , 
+>         xlabel(1911,1912,1913,1914,1915,1916,1917,1918,1919,1920 ) c(lllll);
+
+.  global model1 "lagW IS_WAR war_lagW ";
+
+. global model2 "lagW IS_WAR war_lagW  even evenW ";
+
+. global model3 "lagW EX_WAR EX_WARW ";
+
+. global model4 "demlag IS_WAR war_lagD ";
+
+. global model5 "demlag IS_WAR war_lagD  even evenD lagdemres";
+
+. global model6 "demlag EX_WAR EX_WARD";
+
+.  capture log close;

@@ -1,0 +1,1000 @@
+\movetooddpage
+
+\chapter{Sonuç Ortamý} \label{deploymonitor}
+
+\thischapterhas{
+  \item Sonuç ortamýna kod göndermek 
+  \item Ýþlemde olan bir kurumsal programý kontrol etmek
+}
+
+\versal{K}\textsc{urumsal} uygulamýzý yazýp, test ettikten sonra, uygulamamýzý
+iþleme açmak için iþler kodlarýný sonuç ortamýna göndermemiz
+gerekir. Kitabýmýzda tavsiye edilen sonuç ortamý, iþletim sistemi olarak, Unix
+(Linux, Solaris) sistemleridir. O zaman kurumsal uygulamamýzý Unix üzerindeki
+bir JBoss üzerine göndermek için, bazý yöntemler kullanmamýz gerekecektir. Bu
+yöntemlere deployment baþlýðý altýnda bakacaðýz.
+
+Kod gönderildikten sonra (ciddi sonuç ortamlarýnda) diðer bir problem ile karþý
+karþýya geliriz. Bir kurumsal uygulamayý sonuç ortamýnda gerçek kullanýcý yükü
+altýnda iþletmek, test ortamýnda iþletmekle ayný deðildir. Komut satýrýndan elle
+baþlattýðýmýz bir program, eðer çökerse ne olacaktýr?  Modern bir kurumsal
+uygulamanýn üzerindeki gereklilikler düþünülürse (haftanýn 7 günü ve her günün
+24 saati ayakta kalmasýnýn beklediðimiz sistemler) onlarca Unix makinasýnýn
+oluþturduðu bir küme ortamýnda, sadece \PVerb!run.sh! ile baþlattýðýmýz
+servislerin izlenemez, ve takip edilemez bir halde olduðu sonucuna varýrýz. Bu
+sorunu izleme (monitoring) baþlýðý altýnda çözeceðiz.
+
+\section{Kod Gönderimi} \label{deploymonitor:deploy}
+Bazý seminerlerimde kullandýðým bir fiziksel mimari örneði vardýr: ``Bu sitenin
+kullandýðý fiziksel mimari, küme hâlinde çalýþan 20 tane Unix makinasý
+içeriyor'' diyerek bazý donaným istatistiklerini dinleyiciye sunarým. Bunu duyan
+katýlýmcýlardan biri bazen þu soruyu sorar: ``Biz 4 makinayý zor idare ediyoruz,
+bu adamlar 20 makinayý nasýl idare ediyorlar?''.
+
+Bahsedilen sayý hakikaten büyük bir sayýdýr. Fakat örneði verilen türden bir
+yapýyý idare eden admin'in kullandýðý o ufacýk tekniði duyunca, sorunun
+cevabýnýn aslýnda ne kadar basit olduðunu anlarsýnýz . Meselâ
+\PVerb!kitapdemo.sar! adlý Web paketimizi, \PVerb!host1!, \PVerb!host2!, ... ,
+\PVerb!host100! olarak isimlendirilmiþ 100 tane makinanýn
+\PVerb!/usr/local/jboss/server/all/deploy!  dizini altýna kopyalamamýz
+gerektiðini düþünün (her makinada JBoss'un ayný yere kurulmuþ olduðunu farz
+ediyoruz). Bu kopyalama iþlemini, eðer düzeninizi iyi kurmuþsanýz, þu þekilde
+yapabilirsiniz (\PVerb!sh! scripting dili ile)
+
+\begin{lstlisting}[language=Java, caption=sendcode.sh]
+LIMIT=100
+for ((a=1; a <= LIMIT ; a++))  
+do
+  scp kitapdemo.sar "remoteuser@host\$a:/usr/local/jboss/server/all/deploy"
+done
+\end{lstlisting}
+Ya da Windows BAT ortamýnda
+
+\begin{lstlisting}[language=Java, caption=sendcode.bat]
+@echo off
+FOR /L %%n IN (1,1,100) DO call :copying %%n
+goto end:
+:copying
+scp kitapdemo.sar remoteuser@host%1:/usr/local/jboss/server/all/deploy
+:end
+\end{lstlisting}
+Ýste bu tek script ile paketimizi 100 makinayý tek seferde kopyalamýþ
+olduk. Peki bu nasýl oldu?
+
+\subsection{SSH ve SCP}
+
+Bir makinadan diðerine hem þifresiz hem de güvenli bir þekilde girip, orada
+komut iþletmek, ya da oraya dosya kopyalamak için iki program vardýr:
+\PVerb!ssh! ve \PVerb!scp!. Kullanmak için komut satýrýndan (\PVerb!ssh! için)
+
+\begin{lstlisting}[language=Java, frame=none]
+ssh host1 -l remoteuser
+\end{lstlisting}
+komutunu kullandýðýnýzda \PVerb!host1! adlý makinaya \PVerb!remoteuser!
+kullanýcýsý üzerinden login etmiþ olursunuz. Ya da uzak makinada bir komut
+iþletip sonucunu kendi makinanýza almak isterseniz (meselâ ikinci makinada
+listeleme komutu olan \PVerb!ls! iþletelim), þunu yaparýz
+
+\begin{lstlisting}[language=Java, frame=none]
+ssh host1 -l remoteuser ls
+\end{lstlisting}
+Eðer uzak makinaya bir dosya kopyalamak istersek
+
+\begin{lstlisting}[language=Java, frame=none]
+scp file.txt remoteuser@host1:/tmp
+\end{lstlisting}
+Bu komut ile uzaktaki makinaya {\em sanki yerel dizinlerimiz arasýnda dosya
+kopyalýyormuþ kadar rahat} bir þekilde bir dosya kopyalayabiliyoruz. Giriþte
+bahsettiðimiz basit teknik iþte budur. \PVerb!ssh! ve \PVerb!scp! bir kez
+kurulduktan sonra, uzaktaki makina, yerel makinanýzýn bir uzantýsý hâline
+gelir. Bir makinayý uzaktan idare etmek demek, ya bir dosya deðiþimi, ya da bir
+komut iþletmek demek olduðu için, bu iki programý kullanarak uzaktaki bir
+makinada yapamayacaðýmýz þey yoktur.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.40}{
+  \includegraphics{./images/scp.eps}
+  }
+}
+\end{figure}
+
+
+\subsubsection{Þifresiz Kullanýmý Kurmak}
+
+Eðer \PVerb!ssh!'i hiçbir ek ayar yapmadan kullanýrsanýz, (ilk kurduðumuz
+haliyle) her kullanýþýnýzda size bir þifre sorulacaktýr. Ayný þekilde
+\PVerb!scp!  komutu da böyle davranýr. Fakat, biz meselâ yüz tane makina için
+arka arkaya \PVerb!scp! ya da \PVerb!ssh! kullanmamýz gerekeceði için, þifre
+isteme iþlemini iptal edip, güvenlik kontrolünü kullanýcýya sorulmayan {\em
+baþka bir þekilde} yapmamýz gerekiyor. Bu yöntem de, açýk / gizli (public /
+private) anahtarlar kullanarak yapýlan güvenlik kontrolüdür.
+
+Windows üzerinde \PVerb!ssh! ve \PVerb!scp!'nin iþler kodlarýný kurmayý,
+\ref{install:sshscp} bölümünde bulabilirsiniz. Linux üzerinde \PVerb!ssh! ve \PVerb!scp!
+genellikle otomatik olarak kurulur, eðer kurulmamýþsa, Linux kurulum
+disklerinizde bu programý bulabilirsiniz, ya da admin'inize bu programlarý
+kurdurabilirsiniz.
+
+Açýk / gizli anahtar kurulumunu yapmak için þunlarý yapýn: Ýlk önce kod
+gönderimi ya da uzaktan idareyi yapan yerel makinamýzý tanýtan bir gizli
+anahtar, bir de açýk anahtar üretmemiz gerekiyor.
+\begin{lstlisting}[language=Java, frame=none]
+\$ ssh-keygen -t rsa
+\end{lstlisting}
+Sorulan sorular için hiç cevap girmeden ENTER'e basarak geçin. Bu bittikten
+sonra, \PVerb!\$HOME/.ssh/! dizininiz icinde 2 dosya göreceksiniz. Bu dosyalar
+\PVerb!id_rsa.pub! ve \PVerb!id_rsa! dosyalarý olacaktýr. \PVerb!HOME!
+deðiþkeninin nerede olduðunu komut satýrýndan Unix/Cygwin'de \PVerb!echo \$HOME!
+ile öðrenebilirsiniz. Windows'da dosyalarýn nereye yazýldýðý OpenSSH tarafýndan
+zaten \PVerb!ssh-keygen! sonunda size bildirilecektir.
+
+Biraz önce üretilen dosyalardan \PVerb!id_rsa!, gizli anahtarýnýzdýr. Dosya
+\PVerb!id_rsa.pub!  ise açýk anahtarýnýzdýr. Þimdi, \PVerb!id_rsa.pub!
+kayýdýndaki açýk anahtarý, uzaktan eriþeceðiniz servis bilgisayarýna FTP ya da
+\PVerb!scp! ile gönderin (\PVerb!scp!  kullanýrsanýz, -þimdilik- þifre girmeniz
+gerekecek tabii ki). Sonra, uzaktaki bilgisayardaki kullanacaðýnýz kullanýcý
+hesabýna girin, hesabýn üst seviyesinde \PVerb!\$HOME/.ssh/! dizini altýna
+\PVerb!id_rsa.pub! kayýdýný býrakýn. Sonra, servis sisteminde
+
+\begin{lstlisting}[language=Java, frame=none]
+cat > \$HOME/.ssh/id_rsa.pub >> authorized_keys
+\end{lstlisting}
+komutunu calýþtýrýn. Kuruluþ iþlemi bundan ibarettir. Bu son iþlemden sonra
+artýk uzaktan iþlettiðiniz \PVerb!ssh! ve \PVerb!scp! iþlemleri þifresiz bir
+þekilde iþinizi yapmanýza izin verecektir.
+
+Açýk anahtarýmýzý servis makinasýna eklemek için, Unix \PVerb!cat! komutu ile
+\PVerb!>>!  iþlecini kullandýðýmýza dikkat edelim. Bu demektir ki, birden fazla
+\PVerb!.pub!  dosyasýna tek bir \PVerb!authorized_keys! dosyasýna ekleyebiliriz
+(ve birden fazla kullanýcýyý desteklebilmek için bunu yapmamýz gerekir). Böylece
+ayný makinaya eriþen birden fazla eriþen kiþi, \textbf{ayný} servis makinasýna
+ve ayný kullanýcýya deðiþik açýk anahtarlar ile eriþebilir.
+
+Eðer \PVerb!ssh! kullanýmýnýzda problem çýkarsa (probleme göre) þunlarý
+yapabilirsiniz:
+
+\begin{itemize}
+  \item Servis tarafýndaki \PVerb!authorized_keys! dosyasýnýn güvenliðinin açýk
+    olmamasý gerekir. Eðer dosyanýn Unix bazýnda güvenliði çok açýksa,
+    \PVerb!sshd!  baðlanmaya çalýþan \PVerb!ssh! ya da \PVerb!scp! komutunu bir
+    þifre girmeye zorlayacaktýr. \PVerb!authorized_keys! dosyasýnýn yeterince
+    kapalý hale getirmek için
+\begin{lstlisting}[language=Java, frame=none]
+chmod 600 authorized_keys
+\end{lstlisting}
+ve bir üst seviyedeki \PVerb!.ssh! dizini üzerinde
+\begin{lstlisting}[language=Java, frame=none]
+chmod 700 .ssh/
+\end{lstlisting}
+    komutlarýný kullanmak gerekebilir.
+
+  \item SSH baðlanamama durumu var ise, problem sunucu bilgisayarýnda
+   \PVerb!sshd!  programýnýn iþlemesi olabilir. \PVerb!ps -eaf | grep sshd! ile
+   bunu kontrol edebilirsiniz.
+
+   \item Baðlanan bilgisayarlarda Cygwin'e özel bir problem (Windows'da)
+    þudur. Cygwin ssh programý (OpenSSH), gizli anahtarýn üzerindeki eriþim
+    haklarýnýn "kullanýcýya özel" olmasýný istiyor. Bu normal tabii çünkü bu
+    anahtar gizli, ve her kullanýcý tarafýndan okunamamasý lâzýmdýr. Hata þöyle
+    olacaktýr:
+\begin{lstlisting}[language=Java, frame=none]
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+Permissions 0644 for '/cygdrive/h/.ssh/id_rsa' are too open.
+
+It is recommended that your private key files are NOT accessible
+by others.
+
+This private key will be ignored.
+\end{lstlisting}
+     Hiç problem degil (diye düþünüyoruz) \PVerb!chmod! kullanýrsak iþ biter
+     (bölüm \ref{unix:tools:files:chmod}). Tek problem, Windows ve Unix'in
+     eriþim haklarý yöntemlerinin birbiri ile uyuþmamasýdýr. \PVerb!chmod!'u
+     çalýþtýrdýðýnýzda, komut bir þey yapmýþ gibi geri gelecek, fakat dosyada
+     bir deðiþiklik olmayacaktýr. Unix dosya haklarýnýn Cygwin'de ``simule''
+     edilmesi için, \PVerb!cygwin.bat! içine (\PVerb!CYGWIN/bin/! altýnda) þunu
+     eklemek lazýmdýr.
+\begin{lstlisting}[language=Java, frame=none]
+set CYGWIN=tty ntea 
+\end{lstlisting}
+Bundan sonra
+
+\begin{lstlisting}[language=Java, frame=none]
+chmod 0600 id_rsa
+\end{lstlisting}
+     komutu düzgün iþleyecektir.
+
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section[Uygulama Ýþleyiþini Kontrol Etmek][UYGULAMA ÝÞLEYÝÞÝNÝ KONTROL ETMEK]{Uygulama Ýþleyiþini Kontrol Etmek}
+
+Kurumsal uygulamamýzý oluþturan servis programlarýmýzýn uzun süre ayakta
+kalmasýný ve iþlem yapabilmesini isteriz. Eðer iþletim sistemi hatasý, donaným
+pürüzleri gibi hatalar yüzünden servis süreçlerinde çökme olursa, sektörde
+yaygýn bir metot çökmüþ olan servisin otomatik olarak ayaða kaldýrýlmasýdýr. Bu
+iþi yapan en ünlü ticari program olan AutoSys, çöken bir programý tekrar
+baþlatmak, çökme birkaç kez tekrar ederse olursa belli bir eþik deðerinden sonra
+tekrar baþlatmayý býrakýp durumu sorumlu bir kimseye e-mail ile bildirmek, ya da
+zamanlý (scheduled) bir þekilde belli zamanlarda bir programý iþletmek gibi
+önemli görevleri yerine getirebilir.
+
+Kitabýmýzda bedava / açýk yazýlým yelpazesinden bulunup kullanýlabilen çözümleri
+tavsiye ettiðimiz için, ticari bir ürün olan AutoSys yerine bizim yazdýðýmýz iki
+Perl script'ini tavsiye edeceðiz. Bu script'ler AutoSys'in süreç izleme
+özelliðini taþýyan ufak programlar olacaklardýr. AutoSys'in zamanlý çalýþtýrma
+özellikleri yerine de, Unix \PVerb!cron! programýný (bölüm \ref{unix:cron})
+kullanabilirsiniz.
+
+
+\subsection{Blok Eden Servis Script'leri} %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Blok eden servis programlarýndan kastýmýz, baþlangýç komutu verilince kendini ön
+plana alan türden servis programlarýdýr. Bu tür programlarýn çökme durumunu
+kontrol etmek istiyorsak, servisi baþlatmak için baþlatýcý programý
+(\PVerb!run.sh! gibi) elle baþlatmak yerine, bir takip edici program üzerinden
+``baþlattýrtmamýz'' gerekmektedir. Bu kontrollü baþlatýmdan sonra, eðer kontrol
+edilen program herhangi bir sebeple geri gelirse, kontrol eden program bir çökme
+durumu olduðunu algýlayabilecektir.
+
+Alttaki \PVerb!jobRunner.pl! adlý Perl script'ini bu amaçla kullanabiliriz.
+
+\begin{lstlisting}[language=Perl, caption=jobRunner.pl]
+#!/usr/bin/perl
+
+use Net::SMTP;
+
+\$argCount=\$#ARGV + 1;
+
+die "Usage: perl t.pl <maxRestartCount> <wait> " .
+    "<jobname> <progname>\n" if (\$argCount != 4);
+
+\$maxRestartCount = \$ARGV[0];
+\$wait = \$ARGV[1];
+\$jobName = \$ARGV[2];
+\$jobProg = \$ARGV[3];
+
+print "\$wait";
+
+# run the program
+\$code = system(\$jobProg);
+
+# if first run fails, we come here
+\$restartCount = 0;
+while (1) {
+    \$restartCount++;
+    if (\$restartCount == 3) {
+        print "Cannot restart any more... Exiting\n";
+        alert(\$jobName);
+        exit(-1);
+    } else {
+        print "Exiting with code \$code\n";
+        print "Waiting for cleanup \n";
+        sleep(\$wait);
+        print \$code . "... restarting \n";
+        \$code = system(\$jobProg);
+    }
+}
+
+sub alert(\$){
+    my \$jobName = shift;
+    my \$from = 'jobRunner@company.com';
+    my \$to = 'admin@company.com';
+    my \$subject = "Process \$jobName Failed";
+
+    \$smtp = Net::SMTP->new('mail.company.com');
+    
+    \$smtp->mail(\$from);
+    \$smtp->to(\$to);
+
+    \$smtp->data();
+    \$smtp->datasend("To: \$to\n");
+    \$smtp->datasend("Subject: \$subject\n");
+    \$smtp->datasend("Tried to restart \$jobName \$maxRestartCount times\n");
+    \$smtp->datasend("It Failed\n");
+    \$smtp->dataend();
+
+    \$smtp->quit;
+}
+\end{lstlisting}
+\PVerb!jobRunner.pl! programýnýn seçeneklerini komut satýrýndan \PVerb!perl
+jobRunner.pl! komutunu iþleterek görebiliriz. Bu seçeneklerin açýklamasý
+þöyledir:
+
+\begin{itemize}
+   \item \textbf{maxRestartCount}: \PVerb!jobRunner.pl!'in baþlatmýþ olduðu ve
+   kontrol ettiði program çökünce, en fazla kaç {\em sefer daha} tekrar ayaða
+   kaldýrýlmasý gerektiðini kontrol eder. Eðer bir program
+   \PVerb!maxRestartCount! kere çökmüþ ise, \PVerb!jobRunner.pl!  belirtilen
+   admin kiþisine bir e-mail ile durumu bildirecek, ve programýn
+   \PVerb!maxRestartCount! kere çökmüþ olduðunu haber verecektir. Program bir
+   daha baþlatýlmayacaktýr.
+   
+   \item \textbf{wait}: Çökme ile tekrar baþlatýlma arasýnda kaç saniye
+   beklenmesi gerektiðini belirler.
+   
+   \item \textbf{jobname}: Programý baþlatan kiþinin atadýðý bir isim. Herhangi
+   bir kelime olabilir.
+   
+   \item \textbf{progname}: Ýþletilecek programýn baþlangýç komutu. JBoss
+   örneðinde bu \PVerb!sh run.sh! olacaktýr. Tüm path (full path) burada
+   belirtilir.
+   
+\end{itemize}
+\PVerb!jobRunner.pl! kontrolünde meselâ JBoss baþlatmak için tipik bir kullaným
+þöyle olabilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+perl jobRunner.pl 3 10 JBossServer1 ``sh /usr/local/jboss/bin/run.sh''
+\end{lstlisting}
+\textbf{Not}: Bu þekilde çalýþtýrdýðýmýz servis programýný durdurmak için,
+programýn kendisini deðil, onu baþlatan ve idare eden \PVerb!jobRunner.pl!
+programýný öldürmemiz gerektiðini unutmayalým. Baþlatýcý programý görmek için
+Unix üzerinde \PVerb!ps -eaf | grep perl! ile alacaðýmýz listede, bu Perl
+script'ini \PVerb!kill -9! ile durdurabiliriz. Unix süreç kontrolü ve
+listelemesi için \ref{unix:process} bölümüne bakabiliriz.
+
+\subsection{Deamon Programlarý}
+
+Apache gibi ``baþlangýç programlarý kendini arka plana (background process)
+atan'' türden programlar için, kontrolü bir {\em port bazlý} yapabilen idare bir
+script'ini kullanmamýz gerekiyor. Çünkü kendini arka plana atan script'ler,
+baþlatýcý çaðýrdýktan sonra hemen geri dönerler ve bu da \PVerb!jobRunner.pl!
+gibi bir program için aldatýcý olacaktýr (programýn çökmüþ olduðunu
+zannedecektir). O zaman, kontrol edilen programýn çöküp çökmediðini önplandan
+geri gelip gelmemek deðil, belli bir port üzerinde dinleyici olup olmadýðýný
+anlayarak kontrol edebiliriz. Sistemde bir port'un kullanýlma durumunu
+\PVerb!netstat! ile kontrol edebiliriz. \PVerb!netstat! hakkýnda ayrýntýlý detay
+için \ref{unix:netstat} bölümüne bakabilirsiniz.
+
+\begin{lstlisting}[language=Perl, caption=deamonRunner.pl]
+#!/usr/bin/perl
+
+use Net::SMTP;
+
+\$argCount=\$#ARGV + 1;
+
+die "Usage: perl t.pl <maxRestartCount> <wait> " .
+    "<port> <jobname> <progname>\n" if (\$argCount != 5);
+
+\$maxRestartCount = \$ARGV[0];
+\$wait = \$ARGV[1];
+\$port = \$ARGV[2];
+\$jobName = \$ARGV[3];
+\$jobProg = \$ARGV[4];
+
+# if first run fails, we come here
+\$restartCount = 0;
+while (1) {
+    if (\$restartCount == \$maxRestartCount) {
+        print "Cannot restart any more... Exiting\n";
+        alert(\$jobName);
+        exit(-1);
+    } else {
+        sleep(\$wait);
+        print \$code . "... checking port \$port \n";
+        @netstatout = `netstat -ano`;
+        foreach \$line(@netstatout) {
+            @tokens = split(':|\s',\$line);
+            if (\$tokens[7] =~ /\$port/) {
+                \$found = 1;
+            }
+            
+        }
+        if (\$found != 1) {        
+            \$restartCount++;
+            \$code = system(\$jobProg);            
+        }
+                
+    }
+}
+
+sub alert(\$){
+    my \$jobName = shift;
+    my \$from = 'deamonRunner@company.com';
+    my \$to = `admin@company.com';
+    my \$subject = "Process \$jobName Failed";
+
+    \$smtp = Net::SMTP->new('mail.company.com');
+    
+    \$smtp->mail(\$from);
+    \$smtp->to(\$to);
+
+    \$smtp->data();
+    \$smtp->datasend("To: \$to\n");
+    \$smtp->datasend("Subject: \$subject\n");
+    \$smtp->datasend("Tried to restart \$jobName \$maxRestartCount times\n");
+    \$smtp->datasend("It Failed\n");
+    \$smtp->dataend();
+
+    \$smtp->quit;
+}
+\end{lstlisting}
+\PVerb!deamonRunner.pl! seçenekleri \PVerb!jobRunner.pl! ile neredeyse aynýdýr,
+tek fark, belli aralýklarla kontrol edilmesi gereken bir port parametresidir. Bu
+parametrenin üzerinde dinleyici olma durumu \PVerb!netstat -ano! ile belli
+aralýklarla kontrol eden script, eðer o port dinlenmiyorsa, dinleyen programýn
+çöktüðünü kabul edilecek ve tekrar baþlatmak için gerekli komutu
+uygulayacaktýr. Tipik bir \PVerb!deamonRunner.pl! kullanýmý þöyledir:
+
+\begin{lstlisting}[language=Java, frame=none]
+perl jobRunner.pl 3 10 80 Apache1 ``/usr/local/apache/bin/apachectl start''
+\end{lstlisting}
+Bu komuta göre, Apache programýnýn varlýðý port 80'e bakýlarak her 10 saniyede
+bir kontrol edilecek, eðer program çökmüþ ise tekrar baþlatýlacaktýr. Bu tekrar
+baþlatma iþlemi en fazla 3 kere tekrarlanacak, 3 kereden sonra tekrar baþlatmak
+denenmeyecek, durum görevli admin kiþisine bir e-mail ile bildirilecektir.
+
+\section[Uygulamadan Ýstatistik Almak][UYGULAMADAN ÝSTATÝSTÝK ALMAK]{Uygulamadan Ýstatistik Almak}
+
+Sürecimizin iþleyiþ durumunu kontrol eden yukarýdaki script'ler sayesinde, eðer
+izlenen bir süreç çökmüþ ise, onu tekrar baþlatarak sistemin devamýný saðlamak
+mümkün olacaktýr. Ýþleyiþ hakkýnda daha detaylý bilgiler istersek, bu bilgileri
+uygulama içinden paylaþmamýz, bir þekilde dýþ dünyaya afiþe etmemiz ve belli
+aralýklarla bu bilgileri güncellememiz gerekmektedir. Ýþleyiþ bilgilerini dýþ
+dünyaya afiþe edersek, bu bilgileri (tercihen) görsel bir idare programý
+sayesinde izleyebilir, bir ekranda gösterebilir, hattâ ilginç olan þartlar
+üzerinde alarm þartlarý tanýmlamak suretiyle yetkili bir admin kiþisinin
+(þartlar ihlâl edildiðinde) e-mail ile bilgilendirilmesini saðlayabiliriz.
+
+J2EE dünyasýnda bir uygulamanýn iç istatistiklerini paylaþmak ve idare
+bilgilerini dýþ dünyaya göstermek için JMX teknolojisi kullanýlýr. JMX,
+\textbf{J}ava \textbf{M}anagement E\textbf{X}tensions (Java Ýdare Uzantýlarý)
+cümlesinin kýsaltýlmýþýdýr. Bu teknoloji sayesinde bir uygulama, belli bir
+standarta uyan bir MBean class'ýný (bir bean) dýþ dünyaya gösterebilir. Aslýnda
+JMX ile MBean afiþe etmek, daðýtýk nesne teknolojisi ile nesnemizi JVM dýþýndan
+eriþime açmaya çok benzer, ama iki fark (üstünlük) vardýr: Bir: JMX ile
+dýþarýdan baðlanan müþteri, MBean'lerinizin metotlarýný dinamik þekilde
+gezebilir. Ýki: JMX teknolojisi, idare amaçlý teknolojiler arasýnda piyasada
+tutmuþ bir teknolojidir, bu yüzden birçok ticari ve açýk yazýlým ürün
+istatistiklerini JMX üzerinde paylaþmak amacýyla hazýr MBean'ler yazýp
+ürünlerine dahil etmiþlerdir. Böylece uygulamamýz, bu hazýr MBean'leri olduklarý
+gibi alýp, kendi MBean'lerimiz ile beraber yanyana afiþe edebilir. Hibernate
+\PVerb!org.hibernate.jmx.StatisticsService! MBean'i bu þekilde hazýr yazýlmýþ
+bir istatistik nesnesidir.
+
+
+\subsection{JMX ile MBean Yazmak} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{deploymonitor:jmx}
+
+Dýþ dünyaya bilgi vermek için, Kendi MBean'imizi yazmayý öðrenmemiz
+gerekiyor. Ýki türlü MBean stili vardýr, statik MBean ve dinamik MBean. Statik
+MBean ile uygulama sýrasýnda {\em ismi} deðiþmeyecek parametreleri
+sunabiliriz. Meselâ uygulamamýzýn önbellek büyüklüðü, veri tabaný baðlantý
+havuzundaki aktif baðlantýlar, ya da sistemdeki aktif kullanýcý sayýsý gibi
+parametrelerin ne olduðu önceden bilinen parametrelerdir, ve uygulama sýrasýnda,
+ya da makinadan makinaya deðiþmezler.
+
+Dinamik MBean'ler ise, iþleyiþ anýnda ya da makinadan makinaya deðiþebilecek
+parametreleri afiþe etmek için kullanýlýr. Meselâ uygulamamýzýn üzerinde koþtuðu
+makinanýn disklerinin kullaným ölçüleri (IO read/write) gibi bir istatistik
+dinamik MBean gerektirir, çünkü uygulamamýz kurulduktan ve kullanýma baþladýktan
+sonra bir makinaya ek disk, ek iþlemci gibi donaným uzantýlarý yapmak mümkündür;
+Eðer istatistik paylaþma yöntemimiz sabit disk isimleri üzerinden bilgi topluyor
+(ve JMX ile paylaþýyor) olsaydý, yeni disk'ler eklendikten sonra bu ek birimler
+dýþ dünya tarafýndan görülemez olacaktý.
+
+\subsubsection{Statik MBean}
+
+Statik MBean tanýmlamak için sonu \PVerb!MBean! ile biten bir interface, ve bu
+interface'i gerçekleþtiren bir class gerekecektir. Örnek olarak, bir Web
+uygulamasýna yapýlan toplam ziyaretleri gösteren bir MBean yazalým: Esas
+deðerleri taþýyan sayaç, \PVerb!VisitCounter! adlý bir Singleton class'ý olsun.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class VisitCounter   {
+
+    private static VisitCounter instance = null;
+    
+    private VisitCounter() { }
+
+    public static VisitCounter instance() {
+        if (instance == null) {
+            instance = new VisitCounter();
+        } 
+        return instance;
+    }
+    
+    public int visitCount = 0;
+
+    public synchronized void incrementCount() {
+        visitCount++;
+    }
+
+    public int getVisitCount() { return visitCount; }    
+}
+\end{lstlisting}
+Sayaç nesnesi üzerinde arttýrma iþlemini çaðýran bir Web filtresi
+olacaktýr. Ayrýca Java Servlet belirtimine (specification) göre bir Filtre, Web
+isteði baþlamadan önce ve sonra iþletilebilen bir kod parçasýdýr. Biz filtremizi
+her \PVerb!*.do!  çaðrýsý için aktif olacak þekilde ayarlayalým.
+
+\begin{lstlisting}[language=Java, caption=VisitCounterFilter.java]
+public class VisitCounterFilter implements Filter {
+
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
+
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain) throws IOException,
+                                                   ServletException
+    {
+        chain.doFilter(request, response);
+        VisitCounter.instance().incrementCount();
+    }
+
+    public void destroy() { }
+}
+\end{lstlisting}
+\begin{lstlisting}[language=Java, caption=web.xml]
+  <filter>
+    <filter-name>VisitCounterFilter</filter-name>
+    <filter-class>
+      org.mycompany.kitapdemo.util.VisitCounterFilter
+    </filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>VisitCounterFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+\end{lstlisting}
+Sayaç deðerlerini dýþ dünyaya göstermek için, JMX üzerinden kullanabileceðimiz
+bir statik MBean yazalým.
+
+\begin{lstlisting}[language=Java, frame=none]
+public interface UserStatMBean  {
+    public int getTotalRequestCount();
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java, frame=none]
+public class UserStat implements UserStatMBean {
+
+    VisitCounter counter = null;
+    
+    public UserStat() {
+        counter = VisitCounter.instance();
+    }
+    
+    public int getTotalRequestCount() {
+        return counter.getVisitCount();
+    }
+}
+\end{lstlisting}
+Bu MBean'i bir MBeanServer\PVerb!MBeanServer! ile kayýt ettirdiðimiz zaman, dýþ
+dünya \PVerb!totalRequestCount! adlý istatistiði görebilecektir. MBean kayýt
+ettirmek için, projenin baþlangýç kodlarý iþlettiði yerde (Web uygulamalarý için
+\PVerb!AppStartup! class'ý) þu þekilde kodlar iþletmemiz gerekir.
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AppStartup  implements AppStartupMBean {	
+    public void start() throws Exception {
+        ...                
+        MBeanServer mbeanServer =
+            (MBeanServer) MBeanServerFactory.findMBeanServer(null).get(0);
+        LocateRegistry.createRegistry(new Integer(jmxPort).intValue());
+
+        UserStat userStat = new UserStat();
+        ObjectName userStatName = new ObjectName("UserStat:type=UserStat");
+        mbeanServer.registerMBean(userStat, userStatName);
+        ...
+    } 
+}        
+\end{lstlisting}
+Çaðrý \PVerb!findMBeanServer! ile JBoss'un \PVerb!MBeanServer!'ýna eriþmiþ
+oluyoruz. Bu server, MBean'lerin kayýt edildiði ve merkezi bir giriþ noktasý
+saðlayan noktadýr. Eðer yeni bir \PVerb!MBeanServer! yaratmak istesek,
+
+\begin{lstlisting}[language=Java, frame=none]
+MBeanServer mbeanServer = MBeanServerFactory.createMBeanServer();
+\end{lstlisting}
+kullanýrdýk. Metot \PVerb!findMBeanServer! kullanmakla, JBoss'un içinde olan tüm
+diðer MBean'lerin de kayýt ediliði merkezi noktayý almýþ oluyoruz.
+
+JBoss'un kontrol ettiði MBean'leri görmek için, tarayýcýnýzdan
+\PVerb!/jmx-console!  adresine gidebilirsiniz. Þekil
+\ref{deploymonitor:jmx:jmxconsole} üzerinde görüldüðü gibi \PVerb!UserStat! adlý
+yeni MBean'imiz diðer MBean'ler yanýnda servis'e eklenmiþtir. MBean
+baðlantýsýnýn üzerine týklayarak içindeki öðe (attribute) deðerlerini
+görebiliriz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.45}{
+  \includegraphics{./images/jmxconsole_mbean.eps}
+  }
+}
+\caption{\label{deploymonitor:jmx:jmxconsole} UserStat MBean'i JmxConsole'da}
+\end{figure}
+
+\subsubsection{Dinamik MBean}
+Öðeleri deðiþken yapýda olan MBean yazmak için, statik MBean teknolojisini
+kullanamayýz. Burada dinamik MBean'ler imdadýmýza yetiþiyor. Dinamik MBean
+yazmak için genellikle kullanýlan düzen (pattern), deðiþken öðeleri, eklenip
+çýkarmasýna izin verdiði ve anahtar bazlý veri tutabildiði için bir
+\PVerb!HashMap! üzerinde tutmaktýr. Ýþlem anýnda öðe olmasý istenen deðerler,
+dinamik bir þekilde \PVerb!HashMap!'e anahtar olarak verilir.
+
+Bu \PVerb!HashMap!'i JMX üzerinden dýþ dünyaya göstermek için, MBean içinde
+anýnda bir dönüþüm yapmamýz gerekmektedir. Bu dönüþüm, \PVerb!HashMap! anahtar
+(key) deðerini MBean öðe ismine, \PVerb!HashMap! deðerini ise MBean öðe deðeri
+hâline getirmelidir. Bu dönüþüm örneðini \PVerb!StrutsHibPerformance! projesi
+altýndaki \PVerb!org.mycompany.kitapdemo.service.OsStatistics! MBean class'ý
+üzerinde görüyoruz.
+
+Bu kodda, \PVerb!HashMap! üzerinden dinamik MBean yaratmak için kullanýlan kod
+parçasý (``dinamik kýsým'' comment'leri altýnda listelenen bölüm) oldukça
+basmakalýp kodlardýr. Bu kodlarý, dinamiklik eklemek istediðimiz diðer bir
+MBean'e olduðu gibi ekleyebilir, ya da tekrar kullanýmý (reusability) arttýrmak
+amacýyla, dinamiklik kodlarýný bir üst class içinde tutup MBean'imizden miras
+alabiliriz.
+
+\PVerb!OsStatistics! class'ýnýn ihtiyacý olan deðerler, iþletim sisteminde
+gelmektedir. Bu deðerler mikroiþlemci kullaným yüzdeleri, ne kadar boþ bellek
+olduðu gibi iþletim sisteminin takip ettiði bilgilerdir, ve komut satýrýnda
+bunlarý görmek için \PVerb!vmstat! komutunu kullanýyoruz. \PVerb!OsStatistics!,
+\PVerb!vmstat!'in çýktýsýna eriþmek için \PVerb!Runtime.getRuntime().exec()!
+metotu ile \PVerb!vmstat!'i iþletmekte, ve geri gelen metin bazlý çýktýyý
+tarayarak içinden ilgilendiði deðerleri çekip çýkarmaktadýr. \PVerb!vmstat!
+hakkýnda detaylarý \ref{perf:stats:vmstat} bölümünde bulabilirsiniz.
+
+Dinamik MBean'imiz JBoss'a gönderildikten ve ilk deðerlerini topladýktan sonra,
+\PVerb!/jmx-console! ekranýndan Þekil \ref{deploymonitor:jmx:osstatistics}
+üzerindeki gibi gözükecektir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxconsole_mbean_osstatistics.eps}
+  }
+}
+\caption{\label{deploymonitor:jmx:osstatistics} Dinamik MBean Ekraný}
+\end{figure}
+
+Görüldüðü gibi, \PVerb!mem_cache!, \PVerb!mem_swpd! gibi deðerler, direk
+\PVerb!vmstat! çýktýsýndan gelmektedir. \PVerb!mem_swpd!, \PVerb!swpd! öðesinin
+baþýna \PVerb!mem_! eklenmek suretiyle yaratýlmýþtýr. Öðelerin baþýna
+\PVerb!mem! eklenmesinin sebebi, ileride \PVerb!OsStatistics! MBean'ine
+\PVerb!iostat! gibi bir Unix komutunun çýktýsýný da eklersek, parametrelerin
+birbirine karýþmamasý içindir.
+
+\PVerb!OsStatistics! kodlarýnda belli aralýklarla istatistik deðerlerinin
+güncellenmesi için \PVerb!OsStatistics! içinde olan bir Thread mevcuttur. Bu
+Thread'i \PVerb!OsStatictics! nesnesini kayýt ettiðimizde baþlatmamýz gerekir.
+Bunun için uygulama baþlangýç kodlarý içinde (\PVerb!StrutsHibPerformance!
+projesi için \PVerb!AppStartup!)  \PVerb!osStatistics.startThread()! metotunu
+çaðýrmamýz yeterlidir. Baþlangýç kodlarýnýn tamamý þöyle gözükür.
+
+\begin{lstlisting}[language=Java, frame=none]
+mbeanServer = ...
+OsStatistics stats = new OsStatistics();
+stats.startThread();
+ObjectName name = new ObjectName("OsStatistics:type=OsStatistics");
+mbeanServer.registerMBean(stats, name);
+\end{lstlisting}
+
+Ýstatistik deðerlerinde, alýnma stili olarak \PVerb!UserStat! ile
+\PVerb!OsStatistics! arasýnda bir fark vardýr. \PVerb!UserStat!, kendine yapýlan
+tüm \PVerb!get! çaðrýlarýný baþka bir merkezi nesneye aktararak (delegate)
+gerçek deðerlerin ``o baþka yerde'' güncellenmesini
+bekliyordu. \PVerb!OsStatistics!  ise, kendi deðerlerini kendi toplamakta, kendi
+iþlemekte ve kendi muhafaza etmektedir. Bu fark, iki deðiþik MBean güncelleme
+yöntemini sahneye çýkartmasý için böyle hazýrlanmýþtýr, ve MBean'lerin
+dinamikliði ya da statikliði ile bir alâkasý yoktur. Statik bir MBean üzerinde
+de deðerleri toplayan, iþleyen ve muhafaza eden kodlar yazabilirsiniz.
+
+Hazýr yazýlmýþ açýk yazýlým ya da ticari paketlerin MBean'lerini paylaþmak için
+o paketlerin belgelerine bakýnýz. Meselâ Hibernate belgelerinde Hibernate
+istatistik MBean'ini paylaþmak için þunlarýn yapýlmasý söylenmiþtir.
+
+\begin{lstlisting}[language=Java, frame=none]
+mbeanServer = ....
+Hashtable tb = new Hashtable();
+tb.put("type", "statistics");
+tb.put("sessionFactory", "kitapdemo");
+ObjectName on = new ObjectName("hibernate", tb);
+StatisticsService hibstats = new StatisticsService();
+hibstats.setSessionFactory(HibernateSession.getSessionFactory());
+mbeanServer.registerMBean(hibstats, on);
+\end{lstlisting}
+Tüm bu paylasýmlarý yapan örnek \PVerb!AppStartup! kodlarýný,
+\PVerb!StrutsHibPerformance! projesinde bulabilirsiniz.
+
+\subsection{JmxMonitor} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+MBean deðerlerini \PVerb!jmx-console! üzerinden göstermek bir yararlý bir gözlem
+yöntemidir. Fakat gerçek dünyada iþlemekte olan bir sistemde, bize sunulan
+istatistiklere sadece çýplak gözle bakmaktan daha fazla yeteneklere ihtiyacýmýz
+vardýr. Düþünelim ki, \PVerb!OsStatistics!'den gelen makinamýnýn kullanýlmayan
+bellek kapasitesi (\PVerb!mem_free!) belli bir deðer altýna düþerse,
+haberimizin olmasýný istiyoruz. Ya da, statik MBean örneði olarak yazdýðýmýz
+\PVerb!UserStat!  nesnesindeki \PVerb!totalRequestCount!, belli bir deðeri
+geçtiðinde bir alarm durumu olmalý ve admin e-mail ile haberdar edilmelidir. Bu
+tür izleme iþlemlerini nasýl yapacaðýz?
+
+JmxMonitor\footnote{http://jmxmonitor.sourceforge.net} açýk yazýlým projesi, bu
+tür ihtiyaçlarý karþýlamak için yazýlmýþtýr. Eðer bir uygulamada afiþe edilmiþ
+MBean'ler var ise, bu MBean'ler üzerindeki her öðe için, JmxMonitor'de bu öðeyi
+gözleyen, ve kullanýcýnýn tanýmladýðý bir ve ya daha fazla eþik deðerini
+(threshold) ya da eþitlik þartlarýna uyan durumlarý üzerinde bir alarm þartý
+tanýmlayabiliriz. Alarm þartlarý ortaya çýkarsa JmxMonitor e-mail ve HTML
+önyüzden durumu admin'e bildirilecektir (JmxMonitor kullanýcýsýnýn admin
+görevlisi olduðunu farz ediyoruz).
+
+JmxMonitor kodlarý içine hiçbir MBean isminin gömülmesi (hardcode)
+gerekmez. JmxMonitor, JMX teknolojisinin Java Reflection benzeri dinamik keþif
+özelliðini kullanarak, önce bir \PVerb!MBeanServer! üzerindeki tüm MBean'leri
+alýr daha sonra bu MBean'lerin tüm ögelerini dinamik olarak keþfeder. MBean ve
+öðe listesi kullanýcýya sunulur ve kullanýcý, öðelerin arasýndan
+ilgilendiklerini seçerek üzerlerinde eþik ya da eþitlik þartlarý tanýmlar.
+
+Bu potansiyel alarm þartlarý ana ekran üzerinde listelenir, ve ileri bir
+zamanda, eðer uyan bir eþitlik ya da geçilen bir eþik þartý olursa, ana ekranda
+bu alarm yanýp sönmeye baþlayacaktýr. Ayrýca admin'e e-mail ile durum
+bildirilir.
+
+JmxMonitor Web bazlý bir uygulamadýr. Web uygulamasýnýn içinden
+(\PVerb!JmxMonitorStartup!) baþlatýlan ve alarm deðerlerini kontrol eden bir
+Thread, belli aralýklarla sürekli kontrol yapýyor olacaktýor . Ayrýca JmxMonitor
+Adaptor düzenini (pattern) kullanarak, istatistik toplamak için kullandýðý
+baðlantý teknolojisini deðiþtirmesi de mümkündür. Meselâ paket içinden çýkan
+adaptör \PVerb!JmxFacadeJdk15! class'ýdýr, fakat JmxMonitor'u uzatmak isteyen
+bir programcý, soket üzerinden bilgi toplayan bir adaptör yazabilir. Bu socket
+adaptörü, servis tarafýndan yine socket üzerinden bilgi afiþe eden bir makina,
+port ikilisine baðlanacak, ve beklediði format'taki deðerleri alarak admin'e
+eþik ve eþitlik seçimi için sunacaktýr. Kendi yazdýðýnýz (custom) adaptörün
+\PVerb!JmxFacade! interface'ini gerçekleþtirmesi gerekmektedir. Buna göre
+her adaptörün;
+
+\begin{enumerate}
+   \item Verilen makina ve port ikilisine baðlanmasý mümkün olmalýdýr
+   (\PVerb!connect)!
+   
+   \item Ýstatistik sunan servisteki tüm ``ana birimler'' ve bu birimler ``alt
+   birimlerinin'' listesi alýnabilir olmalýdýr (\PVerb!retrieveAllObjectNames!)
+   
+   \item Her ölçümün ``gerçek deðerini'' almak mümkün olmalýdýr
+   \PVerb!getLatestValue!)
+   
+\end{enumerate}
+Altta bir adaptörün sahip olmasý gereken metotlar gözükmektedir. Her adaptöre
+uymayan (üstteki metotlar haricinde) metotlardan bazýlarý, þartlara göre boþ
+býrakýlabilir.
+
+\begin{lstlisting}[language=Java, frame=none]
+public interface JmxFacade   {
+    public Machine getMachine();
+    public void connect(Machine machine) ..
+    public Map retrieveAllObjectNames() ..
+    public String getLatestValue(ObjectName name, String attribute) ..
+    public void refreshValues() ..
+}
+\end{lstlisting}
+
+\subsubsection{Servis Tarafý}
+
+JmxMonitor'un \PVerb!JmxFacadeAdaptor15! adaptörü ile bir \PVerb!MBeanServer!'a
+eriþebilmesi için, o servisin JMX MBean'lerini RMI üzerinden sunmasý
+gerekir. MX4J paketi bu tür bir RMI köprüsünü sunmaktadýr. Kullanmak için
+\PVerb!AppStartup! içinde bulduðumuz ya da yenisini yarattýðýmýz
+\PVerb!MBeanServer! üzerinde bu  köprünün nasýl kullanýlacaðýný belirtmemiz
+gerekecektir. 
+
+\begin{lstlisting}[language=Java, frame=none]
+public class AppStartup  implements AppStartupMBean {	
+    public void start() throws Exception {
+        ...
+        mbeanServer = ... // MBeanServer'ý al ya da yarat      
+        ...                
+        final String localRmiRegistryHost = "localhost";
+        final String localRmiRegistryPort = "42004";
+        final String jmxHost = "localhost";
+        final String jmxPort = "44334";
+        final String jmxUrl = "/kitapdemo";
+  
+        JMXServiceURL url =
+            new JMXServiceURL("service:jmx:rmi://"
+                              +
+                              localRmiRegistryHost
+                              +
+                              ":"
+                              +
+                              localRmiRegistryPort
+                              +
+                              "/jndi/rmi://"
+                              +
+                              jmxHost
+                              +
+                              ":"
+                              +
+                              jmxPort
+                              +
+                              jmxUrl);
+
+        (JMXConnectorServerFactory.
+         newJMXConnectorServer(url,null,mbeanServer)).start();
+        ...
+        ...
+\end{lstlisting}
+Bu baþlatým komutu ile bizim atadýðýmýz bir RMI URL'i olan bir JMX servisi
+yaratmýþ oluyoruz. Uzaktan baðlanmak isteyenler JMX RMI çaðrýsýný þöyle bir
+URL'i oluþturarak gerçekleþtireceklerdir:
+
+\begin{lstlisting}[language=XML, frame=none]
+service:jmx:rmi://localhost:42004/jndi/rmi://localhost:44334/kitapdemo
+\end{lstlisting}
+
+Bu URL'in iþleyip iþlemediðini anlamak için en çabuk test þudur: JDK 1.5 içinde
+paketten çýkan JConsole adýnda bir uygulama mevcuttur. Bu uygulama, ayný
+JmxMonitor gibi RMI üzerinden dinamik olarak MBean'leri keþfeder ve gösterir
+(fakat JmxMonitor gibi alarm þartlarý koymanýza izin vermez). Bu uygulamayý
+\PVerb!JDK_1_5/bin/jconsole! komutunu kullanarak baþlatabiliriz. Ýlk çýkan baðlantý
+diyalog kutusunda, \PVerb!Advanced! tab'ine giderek, üstte görülen URL'i (tabii
+servisimizi de baþlattýktan sonra) gireriz. Þekil
+\ref{deploymonitor:jmxmonitor:jconsole} üzerindeki ekran görülecektir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jconsole.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:jconsole} JConsole}
+\end{figure}
+Dikkat edersek, uygulamamýzdan afiþe ettiðimiz \PVerb!UserStat!,
+\PVerb!OsStatistics! ve Hibernate istatikleri dinamik olarak keþfedilmiþ ve
+listelenmiþtir.
+
+
+\subsubsection{JmxMonitor Kurmak}
+JmxMonitor, altyapý olarak kitabýmýzda sunulan \PVerb!StrutsHibxx! projeleri ile
+ayný teknik mimariye sahiptir. Bu sebeple indirmesi, kurulmasý için yapýlmasý
+gerekenler, \ref{install:samples:web} bölümündekiler ile aynýdýr. Ek olarak,
+baþlangýç verilerini yüklemek için \PVerb!JMXMONITOR/src/sql/init_data.sql!
+script'ini MySQL (ya da diðer) veri tabanýnýz üzerinde iþletmeniz gereklidir.
+
+Bundan sonra, JBoss servisinizi baþlatýn ve \PVerb!localhost:8080/jmxmonitor!
+adresini ziyaret edin. JmxMonitor ile bir \PVerb!MBeanServer!'a baðlanmak için,
+o servisin makina ismi ve port numarasýna girmemiz gerekiyor. Bu alanlar için
+örnek bazý deðerler Þekil \ref{deploymonitor:jmxmonitor:main} üzerindeki gibi
+gözükecektir.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_1.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:main}  Giriþ Ekraný}
+\end{figure}
+
+Alanlar için girilmesi gereken deðerleri þöyle bulmamýz gerekir: Bir
+\PVerb!MBeanServer!'a bir RMI köprüsü uyguladýðýmýzda (daha önce
+\PVerb!AppStartup! içinde örneðini gösterdiðimiz gibi), þu parametreleri
+kullanmýþtýk
+
+\begin{lstlisting}[language=Java, frame=none]
+final String localRmiRegistryHost = "localhost";
+final String localRmiRegistryPort = "42004";
+final String jmxHost = "localhost";
+final String jmxPort = "44334";
+final String jmxUrl = "/kitapdemo";
+\end{lstlisting}
+Bu parametrelerden \PVerb!jmxUrl!, JmxMonitor'ün URL alanýna, \PVerb!jmxPort!,
+port alanýna, \PVerb!jmxHost!'un ise host alanýna girilmesi gerekmektedir. Bu
+deðerleri girip, \PVerb!Add Machine! düðmesine týklarsak, JmxMonitor bu servisi
+listesine ekleyecektir (Þekil \ref{deploymonitor:jmxmonitor:servisadded}).
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_2.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:servisadded} Servis Eklendi}
+\end{figure}
+
+Listelenen bir servis üzerine týklarsak, JmxMonitor servise RMI üzerinden
+baðlanmaya çalýþacak, ve bir sonraki ekranda (Þekil
+\ref{deploymonitor:jmxmonitor:mbeanlist}) bu servisin tüm MBean'lerinin
+listesini bize sunacaktýr.
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_3.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:mbeanlist} MBean Listesi}
+\end{figure}
+Ayný JConsole örneðinde olduðu gibi, kendi yazmýþ olduðumuz MBean'leri de bu
+ekranda görmemiz mümkündür. Bu MBean'lerden biri için bir alarm þartý tanýmlamak
+için, meselâ \PVerb!OsStatistics! MBean'inindeki bir öðe için, ilk önce öðelerin
+listesini görmemiz gerekiyor. Öðe listesini almak için
+\PVerb!OsStatistics! baðlantýsýný týklamamýz lâzým.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_4.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:attrlist} MBean Ýçindeki Öðeler}
+\end{figure}
+
+Þekil \ref{deploymonitor:jmxmonitor:attrlist} üzerinde týklamadan sonra tüm
+öðeleri görüyoruz. Bu öðelerden biri üstünde bir alarm þartý yaratmak istersek,
+öðenin üzerindke týklamamýz gerekecek. Örnek olarak \PVerb!OsStatistics!
+altýndaki \PVerb!mem_free! öðesi üzerinde alarm yaratalým, týklamadan sonra,
+Þekil \ref{deploymonitor:jmxmonitor:alarmadd} üzerindeki ekraný görürüz. 
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_5.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:alarmadd} Alarm Ekleme Ekraný}
+\end{figure}
+
+Bu ekranda alarmýn \PVerb!mem_free! gerçek deðeri 640000 altýnda düþerse, bir
+alarm oluþmasýný istiyoruz. O zaman \PVerb!Comparator! yâni karþýlaþtýrýcý
+olarak \PVerb!<!  iþaretini seçeriz, ve deðer olarak 640000 deðerini
+\PVerb!Threshold! yâni eþik deðeri kutusuna gireriz. Alarm eklendikten sonra
+Þekil \ref{deploymonitor:jmxmonitor:alarmadded} üzerinde görulen ekrana
+geliriz. Eklenmiþ alarmý silmek için, alarmýn yanýndaki \PVerb!Delete!
+baðlantýsýna týklayabilirsiniz.
+
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_6.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:alarmadded} Alarm Eklendi}
+\end{figure}
+
+Bu þekilde devam ederek birden fazla alarm eklememiz mümkündür. Alarm eklememiz
+bitince, ana sayfaya dönebiliriz. Ana sayfaya dönünce eklediðimiz alarmlarýn
+sayfanýn altýnda listelendiðini göreceðiz (Þekil
+\ref{deploymonitor:jmxmonitor:mainwithalarm}).
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_7.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:mainwithalarm} Ana Sayfaya Dönüþ -
+  Alarm Gösteriliyor}
+\end{figure}
+
+Artýk yapmamýz gereken tek iþlem, izlemekte olduðumuz makina ve port ikilisi
+üzerinde yapýlacak izleme/gözetlemeyi iþlemini aktif hâle getirmektir. Böylece
+JmxMonitor, üzerinde alarm olan öðelerin en son deðerlerini periyodik bir
+þekilde alarak, eþik veya eþitlik þartlarýna uyup uyulmadýðýný kontrol
+edebilecektir. Gözetlemeyi aktif hâle getirmek için, makina ve port ikilisi
+yanýndaki \PVerb!Active! seçeneðine týklarýz. Aktif hâle getirdiðimiz birimin
+iþareti, yeþile dönecektir (Þekil \ref{deploymonitor:jmxmonitor:activated}); Bu
+renk, o makina ve port'un izlenmeye baþladýðýna bir iþarettir. Eðer izlemeyi
+durdurmak istiyorsak, \PVerb!DeActivate! seçeneðini kullanabiliriz.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/jmxmonitor_8.eps}
+  }
+}
+\caption{\label{deploymonitor:jmxmonitor:activated} Aktif Olan bir
+  Makina/Port Ýkilisi}
+\end{figure}
+

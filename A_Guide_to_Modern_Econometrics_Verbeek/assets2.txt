@@ -1,0 +1,44 @@
+The file assets2 contains stock market data from January 1960 to December 2003 
+(T=528). All (excess) returns are in % per month. The riskfree rate (rf) is 
+included, to allow computation of excess returns. 
+Note: Exercise 2.3 only requires data until December 2002.
+
+
+The following variables are available:
+rmrf smb hml umd rf r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 using assets2.dat
+
+
+Variable labels:
+rmrf: excess returns market portfolio (market return minus rf)
+smb: return on small stock minus return on large stock portfolio (small minus big)
+hml: return on value stock minus return on growth stock portfolio (value stocks have a high ratio 
+     of book-to-market value of equity, growth stocks have relatively low values of the book-to-market ratio)
+umd: return on high prior return portfolio minus return on low prior return portfolio.
+rf:  risk free rate (T-bill)
+r1-r10: return on value-weighted size-based portfolios (deciles), 
+r1: smallest firms, ... r10: largest firms
+
+Sample statistics:
+
+
+    Variable |     Obs        Mean   Std. Dev.       Min        Max
+-------------+-----------------------------------------------------
+        rmrf |     528     .458428   4.474007     -23.13      16.05
+         smb |     528    .2166288   3.189462     -16.62      21.83
+         hml |     528    .4305492   2.907817     -12.65      13.65
+         umd |     528    .8731629   3.994523     -24.96      18.38
+          rf |     528    .4646023   .2255489        .07       1.35
+          r1 |     528    1.255644   6.355929     -28.76         29
+          r2 |     528    1.190246   6.247924     -30.01      28.41
+          r3 |     528     1.19714   5.977604     -28.87      25.73
+          r4 |     528    1.140417   5.777226     -29.47      24.16
+          r5 |     528    1.158902   5.545943      -27.7      24.96
+          r6 |     528    1.057652   5.234312     -26.06      20.83
+          r7 |     528    1.105587   5.125363     -26.01      22.46
+          r8 |     528    1.070739   5.010842     -24.03      18.97
+          r9 |     528    .9992803   4.575618     -22.32      18.12
+         r10 |     528     .879678    4.30588     -19.73         18
+
+Note: most of the above data are from Kenneth French's data library at
+http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library.
+Computational details can be found on this webpage too. 

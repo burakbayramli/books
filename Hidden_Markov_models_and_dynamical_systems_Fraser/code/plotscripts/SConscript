@@ -1,0 +1,127 @@
+'''plotscripts/SConscript
+
+Scripts in this directory plot data that other code produced.  They
+should not write anything except the resulting plots.
+'''
+Import('DDL DDA DDS RDA RD FIG KEY BUILD2')
+
+from os.path import join
+root = lambda x: join(GetLaunchDir(), x)
+lp_hr = lambda x: DDA(join('low_pass_heart_rate', x))
+r_times = lambda x: DDA(join('r_times', x))
+resp = lambda x: DDA(join('respiration', x))
+
+env = Environment()
+env.args = {}
+
+target = tuple(FIG(x) for x in
+               ('a03erA.pdf', 'a03erN.pdf', 'a03erHR.pdf', 'ApneaNLD.pdf'))
+source = ('apnea_ts_plots.py', DDA('a03er_seg')) + tuple(
+    lp_hr(x) for x in ('a03', 'a01', 'a12'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('sgram.pdf'),)
+source = ('apnea_sgram.py', r_times('a11'), lp_hr('a11'),
+          RDA('summary_of_training'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('LDA1.pdf'), FIG('LDA2.pdf'))
+source = ('LDA.py',) + tuple(DDA(x) for x in
+                       ('mean.resp', 'AA.resp', 'AN.resp', 'C.resp'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('pass1.pdf'),)
+source = ('class1.py', DDA('pass1_report'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('LikeLor.pdf'),)
+source = ('like_lor.py', DDS('H_study'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('pf_H.pdf'),)
+source = ('PFsurvey.py', DDA('pf_H'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('TSintro.pdf'),)
+source = ('TSintro.py', DDS('TSintro_fine'),  DDS('TSintro_qt'),
+          DDS('TSintro_qtx'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('STSintro.pdf'),)
+source = ('STSintro.py', DDS('state_sequence'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('Statesintro.pdf'),)
+source = ['stateplot.py', DDS('states')]+[DDS('state%s'%x) for x in range(12)]
+env.args[KEY(target)] = (DDS(''), 'state', target[0])
+env.Command(target, source, BUILD2)
+
+target = (FIG('logo.jpg'),) # Small logo for google code
+source = ['logoplot.py', DDS('states')]+[DDS('state%s'%x) for x in range(12)]
+env.args[KEY(target)] = (DDS(''), 'state', target[0])
+env.Command(target, source, BUILD2)
+
+target = (FIG('VARGstates.pdf'),)
+source = ['stateplot.py', DDS('states')]+[DDS('varg_state%s'%x)
+                                          for x in range(12)]
+env.args[KEY(target)] = (DDS(''), 'varg_state', target[0])
+env.Command(target, source, BUILD2)
+
+roots = ('LaserLP5', 'LaserForecast', 'LaserHist', 'LaserLogLike',
+         'LaserStates')
+target = tuple(FIG(x+'.pdf') for x in roots)
+source = ('laser.py',) + tuple(DDL(x) for x in roots)
+env.args[KEY(target)] = tuple('--%s'%x for x in roots)+(DDL(''), FIG(''))
+env.Command(target, source, BUILD2)
+
+target = (FIG('EM.pdf'),)
+source = ['EM.py']
+env.args[KEY(target)] = (FIG('EM.pdf'),)
+env.Command(target, source, BUILD2)
+
+target = (FIG('TrainChar.pdf'),)
+source = ('TrainChar.py', DDS('TrainChar'))
+env.args[KEY(target)] = (source[-1], target[0])
+env.Command(target, source, BUILD2)
+
+target = (FIG('benettin.pdf'),)
+source = ('benettin.py', DDS('benettin'))
+env.args[KEY(target)] = (source[-1], target[0])
+env.Command(target, source, BUILD2)
+
+target = (FIG('ToyTS1.pdf'),)
+source = ('ToyTS1.py', DDS('ToyTS1'))
+env.args[KEY(target)] = (source[-1], target[0])
+env.Command(target, source, BUILD2)
+
+target = (FIG('ToyH.pdf'),)
+source = ('ToyH.py', DDS('Hsurvey'), DDS('HtauS'))
+env.args[KEY(target)] = source[1:] + (target[0],)
+env.Command(target, source, BUILD2)
+
+target = (FIG('ToyStretch.pdf'),)
+source = ('ToyStretch.py', RD('Save_Hview_T_118'), RD('Save_Hview_T_119'))
+env.args[KEY(target)] = source[1:] + (target[0],)
+env.Command(target, source, BUILD2)
+
+target = (FIG('GaussMix.pdf'),)
+source = ('GaussMix.py', DDS('em.pickle'))
+env.args[KEY(target)] = source[1:] + target
+env.Command(target, source, BUILD2)
+
+target = (FIG('SGO_b.pdf'),FIG('SGO_c.pdf'),FIG('SGO_d.pdf'))
+source = ('ScalarGaussian.py', DDS('SGO_sim'))
+env.args[KEY(target)] = (source[-1], FIG(''))
+env.Command(target, source, BUILD2)
+
+#Local Variables:
+#mode:python
+#End:

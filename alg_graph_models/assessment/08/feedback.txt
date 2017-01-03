@@ -1,0 +1,73 @@
+Model answers are available at:
+
+http://www-users.cs.york.ac.uk/~jc/teaching/agm/assessment/08/agm1.py
+http://www-users.cs.york.ac.uk/~jc/teaching/agm/assessment/08/agm2.py
+http://www-users.cs.york.ac.uk/~jc/teaching/agm/assessment/08/agm3.py
+
+General
+*******
+
+The only general point is to be careful to use "its" and "it's"
+appropriately. I suspect people reading job applications take a dim
+view of getting them wrong. (Don't worry I didn't dock any marks for
+this!)
+
+
+Question 1
+**********
+
+Here you just need to recall the characterisation of conditional
+independence in terms of moralised ancestral graphs and then just
+implement using the appropriate gPy methods.
+
+Question 2
+**********
+
+The problem reduces to finding a minimal separator in the appropriate
+moralised ancestral graph. As the question states, 'minimal' means as
+small as possible. In the literature a 'minimal separator' is
+sometimes used to define a separator which contains no other separator
+as a subset (but is not necessarily as small as possible). Some
+students found algorithms for finding minimal separators in this
+second sense, and thus solved the wrong problem. The lesson here is to
+check the definition of words in papers you use. (This issue comes up
+quite often in research; be particularly careful with the phrase
+'causal network'!)
+
+Many students iterated through all possible candidate separators
+checking whether a candidate is indeed a separator using the 'ci'
+function from question 1. This is at least guaranteed to find the
+right answer, but it is slow. Evidently if smaller sets are inspected
+before bigger ones this process can stop as soon as a separator is
+returned. Other students varied this approach with more intelligent
+search methods.
+
+The key to this problem is to use 'maximum flow' techniques and this
+requires finding your way to the right papers. (Inventing these
+techniques from scratch is unrealistic, I certainly wouldn't manage
+it.) I based my answer on the approach of Acid and de Campos (although
+mine is a bit simpler). The basic idea is to imagine shipping goods
+between start and end vertices in the graph - and then looking for the
+'bottleneck'. This will be a minimal separator. It's a bit tricky
+since in 'maximum flow' techniques a bottleneck is a collection of
+edges not vertices, so we have to recode vertices as edges.
+
+Question 3
+**********
+
+The distribution required is what is known as an Ising model. For each
+pair of neighbouring squares one creates a factor which has a high
+value when the squares are in different states. It's a good idea to
+'wrap round' the checkerboard, so that eg the top row neighbours the
+bottom.
+
+The distribution so defined has its probability concentrated on the
+two possible checkerboards (and these two states have equal
+probability). For a sampling technique to be successful it should
+visit these two states equally often. Gibbs sampling does not do
+this. It finds its way to one of the checkerboards and stays there
+with virtually no chance of visiting the other.
+
+The key point here is that the goal of Gibbs sampling is to converge
+to a *distribution* not to some particular state.
+

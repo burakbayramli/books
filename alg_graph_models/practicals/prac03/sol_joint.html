@@ -1,0 +1,21 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../teaching.css" />
+      <title>Joint distributions and Bayes nets</title>
+  </head>
+<body>
+<p>
+P(A,B,C,D,E,F) = P(F)P(E|B,D,F)P(D|A)P(C|B)P(B|A)P(A)
+    </p>
+<p>
+The parent-less nodes (A and F) only require a single probability, since eg if we store P(A=yes), we can work out P(A=no) as 1-P(A=yes). B,C and D all require 2 conditional probabilities. For example, for B we need P(B=yes|A=yes) and P(B=yes|A=no). We can work out P(B=no|A=yes) and P(B=no|A=no) by subtracting from 1 as before. Finally E requires 8 conditional probabilities
+    </p>
+    <p>In total we need 1+2+2+2+8+1 = 16 probabilities.
+    </p>
+<p>
+If we could not assume the given Bayes net structure, we would need
+      2^6 - 1 2*2*2*2*2*2-1 = 63 probabilities. 
+    </p></body>

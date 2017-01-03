@@ -1,0 +1,115 @@
+% 2008-01-31 E6820 acoustics lecture matlab demos
+% dpwe@ee.columbia.edu
+
+% First, simple traveling wave simulation
+help travel1.m
+%  y = travel1(l,d,r,x,v)  Visualize reflected travelling wave in waveguide
+%     l is the length of each waveguide in samples.  
+%     d is the number of output samples to produce (default 10000).
+%     r is the refelection FIR at the far end (default [-1])
+%     x is optional initial input waveform ([1] by default)
+%     v if present and zero suppresses plotting.
+%  2001-02-01 dpwe@ee.columbia.edu.  Based on pluck1a.m
+
+y = travel1(20,200,[-1],hanning(5)');  % 5 pt pulse, fixed end, 20 pt len
+
+% Maybe have some 'dispersion' in reflection
+y = travel1(20,200,[-.25 -.5 -.25],[1]);
+
+% Waves travelling in both directions...
+y = travel1(20,200,[-1],[1 0 0 0 0 0 0 0 0 0 1]);
+
+
+% Animations of sinusoidal standing waves
+help sintwavemov
+%  m = sintwavemov(k,w,z,l,n)  Build a movie of sin travelling wave interference
+%     For a pair of opposite-moving sinusoidal travelling waves of 
+%     temporal frequency w and spatial frequency k where the ratio 
+%     of forward to backward waves at *l* is z (complex), make n 
+%     plots of l points of the wave, both forward, backward, sum and 
+%     difference.  Record each plot in a movie, returned in m.
+%  2001-02-02 dpwe@ee.columbia.edu e6820 acous
+
+% 20 steps for one cycle physically, 40 time steps per cycle, open end
+subplot(211)
+m = sintwavemov(2*pi/20,2*pi/40,-1,33,40);
+movie(m,10)
+% You can see waves traveling each way 
+%  - the sum (blue) is the pressure (zero at end)
+%  - the diff (red) is the volume velocity u(x,t)
+
+
+% Vowel simulation by simple pole pairs
+% e.g. ah = 500 1500 2500
+wc = pi/4000;  % so f*wc is normalized angular frq of pole
+r = 0.97;
+r2 = r*r;
+aah = conv(conv([1 -2*r*cos(500*wc) r2],[1 -2*r*cos(1500*wc) r2]), [1 -2*r*cos(2500*wc) r2]);
+freqz(1,aah,512,8000)
+pt = (rem(1:8000,80)==0);
+vah = filter(1,aah,pt);
+soundsc(vah)
+
+% 'ee' has formants at 250 Hz, 2300 Hz (say)
+aee = conv([1 -2*r*cos(250*wc) r2],[1 -2*r*cos(2300*wc) r2]);
+freqz(1,aee,512,8000)
+vee = filter(1,aee,pt);
+soundsc(vee)
+soundsc(vah)
+
+% oo around 330, 900
+aoo = conv([1 -2*r*cos(wc*330) r2],[1 -2*r*cos(wc*900) r2]);
+freqz(1,aoo,512,8000)
+voo = filter(1,aoo,pt);
+soundsc(voo)
+
+soundsc([vah,voo/8,vee])
+% Sounds OK... oo is louder because formants both low-frequency
+
+
+% Plucked string simulation
+help pluck1a
+%  y = pluck1a(l,d,r,x,v) Plucked string synthesis via pair of waveguide 'rails'
+%     l is the length of each waveguide in samples.  
+%     d is the number of output samples to produce (default 10000).
+%     r is the refelection FIR at the far end (default [-.25 -.5 -.25] if empty)
+%     x is optional initial shape to plucked string (triangular by default)
+%       if x is a scalar value, it is taken as the pluck point as a
+%       proportion of the string length (default 0.5).
+%     v if present and nonzero plots waves & string at each sample time.
+%  2001-02-01 dpwe@ee.columbia.edu.  Based on Julius Smith's 1992 CMJ paper.
+
+x = pluck1a(40,10000);
+soundsc(x)
+subplot(211)
+specgram(x,512,8000)
+% Odd harmonics only - plucked in the middle
+
+% Frequency-dependent decay reflects gain of reflection...
+freqz([.25 .5 .25],1,512,8000)
+
+% Pure loss still decays, but no coloration
+x0 = pluck1a(40,10000,[0 -.97 0]);
+soundsc(x0)
+subplot(211)
+specgram(x0,512,8000)
+
+plot(x0(1:300))
+subplot(212)
+plot(x(1:300))
+% output is actually 'loss' at bridge - high-pass for disperse filt
+
+% Pluck point affects initial excitation, hence harmonics
+x2 = pluck1a(40,10000, [], 0.2);
+subplot(211)
+specgram(x,512,8000)
+subplot(212)
+specgram(x2,512,8000)
+
+soundsc(x2)
+soundsc(x)
+
+% Visualization of string behavior
+x1 = pluck1a(40,10000, [], 0.5,1);
+
+% Notice how resultant wave (red) is fixed at ends, but 'unfolds' each way

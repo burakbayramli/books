@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+
+import numpy as N
+
+import cPickle as pickle
+import rangeonly
+import rangebearing
+import pylab as P
+import rangebearing
+import rangeonly
+import plot
+from data import ds1, ds1_beacons
+
+# Data wrappers
+def range_state_generator(data):
+  for row in data:
+    yield row['dt'], N.array([row['v'], row['w']]), row['z'][0,:].T
+
+def rangebearing_state_generator(data):
+  for row in data:
+    yield row['dt'], N.array([row['v'], row['w']]), row['z'].T
+
+def main(run_rangeonly=True): 
+  if run_rangeonly:
+    state_generator = range_state_generator(ds1)
+    FastSLAMClass = rangeonly.FastSLAM
+  else:
+    state_generator = rangebearing_state_generator(ds1)
+    FastSLAMClass = rangebearing.FastSLAM
+
+  # Initialize Plotting
+  field       = plot.Field((-1.25, 4.75), (-1, 6))
+  # P.ioff() # Uncomment this line to prevent rendering plot to screen
+  beacon_true = plot.Beacons(field, color='b')
+  robot_true  = plot.Robot(field, color='b')
+  # Create beacon plotters for the top 4 particles
+  beacon_est = []
+  for c in 'cymg':
+    beacon_est.append( plot.Beacons(field, scale=4., color=c) )
+  robot_est   = plot.Particles(field, color='r')
+  # Draw the actual beacons, since they don't move.
+  beacon_true.draw(ds1_beacons, None)
+
+  robot = FastSLAMClass(state_generator, 30)
+  # Initialize particles so that output lines up better in live time.
+  robot.setall(N.array([0, 0, N.pi/2.]))
+
+  # Now step through
+  for i, particles in enumerate(robot.run()):
+    # Sort in descending weight order.
+    particles = N.sort(particles, order='w')[::-1]
+    # Plotting / printing
+    print "%d      \r" % i,
+    sys.stdout.flush()
+    if i%5 == 0: 
+      robot_est.draw(particles['x'].T)
+      robot_true.draw(ds1['true'][i,:])
+      # Draw beacons for top 4 particles
+      for j in range(len(beacon_est)):
+        bcns = particles[j]['features'].values()
+        bcnpos = N.array([bcn.X for bcn in bcns])
+        bcncov = [bcn.S for bcn in bcns]
+        beacon_est[j].draw(bcnpos, bcncov)
+      field.refresh()
+    # Save the current frame
+    #P.savefig("output/%05d.png" % i)
+    P.show()
+
+  ### Write out final figure + data ###
+  #pickled = open('output/%s.pkl' % 'ro' if range_only else 'rb' , 'wb')
+  pickled = open('ro.pkl', 'wb')
+  pickle.dump(particles, pickled, -1)
+  pickled.close()
+
+if __name__ == '__main__':
+  if len(sys.argv) < 2:
+    print """Usage: %s ro|rb
+    ro == rangeonly, rb == range and bearing.""" % sys.argv[0]
+    sys.exit(1)
+  else:
+    main(sys.argv[1] == "ro")

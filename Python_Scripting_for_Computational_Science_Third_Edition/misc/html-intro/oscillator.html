@@ -1,0 +1,177 @@
+<!-- 
+This is an example on how to write Web pages in direct HTML code.
+By reading the HTML source along with looking at the result in
+a browser, you should be able to learn basic HTML coding in 
+30 minutes! You can also use the present page as template for
+your own (simple) pages. The following HTML elements are covered:
+
+   * section headings
+   * hypertext links (within the document and to external URLs)
+   * lists
+   * tables
+   * images
+   * font specifications
+
+This instructive page is made by Tom Thorvaldsen and Hans Petter
+Langtangen, Department of Informatics, University of Oslo.  
+-->
+
+<HTML>      <!-- Standard opening of HTML documents. -->
+<HEAD>
+<!-- Title appearing in the frame of your browser window: -->
+<TITLE>Learn basic HTML in 30 minutes </TITLE>
+
+</HEAD>
+<BODY>      <!-- <BODY BGCOLOR="yellow"> forces a yellow background. -->
+
+<!-- Main section headings appear inside <h1>....</h1>,
+     subsection headings are written inside <h2>...</h2>,
+     subsubsection headings are typeset with <h3>...</h3>,
+     and so on. -->
+
+<!-- HTML is case in-sensitive so <h1> is the same as <H1>. -->
+
+<h1>Simulation of an oscillating system</h1>  <!-- main section -->
+
+<!-- Links are created as <a href="link-address">text</a>: -->
+[ <a href="#problemspec">problem specification</a>]
+[ <a href="#parametervals">parameter values</a>]
+[ <a href="#results">results</a>]
+<!-- Internal points to link to are specified like
+     <a name="problemspec"></a>, often embedded in 
+     section headings. -->
+<!-- Example of an external link: -->
+[ <a href="http://www.w3.org/">general HTML info</a> ]
+     
+
+<a name="problemspec"></a> <!-- name for internal links -->
+
+<h2><i>Problem specification:</i></h2>        <!-- subsection -->
+<!-- The I tag, like in <i>some text</i> gives italic font.
+     Similar tags are EM (emphasize, same as I) and  B (bold). -->
+
+We concider an oscillating system, such as a pendulum, a moored ship, 
+or a jumping washing machine. The system is described by the following
+second-order linear differential equation with two initial conditions:
+<br> <!-- The BR tag means line break and can be used to
+          introduce vertical space in a page. -->
+<br>
+<bq> <!-- begin equations -->
+<center>
+my,<sub>tt</sub>  + by,<sub>t</sub> + cf(y) = Acos(wt)
+<!-- The SUB tag enables subscripting. -->
+<br>
+<br>
+y(0) = y0
+<br>
+<br>
+y,<sub>t</sub>(0) = 0
+</center>
+</bq> <!-- end of equations -->
+<br>
+<br>
+
+The physical interpretation of the terms are as follows:
+<ul>  <!-- Start unordered (bullet) list. 
+           Ordered (or enumerated) lists use the OL tag. -->
+  <li>  <!-- list item -->
+  The first term reflects the mass times the acceleration of the system,
+  </li>
+  <li>  <!-- next item -->
+  the second term, bdy/dt, denotes a damping force, 
+  </li>
+  <li>
+  cf(y) is a restoring force, e.g., a spring, while 
+  </li>
+  <li>
+  Acos(wt) is an external force applied to the system.
+  </li>
+</ul> <!-- end of list -->
+
+A sketch of the system is given below.
+<br>
+<br>
+<center>
+<!-- Images are inserted using the IMG tag. -->
+<IMG SRC="./sketch.gif" ALT="Sketch of the system.">
+<br>
+<CAPTION><i>Sketch of the system</i></CAPTION>
+</center>
+
+<!-- Section heading with embedded address for internal links: -->
+<h2><a name="parametervals"><i>Parameter values:</i></a></h2>
+
+The table lists the input parameter values for this simulation. 
+Default values are used for the parameters that are not set
+as command-line options.
+<br>
+<br>
+<CENTER>
+
+<!-- Table with a raised border (8 pixels), a raised border between
+     cells (CELLSPACING=3) and padding (extra space) inside each cell
+     (CELLPADDIG=2).
+-->
+<TABLE BORDER=8 CELLSPACING=3 CELLPADDING=2 WIDTH="60%"> 
+<CAPTION><B>Parameter input values</B></CAPTION>
+<TR>  <!-- define a table row -->
+<TH>Command line input option </TH>  <!-- heading of 1st column -->
+<TH>Parameter value </TH>            <!-- heading of 2nd column -->
+</TR> <!-- end of first table row -->
+
+<TR>  <!-- new table row -->
+  <!-- define columns with the TD tag -->
+  <TD ALIGN="CENTER"><FONT face="Serif">-m</FONT> </TD> 
+  <!-- font and colors can be set with the FONT tag -->
+  <TD ALIGN="CENTER"> 1 </TD>
+  <!-- ALIGN controls whether the column text is adjusted to
+       the left or right or if it is centered. -->
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-b</FONT></TD> 
+  <TD ALIGN="CENTER"> 0.7 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-c</FONT></TD> 
+  <TD ALIGN="CENTER"> 5 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-func</FONT></TD> 
+  <TD ALIGN="CENTER"> y3 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-A</FONT></TD> 
+  <TD ALIGN="CENTER"> 5 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-w</FONT></TD> 
+  <TD ALIGN="CENTER"> 6.28319 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-y0</FONT></TD> 
+  <TD ALIGN="CENTER"> 0.2 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-tstop</FONT></TD> 
+  <TD ALIGN="CENTER"> 30 </TD>
+</TR>
+<TR>
+  <TD ALIGN="CENTER"><FONT face="Serif">-dt</FONT></TD> 
+  <TD ALIGN="CENTER"> 0.05 </TD>
+</TR>
+</TABLE> 
+</CENTER>
+
+<h2><a name="results"><i>Results:</i></a></h2>
+
+The figure below shows a plot of a (numerical) solution of the 
+differential equation. The time interval for the simulation
+is [0:30]. The plot compares a restoring force f(y)=y with f(y)=y*y*y.
+<center>
+<IMG SRC="./solution.png" ALT="A plot of the solution">
+<br>
+<CAPTION><i>Plot of the displacement of a nonlinear oscillator
+and its linear counterpart</i></CAPTION>
+</center>
+</BODY>
+</HTML>

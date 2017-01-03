@@ -1,0 +1,92 @@
+
+## Latent-data parametrization of generalized linear models 
+
+# Logistic regression
+
+model {
+  for (i in 1:n){
+    z.lo[i] <- 100*equals(y[i],0)
+    z.hi[i] <- 100*equals(y[i],1)
+    z[i] ~ dlogis (Xbeta[i], 1) I(z.lo[i], z.hi[i])
+    y[i] ~ dbin (p.bound[i], 1)
+    p.bound[i] <- max(0, min(1, p[i]))
+    logit(p[i]) <- Xbeta[i]
+    Xbeta[i] <- b.0 + b.female*female[i] + b.black*black[i] +
+      b.female.black*female[i]*black[i] +
+      b.age[age[i]] + b.edu[edu[i]] + b.age.edu[age[i],edu[i]] +
+      b.state[state[i]]
+  }
+  b.0 ~ dnorm (0, .0001)
+  b.female ~ dnorm (0, .0001)
+  b.black ~ dnorm (0, .0001)
+  b.female.black ~ dnorm (0, .0001)
+  
+  for (j in 1:n.age){b.age[j] ~ dnorm(0, tau.age)}
+  for (j in 1:n.edu){b.edu[j] ~ dnorm(0, tau.edu)}
+  for (j in 1:n.age){for (k in 1:n.edu){
+    b.age.edu[j,k] ~ dnorm(0, tau.age.edu)}}
+  for (j in 1:n.state){
+    b.state[j] ~ dnorm(b.state.hat[j], tau.state)
+    b.state.hat[j] <- b.region[region[j]] + b.v.prev*v.prev[j]}
+  b.v.prev ~ dnorm(0, .0001)
+  for (j in 1:n.region){b.region[j] ~ dnorm (0, tau.region)}
+
+  tau.age <- pow(sigma.age, -2)
+  tau.edu <- pow(sigma.edu, -2)
+  tau.age.edu <- pow(sigma.age.edu, -2)
+  tau.state <- pow(sigma.state, -2)
+  tau.region <- pow(sigma.region, -2)
+
+  sigma.age ~ dunif (0, 100)
+  sigma.edu ~ dunif (0, 100)
+  sigma.age.edu ~ dunif (0, 100)
+  sigma.state ~ dunif (0, 100)
+  sigma.region ~ dunif (0, 100)
+}
+
+##############################################################################
+
+# Robit regression
+
+model {
+  for (i in 1:n){
+    z.lo[i] <- 100*equals(y[i],0)
+    z.hi[i] <- 100*equals(y[i],1)
+    z[i] ~ dt (z.hat[i], tau.z, df) I(z.lo[i], z.hi[i])
+    y[i] ~ dbin (p.bound[i], 1)
+    p.bound[i] <- max(0, min(1, p[i]))
+    logit(p[i]) <- Xbeta[i]
+    Xbeta[i] <- b.0 + b.female*female[i] + b.black*black[i] +
+      b.female.black*female[i]*black[i] +
+      b.age[age[i]] + b.edu[edu[i]] + b.age.edu[age[i],edu[i]] +
+      b.state[state[i]]
+  }
+  b.0 ~ dnorm (0, .0001)
+  b.female ~ dnorm (0, .0001)
+  b.black ~ dnorm (0, .0001)
+  b.female.black ~ dnorm (0, .0001)
+  tau.z <- df/(df-2)
+  df <- 1/df.inv
+  df.inv ~ dunif (0, .5)  
+  for (j in 1:n.age){b.age[j] ~ dnorm(0, tau.age)}
+  for (j in 1:n.edu){b.edu[j] ~ dnorm(0, tau.edu)}
+  for (j in 1:n.age){for (k in 1:n.edu){
+    b.age.edu[j,k] ~ dnorm(0, tau.age.edu)}}
+  for (j in 1:n.state){
+    b.state[j] ~ dnorm(b.state.hat[j], tau.state)
+    b.state.hat[j] <- b.region[region[j]] + b.v.prev*v.prev[j]}
+  b.v.prev ~ dnorm(0, .0001)
+  for (j in 1:n.region){b.region[j] ~ dnorm (0, tau.region)}
+
+  tau.age <- pow(sigma.age, -2)
+  tau.edu <- pow(sigma.edu, -2)
+  tau.age.edu <- pow(sigma.age.edu, -2)
+  tau.state <- pow(sigma.state, -2)
+  tau.region <- pow(sigma.region, -2)
+
+  sigma.age ~ dunif (0, 100)
+  sigma.edu ~ dunif (0, 100)
+  sigma.age.edu ~ dunif (0, 100)
+  sigma.state ~ dunif (0, 100)
+  sigma.region ~ dunif (0, 100)
+}

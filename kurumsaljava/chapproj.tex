@@ -1,0 +1,1648 @@
+\movetooddpage
+
+\chapter[Proje Yönetimi][PROJE YÖNETÝMÝ]{Proje Yönetimi}
+
+\thischapterhas{
+  \item Karakterler
+  \item Hata takip sistemi
+  \item Kaynak kod idaresi
+  \item Geliþtirme ve test ortamlarý
+}
+
+\versal{E}\textsc{ðer} tasarým disiplini bilimden ziyade sanata yakýn ise,
+``sanata yakýnlýk'' yarýþmasýnda birincilik madalyasýný herhalde proje yönetimi
+disiplinine vermek gerekirdi. Çünkü, yazýlým mühendisliðinde eþya çoðunlukla
+insan (bazen de makinadýr), ama proje yöneticiliðinde eþya {\em tamamen}
+insandýr. Bu durum, proje yönetimi disiplininin anlatýlmasý ve sistemsel bir
+yapýya oturtulmasý açýsýnda zorluklar çýkartýr, çünkü proje yönetim tekniklerini
+kullanan insanlar farklý olduðu gibi yönetimin hedefi olan insanlar da projeden
+projeye farklýlýk gösterirler. Ýnsanlarý hâlen matematiksel þekilde
+anlatamadýðýmýza göre, proje yönetimi hakkýnda verilen her tavsiyenin kulaða
+gayri bilimsel gelmesi normâldir. Bu konu hakkýnda yazan herkes tavsiyelerini
+sadece kendi perspektifinden ve tecrübesine dayanarak anlatmaya mecbur
+kalmaktadýr. Objektif, deneye dayalý sonuçlarý henüz literatürde görememekteyiz.
+
+Bu yüzden, bu bölümde anlatacaðýmýz proje yönetim teknikleri, bizim çalýþtýðýmýz
+projelerde iþlediði gözlenen subjektif teknikler olacaktýr. Örnek olarak,
+tanýdýðýmýz ve saygý duyduðumuz proje yöneticilerinde iyi bulduðumuz özellikleri
+sunacaðýz, ve bunu mümkün olduðu kadar projede çalýþmýþ diðer insanlar da bu
+görüþe katýlmýþ ise yapmaya gayret edeceðiz. Teknik ve teknik olmayan arkadaþlar
+ile iyi bir proje yönetiminin nasýl olmasý gerektiði hakkýnda uzun yýllar
+boyunca görüþ alýþveriþinde bulunduk, bunlarý da bu bölümde paylaþmak istiyoruz.
+
+Kiþilere ek olarak, her projede kurulmasý ve takip edilmesi gereken mekanik
+süreçlerin proje yönetimi bakýmýndan önemli olduðunu vurgulayýp, örnekler
+gösterek anlatmaya çalýþacaðýz. Süreçler bize, ne yapacaðýmýzý ``hatýrlatýcý''
+bir özellik taþýrlar; Mekanik iþleri sürece devrederek (ve süreçle iletiþimde
+tarafýmýzý yine mekanik düþünceyi halleden beyin bölgemize devrederek)
+programcýlýðýn daha yaratýcý kýsmýna bu þekilde korkmadan
+odaklanabiliriz. Mekanik ve önemli noktalar bize süreç tarafýndan
+hatýrlatýlacaktýr. Meselâ tasarým sürecinin bir parçasý olarak kodlamaya
+baþlamadan önce ``mimariyi ortaya koyan'' bir belgenin yazýlmasýnýn þart
+konulmasý, bir sürece örnek olabilir; Bu belgeyi yazma gerekliliði, üzerimizde
+ileriyi düþünmeye yolunda bir baský yaratýr, ve bu baský iyi ve gereklidir. Bu
+örnekte süreç, normâlde yapmayabileceðimiz bir eylemi üzerimizde mecbur
+býrakarak, bizi doðru yöne sevketmiþ ve yaratýcý düþüncemizi doðru formata doðru
+kanalize etmiþtir.
+
+Ayný þekilde bir hata takip süreci, uygulamada test sonucu bulunan hatalarýn bir
+``hata takip sistemine'' girilmesini mecbur kýlabilir, ve böylece hata bulma,
+hata düzeltme ve kapatma gibi mekanik basamaklar bize hatýrlatýcý yardýmcýlar
+hâline gelirler. Biz tüm hatalarý hatýrlayamasak ta, {\em süreç hatýrlar}. Biz
+sadece hatalarý sisteme girmeyi hatýrlamalýyýz (Kural \#3, \#4). 
+
+O zaman bu bölümde anlatýlacak teknikleri þu baþlýklar altýnda toplayabiliriz:
+
+\begin{itemize}
+   \item Karakterler
+   \begin{itemize}
+   \item Proje yöneticileri
+   \item Teknik liderler
+   \item Programcýlar
+   \end{itemize}
+   \item Geliþtirme Süreçleri
+   \begin{itemize}
+   \item Hata takip
+   \item Kaynak kod idaresi
+   \item Kod teftiþi (code review)
+   \item Geliþtirme ve test 
+   \end{itemize}     
+   \item Planlama yöntemi
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Karakterler}
+
+Bir yazýlým takýmýnda doldurulmasý gereken çeþitli roller vardýr; Bu roller,
+bizim þimdiye kadar gördüðümüz kurumsal yazýlým takýmlarý ve danýþman
+(consulting) þirketleri baz alýnarak anlatýlacaktýr. Her rol için ayrý bir
+þahsýn bulunmasý en optimal çözümdür, fakat bâzen bir ve ya daha fazla rol ayný
+kiþi üzerinde de olabilir. Bu karar takýmýn ve projenin büyüklüðüne göre
+verilebilir. Fakat danýþman þirketleri her zaman bir rolü, bir kiþiye verirler.
+
+\subsection{Proje Yöneticisi}
+
+Bir yazýlým projesinde teknik olmasý gerekmeyen nadir kiþilerden biri, proje
+yöneticisidir (project manager). Fakat genellikle, proje yöneticilerinin
+programcýlýk geçmiþi vardýr, sadece, bu yaptýklarý iþ için zorunlu deðildir. Hiç
+teknik olmayan, fakat çok iyi proje yöneticileri ile þahsen çalýþtýðýmýzý
+söyleyebiliriz.
+
+Proje yöneticisinin yaptýðý iþler, yazýlým projenizin hangi safhasýnda
+olduðunuza göre deðiþir, fakat genel olarak denebilir ki proje yöneticisi
+takýmýnýza {\em lojistik destek} saðlamakla yükümlüdür. Tanýdýðým bir teknik
+lider proje yöneticileri hakkýnda þunu söylerdi: ``Programcýlar kara kuvvetleri
+ise, proje yöneticileri \textbf{hava} kuvvetleridir. Biz yerden taarruz ederken,
+onlar havadan desteði saðlar''. Bu çok doðru bir gözlemdir. Hakikaten de proje
+yöneticilerinin en iyisi, takým bir sorun bölgesine gelmeden, o sorunu önceden
+tahmin edip, o konu hakkýnda önlem alabilendir (sorunun tasarým ile ilgisi
+olmamalýdýr). Tanýdýðým en iyi yöneticilerden biri olan Arpan Sheth, bu
+becerinin çok güzel bir örneðini bir projemizde göstermiþti.
+
+Arpan ile beraber çalýþtýðýmýz bu projede teknik takým, projenin ürün seçme ve
+teknik bilgi toplama aþamasýndaydý. Fakat, daha o safhaya gelmemiþ olsak bile,
+geliþtirmeye baþlamak için gerekli Sun Solaris makinalarýmýz hâla ortalarda
+yoktu. Geliþtirmeyi o makinalar üzerinde yapmamýz gerekiyordu, ve o aþamaya
+gelmemiþ olsak bile, o aþamaya geldiðimizde yere düþtüðümüz anda koþmaya
+baþlamamýz (hit the ground running) için, makinalarýn bir an önce gelmesi çok
+önemliydi.
+
+Ve proje yöneticimiz Arpan, geciken makinalarýn problem olabileceðini aylarca
+önceden tahmin etmiþti. Kendisi hemen gerekli yerlerde düðmelere basmaya
+baþlamýþ, ve geriye müþterimizden makinalar için müþteriden parayý almak
+kalmýþtý. Son ve en kötü pürüz iþte burada ortaya çýktý; Bir bütçelendirme
+problemi yüzünden müþteri ödemeyi istediðimiz kadar hýzlý yapamayacaktý. Bu
+durum makinalarýn alýnmasýný aylarca geciktirebilirdi! Bunun üzerine Arpan þöyle
+yaratýcý bir çözüm buldu: Makinalarý bizim danýþman þirketimize aldýrýp,
+müþteriye bu makinalarý lease ediyormuþ gibi bedelini yavaþ yavaþ
+ödetecektik. Müþteri bu ödeme þekline ikna oldu, ve geliþtirme takýmýmýz ürün
+seçimi ve testleri bitirdiðinde, makinalar bizi hazýr bir hâlde
+bekliyordu. Hâtta Arpan'ýn ayarladýðý lease ödemeleri, faizi hesaba katýlsa
+bile, þirketimiz için ufak bir kâr elde edecekti!
+
+Ýþte iyi hava desteði budur. Kara kuvvetleri gelmeden hedef belirlenip yýkýlmýþ,
+ve geriye sadece karadan yapýlabilecek hamleleri yapmak kalmýþtýr. Proje
+yöneticisi tabii ki atlayýp kod yazmaya baþlayamaz, ya da tasarým yapamaz, fakat
+projeye gereken tüm kaynaklarýn mevcut olmasý için gerekli her þeyi yapar. Bu
+örnekten öðrenilmesi gereken diðer bir davranýþ, baþarýlý bir proje
+yöneticisinin en yüksek risk noktalarýna nasýl hemen odaklandýðýný
+görmektir. Geliþtirme makinelerin ortada olmamasý, bir geliþtirme takýmý için
+{\em en yüksek risk} taþýyan durumlardan biridir (alternatif iþletim
+sistemlerinde geliþtirmemiz sözkonusu deðildi) ve yönetici bu durumu kavramýþ ve
+iþin peþini býrakmayarak tüm dikkatini ve enerjisini oraya yönelterek iþi
+sonucunu vardýrmýþtýr.
+
+\subsubsection{Gereklilik Listesi}
+
+Gereklilik listesi, yâni müþterinin yazýlým takýmýndan beklediði iþlevler, proje
+yöneticisinin takip etmesi gereken iþlerden biridir. Bu listenin ne olacaðý
+hakkýnda tartýþmalarda proje lideri baþ rolü teknik lider ile paylaþýr, çünkü
+gereklilik listesinde olanlar programcýlarýn ne kodlayacaðýný ilgilendirir, ve
+programcýlarýn ne kodlayacaðý projenin ne zaman biteceðini ilgilendirir. Proje
+bitiþ tarihine tam zamanýnda ve en az hata ile ulaþmak proje yöneticisinin en
+önemli hedefidir. Bu sebeple ``gereklilik listesi'' kelimelerinin duyduðu anda,
+proje yöneticisi kulak kabartmalýdýr.
+
+Proje yöneticisi gereklilik listesi hakkýnda sürekli teknik lider ile istiþare
+durumunda olur. Yönetici hiçbir zaman tek baþýna bir gerekliliðin ne kadar
+süreceði hakkýnda bir kararý, teknik lider olmadan, vermemelidir. Bu kararý en
+iyi verebilecek kiþi teknik dünyanýn içinde gelen teknik liderdir.
+
+Sabit zamanlý, sabit fiyatlý projelerde, üzerinde kaynak (deðiþik yeteneklerdeki
+programcýlardan kaç tane olduðu) ve fiyat pazarlýklarýnýn yapýlabileceði bir
+plan dökümanýnýn hazýrlanmasý gerekir. Bu belgenin yazýlmasý genellikle danýþman
+þirketlerinde her programcýya bölüm bölüm daðýtýlýr. Bu belgenin bölümlerinin
+daðýtýlmasý, hangi iþin kimde olduðunun takip edilmesi, sonra bölümlerin
+herkesten alýnýp birleþtirilmesi ve gerekirse bir teknik yazara verilmesi proje
+yöneticisinin sorumluluðudur. Plan belgesindeki teknik altyapý, ve mimari kýsmý
+teknik lider tarafýndan yürütülecektir. Teknik altyapýnýn niye plan belgesinde
+gereklilikler ile beraber olduðunu anlamak için \ref{project:planning} bölümüne
+bakabilirsiniz.
+
+\subsubsection{Hata Takip}
+
+Proje, kodlama safhasýnda ilerleyip sýra kullanýcý testleri baþladýktan sonra,
+proje yöneticisi yeni bir rol üstlenerek {\em süper testçi} hâline
+dönüþür. Önyüzün kullanýmýný en iyi bilen kiþi o olmalýdýr, ve plan belgesinde
+olan herþeyin kodlanmýþ olup olmadýðýný bir yandan kontrol etmelidir. Tüm
+özelliklerin kodlanmýþ olmasýndan yönetici, en az teknik lider kadar sorumludur,
+fakat derin teknik bir alanda takýlýp kalabilmesi mümkün olan teknik lidere
+nazaran proje yöneticinin önyüze dönük kontrolleri yapmasý için daha çok fýrsat
+vardýr. Bu yüzden bu görevde baþrolü yönetici almalýdýr.
+
+Testçiler uygulamayý test edip hata buldukça, bunlarý hata takip sistemine
+girerler (\ref{proj:process:bugtracking}). Hata takip sistemindeki hatalarýn ne
+kadar hýzlý tamir edildiði, hangi hatalarýn sürekli gidip geldiði, ya da
+bazýlarýnýn neden uzun süre tamir edilemediði gibi konularý proje yöneticisi
+bilir durumda olmalýdýr. Önem seviyesi, aciliyeti (priority) yüksek olan
+hatalarý tamir eden programcýlar ile yönetici, direk istiþare hâlinde
+olabilir. Proje yöneticisi, önemli hatalar hakkýnda ilgili programcýlara
+hatýrlatmada bulunabilir, ve iþin önemini onlara hissettirecek þekilde onlarla
+konuþabilir. Eðer ilgili programcýlar moral düþüklüðü yaþýyorlar ise, belki
+bunun hakkýnda bir þeyler yapýlmasý gerekiyordur. Hatalarýn tamiri için teknik
+destek tabii ki teknik liderden gelmelidir, fakat proje yöneticisi hatýrlatýcý
+ve kontrol edici, ve gerekirse kaynak saðlayýcý bir durumda hep hazýr olmalýdýr.
+
+Tanýdýðýmýz proje yöneticileri, önemli, ve testçiden programcýya fazlaca gidip
+gelen, hata no'larý ezbere bilirlerdi. Bu yöneticilerin meselâ ``No 334 ne
+durumda?'' gibi sorular sorduklarýný duyardýnýz. Bu tavýrlarý, projede iþlerin
+tamamen kontrolleri altýnda olduðu izlenimini verirdi (ve hakikaten öyleydi), ve
+bu da programcýlarýn daha dikkatli olmasýný saðlardý. Psikolojik olarak birinin
+yaptýðýnýz iþle ilgileniyor olmasý, o iþte daha iyi performans göstermenizi
+saðlar. Çünkü hata tamir edildiðinde, ``hata 334 ne durumda?''  sorusuna ``tamir
+edildi'' cevabý verilebilecektir. Programcý yararlýlýk göstermiþtir ve
+ilgilendiði konuda bunu direk yöneticiye söyleyebilmiþtir.
+
+\subsubsection{Sosyal Konular}
+
+Projenin sosyal atardamarý proje yöneticisidir. Geç vakte kadar çalýþmalarý
+tavsiye etmesek bile, eðer bu çalýþmalar olursa çalýsmadan sonra ödülleri
+(restoran, bar) daðýtan kiþi, proje yöneticisi olmalýdýr. Programcýlar genç bir
+grup ise, bir iþ gününden sonra bar'a, yemeðe götürülmelerini düzenleyecek kiþi
+proje yöneticisi olmalýdýr.
+
+Yönetici her programcý ile iyi bir iletiþimde bulunmalýdýr. Onlarý tanýmalý, ve
+özel hayatlarý hakkýnda çok derinliðine olmasa bile fikir sahibi olacak kadar
+bir yakýnlýkta olmalýdýr. Hiç unutmamak gerekir ki insanlar sevdikleri ve
+saydýklarý yöneticiler için daha çok çalýþýrlar. Bu tekniðin tersi, müthiþ bir
+dikta ile korku kullanarak yönetmektir, fakat korkunun sevgi/saygý kadar motive
+edici olmayacaðýný rahatlýkla söyleyebiliriz. Hiçbir insanýn, korku kullanarak,
+o ekstra kilometreyi koþmasýný saðlayamayýz.
+
+Belli bir alanda uzmanlýðý olan her grup kendine has alýþkanlýklar, konuþma
+stili ve bir alt kültür üretir. Bu kültürü tanýmak proje yöneticisi için faydalý
+olacaktýr. Meselâ benim içinde olduðum kurumsal danýþman olan bizler Unix'i
+sayar Microsoft'u sevmeyiz. {\em Office Space} filmine güleriz. Resmi giyinmek
+bizim için en büyük cezalardan biridir. Sýký çalýþmak problem deðildir, ama sýký
+da eðlenilmelidir. Bu tür kültürel anektodlardan haberdar olmak proje
+idarecisini daha etkili yapar.
+
+\subsection{Teknik Lider}
+
+Projenin olmazsa olmayan kiþiliði, her þeyin etrafýnda döndüðü, her kararýn
+parçasý olmasý gereken þahýs teknik liderdir. Projenin teknik sorumluluðu
+tamamen teknik liderin üzerindedir. Ondan baþka sorumlu aranmaz.
+
+Bu sebeple teknik lider (kýsaca TL diyelim), projenin mimarisi ve kullanacaðý
+teknolojileri seçmek ile sorumludur. {\em Bir projede teknik liderin kabul
+etmediði hiçbir teknoloji kullanýlamaz}. Programcýlar tavsiyeler getirebilirler
+ve bunlar çoðunlukla mimariyi pek ilgilendirmeyecek ufak, izole alanlar için
+olacaktýr, fakat günün sonunda teknoloji seçimi, mimariyi etkilesin ya da
+etkilemesin, tamamen teknik lidere ait olan bir karardýr. TL bu konuda karar
+verdiðinde, kararýn aynen uygulanmasý gerekir.
+
+Bu konuyu þöyle açýklayalým: Sorumluluk ile yetkinin ayný kiþide olmasý
+gerektiði açýktýr. Eðer sorumluluk var fakat yetki yoksa, bu durum teknik
+liderin üzerinde kontrolü dýþýndaki bir durumun sorumluluðunu alma stresi
+getirirdi ki bu hiçbir teknik lider kabul etmeyecektir. Bu yüzden bizim
+çalýþtýðýmýz hiçbir þirkette TL'in izni dýþýnda teknoloji kullanýlmasýna izin
+verilmez. Programcýlar seviyesinde teknolojiler hakkýnda bir heyecan ve ``bunu
+da kullanalým'' saflýðý mevcuttur, ve bu saflýðýn yerine pragmatizme býrakmasý
+sadece ve sadece teknik lider seviyesine eriþildiðinde kristalleþir. Bu yüzden
+bu karar daha tecrübeli olan teknik lidere býrakýlýr. Kurumsal uygulamalarda
+teknolojinin pür nesnesel tasarýmdan bile önemli olduðunu söylemiþtik, çünkü
+yanlýþ yapýlan bir teknoloji seçimi, programcýnýza ve projenize kayýp zaman,
+kalitesiz ve kötü performanslý kod anlamýna gelir, ve bu sebeple bu sorumluluðu
+teknik liderden baþkasý almamalýdýr. Ayrýca teknik sorunlar çýkýnca yardým
+etmesi beklenen teknik lider olduðu için, kendi yardým edemeyeceði bir
+teknolojinin kullanýlmasýný hiçbir teknik lider istemez. 
+
+Teknolojilere karar verdikten sonra, TL kullanmasýný planlandýðý yeni
+teknolojileri testten geçirip kontrol etmeye baþlayabilir. Ýþlerlik kontrolü
+(proof of concept) baðlamýnda TL, kullanacaðý teknolojiyi kontrol etmek için
+çalýþan ufak örnekler yazabilir. Teknik lider, teknoloji ile kendini rahat
+hissedinceye kadar bu denemeleri yapacaktýr.
+
+Teknik lider, gerçek kodlama açýsýndan, sadece mimariden ve (az miktarda kod
+içeren) geliþtirme, ve deployment script'lerinden sorumlu olacaktýr. Teknik
+liderin çok fazla gereklilik kodlamasý beklenmemelidir. Çünkü teknik lider, her
+yere yetiþebilen ve yangýnlarý çýktýðý yerde söndürebilen bir durumda olmalýdýr,
+ama eðer kendisi çok fazla kod yazýyorsa, o zaman diðer önemli sorumluluklarýný
+yerine getirmesi zorlaþýr. Danýþmanlýk aðzýyla söylemek gerekirse, teknik lider
+kendini kritik geçiþ noktasýna koymamalýdýr\footnote{Technical lead must not be
+in the critical path}.
+
+\subsubsection{Mimari}
+
+Mimari tasarým, gereklilik listesinin hazýrlandýðý sýrada paralelde yapýlýr, ve
+bittikten sonra gerekliliklerle beraber plan belgesinin bir bölümünde
+anlatýlarak müþteriye sunulur. Mimari belgelendikten sonra TL, kaynak kod idare
+sistemini kurar, ardýndan planladýðý mimariyi {\em ilk önce kendisi kullanarak}
+bir örnek özellik kodlar. Böylece ayný mimariyi kullanacak olan programcýlarýn
+önüne bir örnek koymuþ olur, ayný zamanda mimariyi hem kendisine hem de diðer
+programcýlara ispat eder.
+
+Açýk söylemek gerekirse bir projede teknik liderin en önemli görevi,
+programcýlarý {\em seri üretim} aþamasýna getirmektir. Seri üretimden kastýmýz,
+her gereklilik için yazýlmasý gereken kodlarýn kullanacaðý altyapý kodlarýnýn ve
+kurallarýn hazýr olup, programcýnýn sadece ve sadece gereklilik için kod yazacak
+duruma gelmiþ olmasýdýr. Seri üretime hazýr bir takým ve programcý ``þu þu nasýl
+yapýlacak'' þeklinde sorularý daha az sorar, çünkü artýk bir yazdýðý gereklilik
+kodu bir önceki gerekliliðe benzer hâldedir, ve kurallarý bile oradan alarak
+sadece iþlem mantýðýna odaklanabilir. Seri üretim, teknoloji kullanýmýnýn tüm
+hatlarýnýn ortaya konulmuþ olmasý demektir. Teknoloji kullanýmý, mimari
+demektir. Mimarinin tam tanýmý için \ref{object:architecture} bölümüne
+bakabilirsiniz. 
+
+Seri üretim sahfasýna gelmiþ olan bir takýma, ne kadar fazla programcý
+eklerseniz, o kadar fazla iþ alýrsýnýz. Bu açýdan bakýlacak olursa Frederick
+Brooks'un söylediði ``geç kalmýþ bir projeye daha fazla programcý eklemek o
+projeyi daha geciktirir''\cite[sf. 25]{manmonth} sözü yanlýþtýr. Yanlýþ mimari,
+gereklilik kodlamasýný geciktirebilir, fakat optimal bir mimari ile daha fazla
+programcý daha fazla iþ demektir.
+
+\subsubsection{Geliþtirme Süreçleri}
+
+Geliþtirme süreçleri, kaynak kod idare sistemini nasýl kullanýlacaðý, hangi alt
+dizin yapýlarýnýn kullanýlmasý gerektiði, ve programcýlarýn kendi testlerini
+nasýl iþleteceði gibi konularý kapsar, ve en az mimari kadar önemlidir.
+
+Kaynak kod idare (KKÝ) sistemi CVS gibi bir ürün olabilir, bu ürün üzerinde tüm
+proje kodlarýnýn tutulacaðý bir depoyu yaratmak teknik liderin
+sorumluluðundadýr. Depoyu yaratma iþini mimariyi ve ilk gerekliliði kodlarken
+yapabilir. Eðer depo yarama görevini TL baþka birine devretmek isterse, bunu
+KKÝ sisteminin nasýl kurulacaðýný bilmediði için deðil, yeni bir kiþiye bu
+bilgiyi transfer etmek için yapmalýdýr. Yâni her þartta teknik lider KKÝ
+sistemlerinin detaylarýný çok iyi bilmelidir.
+
+Hata takip düzeni projenin baþlarýnda kurulmasý mecbur deðildir. Bu sistem,
+testçiler kurumsal uygulamayý ciddi kullanmaya baþlayýncaya kadar çok gerekli
+olmaz, fakat o zaman gelince hata takip sistemi teknik lider tarafýndan hazýr
+edilmiþ olmalýdýr. Hattâ þirketimizin her projesi için ortak kullandýðý (ama
+hata verilerinin her proje için ayrý tutulduðu) bir hata takip programýnýn
+olmasý faydalý olur. Ortak KKÝ programý da ayný þekilde iyi bir fikirdir, tabii
+doðal olarak depo yaratma iþlemi teknik KKÝ bilgisi gerektirecektir.
+
+Geliþtirme ortamýyla ilgili ek bazý ``davranýþ'' kurallarý yeri geldikçe teknik
+lider tarafýndan koyulabilir. Meselâ yaygýn bir açýk kaynak prensibi olan ``her
+kod ekleme (check in) sonrasý proje geliþtirici listesine eklenen kod ile ilgili
+bir mesaj gönderme'' kuralýný teknik lider koyup (hâtta koymalýdýr) takip
+edilmesini saðlayabilir.
+
+\subsubsection{Kod Kalitesi}
+
+Teknik lider, projedeki kodun kalitesinden sorumlu kiþidir. Bu amaçla belli
+aralýklarla kod teftiþ toplantýlarý yapýlmasý yararlýdýr. Bu toplantýlardan önce
+TL, hangi kodlarýn teftiþ edileceðini belirler. Bu toplantýlar detaylý olarak
+\ref{project:codereview} bölümünde anlatýlacaktýr.
+
+TL organize, gurup hâlinde teftiþler yaptýðý gibi bazen raslantýsal ve nokta
+saldýrýsý yaparak kodun belli bölgelerine bakarak kontrol yapabilir. Bu
+raslantýsal kontrollerden sonra eðer hoþuna gitmeyen bir nokta bulursa,
+programcýya bu yorumu bir tavsiye olarak götürebilir.
+
+Kod kalitesi için önemli bir husus olan birim testlerinin kullanýlmaya teþvik
+edilmesini teknik lider üstlenmelidir. Eðer otomize edilmiþ kabul testleri var
+ise, bu testlerin yazýlmasý için bir kaynak (kiþi) ayýrýlmasý teknik lider proje
+yöneticisi ile birlikte götürür. Kabul testleri için kullanýlacak programý
+(\ref{testing:acceptance}) TL çok detaylý bir þekilde bilmelidir. Bu programýn
+kullanýlmasý için tüm sorular ilk baþta ona gelecektir. Bu program teknik olarak
+kavrandýktan sonra, proje yöneticisi tüm gereken kabul testlerinin yazýlma
+iþlemini testleri yazmakla sorumlu kiþiyle beraber teknik liderden baðýmsýz bir
+þekilde götürebilir.
+
+\subsubsection{Sosyal Konular}
+
+Programcýlar ve teknik lider arasýndaki iletiþimin ana hatlarý þunlardýr:
+Programcý, mimariye ve teknik liderin proje bazýndaki koyduðu diðer genel
+kurallara uymaya mecburdur, ama bunun haricinde teknik lider ile programcýsý
+arasýnda bir öðrenci/öðretmen iliþkisi olacaktýr. Öðrenci/öðretmen iliþkisinde
+öðretmen, yani teknik lider, zorlayýcý olmamalýdýr. Programcý ona bir soru sorup
+bir teknik konu hakkýnda yön beklediðinde ona cevabý muhakkak verecektir, fakat
+eðer performans sonuçlarý çok fark etmiyorsa teknik lider programcýya final,
+``þunu yap'' havasýnda bir yön vermekten kaçýnmalýdýr.
+
+Eðer teknik lider, çok performans farký getirmeyecek ama daha temiz bir yöntem
+bulmuþsa bunu programcýsýna ``þu yaklaþýmý hiç düþündün mü'' diyerek getirmeli
+ama ýsrarcý olmamalýdýr. Doðru yolu programcý isterse seçmeli, istemezse kendi
+yolundan devam etmelidir. Mimariye baðlý kalmak çok önemlidir, teknik lider
+mimariden feragat etmemelidir; Bahsettiðimiz ``boþ alan'', mimariyle
+gerekliliðin arasýnda kalan boþ alandýr.
+
+Programcýlar bazen, çok çetrefil bir duruma saplandýlarýnda kendilerine güveni
+kaybedebilirler. Bu gibi ruhani (!) konular bizim gibi teknik konularý tercih
+eden insanlar için en zor konular oluyor. Fakat bu gibi durumlarý çok iyi idare
+etmemiz gerekmektedir, çünkü takýmýmýzýn motivasyonu bu idaremize baðlý
+olacaktýr. Eðer programcý kendinden þüphe eden bir yaklaþýmla lidere geliyor,
+ama teknik bir soruyu direk sormuyorsa, bunun tek anlamý vardýr: Morale ihtiyacý
+vardýr. Bir problemi çözmekte uzun zaman alarak takýmýn gözünden mi düþmektedir?
+Durumu iyi analiz ederek, bu soruna tek þekilde yaklaþabilirsiniz; Eðer
+programcý star programcýlarýmýzdan biriyse, ona kendine güven aþýlamalýyýz. Bu
+noktada yapabileceðimiz en kötü þey, iç yapýsýný sadece o programcýnýn bileceði
+duruma atlayýp programcýyý bir kenara iterek, problemi direk çözmeye
+uðraþmaktýr. Çünkü 1) bunu yapamayabiliriz 2) programcýmýza, ona güvenmediðimiz
+sinyalini göndermiþ olarak motivasyonunu baltalamýþ oluruz.
+
+Motivasyon faktörünü genel takým bazýnda da takip etmemiz ve manipüle etmemiz
+gerekmektedir. Takým bazýnda yaptýðýmýz ``burada bir sorun var'', ``hadi
+arkadaþlar'' ve ``iþte baþardýk'' sözlerinin takýmýnýz üzerinde ne kadar etkili
+olduðunu hiç unutmamalýyýz. Bu sözler ve davranýþlarla, takýmýn ritmi tamamen
+teknik liderin elindedir. Çok uzun süreli ``iþler iyi gitmiyor'' modu takým
+motivasyonu için faydalý deðildir, bu dönemi muhakkak bir ``iþte baþardýk''
+zaferi izlemelidir.  Bu zafer programcýlara belli edilmeli ve çabalarýnýn sonuca
+eriþtiði ortaya çýkmalýdýr. Zafer noktasýna eriþmek için eðer teknik lider
+kollarýný sývayarak programcý ile birebir oturmasý anlamýna geliyorsa, bu
+yapýlmalýdýr. Unutmayalým ki, özellikle baþlangýç seviyesi programcýlarý, zaten
+öðrenmek için oradadýrlar ve çözümünüzü anlayýp öðrenmiþ olmaktan, ve bir
+sonraki seferde kullanabilecek durumda olmaktan mutlu olacaklardýr. Baþarý
+noktasýna eriþtiðinizde böylece onlarýn da motivasyonu artar.
+
+Büyük tepe noktalarýný büyük kutlama izlemelidir, kutlamalarý organize etmek
+proje yöneticisinin görevidir, fakat takýmý o noktaya getirmek (çok daha zor)
+teknik liderin sorumluluðudur.
+
+
+\subsection{Programcýlar}
+
+Programcýlar bir takýmýn iþini üreten, onu ileri iten pistondurlar. Mimariyi
+hazýrlamak ve programcýlarýn önlerindeki tekniksel ve kaynaksal barikatlarý
+yýkmak her ne kadar teknik liderin ve proje yöneticisinin görevi olsa da, bu
+engellerden sonra nihai iþi yapacak olan kiþiler, programcýlardan baþkasý
+deðildir.
+
+Bir programýnýn sahip olduðu en önemli özelliklerden biri, sebat etmektir
+(persistence). Program yazarken problemler, teknoloji bazlý olsun olmasýn her
+zaman ortaya çýkarlar, ve bu olduðu zaman programcý yýlmayan, problemin üzerine
+tekrar tekrar giden, ve bâzen deðiþik açýlardan yaklaþmayý deneyerek sonuca
+varabilen türden bir insan olmalýdýr.
+
+Programcýnýn yeni teknolojileri rahat öðrenebilmesi onun esnekliðini ve
+seçeneklerini arttýrýcý faktörlerden birisidir. Kurumsal programcýlýkta ve
+özellikle kurumsal programcýlýk yapan danýþmanlýk þirketlerinde, her projede
+yeni bir teknoloji kullanýlmasý kaçýnýlmazdýr, bu sebeple yeni teknolojileri
+anlayabilme ve kullanabilme programcý için vazgeçilmez bir yetenek hâline gelir.
+
+Aranan bir diðer özellik, enerjidir. Amerika'da birçok müstakbel programcýnýn
+mülakatýný yaparken baktýðýmýz ana parametrelerden biri hep bu
+oluyordu. Enerjiyi anlamak için programcýnýn nasýl davrandýðýna, teknoloji
+hakkýndaki heyecanýna ve problemlere yaklaþýrken ki tutumuna bakabiliriz.
+
+Programcýlarý her projede genellikle acemi (junior) ve usta (senior) seviyesinde
+iki kategoriye ayýrabiliriz; Bu kategoriler programcýlarýn çalýþtýðý þirket
+içinde HR (Ýnsan Kaynaklarý) tarafýndan verilmiþ ve periyodik olarak bir sonraki
+seviyeye geçiþ (yükselme) kriterleri için kontrol edilen payeler olabilirler. Bu
+durumda junior ya da senior olmanýn {\em maaþsal} etkileri olacaktýr. Bu iþin HR
+tarafýdýr, biz teknik olarak bu kelimelerin anlamýyla ilgileneceðiz.
+
+\subsubsection{Junior Programcýlar} 
+
+Junior, Ýngilizce giriþ seviyesi ya da acemi anlamýna gelir. Bir programcý ilk
+projesinde, ve ilk iþinde bu seviyede olacaktýr. Junior bir programcýnýn,
+projede kullanýlan bilgisayar dilini ve veri tabaný kavramlarýný bilmesi
+beklenir, ama geri kalan çoðu teknolojiyi bilmiyor olabilir. Ayrýca tasarým
+düzenleri, mimarileri takip etmek konusunda yardýma ihtiyacý olacaktýr. Junior
+programcý teknolojileri kendi baþýna öðrenirken zorluk çekebilir. Fakat enerjik
+ve akýllý bir programcýysa, yol gösterilince istenilen yere rahatlýkla gidebilen
+bir kiþidir, ve teknik liderden ya da senior programcýlardan yardým alýnca
+kendi iþini halledecek duruma gelir.
+
+Junior programcýlar teknolojiyi öðrenirken, bir yandan öðrenmeyi öðrenirler. Bir
+teknolojinin püf noktalarýný kapan bir junior progamcý tipik olarak yeni
+teknolojileri daha rahat anlamaya baþlar. Bu þekilde ilerleyerek senior düzeyine
+çýkma yolunda adýmlar atmýþ olacaktýr.
+
+Projemizde bir mimarinin olmasý, en çok junior programcýlar için yararlýdýr,
+çünkü mimarinin yol gösterici özelliði onlar için iyi bir rehber hâline
+gelir. Yaygýn yapýlan hatalara karþý kurallarý iyi oluþturulmuþ bir mimari,
+junior programcýyý tuzaklardan koruyacak, ve sadece iþlem mantýðý koduna
+odaklanmasýna izin verecektir. Ayrýca mimariye bakarak ve onunla ilgili sorulara
+sorarak, teknik liderin teknoloji ve yazýlým geliþtirme felsefesi hakkýndaki
+bilgisini almýþ olur.
+
+Junior programcý, öðrenmek için orda olsa da, günün sonunda iþ yapmasý beklenir,
+ve ona harcanandan daha fazla zamaný, yapýlmýþ iþ olarak geri vermelidir. Eðer
+çok fazla soru soruyorsa ve iþ yaparken harcadýðý zaman, ona öðretilmekte
+harcanan zamandan daha fazla ise, bu bir eksikliktir, ve programcý
+uyarýlmalýdýr.
+
+\subsubsection{Senior Programcý}
+
+Senior programcý yeni teknolojiyi öðrenme, ve bir problemi çözme konusunda en
+becerikli programcýdýr. Senior programcýnýn en iyi tanýmý, ``dýþarýdan sýfýr (ya
+da çok az) yardýmla, bir problem öbeðini kendi baþýna çözen programcý''
+cümlesidir. Teknik liderden bir çýta aþaðý olan bu programcýnýn teknik liderden
+farklarý, mimari hazýrlamak, Unix ve büyük sistemlerde uygulamarýn çalýþmasýný
+anlamak, performans optimizasyonu, geliþtirme ortamý hazýrlama, planlama, ve
+sadece tecrübeyle alýnabilecek çok ince teknolojik detaylar konularýnda
+olabilir. Bunun haricinde senior programcý, teknoloji seçmek, kulanmak, tasarým
+yapmak ve nesnesel modellemede oldukça ileri bir durumdadýr. Kendine verilmiþ
+öbek içindeki kodun kalitesini üzerine alabilir, birim test tekniklerinden
+haberdardýr. Hiçbir teknolojinin kuruluþu ve kullanýmý onun için problem
+deðildir, en yeni teknolojiyi alýp iþler hâle getirebilir. Bu teknolojiyi
+kullanarak en temiz mimariyi kuramayacak olabilir, fakat {\em çalýþtýrmada}
+problem çekmez.
+
+Senior programcý mimari takip etmekte iyidir, ve mimaride bazý boþluklar
+keþfederse bunlarý teknik lidere söylemelidir. Sonuçta senior programcýnýn bir
+sonraki kariyer basamaðý teknik liderlik olacaktýr, bu yolda giderken kendine
+gereken ek yetenekleri liderden almaya uðraþmalýdýr. Teknik mimarinin tasarým
+seçimlerini anlamak bu ek yeteneklerden biridir.
+
+Teknik liderlik yolunda senior programcýya yardýmcý olmak için takýmdaki teknik
+lider, gelecek vaadeden senior programcýya kendi görevlerinden bazýlarýný
+yükleyebilir. Meselâ plan dokümanýndaki mimarinin belgelenmesi senior
+programcýya aktarýlabilir, ya da geliþtirme ortamýnýn kurulmasý (CVS), ya da
+hazýrlanmýþ mimariyi kullanan ``ilk gerekliliðin'' kodlanmasý senior programcýya
+verilmiþ bir görev olabilir.
+
+Junior programcýlar takýldýklarý yerler hakkýnda soru sormak için senior bir
+kiþiye gelebilirler. Bu sorular, projenin mimarisi, karþýlaþýlan bir problem ya
+da hata bulmak (troubleshooting) konularýnda olabilir, senior programcý kendi
+iþleri geriye düþmediði sürece bu sorulara cevap verebilir. Ama esas yangýn
+söndürücü teknik liderdir, belli bir süre harcandýktan sonra problem halâ
+çözülmediyse teknik lider konuya dahil olmalýdýr, çünkü üstüne en az kodlama
+sorumluluðunu almýþ olan teknik liderdir (mimari kodlama projenin baþýnda
+yapýlmýþ ve bitmiþtir) bu yüzden yardým etmek için en fazla zamaný olan tek kiþi
+o olacaktýr.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Planlama} \label{project:planning}
+
+Bir iþe baþlamadan önce plan yapmanýn önemini general ve eski ABD Baþkaný olan
+Eisenhower çok güzel tarif eder: ``Bir savaþ sýrasýnda planlarýn genellikle iþe
+yaramadýðýný gördüm, ama yine de planlamak, bir savaþ için en vazgeçilmez
+eylemdir''\cite{nixon}. Ýnsanoðlunun evrimi sýrasýnda sürekli olarak bilgi
+iþleyebilme kapasitesi artmýþtýr\cite[sf. 138]{complexity} ve bilgi iþleme, onu
+kaydetme, bilgiden öðrenmek anlamýna geldiðine göre, bu yeni kapasite öðrenim,
+tecrübe ve öngörü olarak insana ileriyi tahmin yeteneðini arttýrmasýný
+saðlamýþtýr. Bu artýþ, {\em planlarýmýzýn} daha doðru olacaðý anlamýna gelmiþ ve
+direk sonuç olarak hayatta kalma þansýmýzý arttýrmýþtýr.
+
+Planlar, tecrübeden destek alan doðru öngörüler üzerine kurulursa çok baþarýlý
+olurlar. Fakat düzgün öngörüler üzerine kurulmamýþlar bile olsalar, planlar
+baþarýsýz olacaklarý ana kadar bir gidiþ yönü saðlarlar, ve iþlememeye
+baþladýklarý anda plan ile gerçek durumun farkýný iyice belirgenleþtirecekleri
+için, Eisenhower'ýn dediði gibi, ortada olmalarý vazgeçilmez kaynaklar hâlini
+alýrlar.
+
+\%100 öngörü, engin teknik ve yönetim tecrübesi gerektirir, ve bu tecrübeyi bu
+kitaptaki deðiþik bölümlerde aktarmaya çalýþtýk. Geriye tek bir konu kaldý: {\em
+Planlama planýný}, yâni bir planlama sürecinin takip edeceði bazý faydalý
+kurallarý vermemiz gerekiyor. Böylece planlayýcýlar üzerinde hatýrlatýcý
+noktalar yaratarak, planlamada yapýlabilecek mekanik hatalarý en aza indirgemeyi
+amaçlýyoruz, ayrýca, bu plandan çýkmasý gereken belgeleri ortaya koyarak,
+profosyonel bir yazýlým projesinin müþterisi ile arasýnda önemli olan iletiþim
+noktalarýný göstermeyi amaçlýyoruz.
+
+Planlamanýn kaç ay ileriye doðru yapýlmasý gerektiði, üzerinde oldukça
+düþünülmüþ ve tartýþma yapýlmýþ diðer bir konudur; Bu konu hakkýnda sektörün
+seçimini sunmaya çalýþacaðýz.
+
+\subsection{Ne Kadar Ýleri Görelim?}
+
+Bu sorunun müþterimiz (iþ sahibi, projeyi siparýþ vermek isteyen kiþi)
+açýsýndan, ve yazýlým ekibi için ayrý ayrý cevaplanmasý gereken iki bacaðý
+vardýr. Yazýlým ekibi için bu cevap ``görebileceðimiz kadar ileriye'' olmalý,
+müþteri için ise, ``en çok kâr getirmesi mümkün olan an az yazýlýma yetecek
+kadar'' olmalýdýr. Bu iki nokta arasýnda hangi tarafýn daha aðýr basacaðýný
+yazýlým takýmýnýn istediði fiyat belirleyecektir. Fiyat, ({\em projedeki eleman
+kalitesi ve bunlarýn sayýlarý}) x ({\em kalite birim fiyatý}) x ({\em projede
+harcanan gün}) denkleminden çýkacaktýr. Eðer müþteri kârýný mümkün olduðu kadar
+arttýrýp tam özellikli bir yazýlým istiyorsa ve bunun bedelini ödemeye hazýrsa,
+yazýlým takýmý görebileceði kadar ileriye giden bir proje kapsamýný müþteriye
+hazýrlayýp sunmakta serbesttir.
+
+Yazýlým takýmý niye ``görebileceði kadar ileriyi'' görmeye uðraþmalýdýr? Buna
+karþý bir soruyla cevap verelim: Eðer bunu yapabiliyorsak, niye yapmayalým? Bir
+iþi daha iyi yapmasý beklenen bir yazýlým, kendi içinde bir bütündür ve sonradan
+baþýmýza dert olabilecek durumlarý öngörebiliyorsak, bu bütün içinde
+olabilecekleri öngörebilmemiz gerekir, hâtta öngörmeliyiz. Çünkü yazýlýmýn
+kalitesi ve kodun sonradan deðiþmesini engellemek bunun faydasý olacaktýr.
+
+Bazý planlama süreçlerine göre, ``uzaðý görebiliyorsak bile, görmemek daha
+iyidir'', çünkü ``o zamana kadar müþterinin fikri de, etraftaki baþka þartlarda
+deðiþmiþ olacaktýr''. Onlara göre ``zâten tasarýmý düzgün yapmamýz mümkün
+deðildir''. Ayrýca ``müþteriye ne yapacaðýný söylememeliyiz, çünkü o iþini en iyi
+bilendir''.
+
+Bu düþüncelere katýlmýyoruz, çünkü cevap vermeye sonran baþlamak gerekirse,
+danýþmanlýk dünyasýnýn önemli bir kanununu þöyle der: {\em Müþteri ne istediðini
+bilmez}. Yâni, bir projenin baþýnda en parlak, renkli, acaip önyüz ve veri
+yapýsý tasarýmlarýný gerektiren gereklilikleri önünüze getiren müþteri
+olacaktýr, fakat teknolojiyi, hâtta bâzen kendi iþ yapýlarýný ve o yapýnýn ne
+olmasý gerektiðini çoðunlukla anlamadýklarý için, gerçekçi seçimler
+yapamazlar. O zaman, bir danýþman müþteriye ileriye dönük, sürekli deðiþmesi
+gerekmeyecek (saðlam) bir iþ süreci dahilinde bir IT sistemini tavsiye edecek
+durumdaki en uygun kiþidir. Müþteriniz, bu tavsiyeyi alýnca mutlu da olacaktýr.
+
+Tasarýmý düzgün yapamama, sadece kullanmasý gereken teknolojileri iyi bilmeyen
+takýmlar ve teknik liderler için geçerlidir, bu yüzden pire için yorgan
+yakýlmamasý en iyi seçimdir. Teknik mimar zâten üzerinden optimal bir mimari
+kuramayacaðý bir iþe kalkýþmamalýdýr, bunun tersi intihardýr. Teknik lider böyle
+bir iþe giriþirse, projenin bitiþ tarihini tehlikeye atmýþ olur, ama bu sebeple
+her teknik lideri bilgi seviyesi ne olursa olsun mimari tasarlamaktan men etmek,
+\%99 þartlarda kaliteye sebebiyet verebilecek planlama aþamasýndan bizi mahrum
+býrakmek anlamýna gelecektir. Eðer teknolojiyi anlamayan teknik lider ve ona bu
+görevi vermekte sakýnca görmeyen danýþman þirketinin en yüksek teknik görevlisi
+(CTO) içine girdikleri riskin farkýnda deðillerse, aldýklarý risk geri
+tepecektir, ve tepmelidir; Tahmin edilen sonuç, daralýp iþten çýkan programcýlar,
+müþteriye zamanýnda yazýlým verememekten lekelenen bir ün ve kayýp iþ ve zaman
+olacaktýr. Kýsacasý piyasa kanunlarý durumu hâlledecektir.
+
+Müþterinin fikrinin deðiþme argümanýný herhalde (ayný anda cevaplamýþ) olduk,
+çünkü müþteriye, deðiþmeyecek fikirleri göstermek projenizin planlama takýmýnýn
+görevidir. Müþteri tabii ki planlama dökümaný imzalandýktan sonra çok gerekli
+deðiþimleri yapabilmelidir, ama bunun cevabý ayrý bir sipariþ deðiþim belgesi
+(change order document) ve sürecidir. Bu deðiþim bir mini planlama evresinden
+geçer, ve sonucunda ayrý fiyatlandýrmasý gereken bir belgeye sebebiyet
+verecektir.
+
+Konjektürden kaynaklanan deðiþimler hakkýnda ise yapacak bir þey zaten
+yoktur. Eðer sýrf bunun için rüzgar her deðiþtiðinde baþka yöne gidebilen bir
+planlama süreci kullanýrsak, o zaman habire projeye yeniden baþlamýþ oluyoruz
+demektir, ve bu, uzun vadeli planlamadan elimize geçecek hiçbir kazanýmdan
+istifade edemiyoruz demektir. Burada esas sorulmasý gereken, eðer konjektür
+deðiþmiþ ise, niye belli bir yönde gidecek bir yazýlýmýn ve iþ stratejisinin
+daha baþtan ele alýnmýþ olduðudur. Bir yerde bir hata yapýlmýþtýr, ve bu hata
+yazýlým projesinin çok üzerinde, stratejik baðlamda yapýlmýþtýr. Eðer bu hata
+yapýlmýþsa, o ana kadar yazýlmýþ kod atmaktan baþka çare yoktur. Bu kod
+kullanýlabildiði kadarýyla yeni proje yönünde kullanýlmaya uðraþýlabilir. Ama
+þundan emin olmamýz gerekiyor ki, konjektür çok fazla deðiþmiþ ve bu iþ planý
+üzerinde çok büyük deðiþikliklere sebebiyet verdiyse, üstünde çalýþacaðýmýz þey
+{\em yeni bir projedir}. Bu, gereklilik toplama, mimariyi tasarlama, vs. gibi
+tüm basamaklarýn silbaþtan tekrarlanmasý anlamýna gelir.
+
+\subsection{UGB}
+
+Kitabýmýzda, bir yazýlýmýn planlama odaðý olarak tek bir döküman önereceðiz:
+Uygulama Geliþtirme Belgesi (UGB). Bu belgenin isminin ``gereklilik belgesi''
+olmamasýnýn sebebi, içinde gerekliliklerin listesine ek olarak teknik mimarinin
+de iþlenecek olmasýdýr. UGB pür tasarým, ya da pür gereklilik belgesi deðildir,
+her ikisinin birleþimidir. Hem üzerinden ödeme þartlarýný tanýmlayan bir
+kontrakt imzalanabilecek bir belge, hem de programcýlarýn alýp (mimariyi
+gözönüne alarak) gereklilikleri geliþtirmeye baþlayabilecekleri bir
+kayýttýr. UGB kalemlerini þöyle sýralayabiliriz:
+
+\begin{itemize}
+   \item Gereklilikler
+     \begin{itemize}
+     \item Gri ekranlar
+     \item Ekranlar arasý geçiþ diyagramý
+     \item Düzyazý olarak detaylanmýþ gereklilikler 
+     \end{itemize}
+   \item Teknik mimari
+     \begin{itemize}
+     \item Yazýlým mimarisi
+     \item Sonuç donaným mimarisi
+     \item Veri tabaný þemasý
+     \end{itemize}
+\end{itemize}
+
+UGB öncelikle bir giriþ bölümü içermelidir. Bu giriþte, projenin misyonu ve
+çözmeye çalýþtýðý sorunlar özet olarak anlatýlmalýdýr. Projenin teknik
+önkabulleri paylaþýlmalý, ve sistem hakkýnda genel bir fikir verilmelidir.
+
+Gri ekranlarý bölümünde, form'larý (veri giriþ ekranlarýný) detaylý alanlarýyla
+beraber belgelememiz gerekecektir. Gri ekranlar, isimlerini renksiz ve sýkýcý
+olmaktan alýrlar, çünkü tek amaçlarý sistemizin veri alýþveriþ gerekliliklerini
+belgelemektir. Gri ekranlara bakarak tüm veri giriþ gerekliliklerini görmek
+mümkün olmalýdýr. Unutmayalým ki bu gri ekranlarýnýn, veri taban þemasý
+tasarýmýna etkileri olacaktýr.
+
+Gri ekranlarý kaðýda (ekrana) dökebilmek için, diyagram üretebilen bir program
+kullanmamýz gerekir, piyasada birçok gri ekran hazýrlayabilen ürün mevcuttur. Bu
+ürünler ile ekranlarý ekran alanlarýný gösterip, belgemizin içine þekilleri
+grafik olarak ekleyebiliriz.
+
+Ekranlar teker teker tamamlandýktan sonra, kuþbakýþý seviyesinde (alan
+detaylarýný göstermeden) sadece hangi ekrandan hangisine geçilebileceðini
+gösteren bir büyük diyagram hazýrlanmalýdýr. Bu diyagram, bir ekrandan
+diðerlerine yapýlmasý mümkün olan tüm geçiþleri göstermelidir, ve bütün olarak
+bakýldýðýnda bir að gibi gözükecek diyagram, tüm geçiþleri göstermiþ
+olacaktýr. Böylece üst seviyeden bakarak uygulamada nereden nereye
+gidebileceðimizi anlamamýz rahat olur.
+
+Ardýndan, düzyazý olarak anlatýlacak gereklilikler bölümü gelmelidir. Her
+gereklilik ayrý bir bölüm (section) içinde, düzyazý olarak anlatýlmalýdýr, ve bu
+anlatým mümkün olduðu kadar detay içermelidir. Bu belge üzerinden kodlama
+yapacaðýmýzý unutmamamýz gerekir. Belge hazýrlanýrken birçok git/gel, istiþare,
+yeniden konuþma ve al/ver (tradeoff) kararý yaþanacaktýr, çünkü müþteri kendi
+için iyi olacak gerekliliklere karar verme basamaklarýndan geçmektedir, ve bu
+saðlýklýdýr. Belgeleme süreci, yapmasý istenen þeyi, yâni iletiþimi faydalý
+yönde kanalize edici, ve en sonunda kaydedici rolünü oynamaktadýr. Planlama
+takýmý bu noktada müþteri için uygun tavsiyeleri ortaya koymalý, ve
+gereklilikleri müþteri için yararlý ve teknik olarak yapýlabilir (feasible) yöne
+doðru itmelidir.
+
+Gereklilikleri toplarken, düzyazý ya da ekranlar formatýnda, planlama takýmýnýn
+fiyatlandýrma düþünmemesi iyi olur. Unutmayalým ki müþteri, eðer kendi
+önceliklerini iyi anlamýþsa, ``en çok kâr getirecek en az yazýlýmý''
+düþünüyordur, ve bu yönde açýk tavsiyeler almak onun için faydalýdýr, ve fiyat
+ancak bu gereklilik listelemesi bittiðinde ve teknik mimari ortaya çýktýðýnda o
+projenin ne kadar süreceði (programcý sayýsýný ve kalitesine oranla tabii) belli
+olacaktýr. Bu noktadan önce, uygun gerekliliklerin listeye eklenmesi zaman
+argümanýyla engellenmemelidir. Bir özelliðin dahil edilmesi ya da edilmemesi,
+yapýlabilirlik, ve iþe faydasý çerçevesinde olmalýdýr. Müþteri nasýl olsa bir
+fiyat gördüðünde, ve o fiyat yüksek gelirse kendiliðinden gereklilik traþlamaya
+baþlayarak, daha az önemli özellikleri atmak isteyecektir.
+
+Teknik mimari, gereklilikler toplanýrken arka planda teknik lider tarafýndan
+yavaþ yavaþ piþirilecektir. TL eðer bir karara yaklaþtýysa, mimariyi paralelde,
+gereklilikler toplanýrken bile belgelemeye baþlayabilir. UGB'nin mimari alâkalý
+bölümünde hem yazýlým mimarisi hem de sonuç ortamýnýn yapýsý (donaným) ortaya
+çýkmalýdýr, yâni ölçekleme (scaling) bu aþamada yapýlacaktýr. Bu amaçla teknik
+lider müþteriye, sistemin kullaným seviyesi hakkýnda sorular sormalýdýr. Sistem,
+eþzamanlý kaç kiþi, günde toplam kaç ziyaret için hazýrlanmaktadýr? Kullaným
+düzenleri (access patterns) nasýldýr; Her dakika, saat, gün için eþit midir,
+yoksa belli bazý zýplama noktalarý (peak) olacak mýdýr (meselâ bir çiçekçi
+sitesinin sevgililer gününden bir gün önce yüksek zýplama yapmasý, ama diðer
+günler oldukça boþ kalmasý gibi).
+
+Veri tabaný þemasý ise, gri ekranlarýn bir sonucu olarak ortaya çýkacaktýr.
+
+\subsubsection{Gereklilikler ve Tasarým}
+
+Gereklilikleri düz yazý olarak yazmanýn önemini bir kere daha vurgulamak
+istiyoruz, çünkü gerekliliklerin en önemli görevi müþterimiz ile aramýzda bir
+iletiþim formatý olmaktýr, ikincil olarak, geliþtirme takýmýna ne yapacaðýný
+anlatmaktýr.
+
+Bazý planlama yaklaþýmlarýnda, gereklilik belgesini, koda yakýn bir þekilde ve
+kodun ne yapacaðýný birebir tarif etmeye uðraþýlmasý tavsiye edilir. Bu tamamen
+gereksiz, ve zaman israfý sayýlabilecek bir iþlemdir, çünkü kodlama, o iþi yapan
+programcýlarýn iþidir ve kod miktarý bakýmýndan en fazla yer tutan bölüm olan
+gereklilik kodlarýnýn iki kere yazýlmýþ olmasý (birincisi belgede diðeri kodda),
+hem uyum açýsýndan hem de efor açýsýndan zarar verecektir. ``Analizcinin
+programcýya gerekliliði hata býrakmayacak þekilde târif etmesi'' iyi bir þey
+olarak pazarlanabilir, fakat kaynak açýsýndan analizci, en fazla birkaç kiþi
+olabilir, ve bu birkaç kiþi neredeyse uygulamayý belge içine {\em yazarken},
+programcýlarýn kenarda durup bunun bitmesini beklemeleri gerekecektir. Hýz,
+günümüz iþ dünyasýnda en önemli faktör olduðu için, programcýlarýn kodlamaya
+gereklilikleri okuyarak ve mimariyi dikkate alarak baþlamasý, en uygun seçim
+olacaktýr.
+
+\subsection{Kaynaklar, Zaman, Kalite, Fiyat}
+
+UGB hazýrlandýktan sonra yazýlým takýmýnýn yönetim grubu, teknik liderin
+kontrolünde, kaynak ayýrýmý, zaman kararý ve fiyatlandýrma iþlerine
+baþlayabilir. Kaynak ayýrýmý þirket içinden programcý (kaynak) bulmak,
+fiyatlandýrma ise müþteriden istenecek meblaða karar vermek için
+yapýlacaktýr. Danýþman þirketleri için kaynak ayýrýmýnýn fiyat üzerinde etkileri
+vardýr, çünkü danýþman þirketleri aslýnda kendileri için çalýþan programcýlarýn
+{\em zamanýný} müþterilerine satmaktadýrlar. Eðer bir yazýlým projesi müþterinin
+þirketindeki programcýlara yaptýrýlacaksa (in-house development) o zaman bu
+aþamada tek yapýlmasý gereken kaynak ve zamana bakmaktýr, çünkü programcýlarýn
+maaþý nasýl olsa müþterinin kendisi tarafýndan verilmektedir.
+
+Danýþman þirketlerde, kaynak planlamasý açýsýndan yapýlmasý gereken tek þey
+teknik liderin kendi þirketi içinde bir kaynak kapma savaþý vermesidir. Eðer
+danýþman þirkette birden fazla proje üzerinde çalýþýlmakta ise, normâl olarak
+herkes en iyilerle ve en yeterli sayýda insanla çalýþmak istediði için,
+kaynaklar üzerinde diðer projelerle giriþilen kýran kýrana bir kapýþma savaþý
+yaþanabilecektir. Dot com yýllarýnda danýþmanlýk yapan bir þirketimizde
+görevlendirme toplantýlarý (staffing meeting) kanýn gövdeyi götürdüðü (!)
+toplantýlar hâline gelmekle ünlüydü.
+
+Bu kapýþma sonucu teknik lider belli sayýda adamlarý projesine katar. Þimdi bu
+adamlarýn sayýsý ve yetenek seviyeleri üzerinden, bir zaman ve ona göre bir
+fiyat kararý verilebilir. Bu irdeleme ``programcý X, Y, Z arasýndan, X senior ve
+Y, Z junior ise, A gereklilik listesi 4 ayda biter'' gibi bir çizgiyi
+izler. Danýþman þirketi her programcý tipi için bir fiyat çizelgesi
+hazýrlamýþtýr, ve X, Y, Z'nin harcayacaðý 4 ay için müþteriye bir fiyat biçilir.
+
+Ve bu, planlamanýn {\em olmasý gereken} þeklidir. Bu yaklaþýmýn tersi, yazýlým
+üst þirket yönetiminin bir projeye çok muhtaç olup imkansýz bir bitiþ zamaný
+için müþteriye direk söz vermesi, ve bir de ek kaynak vermeden teknik lidere
+projeyi bir þekilde bitirmesini istemektir. Kaynaklar ve zaman yakýn iliþkide
+olan iki vanadýrlar; Birinin deðiþimi ötekini etkiler. Ama bu iki vana
+deðiþmiyorsa, üçüncü bir vana olan {\em kod kalitesi} aþaðý düþecektir. Test
+edilmeden bittiði deklare edilen kod parçalarý, test evresine girildiðinde hâla
+geliþtirmesi devam eden yazýlým parçalarý bu garabetin baþ göstergeleri
+sayýlýrlar. Bunun yapýldýðýný sektörde ne yazýk ki pek çok kez gördük. Umarýz bu
+alanda iyiye doðru bir gidiþ yaþanýr.
+
+Bilinçli bir þekilde bir vana olarak göstermediðimiz diðer bir oynama noktasý
+(dokunulmamasýný umarak), programcýnýn iþ saatinin arttýrýlma vanasýdýr. Vana
+olarak gösterilmemiþtir çünkü programcý saatinde oynama yapmak, kalitesizlik ile
+toplanarak programcýnýn stresini arttýrýcý bir rol oynayabilir. Psikolojik
+olarak programcýlar proje daha baþlamadan geç kaldýklarýný hissederler ve
+sürekli kovalama oyunu oynadýklarý bilinciyle tüm potansiyelleri ile
+çalýsamazlar. Belli bir yaþ seviyesindeki programcýlarla bu oyunu oynamak mümkün
+olabilir, fakat bir süre sonra bu oyunu oynayacak programcý bulmakta
+zorlanabiliriz. Talebin olduðu bir piyasada, programcýlar daha az stresli
+çalýþabilecekleri yerlere geçeceklerdir.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Geliþtirme Ortamý][GELÝÞTÝRME ORTAMI]{Geliþtirme Ortamý} \label{project:devenv}
+
+Geliþtirme ortamý, kaynak kod deposu, test makinalarý, test veri tabaný, hata
+takip sistemi ve programcýlarýn makinalarýný içeren sistemler ve ürünler
+topluluðudur. Bu bölümde, geliþtirme ortamýný oluþturan sistemlerin kurulmasý ve
+aralarýndaki iliþkinin nasýl olmasý gerektiðini iþleyeceðiz.
+
+Her projede, üzerinde kaynak kod deposu (meselâ CVS'in) çalýþacaðý bir makina
+gereklidir. Bu makina, herkesin geliþtirme ortamýnýn baðlanýp en son kodu alýp
+geri verebileceði bir merkezi yer olmalýdýr. Genellikle bu makinanýn uygulama
+servisi ve veri tabaný test makinalarýndan ayrý olmasý tavsiye edilir. Bu
+makinanýn üzerindeki kod depolarýnýn yedeklenme iþi düzenli olarak yapýlmalýdýr.
+
+Programcýlarýn geliþtirme makinalarý (hesaplarý), merkezi depo'ya iþaret eder,
+ve tüm kod alma/verme iþlemleri, bu depo üzerinden yapýlýr. Test için ortaya
+çýkartýlacak sürüm, müþteriye projenin sonunda gönderilecek final ürün, hep bu
+merkezi depodan çekilen kodlar baz alýnarak yapýlmalýdýr. Tüm kodun en son hâli,
+sadece kod deposunda olmalýdýr.
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.5}{
+  \includegraphics{./images/dev_env_actors.eps}
+  }
+}
+\caption{Geliþtirme Ortamý Fiziksel Yapýsý}
+\end{figure}
+
+Programcýlarýn hususi geliþtirme ve test ortamý için iki türlü fiziksel yapý
+mümkündür:
+
+\begin{itemize}
+   \item Unix makinalara login ederek, onlar üzerinden geliþtirme ve test
+   \item Windows makinalarda geliþtirme ve Unix üzerinde test
+\end{itemize}
+Bu anlatým, dolaylý olarak þu önkabulu içerir: Her programcýya ayrý bir test
+ortamý gereklidir. Bu test ortamý, genellikle, Unix üzerinde olur, çünkü sonuç
+(production) makinasý bir Unix makinasýdýr. Test ortamýnýn sonuç ortamýna mümkün
+olduðu kadar benzemesi, üzerinde kodun iþleyeceði final ortamda çýkabilecek
+hatalarý önceden yakalama bakýmýndan çok önemlidir. Projemizde iþletim
+sisteminden iþlerkod seviyesinde baðýmsýz olan Java dilini kullanýyorsak bile,
+bu durum böyledir, çünkü baytkod ayný bile olsa, JVM'ler ayrý iþletim
+sistemlerinde çalýþmaktadýr. Bir Murphy kanununa göre ``ters gidebilecek herþey
+ters gidecekse'', o zaman tüm potansiyel terslikler (bir JVM'de çalýþan kodun
+öteki iþletim sistemindeki JVM'de çalýþmamasý ihtimali) önceden test
+edilmelidir.
+
+Eðer Unix üzerinde geliþtirme yapýyorsak, bu birden fazla programcý ayný
+makinada kodlama yapýyor demektir, ve bu sebeple \ref{install:jboss:ports:dev}
+bölümünde anlatýldýðý gibi herkesin uygulama servisi (meselâ JBoss) için ayrý
+ayrý port'lar kullanmamýz gerekir. Programcýlar ayrý Unix hesaplarý ile merkezi
+geliþtirme makinasýna girecekler, ve oradaki ortamlarý (\PVerb!javac!, editör,
+vs) ile geliþtirmeyi yapýp, depoya o ortamdan son stabil kodu göndereceklerdir.
+
+Eðer geliþtirme Windows, test ortamý Unix ise (yâni potansiyel JVM
+farklýlýklarýndan çýkabilecek hatalarý göze aldýysak), geliþtirme ortamýnda port
+ayrýmý yapmamýz gerekmez çünkü herkesin makinasý ay\textbf{rý}dýr ve bu yüzden
+bu makinalar ayný port'larý kullanabilirler. Fakat test makinasý merkezi
+olacaktýr, ve bu sebeple \ref{install:jboss:ports:dev} bölümündeki port ayar
+deðiþikliðini test makinasý için yapmamýz gerekir.
+
+Unix üzerinde, geliþtirme ya da test amaçlý birçok kullanýcýyý ayný makinada
+desteklemek için teknik lider þu prensibi takip etmelidir. Geliþtirme ve test
+amaçlarý için {\em her programcýya}
+
+\begin{figure}[!hbp]
+\center{
+  \scalebox{0.55}{
+  \includegraphics{./images/dev_env_flow.eps}
+  }
+}
+\caption{\label{project:devenv:flow} Geliþtirme ve Test Sýrasý}
+\end{figure}
+
+\begin{itemize}
+   \item Bir Unix kullanýcýsý (kendi adýnda)
+   \item O kullanýcý üzerinde iþleyen bir JBoss sürecine ayrý bir port
+   \item Uygulamanýn kullanacaðý ayrý isimli bir veri tabaný þemasý
+   (kullanýcýsý)
+\end{itemize}
+tahsis edilmelidir. Tüm bu birimlerin herkes için \textbf{ayrý} olmasý çok
+önemlidir! Yoksa, ayný anda ayný makinada geliþtirme ya da test yapmanýn imkaný
+yoktur.
+
+Ayrý port/kullanýcý/süreç sistemi, tüm programcýlara ve testçilere
+birbirlerinden izolasyon saðlayarak, herkese kendi geliþtirme/test ortamýný
+verir. Ýnsanlarýn bir test yapmak için birbirinden izin istediði, ya da
+istemeden direk kullanmaya baþlayarak birbirlerinin sonucunu etkilediði bir
+sistem optimal-altý, hatalara açýk ve hiçbir þirketin takip etmeyeceði bir
+yöntemdir.
+
+Veri tabaný, fiziksel olarak, uygulama servislerinin iþlediði test Unix
+makinasýnda olabilir.
+
+\subsection{Test Ortamýna Deployment}
+
+Geliþtirme süreci içinde uygulama belli bir olgunluða eriþtiði zaman test için
+en son kodu test makinasýna gönderme iþi teknik lider tarafýndan özel script'ler
+kullanýlarak yapýlýr (bölüm \ref{deploymonitor:deploy}). Eðer programcýlar
+Windows'da çalýþýyor ve hepsinin ayrý bir Unix makinasýnda test hesaplarý var
+ise, bu script'ler zaten programcýlarýn kendi test'leri için sürekli
+kullanýlmaktadýr, teknik lider sadece bu kod gönderim iþlemini {\em testçi için
+ayrý} bir Unix hesabýna, JBoss port'una ve veri tabaný kullanýcýsýna doðru
+yapacaktýr. Kodlarýn geliþtirme ve diðer ortamlarý arasýndaki hareketi, Þekil
+\ref{project:devenv:flow} üzerinde gösterilmiþtir.
+
+Ek olarak teknik lider, kod depo sisteminde gönderilen kodun gününü belirten bir
+etiket atýlmalýdýr, çünkü bu sürüme sonradan dönmek gerekebilir.
+
+Bu yapýldýktan sonra, artýk en son kodlarý içeren test hesabýnda üzerinden test
+servisi baþlatýlýr, ve kabul testlerini iþletmekle görevli kiþi bu servis
+üzerinde testlerini yapmaya baþlar. Bulunan hatalar hata takip sistemine
+girilecektir.
+
+Projenin kaynak kod dizin aðacýnda bulunmasý gereken önemli script'ler,
+
+\begin{itemize}
+   \item Kod göndermek
+   \item Veri tabanýný sýfýrdan kurmak
+   \item Test verisi yüklemek
+\end{itemize}
+için yazýlmýþ script'lerdir. Kitabýmýzýn örnek projelerinde veri tabaný
+script'leri \PVerb!src/sql! altýndadýr. Bu script'ler \PVerb!.sql! dosyalarýnda
+bulunurlar ve test makinasýna her kod gönderildiðinde test makinasýnda
+iþletilerek en son kodun en son þema ile çalýþmasý saðlanmalýdýr. Bu beyanýn bir
+yan sonucu olarak, þemanýn en son hâlinin her zaman \PVerb!sql! dosyalarýna
+yazýlmasý gerekliliði sonucuna varýrýz; Þema ile kodun arasýnda olmasý gereken
+birebir iliþki barizdir, ve bu iki tarafý senkron halde tutmaya dikkat ederek,
+en son kodun {\em eski bir þema} üzerinde test edilmesini engellemiþ
+oluruz. Hattâ teknik liderin koyacaðý önemli davranýþ kurallarýndan biri bu
+olmalýdýr: ``Her þema deðiþikliði ilk önce \PVerb!src/sql! altýndaki script'ler
+içinde yapýlmalý ve bu deðiþikliði kullanan kodlar ile birlikte KKÝ'a ayný anda
+eklenmelidir (check-in)''. Þema deðiþiði {\em hiçbir zaman} test veri tabaný
+üzerinde direk olarak yapýlýp, orada býrakýlmamalýdýr. Þema, kodumuzun ayrýlmaz
+bir parçasýdýr.
+
+Kod deposu, uygulamanýn çalýþmasý için gereken her türlü metni içeren bir merkez
+olmalýdýr.
+
+Kod gönderme için gereken script, meselâ \PVerb!deploy.sh! adýnda ve
+\PVerb!src/scripts! dizini altýndaki olabilir. Bu script parametre olarak deploy
+edilecek makinanýn ismini, ve Unix hesap ismini alabilir. Bunlarý kullanarak,
+önce kod deposundan en kodu alacak, Ant ile derleyecek, \PVerb!scp! ile derlenen
+kodlarý test ortamýna gönderecek, ve test veri tabanýndaki þemayý silbaþtan
+yaratýp (\PVerb!CREATE TABLE! komutlarý ile) test verisini ekleyecektir.
+
+\subsection{Kaynak Kod Ýdaresi}
+
+Kaynak kod idaresi (KKÝ) sistemi bir projede çalýþan tüm programcýlarýn yazdýðý
+kodun ve script'lerin metninin muhafaza edildiði yerdir. Bu merkezi yere olan
+gereksinimimiz, birçok programcýnýn ayný anda ayný yerdeki kod üzerinde yaptýðý
+deðiþiklikleri gönderebilme ihtimalinden ortaya çýkmaktadýr; Eðer ayný dosyayý
+birden fazla kiþi deðiþtirmiþse, KKÝ bu çakýþmalarý çözecek teknolojiye
+sahiptir.
+
+Ayrýca KKÝ tarihi bir arþiv niteliðini taþýr. Bu akýllý depo, bir kod parçasýnýn
+üzerinde yapýlmýþ olan tüm deðiþiklikleri hatýrlayabilir. Eðer kod parçasý X'in
+2, 3, 10 gün önceki hâline dönmek istiyorsak, bu KKÝ sistemleri için çok basit
+bir iþlemdir. Bunu yapmak projelerde çok sýk olmasa da, arada yapýlmasý
+gerekebilir ve gerektiði zaman KKÝ tarafýndan desteklenmesi istenir.
+
+Diðer aranan KKÝ özellikleri kaynak kodlarý yedekleme, belli bir tarihteki tüm
+kodlara iþaret atarak o günün kodunu dondurma (labeling) ve dallanmak
+(branching) gibi özelliklerdir. Bunlarýn CVS ile nasýl yapýlacaðýný ileri
+bölümlerde iþleyeceðiz.
+
+CVS, ürün olarak piyasadaki en rahat eriþilebilir, fiyatý uygun (bedava) ve
+hakkýnda yaygýn kaynak olan KKÝ sistemidir. Son zamanlarda Subversion adlý açýk
+yazýlým ürün de popülerlik kazanmaya baþlamýþtýr. Açýk yazýlým projelerinin
+neredeyse tamamý CVS kullanýr, bunda CVS'in programcýlara kopuk (disconnected)
+þekilde çalýþmasýna verdiði destek büyük rol oynamýþtýr (fiyat ikinci bir
+etkendir).
+
+Kopuk çalýsma, sadece Ýnternet üzerinden iletiþim kuran ve deðiþik bölgelerden
+programcýlarýn beraber çalýþmasýný çaðrýþtýrýr, fakat kopuk çalýþma ayný
+bölgede, ayný odada çalýþan programcýlar için bile istenen bir özelliktir. CVS
+ile bir dosyayý deðiþtirmek için kitlememiz gerekmez, ve baþkasý ile ayný anda
+yaptýðýmýz deðiþikliðimizi CVS'e ayný anda geri koymaya uðraþýrsak CVS bir
+çakýþma (merge conflict) mesajý alýrýz. Böylece CVS ikinci deðiþiklýði gönderen
+kiþinin çakýþmayý çözmesini bekler. Bu durum, ayrý bir dünya için olsa da,
+\ref{web:patterns:update:optimistic} bölümünde uygulama ve veri tabaný
+arasýndaki çakýsma çözme dinamiðine çok benzer. Ve uygun çözüm ne kadar ilginç
+ki ``tekrar'' iyimser kitleme (optimistic locking) yönünde olmuþtur, yâni burada
+da çözüm çakýþmayý sonradan çözmek yönündedir. Ýyi fikirlerin sürekli ortaya
+çýkma gibi bir adetleri vardýr.
+
+\subsubsection{Ýlk Kod Deposunu Hazýrlamak}
+
+CVS kurmak için \ref{install:cvs} bölümüne baþvurunuz. KKÝ sistemi için önce bir
+depo yaratmak gerekir. Bu depo, bütün kaynak kodun saklandýðý yer olur. Projenin
+ilk kodunu sisteme eklemek için, CVS'in olduðu makinaya baðlanýp (yâni
+\PVerb!CVSROOT! deðiþkenini o makinadaki depoya set edip), \PVerb!cvs import!
+komutunu kullanmalýyýz. Bu komut, sadece projenin baþýnda gereklidir. Teknik
+lider projenin dizin yapýsýný, Ant script'lerini, mimari için gereken Java
+dosyalarýný, ve jar kütüphanelerini kendi yerel makinasýnda hazýrladýktan sonra
+bu yapýnýn tamamýný CVS'e koymak isteyecektir. O anda CVS bomboþtur, ve ilk
+giren kod bu kodlar olacaktýr.
+
+Bu durum tipik bir \PVerb!cvs import! gerektiren bir durumdur. Teknik lider,
+eðer projeyi \PVerb!/usr/local/proje1/! altýnda kurdu ise, önce o dizine gider,
+ve þu komutu iþletir.
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs import -m "Proje Ekleniyor" havuz_ismi vendortag releasetag
+\end{lstlisting}
+
+Bu komut, \PVerb!havuz_ismi! için ne kullanýldýysa, o isimde bir kod havuzu
+CVS'te yaratacaktýr, ve \PVerb!/usr/local/proje1! altýndaki bütün kodlarý oraya
+koyacaktýr.
+
+Bu komutu kullanýrken, CVSROOT deðiþkeninin doðru ayarlanmýþ olduðunu
+farzediyoruz. CVS kurmak ile ilgili \ref{install:cvs} bölümünde, havuzun
+fiziksel adresini taþýmak için \PVerb!-d! yaklaþýmý yerine \PVerb!CVSROOT!'un
+daha iyi olacaðýný belirtmiþtik.
+
+Bir önemli not daha: \PVerb!cvs import!, (teknik lider için)
+\PVerb!/usr/local/proje1! dizinini geliþtirme yapmaya hazýrlamaz, sadece o kodu
+içeri koyar. Yani, o kodu içeri koyan teknik lider cvs commit, cvs update gibi
+komutlarý kullanmak istiyorsa, önce \PVerb!cvs co havuz_ismi! komutunu iþletmeli
+ve kodu aynen öteki programcýlarýn yapacaðý gibi dýþarý çekmelidir. Bunu ya ayný
+dizinde, ya da baþka bir dizinde yapabilir.
+
+\subsubsection{Dallanma (Branching)}
+
+ClearCase kullanýlan bir projede çalýþmýþ olanlar, branch kullanýmýnýn ne kadar
+fazla olduðunu gözlemlemiþtir. ClearCase, branch yaratmayý ve kullanýmýný büyük
+ölçüde rahatlatýr. ABD'de `büyük beþli' diye bilinen danýþman þirketlerinden
+(Deloitte \& Touche, Ernst \& Young, KPMG, PriceWaterhouseCoopers and Accenture)
+gelen arkadaþlarda bu derin ClearCase etkisi ile bir `branch' kültürü
+hissedersiniz. Bu þirketlerdeki ClearCase kullanýmýnýn sebebi, büyük projeleri
+idare etmek için eskiden ClearCase'den daha profosyonel bir aracýn
+olmamasýdýr. Bu þirketler de yazýlýmda eski ve köklü þirketlerden sayýlýrlar.
+
+ClearCase'çilerin de çok branch kullanmalarýnýn sebebi de aslýnda þudur:
+ClearCase de çalýþýrken, bir dosya üzerinde çalýþmak için önce onu kitlemeniz
+gerekir. Eðer branch'ler olmasaydý, ayný kod üzerinde çalýþan programcýlar {\em
+ayný anda}, {\em ayný dosya} üzerinde çalýþamaz olurlardý. Bu da kabul edilmez
+bir durumdur. Ýþte bu sebeple de ayný dosya üzerinde çalýþmasý muhtemel
+olabilecek ayný takýmýn programcýlarý, kendileri için ayrý birer branch yaratma
+yoluna gider olmuþlardýr. Yâni kiþi baþýna branch yaratmak, ClearCase kodcularý
+için bir lüks deðil, aslýnda bir {\em zorunluluktur}.
+
+Fakat açýk yazýlým, kendisi ve kültürü ile bu yaklaþýmý deðiþtirmeye
+baþladý. Öncelikle, CVS kopuk (disconnected) çalýþmaya uygun bir araç olduðu
+için, bu stil, dünyanýn herhangi bir yerinde olabilecek açýk yazýlýmcý için daha
+uygun bir model olmuþtur. CVS'te bir dosya üzerinde çalýþmak için onu kitlemeniz
+gerekmiyor. CVS, herkesin ayný dosya üzerinde deðiþiklik yapmasýna izin verir,
+ve bu sebeple olabilecek, yâni ayný dosyayý birkaç kiþinin deðiþtirmesinden
+ortaya çýkabilecek, çakýþmalarý (merge conflicts) önceden engellemek deðil, {\em
+sonradan, commit anýnda kontrol etmeyi} seçer. Çakýþmalarý çözmek, biraz CVS'in
+yardýmýyla ikinci deðiþikliði yapan programcýya kalýr.
+
+Örnek: A ve B tüm kodu checkout ederler. A dosya X'i deðiþtirir. B X'i
+deðiþtir. A commit eder. B commit eder, ve B çakýþma hatasý görür. Bu
+çakýþmalarý, \PVerb!cvs up! komutu otomatik olarak çözebilir, ve {\em lokal}
+dosyasýnda, güzelce formatlanmýþ þekilde hangi parçanýn hangi kodcudan geldiðini
+gösteren bir þekilde bir otomatik birleþtirim (auto merge) sonucu
+görecektir. Ama iþ bitmiþ deðildir, final bir versiyon için bu parçalardan
+birinin ya da ötekin seçilmesi, ve bu final versiyonun CVS'e commit edilmesi
+gerekir. Ancak bu yapýlýnca iþ tamamlanacaktýr.
+
+CVS ClearCase'den kitleme baðlamýnda deðiþik olmasýna karþýn, bu, CVS'te hiç
+branch kullanýlmayacaðý anlamýna gelmez. Evet, CVS projelerinde branch kullanýmý
+daha azdýr, ama {\em gereksiz} deðildir. O zaman þu sorularýn cevabýný verelim:
+
+\begin{itemize}
+  \item CVS'te ne zaman branch yaratmak gerekir, ya da daha genel anlamýnda `bir
+yazýlým projesi ne zaman branch yaratmalýdýr?'.
+  \item Ne kadar sýklýkla branch yaratýlmalýdýr?
+  \item Branch'lerle alâkalý hangi disiplin takip edilmelidir; Yâni branching
+  yaplarýmýz, yapmalarýmýz nelerdir?
+\end{itemize}
+
+Ýlk soruya cevap verelim. Bazý þartlar vardýr ki, branch kullanýmý
+kaçýnýlmazdýr. Meselâ, 2004-10-02 tarihinde HEAD üzerinden bir sürüm yaptýnýz ve
+yazýlýmýn bir sonraki özelliklerini eklemeye devam ettiniz, haftalar geçti ve
+kodcularýnýz tam gaz gidiyorlar. CVS'i kullanma stiliniz þöyle: Kodun son hâlini
+HEAD üzerinde tutuyorsunuz, programcýlar kodlarýný son hâlini buraya commit
+ediyorlar.
+
+Fakat, birden bir kullanýcýnýz (user) haftalar önceki 2004-10-02 sürümünde bir
+hata buldu. Fakat öyle bir þey ki, siz yeni versiyon içinde zâten `bu hatanýn
+olduðu modülü' tamamen deðiþtirmektesiniz, yâni hata veren kod ortalýkta yok!
+Bu hatanýn tamir edilmesi ve kullanýcýya yeni bir sürüm verilmesi gerekiyor. Ne
+yapacaksýnýz? Tamir edilecek kod artýk HEAD'de deðil, ya da orada, ama üzerinde
+baþka bir þey eklenmekte, yâni çalýþma hâlinde.
+
+Ýþte bir branch, bu klasik derde bir devadýr. Prensip olarak, sürüm yapýlýnca
+(örneðimizdeki 2004-10-02 tarihi) kodun o andaki haline CVS'te bir tag (etiket)
+atýlýr. Ve bundan sonra geliþtirmeye HEAD üzerinde devam edersiniz. Bu sayede
+hata raporu gelince, tag koyulan yere geri dönebilirsiniz. Hatayý tamir için,
+HEAD'i etkilemeyecek bir yan dal açmanýz gerekir, yâni bir branch. Þimdi hatayý,
+{\em bu branch üzerinde} tamir edip, commit etmeniz mümkündür. Bu deðiþiklik
+HEAD tarafýndan görülmeyecektir. Bu durum HEAD üzerinde yeni özellikleri ekleyen
+arkadaþlarý mutlu eder, çünkü kendi hâllerinde iþlerine devam etmek isterler.
+
+Ýþte branch'in faydasý budur. Bir branch, herhangi bir zamanda HEAD'in sanal bir
+kopyasýdýr, ve o andan itibaren ondan baðýmsýzdýr. Branch'ler sayesinde HEAD'i
+öteki branch'lerden izole edebiliyoruz. Yan detay olarak: bir branch HEAD'den
+olduðu gibi baþka bir branch'ten de açýlabilir, CVS buna izin verir, ama bu
+yaklaþýmý tavsiye etmiyoruz. Bir branch'i sadece HEAD'den açmalýyýz.
+
+Hata tamir senaryomuza dönersek; Diyelim ki, 2004-10-02 branch'i üzerinde
+yapýlan deðiþiklik projenin en son hâlinde isteyeceðimiz bir özellik. Yâni eðer
+yaptýðýnýz düzeltmeleri HEAD üzerine de koymak istiyorsanýz, bunu merge iþlemi
+ile gerçekleþtirebilirsiniz. Bu iþlem, cvs up yaptýðýmýzda olan merge iþleminin
+branch-lerarasý bir karþýlýðýdýr. Aynen normal CVS kullanýmýnda olduðu gibi eðer
+çakýþmalar olursa, CVS sizi uyaracaktýr. Bu iþlem için gereken komutlarý daha
+sonra göreceðiz.
+
+Branch'ler ile çalýþmaya baþladýðýnýzda, özellikle Kaynak Ýdare Lideri (KÝL)
+olan siz, birden fazla olacak branch'leri hatýrlamak ve ismine bakarak ne için
+yaratýlmýþ olduðunu çabukça anlabilmek için bir {\em isimlendirme stratejisi}
+geliþtirmek zorundasýnýz.
+
+Tavsiyemiz bu ismin, aþaðýdaki her kavram için diðerlerinden \_ ile ayrýlan bir
+kelime kullanmasýdýr. Bu kavramlar
+
+\begin{itemize}
+ \item \textbf{ Sabit bir önek}: Ýsmin branch olduðunu belirten B harfi, ya da tag
+ için T.
+ \item \textbf{Proje safhasý}: (ALPHA, BETA, RELEASE)
+ \item \textbf{Bir ayraç}: KKÝ tarafýndan ya da kullanýcý tarafýndan
+   kararlaþtýrýlýr. 1,2,3 ya da ÖNCE, SONRA, kullanýcý ismi, vs.
+ \item \textbf{Tarih}: (YIL-AY-GÜN olarak, örnek: 2004-10-20)
+\end{itemize}
+
+Örnek olarak, BETA safhasýnda yarattýðýmýz bir branch ismine bakalým:
+\PVerb!B_BETA_1_2004_10_22!.
+
+Bir branch yaratmak için, \PVerb!cvs tag! komutunu kullanmamýz gerekiyor. Bu
+durum, \PVerb!cvs tag! komutunu daha önce salt etiketlemek için kullanlar için
+biraz garip gelebilir. Fakat tarihi bir takým sebepler yüzünden durum böyledir.
+
+Branch'e dönelim: Baþta bahsettiðimiz senaryo baðlamýnda tag koyma iþi (pür
+etiket), branch'in kendisinden muhakkak daha önce gelecektir. Her release'den
+sonra, muhakkak tag atmayý unutmayýn! Eðer dönecek iþaretiniz yoksa, o noktadan
+branch açmanýz imkansýz hâle gelir. Projenin önemli kilometre taþlarýný bir tag
+ile iþaretlemeyi alýþkanlýk hâline getirin.
+
+Örneðimize dönelim: Bu þekilde atýlmýþ olan tag isminin
+\PVerb!T_RELEASE_1_2004_10_22! olduðunu farzedersek, önce o tag'e dönüp, yeni
+bir çalýþma dizinini sadece o tag için checkout etmemiz gerekecektir.
+
+\begin{lstlisting}[language=Java, frame=none]
+cd /vs/vs/proje1/
+
+cvs co -d eski_release -r T_RELEASE_1_2004_10_22
+\end{lstlisting}
+Þimdi bu çalýþma dizini içinden bir branch oluþturabiliriz.
+
+\begin{lstlisting}[language=Java, frame=none]
+cd /vs/vs/proje1/eski_release/ModulIsmi
+
+cvs tag -b B_RELEASE_1_2004_10_22
+\end{lstlisting}
+Böylece sürümün yapýldýðý anda tanýmlanmýþ tag üzerinden artýk bir branch
+yaratmýþ oluyoruz. Artýk deðiþikliklerimizi bu branch üzerinden yapabiliriz. 
+
+Fakat dikkat! Hâlen branch üzerindeki kodlarý gösteren bir çalýþma dizini
+içinde deðiliz. Bu çalýþma dizinini yaratmak için, cvs co komutunu kullanmamýz
+gerekiyor. 
+
+\begin{lstlisting}[language=Java, frame=none]
+cd /vs/vs/proje1/
+
+cvs co -d Relase1Branch -r B_RELEASE_1_2004_10_22 
+\end{lstlisting}
+Tamam. Artýk \PVerb!/vs/vs/proje1/Relase1Branch! altýnda branch kodlarý üzerinde
+istediðimiz düzeltmeyi yapabiliriz. Geliþtirme sýrasýnda artýk tamamen ayrý bir
+branch'te olduðunuza göre, istediðiniz kadar checkin yapabilirsiniz. Bu
+commit'ler sadece branch'inize gidecektir, HEAD etkilenmeyecektir. Deðiþim
+bittikten sonra, önce update sonra commit yapmalýsýnýz. Her commit'ten önce
+update yapmayý da alýþkanlýk hâline getirin. Bu sayede ayný branch üzerinde
+olabilecek çakýþmalarý görebilirsiniz.
+
+\begin{lstlisting}[language=Java, frame=none]
+cd /vs/vs/proje1/Relase1Branch/ModulIsmi
+
+cvs -q update
+\end{lstlisting}
+Merge çakýþmasý gelmedi ise, commit edebiliriz.
+
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs ci -m "Hata no 3342 tamir edildi"
+...
+...
+(commit çýktýsý)
+...
+...
+\end{lstlisting}
+Örneðimizin baþýnda, tamir edilmesi gereken kodun artýk ortada bile
+olmayabileceðini söylemiþtik. Bu durumda HEAD branch herhalde yapýlan tamire
+ihtiyaç duymaz. Siz de tamiri branch içinde býrakýr ve bir daha onu
+kullanmazsýnýz (branch'i silmeyin). Fakat durum öyle olabilir ki (ve çoðunlukla böyle
+olacaktýr) yapýlan tamir HEAD üzerinde de yapýlmalýdýr. Hata raporu release
+tarihine oldukça yakýn olabilir ve gelen rapor HEAD üzerindeki yeni özellikleri
+bile etkiliyordur. Bu durum, branch'ten HEAD'e merge yapmamýzý gerektiren bir
+durumdur. 
+
+Bu noktada, `eðer ayný deðiþikliði HEAD üzerine nasýl olsa geçireceksek, niye bu
+iþ için bir branch açtým. Release tag'deki hâlimize dönüp, orada tamir
+yapabilirdim' diye düþünebilirsiniz. Bu düþünce þu sebeple geçersizdir.
+
+\begin{enumerate}
+  \item Release tag üzerinde kod deðiþtirirseniz, tag, hareketli bir tag
+  olacaktýr. Halbuki release tag'i, kodun belli bir anda taþa kazýnmýþ hâli
+  olmalýdýr. Siz deðiþiklikleri release tag üstünde commit ederseniz, kodun ilk
+  release'deki hâline bir daha asla dönemezsiniz. `Zaten ihtiyacým olmaz'
+  demeyin. Gerekebilir.  \item Branch üzerinde tamir yapmakla, istediðiniz kadar
+  commit etme, ve günlerce bu branch'te kalma lüksüne kavuþmuþ oluyorsunuz. Ne
+  siz HEAD'i, ne HEAD sizi etkiliyor.
+\end{enumerate}
+Tamam. Þimdi HEAD'e merge tekniðini görelim. Biz de bir geliþtirici olduðumuza
+göre, HEAD'e iþaret eden yâni en son kodlarý içeren bir çalýþma dizinimiz
+olacaktýr. Yoksa yaratalým. Merge'e baþlamadan önce de \PVerb!cvs up -d! ile
+güncelleyelim. Bu dizin içine gidelim, ve önce ``update'' ile çakýþmalarý
+görelim. Çakýþmalarý çözdükten sonra da commit (\PVerb!ci!) ile iþi bitirelim.
+
+\begin{lstlisting}[language=Java, frame=none]
+cd /vs/vs/proje1/HEAD/ModulIsmi
+
+cvs -q update -j B_RELEASE_1_2004_10_22 
+
+cvs -q ci -m "B_RELEASE_1_2004_10_22  Branchinden Merge Edildi"
+\end{lstlisting}
+Bravo. Ýlk merge'ü gerçekleþtirdiniz.
+
+Bu merge bittikten sonra, eðer ayný branch'i ileride tekrar kullanmak
+istiyorsanýz, önemli bir uyarýda bulunmak isterim. Ayný branch'ten HEAD'e {\em
+birden fazla} merge yaparsanýz (tabii ki yeni deðiþiklikler ve yeni bir commit
+yaptýktan sonra), bir sürprizle karþýlaþacaksýnýz. CVS, daha önce yaptýðýnýz
+deðiþiklikleri tekrar merge etmeye çalýsacak! Ve bu sebeple ``warning: conflicts
+during merge'' mesajýný görürsünüz. Bunun sebebi, CVS'in ``son yaptýðýnýz
+commit'lerin kümesi'' diye bir anlayýþýnýn olmamasýdýr. CVS'e göre, ``beraber
+commit olmuþ'' dosya A,B,C arasýnda hiçbir baðlantý yoktur. Merge iþleminin
+tarifi de branch'in üst noktasý ve HEAD arasýndaki farkýn uygulanmasý olduðuna
+göre, üst nokta, ayný deðiþiklikleri içerecektir, ve çakýþma ortaya çýkacaktýr.
+
+Bu problemin üstesinden gelmek için, CVS'e biraz yardým etmemiz lâzým. Branch
+üzerinde ilk tamiri gerçekleþtirdikten sonra branch üzerine bir tag koyun. Ýsmi,
+meselâ, \PVerb!B_RELEASE_1_2004_10_22_tamir_1! olsun.
+
+Böylece Ýkinci tamiri yaptýktan (ve commit ettikten sonra), CVS'e `bu tag'ten
+önce yaptýklarýmý istemiyorum' diyebilirsiniz. Bunun için (HEAD çalýþma dizini
+içinde) þunlarý kullanmanýz lâzým.
+
+\begin{lstlisting}[language=Java, frame=none]
+cd /vs/vs/proje1/HEAD/ModulIsmi
+
+cvs -q update -j B_RELEASE_1_2004_10_22_tamir_1 B_RELEASE_1_2004_10_22
+
+cvs -q ci -m "B_RELEASE_1_2004_10_22 tamir 2 Branchinden Merge Edildi"
+\end{lstlisting}
+Ýlk -j baþlangýç tamir 1'den sonra konulan tag'dir, ikinci -j normal branch
+ismidir.
+
+Herhalde burada alýnacak ders þu olmalýdýr: CVS'te sýk sýk tag atýn! Bir release
+olayý, bir branch'ten HEAD'e merge olayý, ya da bir hata tamiri CVS dünyasýnda
+{\em önemli} olaylardandýr, ve günün anlam ve önemini belirten bir tag ile
+kutlanmalarý (!)  gerekir.
+
+Artýk seçtiðimiz yolu özetlemeye hazýrýz.
+
+\begin{itemize}
+\item CVS'te en rahat geliþtirme yolu, programcýlarýn en sonu kodu HEAD
+ üzerinde geliþtirdikleri yoldur. Zâten progamcýlarýn çalýþma dizinleri bir nevi
+ branch gibi de görülebilir. Ama bu yöntemi verimli çalýþýr hâlde tutmak için, þu
+ kurallarý sýký sýký takip edin:
+ \begin{itemize}
+   \item Programcýlarýnýza sýk sýk commit etmesini söyleyin (her gün).
+   \item Programcýlarýnýza derlenmemiþ ve testleri geçmeyen kodu commit
+   etmemesini tembih edin.
+   \item Herkesin CVS'ten en son kodu sýk sýk almalarýný söyleyin.
+ \end{itemize}   
+ \item Branch'leri özel durumlar (hata tamiri) için kullanýn. 
+ \item Önemli olaylarda tag atýn (hem HEAD üzerinde, hem de branch'ler
+ üzerinde). Meselâ bir release, ya da hata tamiri muhakkak tag gerektiren
+ durumlar olmalýdýr.
+ \item Ýþinizin bittiði branch'i kendi hâlinde býrakýn. Çalýþma dizinini
+ silebilirsiniz (tabii içindeki herþeyin commit edildiðine emin olduktan
+ sonra). Bu branch'i CVS'ten silmeye uðraþmayýn. Tekrar iþinize yarayabilir.
+\end{itemize}
+
+\subsubsection{Kaynak Kodu Etiketlemek}
+
+Teknik lider, ya da onun eðittiði ve görevlendirdiði projede idari iþlere bakan
+arkadaþ, ne zaman test için önemli bir sürüm yapýlmýþsa o sürümün referans
+aldýðý o anki kod durumunu ``dondurmak'' için, CVS'te bir etiket
+atmalýdýr. Etiket atmak, bir nevi koda iþaret býrakmaktýr. Bu iþarete sonradan
+dönülebilir, hattâ sadece iþarete yönelik \PVerb!cvs commit! iþlemleri bile
+yapabilirsiniz. Fakat geri dönmek, veya hatýrlamak için bu iþareti býrakmak daha
+yaygýn bir yaklaþýmdýr. Etiketlemek için,
+
+\begin{lstlisting}[language=Java, frame=none]
+cvs tag <<etiket_ismi>>
+\end{lstlisting}
+komutunu kullanabilirsiniz.
+
+Teknik lider, ne zaman müþteriye ve ya büyük bir test yönelik bir sürüm yaparsa,
+bu etiketleme iþlemini gerçekleþtirmelidir. Etiket isimleri, \PVerb!release_1!
+(sürüm 1), \PVerb!release_2!, gibi isimler, ya da sadece bir numara
+olabilir. Tarih içeren sürüm isimleri de görmüþtük.
+
+Daha büyük projelerde, etiketleme süreci ile {\em hata takip programý} arasýnda
+iliþkinin kurulmasý gerekecektir, çünkü sonuçta sürüm yapýlmýþtýr, test
+makinasýna konulmuþtur, ve bir süre sonra testçi, hata raporlarý göndermeye
+baþlayacaktýr. Programcý bu hatalarý, hangi sürümde tamir etmeli, ya da tekrar
+ortaya çýkarmalýdýr? Bu gibi durumlarda, ITracker programýnýn da desteklendiði
+gibi, hatalarýn içinde ``hangi sürümde test edileceði'' bilgisi
+kaydedilmelidir. Bu sürüm no'su, teknik liderin CVS'te attýðý etiket
+numaralarýný baz alarak girilen bir numara olacaktýr.
+
+Ayrýca diðer yönde, testçilerin o anda ``hangi sürümde olan bir programa''
+baktýklarýný anlayabilmeleri için (önyüze bakarak sürümü anlayabilmeleri her
+zaman mümkün deðildir), teknik liderin etiket deðerini, uygulamanýn parçasý olan
+bir statik HTML sayfasýna koymasý uygun olabilir (meselâ
+\PVerb!src/pages/version.html! gibi. Bu deðer gönderimi, etiketleme script'inin
+yapacaðý yan bir iþlem olabilir (en uygun yer aslýnda orasýdýr). Sürüm HTML
+sayfasý, hep ayný yerde, hep ayný isimde olacak bir sayfa olmalýdýr, ve sayfanýn
+tek içeriði, test edilen o anki kodlarýn sürüm numarasýndan ibarettir. Böylece
+gerektiðinde ``ismi belli'' bu HTML sayfasýný ziyaret eden testçi, test ettiði
+uygulamanýn hangi sürümde olduðunu rahatça anlayabilmiþ olur.
+
+\subsection{Kod Gözden Geçirme Toplantýlarý} \label{project:codereview}
+
+Proje takýmýnda her programcýnýn belli bazý kodlarýný gözden geçirmek, ve daha
+genel amaçlý olarak takýmýn kullandýðý teknolojiler hakkýnda bilgi istiþaresinde
+bulunmak için, arada sýrada resmi bir kod gözden geçirme (code review)
+toplantýsýnýn yapýlmasý gereklidir. Bu toplantýdan önce teknik lider hangi
+programcýnýn kodunun gözden geçirileceðine karar verir, ve bu toplantýdan önce
+programý kodunu yazýcýdan basarak herkese daðýtýr. Kodun her yazýcý sayfasýna
+iki kod sayfasý düþecek þekilde ve yatay olarak basýlmasý iyi olur. Bu þekilde
+kod basmanýn tekniklerini \ref{install:enscript} bölümünde görebilirsiniz.
+
+Bu gözden geçirme toplantýlarýna herkes baktýðý kodun üzerine notlar almýþ
+olarak gelir. Toplantý sýrasýnda herkes sýrayla yazdýðý yorumlarý kodun sahibi
+ile paylaþýr. Programcý konu hakkýnda soru sorar, eðer katýlmýyorsa, cevap
+verir. Teknik lider de konu hakkýnda yorumlarýný ekleyecektir, böylece tüm takým
+birbirinden yeni bilgiler edinmiþ olur.
+
+Ruh hâli olarak gözden geçirme toplantýlarý programcýlar üzerinde stres
+yaratabilir, çünkü herkesin önünde kodlarý hakkýnda yorum yapýlacaktýr, ve
+görülen eksiklikler söylenecektir. Tavsiyemiz, programcýlarýn bu toplantýyý
+``idam mangasý önüne çýkýyor'' gibi görmemesidir. Ayrýca kod hakkýnda yorum
+verenler de yapýcý eleþtiriler ile toplantýya gelmelidirler. Ýnsanlar mekanik
+hatalar yapabilirler (bkz. Kural \#4), bunlar zâten çok önemli deðildir; Ama
+prensip hatalarý, takip edilmesi gereken mimari kurallarýn kontrolü kod gözden
+geçirme toplantýsýnda yapýlmalýdýr. Kodlama standartlarýnýn takibi de, ayný
+þekilde, bu toplantýda kontrol edilmelidir.
+
+\subsection{Kodlama Standartlarý} \label{project:codingstandards}
+
+Kodlama standartlarý, pür dil seviyesinde konan ve stil ile alâkalý
+kurallardýr. Meselâ, \PVerb!if! komutlarýnda ``\PVerb!{!'' iþaretinin \PVerb!if!
+kelimesi ile ayný satýrda mý, bir sonraki satýrda mý olmasý gerektiði, bir
+kodlama standartý kararýdýr. Kozmetik bir karar gibi gözükse de, kodlama
+standartlarý kod bakýmý için önemlidir, çünkü kodun birçok deðiþik yerine
+bakarken insanýn aradýðýný bulma kabiliyetini arttýrýr. Proje sonunda tüm kod
+sanki tek kiþi tarafýndan yazýlmýþ gibi gözükmelidir.
+
+Kodlama standartlarýný otomatik olarak kontrol etmek istiyorsanýz,
+\PVerb!http://checkstyle.sourceforge.net/! adresinden Checkstyle adlý açýk
+yazýlým projesini alýp kullanabilirsiniz. Checkstyle kullanmak için kurallarýn
+tanýmlandýðý bir ayar dosyasý hazýrlamak gerekir, ve daha sonra (meselâ bir Ant
+target'inden çaðýrarak) iþlettiðiniz Checkstyle, tüm kodu stil kontrolünden
+geçirecektir. Bulunan stil hatalarý, aynen derleme hatalarý gibi bir hata
+log'undan ekrana basýlacaktýr. Teknik lider kodlama standartlarý gerçekten takip
+edilmesini istiyorsa, projenin Ant script'i \PVerb!build.xml! içinde derleme
+target'ini Checkstyle target'i ile bir \PVerb!depends! iliþkisine
+sokabilir. Böylece derleme yapmak için stil kontrolü kendiliðinden olmuþ
+olacaktýr.
+
+Teknik liderler kodlama standartlarýný oluþtururken, programcýlarý çok
+sýkacak kurallar getirmemelidirler; Genellikle çoðunluðun takip ettigi yöntemi
+kural hâline getirmek en iyisidir. Amacýmýz kodun ayný gözükmesini saðlamaktýr,
+kodculara hiç normâl gelmeyen katý kurallar koymak deðil. 
+
+\subsection{Projelerde Hata Takip Düzeni}  \label{proj:process:bugtracking}
+
+Bilgi iþlem projelerinde hata takip için bir sistem kurmamýz gereken zaman,
+stabil bir kod bazýnýn ortaya çýkmaya baþladýðý ve sistemi müþterilere
+göstermeye baþladýðýmýz zamana yakýn bir yerde olmalýdýr. Hatalar, herhangi bir
+programcýnýn herhangi bir kod parçasýnda (JSP sayfasý, Java kodlarý, vs.) ortaya
+çýkmýþ olabilir, ve bu hatalar bulunduðu zaman bir yerlere kayýt edilip oradan
+takip edilmelidir. Hatalar (ve bilahere onlarýn tamir edilme isteði) zamanla
+biriktikçe, hangisinin tamir edilmiþ olduðu, test etmeye hazýr olduðu gibi
+konular idare açýsýndan saç yolduracak seviyeye gelebilirler. 20-30 tane hata
+bile, bir hata takip sistemi kurmamýzý gerektirecektir.
+
+Bu hata takip sisteminin ana özellikleri þunlar olmalýdýr. Sistem,
+
+\begin{itemize}
+\item Programcýlara atanan/ait hatalarý sadece onlara gösterebilmeli
+\item Hatalarýn tamir durumunu muhafaza edebilmeli
+\item Tamirden sonra tekrar test edilecek hatalarýn hangileri olduðunu
+testçilere gösterebilmeli 
+\item Hatalarýn testçiden programcýya, ve tamir edildikten sonra programcýdan
+testçiye geri olan \textbf{iþ akýþýný} destekleyebilmeli.
+\item Hatalarýn deðiþim tarihçesini, herkesin düþtüðü notlarý kayýtlý
+tutabilmeli ve gösterebilmelidir
+\end{itemize}
+Bu ana hatlarý destekleyecek en iyi uygulama türü, portal þeklinde olan bir hata
+takip sistemidir. Buna karþýlýk, Excel tablolarýnda hata takip yapmak çok
+külfetli olacaktýr, çünkü bu þekilde tablolarda iþ akýþý, tarihçe tutmak
+imkansýzdýr. Tek bir Excel tablosunda birkaç programcýnýn hatalarýnýn en son
+durumunu kaydedilip birleþtirilmesi çok zordur. Portal bazlý hata takip
+programý, her programcýya ve testçiye bir giriþ ismi verecek, testçilerin
+yarattýðý hatalarý programcýlara göndermesini rahatlatacaktýr.
+
+\subsubsection{Ýþ Akýþý}
+
+Ýþ akýþýnýn genel hatlarý þöyle olur.
+
+\begin{enumerate}
+\item Testçi, hata portal'ýna kendi kullanýcý ismini kullanarak girer ve
+  projenin uygulamasýnda gördüðü bir hatayý sisteme ekler. Bu hatayý, bir
+  programcýya atar.
+
+\item Hatayý alan programcý, o hatanýn çýktýðý kodu yazan, ya da o kodu iyi
+  bilen bir baþka programcý olabilir. Bu programcý, günün herhangi bir saatinde
+  portal'e girip hatalarý listesini kontrol edecektir (ya da hata portal'inden
+  otomatik e-mail almýþtýr, portal hata atanýr atanmaz programcýya e-mail atmak
+  için ayarlanmýþ olabilir), ve listesindeki kendine atanmýþ hatayý
+  görür. Herkesin \PVerb!benimPortal! listesi, kendine atanan hatalarý
+  göstermesi için ayarlanmýþtýr (buna testçi de dahil, çünkü ona da hatalar
+  atanabilir)
+\item Programcý hatanýn detayýna týklar, ve tanýmý okur. Kendi geliþtirme ortamýnda
+  hatayý tekrar ettirerek (duplicate) kendi de görür, ve tamir etmek için kollarý
+  sývar.
+
+\item Programcý hatayý tamir edince, yeni kodu kaynak kontrol sistemine
+  ekler. Projenin teknik lideri her gün baþýnda test makinasýna
+  (bkz. \ref{project:devenv} bölümü) zaten sürüm yapýyordur, ya da acil bir sürüm
+  yapýlarak (o hata çok önemli ise) test makinasýna en son kodlar atýlýr.
+
+\item Programcý, portal'den tamir edilmiþ hatanýn detayýna tekrar inerek, bu
+  sefer bir deðiþiklik yapar. Hatanýn konumunu ``çözüldü'' olarak deðiþtirir, ve
+  hatanýn yeni sahibi olarak ``testçi'' arkadaþýný seçer. Hatayý kaydeder. Þimdi
+  programcý kendi ``benimHataPortal'' ekranýna döndüðünde, tamir etmiþ
+  olduðu hatanýn kaybolduðunu görecektir (çok güzel, yapacak iþ azaldý).
+
+\item Bu hata tabii kaybolmadý. Testçi kimse, ``benimHataPortal'''ýna
+  girdiðinde (ya da ayný þekilde e-mail aldýðýnda) portal'a girecek, ve
+  listesindeki hatayý görecektir. Testçilerin hata almasý garip olmamalý,
+  testçinin görevi sadece test etmek olduðu için bu hatanýn onun listesinde
+  olmasýnýn tek bir anlamý vardýr: Hata tamir edilmiþtir, ve tekrar test edilmeye
+  hazýrdýr.
+
+\item Test makinasýnda da en son kodlar olduðuna göre, testçi arkadaþ bu makinaya
+  baðlanarak hatanýn olduðu kýsma/bölüme giderek kontrolünü yapar.
+
+\item Eðer hata gerçekten tamir olduysa, testçi portal'a dönerek o hatanýn detayýna
+  gelecek, ve ``kapandý'' statüsüne getirecektir. Baþka yapmasý gereken bir þey
+  yoktur.
+
+\item Fakat hata hâlâ ortaya çýkýyor ise, o zaman hatanýn statüsünü ``açýk'' olarak
+  deðiþtirmeli, ve sahibi olarak (tamir ettiðini zanneden) programcýyý atamalý,
+  yani, hatayý programcýya geri göndermelidir! Ve bu þekilde iþ akýþý tekrar
+  baþlamýþ olur.
+
+\item Eðer hata tamir olmuþ ise, kapandý statüsünü alan hata herkezin listesinden
+  kaybolacak, yani tamir edilen hatalarýn arasýna karýþmýþ olacaktýr.
+
+\end{enumerate}
+
+\begin{quote}
+  \textbf{Not:} Konu hakkýnda eklememiz gereken iki nokta þöyledir: 
+\begin{itemize}
+\item Dikkat edilmesi gereken bir nokta, bir hatanýn tamir olmuþ ama, o hatadan
+  baðýmsýz baþka bir hata ayný ekranda/bölümde bulunmasýnda ortaya
+  çýkar. \textbf{Bu yeni hatanýn eski hata üzerine not düþülmemesi
+  gerekir}. Çünkü yeni hata deðiþik bir hatadýr. Ayrý þekilde takip edilmesi
+  gerekecektir.
+
+\item Üstte tarif edilen düzende þöyle bir nüans farki uygulanabilir: Testçi
+  hatayý atar (programcýyý seçerek). Ama programcý, tamirden sonra tesçiye geri
+  atama yapmaz. Sadece hata konumunu ``çözüldü'' ye getirir. Bu durumda
+  testçinin görevi, periyodik bir þekilde portal üzerinde statüsü ``çözüldü''
+  durumunda olan hatalarý kontrol etmektir çünkü hatayý geri kendi
+  \PVerb!benimPortal! listesinde görmeyecektir.
+\end{itemize}
+  
+\end{quote}
+
+\subsubsection{ITracker} \label{project:bugtracking:itracker}
+
+Evet, genel hatlarý ile tarif ettiðimiz bu iþ akýþýný ITracker programý ile
+gerçekleþtirmeye çalýþacaðýz. ITracker'in nasýl kurulacaðýný
+\ref{install:itracker} bölümünda bulabilirsiniz. Programa admin olarak ilk
+girdiðinizde bu ekraný göreceksiniz. (Eðer bu ekran Ýngilizce geldiyse, My
+Preferences altýndan Turkish seçerek Türkçe ekrana gelebiliriz)
+\footnote{ITracker programý bu satýrlarýn yazarý tarafýndan
+Türkçeleþtirilmiþtir}
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_benimItracker.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:myitracker}}
+\end{figure}
+Yukarýdaki ekranda, bekleneceði gibi, hiçbir proje yok. Ýlk yapmamýz gereken,
+bir proje yaratmak. Ýlk önce Sistem Bakýmý seçeneðine týklayýn.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_sistemBakimi.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:maintanance}}
+\end{figure}
+``Proje Bakýmý \PVerb!|! Bakým Yap'' seçeneðinden ``Proje Listesi'' ekranýna
+gelin.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_projeleriListele.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:listprojects}}
+\end{figure}
+Þimdi üst saðda bulunan sayfa ikonuna basarak yeni proje yaratma
+sayfasýna gelebilirsiniz.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_yeniProjeYarat.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:newproject}}
+\end{figure}
+Üstteki örnek bilgileri girerek hemen bir proje yaratmamýz mümkün. Proje ismi
+``deneme'' olarak seçildi.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_projeYaratildi.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:projectcreated}}
+\end{figure}
+
+\subsubsection{Kullanýcýlar}
+
+Þimdi de kullanýcýlar yaratmamýz gerekiyor. Bu kullanýcýlar, projede görev yapan
+programcýlar, proje müdürü gibi kimseler olacaklar. ITracker'ý kullanan herkese
+ayrý bir kullanýcý ismi gerekecek, çünkü herkes kendine ait olan sorunlari
+(hatalarý) kendi kullanýcýsý üzerinden görecek.
+
+Þekil \ref{project:bugtracking:itracker:adduser} üzerinde görüldüðü gibi ilk
+kullanýcýyý yaratýyoruz. Kullanýcýnýn ismi Ali, ve testçilik görevini
+yürütecek. Ali, uygulamayý test edip çýkan hatalarý programcýlara atamak ile
+görevli.
+
+Ali'yi eklediðimiz ekrana dikkat ederseniz, ona birçok hak verdiðimizi
+görüyoruz. Bunlardan en önemlisi ``Proje Bakým'' ve ``Sorunu Kapat''
+haklarýdýr. Proje müdürü (ya da testçisi) olarak Ali, sorunlarý tamir edildikten
+sonra tekrar test edip, sorunun çözülüp çözülmeyeceðine karar verebilecek tek
+kiþi olmalýdýr. Programcýlar sorunlarý kapatmamalý, Ali'ye test edilmesi için
+\textbf{yollamalýdýr}.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_ilkKullaniciEkle.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:adduser}}
+\end{figure}
+
+Aynen Ali'yi yarattýðýmýz gibi, Veli'yi de benzer þekilde ekleyebiliriz. Tabii
+Veli'de testçilere özel haklar olmayacak.
+
+\subsubsection{Hata Eklemek}
+
+Bu noktada, Ali ve Veli sistemi kullanmaya hazýrlar. Ali testçi, Veli
+programcý. Þimdi, Ali'nin sisteme nasýl sorun eklediðini görelim.
+
+Ali, ilk giriþ yaptýðýnda benimITracker ekranýný görecek. Buradan, üst kýsýmdaki
+Proje Listesi seçeneðinden ``deneme'' projesini görebilir. Ali, en solda bulunan
+üçlü ikon gurubundan ortadakini seçerek, yeni bir sorun ekleyecek ve Veli'ye
+atayacak. Görelim.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_yeniSorunEkle.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:addissue}}
+\end{figure}
+
+Atanma yapýldýktan sonra, görmek için Veli olarak sisteme girebilirsiniz.
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_benimItrackerVeli.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:veliitracker}}
+\end{figure}
+
+Þekil \ref{project:bugtracking:itracker:reducelist} üzerinde görüldüðü gibi bir
+sorun Veli'ye atanmýþ.
+
+Not: Eðer Veli, ``benimITracker'''ýnda çýkan listesini, sadece ona atanmýþ
+sorunlara indirmek istiyorsa, bunun ayarýný rahatlýkla yapabilir. En üstteki
+``Tercihlerim'' seçeneðinden,
+
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_listeniAzalt.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:reducelist}}
+\end{figure}
+
+``benimITracker Bölümlerimi Sakla'' kýsmýna gidip, orada ``Atanmýþ Sorunlar''
+hariç bütün diðer listeleri kapatabilir.
+
+Þimdi gelelim iþ akýþýmýzda önemli bir bölüme: Veli, uygulama kodlarýný hatasýný
+tamir etmek üzere deðiþtirdi, kendi geliþtirme makinasýnda test etti ve tamir
+edildiðine karar kýldý. Þimdi, bu hatanýn ``tekrar test'' için Ali'ye geri
+gönderilmesi gerekiyor.
+
+Hata listesinden bu hatayý deðiþtirmeyi seçip, aþaðýdaki gibi bir giriþ yaparsa,
+hatayý Ali'ye geri göndermiþ olacaktýr (kýrmýzý ile iþaretli alanlardan)
+
+\begin{figure}[!hbp]
+  \center{
+    \scalebox{1.4}{
+      \includegraphics{./images/itracker_sorunTestEdilsin.eps}
+     }
+    }
+\caption{\label{project:bugtracking:itracker:testissue}}
+\end{figure}
+
+Bu sayede Ali, kendi ``benimITracker'' sayfasýndan, tamirini istediði hatanýn
+geri gelmiþ olduðunu görecek, bu hatayý test ederek eðer tamir olmuþsa Kapat
+seçeneði ile hatayý kapatacaktýr. Kapanmýþ statüsündeki hatalar kimsenin
+``benimITracker'' listesinde gözükmezler. Onlar tamir edilmiþtir!
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Kullaným Kýlavuzu][KULANIM KILAVUZU]{Kullaným Kýlavuzu}
+
+Kullaným kýlavuzu (turnover document) belgesi, bir projeyi geliþtirmiþ
+programcýlar projeden çýktýktan sonra, onlardan sonra kod üzerinde bakým yapmasý
+gerekecek programcýlara býrakýlmýþ bir mesaj niteliðini taþýr. Bu dokümanda
+uygulamaya yeni bir kod parçasý eklemek için yapýlmasý gerekenler, geliþtirme
+ortamýnýn nasýl kullanýlacaðý, en son kodu sonuç ortamýna göndermek için
+yapýlmasý gerekenler gibi bakým/idare detaylarý anlatýlýr.
+
+Kullaným kýlavuzu, danýþman þirketlerinin her proje sonunda ürettiði standart
+dökümanlardan biridir, çünkü proje bittikten sonra takým elemanlarý genelde
+baþka projelerde ve baþka müþteriler için görevlendirilirler, ve bu orijinal
+takým projeden ayrýlacaðý için onlarýn tüm bilgilerinin bir yerde belgelenmesi
+þarttýr. Fakat kullaným kýlavuzu, þirket içi (in-house) yazýlým takýmlarý, ya da
+ürün þirketleri için bile faydalýdýr. Takýma yeni katýlan programcýlar bu
+belgeleri kullanarak geliþtirme sürecine daha rahat bir þekilde dahil
+olabilirler.
+
+Web uygulamalarý dünyasýnda, eðer uygulamayý iþletmekle ve ayakta tutmakla
+sorumlu bir ASP (Application Service Provider - Uygulama Servis Saðlayýcýsý)
+þirketi var ise, kullaným kýlavuzunun sonuç ortamý ile alâkalý bölüm en çok
+onlara hitaben yazýlacaktýr. Sonuçta uygulamayý sürekli iþletmekle görevli
+olanlar onlardýr, ve sonuç ortamý bölümü ``servis nasýl baþlatýlýr'', ``veri
+tabanýna baðlanmak için gerekenler'', ``sonuç ortamýna kod gönderme'' gibi
+detaylarý içerdiði için ASP'ler için okunmasý gereken bölümler hâline gelirler.
+
+Teknik lider kullaným kýlavuzu belgesinin en önemli yazarýdýr, çünkü sistemsel
+detaylara hâkim olan kiþi o olacaktýr. Fakat bazen bu görev, kariyeri teknik
+liderlik yönünde ilerleyen senior bir programcýya da verilebilir.

@@ -1,0 +1,45 @@
+* (Same file as transform_user.src)
+procedure transform_user y
+type series y
+
+usermenu(action=define,title='Transform') $
+1>>'Logarithmic' $
+2>>'First Difference' $
+3>>'Growth Rate'   $
+4>>'Done'
+loop
+
+usermenu
+
+if %menuchoice.eq.1 {
+sta(noprint,fractiles) y
+   if %minimum > 0. {
+     com a$ = 'L' + %label(y)
+     set %s(a$) = log(y)
+}
+  if %minimum.le.0
+    mes(style=alert) "I CAN ONLY TAKE THE LOG OF POSITIVE NUMBERS"
+}
+
+if %menuchoice.eq.2 {
+com a$ = 'D' + %label(y)
+set %s(a$) = y - y{1}
+}
+
+if %menuchoice.eq.3 {
+com a$ = 'G' + %label(y)
+set %s(a$) = y/y{1} - 1
+}
+
+if %menuchoice.eq.4 ; break
+
+graph(header='Time Path of ' + a$) 1 ; # %s(a$)
+
+
+end loop
+usermenu(action=remove)
+end transform_user
+
+
+
+

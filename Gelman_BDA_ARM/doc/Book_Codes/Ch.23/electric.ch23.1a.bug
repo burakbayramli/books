@@ -1,0 +1,20 @@
+# Electric company example: fitting all grades at once
+
+model {
+  for (i in 1:n){
+    y[i] ~ dnorm (y.hat[i], tau.y[grade[i]])
+    y.hat[i] <- a[pair[i]] + theta[grade[i]]*treatment[i]
+  }
+  for (j in 1:n.pair){
+    a[j] ~ dnorm (mu.a[grade.pair[j]], tau.a[grade.pair[j]])
+  }
+  for (k in 1:n.grade){
+    theta[k] ~ dnorm (0, .0001)
+    tau.y[k] <- pow(sigma.y[k], -2)
+    sigma.y[k] ~ dunif (0, 100)
+    mu.a[k] ~ dnorm (0, .0001)
+    tau.a[k] <- pow(sigma.a[k], -2)
+    sigma.a[k] ~ dunif (0, 100)
+  }
+}
+

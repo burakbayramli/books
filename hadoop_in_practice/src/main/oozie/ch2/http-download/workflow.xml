@@ -1,0 +1,54 @@
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="download-http">
+  <start to="download-http"/>
+  <action name="download-http">
+    <map-reduce>
+      <job-tracker>${jobTracker}</job-tracker>
+      <name-node>${nameNode}</name-node>
+      <prepare>
+        <delete path="${outputData}"/>
+      </prepare>
+      <configuration>
+        <property>
+          <name>mapred.job.queue.name</name>
+          <value>${queueName}</value>
+        </property>
+        <property>
+          <name>mapred.mapper.class</name>
+          <value>com.manning.hip.ch2.HttpDownloadMap</value>
+        </property>
+        <property>
+          <name>mapred.mapoutput.key.class</name>
+          <value>org.apache.hadoop.io.Text</value>
+        </property>
+        <property>
+          <name>mapred.mapoutput.value.class</name>
+          <value>org.apache.hadoop.io.Text</value>
+        </property>
+        <property>
+          <name>mapred.map.tasks</name>
+          <value>1</value>
+        </property>
+        <property>
+          <name>mapred.reduce.tasks</name>
+          <value>0</value>
+        </property>
+        <property>
+          <name>mapred.input.dir</name>
+          <value>${inputData}</value>
+        </property>
+        <property>
+          <name>mapred.output.dir</name>
+          <value>${outputData}</value>
+        </property>
+      </configuration>
+    </map-reduce>
+    <ok to="end"/>
+    <error to="fail"/>
+  </action>
+  <kill name="fail">
+    <message>Map/Reduce failed, error
+      message[${wf:errorMessage(wf:lastErrorNode())}]
+    </message>
+  </kill>
+  <end name="end"/>
+</workflow-app>

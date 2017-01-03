@@ -1,0 +1,153 @@
+\documentclass[landscape]{slides}
+
+\usepackage{amsmath,graphicx,amssymb,url}
+
+\newcommand{\lecnum}{AGM-02}
+\newcommand{\slidehead}[1]{{\centering \bf #1 \\}}
+\newenvironment{titledslide}[1]{\begin{slide}\slidehead{#1}\vfill}{\vfill \tiny \lecnum \end{slide}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Algorithms for Graphical Models (AGM)\\
+\vfill {\Huge Python: Basics}}\vfill
+
+\begin{verbatim}
+$Date: 2008/10/15 15:25:51 $
+\end{verbatim}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Learn Python in an afternoon?}
+  
+  \begin{itemize}
+  \item The key first step is to find the documentation that comes
+    with a Python distribution.
+  \item They are in this (standard) location:\\
+ \verb+/usr/doc/python-2.5.2/html/Python-Docs-2.5.2/index.html+
+  \item A good way to get to grips with Python is plod through the
+    Tutorial there.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Once this lecture is over}
+
+  \begin{itemize}
+  \item These slides are just prompts for demos.
+  \item Afterwards go to\\
+    \url{http://www-users.cs.york.ac.uk/~jc/teaching/ipp/}
+  \item Lecture slides, two online books, and example programs.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Writing and executing Python code}
+
+  \begin{itemize}
+  \item Using a suitable text editor (preferably one equipped with a
+    Python mode) save your code to a file \texttt{somefile.py}
+  \item To run it do \texttt{python somefile.py}
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Python as scripting language}
+  
+  \begin{itemize}
+  \item Python programs are scripts. There is no `main'. Execution
+    starts from the top line of the code and just works down.
+  \item Of course, the first step might be to define a function which
+    only gets called later.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Python as intepreter}
+  
+  \begin{itemize}
+  \item Typing \texttt{python} at the command prompt brings up the
+    Python interpreter.
+  \item Use this to try stuff out, and to get to the builtin \texttt{help} function.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Built in data types}
+
+  \begin{itemize}
+  \item Float, complex, int
+  \item List (mutable), tuple (immutable), string (immutable), Unicode
+    strings (immutable)
+  \item Dictionaries (mutable), set (mutable), frozenset (immutable)
+  \item Explore them with the interpreter. Lots of builtin
+    \emph{methods} for these.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Typing}
+  
+  \begin{itemize}
+  \item The type of an object is determined by assignment
+  \item \texttt{x=2} An integer object with the name \texttt{x}
+  \item \texttt{x='foo'} An entirely different string object with the
+    same name
+  \item Can't use \texttt{x} to get to the '2' any longer.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Python syntax}
+
+  \begin{itemize}
+  \item Uses \emph{indentation} to make blocks, (and the occasional colon)
+  \item Even when using the interpreter
+  \item You get used to it!
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Conditionals, loops}
+
+  \begin{itemize}
+  \item All pretty standard: \texttt{if, elif, else}
+  \item \texttt{for} loops are not like C ones \dots
+  \item Have \texttt{while, break, continue} as per normal
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Defining functions}
+
+  \begin{itemize}
+  \item Indentation as always \dots
+  \item A function definition \texttt{def f(x): ... } assigns a
+    function object to the name \texttt{f}
+  \item Objects created in a function are local to that function. Are
+    allowed to access non-local objects.
+  \item Since the program is a script, can't call a function before it
+    is defined.
+  \end{itemize}
+  
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{Exception handling}
+  
+  \begin{itemize}
+  \item Use \texttt{try: ... except SomeException: ...} to handle exceptions
+  \item \texttt{raise} for raising them.
+  \end{itemize}
+
+\end{titledslide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titledslide}{I/O}
+
+  \begin{itemize}
+  \item Done using file objects (which are builtin).
+  \item Builtin function \texttt{open} creates them.
+  \end{itemize}
+  
+\end{titledslide}
+
+\end{document}

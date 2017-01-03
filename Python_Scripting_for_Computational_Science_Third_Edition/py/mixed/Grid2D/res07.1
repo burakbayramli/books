@@ -1,0 +1,350 @@
+hpl:22.28 Grid2D> ./efficiency-tests.sh
+F77 stand-alone program:
++ g77 -O -o tmp.app gridloop.f
++ echo we make a test run:
++ timer.py ./tmp.app
++ rm -rf tmp.app 'ext_gridloop*' gridloop.f.old~ callback.so _cb.f
+F77 extension module:
+Grid2Deff.timing2: reference CPU time = 0.2274
+ Grid2Deff.gridloop (1 calls): elapsed=51.4227, CPU=51.09
+ Grid2Deff.gridloop (1 calls): elapsed=28.085, CPU=27.92
+ Grid2Deff.__call__ (1 calls): elapsed=0.340716, CPU=0.32
+ Grid2Deff.__call__ (1 calls): elapsed=0.331177, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=42.1451, CPU=41.9
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=10.5565, CPU=10.47
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=42.3638, CPU=42.12
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=10.4715, CPU=10.38
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=42.343, CPU=42.13
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=10.476, CPU=10.41
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+copied an array: size=1212201, elsize=8
+ Grid2Deff.ext_gridloop_vec2 (20 calls): elapsed=10.4726, CPU=10.17
+ Grid2Deff.ext_gridloop2_str (20 calls): elapsed=4.74669, CPU=4.72
+ Grid2Deff.ext_gridloop_noalloc (20 calls): elapsed=3.97904, CPU=3.95
+Traceback (most recent call last):
+  File "../Grid2Deff.py", line 509, in <module>
+    run()
+  File "../Grid2Deff.py", line 501, in run
+    exec 'timing2(%d, %g)' % (n, best_time)
+  File "<string>", line 1, in <module>
+  File "../Grid2Deff.py", line 452, in timing2
+    g.ext_gridloop2_fcb_compile(str(expression1))
+  File "../Grid2Deff.py", line 121, in ext_gridloop2_fcb_compile
+    import f2py2e
+ImportError: No module named f2py2e
++ rm -rf tmp1 ext_gridloop.so '*~' callback.so _cb.f
+C extension module; a single handwritten function:
++ ./clean.sh
++ rm -rf '*.o' '*.so' '*~' '*.egg-info' build
+++ python -c 'import sys; print sys.prefix'
++ root=/home/hpl/sysdir/Linux
+++ python -c 'import numpy; print numpy.get_include()'
++ numpy=/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include
+++ python -c 'import sys; print sys.version[:3]'
++ ver=2.5
++ gcc -O3 -g -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -I/home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/C -c gridloop.c -o gridloop.o
++ gcc -shared -o ext_gridloop.so gridloop.o
++ python -c 'import ext_gridloop; print dir(ext_gridloop); \
+           print ext_gridloop.__doc__'
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+module ext_gridloop:
+   gridloop1(a, xcoor, ycoor, pyfunc)
+   a = gridloop2(xcoor, ycoor, pyfunc)
+Grid2Deff.timing2: reference CPU time = 0.2274
+ Grid2Deff.gridloop (1 calls): elapsed=51.4248, CPU=51.09
+ Grid2Deff.gridloop (1 calls): elapsed=28.2674, CPU=28.08
+ Grid2Deff.__call__ (1 calls): elapsed=0.33597, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.334435, CPU=0.32
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=40.8771, CPU=40.63
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=9.09567, CPU=9.02
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=40.9967, CPU=40.75
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.25808, CPU=9.15
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=40.9873, CPU=40.72
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.17646, CPU=9.11
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=8.36036, CPU=6.16
+ Grid2Deff.gridloop (1 calls): elapsed=13.3775, CPU=13.28
+ Grid2Deff.gridloop (1 calls): elapsed=13.5721, CPU=13.47
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C/plain
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "g.ext_gridloop1_weave('sin(x*y) + 8*x')"
+with CPU time:
+  0.30799999999999983
+
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.00
+g.__call__, myfunc1                     |     1.01
+g.__call__, expression1_f               |     1.04
+g.ext_gridloop1, myfunc2                |    29.29
+g.ext_gridloop2, expression2_f          |    29.58
+g.ext_gridloop2, myfunc2                |    29.71
+g.ext_gridloop_psyco, myfunc2           |    43.12
+g.ext_gridloop_psyco, expression2_f     |    43.73
+g.gridloop, myfunc2                     |    91.17
+g.ext_gridloop1, myfunc1                |   131.92
+g.ext_gridloop2, expression1_f          |   132.21
+g.ext_gridloop2, myfunc1                |   132.31
+g.gridloop, myfunc1                     |   165.88
+
++ rm -rf gridloop.o ext_gridloop.so '*~' '*.egg-info' build
+C extension module; separate function and handwritten wrapper:
++ ./clean.sh
++ rm -rf '*.o' '*.so' gridloop_wrap.c~ '*.egg-info' build
+++ python -c 'import sys; print sys.prefix'
++ root=/home/hpl/sysdir/Linux
+++ python -c 'import numpy; print numpy.get_include()'
++ numpy=/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include
+++ python -c 'import sys; print sys.version[:3]'
++ ver=2.5
++ gcc -O3 -g -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -I. -I/home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/C -c gridloop_C.c gridloop_wrap.c
++ gcc -shared -o ext_gridloop.so gridloop_C.o gridloop_wrap.o
++ python -c 'import ext_gridloop; print dir(ext_gridloop); \
+           print ext_gridloop.__doc__'
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+module ext_gridloop:
+   gridloop1(a, xcoor, ycoor, pyfunc)
+   a = gridloop2(xcoor, ycoor, pyfunc)
+Grid2Deff.timing2: reference CPU time = 0.2274
+ Grid2Deff.gridloop (1 calls): elapsed=51.3732, CPU=50.9
+ Grid2Deff.gridloop (1 calls): elapsed=28.0448, CPU=27.94
+ Grid2Deff.__call__ (1 calls): elapsed=0.32347, CPU=0.29
+ Grid2Deff.__call__ (1 calls): elapsed=0.319524, CPU=0.3
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=40.3745, CPU=40.24
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=9.03755, CPU=8.97
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=40.4475, CPU=40.31
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.02939, CPU=8.98
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=40.5644, CPU=40.42
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.02605, CPU=8.96
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=6.04466, CPU=5.97
+ Grid2Deff.gridloop (1 calls): elapsed=13.3705, CPU=13.3
+ Grid2Deff.gridloop (1 calls): elapsed=13.5337, CPU=13.46
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C/clibcall
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "g.__call__, myfunc1"
+with CPU time:
+  0.29000000000000625
+
+g.__call__, myfunc1                     |     1.00
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.03
+g.__call__, expression1_f               |     1.03
+g.ext_gridloop2, expression2_f          |    30.90
+g.ext_gridloop1, myfunc2                |    30.93
+g.ext_gridloop2, myfunc2                |    30.97
+g.ext_gridloop_psyco, myfunc2           |    45.86
+g.ext_gridloop_psyco, expression2_f     |    46.41
+g.gridloop, myfunc2                     |    96.34
+g.ext_gridloop1, myfunc1                |   138.76
+g.ext_gridloop2, myfunc1                |   139.00
+g.ext_gridloop2, expression1_f          |   139.38
+g.gridloop, myfunc1                     |   175.52
+
++ rm -rf gridloop_C.o gridloop_wrap.o ext_gridloop.so '*~' '*.egg-info' build
+C++ extension module; handwritten wrapper + class:
++ rm -f '*.o' '*.so'
+++ python -c 'import sys; print sys.prefix'
++ root=/home/hpl/sysdir/Linux
+++ python -c 'import numpy; print numpy.get_include()'
++ numpy=/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include
+++ python -c 'import sys; print sys.version[:3]'
++ ver=2.5
++ g++ -O3 -g -I. -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -c gridloop.cpp
+In file included from /home/hpl/sysdir/Linux/include/python2.5/Python.h:8,
+                 from ./NumPyArray.h:4,
+                 from gridloop.cpp:9:
+/home/hpl/sysdir/Linux/include/python2.5/pyconfig.h:932:1: warning: "_POSIX_C_SOURCE" redefined
+In file included from /usr/include/math.h:27,
+                 from gridloop.cpp:1:
+/usr/include/features.h:150:1: warning: this is the location of the previous definition
++ g++ -shared -o ext_gridloop.so gridloop.o
++ python -c 'import ext_gridloop; print dir(ext_gridloop)'
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+Grid2Deff.timing2: reference CPU time = 0.2274
+ Grid2Deff.gridloop (1 calls): elapsed=50.4749, CPU=50.34
+ Grid2Deff.gridloop (1 calls): elapsed=28.5619, CPU=28.23
+ Grid2Deff.__call__ (1 calls): elapsed=0.335857, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.336714, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=40.4768, CPU=40.19
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=9.11652, CPU=9.02
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=40.8651, CPU=40.64
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.18273, CPU=9.13
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=40.6366, CPU=40.38
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=9.18613, CPU=9.12
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=6.2961, CPU=6.13
+ Grid2Deff.gridloop (1 calls): elapsed=13.3968, CPU=13.32
+ Grid2Deff.gridloop (1 calls): elapsed=13.568, CPU=13.47
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C++/plain
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "g.ext_gridloop1_weave('sin(x*y) + 8*x')"
+with CPU time:
+  0.30649999999999977
+
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.00
+g.__call__, expression1_f               |     1.01
+g.__call__, myfunc1                     |     1.01
+g.ext_gridloop1, myfunc2                |    29.43
+g.ext_gridloop2, expression2_f          |    29.76
+g.ext_gridloop2, myfunc2                |    29.79
+g.ext_gridloop_psyco, myfunc2           |    43.46
+g.ext_gridloop_psyco, expression2_f     |    43.95
+g.gridloop, myfunc2                     |    92.10
+g.ext_gridloop1, myfunc1                |   131.13
+g.ext_gridloop2, expression1_f          |   131.75
+g.ext_gridloop2, myfunc1                |   132.59
+g.gridloop, myfunc1                     |   164.24
+
++ rm -rf gridloop.o ext_gridloop.so '*~' build '*.egg-info'
+C++ extension module; handwritten wrapper using SCXX:
++ rm -f gridloop_scxx.o ext_gridloop.so
+++ python -c 'import sys; print sys.prefix'
++ root=/home/hpl/sysdir/Linux
+++ python -c 'import numpy; print numpy.get_include()'
++ numpy=/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include
+++ python -c 'import sys; print sys.version[:3]'
++ ver=2.5
++ inc=/home/store/hpl-store/scriptingsuite/trunk/SYSDIR//src/python/Python-2.5/../tools/scxx_b3
++ lib=/home/hpl/sysdir/Linux/lib
++ g++ -O3 -g -I../plain -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -I/home/hpl/sysdir/Linux/include/python2.5 -I/home/store/hpl-store/scriptingsuite/trunk/SYSDIR//src/python/Python-2.5/../tools/scxx_b3 -c gridloop_scxx.cpp
+In file included from /home/hpl/sysdir/Linux/include/python2.5/Python.h:8,
+                 from /home/store/hpl-store/scriptingsuite/trunk/SYSDIR//src/python/Python-2.5/../tools/scxx_b3/PWOBase.h:10,
+                 from /home/store/hpl-store/scriptingsuite/trunk/SYSDIR//src/python/Python-2.5/../tools/scxx_b3/PWOCallable.h:8,
+                 from gridloop_scxx.cpp:3:
+/home/hpl/sysdir/Linux/include/python2.5/pyconfig.h:932:1: warning: "_POSIX_C_SOURCE" redefined
+In file included from /usr/include/math.h:27,
+                 from gridloop_scxx.cpp:1:
+/usr/include/features.h:150:1: warning: this is the location of the previous definition
++ g++ -shared -o ext_gridloop.so gridloop_scxx.o /home/hpl/sysdir/Linux/lib/frobit.so
++ python -c 'import ext_gridloop; print dir(ext_gridloop)'
+['__doc__', '__file__', '__name__', 'gridloop1', 'gridloop2']
+Grid2Deff.timing2: reference CPU time = 0.2274
+ Grid2Deff.gridloop (1 calls): elapsed=50.958, CPU=50.75
+ Grid2Deff.gridloop (1 calls): elapsed=28.3021, CPU=28.13
+ Grid2Deff.__call__ (1 calls): elapsed=0.338765, CPU=0.31
+ Grid2Deff.__call__ (1 calls): elapsed=0.337655, CPU=0.31
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=52.7225, CPU=52.37
+ Grid2Deff.ext_gridloop1 (1 calls): elapsed=31.9908, CPU=31.26
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=75.3184, CPU=74.59
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=50.9499, CPU=50.17
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=90.2756, CPU=89.43
+Creating array(1101,1101)
+ Grid2Deff.ext_gridloop2 (1 calls): elapsed=674.652, CPU=80.97
+ Grid2Deff.ext_gridloop1_weave (20 calls): elapsed=15.1458, CPU=6.23
+ Grid2Deff.gridloop (1 calls): elapsed=13.5111, CPU=13.4
+ Grid2Deff.gridloop (1 calls): elapsed=13.6565, CPU=13.55
+
+
+
+
+run from directory /home/store/hpl-store/scriptingsuite/trunk/books/Langtangen-TCSE3/scripting-src/src/py/mixed/Grid2D/C++/scxx
+
+
+********************************************************************************
+Grid2Deff tests, 1100x1100 grid
+********************************************************************************
+reference CPU time based on the experiment
+   "g.__call__, myfunc1"
+with CPU time:
+  0.31000000000000227
+
+g.__call__, myfunc1                     |     1.00
+g.__call__, expression1_f               |     1.00
+g.ext_gridloop1_weave('sin(x*y) + 8*x') |     1.00
+g.ext_gridloop_psyco, myfunc2           |    43.23
+g.ext_gridloop_psyco, expression2_f     |    43.71
+g.gridloop, myfunc2                     |    90.74
+g.ext_gridloop1, myfunc2                |   100.84
+g.ext_gridloop2, myfunc2                |   161.84
+g.gridloop, myfunc1                     |   163.71
+g.ext_gridloop1, myfunc1                |   168.94
+g.ext_gridloop2, myfunc1                |   240.61
+g.ext_gridloop2, expression2_f          |   261.19
+g.ext_gridloop2, expression1_f          |   288.48
+
++ rm -f gridloop_scxx.o ext_gridloop.so '*~' app.tmp
+C++ extension module; conversion class wrapped with SWIG:
++ ./clean.sh
++ rm -rf '*.o' '*.so' '*~' tmp.app build '*_wrap.*' '*.pyc' ext_gridloop.py
+++ python -c 'import sys; print sys.prefix'
++ root=/home/hpl/sysdir/Linux
+++ python -c 'import numpy; print numpy.get_include()'
++ numpy=/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include
+++ python -c 'import sys; print sys.version[:3]'
++ ver=2.5
++ swig -python -c++ -I. -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include ext_gridloop.i
++ g++ -I. -O3 -g -I/home/hpl/sysdir/Linux/include/python2.5 -I/home/hpl/sysdir/Linux/lib/python2.5/site-packages/numpy/core/include -c convert.cpp gridloop.cpp ext_gridloop_wrap.cxx
+ext_gridloop_wrap.cxx: In function 'int SWIG_Python_ConvertPtr(PyObject*, void**, swig_type_info*, int)':
+ext_gridloop_wrap.cxx:1231: error: invalid conversion from 'const char*' to 'char*'
+ext_gridloop_wrap.cxx: In function 'void SWIG_Python_FixMethods(PyMethodDef*, swig_const_info*, swig_type_info**, swig_type_info**)':
+ext_gridloop_wrap.cxx:2165: error: invalid conversion from 'const char*' to 'char*'
++ g++ -shared -o _ext_gridloop.so convert.o gridloop.o ext_gridloop_wrap.o
+g++: ext_gridloop_wrap.o: No such file or directory
++ python -c 'import ext_gridloop; print dir(ext_gridloop);'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "ext_gridloop.py", line 4, in <module>
+    import _ext_gridloop
+ImportError: No module named _ext_gridloop
+Traceback (most recent call last):
+  File "Grid2Deff2.py", line 7, in <module>
+    import ext_gridloop
+  File "ext_gridloop.py", line 4, in <module>
+    import _ext_gridloop
+ImportError: No module named _ext_gridloop
++ rm -rf convert.o gridloop.o '*.so' '*~' tmp.app build ext_gridloop_wrap.cxx ext_gridloop.pyc ext_gridloop.py
+C++ standalone program (with MyArray and gridloop1):
++ ./clean.sh
++ rm -rf '*.o' '*.so' '*~' tmp.app build '*_wrap.*' '*.pyc' ext_gridloop.py
++ g++ -O3 -o tmp.app -I. main.cpp gridloop.cpp MyArray.cpp
++ timer.py ./tmp.app 1100
+gridloop1 called 50 times!
+cmd: ./tmp.app 1100; elapsed=12.12 cpu=12.03
++ rm -rf '*.o' '*.so' '*~' tmp.app build '*_wrap.*' '*.pyc' ext_gridloop.py

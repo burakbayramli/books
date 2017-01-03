@@ -1,0 +1,360 @@
+original (optimal?) code
+
+
+Running on pico: f90 compiler (HP f90 compiler)
+f90 -c -p -O0  main.f F77WAVE.f
+f90 -o app -p  main.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time:  43.36   f90 -O0 original (optimal?) code
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  47.0   20.34   20.34                      $$mulI
+  41.9   18.15   38.49                      f77wave
+   9.9    4.29   42.78                      timeloop
+   0.3    0.11   42.89                      setic
+   0.1    0.04   42.93                      bell
+   0.0    0.01   42.94                      h
+   0.0    0.00   42.94     413        0.00  _memcpy
+   0.0    0.00   42.94     107        0.00  __errno
+f90 -c -p -O1  main.f F77WAVE.f
+f90 -o app -p  main.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time:  25.67   f90 -O1 original (optimal?) code
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  42.6   10.88   10.88                      $$mulI
+  38.0    9.70   20.58                      f77wave
+  16.3    4.17   24.75                      timeloop
+   0.5    0.14   24.89                      setic
+   0.0    0.01   24.90                      bell
+   0.0    0.00   24.90     413        0.00  _memcpy
+   0.0    0.00   24.90     107        0.00  __errno
+   0.0    0.00   24.90      83        0.00  fwrite
+f90 -c -p -O2  main.f F77WAVE.f
+f90 -o app -p  main.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time:   1.98   f90 -O2 original (optimal?) code
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  37.3    0.72    0.72                      timeloop
+   2.6    0.05    0.77                      setic
+   1.0    0.02    0.79                      bell
+   0.5    0.01    0.80                      $$exp_20
+   0.0    0.00    0.80     413        0.00  _memcpy
+   0.0    0.00    0.80     107        0.00  __errno
+   0.0    0.00    0.80      83        0.00  _fwrite
+   0.0    0.00    0.80      16        0.00  __thread_mutex_lock
+f90 -c -p -O3  main.f F77WAVE.f
+f90 -o app -p  main.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time:   1.75   f90 -O3 original (optimal?) code
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  49.7    0.85    0.85                      timeloop
+   1.2    0.02    0.87                      $$exp_20
+   0.0    0.00    0.87     413        0.00  _memcpy
+   0.0    0.00    0.87     107        0.00  __errno
+   0.0    0.00    0.87      83        0.00  _fwrite
+   0.0    0.00    0.87      16        0.00  __thread_mutex_lock
+   0.0    0.00    0.87      16        0.00  __thread_mutex_unlock
+   0.0    0.00    0.87      11        0.00  malloc
+formatted I/O
+
+
+Running on pico: f90 compiler (HP f90 compiler)
+f90 -c -p -O0  versions/main_wIO.f F77WAVE.f
+f90 -o app -p  main_wIO.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time: 304.38   f90 -O0 formatted I/O
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  35.9   79.40   79.40                      $$mulU
+  11.5   25.39  104.79                      $$mulI
+   8.3   18.33  123.12                      f77wave
+   3.8    8.52  131.6481318427        0.00  _memcpy
+   2.5    5.45  137.0920582575        0.00  fwrite
+   2.4    5.37  142.46                      _mcount
+   2.2    4.94  147.40                      $$divoI
+   2.0    4.48  151.88                      timeloop
+f90 -c -p -O1  versions/main_wIO.f F77WAVE.f
+f90 -o app -p  main_wIO.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time: 273.39   f90 -O1 formatted I/O
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  40.3   77.09   77.09                      $$mulU
+   7.1   13.50   90.59                      $$mulI
+   4.9    9.38   99.97                      f77wave
+   4.2    7.94  107.9181318427        0.00  _memcpy
+   3.3    6.22  114.1320582575        0.00  fwrite
+   3.2    6.04  120.17                      _mcount
+   2.5    4.85  125.02                      $$divoI
+   2.3    4.42  129.44                      timeloop
+f90 -c -p -O2  versions/main_wIO.f F77WAVE.f
+f90 -o app -p  main_wIO.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time: 249.68   f90 -O2 formatted I/O
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  46.9   78.18   78.18                      $$mulU
+   5.0    8.36   86.5481318408        0.00  _memcpy
+   3.4    5.69   92.2320582575        0.00  _fwrite
+   3.3    5.56   97.80                      _mcount
+   3.0    5.07  102.87                      $$divoI
+   1.1    1.89  104.7620582083        0.00  __ecvt_r
+   0.7    1.20  105.96                      $$mulI
+   0.6    1.05  107.01                      dump
+f90 -c -p -O3  versions/main_wIO.f F77WAVE.f
+f90 -o app -p  main_wIO.o F77WAVE.o  
+./app < input > tmp.out
+CPU-time: 249.38   f90 -O3 formatted I/O
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  46.5   78.17   78.17                      $$mulU
+   5.2    8.74   86.9181318416        0.00  _memcpy
+   4.3    7.23   94.1420582575        0.00  _fwrite
+   3.1    5.14   99.29                      _mcount
+   2.8    4.64  103.93                      $$divoI
+   0.9    1.54  105.4720582083        0.00  __ecvt_r
+   0.7    1.22  106.69                      $$mulI
+   0.6    1.03  107.72                      dump
+traversing the array rowwise
+
+
+Running on pico: f90 compiler (HP f90 compiler)
+f90 -c -p -O0  main.f versions/F77WAVE_columntraverse.f
+f90 -o app -p  main.o F77WAVE_columntraverse.o  
+./app < input > tmp.out
+CPU-time:  44.47   f90 -O0 traversing the array rowwise
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  45.5   20.16   20.16                      $$mulI
+  43.4   19.24   39.40                      f77wave
+   9.8    4.36   43.76                      timeloop
+   0.2    0.11   43.87                      setic
+   0.0    0.02   43.89                      bell
+   0.0    0.00   43.89     413        0.00  _memcpy
+   0.0    0.00   43.89     107        0.00  __errno
+   0.0    0.00   43.89      83        0.00  fwrite
+f90 -c -p -O1  main.f versions/F77WAVE_columntraverse.f
+f90 -o app -p  main.o F77WAVE_columntraverse.o  
+./app < input > tmp.out
+CPU-time:  26.16   f90 -O1 traversing the array rowwise
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  44.9   11.70   11.70                      $$mulI
+  35.9    9.34   21.04                      f77wave
+  15.8    4.12   25.16                      timeloop
+   0.4    0.11   25.27                      setic
+   0.0    0.00   25.27     413        0.00  _memcpy
+   0.0    0.00   25.27     107        0.00  __errno
+   0.0    0.00   25.27      83        0.00  fwrite
+   0.0    0.00   25.27      16        0.00  __thread_mutex_lock
+f90 -c -p -O2  main.f versions/F77WAVE_columntraverse.f
+f90 -o app -p  main.o F77WAVE_columntraverse.o  
+./app < input > tmp.out
+CPU-time:   4.29   f90 -O2 traversing the array rowwise
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  16.2    0.69    0.69                      timeloop
+   1.2    0.05    0.74                      setic
+   0.9    0.04    0.78                      $$exp_20
+   0.0    0.00    0.78     413        0.00  _memcpy
+   0.0    0.00    0.78     107        0.00  __errno
+   0.0    0.00    0.78      83        0.00  _fwrite
+   0.0    0.00    0.78      16        0.00  __thread_mutex_lock
+   0.0    0.00    0.78      16        0.00  __thread_mutex_unlock
+f90 -c -p -O3  main.f versions/F77WAVE_columntraverse.f
+f90 -o app -p  main.o F77WAVE_columntraverse.o  
+./app < input > tmp.out
+CPU-time:   1.82   f90 -O3 traversing the array rowwise
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  47.2    0.84    0.84                      timeloop
+   1.7    0.03    0.87                      $$exp_20
+   0.0    0.00    0.87     413        0.00  _memcpy
+   0.0    0.00    0.87     107        0.00  __errno
+   0.0    0.00    0.87      83        0.00  _fwrite
+   0.0    0.00    0.87      16        0.00  __thread_mutex_lock
+   0.0    0.00    0.87      16        0.00  __thread_mutex_unlock
+   0.0    0.00    0.87      11        0.00  malloc
+lambda array replaced by h(0,0) calls
+
+
+Running on pico: f90 compiler (HP f90 compiler)
+f90 -c -p -O0  main.f versions/F77WAVE_call_h00.f
+f90 -o app -p  main.o F77WAVE_call_h00.o  
+./app < input > tmp.out
+CPU-time:  36.26   f90 -O0 lambda array replaced by h(0,0) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  42.4   15.35   15.35                      f77wave
+  36.4   13.18   28.53                      $$mulI
+  11.3    4.10   32.63                      timeloop
+   8.0    2.88   35.51                      h
+   0.2    0.08   35.59                      wave2d
+   0.2    0.08   35.67                      setic
+   0.0    0.01   35.68                      bell
+   0.0    0.00   35.68     413        0.00  _memcpy
+f90 -c -p -O1  main.f versions/F77WAVE_call_h00.f
+f90 -o app -p  main.o F77WAVE_call_h00.o  
+./app < input > tmp.out
+CPU-time:  32.81   f90 -O1 lambda array replaced by h(0,0) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  44.8   14.69   14.69                      $$mulI
+  35.5   11.63   26.32                      f77wave
+  12.5    4.08   30.40                      timeloop
+   3.2    1.05   31.45                      h
+   0.5    0.15   31.60                      wave2d
+   0.3    0.11   31.71                      setic
+   0.1    0.03   31.74                      bell
+   0.0    0.00   31.74     413        0.00  _memcpy
+f90 -c -p -O2  main.f versions/F77WAVE_call_h00.f
+f90 -o app -p  main.o F77WAVE_call_h00.o  
+./app < input > tmp.out
+CPU-time:   6.36   f90 -O2 lambda array replaced by h(0,0) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  11.5    0.73    0.73                      timeloop
+   2.0    0.12    0.85                      h
+   0.5    0.03    0.88                      bell
+   0.5    0.03    0.91                      setic
+   0.3    0.02    0.93                      $$exp_20
+   0.2    0.01    0.94                      __strerror_r
+   0.0    0.00    0.94     413        0.00  _memcpy
+   0.0    0.00    0.94     107        0.00  __errno
+f90 -c -p -O3  main.f versions/F77WAVE_call_h00.f
+f90 -o app -p  main.o F77WAVE_call_h00.o  
+./app < input > tmp.out
+CPU-time:   5.10   f90 -O3 lambda array replaced by h(0,0) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  16.0    0.81    0.81                      timeloop
+   2.4    0.12    0.93                      h
+   1.0    0.05    0.98                      $$exp_20
+   1.0    0.05    1.03                      wave2d
+   0.0    0.00    1.03     413        0.00  _memcpy
+   0.0    0.00    1.03     107        0.00  __errno
+   0.0    0.00    1.03      83        0.00  _fwrite
+   0.0    0.00    1.03      16        0.00  __thread_mutex_lock
+lambda array replaced by h(x,y) calls
+
+
+Running on pico: f90 compiler (HP f90 compiler)
+f90 -c -p -O0  main.f versions/F77WAVE_call_hxy.f
+f90 -o app -p  main.o F77WAVE_call_hxy.o  
+./app < input > tmp.out
+CPU-time:  46.66   f90 -O0 lambda array replaced by h(x,y) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  57.4   26.71   26.71                      f77wave
+  26.8   12.47   39.18                      $$mulI
+   9.0    4.17   43.35                      timeloop
+   6.0    2.80   46.15                      h
+   0.2    0.09   46.24                      setic
+   0.1    0.03   46.27                      bell
+   0.0    0.00   46.27     413        0.00  _memcpy
+   0.0    0.00   46.27     107        0.00  __errno
+f90 -c -p -O1  main.f versions/F77WAVE_call_hxy.f
+f90 -o app -p  main.o F77WAVE_call_hxy.o  
+./app < input > tmp.out
+CPU-time:  37.20   f90 -O1 lambda array replaced by h(x,y) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  45.8   16.98   16.98                      f77wave
+  37.0   13.73   30.71                      $$mulI
+  11.3    4.21   34.92                      timeloop
+   2.7    1.00   35.92                      h
+   0.5    0.19   36.11                      wave2d
+   0.3    0.10   36.21                      setic
+   0.1    0.02   36.23                      bell
+   0.0    0.00   36.23     413        0.00  _memcpy
+f90 -c -p -O2  main.f versions/F77WAVE_call_hxy.f
+f90 -o app -p  main.o F77WAVE_call_hxy.o  
+./app < input > tmp.out
+CPU-time:   6.96   f90 -O2 lambda array replaced by h(x,y) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  10.1    0.70    0.70                      timeloop
+   3.6    0.25    0.95                      h
+   0.4    0.03    0.98                      $$exp_20
+   0.4    0.03    1.01                      setic
+   0.1    0.01    1.02                      __strerror_r
+   0.1    0.01    1.03                      bell
+   0.0    0.00    1.03     413        0.00  _memcpy
+   0.0    0.00    1.03     107        0.00  __errno
+f90 -c -p -O3  main.f versions/F77WAVE_call_hxy.f
+f90 -o app -p  main.o F77WAVE_call_hxy.o  
+./app < input > tmp.out
+CPU-time:   6.36   f90 -O3 lambda array replaced by h(x,y) calls
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  13.1    0.83    0.83                      timeloop
+   1.4    0.09    0.92                      wave2d
+   0.8    0.05    0.97                      $$exp_20
+   0.2    0.01    0.98                      h
+   0.0    0.00    0.98     413        0.00  _memcpy
+   0.0    0.00    0.98     107        0.00  __errno
+   0.0    0.00    0.98      83        0.00  _fwrite
+   0.0    0.00    0.98      16        0.00  __thread_mutex_lock
+if-test inside the double loop
+
+
+Running on pico: f90 compiler (HP f90 compiler)
+f90 -c -p -O0  main.f versions/F77WAVE_loop_wiftest.f
+f90 -o app -p  main.o F77WAVE_loop_wiftest.o  
+./app < input > tmp.out
+CPU-time:  43.90   f90 -O0 if-test inside the double loop
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  45.5   19.93   19.93                      $$mulI
+  43.2   18.91   38.84                      f77wave
+   9.9    4.35   43.19                      timeloop
+   0.2    0.10   43.29                      setic
+   0.1    0.04   43.34                      bell
+   0.0    0.00   43.34     413        0.00  _memcpy
+   0.0    0.00   43.34     107        0.00  __errno
+   0.0    0.00   43.34      83        0.00  fwrite
+f90 -c -p -O1  main.f versions/F77WAVE_loop_wiftest.f
+f90 -o app -p  main.o F77WAVE_loop_wiftest.o  
+./app < input > tmp.out
+CPU-time:  26.24   f90 -O1 if-test inside the double loop
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  42.9   11.19   11.19                      $$mulI
+  38.8   10.11   21.30                      f77wave
+  15.6    4.08   25.38                      timeloop
+   0.3    0.08   25.46                      setic
+   0.2    0.04   25.50                      bell
+   0.0    0.00   25.50     413        0.00  _memcpy
+   0.0    0.00   25.50     107        0.00  __errno
+   0.0    0.00   25.50      83        0.00  fwrite
+f90 -c -p -O2  main.f versions/F77WAVE_loop_wiftest.f
+f90 -o app -p  main.o F77WAVE_loop_wiftest.o  
+./app < input > tmp.out
+CPU-time:   4.51   f90 -O2 if-test inside the double loop
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  16.1    0.72    0.72                      timeloop
+   0.9    0.04    0.76                      setic
+   0.7    0.03    0.79                      bell
+   0.4    0.02    0.81                      $$exp_20
+   0.0    0.00    0.81     413        0.00  _memcpy
+   0.0    0.00    0.81     107        0.00  __errno
+   0.0    0.00    0.81      83        0.00  _fwrite
+   0.0    0.00    0.81      16        0.00  __thread_mutex_lock
+f90 -c -p -O3  main.f versions/F77WAVE_loop_wiftest.f
+f90 -o app -p  main.o F77WAVE_loop_wiftest.o  
+./app < input > tmp.out
+CPU-time:   5.11   f90 -O3 if-test inside the double loop
+ %Time Seconds Cumsecs  #Calls   msec/call  Name
+
+  16.1    0.82    0.82                      timeloop
+   0.8    0.04    0.86                      $$exp_20
+   0.0    0.00    0.86     413        0.00  _memcpy
+   0.0    0.00    0.86     107        0.00  __errno
+   0.0    0.00    0.86      83        0.00  _fwrite
+   0.0    0.00    0.86      16        0.00  __thread_mutex_lock
+   0.0    0.00    0.86      16        0.00  __thread_mutex_unlock
+   0.0    0.00    0.86      11        0.00  malloc

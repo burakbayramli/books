@@ -1,0 +1,123 @@
+<TITLE> Regress function library </TITLE>
+<BODY> 
+<A HREF = "../html/view.html" target="FRP">[Return to Master Index]</A>
+</BR> 
+</BR> 
+<pre> 
+-------- Regression functions -------- 
+</pre> 
+<pre> 
+<A HREF = "ar1_like.m       ">ar1_like         </A>: evaluate ols model with AR1 errors log-likelihood
+<A HREF = "ar_g.m           ">ar_g             </A>: MCMC estimates Bayesian heteroscedastic AR(k) model 
+<A HREF = "ar_gd.m          ">ar_gd            </A>: An example using ar_g(),
+<A HREF = "box_lik.m        ">box_lik          </A>: evaluate Box-Cox model likelihood function
+<A HREF = "boxc_trans.m     ">boxc_trans       </A>: compute box-cox transformation
+<A HREF = "boxcox.m         ">boxcox           </A>: box-cox regression using a single scalar transformation
+<A HREF = "boxcox_d.m       ">boxcox_d         </A>: An example using box_cox(),
+<A HREF = "demo_reg.m       ">demo_reg         </A>: demo using most all regression functions
+<A HREF = "felogit.m        ">felogit          </A>: computes binomial logistic regression with a one-dimensional fixed effect:
+<A HREF = "felogit_demo.m   ">felogit_demo     </A>: demonstrate use of felogit.m
+<A HREF = "felogit_lik.m    ">felogit_lik      </A>: Compute probabilities and value of log-likelihood
+<A HREF = "garch_like.m     ">garch_like       </A>: log likelihood for garch model
+<A HREF = "garch_sigt.m     ">garch_sigt       </A>: generate garch model sigmas over time 
+<A HREF = "garch_trans.m    ">garch_trans      </A>: function to transform garch(1,1) a0,a1,a2 garch parameters
+<A HREF = "ham_itrans.m     ">ham_itrans       </A>: inverse transform Hamilton model parameters
+<A HREF = "ham_like.m       ">ham_like         </A>: log likelihood function for Hamilton's model
+<A HREF = "ham_trans.m      ">ham_trans        </A>: transform Hamilton model parameters
+<A HREF = "hwhite.m         ">hwhite           </A>: computes White's adjusted heteroscedastic
+<A HREF = "hwhite_d.m       ">hwhite_d         </A>: An example of  hwhite(),
+<A HREF = "ksmooth.m        ">ksmooth          </A>: Kim's smoothing for Hamilton() model
+<A HREF = "lad.m            ">lad              </A>: least absolute deviations regression
+<A HREF = "lad_d.m          ">lad_d            </A>: An example using lad(),
+<A HREF = "lmtest.m         ">lmtest           </A>: computes LM-test for two regressions
+<A HREF = "lmtest_d.m       ">lmtest_d         </A>: demo using lmtest() 
+<A HREF = "lo_like.m        ">lo_like          </A>: evaluate logit log-likelihood
+<A HREF = "logit.m          ">logit            </A>: computes Logit Regression
+<A HREF = "logit_d.m        ">logit_d          </A>: An example of logit(),
+<A HREF = "mlogit.m         ">mlogit           </A>: multinomial logistic regression 
+<A HREF = "mlogit_d.m       ">mlogit_d         </A>: An example of mlogit(),
+<A HREF = "mlogit_lik.m     ">mlogit_lik       </A>: Calculates likelihood for multinomial logit regression model.
+<A HREF = "multilogit.m     ">multilogit       </A>: implements multinomial logistic regression
+<A HREF = "multilogit_demo.m">multilogit_demo  </A>: demonstrates the use of multilogit.m
+<A HREF = "multilogit_lik.m ">multilogit_lik   </A>: Computes value of log likelihood function for multinomial logit regression
+<A HREF = "nwest.m          ">nwest            </A>: computes Newey-West adjusted heteroscedastic-serial
+<A HREF = "nwest_d.m        ">nwest_d          </A>: An example using nwest(),
+<A HREF = "ols.m            ">ols              </A>: least-squares regression 
+<A HREF = "ols_d.m          ">ols_d            </A>: An example using ols(),
+<A HREF = "ols_g.m          ">ols_g            </A>: MCMC estimates for the Bayesian heteroscedastic linear model
+<A HREF = "ols_gcbma.m      ">ols_gcbma        </A>: MC^3 x-matrix specification for homoscedastic OLS model
+<A HREF = "ols_gcbmad.m     ">ols_gcbmad       </A>: Demo of ols_gcbma() model comparison function
+<A HREF = "ols_gd.m         ">ols_gd           </A>: demo of ols_g() 
+<A HREF = "ols_gv.m         ">ols_gv           </A>: MCMC estimates for the Bayesian heteroscedastic linear model
+<A HREF = "ols_gvd.m        ">ols_gvd          </A>: demo of ols_g() 
+<A HREF = "olsar1.m         ">olsar1           </A>: computes maximum likelihood ols regression for AR1 errors
+<A HREF = "olsar1_d.m       ">olsar1_d         </A>: demonstrate olsc, olsar1 routines
+<A HREF = "olsc.m           ">olsc             </A>: computes Cochrane-Orcutt ols Regression for AR1 errors
+<A HREF = "olsc_d.m         ">olsc_d           </A>: demonstrate ols_corc roc 
+<A HREF = "olse.m           ">olse             </A>: OLS regression returning only residual vector
+<A HREF = "olsrs.m          ">olsrs            </A>: Restricted least-squares estimation
+<A HREF = "olsrs_d.m        ">olsrs_d          </A>: An example using olsrs(),
+<A HREF = "olst.m           ">olst             </A>: ols with t-distributed errors
+<A HREF = "olst_d.m         ">olst_d           </A>: An example using olst(),
+<A HREF = "panel_d.m        ">panel_d          </A>: Demonstrates use of panel data estimation
+<A HREF = "pfixed.m         ">pfixed           </A>: performs Fixed Effects Estimation for Panel Data
+<A HREF = "phaussman.m      ">phaussman        </A>: prints haussman test, use for testing the specification of the fixed or
+<A HREF = "plt_eqs.m        ">plt_eqs          </A>: plots regression actual vs predicted and residuals for:
+<A HREF = "plt_gibbs.m      ">plt_gibbs        </A>: Plots output from Gibbs sampler regression models
+<A HREF = "plt_reg.m        ">plt_reg          </A>: plots regression actual vs predicted and residuals
+<A HREF = "plt_tvp.m        ">plt_tvp          </A>: Plots output using tvp regression results structures
+<A HREF = "ppooled.m        ">ppooled          </A>: performs Pooled Least Squares for Panel Data(for balanced or unbalanced data)
+<A HREF = "pr_like.m        ">pr_like          </A>: evaluate probit log-likelihood
+<A HREF = "prandom.m        ">prandom          </A>: performs Random Effects Estimation for Panel Data
+<A HREF = "probit.m         ">probit           </A>: computes Probit Regression
+<A HREF = "probit_d.m       ">probit_d         </A>: demo of probit()
+<A HREF = "probit_g.m       ">probit_g         </A>: MCMC sampler for the Bayesian heteroscedastic Probit model  
+<A HREF = "probit_gd.m      ">probit_gd        </A>: demo of probit_g
+<A HREF = "prt_bmao.m       ">prt_bmao         </A>: print results from ols_gcbma function
+<A HREF = "prt_eqs.m        ">prt_eqs          </A>: Prints output from mutliple equation regressions
+<A HREF = "prt_felogit.m    ">prt_felogit      </A>: Prints output from felogit function
+<A HREF = "prt_gibbs.m      ">prt_gibbs        </A>: Prints output from Gibbs sampler regression models
+<A HREF = "prt_multilogit.m ">prt_multilogit   </A>: Prints output from multilogit function
+<A HREF = "prt_panel.m      ">prt_panel        </A>: Prints Panel models output
+<A HREF = "prt_reg.m        ">prt_reg          </A>: Prints output using regression results structures
+<A HREF = "prt_swm.m        ">prt_swm          </A>: Prints output from Switching regression models
+<A HREF = "prt_tvp.m        ">prt_tvp          </A>: Prints output using tvp() regression results structures
+<A HREF = "ridge.m          ">ridge            </A>: computes Hoerl-Kennard Ridge Regression
+<A HREF = "ridge_d.m        ">ridge_d          </A>: An example using ridge(), bkw()
+<A HREF = "ridge_d2.m       ">ridge_d2         </A>: An example using ridge(), bkw()
+<A HREF = "robust.m         ">robust           </A>: robust regression using iteratively reweighted
+<A HREF = "robust_d.m       ">robust_d         </A>: An example using robust(),
+<A HREF = "rtrace.m         ">rtrace           </A>: Plots ntheta ridge regression estimates 
+<A HREF = "sur.m            ">sur              </A>: computes seemingly unrelated regression estimates
+<A HREF = "sur_d.m          ">sur_d            </A>: An example using sur(),
+<A HREF = "switch_em.m      ">switch_em        </A>: Switching Regime regression (EM-estimation)
+<A HREF = "switch_emd.m     ">switch_emd       </A>: Demo of switch_em
+<A HREF = "theil.m          ">theil            </A>: computes Theil-Goldberger mixed estimator
+<A HREF = "theil_d.m        ">theil_d          </A>: An example using theil(),
+<A HREF = "thsls.m          ">thsls            </A>: computes Three-Stage Least-squares Regression
+<A HREF = "thsls_d.m        ">thsls_d          </A>: An example using thsls(),
+<A HREF = "to_llike.m       ">to_llike         </A>: evaluate tobit log-likelihood
+<A HREF = "to_rlike.m       ">to_rlike         </A>: evaluate tobit log-likelihood
+<A HREF = "tobit.m          ">tobit            </A>: computes Tobit Regression
+<A HREF = "tobit_d.m        ">tobit_d          </A>: An example using tobit()
+<A HREF = "tobit_d2.m       ">tobit_d2         </A>: An example using tobit()
+<A HREF = "tobit_g.m        ">tobit_g          </A>: MCMC sampler for Bayesian Tobit model  
+<A HREF = "tobit_gd.m       ">tobit_gd         </A>: An example using tobit_g()
+<A HREF = "tobit_gd2.m      ">tobit_gd2        </A>: An example using tobit_g()
+<A HREF = "tsls.m           ">tsls             </A>: computes Two-Stage Least-squares Regression
+<A HREF = "tsls_d.m         ">tsls_d           </A>: An example using tsls(),
+<A HREF = "tvp.m            ">tvp              </A>: time-varying parameter maximum likelihood estimation
+<A HREF = "tvp_d.m          ">tvp_d            </A>: An example using tvp(),
+<A HREF = "tvp_garch.m      ">tvp_garch        </A>: time-varying parameter estimation with garch(1,1) errors
+<A HREF = "tvp_garch_like.m ">tvp_garch_like   </A>: log likelihood for tvp_garch model
+<A HREF = "tvp_garchd.m     ">tvp_garchd       </A>: An example using tvp_garch(),
+<A HREF = "tvp_like.m       ">tvp_like         </A>: returns -log likelihood function for tvp model
+<A HREF = "tvp_markov.m     ">tvp_markov       </A>: time-varying parameter model with Markov switching error variances
+<A HREF = "tvp_markov_lik.m ">tvp_markov_lik   </A>: log-likelihood for Markov-switching TVP model 
+<A HREF = "tvp_markovd.m    ">tvp_markovd      </A>: An example using tvp_markov(),
+<A HREF = "tvp_markovd2.m   ">tvp_markovd2     </A>: An example using tvp_markov(), and tvp_garch()
+<A HREF = "tvp_zglike.m     ">tvp_zglike       </A>: returns -log likelihood function for tvp model with Zellner's g-prior
+<A HREF = "waldf.m          ">waldf            </A>: computes Wald F-test for two regressions
+<A HREF = "waldf_d.m        ">waldf_d          </A>: demo using waldf() 
+</pre> 
+</BODY> 
