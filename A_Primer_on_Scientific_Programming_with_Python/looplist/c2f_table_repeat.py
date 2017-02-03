@@ -1,0 +1,13 @@
+C = -20;  F = 9.0/5*C + 32;  print C, F
+C = -15;  F = 9.0/5*C + 32;  print C, F
+C = -10;  F = 9.0/5*C + 32;  print C, F
+C =  -5;  F = 9.0/5*C + 32;  print C, F
+C =   0;  F = 9.0/5*C + 32;  print C, F
+C =   5;  F = 9.0/5*C + 32;  print C, F
+C =  10;  F = 9.0/5*C + 32;  print C, F
+C =  15;  F = 9.0/5*C + 32;  print C, F
+C =  20;  F = 9.0/5*C + 32;  print C, F
+C =  25;  F = 9.0/5*C + 32;  print C, F
+C =  30;  F = 9.0/5*C + 32;  print C, F
+C =  35;  F = 9.0/5*C + 32;  print C, F
+C =  40;  F = 9.0/5*C + 32;  print C, F

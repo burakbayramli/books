@@ -1,0 +1,373 @@
+# #ifdef HEADER
+
+TITLE: Monte Carlo Simulation with Cython
+AUTHOR: Hans Petter Langtangen at Simula Research Laboratory and University of Oslo
+DATE: today
+# #endif
+
+# #ifdef STANDALONE
+
+======= Speeding up Programs with Cython =======
+
+Cython can be viewed as an extension of the Python language where
+variables can be declared with a type and other information such that
+Cython is able to generate special-purpose, fast C code from the
+Python code. This document applies an example involving Monte Carlo
+simulation for showing how Cython can be utilized and what the
+computational gain might be.
+# #else
+# Cython doc
+
+======= Illustration of Cython for Monte Carlo Simulation ======= 
+# #endif
+
+===== Problem =====
+
+What is the probability of getting at least a certain number of dice
+with six eyes with throwing a given number of dice? For example, what
+is the probability of getting six eyes on at least three out of five
+dice?
+
+A simple solution method is to let the computer perform this game
+a large number of times, `N`, and count how many times, `M`, the
+experiment turned out successfully, i.e., when we got at least as
+many dice with six eyes as specified on beforehand.
+Then `M`/`N` is an empirical estimate on the probability of success.
+
+This solution approach is called Monte Carlo
+simulation. Traditionally, Monte Carlo simulation has been viewed as a
+very costly method, normally requiring very sophisticated, fast
+computer implementations. A fundamental question is whether "slow"
+languages like Python are useful at all for Monte Carlo simulation.
+
+
+===== Solution 1: A Scalar Python Implementation ======
+
+Let `ndice` be the number of dice that are thrown and let `nsix` be
+the number of dice that show six eyes. The Monte Carlo method is
+simply a loop, repeated `N` times, where the body of the loop may
+directly express the problem at hand. Here, we draw `ndice` random
+integers in $[1,6]$ inside the loop and count of many (`six`) that
+equal 6. If `six >= nsix`, the experiment is a success and we increase
+the counter `M` by one.
+
+A Python function implementing this method may look as follows:
+!bc cod
+import random
+
+def roll_dice_py(N, ndice, nsix):
+    M = 0            # no of successful events
+    for i in range(N):
+    	six = 0               # how many dice with six eyes?
+    	for j in range(ndice):
+            # Roll die no. j
+            r = random.randint(1, 6)
+            if r == 6:
+               six += 1
+        if six >= nsix:  # Successful event?
+            M += 1
+    p = float(M)/N
+    return p
+!ec
+The `float(M)` transformation is important since `M/N` will imply integer
+division, when `M` and `N` both are integers, in Python (v2.x) and many other
+languages.
+
+We will refer to this implementation is the *scalar pure Python* implementation
+since we work with one die and one experiment at a time.
+Timing the function can be done like this in Python:
+!bc cod
+import time
+t0 = time.clock()
+p = roll_dice_py(N, ndice, nsix)
+t1 = time.clock()
+print 'Loops in Python:', t1-t0
+!ec
+Scaling the timings such that the fast implementation (see below) runs
+at speed unity, this pure Python version runs at speed 87.
+
+The function above can be verified by styding the (somewhat simplified) case
+where `nsix == ndice`. The probability is then 1/6 to the power of
+`ndice`.
+
+===== Solution 2: A Vectorized Python Implementation ======
+
+A vectorized version of the previous program consists of replacing the
+explicit loops in Python by efficient operations on vectors or arrays.
+Each array operation takes place in C or Fortran and is hence
+much more efficient than the corresponding loop version in Python.
+First, we must generate all the random numbers to be used in
+one operation, which runs fast since all numbers are then generated
+in efficient C code. This is accomplished using the Numerical Python
+(`numpy`) package and its `random` module.
+Second, the analysis of the (large) collection of random numbers
+must be done by appropriate vector/array operations such that
+no looping in Python is needed. The corresponding code then needs to
+be expressed as a series of function calls to an array library (here
+`numpy`) offering the building blocks of the vectorized version of
+the algorithms.
+
+Generation of `ndice` random number of eyes for `N` experiments are
+performed by
+!bc cod
+import numpy as np
+eyes = np.random.random_integers(1, 6, (N, ndice))
+!ec
+
+The next step is to count the number of successes in each experiment.
+For this purpose, we must avoid explicit loops if we want the program
+to run fast.  In the present example, we can compare all rolls with
+six eyes, resulting in an array `compare` (dimension as `eyes`) with
+ones for rolls with six and zero otherwise.  Summing up the rows in
+`compare`, we are interested in the rows where the sum is equal to or
+greater than `nsix`.  The number of such rows equals the number of
+successful events, which we must divide by the total number of
+experiments to get the probability.  The vectorized algorithm can be
+expressed as
+!bc cod
+def roll_dice_vec1(N, ndice, nsix):
+    eyes = np.random.randint(1, 7, (N, ndice))
+    compare = eyes == 6
+    nthrows_with_6 = np.sum(compare, axis=1)  # sum over columns
+    nsuccesses = nthrows_with_6 >= nsix
+    M = sum(nsuccesses)
+    p = float(M)/N
+    return p
+!ec
+We shall refer to this code as the vectorized Python implementation,
+version 1. Its scaled speed is 22, about four times as fast as the
+Python version with loops.
+
+The criticism against the vectorized version is that the original
+problem description, which was almost literally turned into Python
+code in the `roll_dice_py` function, has now become much more
+complicated. We have to decode the calls to various
+`numpy` functionality to actually realize that `roll_dice_py`
+and `roll_dice_vec` correspond to the same mathematics.
+
+Here is another possible vectorized algorithm, which is perhaps easier
+to understand, because we retain the Monte Carlo loop and vectorize
+only each individual experiment:
+!bc cod
+def roll_dice_vec2(N, ndice, nsix):
+    eyes = np.random.random_integers(1, 6, (N, ndice))
+    six = [6 for i in range(ndice)]
+    M = 0
+    for i in range(N):
+        # Check experiment no. i:
+        compare = eyes[i,:] == six
+        if np.sum(compare) == ndice:
+            M += 1
+    p = float(M)/N
+    return p
+!ec
+This more readable version is known as the vectorized Python implementation,
+version 2. The scaled speed becomes 140 (!), almost twice as long as the
+standard Python loop version. The conclusion is that readable, partially
+vectorized code, may run slower than straightforward scalar code.
+
+
+===== Solution 3: A Plain Cython Implementation ======
+
+A Cython program starts with the Python implementation and
+specification of all variables with type, using the Cython
+syntax `cdef int M`, for instance. This is easy to accomplish
+in the scalar Python implementation:
+!bc cod
+import random
+
+def roll_dice1(int N, int ndice, int nsix):
+    cdef int M = 0            # no of successful events
+    cdef int six, r
+    cdef double p
+    for i in range(N):
+        six = 0               # how many dice with six eyes?
+        for j in range(ndice):
+            # Roll die no. j
+            r = random.randint(1, 6)
+            if r == 6:
+               six += 1
+        if six >= nsix:  # Successful event?
+            M += 1
+    p = float(M)/N
+    return p
+!ec
+This code must be run by Cython, yielding a C code that needs to be
+compiled and linked to form a shared library, which can be imported
+in Python as a standard C extension module. The creation of this
+extension module is normally done by a `setup.py` script.
+Letting the `roll_dice1` function above be stored in a file `roll_dice.pyx`,
+a proper `setup.py` script looks as follows:
+!bc cod
+from distutils.core import setup
+from distutils.extension import Extension
+from Cython.Distutils import build_ext
+import sys
+
+setup(
+  name='Monte Carlo simulation',
+  ext_modules=[Extension('roll_dice_cy', ['roll_dice.pyx'],)],
+  cmdclass={'build_ext': build_ext},
+)
+!ec
+Running
+!bc sys
+Unix/DOS> python setup.py build_ext --inplace
+!ec
+generates the C code and forms an extension module with name `roll_dice_cy`.
+Running the Cython function `roll_dice1` in this module is done by
+!bc cod
+from roll_dice_cy import roll_dice1 as roll_dice_cy1
+import time
+t0 = time.clock()
+p = roll_dice_cy1(N, ndice, nsix)
+t1 = time.clock()
+print t1 - t0
+!ec
+Although most of the statements in the `roll_dice1` function
+are turned into plain and fast C code,
+the scaled speed is not impressive: 77. We refer to this implementation
+as the Cython implementation, version 1.
+
+To investigate what takes time in this Cython implementation, we should perform
+a profiling. The template for profiling a Python function whose
+call syntax is stored in some string `statement`, reads
+!bc cod
+import cProfile, pstats
+cProfile.runctx(statement, globals(), locals(), '.prof')
+s = pstats.Stats('.prof')
+s.strip_dirs().sort_stats('time').print_stats(30)
+!ec
+Here, we set
+!bc cod
+statement = 'roll_dice_cy1(N, ndice, nsix)'
+!ec
+In addition, a Cython file in which there are functions we want to
+profile must start with the line
+!bc cod
+# cython: profile=True
+!ec
+to turn on profiling when creating the extension module.
+The profiling output from the present example looks like
+!bc dat
+       5400004 function calls in 7.525 CPU seconds
+
+ Ordered by: internal time
+
+ ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+1800000    4.511    0.000    4.863    0.000 random.py:160(randrange)
+1800000    1.525    0.000    6.388    0.000 random.py:224(randint)
+      1    1.137    1.137    7.525    7.525 roll_dice.pyx:6(roll_dice1)
+1800000    0.352    0.000    0.352    0.000 {method 'random' ...
+      1    0.000    0.000    7.525    7.525 {roll_dice_cy.roll_dice1}
+!ec
+We easily see that it is the call to `random.randint` that consumes
+almost all the time. The reason is that the generated C code must
+call a Python module, which implies a lot of overhead. The C code
+should only call plain C function, or if Python functions *must*
+be called, they should involve so much computations that the overhead
+in calling Python from C is negligible.
+
+Instead of profiling the code to uncover inefficient constructs we
+can generate a visual representation of how the Python code is
+translated to C. Running
+!bc sys
+Unix/DOS> cython -a roll_dice.pyx
+!ec
+creates a file `roll_dice.html` which can be loaded into a web browser
+to inspect what Cython has done with the Python code.
+
+FIGURE:[figs/roll_dice1_html.png, width=400]
+
+White lines indicate that the Python code is translated into C code, while
+the yellow lines indicate that the generated C code must make calls
+back to Python (using the Python API, which implies overhead). Here,
+the `random.randint` call is in yellow, so this call is 
+not translated to efficient C code but performed by
+calling a Python function.
+
+===== Solution 4: A Better Cython Implementation ======
+
+To speed up the previous Cython code, we have to get rid of the
+`random.randint` call every time we need a random variable.
+Either we must call some C function for generating a random
+variable (which could be done if we wrote a random number generator
+in Python and let Cython translate it to C), or we must create
+a bunch of random numbers simultaneously. We follow the latter
+strategy and apply the `numpy.random` module to generate all the
+random numbers we need:
+!bc cod
+import  numpy as np
+cimport numpy as np
+
+cdef np.ndarray[np.int_t, ndim=2, negative_indices=False, 
+     mode='c'] eyes = np.random.random_integers(1, 6, (N, ndice))
+!ec
+This code needs some explanation. The `cimport` statement imports
+a special version of `numpy` for Cython and is needed after the
+standard `numpy` import. The declaration of the array of
+random numbers could just go as
+!bc cod
+cdef np.ndarray eyes = np.random.random_integers(1, 6, (N, ndice))
+!ec
+However, the processing of the `eyes` array will then be slow because
+Cython does not have enough information about the array. To generate
+optimal C code, we must provide information on the element types
+in the array, the number of dimensions of the arrays, that the array
+is stored in contiguous memory, and that we do not need negative
+indices (which slows down array indexing). All this information
+is inserted in square brackets: `np.int_t` denotes integer array
+elements (`np.int` is the usual data type object, but `np.int_t` is
+a Cython precompiled version of this object), `ndim=2` tells
+that the array has two dimensions (indices), 
+`negative_indices=False` turns off the possibility for negative indices,
+and `mode='c'` indicates contiguous storage of the array.
+With all this extra information, Cython can generate C code that
+works with `numpy` arrays as efficiently as native C arrays.
+
+Inside the `rool_dice1` function we just replace
+the `random.randint` call by an array look-up to `eyes[i,j]`
+retrieve 
+the next random number. The two loops will now be as efficient
+as if they were coded directly in pure C.
+
+The complete code for the efficient version of the `roll_dice1` function
+looks as follows:
+!bc cod
+import  numpy as np
+cimport numpy as np   # fast numpy version for Cython
+
+import cython
+@cython.boundscheck(False)
+def roll_dice2(int N, int ndice, int nsix):
+    # Use numpy to generate all random numbers
+    cdef int M = 0            # no of successful events
+    cdef int six, r
+    cdef double p
+    cdef np.ndarray[np.int_t, ndim=2, negative_indices=False, 
+         mode='c'] eyes = np.random.random_integers(1, 6, (N, ndice))
+    for i in range(N):
+        six = 0               # how many dice with six eyes?
+        for j in range(ndice):
+            # Roll die no. j
+            r = eyes[i,j]
+            if r == 6:
+               six += 1
+        if six >= nsix:  # Successful event?
+            M += 1
+    p = float(M)/N
+    return p
+!ec
+The compiled version of this function runs at speed 1.
+
+The conclusion we can draw from this example, is that Monte Carlo
+algorithms can be implemented in plain Python first. If the speed is
+not acceptable, go for Cython rather than vectorization.  With Cython,
+generate all the random numbers at once and introduce simple loops
+that fetch all random numbers from an array.  Such loops and array
+loop-ups can be successfully turned into fast C code by
+Cython. Vectorized versions suffer from two major shortcomings in this
+example: the gain in speed is modest and the close correspondance
+between the original problem formulation and the code in the body of
+the Monte Carlo loop is lost.
+
