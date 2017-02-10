@@ -1,0 +1,325 @@
+Version 0.1.5
+=============
+
+* Fix #53: UKF rts_smoother does not use residual functions
+* Fixed #54: Comments in multivariate_multiply incorrectly called the
+  covariance the mean. 
+* Added logpdf to stats. Computes logpdf - mostly a wrapper around
+  stats.multivariate_normal.logpdf as older versions of that function 
+  do not support the allow_singular keyword. But it also flattens out the
+  vectors for you so you do not have to do anything special with column vectors.
+
+Version 0.1.4
+=============
+
+* Added Cubature Kalman filter.
+* Bug in Q_continuous_white_noise(). The first term in the matrix should be (dt**3)/3, not (dt**4)/3. 
+* Added log-likelihood computation to UKF.
+* Added simplex points for UKF
+* fixed bug in KF matrix size check
+
+Version 0.1.3
+=============
+
+* Github issue #37. rts_smoother uses the wrong index for F and Q: they should
+use k+1, not k. This caused poor smoothing performance when either F or Q are
+time varying.
+
+
+* Github issue #40. Fixed behavior of multivariate_gaussian to accept list as
+the covariance matrix. 
+
+
+Version 0.1.2
+=============
+
+Modified the update() and predict() functions to work in the
+univariate case. You can pass int/floats into the equations
+and get floats back.
+
+
+Version 0.1.1
+=============
+
+* Added discrete_bayes module, which supports discrete Bayesian filtering.
+
+* Brought docstrings (mostly) into compliance with NumPy documentation style.
+This requires installation of numpy doc with
+    pip install numpydoc
+    
+docs\conf.py has been modified to use numpydoc. 
+
+
+
+Version 0.1.0
+==============
+
+Move to minor version numbering doesn't mean anything other than
+it got absurd to be using 3 digits for version numbers. We are
+far past alpha here. I will be moving to 1.0.0 soon, probably after
+I finish the book and flesh out a few points.
+
+* Implemented a fixed-point smoother, but it is not working all that well.
+
+Color on this: There are various recusive equations for the fixed point
+filter that I have found in various book - Simon, Crassidis, and Grewal.
+None seem to work very well. I have code that works pretty good when R 
+is < 0.5 or so, but then the filter diverges when R is larger. I'm not seeing
+much in the literature that explains this very well, nor any evidence of
+this smoother actually being used in practice. I will give this a bit
+more effort, and if I can't get something reliable I'll put it in a branch
+and remove from trunk. Someone will have to tackle this on a rainy day.
+
+* KalmanFilter.batch_filter() now accepts lists of all the KF matrices
+
+* lots of docstring corrections and additions
+
+
+
+Version 0.0.28
+==============
+
+* Deprecated plot_gaussian in favor of plot_gaussian_pdf,
+which is a more descriptive name.
+
+* Added plot_gaussian_cdf and plot_discrete_cdf.
+
+
+Version 0.0.27
+==============
+
+* Added function to compute update in the presense of
+correlated process and measurement noise.
+
+* Added IMM filter.
+
+* added tests for IMM and MMAE filters
+
+* Added display of semi-axis for covariance ellipses
+
+* various bug fixes
+
+ 
+Version 0.0.26
+==============
+
+* Added likelihood and log-likelihood to the KalmanFilter
+class. 
+
+* Added an MMAE filter bank class.
+
+* Added function to compute NEES
+
+
+Version 0.0.25
+==============
+Installation still messed up, this is a revert to 0.0.23
+minus the folder changes. I hope.
+
+Version 0.0.24
+==============
+
+I messed up the installation on 0.0.23 on pypi, it had no
+source files in it. Pypi no longer allows you to refresh
+distribution files, so I had to make a new version number.
+
+Only changes are to make the install work - I had to move
+some of the install files around. This should affect no one
+but me.
+
+
+Version 0.0.23
+==============
+
+* Restructured directories so source code is under filterpy/,
+not filterpy/filterpy. If you have PYTHONPATH set to point
+to some_dir/filterpy you will need to change it to some_dir.
+Shouldn't affect you if you do a normal pip install. Let me
+know.
+
+* Allow KalmanFilter.B to be set to a scalar.
+
+* let plot_covariance_ellipse use fc and ec for facecolor
+and edgecolor. Just to make code shorter in book!
+
+
+Version 0.0.22
+==============
+
+BREAKING CHANGE
+
+Split statistical functions in filterpy.common into filterpy.stats
+module. I did not add or change anything, just move functions.
+If you get an import error, this is probably why! Switch import
+from filterpy.common to filterpy.stats and everything should work.
+
+
+Version 0.0.21
+==============
+
+Added monte_carlo module which contains routines for MCMC - mostly 
+for particle filtering. 
+
+
+Version 0.0.20
+==============
+
+Several important bug fixes and additions for the UKF filter. It is very
+important to update your code to this release if you are using the UKF.
+
+* You couldn't call update() more than once in a row or the covariance
+matrix would be computed incorrectly,.
+
+* Added way to specify subtract routine in the sigma point classes.
+
+* Fixed bug in computation of weights for the Julier sigma points.
+
+
+
+Version 0.0.19
+===========
+
+BREAKING CHANGES!!
+
+The unscented kalman filter code has been significantly altered. Your
+existing code will no longer run. Sorry, but it had to be done. 
+
+As of version 0.0.18 there were separate classes for the UKF (Julier's)
+original formulation, and for the scaled UKF. But they are all the same thing,
+basically, and there were differing levels of support - the scaled version didn't
+have an RTS smoother, for example.
+
+Now the sigma point and weight generation is done with a separate class,
+and the UKF class just performs the algorithm. This is much more configurable
+at perhaps the cost of being a bit harder to read and learn. But I didn't want to
+keep writing batch_filter, rts_smoother, etc, for every possible sigma point
+filter.
+
+The best documentation on this is the chapter on the UKF in my Kalman filter
+book:
+
+https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/09_Unscented_Kalman_Filter.ipynb
+
+
+
+
+
+Version 0.0.18
+==============
+
+* Added args parameters to Hx and HJacobian of the ExtendedKalmanFilter
+class so you can pass additional data to them. 
+
+* Made an exception more human readable by including the size of the
+matrix that caused the shape error.
+
+
+Version 0.0.17
+==============
+* Fixed assert in UKF module that incorrectly required kappa
+to be >= 0.
+
+Version 0.0.16
+==============
+
+* Added multivariate_multiply to stats module.
+* IMPORTANT: bug fix in the UKF RTS smoother routine. 
+* various typo fixes.
+
+Version 0.0.15
+==============
+
+A bunch of small changes and bug fixes. Documentation improvements.
+
+
+Version 0.0.14
+==============
+
+The change to _dt was stupid in 0.0.13 . I put it back to _dt, and 
+then added an optional dt parameter to the predict() function. 
+
+
+Version 0.0.13
+==============
+
+* BREAKING CHANGE: _dt in UKF is now named dt to allow users to
+rename. You will get an exception if you try to use _dt for now.
+
+* fixed bug in EKF.
+
+
+Version 0.0.12
+==============
+* Mostly a change in the pypi install so that the pip install will
+include the test directories, and include the changelog and license.
+
+* a few small bug fixes.
+
+
+Version 0.0.11
+==============
+
+* Breaking change - moved rts_smoother into the KalmanFilter class.
+
+* added an rts_smoother method to the UnscentedKalmanFilter class
+
+
+Version 0.0.10
+==============
+* Modified all filters to allow a 1D array for the state vector x.
+  That is, np.array([1,0]) is allowed, as well as np.array([[1],[0]])
+
+This is a potentially breaking change to your scripts. I tried to test
+all of the possibilities, but bug may remain.
+
+* Added some tests for dimensionality of input to functions. It is far
+from complete, as I don't want to go overboard running tests for every
+function call. On the other hand, failures are obsucre. This will be
+finalized in few releases.
+
+
+ 
+Version 0.0.9
+=============
+
+* Added Ensemble Kalman filter
+* bug fixes in UKF
+
+Version 0.0.8
+=============
+
+Minor changes to Unscented filter, mainly naming of local variables.
+
+
+Version 0.0.7
+=============
+
+Significant changes to Unscented filter. Now separate classes for the different
+sigma computations, and predict/update split out. Provision for supplying your own
+residual and unscented transform functions.
+
+Version 0.0.6
+=============
+
+
+Version 0.0.5
+=============
+
+* Fixed and included the fixed lag smoother algorithm.
+* name change - all Z and Zs to z and zs. They are vectors, not matrices.
+* Optional H parameter in KalmanFilter.update() to override the H matrix. Useful if you have a variable number of measurements on each update.
+
+
+Version 0.0.4
+=============
+* Tests and fixes for the ExtendedKalmanFilter
+* Minor name changes for the methods that compute Q in common
+
+
+Version 0.0.3
+=============
+
+* Reverted the name change of .x to .X in the various classes. I have no idea what I was thinking - x is a vector, so it should be lower case.
+
+* Moved some code to a new /examples directory to reduce clutter. It is worth noting that the code in there does not run now - it is based on the old procedural unscented KF code, not the new OO based code. However, the test_UKF.py code basically implements this example as a test using the new code. This is more a change for the future.
+
