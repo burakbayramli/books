@@ -461,11 +461,9 @@ def plot_residual_resample(a):
 
 
 if __name__ == '__main__':
-    plot_residual_resample([.1, .2, .3, .4, .2, .3, .1])
-
+    #plot_residual_resample([.1, .2, .3, .4, .2, .3, .1])
     #example()
     #show_two_pf_plots()
-
-    a = [.1, .2, .1, .6]
+    #a = [.1, .2, .1, .6]
     #plot_cumsum(a)
     #test_pf()
