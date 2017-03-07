@@ -48,11 +48,14 @@ start=datetime.datetime(2001, 1, 1)
 end=datetime.datetime(2018, 1, 1)
 df = data.DataReader('^GSPC', 'yahoo', start, end)
 df.to_csv('sp500201702.csv')
+df = data.DataReader('^DJI', 'yahoo', start, end)
+df.to_csv('dji201702.csv')
 ```
 
 ```python
 import pandas as pd, datetime
-df = pd.read_csv('sp500201702.csv', index_col=0,parse_dates=True)
+#df = pd.read_csv('sp500201702.csv', index_col=0,parse_dates=True)
+df = pd.read_csv('dji201702.csv', index_col=0,parse_dates=True)
 ```
 
 ```python
@@ -92,7 +95,7 @@ end_date = df.tail(1).index[0].timetuple()
 end_date_dec = end_date.tm_year + (end_date.tm_yday / 367.)
 df['Year'] = np.linspace(beg_date_dec,end_date_dec,len(df))
 
-fit_params = init_fit(2001.0,2100.0,2040.)
+fit_params = init_fit(2001.0,2100.0,2050.)
 
 y = np.log(df['Adj Close'])
 t = df['Year']
@@ -103,27 +106,34 @@ report_fit(fit_params)
 
 ```text
 [[Variables]]
-    tc:      2017.15803 +/- 0.003517 (0.00%) (init= 2040)
-    A:       3.97290983 +/- 0.739854 (18.62%) (init= 2)
-    m:       0.27954457 +/- 0.679798 (243.18%) (init= 0.5)
-    C:      -0.04248284 +/- 0.142132 (334.56%) (init= 0)
-    beta:    0.40175845 +/- 0.603513 (150.22%) (init= 0.5)
-    omega:   21.4526411 +/- 5.789025 (26.99%) (init= 20)
-    phi:     6.21769660 +/- 13.17586 (211.91%) (init= 3.141593)
+    tc:      2018.01977 +/- 0.059571 (0.00%) (init= 2050)
+    A:       10         +/- 0.007098 (0.07%) (init= 2)
+    m:       0.19663441 +/- 0.019641 (9.99%) (init= 0.5)
+    C:      -0.14243083 +/- 0.007036 (4.94%) (init= 0)
+    beta:    0.53262341 +/- 0.026568 (4.99%) (init= 0.5)
+    omega:   13.1485152 +/- 0.151282 (1.15%) (init= 20)
+    phi:     6.28318530 +/- 0.049456 (0.79%) (init= 3.141593)
 [[Correlations]] (unreported correlations are <  0.100)
-    C(m, beta)                   = -0.990 
-    C(A, m)                      =  0.987 
-    C(omega, phi)                = -0.970 
-    C(A, beta)                   = -0.958 
-    C(A, C)                      =  0.326 
-    C(m, C)                      =  0.322 
-    C(C, beta)                   = -0.312 
-    C(tc, A)                     =  0.192 
-    C(tc, m)                     =  0.189 
-    C(tc, beta)                  = -0.183 
-    C(beta, omega)               = -0.124 
-    C(m, omega)                  =  0.107 
+    C(omega, phi)                = -0.994 
+    C(m, beta)                   = -0.993 
+    C(A, m)                      =  0.972 
+    C(tc, phi)                   = -0.940 
+    C(A, beta)                   = -0.940 
+    C(tc, omega)                 =  0.911 
+    C(A, C)                      =  0.801 
+    C(m, C)                      =  0.766 
+    C(C, beta)                   = -0.729 
+    C(tc, C)                     =  0.200 
+    C(C, phi)                    = -0.178 
+    C(tc, A)                     =  0.173 
+    C(C, omega)                  =  0.164 
+    C(beta, omega)               =  0.147 
+    C(A, phi)                    = -0.128 
+    C(beta, phi)                 = -0.121 
+    C(A, omega)                  =  0.101 
 ```
+
+Analyze residuals for stationarity, if there, fit was good.
 
 ```python
 import statsmodels.tsa.stattools as st
@@ -132,12 +142,15 @@ print res[0], '%1,%5,%10', res[4]['1%'], res[4]['5%'], res[4]['10%']
 ```
 
 ```text
--2.57532029304 %1,%5,%10 -3.43196128744 -2.86225197858 -2.56714899328
+-2.90299578531 %1,%5,%10 -3.43196089051 -2.86225180324 -2.56714889993
 ```
 
+```python
+df['Adj Close'].plot()
+plt.savefig('bubble_01.png')
+```
 
-
-
+![](bubble_01.png)
 
 
 
