@@ -1,0 +1,70 @@
+SciPy, Matplotlib, etc:
+
+http://fonnesbeck.github.io/ScipySuperpack/
+
+    curl -O https://raw.github.com/fonnesbeck/ScipySuperpack/master/install_superpack.sh
+    sh install_superpack.sh
+
+
+PIL:
+
+Download libjpeg source from http://libjpeg.sourceforge.net/
+Download zlib source from http://zlib.net/
+Download source from http://www.pythonware.com/products/pil/
+
+Put jpeglib and zlib below Imaging folder. Edit jconfig.h, then run
+
+    PYTHONPATH=../../src/ninja/misc python ninja.py && ninja
+
+to build them.
+
+Edit setup.py to have:
+
+    JPEG_ROOT = './ninjaout', './jpeg-6b'
+    ZLIB_ROOT = './ninjaout', './zlib-1.2.8'
+
+Build PIL:
+
+    CFLAGS=-Qunused-arguments python setup.py build
+    sudo python setup.py install
+
+
+vlfeat:
+
+Grab binaries from http://www.vlfeat.org/ , add them to PATH
+
+pydot:
+
+    sudo easy_install pydot
+
+
+PyGame:
+
+Grab binaries from http://www.pygame.org/download.shtml
+
+PyOpenGL:
+
+    sudo pip install PyOpenGL PyOpenGL_accelerate
+
+
+Data files:
+
+merton1 from http://www.robots.ox.ac.uk/~vgg/data/data-mview.html
+
+CherryPy:
+
+Hit "Download" on http://www.cherrypy.org/ , get zip, cd there, do
+
+  sudo python setup.py install
+
+LibSVN:
+
+Download zip from http://www.csie.ntu.edu.tw/~cjlin/libsvm/ , unzip, cd there,
+
+    make
+    cd python && make
+    cd ..
+    sudo mkdir /Library/Python/2.7/site-packages/libsvm
+    sudo touch /Library/Python/2.7/site-packages/libsvm/__init__.py
+    sudo cp libsvm.so.2 python/svm.py python/svmutil.py /Library/Python/2.7/site-packages/libsvm
+    sudo sed -i -e 's:\.\./::' /Library/Python/2.7/site-packages/libsvm/svm.py
