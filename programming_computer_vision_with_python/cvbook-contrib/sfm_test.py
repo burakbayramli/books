@@ -24,6 +24,8 @@ class SfmTest(unittest.TestCase):
     cam.P = dot(cam.P, rot)
     cam.P[:, 3] = array([1, 0, 0])
     self.x2 = cam.project(points)
+    print self.x2.shape
+    print self.x2
 
     K, R, t = cam.factor()
     self.expectedE = dot(sfm.skew(t), R)
