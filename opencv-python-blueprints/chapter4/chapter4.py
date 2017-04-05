@@ -29,7 +29,8 @@ def main():
     scene = SceneReconstruction3D(K, d)
 
     # load a pair of images for which to perform SfM
-    scene.load_image_pair("fountain_dense/0004.png", "fountain_dense/0005.png")
+    scene.load_image_pair("/home/burak/Documents/Dropbox/Public/data/opencv-python-blueprints-data/fountain_dense/0004.png",
+                          "/home/burak/Documents/Dropbox/Public/data/opencv-python-blueprints-data/fountain_dense/0005.png")
 
     # draw 3D point cloud of fountain
     # use "pan axes" button in pyplot to inspect the cloud (rotate and zoom
