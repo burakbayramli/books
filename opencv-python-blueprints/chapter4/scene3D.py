@@ -228,7 +228,8 @@ class SceneReconstruction3D:
         # extract features
         if feat_mode.lower() == "surf":
             # feature matching via SURF and BFMatcher
-            self._extract_keypoints_surf()
+            #self._extract_keypoints_surf()
+            self._extract_keypoints_flow()
         else:
             if feat_mode.lower() == "flow":
                 # feature matching via optic flow
@@ -240,7 +241,8 @@ class SceneReconstruction3D:
     def _extract_keypoints_surf(self):
         """Extracts keypoints via SURF descriptors"""
         # extract keypoints and descriptors from both images
-        detector = cv2.SURF(250)
+        #detector = cv2.SURF(250)
+        detector = cv2.SIFT()
         first_key_points, first_desc = detector.detectAndCompute(self.img1,
                                                                  None)
         second_key_points, second_desc = detector.detectAndCompute(self.img2,
@@ -263,7 +265,8 @@ class SceneReconstruction3D:
     def _extract_keypoints_flow(self):
         """Extracts keypoints via optic flow"""
         # find FAST features
-        fast = cv2.FastFeatureDetector()
+        #fast = cv2.FastFeatureDetector()
+        fast = cv2.FastFeatureDetector_create()
         first_key_points = fast.detect(self.img1, None)
 
         first_key_list = [i.pt for i in first_key_points]
