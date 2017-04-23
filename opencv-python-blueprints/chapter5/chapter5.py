@@ -15,7 +15,7 @@ from saliency import Saliency
 from tracking import MultipleObjectsTracker
 
 
-def main(video_file='soccer.avi', roi=((140, 100), (500, 600))):
+def main(video_file='/home/burak/Documents/Dropbox/Public/data/opencv-python-blueprints-data/soccer.avi', roi=((140, 100), (500, 600))):
     # open video file
     if path.isfile(video_file):
         video = cv2.VideoCapture(video_file)
