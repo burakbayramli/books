@@ -1,0 +1,202 @@
+                              Documentation for
+                             NORAD SGP4/SDP4 Units
+
+                                 Developed by
+                                 Dr TS Kelso
+
+                                 Version 2.60
+                               1999 November 28
+
+Copyright (C) 1992-1999.  All rights reserved.
+
+
+PURPOSE
+
+The enclosed Pascal source code implements the NORAD SGP4/SDP4 orbital 
+models for use with the standard two-line orbital element sets to 
+determine earth- centered inertial (ECI) and topocentric coordinates of 
+earth-orbiting objects. This code implements both the near-earth and 
+deep-space portions of the NORAD SGP4 orbital model.  These units are 
+designed to make the development of programs based on the NORAD orbital 
+models straightforward and standardized.
+
+
+INTRODUCTION
+
+In order to properly determine the position of any earth-orbiting object 
+using the standard NORAD two-line element sets, it is necessary that the 
+proper orbital model be used.  Since the observations taken by NORAD for 
+each earth-orbiting object are reduced to orbital elements using the 
+SGP4 (Simplified General Perturbations) model, the SGP4 model *MUST* be 
+used to get the most accurate determination possible of an object's 
+position and velocity.  The primary reason for this requirement is that 
+each orbital model handles perturbations (due to atmospheric drag, solar 
+and lunar gravitational effects, irregularities of the earth's 
+gravitational field, etc.) in a different manner.  The NORAD two-line 
+element sets incorporate these perturbations using the SGP4 orbital 
+model and that model is required to accurately reconstruct the 
+magnitudes of these effects.
+
+The SGP4 orbital model takes into account perturbations due to 
+atmospheric drag (based on a static, non-rotating, spherically-symmetric 
+atmosphere whose density can be described by a power law), fourth-order 
+zonal geopotential harmonics (J2, J3, and J4), spin-orbit resonance 
+effects for synchronous and semi-synchronous orbits, and solar and lunar 
+gravitational effects to first order.  The two portions of the SGP4 
+model are SGP4 (for objects in orbits with periods less than 225 
+minutes) and SDP4 (for objects in orbits greater than or equal to 225 
+minutes).  The reason for breaking the model into two parts is that for 
+low-earth orbits the effects of spin-orbit resonance and lunar and solar 
+gravity are not significant.  This result allows the development of an 
+analytical model (SGP4) for determining an object's position and 
+velocity, thereby reducing the computational burden.  For deep-space 
+orbits, a semi-analytical model (SDP4) is required.
+
+Models which implement the older SGP model should be accurate for 
+low-earth orbits but really won't be adequate for deep-space objects, 
+particularly those in resonance with the geopotential.
+
+
+COMPUTER IMPLEMENTATION
+
+The enclosed Pascal source code was developed in Turbo Pascal Version 
+7.0 to fully implement the NORAD SGP4 orbital model.  There are now 
+twelve units provided:
+
+     SGP4SDP4     Full implementation of NORAD SGP4/SDP4 models
+     SGP_OBS      Observer-dependent routines for calculating 
+                  topocentric information
+     MINMAX       Minimum/maximum functions
+     SGP_MATH     Various trigonometric and mathematical routines
+     SGP_TIME     Time-based routines for converting among time systems
+     SGP_INIT     Code and variables needed to initialize SGP4SDP4
+     SGP_INTF     Interface between SGP4SDP4 and SGP_CONV (and some 
+                  special-purpose programs)
+     SGP_CONV     Routines for converting two-line data and SGP4 state 
+                  vectors
+     SGP_IN       Routines to simplify input of data (with error checking)
+     SGP_OUT      Routines for outputting program results in standard 
+                  formats
+     SOLAR        Routines for calculating the position of the sun and 
+                  whether a satellite is in earth umbral eclipse
+     SUPPORT      General support routines for machine-dependent features
+
+These units are structured to make development of software as simple as 
+possible and to reduce the time needed for validating results.  A more 
+complete description of these Pascal units is included in INTRFACE.TXT.
+
+Of the units provided, the most complex is the implementation of the 
+NORAD orbital models (SGP4SDP4).  The development of this unit was done 
+to follow as closely as possible the implementation contained in 
+Spacetrack Report Number 3, "Models for Propagation of NORAD Element 
+Sets," (a copy of the LaTeX documentation and complete FORTRAN source 
+code is available on the CelesTrak WWW site in the Documentation 
+section). No attempt has been made at this point to optimize the code to 
+run faster.  A future release will provide a more streamlined 
+implementation.  To ensure the validity of these units, no changes 
+should be made to the units themselves which have been extensively 
+tested and validated.
+
+A test program (SGP4TEST.PAS) is included to implement the sample cases 
+included in the Spacetrack Report Number 3 documentation. This test 
+program should provide a reasonably good idea of how to use these Turbo 
+Pascal units.  To determine an object's position and velocity, the 
+object's two-line orbital element set is read into the array {sat_data} 
+[Note:  Variable names will be enclosed within braces to set them apart 
+in this document].  A call is then made to the procedure 
+Convert_Satellite_Data passing the satellite's index {satnumber}. In the 
+call to this procedure, a determination is automatically made as to 
+whether the object is in a near-earth or deep-space orbit; the result is 
+returned in {ideep}.  If {ideep} is 0, then the object is in a 
+near-earth orbit; if {ideep} is 1, it is in a deep-space orbit.  A call 
+is then made to either SGP4 or SDP4 depending on the value of {ideep}.
+
+The time passed in this call, {tsince}, represents the time since 
+(before or after) the satellite epoch in the two-line element set.  The 
+four-dimensional vectors {pos} and {vel} are returned containing the x, 
+y, and z ECI coordinates (referenced to the true equator and mean 
+equinox of date) and vector magnitude of the object's position and 
+velocity, respectively, at the specified time.  Units are earth radii 
+and earth radii per minute, respectively; appropriate conversions must 
+be made to get the proper units (as demonstrated in the test program 
+using Convert_Sat_State).  The variable {iflag} is used internally for 
+keeping track of initialization conditions for the deep-space portion of 
+the model.
+
+Running this test program should provide results quite close to those 
+provided in the Spacetrack Report Number 3 documentation (see 
+SGP4-VAL.TXT and SDP4-VAL.TXT).  The minor differences that do occur are 
+due to two primary reasons.  The first is the result of differences in 
+the internal precision of the FORTRAN compiler used to generate the 
+report and that of the Turbo Pascal compiler.  The second is due to the 
+choice to implement a consistent numerical precision in the Turbo Pascal 
+code. Examination of the FORTRAN source code will reveal inconsistent 
+use of single- and double-precision variables and trigonometric 
+functions; the Turbo Pascal code uses double-precision variables and 
+functions throughout.
+
+Because it is not very straightforward to perform calls to the SGP4 
+units based on the time since each satellite's element set epoch, a 
+procedure is also provided which interfaces between a standard time 
+system and the SGP4 and SDP4 calls.  This procedure, SGP, requires only 
+that the user pass the Julian Date of interest; the procedure 
+Julian_Date_of_Epoch converts from a date in the format used in the 
+two-line element set to a Julian Date.  The SGP call also takes care of 
+making the determination of whether the object is in a near-earth or 
+deep-space orbit and calls the appropriate model.  The SGP_TIME unit 
+contains these procedures as well as routines to convert Julian Dates to 
+more recognizable time formats.
+
+The main advantage of using the Julian Date in SGP is that there is no 
+problem calculating the time interval between the time of interest and 
+the satellite element set epoch, regardless of whether this interval 
+spans the beginning of a year.  There is also a function to convert 
+Julian Dates to calendar dates (Calendar_Date) of the form "1999 Nov 
+30."  Epoch_Time transforms the Julian Dates to the form used in the 
+two-line element sets.
+
+The test program SGP4TST2.PAS gives an example implementation of this 
+approach.  It is designed to produce the same results as SGP4TEST.PAS.  
+The main difference is that the Julian Date is calculated to be the time 
+of the epoch for each element set and then the offset (in minutes) is 
+added.  Be sure to note that times outside the units are now all in 
+*days* not in minutes (as they are inside the units).
+
+
+CONCLUSION
+
+These Turbo Pascal units should make it easy to implement the official 
+NORAD orbital models in developing any number of applications.  It is 
+now very straightforward to select input files (of satellite and 
+observer data) and time conditions (with full error checking) and output 
+data ranging from spacecraft ECI position and velocity to spacecraft 
+ground tracks (latitude, longitude, and altitude) to look angles 
+(azimuth, elevation, range, and range rate) to right ascension and 
+declination.  Each of these outputs uses the WGS '72 geoid 
+(nonspherical) and takes into account atmospheric refraction, where 
+appropriate.  These results can be easily output as text or incorporated 
+into advanced graphical applications.
+
+For a full-blown example of how to implement these functions, look for 
+the application TrakStar/SGP4, also available on the CelesTrak WWW site.  
+It allows output for up to 250 satellites (or element sets for a single 
+satellite) in the form of spacecraft ECI position and velocity, 
+spacecraft ground tracks (latitude, longitude, and altitude), look 
+angles (azimuth, elevation, range, and range rate), and right ascension 
+and declination.  A separate data file is created for each 
+object/element set--a great tool for all sorts of analyses.
+
+Future releases of these units will include routines to efficiently 
+determine crossing phenomena (e.g., satellite rise/set, sun rise/set, 
+and satellite entry into/exit from earth eclipse) and local optima 
+(e.g., closest approach).
+
+In a continuing effort to promote standardization of orbital 
+calculations, I will endeavor to continue to improve this package and 
+will gratefully accept user feedback or contributions to this effort.
+
+                                       - Dr TS Kelso
+                                         CelesTrak WWW
+                                         http://celestrak.com
+                                         E-Mail:  tskelso@celestrak.com
+                                         Beavercreek, OH  45431-4114
