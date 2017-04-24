@@ -1,0 +1,918 @@
+                              Documentation for
+                             NORAD SGP4/SDP4 Units
+
+                           Interface Specifications
+
+                                 Developed by
+                                  Dr TS Kelso
+
+                                 Version 2.60
+                               1999 November 28
+
+Copyright (C) 1992-1999.  All rights reserved.
+
+
+INTRODUCTION
+
+The following document is intended to provide complete documentation for 
+the interface section of the units provided in this package.  Each unit 
+will be presented, in alphabetical order, and the INTERFACE section is 
+reproduced, showing the exact nature of each call.  Following this 
+information will be a description of the intended use of each variable 
+and procedure.
+
+** UNIT MINMAX -- VERSION 1.02 ***********************************************
+
+Function IMin(arg1,arg2 : integer) : integer;
+Function IMax(arg1,arg2 : integer) : integer;
+Function RMin(arg1,arg2 : real) : real;
+Function RMax(arg1,arg2 : real) : real;
+Function DMin(arg1,arg2 : double) : double;
+Function DMax(arg1,arg2 : double) : double;
+
+These functions are used to provide integer, real, and double minimum 
+and maximum calculations used in these libraries.
+
+** UNIT SGP4SDP4 -- VERSION 1.50 *********************************************
+
+  Uses Support,
+       SGP_Init,
+       SGP_Math,SGP_Time;
+
+Procedure SGP(time : double;
+       var pos,vel : vector);
+Procedure SGP4(tsince : double;
+            var iflag : integer;
+          var pos,vel : vector);
+Procedure SDP4(tsince : double;
+            var iflag : integer;
+          var pos,vel : vector);
+
+This unit contains the Pascal implementation of the SGP4 and SDP4 
+orbital models.  Two methods of interfacing are available.  The first 
+method is to access the individual routines exactly as described in 
+Project Spacetrack Report Number 3 (Procedures SGP4 and SDP4).  This 
+method requires the user to calculate the time (in minutes) since each 
+satellite element set epoch and determine the appropriate model to use.  
+The variable {iflag} is used to keep track of initialization status and 
+is set within these routines and within Convert_Satellite_Data (Unit 
+SGP_CONV).  This method is *NOT* recommended.
+
+The second method is to access the orbital models via a call to SGP.  
+Here the user is only required to pass a time (Julian Date) for the 
+calculation and the satellite ECI position and velocity are returned.  
+Determination of the appropriate orbital model is transparent to the 
+user.  The only requirement is that a call to Convert_Satellite_Data be 
+made each time a new satellite is selected before calling SGP.  Routines 
+for calculating Julian Dates are included in Unit SGP_TIME.
+
+** UNIT SGP_CONV -- VERSION 1.00 *********************************************
+
+  Uses SGP_Math;
+
+Procedure Convert_Satellite_Data(arg : integer);
+Procedure Convert_Sat_State(var pos,vel : vector);
+
+The first procedure is used to extract the data in a given two-line 
+element set to the variables expected by UNIT SGP4SDP4.  The data 
+structures containing the two-line element sets is described in UNIT 
+SGP_INIT.  In addition, a determination as to whether the near-earth 
+(SGP4) or deep-space (SDP4) model should be used is made within this 
+unit.  These variables are passed between SGP4SDP4 and SGP_CONV using 
+UNIT SGP_INTF.  This unit (SGP_INTF) should NOT be included in the main 
+program unless absolutely necessary to avoid unintentional changes to 
+these critical variables.  Two additional variables, {catnr} and 
+{elset}, are provided to identify the satellite element set.  Finally, 
+the variable {epoch} is globally available to determine the epoch of the 
+element set.
+
+Convert_Sat_State is used to convert the native units provided by 
+SGP4/SDP4 (position in earth radii, velocity in earth radii/minute) to 
+standard metric units (kilometers and kilometers/sec).
+
+** UNIT SGP_IN -- VERSION 2.10 ***********************************************
+
+(** This unit contains machine-specific code **)
+
+  Uses SGP_Math,SGP_Init,Support;
+
+const
+  data_type : byte = 3;
+
+var
+  fsat,fobs : text;
+
+Procedure Select_Time(message : string;
+                    xpos,ypos : byte;
+                  var default : time_set;
+                    precision : byte);
+Procedure Select_Time_Interval(message : string;
+                             xpos,ypos : byte;
+                           var default : time_set;
+                             precision : byte);
+Function Checksum_Good(line : line_data) : boolean;
+Function Good_Elements(line : two_line) : boolean;
+Procedure Input_Satellite(index : word);
+Function Input_Satellite_Data(fn : string) : word;
+Procedure Select_Satellites(title : string;
+                          x,y,w,h : byte;
+                           number : word);
+Procedure Input_Observer(var geodetic : vector);
+
+This unit is one of two units which contain machine-specific code; this 
+limitation will probably be removed in the future, moving all 
+machine-specific code to UNIT SUPPORT.
+
+The constant {data_type} is preset to 3 and is used to specify the 
+format of the two-line orbital data file.  A value of 2 indicates that 
+the satellite data files contain *only* two-line data; a value of 3 
+indicates that each two-line element set is preceded by a 24-character 
+satellite name.  These data are read into data structures as described 
+in UNIT SGP_INIT.  The value of {data_type} can be changed in the main 
+program and, if necessary, should be done within the program 
+initialization block.
+
+The variables {fsat} and {fobs} are predefined text files to be assigned 
+to the satellite and observer files, respectively.  Routines used in 
+this unit expect to use these file handles.
+
+The first two procedures, Select_Time and Select_Time_Interval, are 
+provided to make it easy to input start/stop times and time intervals 
+for performing calculations.  Each procedure will put a window on the 
+screen with the title specified by {message} at the location 
+({xpos},{ypos}).  A default time set is passed to initialize the time; 
+the structure of this variable is set forth in UNIT SUPPORT.  The 
+variable {default} may be initialized manually or by a call to 
+Get_Current_Time (for Select_Time) or Zero_Time (for 
+Select_Time_Interval); each of these procedures is also in UNIT SUPPORT.  
+The variable {precision} is used to indicate the precision of the data 
+to be selected.  Precision ranges from years down to hundredths of a 
+second.  A precision of 7 indicates that all time units are to be input; 
+a precision of 5 would omit inputting seconds and hundredths of seconds.  
+All values beyond the specified precision are set to zero, regardless of 
+any other user action.
+
+The next two functions are used to determine whether a given two-line 
+element set is "good"--at least in the sense that it passes the 
+modulo-10 checksum on each line and that all the numbers appear to be in 
+the proper fields.  A simple call passing the two-line element set 
+{lines} to Good_Elements returns TRUE if the data passes these tests.  
+The function Checksum_Good can be used to test the modulo-10 checksum 
+for a single line of a two-line element set. These functions are not 
+used explicitly during element set input as it is assumed that the user 
+has already done so (all data posted to the CelesTrak WWW site has 
+already been subjected to these tests).  In fact, the program Pass 
+Update, which is available on this system for updating files of two-line 
+element sets from a master file, does this checking for you.  However, 
+if you are unsure of the quality of your data, it is STRONGLY 
+RECOMMENDED that you develop your own preprocessor using these functions 
+to test your data.
+
+The procedure Input_Satellite is used to read in individual two-line 
+element sets.  The index indicates its placement within the data array.  
+This call assumes that {fsat} has already been ASSIGNed and initialized.  
+Typically, this call is made from the function Input_Satellite_Data 
+which initializes {fsat} and reads an entire file into memory from the 
+file {fn}; the output of this function is the number of satellites in 
+{fn}.  However, due to memory limitations, some files will be too large 
+to read into memory.  In these cases, Input_Satellite should be used to 
+sequentially read and process individual element sets; each element set 
+could be read into {index}=1 and processed before proceeding.
+
+In cases where all the orbital data can be read into memory and 
+{data_type}=3, the procedure Select_Satellites can be used to tag 
+satellites for calculations later in the program using the array 
+{selected}.  Initially, no satellites are selected.  A call to this 
+procedure will place a window on the screen with the upper-left corner 
+at ({x},{y}) and having a width {w} and maximum height {h} (the height 
+ranges from 1 to the minimum of {h} and the number of satellites). A 
+{title} is also put on the window.  The final parameter in this call is 
+the number of satellites available.  Selection is achieved by moving 
+with the up/down cursor keys to the appropriate satellite and toggling 
+with the space bar (an asterisk marks an item as being selected); data 
+scrolls in the window, as necessary.  Toggling advances to the next item 
+in the list, making it easier to quickly mark items.  The 'A' key 
+toggles all items (negates their current status).  Once the desired 
+items are selected, the [ENTER] key completes the process.  At least one 
+satellite must be selected to continue.  Within the main program, items 
+can be tested for selection with a statement such as:  if 
+selected[index] then ...
+
+The final procedure for this unit is Input_Observer and it works 
+somewhat like Input_Satellite except that the data is read into a 
+{geodetic} four-element vector where {geodetic}[1] is North latitude, 
+{geodetic}[2] is East longitude (that means that West longitudes are 
+negative), and {geodetic}[3] is altitude above mean sea level (AMSL).  
+Input is expected from the file {fobs} in units of degrees and meters 
+but is immediately converted to radians and kilometers for use within 
+these units.  Each observer entry in {fobs} consists of a single line 
+beginning with a 25-character site name (passed as {obs_name}); it is 
+expected that this name has a three-character short name (or number), 
+two spaces, followed by a long name.  The short name is used within UNIT 
+SGP_OUT for topocentric output.  The remaining three numbers on this 
+line are free-field format, beginning on or after character 26.
+
+** UNIT SGP_INIT -- VERSION 1.20 *********************************************
+
+const
+  max_sats = 250;
+
+type
+  line_data = string[69];
+  two_line  = array [1..2] of line_data;
+
+var
+  visible              : boolean;
+  epoch                : double;
+  catnr,elset          : string;
+  obs_name             : string[25];
+  selected             : array [1..max_sats] of boolean;
+  sat_name             : array [1..max_sats] of string[24];
+  sat_data             : array [1..max_sats] of two_line;
+  data_drive,data_dir,
+  work_drive,work_dir  : string;
+  UTC_offset           : integer;
+  DST                  : boolean;
+
+Procedure Program_Initialize(program_name : string);
+Procedure Program_End;
+
+This unit is used to initialize most of the data structures specific to 
+the SGP4 family of units.  The constant {max_sats} sets the limit 
+(imposed by system memory constraints) on the maximum number of 
+satellites available. This constant affects the storage allocation for 
+two-line element sets in the array {sat_data}, satellite names in the 
+array {sat_name}, and the array of selected satellites in {selected}.  
+Note that type {two_line} is a two-element string of 69-character lines.
+
+The first variable provided is a boolean variable {visible} which is set 
+when making calls to determine topocentric position; if the satellite is 
+visible to the observer, {visible} is set true, otherwise it is set 
+false. Checks of this variable make sense only in this context.  
+Eventually, this variable will also be used in determining other 
+visibility conditions.
+
+The next three variables pertain to the current two-line element set 
+(the last one processed through Convert_Satellite_Data).  The variables 
+{catnr} and {elset} are read from the appropriate field of Line 1 and 
+serve to identify the data.  The variable {epoch} marks the epoch time 
+(in two-line format) of that element set.
+
+The next four variables are determined in the procedure 
+Program_Initialize. They are used to specify the location of data files 
+({fsat} and {fobs} files) and output files.  Having separate locations 
+for these two groups makes development and testing easier (in my 
+opinion) and allows for standard locations to facilitate integration 
+with other programs (it doesn't make sense to have various versions of 
+two-line element set files scattered all over your hard disk).  These 
+values are specified in the configuration file {program_name}.CFG (if it 
+exists; if not, everything defaults to the working disk and directory).  
+For example, in the directory where the program TRAKSTAR is located, 
+there would be a file called TRAKSTAR.CFG. If the program files were 
+located in C:\SGP4 and the data was in C:\SGP4\DATA and work files were 
+to go to C:\SGP4\WORK, the first four lines of the configuration file 
+would look like:
+
+----------------------------------------------------------------------
+C:                                % Default drive for data files      
+\SGP4\DATA\                       % Default directory for data files  
+C:                                % Default drive for output files    
+\SGP4\WORK\                       % Default directory for output files
+----------------------------------------------------------------------
+
+Note that each directory ends with a trailing \ and should have no 
+blanks. If you wish to run from the default drive (useful when using 
+removable cartridges and moving between systems), you might change the 
+above to:
+
+----------------------------------------------------------------------
+                                  % Default drive for data files
+\SGP4\DATA\                       % Default directory for data files
+                                  % Default drive for output files
+\SGP4\WORK\                       % Default directory for output files
+----------------------------------------------------------------------
+
+To specify directories which are below the working directory, you could 
+also use:
+
+----------------------------------------------------------------------
+                                  % Default drive for data files      
+DATA\                             % Default directory for data files  
+                                  % Default drive for output files    
+WORK\                             % Default directory for output files
+----------------------------------------------------------------------
+
+The variables {UTC_offset} and {DST} are used to support the input and 
+output of local times instead of UTC. It is assumed that the computer's 
+system clock is set to the local time zone specified by {UTC_offset} and 
+{DST}. If UTC output is desired, {UTC_offset} must be set to zero and 
+{DST} set to N. In this situation, the system clock is also assumed to 
+be set to UTC, but this only affects the initial suggestion for a 
+calculation's start time. {UTC_offset} can be between -12 and 12.
+
+A sample configuration file is included in the TrakStar package. It is 
+set up to use the default drive and directory for data and output files 
+and assumes Eastern Standard Time.
+
+The call to Program_Initialize will read {program_name}.CFG to determine 
+this information (if it exists) and will also read {program_name}.HDR 
+(if it exists) to place one page of information on the screen to 
+identify the program.  It is strongly recommended that these parameters 
+be used in your programs to facilitate traceability and portability.
+
+A call to Program_End is strongly recommended to reset the terminal 
+after program execution.  Currently, this procedure positions the cursor 
+to the bottom of the screen and makes sure it is on.
+
+** UNIT SGP_INTF -- VERSION 1.02 *********************************************
+
+const
+  ae       = 1;
+  tothrd   = 2/3;
+  xkmper   = 6378.135;        {Earth equatorial radius - kilometers (WGS '72)}
+  f        = 1/298.26;        {Earth flattening (WGS '72)}
+  ge       = 398600.8;        {Earth gravitational constant (WGS '72)}
+  J2       = 1.0826158E-3;    {J2 harmonic (WGS '72)}
+  J3       = -2.53881E-6;     {J3 harmonic (WGS '72)}
+  J4       = -1.65597E-6;     {J4 harmonic (WGS '72)}
+  ck2      = J2/2;
+  ck4      = -3*J4/8;
+  xj3      = J3;
+  qo       = ae + 120/xkmper;
+  s        = ae + 78/xkmper;
+  e6a      = 1E-6;
+  dpinit   = 1;               {Deep-space initialization code}
+  dpsec    = 2;               {Deep-space secular code}
+  dpper    = 3;               {Deep-space periodic code}
+
+var
+  iflag,ideep                : integer;
+  xmo,xnodeo,omegao,eo,xincl,
+  xno,xndt2o,xndd6o,bstar,
+  julian_epoch,xke           : double;
+
+This unit defines the constants and variables used internal to SGP4SDP4.  
+Note that this version still uses WGS '72 values (while the impact of 
+switching to WGS '84 is assessed).  It is STRONGLY recommended that this 
+unit NOT be included in the main program.  All determinations using 
+these constants (such as position of an observer on the earth's surface 
+in the ECI system) should be performed through the appropriate call.  
+Also, note that {iflag} and {ideep} are unavailable to the main program 
+under this recommendation, forcing the use of the procedure SGP to 
+access the NORAD orbital models.
+
+** UNIT SGP_MATH -- VERSION 3.00 *********************************************
+
+type
+  vector = array [1..4] of double;
+
+const
+  twopi = 2 * pi;
+  zero : vector = (0,0,0,0);
+
+Function Sign(arg : double) : shortint;
+Function Cube(arg : double) : double;
+Function Power(arg,pwr : double) : double;
+Function Radians(arg : double) : double;
+Function Degrees(arg : double) : double;
+Function Tan(arg : double) : double;
+Function ArcSin(arg : double) : double;
+Function ArcCos(arg : double) : double;
+Function Modulus(arg1,arg2 : double) : double;
+Function Fmod2p(arg : double) : double;
+Function AcTan(sinx,cosx : double) : double;
+Procedure Magnitude(var v : vector);
+Procedure Vec_Add(v1,v2 : vector; var v3 : vector);
+Procedure Vec_Sub(v1,v2 : vector; var v3 : vector);
+Procedure Scalar_Multiply(k : double; v1 : vector; var v2 : vector);
+Function Dot(v1,v2 : vector) : double;
+Function Angle(var v1,v2 : vector) : double;
+Procedure Cross(v1,v2 : vector; var v3 : vector);
+Procedure Normalize(var v : vector);
+
+This unit first defines the the type {vector} as a four-element array 
+(or four-vector) consisting (typically) of x, y, and z position and a 
+vector magnitude.  These vectors are also used for storing other types 
+of information (as will be seen in UNIT SGP_OBS).  Next, the constant 
+{twopi} is defined as appropriate for Turbo Pascal Version 6.0 and 7.0.  
+Note that earlier versions of Turbo Pascal will NOT allow constant 
+definitions of this form.  The definition of a zero vector has also been 
+added.
+
+The remaining routines are defined below.
+
+Function Sign(arg : double) : shortint;
+    Output is the sign (-1, 0, +1) of {arg}.
+Function Cube(arg : double) : double;
+    Output is {arg} to the third power.
+Function Power(arg,pwr : double) : double;
+    Output is {arg} to the {pwr} power.  This is a more general-purpose
+    function, but is restricted to positive values of {arg}.  An error
+    message is reported if {arg} violates this restriction.
+Function Radians(arg : double) : double;
+    Output is an angle in radians where {arg} was input in degrees.
+Function Degrees(arg : double) : double;
+    Output is an angle is degrees where {arg} was input in radians.
+Function Tan(arg : double) : double;
+    Output is the tangent of {arg}.
+Function ArcSin(arg : double) : double;
+    Output is the arcsine of {arg} in radians.  Values range between 
+    -pi and +pi.
+Function ArcCos(arg : double) : double;
+    Output is the arccosine of {arg} in radians.  Values range between 
+    0 and 2*pi.
+Function Modulus(arg1,arg2 : double) : double;
+    Output is the remainder after {arg1} is divided by {arg2}.  This 
+    routine is useful for keeping angles between 0 and 2*pi (or 0 and 
+    360 degrees).
+Function Fmod2p(arg : double) : double;
+    This function is a specific implementation of Modulus where {arg2} 
+    equals 2*pi.  Used explicitly within SGP4SDP4.
+Function AcTan(sinx,cosx : double) : double;
+    Output is the arctangent of {sinx}/{cosx} in radians.  Used 
+    explicitly within SGP4SDP4.  The advantage of this function over 
+    ArcTan is that it returns the correct quadrant of the angle.
+Procedure Magnitude(var v : vector);
+    This procedure calculates the magnitude of vector {v} using 
+    components 1, 2, and 3, storing the result in component 4.
+Procedure Vec_Add(v1,v2 : vector; var v3 : vector);
+    This procedure adds vectors {v1} and {v2} to produce vector {v3}.
+Procedure Vec_Sub(v1,v2 : vector; var v3 : vector);
+    This procedure subtracts vector {v2} from vector {v1} to produce
+    vector {v3}.
+Procedure Scalar_Multiply(k : double; v1 : vector; var v2 : vector);
+    This procedure multiplies the elements of vector {v1} by the 
+    constant {k} to produce vector {v2}.
+Function Dot(v1,v2 : vector) : double;
+    Output is the vector dot product of {v1} and {v2}.
+Function Angle(var v1,v2 : vector) : double;
+    Output is the angle, in radians, between vectors {v1} and {v2}.
+Procedure Cross(v1,v2 : vector; var v3 : vector);
+    Returns vector {v3} which is the vector cross product of {v1} 
+    and {v2}.
+Procedure Normalize(var v : vector);
+    Returns a unit vector {v} along the direction of the original
+    vector {v}.
+
+** UNIT SGP_OBS -- VERSION 1.40 **********************************************
+
+  Uses SGP_Math;
+
+Procedure Calculate_User_PosVel(var geodetic : vector;
+                                        time : double;
+                         var obs_pos,obs_vel : vector);
+Procedure Calculate_LatLonAlt(pos : vector;
+                             time : double;
+                     var geodetic : vector);
+Procedure Calculate_Obs(pos,vel,geodetic : vector;
+                                    time : double;
+                             var obs_set : vector);
+Procedure Calculate_RADec(pos,vel,geodetic : vector;
+                                      time : double;
+                               var obs_set : vector);
+
+These procedures are used to provide observer-specific coordinate 
+transformations of the output of the NORAD orbital models.
+
+Procedure Calculate_User_PosVel passes the user's geodetic position and 
+the time of interest and returns the ECI position and velocity of the 
+observer. The format of {geodetic} is as explained in UNIT SGP_IN.  The 
+velocity calculation assumes the geodetic position is stationary 
+relative to the earth's surface.  This routine is made available to the 
+user, although the exact nature of its application is uncertain.  This 
+procedure is used, however, as the basis for Calculate_Obs and 
+Calculate_RADec, to be explained later.
+
+Procedure Calculate_LatLonAlt will calculate the {geodetic} position of 
+an object given its ECI position {pos} and {time}.  It is intended to be 
+used to determine the ground track of a satellite.  The calculations 
+assume the earth to be an oblate spheroid as defined in WGS '72.
+
+The procedures Calculate_Obs and Calculate_RADec calculate the 
+*topocentric* coordinates of the object with ECI position, {pos}, and 
+velocity, {vel}, from location {geodetic} at {time}.  The {obs_set} 
+returned for Calculate_Obs consists of azimuth, elevation, range, and 
+range rate (in that order) with units of radians, radians, kilometers, 
+and kilometers/second, respectively. The WGS '72 geoid is used and the 
+effect of atmospheric refraction (under standard temperature and 
+pressure) is incorporated into the elevation calculation; the effect of 
+atmospheric refraction on range and range rate has not yet been 
+quantified.
+
+The {obs_set} for Calculate_RADec consists of right ascension and 
+declination (in that order) in radians.  Again, calculations are based 
+on *topocentric* position using the WGS '72 geoid and incorporating 
+atmospheric refraction.
+
+** UNIT SGP_OUT -- VERSION 1.60 **********************************************
+
+  Uses SGP_Math;
+
+const
+  day_date  : boolean = true;
+  full_time : boolean = true;
+  N_E_W_S   : boolean = false;
+  D_M_S     : boolean = false;
+  time_res  : byte = 2;
+  angle_res : byte = 4;
+  dist_res  : byte = 3;
+
+var
+  fout : text;
+
+Procedure Output_Time(time : double);
+Procedure Output_ECI(time : double;
+                  pos,vel : vector);
+Procedure Output_Angle(angle : double;
+                   width,dec : byte;
+                     degrees : boolean);
+Procedure Output_LatLonAlt(time : double;
+                       geodetic : vector);
+Procedure Output_Obs(time : double;
+                      obs : vector);
+Procedure Output_RADec(time : double;
+                        obs : vector);
+
+This unit begins with a set of constants used as formatting parameters.  
+The intention here is to set these values for consistency in the output 
+and not clutter output calls with formatting information.  While the 
+default values are set above, it is easy to change these values either 
+globally or locally. For example, the user may decide to change these 
+values in the program initialization step.  Or, these values could be 
+set prior to making calls to routines within UNIT SGP_OUT.
+
+The constant {day_date} allows for selection of output time as day/date 
+(if true) or as a Julian Date (easier to read into other programs).
+
+The constant {full_time} allows the selection of times with colons 
+between the hours and minutes and between the minutes and seconds (i.e., 
+HH:MM:SS), if set true.
+
+The constant {N_E_W_S} is used with outputs of latitude and longitude to 
+specify an output with North/South or East/West (if true) rather than 
+plus or minus values.
+
+The constant {D_M_S} allows for angular output in degrees, minutes, and 
+seconds (if true) rather than decimal degrees.
+
+The final three constants are used to set the precision of output for 
+time, angle, and distance variables, respectively.  The default for 
+{time_res} of 2 indicates output to hundredths of a second.  The default 
+for {angle_res} of 4 indicates output to four decimal places (if D_M_S = 
+false) or arcseconds (if D_M_S = true); outputs in degrees, minutes, and 
+seconds are rounded to tens of arcminutes, arcminutes, tens of 
+arcseconds, and seconds for values of 1, 2, 3, and 4, respectively.  The 
+default for {dist_res} of 3 indicates a precision to three decimal 
+places in distances (i.e., meters) and six decimal places in velocities 
+(i.e., millimeters/second).
+
+The variable {fout} is a pre-defined variable to specify the output 
+file.
+
+The procedure Output_Time is used to output either the calendar date and 
+time of day or Julian Date of {time} to {fout}. This routine now 
+supports output as UTC or local time.
+
+The procedure Output_ECI outputs ECI position {pos} (in kilometers) and 
+velocity {vel} (in kilometers/second) vectors along with the time.
+
+The procedure Output_Angle outputs an angle {angle} in a field of width 
+{width} with {dec} decimal places.  The variable {degrees} is used when 
+{D_M_S} is true to specify whether the angular output is degrees or 
+hours.
+
+The procedure Output_LatLonAlt output the time, latitude (in degrees), 
+longitude (in degrees), and altitude (in kilometers) of an object.
+
+The procedure Output_Obs outputs the time, azimuth (in degrees), 
+elevation (in degrees), range (in kilometers), and range rate (in 
+kilometers/second with negative values approaching the observer).
+
+The procedure Output_RADec outputs the time, right ascension (in hours), 
+and declination (in degrees).
+
+Output_ECI and Output_LatLonAlt add ECL to the end of each line if the 
+satellite is in earth umbral eclipse.
+
+Output_Obs and Output_RADec now output a blank line at the completion of 
+a pass.
+
+** UNIT SGP_TIME -- VERSION 2.00 *********************************************
+
+  Uses SGP_Math,Support;
+
+type
+  clock_time = string[12];
+  date       = string[11];
+
+const
+  xmnpda   =  1440.0;        {Minutes per day}
+  secday   = 86400.0;        {Seconds per day}
+  omega_E  = 1.00273790934;  {Earth rotations per sidereal day (non-constant)}
+  omega_ER = omega_E*twopi;  {Earth rotation, radians per sidereal day}
+
+var
+  ds50 : double;
+
+Function Julian_Date_of_Year(year : double) : double;
+Function Julian_Date_of_Epoch(epoch : double) : double; {Modified for Y2K}
+Function Epoch_Time(jd : double) : double;
+Function DOY(yr,mo,dy : word) : word;
+Function Fraction_of_Day(hr,mi,se,hu : word) : double;
+Function Calendar_Date(jd : double;
+                      res : byte) : date;
+Function Time_of_Day(jd : double;
+                   full : boolean;
+                    res : byte) : clock_time;
+Function Julian_Date(ts : time_set) : double;
+Procedure Date_Time(jd : double;
+                var ts : time_set);
+Procedure Check_Date(var ts : time_set);
+Procedure Time_to_UTC(var ts : time_set);
+Procedure JD_to_UTC(var jt : double);
+Procedure Time_from_UTC(var ts : time_set);
+Procedure JD_from_UTC(var jt : double);
+Function ThetaG(epoch : double) : double;               {Modified for Y2K}
+Function ThetaG_JD(jd : double) : double;
+Function Delta_ET(year : double) : double;
+
+This unit contains all the routines to perform time conversions. It 
+begins by defining types for time and date output. Each of the constants 
+provided is defined in place and are available globally.
+
+The function Julian_Date_of_Year calculates the Julian Date of Day 0.0 
+of {year}.  This function is used to calculate the Julian Date of any 
+date by using Julian_Date_of_Year, DOY, and Fraction_of_Day.
+
+The function Julian_Date_of_Epoch returns the Julian Date of an epoch 
+specified in the format used in the NORAD two-line element sets. It has 
+been modified to support dates beyond the year 1999 assuming that 
+two-digit years in the range 00-56 correspond to 2000-2056. Until the 
+two-line element set format is changed, it is only valid for dates 
+through 2056 December 31.
+
+The function DOY calculates the day of the year for the specified date.  
+The calculation uses the rules for the Gregorian calendar and is valid 
+from the inception of that calendar system.
+
+Fraction_of_Day calculates the fraction of a day passed at the specified 
+input time.
+
+The function Calendar_Date converts a Julian Date to a string of the 
+form "yyyy Mon dd".  It is typically used as the major output time 
+format. The date is resolved to the accuracy defined by {res} as 
+described in Time_of_Day.
+
+Time_of_Day takes a Julian Date and calculates the clock time portion of 
+that date.  The variable {full} is set true if it is desired to place 
+colons between hours and minutes and minutes and seconds.  The variable 
+{res} is used to determine the number of decimal places after the 
+seconds in the output; zero gives a resolution of seconds, one gives a 
+resolution of tenths of seconds, etc.  The variable {res} can take on 
+values between 0 and 3.
+
+The function Julian_Date converts a standard calendar date and time to a 
+Julian Date. The procedure Date_Time performs the inverse of this 
+function.
+
+The procedure Check_Date can be used as a check to see if a calendar 
+date and time are valid. It works by first converting the calendar date 
+and time to a Julian Date (which allows for irregularities, such as a 
+time greater than 24 hours) and then converting back. Check_Date takes 
+advantage of the built-in error checking in Julian_Date and Date_Time.
+
+Procedures Time_to_UTC and Time_from_UTC are used to convert time_sets 
+between UTC and local time based on the values of {UTC_offset} and 
+{DST}. The procedures JD_to_UTC and JD_from_UTC are used to do the same 
+thing working directly with Julian dates.
+
+The function ThetaG calculates the Greenwich Mean Sidereal Time for an 
+epoch specified in the format used in the NORAD two-line element sets. 
+It has now been adapted for dates beyond the year 1999, as described 
+above. The function ThetaG_JD provides the same calculation except that 
+it is based on an input in the form of a Julian Date.
+
+The function Delta_ET has been added to allow calculations on the 
+position of the sun.  It provides the difference between UT 
+(approximately the same as UTC) and ET (now referred to as TDT).  This 
+function is based on a least squares fit of data from 1950 to 1991 and 
+will need to be updated periodically.
+
+** UNIT SOLAR -- VERSION 1.30 ************************************************
+
+  Uses SGP_Math;
+
+const
+  eclipsed : boolean = false;
+  show_vis : boolean = false;
+
+var
+  civil,
+  nautical,
+  astronomical : double;  {Twilight elevations}
+
+Procedure Calculate_Solar_Position(time : double;
+                       var solar_vector : vector);
+Function Sat_Eclipsed(sat,sol : vector;
+                    var depth : double) : boolean;
+
+The variable {eclipsed} is provided for use with the Function 
+Sat_Eclipsed to reflect whether a satellite is in earth umbral eclipse.  
+The constant {show_vis} is used to indicate whether information should 
+be output for all passes or only visible passes (i.e., satellite above 
+the observer's horizon, not in earth umbral eclipse, and the sun below 
+the appropriate threshold for the sky to be dark at the observer's 
+location).
+
+The variables {civil}, {nautical}, and {astronomical} are initialized to 
+the thresholds for solar elevation defining the corresponding twilights.  
+These are defined to occur at 6, 12, and 18 degrees below the horizon, 
+respectively.
+
+The procedure Calculate_Solar_Position calculates the position of the 
+sun in the ECI coordinate system at the designated time (UTC).  The 
+procedure makes an adjustment for the difference between UT and TDT by 
+calling Delta_ET in Unit SGP_TIME.  The variable {solar_vector} returns 
+the ECI position in kilometers and calculates the distance to the sun.
+
+The function Sat_Eclipsed (which replaces Depth_of_Eclipse) determines 
+whether a satellite at position {sat} is in earth umbral eclipse with 
+the sun at position {sol}. It also determines the depth of the eclipse 
+as the smallest angle between the earth's limb and the sun's limb. The 
+calculation used in Sat_Eclipsed is much more straightforward than that 
+used in Depth_of_Eclipse. A complete description of this calculation can 
+be found in the article "Visually Observing Earth Satellites" on the 
+CelesTrak WWW site at:
+
+    http://celestrak.com/columns/
+
+** UNIT SUPPORT -- VERSION 1.81 **********************************************
+
+const  {IBM PC screen codes}
+  BS       =  ^H;                      {Backspace}
+  CR       =  ^M;                      {Carriage Return}
+  CRLF     =  ^M^J;                    {Carriage Return/Line Feed}
+  BELL     =  ^G;                      {Terminal Bell}
+  ESC      =  ^[;                      {Escape}
+  DEL      =  #$7F;                    {Delete}
+  Up       =  #72;                     {Up Cursor}
+  Dn       =  #80;                     {Down Cursor}
+  Rt       =  #77;                     {Right Cursor}
+  Lt       =  #75;                     {Left Cursor}
+  Home     =  #71;                     {Home Key}
+  Endd     =  #79;                     {End Key}
+  PgUp     =  #73;                     {Page Up}
+  PgDn     =  #81;                     {Page Down}
+  C_Lt     =  #115;                    {Control-Left Cursor}
+  C_Rt     =  #116;                    {Control-Right Cursor}
+  C_PgUp   =  #132;                    {Control-Page Up}
+  C_PgDn   =  #118;                    {Control-Page Down}
+  UpDown   =  #24#25;                  {Up/Down Arrows}
+  Cursors  =  #24#25#26#27;            {Up/Down/Left/Right Arrows}
+  SFrame : string = '⁄ƒø≥¿Ÿ¡¬√≈¥';     {Single-Line Frame Characters}
+  DFrame : string = '…Õª∫»º ÀÃŒπ';     {Double-Line Frame Characters}
+  MFrame : string = 'µ∆∏æ‘’';          {Mixed-Line Frame Characters}
+
+type
+  options  = array [0..10] of string;
+  time_set = record
+    yr,mo,dy,hr,mi,se,hu : word;
+    end; {record}
+
+Procedure Cursor_On;
+Procedure Cursor_Off;
+Procedure Save_Cursor;
+Procedure Restore_Cursor;
+Procedure ReverseVideo;
+Procedure NormalVideo;
+Procedure BoldVideo;
+Procedure FrameWindow(x,y,w,h,color : byte; title : string);
+Procedure MakeWindow(x,y,w,h,color : byte; title : string);
+Procedure ClearWindow(x,y,w,h : byte);
+Procedure Show_Status_Line(title : string);
+Procedure Show_Instructions(title : string);
+Procedure Clear_Status_Line;
+Procedure Report_Error(x,y : byte; title : string);
+Procedure Beep;
+Procedure Buzz;
+Procedure Mark_Time;
+Procedure Zero_Time(var time : time_set);
+Procedure Get_Current_Time(var time : time_set);
+Function Yes : boolean;
+Function TwoDigit(arg : integer) : string;
+Function ThreeDigit(arg : integer) : string;
+Procedure Convert_Blanks(var field : string);
+Function Integer_Value(buffer : string;
+                 start,length : integer) : integer;
+Function Real_Value(buffer : string;
+              start,length : integer) : double;
+Function File_Exists(filename : string) : boolean;
+Function Select_File(title,pattern,default : string; x,y,w,h : byte) : string;
+Function Select_Option(menu : options; number,x,y,w,h : byte) : byte;
+
+This unit is considerably different from the other units in this library 
+and is intended to be a general support library for a specific hardware 
+implementation, in this case the IBM PC compatible family of 
+microcomputers running Microsoft DOS.  Eventually, *ALL* 
+machine-specific code will be put in this unit to enhance portability, 
+meaning that only these routines will have to be changed to port it to 
+another machine.  I have decided not to delay the release of the package 
+to achieve this goal since there is no widely available standard 
+implementation of Pascal to necessitate such changes.
+
+The unit begins with a set of constants which define the specifics of 
+various keys and characters on IBM PCs; their definitions are commented 
+above.
+
+The two types defined are an array of {options} which are used with the 
+function Select_Option and {time_set} which is a record containing the 
+year, month, day, hour, minute, second, and hundredth of seconds.
+
+The remaining routines are described below.
+
+Procedure Cursor_On;
+    Turns on a block cursor on the screen at the current cursor 
+    location.
+Procedure Cursor_Off;
+    Hides the cursor from view.
+Procedure Save_Cursor;
+    Saves the current position of the cursor.
+Procedure Restore_Cursor;
+    Restores the cursor location to the last saved location.
+Procedure ReverseVideo;
+    Changes the text attributes to reverse video (black on white).
+Procedure NormalVideo;
+    Changes the text attributes to normal_video (white on black).
+Procedure BoldVideo;
+    Changes the text attributes to bold (yellow on black).
+Procedure FrameWindow(x,y,w,h,color : byte; title : string);
+    Puts a frame around a window (and is usually called by MakeWindow).
+Procedure MakeWindow(x,y,w,h,color : byte; title : string);
+    Makes a window, located at ({x},{y}) with width {w} and height {h} 
+    in color {color}.  A {title} is put on the window.
+Procedure ClearWindow(x,y,w,h : byte);
+    ClearWindow simply clears a window from the display.  The code does 
+    not, at this time, allow restoration of underlying screen text.
+Procedure Show_Status_Line(title : string);
+    Shows status on the left side of the last line of the display.  
+    Usually used in support of providing brief instructions during 
+    input.
+Procedure Show_Instructions(title : string);
+    Similar to Show_Status_Line except providing right-justified output 
+    on the last line of the display.
+Procedure Clear_Status_Line;
+    Clears the last line of the display.
+Procedure Report_Error(x,y : byte; title : string);
+    Reports the error specified by {title} in BoldVideo at the position 
+    ({x},{y}) and then exits the program.
+Procedure Beep;
+    Sounds a high-pitched tone to draw attention.
+Procedure Buzz;
+    Sounds a lower-pitched tone to indicate an error condition.
+Procedure Mark_Time;
+    A rotating cursor to serve as a visual indication that the machine 
+    is still operating during time-intensive operations.
+Procedure Zero_Time(var time : time_set);
+    Places zeros in all element of {time}.  Useful in initializing in 
+    preparation for a call to Select_Time_Interval.
+Procedure Get_Current_Time(var time : time_set);
+    Reads the current system time into variable {time}.  Useful for 
+    initializing Select_Time.
+Function Yes : boolean;
+    A function which waits for the input of a Y or N in response to a 
+    question.  The words Yes or No are printed in response to the 
+    appropriate input and Yes is set true if a positive response is 
+    received.  For example,
+
+    Write('Are you ready? ');
+    if Yes then Do_Ready else Do_Not_Ready;
+
+Function TwoDigit(arg : integer) : string;
+    Converts an integer to a two-digit string with leading zeros.
+Function ThreeDigit(arg : integer) : string;
+    Converts an integer to a three-digit string with leading zeros.
+Procedure Convert_Blanks(var field : string);
+    Used with the next two functions to convert leading spaces to zeros 
+    to facilitate text conversion to integers or reals.
+Function Integer_Value(buffer : string;
+                 start,length : integer) : integer;
+    Takes the segment of {buffer} beginning at {start} and having length 
+    {length} and converts it to an integer number.
+Function Real_Value(buffer : string;
+              start,length : integer) : double;
+    Takes the segment of {buffer} beginning at {start} and having length 
+    {length} and converts it to a double precision real number.
+Function File_Exists(filename : string) : boolean;
+    Checks to see if {filename} exists.
+Function Select_File(title,pattern,default : string; x,y,w,h : byte) : string;
+    Allows for easy selection of input files.  Select_File places a 
+    window on the screen with upper-left corner at location ({x},{y}) 
+    and having width {w} and maximum height of {h}.  The window is 
+    labeled with {title} and {pattern} specifies the pattern of files to 
+    look for; {default} is the default pattern (this filename is 
+    highlighted, if present).  Select_File returns the filename selected.
+Function Select_Option(menu : options; number,x,y,w,h : byte) : byte;
+    Allows for the easy selection of an option from a menu {menu}.  The 
+    values of {x}, {y}, {w}, and {h} are the same as for Select_File; 
+    {number} indicates the total number of options available.  
+    Select_Option returns the option number selected.
