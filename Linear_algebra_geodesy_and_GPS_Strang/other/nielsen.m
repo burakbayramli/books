@@ -69,7 +69,6 @@ for iter = 1:20
   end
 
   k = l-F; % l is \ell (not one)
-	   %k = -l+F;
   N = A'*P;
   c = N*k;
   N = N*A;
@@ -91,7 +90,7 @@ for iter = 1:20
 				%itertst = (k'*P*k)/(vhat'*P*vhat);
 				%if itertst < 1.000001
 				%
-  break
+				% break
 				%end
 
 end
