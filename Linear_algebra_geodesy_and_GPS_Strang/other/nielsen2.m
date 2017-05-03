@@ -23,15 +23,12 @@ n = size(xx,1); % number of observations
 
 % preliminary position, [m]
 x = [0 0 0 0]';
-p = size(x,1); % number of elements/parameters
-f = n-p; % number of degrees of freedom
 x0 = x;
 
 for iter = 1:20 
   range = sqrt((x(1)-xx).^2+(x(2)-yy).^2+(x(3)-zz).^2);
   prange = range+x(4);
   F = prange;
-
   A = [];
   irange = 1./range;
   dF = irange.*(x(1)-xx);
@@ -49,6 +46,7 @@ for iter = 1:20
   N = N*A;
   deltahat = N\c;
   x = x+deltahat;
+  
   if max(abs(deltahat))<0.001
     break
   end
