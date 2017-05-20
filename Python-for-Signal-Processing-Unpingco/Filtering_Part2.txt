@@ -1,0 +1,172 @@
+
+# omega_c = pi/4
+
+from __future__ import  division
+from scipy import signal
+
+wc = pi/4
+M=20
+N = 512 # DFT size
+n = arange(-M,M)
+h = wc/pi * sinc(wc*(n)/pi)  # see definition of np.sinc()
+
+w,Hh = signal.freqz(h,1,whole=True, worN=N) # get entire frequency domain
+wx = fft.fftfreq(len(w)) # shift to center for plotting
+
+fig,axs = subplots(3,1)
+fig.set_size_inches((8,8))
+subplots_adjust(hspace=0.3)
+
+ax=axs[0]
+ax.stem(n+M,h,basefmt='b-')
+ax.set_xlabel("n",fontsize=16)
+ax.set_ylabel("amplitude",fontsize=16)
+
+ax=axs[1]
+ax.plot(w-pi,abs(fft.fftshift(Hh)))
+ax.axis(xmax=pi/2,xmin=-pi/2)
+ax.vlines([-wc,wc],0,1.2,color='g',lw=2.,linestyle='--',)
+ax.hlines(1,-pi,pi,color='g',lw=2.,linestyle='--',)
+ax.set_xlabel(r"$\omega$",fontsize=22)
+ax.set_ylabel(r"$|H(\omega)| $",fontsize=22)
+ax.grid()
+
+ax=axs[2]
+ax.plot(w-pi,20*log10(abs(fft.fftshift(Hh))))
+ax.axis(ymin=-40,xmax=pi/2,xmin=-pi/2)
+ax.vlines([-wc,wc],10,-40,color='g',lw=2.,linestyle='--',)
+ax.hlines(0,-pi,pi,color='g',lw=2.,linestyle='--',)
+ax.grid()
+ax.set_xlabel(r"$\omega$",fontsize=22)
+ax.set_ylabel(r"$20\log_{10}|H(\omega)| $",fontsize=18)
+#ax.axis( ymin=-40,xmax=pi/2)
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+fig,ax = subplots()
+fig.set_size_inches(6,3)
+
+k=arange(M)
+omega = linspace(0,pi,100)
+
+ax.plot(omega,(sin(k*omega[:,None]+k*wc)-sin(k*omega[:,None]-k*wc)).sum(axis=1))
+ax.set_ylabel(r"$Y_{re}(\omega)$",fontsize=18)
+ax.grid()
+ax.set_title(r"$\omega_c = \pi/4$",fontsize=22)
+ax.set_xlabel(r" $\omega $",fontsize=22)
+ax.set_xticks([0, pi/4,pi/2.,3*pi/4, pi,])
+ax.set_xticklabels(['$0$',r'$\frac{\pi}{4}$',r'$\frac{\pi}{2}$',r'$\frac{3\pi}{4}$', r'$\pi$'],fontsize=18)
+ax.set_xlim(xmax=pi)
+ax.annotate("Gibbs phenomenon",xy=(pi/4,10),fontsize=14,
+            xytext=(20,0),
+            textcoords='offset points',
+            arrowprops={'facecolor':'b','arrowstyle':'->'})
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+wc = pi/4
+
+M=20
+
+N = 512 # DFT size
+n = arange(-M,M)
+win = signal.hamming(len(n))
+h = wc/pi * sinc(wc*(n)/pi)*win  # see definition of np.sinc()
+
+w,Hh = signal.freqz(h,1,whole=True, worN=N) # get entire frequency domain
+wx = fft.fftfreq(len(w)) # shift to center for plotting
+
+fig,axs = subplots(3,1)
+fig.set_size_inches((8,8))
+subplots_adjust(hspace=0.3)
+
+ax=axs[0]
+ax.stem(n+M,h,basefmt='b-')
+ax.set_xlabel("n",fontsize=16)
+ax.set_ylabel("amplitude",fontsize=16)
+
+ax=axs[1]
+ax.plot(w-pi,abs(fft.fftshift(Hh)))
+ax.axis(xmax=pi/2,xmin=-pi/2)
+ax.vlines([-wc,wc],0,1.2,color='g',lw=2.,linestyle='--',)
+ax.hlines(1,-pi,pi,color='g',lw=2.,linestyle='--',)
+ax.set_xlabel(r"$\omega$",fontsize=22)
+ax.set_ylabel(r"$|H(\omega)| $",fontsize=22)
+ax.grid()
+
+ax=axs[2]
+ax.plot(w-pi,20*log10(abs(fft.fftshift(Hh))))
+ax.axis(ymin=-80,xmax=pi/2,xmin=-pi/2)
+ax.vlines([-wc,wc],10,-80,color='g',lw=2.,linestyle='--',)
+ax.hlines(0,-pi,pi,color='g',lw=2.,linestyle='--',)
+ax.grid()
+ax.set_xlabel(r"$\omega$",fontsize=22)
+ax.set_ylabel(r"$20\log_{10}|H(\omega)| $",fontsize=18)
+#ax.axis( ymin=-40,xmax=pi/2)
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+
+Ns =300 # number of samples 
+N = 1024 # DFT size
+
+fs = 1e3 # sample rate in Hz
+fpass = 100 # in Hz
+fstop = 150 # in Hz
+delta = 60 # in dB, desired attenuation in stopband
+
+from matplotlib.patches import Rectangle
+
+M,beta= signal.fir_filter_design.kaiserord(delta, (fstop-fpass)/(fs/2.))
+
+hn = signal.firwin(M,(fstop+fpass)/2.,window=('kaiser',beta),nyq=fs/2.)
+w,H = signal.freqz(hn) # frequency response
+
+fig,ax = subplots()
+fig.set_size_inches((8,3))
+
+ax.plot(w/pi*fs/2.,20*log10(abs(H)))
+ax.set_xlabel("frequency( Hz )",fontsize=16)
+ax.set_ylabel(r"$20\log_{10} |H(f)| $",fontsize=22)
+ymin,ymax = -80,5
+ax.axis(ymin = ymin,ymax=ymax)
+ax.add_patch(Rectangle((0,ymin),width=fpass,height=ymax-ymin,color='g',alpha=0.3))
+ax.add_patch(Rectangle((fpass,ymin),width=fstop-fpass,height=ymax-ymin,color='r',alpha=0.3))
+ax.add_patch(Rectangle((fstop,ymin),width=fs/2-fstop,height=ymax-ymin,color='y',alpha=0.3))
+ax.set_title("Number of taps=%d"%M)
+ax.text(10,-15,'passband',fontsize=14,bbox=dict(color='white'))
+ax.text(200,-15,'stopband',fontsize=16,bbox=dict(color='white'))
+ax.grid()
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+# two-tone example using filter
+
+t = arange(0,Ns)/fs
+x = cos(2*pi*30*t)+cos(2*pi*200*t)
+X = fft.fft(x,N)
+
+y=signal.lfilter(hn,1,x)
+Y = fft.fft(y,N)
+
+fig,ax = subplots()
+fig.set_size_inches((10,4))
+ax.plot(arange(N)/N*fs,20*log10(abs(X)),'r-',label='filter input')
+ax.plot(arange(N)/N*fs,20*log10(abs(Y)),'g-',label='filter output')
+ax.set_xlim(xmax = fs/2)
+ax.set_ylim(ymin=-20)
+ax.set_ylabel(r'dB',fontsize=22)
+ax.set_xlabel("frequency (Hz)",fontsize=18)
+ax.grid()
+ax.annotate('attenuated in\nstopband',fontsize=16,xy=(200,32),
+             xytext=(50,3),textcoords='offset points',
+             arrowprops=dict(arrowstyle='->',lw=3),
+            )
+ax.legend(loc=0);
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+

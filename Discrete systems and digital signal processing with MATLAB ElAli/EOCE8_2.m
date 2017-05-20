@@ -1,0 +1,16 @@
+R=20*pi;
+L2=2;
+L1=1;
+Rs=20*pi;
+w=0:0.1:100*pi;
+T1=R./(R+j*w*L1);
+T2=R./(R+j*w*L2+Rs);
+Mag_T1=abs(T1);
+Mag_T2=abs(T2);
+plot(w,Mag_T1,w,Mag_T2);
+xlabel('w in rad');
+ylabel('Magnitude of the transfer functions');
+gtext('EOCE1');
+gtext('----3db-down from max mag of 1 (0.707)');
+gtext('EOCE2');
+gtext('----3db-down from max mag of 0.5 (0.35)');
