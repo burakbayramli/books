@@ -1,0 +1,141 @@
+
+from __future__ import  division
+from matplotlib.patches import Rectangle
+from scipy import signal
+
+fs = 1e3 # sample rate in Hz
+M = 20
+fpass = 100 # in Hz
+fstop = 150 # in Hz
+
+hn = signal.remez(M,
+                 array([0, fpass, fstop, fs])/2., # scaled passband, and stop band 
+                 [1,0],  # low pass filter
+                 Hz = fs, # sampling frequency
+                 )
+
+w,H=signal.freqz(hn,1) # frequency response
+
+def apply_plot_overlay():
+    'convenience function to illustrate stop/passband in frequency response plot'
+    ax.plot(w/pi*(fs/2),20*log10(abs(H)),label='filter response')
+    ax.set_ylim(ymax=5)
+    ax.vlines(100,*ax.get_ylim(),color='r')
+    ax.vlines(150,*ax.get_ylim(),color='r')
+    ax.set_ylim(ymin=-40)
+    ax.set_xlabel("frequency (Hz)",fontsize=18)
+    ax.set_ylabel(r"$20\log_{10}|H(f)|$",fontsize=22)
+    ax.add_patch(Rectangle((0,-40),width=fpass,height=45,color='g',alpha=0.3))
+    ax.add_patch(Rectangle((fpass,-40),width=fstop-fpass,height=45,color='r',alpha=0.3))
+    ax.add_patch(Rectangle((fstop,-40),width=fs/2-fstop,height=45,color='y',alpha=0.3))
+    ax.text(10,-5,'passband',fontsize=14,bbox=dict(color='white'))
+    ax.text(200,-5,'stopband',fontsize=16,bbox=dict(color='white'))
+    ax.grid()
+    
+fig,ax = subplots()
+fig.set_size_inches((7,3))
+apply_plot_overlay()
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+M = 40 # double filter length
+hn = signal.remez(M,
+                 array([0, fpass, fstop, fs])/2., # scaled passband, and stop band 
+                 [1,0],  # low pass filter
+                 Hz = fs, # sampling frequency
+                 )
+
+w,H=signal.freqz(hn,1) # frequency response
+
+fig,ax = subplots()
+fig.set_size_inches((7,3))
+apply_plot_overlay()
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+hn = signal.remez(M,
+                 array([0, fpass, fstop, fs])/2., # scaled passband, and stop band 
+                 [1,0],  # low pass filter
+                 weight=[100,1], # passband 100 times more important than stopband
+                 Hz = fs, # sampling frequency
+                 )
+
+w,H=signal.freqz(hn,1) # frequency response
+fig,ax = subplots()
+fig.set_size_inches((7,3))
+apply_plot_overlay()
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+Ns =300 # number of samples 
+N = 1024 # DFT size
+t = arange(0,Ns)/fs
+
+x = cos(2*pi*30*t)+cos(2*pi*200*t)
+#x = x*signal.hamming(Ns) # try windowing also!
+X = fft.fft(x,N)
+
+y=signal.lfilter(hn,1,x)
+Y = fft.fft(y,N)
+
+fig,ax = subplots()
+fig.set_size_inches((10,4))
+apply_plot_overlay()
+ax.set_ylim(ymin=-30,ymax=7)
+ax.legend(loc='upper left')
+
+ax2 = ax.twinx()
+ax2.plot(arange(N)/N*fs,20*log10(abs(X)),'r-',label='filter input')
+ax2.plot(arange(N)/N*fs,20*log10(abs(Y)),'g-',label='filter output')
+#ax2.plot(arange(N)/N*fs,20*log10(abs(X)*abs(H)),'g:',lw=2.,label='YY')
+ax2.set_xlim(xmax = fs/2)
+ax2.set_ylim(ymin=-20)
+ax2.set_ylabel(r'$20\log|Y(f)|$',fontsize=22)
+ax2.legend(loc=0);
+
+fig,ax = subplots()
+fig.set_size_inches((10,4))
+ax.plot(arange(N)/N*fs,20*log10(abs(X)),'r-',label='input')
+ax.plot(arange(N)/N*fs,20*log10(abs(Y)),'g-',label='output')
+ax.set_xlim(xmax = fs/2)
+ax.set_ylim(ymin=-20)
+ax.set_ylabel(r'dB',fontsize=22)
+ax.set_xlabel("frequency (Hz)",fontsize=18)
+ax.grid()
+ax.annotate('passband\nattenuation',fontsize=16,xy=(200,32),
+             xytext=(50,3),textcoords='offset points',
+             arrowprops=dict(arrowstyle='->',lw=3),
+            )
+ax.legend(loc=0);
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+
+
+x_pass = cos(2*pi*30*t) # passband signal
+x_stop = cos(2*pi*200*t) # stopband signal
+x = x_pass + x_stop
+y=signal.lfilter(hn,1,x)
+
+fig,axs = subplots(3,1,sharey=True,sharex=True)
+fig.set_size_inches((10,5))
+
+ax=axs[0]
+ax.plot(t,x_pass,label='passband signal',color='k')
+ax.plot(t,x_stop,label='stopband signal')
+ax.legend(loc=0)
+
+ax=axs[1]
+ax.plot(t,x,label='filter input=passband + stopband signals',color='r')
+ax.legend(loc=0)
+
+ax=axs[2]
+ax.plot(t,x_pass,label='passband signal',color='k')
+ax.plot(t,y,label='filter output',color='g')
+ax.set_xlabel("time (sec)",fontsize=18)
+ax.legend(loc=0);
+
+# fig.savefig('figure_00@.png', bbox_inches='tight', dpi=300)
+

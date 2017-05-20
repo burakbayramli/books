@@ -1,0 +1,11 @@
+A=[-14 4;1 -18];
+B=[2 1;3 0];
+sum_A_and_B=A+B
+Diff_B_A=B-A
+A_times_23=23*A
+A_plus_B_times_2=2*(A+B)
+A_times_B=A*B
+B_times_A=B*A
+Two_times_A_times_B=2*(A*B)
+transpose_A=A'
+Inverse_A=inv(A)

@@ -1,0 +1,5 @@
+y=dsolve('D2y+2*Dy+4*y=0','y(0)=1','Dy(0)=0') 
+axis([0 10 -1 1])
+ezplot(y,[0 10])
+ylabel('The displacement y')
+title('y=(cos(3^(1/2)*t)+1/3*sin(3^(1/2)*t)*3^(1/2))/exp(t)')
