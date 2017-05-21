@@ -24,7 +24,7 @@ fs = 20
 filter_type = 'low'
 window_type = 'hamming'
 analyse_plot = 'n'
-f1 = window_sinc_filter(order, fc1, 0, fs, filter_type, window_type, analyse_plot);
+f1 = my_sinc_filter_low(order, fc1, fs);
 
 fou=fft(f1,fs);
 hmag=real(fou); ah=hmag/N;
