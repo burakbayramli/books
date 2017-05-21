@@ -1,4 +1,4 @@
-function output = Fenster(window_size, window_type) 
+function output = Fenster(window_size) 
 % Input der Funktion: 
 % window_size = Fensterlänge 
 % window_typ = 'Hamming', 'Hann', 'Blackman', 'Blackman-Harris'
