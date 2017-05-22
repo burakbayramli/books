@@ -14,7 +14,7 @@ f1 = window_sinc_filter(order, fc1, fc2, fs, filter_type, window_type, analyse_p
 size(f1)
 f1
 
-f2 = fir1(32, fc1, "low", "hamming", "noscale");
+f2 = fir1(order, fc1, "low", "hamming", "noscale");
 size(f2)
 f2
 
