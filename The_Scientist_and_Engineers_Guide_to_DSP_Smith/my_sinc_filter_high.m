@@ -1,16 +1,7 @@
 function [output] = my_sinc_filter_high(order, fc1, fs)
-if (fs < 1) || (~isreal(fs)) 
-    error(['Wrong sampling frequency fs [Hz]: ', sprintf('%8.1f',fs),' ...must be a real positiv number']);
-end  
-Fc1 = fc1 / fs ; % Normierung auf fn (Fc1 = 0...0.5 fs)
-if (Fc1 <= 0) || (Fc1 >= 0.5)
-    error(['Wrong cutoff frequency fc1 [Hz]: ', sprintf('%8.1f',fc1),' ...choose: 0 < fc1 < ',sprintf('%8.1f',fs/2),' = fs/2']);
-end
+Fc1 = fc1 / fs ; 
 M  = order;
-if (mod(M, 2) ~= 0) % Filterordnung gerade?
-    error(['Wrong Filterorder: ', sprintf('%8.1f',order),' ...must be even']);
-end                
-output = zeros(M+1, 1); % Init
+output = zeros(M+1, 1);
 window = hamm(M+1);
 for i = 0:M 
     if 2 * i == M 
@@ -20,7 +11,6 @@ for i = 0:M
     end
     B(i+1) = B(i+1) * window(i+1); 
 end                
-
 B = B./sum(B);
 output      = - B;
 output((M/2)+1) = output((M/2)+1) + 1;

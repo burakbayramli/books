@@ -1,7 +1,6 @@
 % Sum of sines signal 
 fy=300; %signal frequency in Hz
 wy=2*pi*fy; %signal frequency in rad/s
-
 fs=50; %sampling frequency in Hz
 tiv=1/fs; %time interval between samples;
 t=0:tiv:(5-tiv); %time intervals set (5 seconds)
