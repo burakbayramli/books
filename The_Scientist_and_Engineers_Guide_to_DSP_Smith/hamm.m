@@ -8,5 +8,5 @@ else
     m = fix(N / 2)+1; 
     n = m-1; 
 end     
-window = 0.54 - 0.46 * cos(2*pi*(0:m) / (N-1)); 
+window = 0.54 - 0.46 * cos(2*pi*(0:m) / (N-1));
 output = transpose([window(1:m),window(n:-1:1)]);
