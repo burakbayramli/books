@@ -17,8 +17,6 @@ stem(0:9,ah(1:10)); hold on;
 plot([0 10],[0 0],'k');
 print ('out1.png')
 
-quit()
-
 pkg load signal
 order = 32
 fc1 = 4

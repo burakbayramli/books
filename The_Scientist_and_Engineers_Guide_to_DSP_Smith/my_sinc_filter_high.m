@@ -14,4 +14,4 @@ end
 B = B./sum(B);
 output      = - B;
 output((M/2)+1) = output((M/2)+1) + 1;
-        
+

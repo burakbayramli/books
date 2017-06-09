@@ -24,6 +24,8 @@ A = A./sum(A);
 B = B./sum(B);
 B          = - B;
 B((M/2)+1) = B((M/2)+1) + 1;
+A
+B
 output     = A + B;
 output          = - output;
 output((M/2)+1) = output((M/2)+1) + 1;
