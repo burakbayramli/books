@@ -1,0 +1,32 @@
+
+This directory contains MATLAB scripts to perform calculations on the quasi-geostrophic equations. The main tools include a quasi-geostrophic model, QG PV inversion routine, and a diagnostic package for investigating output from the model or fields specified by the user. All calculations are performed on a rectangular domain that is periodic in x and y and bounded by rigid level surfaces in z. Fourier spectral methods are used in the horizontal, and second-order finite differences in the vertical. The reference state is assumed to have constant buoyancy frequency. For convenience, many calculations are carried out in non-dimensional form, and dimensional values recovered afterward. Details on the scaling are defined in the document QG_scaling.pdf, and a brief description of the scripts in this directory follows.
+
+Main codes:
+
+QG_model.m : solves the QG equations in PV-theta form. 
+
+QG_PV_inversion.m : Inverts a user-specified distribution of PV and boundary potential temperature.
+
+QG_diagnostics.m : works on data either from the QG model, or specified by the user. It solves and makes basic plots for the QG height tendency equation, QG omega equation, and the ageostrophic wind.
+
+Support codes:
+
+QG_initial_value.m: : specification of initial conditions for the QG model and for direct use in the diagnostic package. 
+
+grid_setup.m : grid definitions for the calculations
+reference_state.m : defines the reference state
+scaling.m : scaling parameters for converting between dimensional and nondimensional variables
+
+QG_tend.m : compute the advection terms for the QG model
+QG_nonlin.m : evaluates nonlinear terms on a spatial grid (not spectral) for the QG model
+Dalias.m : facilitates the de-aliased spectral calculation in QG_nonlin.m
+advance_rk4.m : a 4th-order Runge-Kutta time-integration scheme
+
+inv_laplacian.m : invert a 3D non-dimensional Laplacian with either Neumann or Dirichlet boundary conditions on the upper and lower boundaries
+laplacian.m : compute a 3D non-dimensional Laplacian
+get_waves.m : helper code for spectral methods
+
+plot_qg_model.m : basic plotting of output from the QG model
+setcolor.m : a red and blue color scale
+
+
