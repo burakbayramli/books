@@ -1,21 +1,14 @@
 
 # [ATM 623: Climate Modeling](../index.ipynb)
 
-[Brian E. J. Rose](http://www.atmos.albany.edu/facstaff/brose/index.html), University at Albany
+[Brian
+E. J. Rose](http://www.atmos.albany.edu/facstaff/brose/index.html),
+University at Albany
 
 # Lecture 18: Ice albedo feedback in the EBM
 
-### About these notes:
-
-This document uses the interactive [`Jupyter notebook`](https://jupyter.org) format. The notes can be accessed in several different ways:
-
-- The interactive notebooks are hosted on `github` at https://github.com/brian-rose/ClimateModeling_courseware
-- The latest versions can be viewed as static web pages [rendered on nbviewer](http://nbviewer.ipython.org/github/brian-rose/ClimateModeling_courseware/blob/master/index.ipynb)
-- A complete snapshot of the notes as of May 2017 (end of spring semester) are [available on Brian's website](http://www.atmos.albany.edu/facstaff/brose/classes/ATM623_Spring2017/Notes/index.html).
-
-[Also here is a legacy version from 2015](http://www.atmos.albany.edu/facstaff/brose/classes/ATM623_Spring2015/Notes/index.html).
-
-Many of these notes make use of the `climlab` package, available at https://github.com/brian-rose/climlab
+Many of these notes make use of the `climlab` package, available at
+https://github.com/brian-rose/climlab
 
 ## Contents
 
@@ -39,9 +32,6 @@ the equation is
 C(\phi) \frac{\partial T_s}{\partial t} = & ~(1-\alpha) ~ Q - \left( A + B~T_s \right) +  \\
 & \frac{D}{\cos⁡\phi } \frac{\partial }{\partial \phi} \left(\cos⁡\phi  ~ \frac{\partial T_s}{\partial \phi} \right)
 \end{align*}
-
-
-
 
 ### Temperature-dependent ice line
 
