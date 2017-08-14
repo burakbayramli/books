@@ -47,8 +47,7 @@ for row in r:
 ## compute the projected graph
 pacnet=bi.weighted_projected_graph(g, pacs, ratio=False)
 pacnet=net.connected_component_subgraphs(pacnet)[0]
-weights=[math.log(edata['weight']) for f,t,edata in pacnet.edges(data=True)]
-
+weights=[math.log(edata['weight']) for f,t,edata in pacnet.edges()]
 net.draw_networkx(p,width=weights, edge_color=weights)
 
 
