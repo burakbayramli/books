@@ -1,0 +1,23 @@
+dist: trusty
+
+language: python
+
+cache: pip
+
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.5-dev" # 3.5 development branch
+  - "3.6"
+  - "3.6-dev" # 3.6 development branch
+
+# command to install dependencies
+install:
+  - pip install --upgrade pip setuptools
+  - cd python && pip install -r requirements-ci.txt
+
+# command to run tests
+# (we are already in "python" directory here)
+script:
+  - python -m pytest tests/
