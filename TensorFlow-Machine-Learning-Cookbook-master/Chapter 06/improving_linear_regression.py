@@ -1,7 +1,7 @@
 # Improving Linear Regression with Neural Networks (Logistic Regression)
 #----------------------------------
 #
-# This function shows how to use Tensorflow to
+# This function shows how to use TensorFlow to
 # solve logistic regression with a multiple layer neural network
 # y = sigmoid(A3 * sigmoid(A2* sigmoid(A1*x + b1) + b2) + b3)
 #
@@ -13,25 +13,54 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import requests
+import os.path
+import csv
 from tensorflow.python.framework import ops
+
+# reset computational graph
 ops.reset_default_graph()
 
-# Create graph
-sess = tf.Session()
+# name of data file
+birth_weight_file = 'birth_weight.csv'
 
-birthdata_url = 'https://www.umass.edu/statdata/statdata/data/lowbwt.dat'
-birth_file = requests.get(birthdata_url)
-birth_data = birth_file.text.split('\r\n')[5:]
-birth_header = [x for x in birth_data[0].split(' ') if len(x)>=1]
-birth_data = [[float(x) for x in y.split(' ') if len(x)>=1] for y in birth_data[1:] if len(y)>=1]
+# download data and create data file if file does not exist in current directory
+if not os.path.exists(birth_weight_file):
+    birthdata_url = 'https://github.com/nfmcclure/tensorflow_cookbook/raw/master/01_Introduction/07_Working_with_Data_Sources/birthweight_data/birthweight.dat'
+    birth_file = requests.get(birthdata_url)
+    birth_data = birth_file.text.split('\r\n')
+    birth_header = birth_data[0].split('\t')
+    birth_data = [[float(x) for x in y.split('\t') if len(x)>=1] for y in birth_data[1:] if len(y)>=1]
+    with open(birth_weight_file, "w") as f:
+        writer = csv.writer(f)
+        writer.writerows(birth_data)
+        f.close()
+
+# read birth weight data into memory
+birth_data = []
+with open(birth_weight_file) as csvfile:
+     csv_reader = csv.reader(csvfile)
+     birth_header = next(csv_reader)
+     for row in csv_reader:
+         birth_data.append(row)
+
 # Pull out target variable
 y_vals = np.array([x[1] for x in birth_data])
 # Pull out predictor variables (not id, not target, and not birthweight)
 x_vals = np.array([x[2:9] for x in birth_data])
 
+# set for reproducible results
+seed = 99
+np.random.seed(seed)
+tf.set_random_seed(seed)
+
+# Declare batch size
+batch_size = 90
+
 # Split data into train/test = 80%/20%
-train_indices = np.random.choice(len(x_vals), round(len(x_vals)*0.8), replace=False)
-test_indices = np.array(list(set(range(len(x_vals))) - set(train_indices)))
+tmp = np.random.choice(range(len(x_vals)), size=len(x_vals), replace=False)
+first = int(len(x_vals)*0.80)
+train_indices = tmp[:first]
+test_indices = tmp[first:]
 x_vals_train = x_vals[train_indices]
 x_vals_test = x_vals[test_indices]
 y_vals_train = y_vals[train_indices]
@@ -46,8 +75,9 @@ def normalize_cols(m):
 x_vals_train = np.nan_to_num(normalize_cols(x_vals_train))
 x_vals_test = np.nan_to_num(normalize_cols(x_vals_test))
 
-# Declare batch size
-batch_size = 90
+
+# Create graph
+sess = tf.Session()
 
 # Initialize placeholders
 x_data = tf.placeholder(shape=[None, 7], dtype=tf.float32)
@@ -86,14 +116,14 @@ b3 = init_variable(shape=[1])
 final_output = logistic(logistic_layer2, A3, b3, activation=False)
 
 # Declare loss function (Cross Entropy loss)
-loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(final_output, y_target))
+loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=final_output, labels=y_target))
 
 # Declare optimizer
-my_opt = tf.train.AdamOptimizer(learning_rate = 0.005)
+my_opt = tf.train.AdamOptimizer(learning_rate = 0.002)
 train_step = my_opt.minimize(loss)
 
 # Initialize variables
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess.run(init)
 
 # Actual Prediction

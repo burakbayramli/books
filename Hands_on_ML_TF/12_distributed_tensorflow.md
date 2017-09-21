@@ -1,11 +1,14 @@
 
 **Chapter 12 – Distributed TensorFlow**
 
-_This notebook contains all the sample code and solutions to the exercices in chapter 12._
+_This notebook contains all the sample code and solutions to the
+exercices in chapter 12._
 
 # Setup
 
-First, let's make sure this notebook works well in both python 2 and 3, import a few common modules, ensure MatplotLib plots figures inline and prepare a function to save the figures:
+First, let's make sure this notebook works well in both python 2 and
+3, import a few common modules, ensure MatplotLib plots figures inline
+and prepare a function to save the figures:
 
 
 ```python

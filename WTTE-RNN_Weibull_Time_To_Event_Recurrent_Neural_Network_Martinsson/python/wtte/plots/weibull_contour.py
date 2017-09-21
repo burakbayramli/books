@@ -1,7 +1,13 @@
-try:
-    xrange
-except NameError:
-    xrange = range
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import numpy as np
+import matplotlib.pyplot as plt
+from six.moves import xrange
+
+from wtte import weibull
+
 
 def weibull_contour(Y, U, is_discrete, true_alpha, true_beta, logx=True, samples=200, lines=True):
 
@@ -10,14 +16,15 @@ def weibull_contour(Y, U, is_discrete, true_alpha, true_beta, logx=True, samples
     x_grid, y_grid = np.meshgrid(xlist, ylist)
 
     loglik = x_grid * 0
+
     if is_discrete:
-        for i in xrange(len(Y)):
-            loglik = loglik + \
-                weibull_discrete_logLik(Y[i], x_grid, y_grid, U[i])
+        fun = weibull.discrete_loglik
     else:
-        for i in xrange(len(Y)):
-            loglik = loglik + \
-                weibull_continuous_logLik(Y[i], x_grid, y_grid, U[i])
+        fun = weibull.continuous_loglik
+
+    for i in xrange(len(Y)):
+        loglik = loglik + \
+            fun(Y[i], x_grid, y_grid, U[i])
 
     z_grid = loglik / len(Y)
 
@@ -29,7 +36,7 @@ def weibull_contour(Y, U, is_discrete, true_alpha, true_beta, logx=True, samples
     else:
         xlab = r'$\alpha$'
 
-    cp = plt.contourf(x_grid, y_grid, z_grid, 100)
+    cp = plt.contourf(x_grid, y_grid, z_grid, 100, cmap='jet')
     plt.colorbar(cp)
     if lines:
         plt.axvline(true_alpha, linestyle='dashed', c='black')
