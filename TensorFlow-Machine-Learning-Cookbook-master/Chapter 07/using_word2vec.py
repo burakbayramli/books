@@ -13,13 +13,10 @@ import random
 import os
 import pickle
 import string
-import requests
 import collections
 import io
 import tarfile
-import urllib.request
 import text_helpers
-from nltk.corpus import stopwords
 from tensorflow.python.framework import ops
 ops.reset_default_graph()
 
@@ -35,12 +32,13 @@ batch_size = 100
 max_words = 100
 
 # Declare stop words
-stops = stopwords.words('english')
+#stops = stopwords.words('english')
+stops = [".",",","-", " "]
 
 # Load Data
 print('Loading Data')
-data_folder_name = 'temp'
-texts, target = text_helpers.load_movie_data(data_folder_name)
+data_folder_name = '/tmp'
+texts, target = text_helpers.load_movie_data("")
 
 # Normalize text
 print('Normalizing Text Data')
@@ -51,7 +49,7 @@ target = [target[ix] for ix, x in enumerate(texts) if len(x.split()) > 2]
 texts = [x for x in texts if len(x.split()) > 2]
 
 # Split up data set into train/test
-train_indices = np.random.choice(len(target), round(0.8*len(target)), replace=False)
+train_indices = np.random.choice(range(len(target)), size=int(0.8*len(target)), replace=False)
 test_indices = np.array(list(set(range(len(target))) - set(train_indices)))
 texts_train = [x for ix, x in enumerate(texts) if ix in train_indices]
 texts_test = [x for ix, x in enumerate(texts) if ix in test_indices]
