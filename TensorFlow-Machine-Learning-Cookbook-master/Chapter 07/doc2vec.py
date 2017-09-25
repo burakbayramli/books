@@ -20,7 +20,6 @@ import requests
 import collections
 import io
 import tarfile
-import urllib.request
 import text_helpers
 from nltk.corpus import stopwords
 from tensorflow.python.framework import ops

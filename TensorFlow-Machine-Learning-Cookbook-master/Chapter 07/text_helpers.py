@@ -5,7 +5,6 @@
 
 import string
 import os
-import urllib.request
 import io
 import tarfile
 import collections
@@ -121,8 +120,8 @@ def generate_batch_data(sentences, batch_size, window_size, method='skip_gram'):
 # Load the movie review data
 # Check if data was downloaded, otherwise download it and save for future use
 def load_movie_data(data_folder_name):
-    pos_file = os.path.join(data_folder_name, 'rt-polarity.pos')
-    neg_file = os.path.join(data_folder_name, 'rt-polarity.neg')
+    pos_file = os.path.join(data_folder_name, '/home/burak/Documents/general/cnn-text-classification-tf-master/data/rt-polaritydata/rt-polarity.pos')
+    neg_file = os.path.join(data_folder_name, '/home/burak/Documents/general/cnn-text-classification-tf-master/data/rt-polaritydata/rt-polarity.neg')
 
     # Check if files are already downloaded
     if os.path.isfile(pos_file):
@@ -135,36 +134,7 @@ def load_movie_data(data_folder_name):
             for row in temp_neg_file:
                 neg_data.append(row)
     else: # If not downloaded, download and save
-        movie_data_url = 'http://www.cs.cornell.edu/people/pabo/movie-review-data/rt-polaritydata.tar.gz'
-        stream_data = urllib.request.urlopen(movie_data_url)
-        tmp = io.BytesIO()
-        while True:
-            s = stream_data.read(16384)
-            if not s:  
-                break
-            tmp.write(s)
-            stream_data.close()
-            tmp.seek(0)
-    
-        tar_file = tarfile.open(fileobj=tmp, mode="r:gz")
-        pos = tar_file.extractfile('rt-polaritydata/rt-polarity.pos')
-        neg = tar_file.extractfile('rt-polaritydata/rt-polarity.neg')
-        # Save pos/neg reviews
-        pos_data = []
-        for line in pos:
-            pos_data.append(line.decode('ISO-8859-1').encode('ascii',errors='ignore').decode())
-        neg_data = []
-        for line in neg:
-            neg_data.append(line.decode('ISO-8859-1').encode('ascii',errors='ignore').decode())
-        tar_file.close()
-        # Write to file
-        if not os.path.exists(save_folder_name):
-            os.makedirs(save_folder_name)
-        # Save files
-        with open(pos_file, "w") as pos_file_handler:
-            pos_file_handler.write(''.join(pos_data))
-        with open(neg_file, "w") as neg_file_handler:
-            neg_file_handler.write(''.join(neg_data))
+        print 'yo!'
     texts = pos_data + neg_data
     target = [1]*len(pos_data) + [0]*len(neg_data)
     return(texts, target)
