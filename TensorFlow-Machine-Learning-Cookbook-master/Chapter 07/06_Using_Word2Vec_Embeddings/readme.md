@@ -8,8 +8,12 @@ Sentiment analysis is a really hard task to do because human language makes it v
 
 ## Pre-requisites
 
-In order to load the CBOW embeddings, we must run the [CBOW tutorial](../05_Working_With_CBOW_Embeddings) before running this one.  Navigate to the [CBOW tutorial](../05_Working_With_CBOW_Embeddings) folder and run:
+In order to load the CBOW embeddings, we must run the [CBOW
+tutorial](../05_Working_With_CBOW_Embeddings) before running this one.
+Navigate to the [CBOW tutorial](../05_Working_With_CBOW_Embeddings)
+folder and run:
 
     python3 05_Working_With_CBOW.py
 
-This will train and save the CBOW embeddings we need to perform predictions for this recipe.
+This will train and save the CBOW embeddings we need to perform
+predictions for this recipe.
