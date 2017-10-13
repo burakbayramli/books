@@ -319,7 +319,9 @@ init = tf.global_variables_initializer()
 sess.run(init)
 ```
 
-We now start the training.  For each iteration, we pick a random bicket, and get a batch of sentences from that bucket.  There are then trained on.
+We now start the training.  For each iteration, we pick a random
+bucket, and get a batch of sentences from that bucket.  There are then
+trained on.
 
 
 ```python
