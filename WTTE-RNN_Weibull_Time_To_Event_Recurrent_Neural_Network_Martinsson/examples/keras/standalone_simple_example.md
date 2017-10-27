@@ -577,7 +577,11 @@ plt.legend()
 
 
 # Predictions
-Try out training the model with different levels of noise. With more noise confidence gets lower (smaller beta). With less noise beta goes to maximum value and the predicted mode/peak probability is centered around the actual TTE.
+
+Try out training the model with different levels of noise. With more
+noise confidence gets lower (smaller beta). With less noise beta goes
+to maximum value and the predicted mode/peak probability is centered
+around the actual TTE.
 
 
 ```python

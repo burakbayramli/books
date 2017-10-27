@@ -1,6 +1,10 @@
 
 # WTTE-RNN in keras
-A template to use with data of varying shape (and varying sequence length if you uncomment certain lines). This notebook imports from wtte-rnn repo. See `standalone_simple_example.ipynb` for a similar notebook with all functions inlined.
+
+A template to use with data of varying shape (and varying sequence
+length if you uncomment certain lines). This notebook imports from
+wtte-rnn repo. See `standalone_simple_example.ipynb` for a similar
+notebook with all functions inlined.
 
 For details, check out
 https://ragulpr.github.io/2016/12/22/WTTE-RNN-Hackless-churn-modeling/
@@ -111,9 +115,13 @@ def get_data(n_timesteps, every_nth,n_repeats,noise_level,n_features,use_censore
 
 ### Generate some data
 
-* The true event-sequence is evenly spaced points (but we start anywhere in the sequence)
+* The true event-sequence is evenly spaced points (but we start
+  anywhere in the sequence)
+
 * The true feature is (binary) if there was an event in last step
+
 * In the training data the feature has added noise
+
 * Training TTE is censored. Testing TTE is uncensored.
 
 
@@ -205,10 +213,17 @@ plt.show()
         * n_timesteps 
         * n_features to get more noisy input
     * Generate more interesting temporal relationships
-    * Here we use the smallest possible GRU. Try different learning rates, network architectures, initializations. 
-    * Try Implementing multivariate distributions, other distributions, data pipelines etc.
+    
+    * Here we use the smallest possible GRU. Try different learning
+      rates, network architectures, initializations.
+    
+    * Try Implementing multivariate distributions, other
+      distributions, data pipelines etc.
+    
     * Invent better output activation layer
+    
     * Invent ways to overcome instability with lots of censoring
+    
     * ETC and have fun!
 
 
@@ -439,7 +454,11 @@ weightwatcher.plot()
 
 
 # Predictions
-Try out training the model with different levels of noise. With more noise confidence gets lower (smaller beta). With less noise beta goes to maximum value and the predicted mode/peak probability is centered around the actual TTE.
+
+Try out training the model with different levels of noise. With more
+noise confidence gets lower (smaller beta). With less noise beta goes
+to maximum value and the predicted mode/peak probability is centered
+around the actual TTE.
 
 
 ```python
