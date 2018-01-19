@@ -17,9 +17,9 @@ h = 494
 numcep = 26
 numcontext = 9
 fs = 16000
-batch_size = 100
+batch_size = 200
 num_epochs = 10000
-num_cell = 128
+num_cell = 256
 num_layers = 4
 mfile = "/tmp/speech12.ckpt"
 train_dir = '/home/burak/Downloads/train/audio'
@@ -189,7 +189,7 @@ softmax = tf.nn.softmax_cross_entropy_with_logits(logits=logits,labels=y)
 
 cross_entropy = tf.reduce_mean(softmax)
 
-train_step = tf.train.MomentumOptimizer(lrate, 0.99).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(lrate).minimize(cross_entropy)
 
 predicted_indices = tf.argmax(logits, 1)
 
