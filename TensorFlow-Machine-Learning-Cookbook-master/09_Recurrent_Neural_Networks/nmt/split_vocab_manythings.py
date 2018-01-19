@@ -21,9 +21,9 @@ for line in fin.readlines():
     fouten.write(nline[0] + "\n")
     fouttr.write(nline[1])
 
-    tokens = nline[0].replace(","," ").split(' ')
+    tokens = nline[0].replace(","," ").replace('"'," ").replace("."," ").split(' ')
     for tok in tokens: vocaben[tok] = "0"
-    tokens = nline[1].replace(","," ").split(' ')
+    tokens = nline[1].replace(","," ").replace('"'," ").replace("."," ").split(' ')
     for tok in tokens: vocabtr[tok] = "0"
     
     fouten.flush()
@@ -34,11 +34,11 @@ foutvocabtr = open('/home/burak/Downloads/tur-eng/vocab.tr','w')
 
 foutvocaben.write("<unk>\n")
 foutvocaben.write("<s>\n")
-foutvocaben.write("</s>\n")
+foutvocaben.write("</s>")
 
 foutvocabtr.write("<unk>\n")
 foutvocabtr.write("<s>\n")
-foutvocabtr.write("</s>\n")
+foutvocabtr.write("</s>")
 
 for ve in vocaben.keys():
     foutvocaben.write(ve + "\n")
