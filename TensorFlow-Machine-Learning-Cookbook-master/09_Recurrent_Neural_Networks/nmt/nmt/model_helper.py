@@ -82,7 +82,9 @@ def create_train_model(
     src_dataset = tf.data.TextLineDataset(src_file)
     tgt_dataset = tf.data.TextLineDataset(tgt_file)
     skip_count_placeholder = tf.placeholder(shape=(), dtype=tf.int64)
-
+    print (src_vocab_table)
+    print (tgt_vocab_table)
+    #exit()
     iterator = iterator_utils.get_iterator(
         src_dataset,
         tgt_dataset,
