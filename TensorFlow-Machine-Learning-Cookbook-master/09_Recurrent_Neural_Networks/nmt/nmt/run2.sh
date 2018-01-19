@@ -2,8 +2,8 @@ python nmt.py \
     --src=en --tgt=tr \
     --vocab_prefix=/home/burak/Downloads/tur-eng/vocab  \
     --train_prefix=/home/burak/Downloads/tur-eng/train \
-    --dev_prefix=/home/burak/Downloads/tur-eng/train  \
-    --test_prefix=/home/burak/Downloads/tur-eng/train \
+    --dev_prefix=/home/burak/Downloads/tur-eng/tst2012  \
+    --test_prefix=/home/burak/Downloads/tur-eng/tst2013 \
     --out_dir=/tmp/nmt_model \
     --num_train_steps=12000 \
     --steps_per_stats=100 \
