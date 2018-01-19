@@ -34,19 +34,21 @@ foutvocabtr = open('/home/burak/Downloads/tur-eng/vocab.tr','w')
 
 foutvocaben.write("<unk>\n")
 foutvocaben.write("<s>\n")
-foutvocaben.write("</s>")
+foutvocaben.write("</s>\n")
 
 foutvocabtr.write("<unk>\n")
 foutvocabtr.write("<s>\n")
-foutvocabtr.write("</s>")
+foutvocabtr.write("</s>\n")
 
 for ve in vocaben.keys():
-    foutvocaben.write(ve + "\n")
-    foutvocaben.flush()
+    if not ve.isspace(): 
+        foutvocaben.write(ve + "\n")
+        foutvocaben.flush()
 
 for vt in vocabtr.keys():
-    foutvocabtr.write(vt + "\n")
-    foutvocabtr.flush()
+    if not vt.isspace(): 
+        foutvocabtr.write(vt + "\n")
+        foutvocabtr.flush()
     
 
 
