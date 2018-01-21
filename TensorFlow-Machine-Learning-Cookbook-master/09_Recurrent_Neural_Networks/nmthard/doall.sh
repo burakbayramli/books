@@ -10,4 +10,3 @@ split -l 20000 /tmp/out1trab /tmp/out2tr
 mv /tmp/out1traa /home/burak/Downloads/tur-eng/train.tr
 mv /tmp/out2traa /home/burak/Downloads/tur-eng/tst2012.tr
 mv /tmp/out2trab /home/burak/Downloads/tur-eng/tst2013.tr
-
