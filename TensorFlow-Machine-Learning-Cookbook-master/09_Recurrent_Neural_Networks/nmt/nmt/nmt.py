@@ -496,6 +496,8 @@ def ensure_compatible_hparams(hparams, default_hparams, hparams_path):
   """Make sure the loaded hparams is compatible with new changes."""
   default_hparams = utils.maybe_parse_standard_hparams(
       default_hparams, hparams_path)
+  print (default_hparams)
+  #exit()
 
   # For compatible reason, if there are new fields in default_hparams,
   #   we add them to the current hparams
