@@ -5,11 +5,8 @@ import math
 import os
 import random
 import time
-
 import tensorflow as tf
-
 import attention_model
-import gnmt_model
 import inference
 import model as nmt_model
 import model_helper
