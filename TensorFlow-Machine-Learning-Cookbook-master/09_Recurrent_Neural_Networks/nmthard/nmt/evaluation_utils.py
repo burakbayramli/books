@@ -34,10 +34,6 @@ def evaluate(ref_file, trans_file, metric, subword_option=None):
   if metric.lower() == "bleu":
     evaluation_score = _bleu(ref_file, trans_file,
                              subword_option=subword_option)
-  # ROUGE scores for summarization tasks
-  elif metric.lower() == "rouge":
-    evaluation_score = _rouge(ref_file, trans_file,
-                              subword_option=subword_option)
   elif metric.lower() == "accuracy":
     evaluation_score = _accuracy(ref_file, trans_file)
   elif metric.lower() == "word_accuracy":
