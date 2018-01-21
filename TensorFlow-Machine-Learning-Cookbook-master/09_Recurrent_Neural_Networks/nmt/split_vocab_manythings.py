@@ -7,18 +7,20 @@ fouttr = open('/tmp/train.tr','w')
 vocaben = {}
 vocabtr = {}
 
-for line in fin.readlines():
+for line in fin.readlines():    
     nline = line.split('\t')
     
     nline[0] = re.sub(r'\.$',' .', nline[0])
     nline[0] = re.sub(r'\!$',' .', nline[0])
     nline[0] = re.sub(r'\?$',' .', nline[0])
     nline[0] = nline[0].replace("'","")
+    nline[0] = nline[0].replace(",", " ,")
    
     nline[1] = re.sub(r'\.$',' .', nline[1])
     nline[1] = re.sub(r'\!$',' .', nline[1])
     nline[1] = re.sub(r'\?$',' .', nline[1])
     nline[1] = nline[1].replace("'","")
+    nline[1] = nline[1].replace(",", " ,")
     
     fouten.write(nline[0] + "\n")
     fouttr.write(nline[1])

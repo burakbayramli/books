@@ -1,5 +1,5 @@
 python nmt.py \
-    --src=en --tgt=tr \
+    --src=tr --tgt=en \
     --vocab_prefix=/home/burak/Downloads/tur-eng/vocab  \
     --train_prefix=/home/burak/Downloads/tur-eng/train \
     --dev_prefix=/home/burak/Downloads/tur-eng/tst2012  \
