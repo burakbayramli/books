@@ -1,5 +1,5 @@
 fin = open('/tmp/vocab.en')
-fout = open('/home/burak/Downloads/tur-eng/vocab.en',"w")
+fout = open('/tmp/vocab.2.en',"w")
 for line in fin.readlines():
     if line.isspace(): continue
     fout.write(line)
@@ -7,7 +7,7 @@ for line in fin.readlines():
 fout.close()
 
 fin = open('/tmp/vocab.tr')
-fout = open('/home/burak/Downloads/tur-eng/vocab.tr',"w")
+fout = open('/tmp/vocab.2.tr',"w")
 for line in fin.readlines():
     if line.isspace(): continue
     fout.write(line)
