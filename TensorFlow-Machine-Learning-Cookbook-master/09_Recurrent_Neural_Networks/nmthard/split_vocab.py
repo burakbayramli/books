@@ -33,8 +33,8 @@ for line in fin.readlines():
     fouten.flush()
     fouttr.flush()
     
-foutvocaben = open('/tmp/vocab.en','w')
-foutvocabtr = open('/tmp/vocab.tr','w')
+foutvocaben = open('/home/burak/Downloads/tur-eng/vocab.en','w')
+foutvocabtr = open('/home/burak/Downloads/tur-eng/vocab.tr','w')
 
 for ve in vocaben.keys():
     if len(ve)==0: continue
