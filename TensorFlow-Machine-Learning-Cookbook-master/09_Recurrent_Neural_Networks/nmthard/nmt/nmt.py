@@ -18,7 +18,6 @@ utils.check_tensorflow_version()
 
 FLAGS = None
 
-
 def add_arguments(parser):
   """Build ArgumentParser."""
   parser.register("type", "bool", lambda v: v.lower() == "true")

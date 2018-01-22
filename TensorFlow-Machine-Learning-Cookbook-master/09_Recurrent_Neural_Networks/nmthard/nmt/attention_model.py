@@ -22,9 +22,6 @@ import tensorflow as tf
 import model
 import model_helper
 
-__all__ = ["AttentionModel"]
-
-
 class AttentionModel(model.Model):
   """Sequence-to-sequence dynamic model with attention.
 

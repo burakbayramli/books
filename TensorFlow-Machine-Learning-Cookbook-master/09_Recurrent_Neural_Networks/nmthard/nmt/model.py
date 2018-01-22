@@ -5,12 +5,9 @@ import abc
 import tensorflow as tf
 from tensorflow.python.layers import core as layers_core
 import model_helper
-import iterator_utils
-import misc_utils as utils
+import utils
 
 utils.check_tensorflow_version()
-
-__all__ = ["BaseModel", "Model"]
 
 class BaseModel(object):
   """Sequence-to-sequence base class.
@@ -39,7 +36,7 @@ class BaseModel(object):
       extra_args: model_helper.ExtraArgs, for passing customizable functions.
 
     """
-    assert isinstance(iterator, iterator_utils.BatchedInput)
+    assert isinstance(iterator, utils.BatchedInput)
     self.iterator = iterator
     self.mode = mode
     self.src_vocab_table = source_vocab_table
