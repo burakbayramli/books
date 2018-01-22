@@ -12,9 +12,7 @@ import tensorflow as tf
 
 import inference
 import train
-import evaluation_utils
-import misc_utils as utils
-import vocab_utils
+import utils
 
 utils.check_tensorflow_version()
 
@@ -332,8 +330,8 @@ def create_hparams(flags):
       num_translations_per_input=flags.num_translations_per_input,
 
       # Vocab
-      sos=flags.sos if flags.sos else vocab_utils.SOS,
-      eos=flags.eos if flags.eos else vocab_utils.EOS,
+      sos=flags.sos if flags.sos else utils.SOS,
+      eos=flags.eos if flags.eos else utils.EOS,
       subword_option=flags.subword_option,
       check_special_token=flags.check_special_token,
 
@@ -417,13 +415,13 @@ def extend_hparams(hparams):
     raise ValueError("hparams.vocab_prefix must be provided.")
 
   # Source vocab
-  src_vocab_size, src_vocab_file = vocab_utils.check_vocab(
+  src_vocab_size, src_vocab_file = utils.check_vocab(
       src_vocab_file,
       hparams.out_dir,
       check_special_token=hparams.check_special_token,
       sos=hparams.sos,
       eos=hparams.eos,
-      unk=vocab_utils.UNK)
+      unk=utils.UNK)
 
   # Target vocab
   if hparams.share_vocab:
@@ -431,13 +429,13 @@ def extend_hparams(hparams):
     tgt_vocab_file = src_vocab_file
     tgt_vocab_size = src_vocab_size
   else:
-    tgt_vocab_size, tgt_vocab_file = vocab_utils.check_vocab(
+    tgt_vocab_size, tgt_vocab_file = utils.check_vocab(
         tgt_vocab_file,
         hparams.out_dir,
         check_special_token=hparams.check_special_token,
         sos=hparams.sos,
         eos=hparams.eos,
-        unk=vocab_utils.UNK)
+        unk=utils.UNK)
   hparams.add_hparam("src_vocab_size", src_vocab_size)
   hparams.add_hparam("tgt_vocab_size", tgt_vocab_size)
   hparams.add_hparam("src_vocab_file", src_vocab_file)
@@ -567,7 +565,7 @@ def run_main(flags, default_hparams, train_fn, inference_fn, target_session=""):
     ref_file = flags.inference_ref_file
     if ref_file and tf.gfile.Exists(trans_file):
       for metric in hparams.metrics:
-        score = evaluation_utils.evaluate(
+        score = utils.evaluate(
             ref_file,
             trans_file,
             metric,
