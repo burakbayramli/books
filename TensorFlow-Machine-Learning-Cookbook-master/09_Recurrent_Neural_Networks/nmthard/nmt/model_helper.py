@@ -11,22 +11,10 @@ import tensorflow as tf
 
 from tensorflow.python.ops import lookup_ops
 
-import iterator_utils
-import misc_utils as utils
-import vocab_utils
-
-
-__all__ = [
-    "get_initializer", "get_device_str", "create_train_model",
-    "create_eval_model", "create_infer_model",
-    "create_emb_for_encoder_and_decoder", "create_rnn_cell", "gradient_clip",
-    "create_or_load_model", "load_model", "avg_checkpoints",
-    "compute_perplexity"
-]
+import utils
 
 # If a vocab size is greater than this value, put the embedding on cpu instead
 VOCAB_SIZE_THRESHOLD_CPU = 50000
-
 
 def get_initializer(init_op, seed=None, init_weight=None):
   """Create an initializer. init_weight is only for uniform."""
@@ -76,7 +64,7 @@ def create_train_model(
   graph = tf.Graph()
 
   with graph.as_default(), tf.container(scope or "train"):
-    src_vocab_table, tgt_vocab_table = vocab_utils.create_vocab_tables(
+    src_vocab_table, tgt_vocab_table = utils.create_vocab_tables(
         src_vocab_file, tgt_vocab_file, hparams.share_vocab)
 
     src_dataset = tf.data.TextLineDataset(src_file)
@@ -85,7 +73,7 @@ def create_train_model(
     print (src_vocab_table)
     print (tgt_vocab_table)
     #exit()
-    iterator = iterator_utils.get_iterator(
+    iterator = utils.get_iterator(
         src_dataset,
         tgt_dataset,
         src_vocab_table,
@@ -136,13 +124,13 @@ def create_eval_model(model_creator, hparams, scope=None, extra_args=None):
   graph = tf.Graph()
 
   with graph.as_default(), tf.container(scope or "eval"):
-    src_vocab_table, tgt_vocab_table = vocab_utils.create_vocab_tables(
+    src_vocab_table, tgt_vocab_table = utils.create_vocab_tables(
         src_vocab_file, tgt_vocab_file, hparams.share_vocab)
     src_file_placeholder = tf.placeholder(shape=(), dtype=tf.string)
     tgt_file_placeholder = tf.placeholder(shape=(), dtype=tf.string)
     src_dataset = tf.data.TextLineDataset(src_file_placeholder)
     tgt_dataset = tf.data.TextLineDataset(tgt_file_placeholder)
-    iterator = iterator_utils.get_iterator(
+    iterator = utils.get_iterator(
         src_dataset,
         tgt_dataset,
         src_vocab_table,
@@ -184,17 +172,17 @@ def create_infer_model(model_creator, hparams, scope=None, extra_args=None):
   tgt_vocab_file = hparams.tgt_vocab_file
 
   with graph.as_default(), tf.container(scope or "infer"):
-    src_vocab_table, tgt_vocab_table = vocab_utils.create_vocab_tables(
+    src_vocab_table, tgt_vocab_table = utils.create_vocab_tables(
         src_vocab_file, tgt_vocab_file, hparams.share_vocab)
     reverse_tgt_vocab_table = lookup_ops.index_to_string_table_from_file(
-        tgt_vocab_file, default_value=vocab_utils.UNK)
+        tgt_vocab_file, default_value=utils.UNK)
 
     src_placeholder = tf.placeholder(shape=[None], dtype=tf.string)
     batch_size_placeholder = tf.placeholder(shape=[], dtype=tf.int64)
 
     src_dataset = tf.data.Dataset.from_tensor_slices(
         src_placeholder)
-    iterator = iterator_utils.get_infer_iterator(
+    iterator = utils.get_infer_iterator(
         src_dataset,
         src_vocab_table,
         batch_size=batch_size_placeholder,
@@ -235,13 +223,13 @@ def _create_pretrained_emb_from_txt(
     num_trainable_tokens: Make the first n tokens in the vocab file as trainable
       variables. Default is 3, which is "<unk>", "<s>" and "</s>".
   """
-  vocab, _ = vocab_utils.load_vocab(vocab_file)
+  vocab, _ = utils.load_vocab(vocab_file)
   trainable_tokens = vocab[:num_trainable_tokens]
 
   utils.print_out("# Using pretrained embedding: %s." % embed_file)
   utils.print_out("  with trainable tokens: ")
 
-  emb_dict, emb_size = vocab_utils.load_embed_txt(embed_file)
+  emb_dict, emb_size = utils.load_embed_txt(embed_file)
   for token in trainable_tokens:
     utils.print_out("    %s" % token)
     if token not in emb_dict:

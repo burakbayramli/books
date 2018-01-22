@@ -7,12 +7,7 @@ import tensorflow as tf
 import attention_model
 import model as nmt_model
 import model_helper
-import misc_utils as utils
-import nmt_utils
-
-__all__ = ["load_data", "inference",
-           "single_worker_inference", "multi_worker_inference"]
-
+import utils
 
 def _decode_inference_indices(model, sess, output_infer,
                               output_infer_summary_prefix,
@@ -31,7 +26,7 @@ def _decode_inference_indices(model, sess, output_infer,
 
       # get text translation
       assert nmt_outputs.shape[0] == 1
-      translation = nmt_utils.get_translation(
+      translation = utils.get_translation(
           nmt_outputs,
           sent_id=0,
           tgt_eos=tgt_eos,
@@ -131,7 +126,7 @@ def single_worker_inference(infer_model,
           tgt_eos=hparams.eos,
           subword_option=hparams.subword_option)
     else:
-      nmt_utils.decode_and_evaluate(
+      utils.decode_and_evaluate(
           "infer",
           loaded_infer_model,
           sess,
@@ -179,7 +174,7 @@ def multi_worker_inference(infer_model,
              })
     # Decode
     utils.print_out("# Start decoding")
-    nmt_utils.decode_and_evaluate(
+    utils.decode_and_evaluate(
         "infer",
         loaded_infer_model,
         sess,

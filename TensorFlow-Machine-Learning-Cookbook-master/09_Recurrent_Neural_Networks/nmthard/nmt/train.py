@@ -14,13 +14,6 @@ import utils
 
 utils.check_tensorflow_version()
 
-__all__ = [
-    "run_sample_decode", "run_internal_eval", "run_external_eval",
-    "run_avg_external_eval", "run_full_eval", "init_stats", "update_stats",
-    "print_step_info", "process_stats", "train"
-]
-
-
 def run_sample_decode(infer_model, infer_sess, model_dir, hparams,
                       summary_writer, src_data, tgt_data):
   """Sample decode a random sentence from src_data."""
