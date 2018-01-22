@@ -10,8 +10,7 @@ import attention_model
 import inference
 import model as nmt_model
 import model_helper
-import misc_utils as utils
-import nmt_utils
+import utils
 
 utils.check_tensorflow_version()
 
@@ -507,7 +506,7 @@ def _sample_decode(model, global_step, sess, hparams, iterator, src_data,
     # get the top translation.
     nmt_outputs = nmt_outputs[0]
 
-  translation = nmt_utils.get_translation(
+  translation = utils.get_translation(
       nmt_outputs,
       sent_id=0,
       tgt_eos=hparams.eos,
@@ -537,7 +536,7 @@ def _external_eval(model, global_step, sess, hparams, iterator,
   sess.run(iterator.initializer, feed_dict=iterator_feed_dict)
 
   output = os.path.join(out_dir, "output_%s" % label)
-  scores = nmt_utils.decode_and_evaluate(
+  scores = utils.decode_and_evaluate(
       label,
       model,
       sess,
