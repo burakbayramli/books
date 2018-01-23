@@ -4,7 +4,6 @@ from __future__ import print_function
 import abc
 import tensorflow as tf
 from tensorflow.python.layers import core as layers_core
-import model_helper
 import utils
 
 utils.check_tensorflow_version()
@@ -67,7 +66,7 @@ class BaseModel(object):
       self.num_decoder_residual_layers = hparams.num_decoder_residual_layers
 
     # Initializer
-    initializer = model_helper.get_initializer(
+    initializer = utils.get_initializer(
         hparams.init_op, hparams.random_seed, hparams.init_weight)
     tf.get_variable_scope().set_initializer(initializer)
 
@@ -126,7 +125,7 @@ class BaseModel(object):
           params,
           colocate_gradients_with_ops=hparams.colocate_gradients_with_ops)
 
-      clipped_grads, grad_norm_summary, grad_norm = model_helper.gradient_clip(
+      clipped_grads, grad_norm_summary, grad_norm = utils.gradient_clip(
           gradients, max_gradient_norm=hparams.max_gradient_norm)
       self.grad_norm = grad_norm
 
@@ -216,7 +215,7 @@ class BaseModel(object):
   def init_embeddings(self, hparams, scope):
     """Init embeddings."""
     self.embedding_encoder, self.embedding_decoder = (
-        model_helper.create_emb_for_encoder_and_decoder(
+        utils.create_emb_for_encoder_and_decoder(
             share_vocab=hparams.share_vocab,
             src_vocab_size=self.src_vocab_size,
             tgt_vocab_size=self.tgt_vocab_size,
@@ -280,7 +279,7 @@ class BaseModel(object):
 
       ## Loss
       if self.mode != tf.contrib.learn.ModeKeys.INFER:
-        with tf.device(model_helper.get_device_str(self.num_encoder_layers - 1,
+        with tf.device(utils.get_device_str(self.num_encoder_layers - 1,
                                                    self.num_gpus)):
           loss = self._compute_loss(logits)
       else:
@@ -306,7 +305,7 @@ class BaseModel(object):
                           base_gpu=0):
     """Build a multi-layer RNN cell that can be used by encoder."""
 
-    return model_helper.create_rnn_cell(
+    return utils.create_rnn_cell(
         unit_type=hparams.unit_type,
         num_units=hparams.num_units,
         num_layers=num_layers,
@@ -632,7 +631,7 @@ class Model(BaseModel):
     if hparams.attention:
       raise ValueError("BasicModel doesn't support attention.")
 
-    cell = model_helper.create_rnn_cell(
+    cell = utils.create_rnn_cell(
         unit_type=hparams.unit_type,
         num_units=hparams.num_units,
         num_layers=self.num_decoder_layers,

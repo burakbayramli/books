@@ -586,4 +586,5 @@ if __name__ == "__main__":
   nmt_parser = argparse.ArgumentParser()
   add_arguments(nmt_parser)
   FLAGS, unparsed = nmt_parser.parse_known_args()
+  print (FLAGS)
   tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

@@ -6,18 +6,9 @@ from __future__ import print_function
 import tensorflow as tf
 
 import model
-import model_helper
+import utils
 
 class AttentionModel(model.Model):
-  """Sequence-to-sequence dynamic model with attention.
-
-  This class implements a multi-layer recurrent neural network as encoder,
-  and an attention-based decoder. This is the same as the model described in
-  (Luong et al., EMNLP'2015) paper: https://arxiv.org/pdf/1508.04025v5.pdf.
-  This class also allows to use GRU cells in addition to LSTM cells with
-  support for dropout.
-  """
-
   def __init__(self,
                hparams,
                mode,
@@ -83,7 +74,7 @@ class AttentionModel(model.Model):
     attention_mechanism = self.attention_mechanism_fn(
         attention_option, num_units, memory, source_sequence_length, self.mode)
 
-    cell = model_helper.create_rnn_cell(
+    cell = utils.create_rnn_cell(
         unit_type=hparams.unit_type,
         num_units=num_units,
         num_layers=num_layers,
@@ -106,9 +97,7 @@ class AttentionModel(model.Model):
         name="attention")
 
     # TODO(thangluong): do we need num_layers, num_gpus?
-    cell = tf.contrib.rnn.DeviceWrapper(cell,
-                                        model_helper.get_device_str(
-                                            num_layers - 1, self.num_gpus))
+    cell = tf.contrib.rnn.DeviceWrapper(cell, utils.get_device_str(num_layers - 1, self.num_gpus))
 
     if hparams.pass_hidden_state:
       decoder_initial_state = cell.zero_state(batch_size, dtype).clone(
