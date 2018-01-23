@@ -6,7 +6,6 @@ import time
 import tensorflow as tf
 import attention_model
 import model as nmt_model
-import model_helper
 import utils
 
 def _decode_inference_indices(model, sess, output_infer,
@@ -65,15 +64,8 @@ def inference(ckpt,
               jobid=0,
               scope=None):
   """Perform translation."""
-  if hparams.inference_indices:
-    assert num_workers == 1
-  if not hparams.attention:
-    model_creator = nmt_model.Model
-  elif hparams.attention_architecture == "standard":
-    model_creator = attention_model.AttentionModel
-  else:
-    raise ValueError("Unknown model architecture")
-  infer_model = model_helper.create_infer_model(model_creator, hparams, scope)
+  model_creator = attention_model.AttentionModel
+  infer_model = utils.create_infer_model(model_creator, hparams, scope)
 
   if num_workers == 1:
     single_worker_inference(
@@ -106,7 +98,7 @@ def single_worker_inference(infer_model,
 
   with tf.Session(
       graph=infer_model.graph, config=utils.get_config_proto()) as sess:
-    loaded_infer_model = model_helper.load_model(
+    loaded_infer_model = utils.load_model(
         infer_model.model, ckpt, sess, "infer")
     sess.run(
         infer_model.iterator.initializer,
@@ -165,7 +157,7 @@ def multi_worker_inference(infer_model,
 
   with tf.Session(
       graph=infer_model.graph, config=utils.get_config_proto()) as sess:
-    loaded_infer_model = model_helper.load_model(
+    loaded_infer_model = utils.load_model(
         infer_model.model, ckpt, sess, "infer")
     sess.run(infer_model.iterator.initializer,
              {

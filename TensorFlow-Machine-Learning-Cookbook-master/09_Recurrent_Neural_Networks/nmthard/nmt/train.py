@@ -9,7 +9,6 @@ import tensorflow as tf
 import attention_model
 import inference
 import model as nmt_model
-import model_helper
 import utils
 
 utils.check_tensorflow_version()
@@ -18,7 +17,7 @@ def run_sample_decode(infer_model, infer_sess, model_dir, hparams,
                       summary_writer, src_data, tgt_data):
   """Sample decode a random sentence from src_data."""
   with infer_model.graph.as_default():
-    loaded_infer_model, global_step = model_helper.create_or_load_model(
+    loaded_infer_model, global_step = utils.create_or_load_model(
         infer_model.model, model_dir, infer_sess, "infer")
 
   _sample_decode(loaded_infer_model, global_step, infer_sess, hparams,
@@ -32,7 +31,7 @@ def run_internal_eval(
     use_test_set=True):
   """Compute internal evaluation (perplexity) for both dev / test."""
   with eval_model.graph.as_default():
-    loaded_eval_model, global_step = model_helper.create_or_load_model(
+    loaded_eval_model, global_step = utils.create_or_load_model(
         eval_model.model, model_dir, eval_sess, "eval")
 
   dev_src_file = "%s.%s" % (hparams.dev_prefix, hparams.src)
@@ -64,7 +63,7 @@ def run_external_eval(infer_model, infer_sess, model_dir, hparams,
                       avg_ckpts=False):
   """Compute external evaluation (bleu, rouge, etc.) for both dev / test."""
   with infer_model.graph.as_default():
-    loaded_infer_model, global_step = model_helper.create_or_load_model(
+    loaded_infer_model, global_step = utils.create_or_load_model(
         infer_model.model, model_dir, infer_sess, "infer")
 
   dev_src_file = "%s.%s" % (hparams.dev_prefix, hparams.src)
@@ -116,7 +115,7 @@ def run_avg_external_eval(infer_model, infer_sess, model_dir, hparams,
   if hparams.avg_ckpts:
     # Convert VariableName:0 to VariableName.
     global_step_name = infer_model.model.global_step.name.split(":")[0]
-    avg_model_dir = model_helper.avg_checkpoints(
+    avg_model_dir = utils.avg_checkpoints(
         model_dir, hparams.num_keep_ckpts, global_step, global_step_name)
 
     if avg_model_dir:
@@ -268,9 +267,9 @@ def train(hparams, scope=None, target_session=""):
       raise ValueError("Unknown attention architecture %s" %
                        hparams.attention_architecture)
 
-  train_model = model_helper.create_train_model(model_creator, hparams, scope)
-  eval_model = model_helper.create_eval_model(model_creator, hparams, scope)
-  infer_model = model_helper.create_infer_model(model_creator, hparams, scope)
+  train_model = utils.create_train_model(model_creator, hparams, scope)
+  eval_model = utils.create_eval_model(model_creator, hparams, scope)
+  infer_model = utils.create_infer_model(model_creator, hparams, scope)
 
   # Preload data for sample decoding.
   dev_src_file = "%s.%s" % (hparams.dev_prefix, hparams.src)
@@ -305,7 +304,7 @@ def train(hparams, scope=None, target_session=""):
 
   with train_model.graph.as_default():
     print (train_model.model)
-    loaded_train_model, global_step = model_helper.create_or_load_model(
+    loaded_train_model, global_step = utils.create_or_load_model(
         train_model.model, model_dir, train_sess, "train")
 
   # Summary writer
@@ -475,7 +474,7 @@ def _internal_eval(model, global_step, sess, iterator, iterator_feed_dict,
                    summary_writer, label):
   """Computing perplexity."""
   sess.run(iterator.initializer, feed_dict=iterator_feed_dict)
-  ppl = model_helper.compute_perplexity(model, sess, label)
+  ppl = utils.compute_perplexity(model, sess, label)
   utils.add_summary(summary_writer, global_step, "%s_ppl" % label, ppl)
   return ppl
 
