@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from zipfile import ZipFile
 from collections import Counter
+import seq2seq_model
 from tensorflow.python.framework import ops
 ops.reset_default_graph()
 
@@ -32,13 +33,14 @@ else:
     #models can be retrieved from github: https://github.com/tensorflow/models.git
     #put the models dir under python search lib path.
     
-    if not os.path.exists(local_repository):
-        from git import Repo
-        tf_model_repository = 'https://github.com/tensorflow/models'
-        Repo.clone_from(tf_model_repository, local_repository)
-        sys.path.insert(0, 'temp/tutorials/rnn/translate/')
-        import seq2seq_model as seq2seq_model
-        import data_utils as data_utils
+#    if not os.path.exists(local_repository):
+#        from git import Repo
+#        tf_model_repository = 'https://github.com/tensorflow/models'
+#        Repo.clone_from(tf_model_repository, local_repository)
+#        sys.path.insert(0, 'temp/tutorials/rnn/translate/')
+#        import seq2seq_model as seq2seq_model
+#        import data_utils as data_utils
+    pass
 
 # Start a session
 sess = tf.Session()
@@ -60,8 +62,8 @@ output_every = 50
 punct = string.punctuation
 
 # Data Parameters
-data_dir = 'temp'
-data_file = 'eng_ger.txt'
+data_dir = '/home/burak/Downloads/tur-eng'
+data_file = 'tur.txt'
 model_path = 'seq2seq_model'
 full_model_dir = os.path.join(data_dir, model_path)
 
