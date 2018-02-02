@@ -1,13 +1,20 @@
-"""
-Full code for running a game of tic-tac-toe on a 3 by 3 board.
-Two players take turns making moves on squares of the board, the first to get 3 in a row, including diagonals, wins. If
+"""Full code for running a game of tic-tac-toe on a 3 by 3 board.
+
+Two players take turns making moves on squares of the board, the first
+to get 3 in a row, including diagonals, wins. If
+
 there are no valid moves left to make the game ends a draw.
 
-The main method to use here is play_game which simulates a game to the end using the function args it takes to determine
-where each player plays.
-The board is represented by a 3 x 3 tuple of ints. A 0 means no player has played in a space, 1 means player one has
-played there, -1 means the seconds player has played there. The apply_move method can be used to return a copy of a
-given state with a given move applied. This can be useful for doing min-max or monte carlo sampling.
+The main method to use here is play_game which simulates a game to the
+end using the function args it takes to determine where each player
+plays.
+
+The board is represented by a 3 x 3 tuple of ints. A 0 means no player
+has played in a space, 1 means player one has played there, -1 means
+the seconds player has played there. The apply_move method can be used
+to return a copy of a given state with a given move applied. This can
+be useful for doing min-max or monte carlo sampling.
+
 """
 import random
 import itertools

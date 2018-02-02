@@ -1,12 +1,18 @@
-"""
-Full code for running a game of connect 4 on a board_width, board_height and winning length can be specified in relevant
-methods. Allowing you to play connect 5, 6, 7, etc. Defaults are board_width = 7, board_height = 6, winning_length = 4
+"""Full code for running a game of connect 4 on a board_width,
+board_height and winning length can be specified in relevant
+methods. Allowing you to play connect 5, 6, 7, etc. Defaults are
+board_width = 7, board_height = 6, winning_length = 4
 
-The main method to use here is play_game which simulates a game to the end using the function args it takes to determine
-where each player plays.
-The board is represented by a board_width x board_height tuple of ints. A 0 means no player has played in a space, 1
-means player one has played there, -1 means the seconds player has played there. The apply_move method can be used to
-return a copy of a given state with a given move applied. This can be useful for doing min-max or monte carlo sampling.
+The main method to use here is play_game which simulates a game to the
+end using the function args it takes to determine where each player
+plays.
+
+The board is represented by a board_width x board_height tuple of
+ints. A 0 means no player has played in a space, 1 means player one
+has played there, -1 means the seconds player has played there. The
+apply_move method can be used to return a copy of a given state with a
+given move applied. This can be useful for doing min-max or monte
+carlo sampling.
 """
 
 import random
