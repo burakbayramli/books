@@ -4,17 +4,23 @@ import math
 from tic_tac_toe import has_winner, available_moves, apply_move
 
 
-def monte_carlo_sample(board_state, side):
-    """Sample a single rollout from the current board_state and side. Moves are made to the current board_state until we
-     reach a terminal state then the result and the first move made to get there is returned.
+def monte_carlo_sample(board_state, side):    
+    """Sample a single rollout from the current board_state and
+     side. Moves are made to the current board_state until we reach a
+     terminal state then the result and the first move made to get
+     there is returned.
 
     Args:
-        board_state (3x3 tuple of int): state of the board
-        side (int): side currently to play. +1 for the plus player, -1 for the minus player
 
-    Returns:
-        (result(int), move(int,int)): The result from this rollout, +1 for a win for the plus player -1 for a win for
-            the minus player, 0 for a draw
+    board_state (3x3 tuple of int): state of the board
+
+    side (int): side currently to play. +1 for the plus player, -1 for
+        the minus player
+
+    Returns: (result(int), move(int,int)): The result from this
+        rollout, +1 for a win for the plus player -1 for a win for the
+        minus player, 0 for a draw
+
     """
     result = has_winner(board_state)
     if result != 0:
@@ -30,16 +36,26 @@ def monte_carlo_sample(board_state, side):
 
 
 def monte_carlo_tree_search(board_state, side, number_of_samples):
-    """Evaluate the best from the current board_state for the given side using monte carlo sampling.
+    
+    """Evaluate the best from the current board_state for the given side
+    using monte carlo sampling.
 
     Args:
+    
         board_state (3x3 tuple of int): state of the board
-        side (int): side currently to play. +1 for the plus player, -1 for the minus player
-        number_of_samples (int): number of samples rollouts to run from the current position, the higher the number the
+    
+        side (int): side currently to play. +1 for the plus player, -1
+        for the minus player
+    
+        number_of_samples (int): number of samples rollouts to run
+            from the current position, the higher the number the
             better the estimation of the position
 
     Returns:
-        (result(int), move(int,int)): The average result for the best move from this position and what that move was.
+    
+        (result(int), move(int,int)): The average result for the best
+        move from this position and what that move was.
+
     """
     move_wins = collections.defaultdict(int)
     move_samples = collections.defaultdict(int)
@@ -61,17 +77,23 @@ def _upper_confidence_bounds(payout, samples_for_this_machine, log_total_samples
 
 
 def monte_carlo_tree_search_uct(board_state, side, number_of_samples):
-    """Evaluate the best from the current board_state for the given side using monte carlo sampling with upper
-    confidence bounds for trees.
+    
+    """Evaluate the best from the current board_state for the given side
+    using monte carlo sampling with upper confidence bounds for trees.
 
     Args:
         board_state (3x3 tuple of int): state of the board
-        side (int): side currently to play. +1 for the plus player, -1 for the minus player
-        number_of_samples (int): number of samples rollouts to run from the current position, the higher the number the
+    
+        side (int): side currently to play. +1 for the plus player, -1
+        for the minus player
+    
+        number_of_samples (int): number of samples rollouts to run
+            from the current position, the higher the number the
             better the estimation of the position
 
-    Returns:
-        (result(int), move(int,int)): The average result for the best move from this position and what that move was.
+    Returns: (result(int), move(int,int)): The average result for the
+        best move from this position and what that move was.
+
     """
     state_results = collections.defaultdict(float)
     state_samples = collections.defaultdict(float)
