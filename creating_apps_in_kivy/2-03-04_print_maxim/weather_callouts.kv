@@ -1,0 +1,20 @@
+AddLocationForm:
+
+<AddLocationForm>:
+    orientation: "vertical"
+    BoxLayout:
+        height: "40dp"
+        size_hint_y: None
+        TextInput:
+            size_hint_x: 50
+        # BEGIN SEARCHBUTTON
+        Button:
+            text: "Search"
+            size_hint_x: 25
+            on_press: root.search_location()  # <1>
+        # END SEARCHBUTTON
+        Button:
+            text: "Current Location"
+            size_hint_x: 25
+    ListView:
+        item_strings: ["Palo Alto, MX", "Palo Alto, US"]
