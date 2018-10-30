@@ -1,0 +1,70 @@
+#: import main main
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+
+
+WeatherRoot:
+
+<WeatherRoot>:
+    AddLocationForm
+
+<AddLocationForm>:
+    orientation: "vertical"
+    search_input: search_box
+    search_results: search_results_list
+    BoxLayout:
+        height: "40dp"
+        size_hint_y: None
+        TextInput:
+            id: search_box
+            size_hint_x: 50
+            focus: True
+            multiline: False
+            on_text_validate: root.search_location()
+        Button:
+            text: "Search"
+            size_hint_x: 25
+            on_press: root.search_location()
+        Button:
+            text: "Current Location"
+            size_hint_x: 25
+    ListView:
+        id: search_results_list
+        adapter:
+            ListAdapter(
+            data=[],
+            cls=main.LocationButton,
+            args_converter=root.args_converter)
+    Button:
+        height: "40dp"
+        size_hint_y: None
+        text: "Cancel"
+        on_press: app.root.show_current_weather(None)
+
+
+# BEGIN CURRENT_WEATHER
+<CurrentWeather@BoxLayout>:
+    location: ['New York', 'US'] # <1>
+    conditions: None
+    temp: None
+    temp_min: None
+    temp_max: None
+    orientation: "vertical"
+    Label:
+        text: "{} ({})".format(root.location[0], root.location[1]) # <2>
+    BoxLayout:
+        orientation: "horizontal"
+        size_hint_y: None 
+        height: "40dp"
+        Button:
+            text: "Add Location"
+            on_press: app.root.show_add_location_form()
+        Button:
+            text: "Forecast"
+# END CURRENT_WEATHER
+
+<LocationButton>:
+    text: "{} ({})".format(self.location[0], self.location[1])
+    height: "40dp"
+    size_hint_y: None
+    on_press: app.root.show_current_weather(self.location)
+
