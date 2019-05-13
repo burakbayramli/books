@@ -1,0 +1,15 @@
+function [activation,life] = velocity_neuron(theta,theta_dot,sigma_theta,sigma_theta_dot,centre_theta,centre_theta_dot,life)
+
+x1 = theta - centre_theta;
+x2 = theta_dot - centre_theta_dot;
+
+activation1 = (1/(sqrt(2*pi)*sigma_theta^3))*(1 - x1'*x1/sigma_theta^2)*exp(-(x1'*x1/(2*sigma_theta^2)));
+activation2 = (1/(sqrt(2*pi)*sigma_theta_dot^3))*(1 - x2'*x2/sigma_theta^2)*exp(-(x2'*x2/(2*sigma_theta^2)));
+
+life = life;
+
+if abs(activation) < 0.2
+    life = life - 1;
+end
+
+

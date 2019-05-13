@@ -1,0 +1,15 @@
+time = [-1:0.01:1]';
+centre_t = 0;
+sigma_t = 1;
+act = [];
+for i = 1:length(theta1)
+        x = [theta1(i) theta2(j)]' - centre_theta';
+        act(i,j) = (1/(sqrt(2*pi)*sigma_theta^3))*(1 - x'*x/sigma_theta^2)*exp(-(x'*x/(2*sigma_theta^2)));
+end
+
+mesh(theta1,theta2,act);
+title('Centre: [1 0], width: 1');
+xlabel('Joint-1 angle [rad]');
+ylabel('Joint-2 angle [rad]');
+zlabel('Activation');
+
