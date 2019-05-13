@@ -1,0 +1,55 @@
+Cm = 1;
+Cn = 1;
+Ch = 1;
+C = 1;
+alpha = 1;
+g_K = 36;
+g_L = 0.3;
+g_Na = 120;
+v_Na = -115;
+v_K = 12;
+v_L = -10.5989;
+h = 3;m = 9;n = 9;
+T = 0.00001;
+
+vh = 0;ih = 0;
+vm = 0;im = 0;
+vn = 0;in = 0;
+v = 0; i = 0;
+
+iK = 0;
+iNa = 0;
+iL = 0;
+
+data = [];
+i = 2;
+fp = fopen('hh.txt','w');
+for i = 1:1000000
+    v = v + T*(i - (iK + iNa + iL))/C;
+    alpha_n = (0.1 - 0.01*v)/(exp(1-0.1*v) - 1);
+    alpha_m = (2.5 - 0.1*v)/(exp(2.5 - 0.1*v) - 1);
+    alpha_h = 0.07*exp(-v/20);
+    
+    beta_n = 0.125*exp(-v/80);
+    beta_m = 4*exp(-v/18);
+    beta_h = 1/(exp(3 - 0.1*v) + 1);
+    
+    m = m + T*(alpha_m*(1-m)-beta_m*m);
+    
+    
+    vh = T*ih/Ch + vh;
+    vm = T*im/Cm + vm;
+    vn = T*in/Cn + vn;
+    
+    iK = (v - v_K)*g_K*alpha^4*vn^4;
+    iNa = (v - v_Na)*g_Na*alpha^4*vm^3*vh;
+    iL = (v - v_L)*g_L;
+    data = [T*i v];
+    fprintf(fp,'%6.2f %6.2f\n',data');
+   
+end
+fclose(fp);
+data = load('hh.txt');
+time = data(:,1);
+pp = data(:,2);
+plot(time,pp);

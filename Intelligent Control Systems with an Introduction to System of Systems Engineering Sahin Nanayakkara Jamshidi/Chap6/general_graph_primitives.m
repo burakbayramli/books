@@ -1,0 +1,10 @@
+x = [-2:0.2:2];
+y1 = (x .^3 + (sin(x)) .^2) .*exp(-abs(x));
+y2 = exp(-(x + 0.5) .^2) - 1;
+y3 = exp(-0.4*(x - 2.0) .^2);
+y4 = y2 + 2*y3;
+plot(x,y1,'o',x,y2,'*',x,y3,'d',x,y4); 
+xlabel('Independant variable');
+ylabel('Dependant variable');
+title('y4 = y2 + 2*y3');
+legend('original','y2','y3','y4: approximated');
