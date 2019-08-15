@@ -1,0 +1,96 @@
+\section{Simplex Method in Column Form}
+For the sake of completeness, we transpose the above results on the simplex
+method into column form here.  This supplement is not necessary for
+understanding but only a concession to a reader being not familiar with
+problems in row form.
+\par
+The dual problem (\ref{e8}) writes in column form as
+\[
+\fbox{$
+\min \{cy, \; By = a, \; y^{\Q} \geq 0\},\
+B \in \Bbb{R}^n{}_m, \;
+\rank (B_{\P}) = p, \; \rank (B) = n.
+$}
+\]
+The side conditions are now
+\[
+\ba{[}{cc} B_{\P} & B_{\Q}\\ O & -I_{m-p}\ea{]}
+y \leq \ba{[}{c}a \\ 0 \ea{]} \in \Bbb{R}^{n+m-p},
+\]
+where the first $n$ conditions shall be always active again.  The gradients of
+the side conditions are rows again as in the original problem and the
+following matrix $\wi{B}^{\A}$ corresponds to the former matrix
+$\wi{B}_{\A}$ in a vertex $y$:
+\[
+\wi{B}^{\A}P^T = \ba{[}{ccc} B_{\A} & B_{\N}\\
+                             O      & -I_{m-n}\ea{]},
+\; \wi{B}^{\N}P^T = [O, -I_{n-p}, \; O].
+\]
+Writing
+\[
+A = [B_{\A}]^{-1} \in \Bbb{R}^n{}_n
+\]
+the edge matrix becomes
+\[
+\wi{A} \equiv [\wi{a}_1, \ldots, \wi{a}_m]
+= [\wi{B}^{\A}]^{-1} = P^T\ba{[}{cc} A & AB_{\N}\\
+                                     O & -I_{m-n} \ea{]}.
+\]
+The optimality condition is now slightly modified and reads
+%
+\[
+- v_{\N} = - c_{\N} + c_{\A}AB_{\N} \leq 0.
+\]
+Here we have
+\[
+\wi{r} = - y^{\A}, \; \wi{w} = [u, v] \in  \Bbb{R}_m,
+\]
+and we obtain for the tableau of the simplex method in column form
+%
+\[
+\wi{{\bf T}}^*(y) :=
+\ba{[}{cc} \wi{A} & \wi{x}\\  \wi{B}^{\N}\wi{A} & \wi{r}\\- \wi{w} &
+- \wi{f} \ea{]} =
+\ba{[}{ccc}
+A^{1:p}     & A^{1:p}B_{\N}    & y^{\P} \\
+A^{p+1:n}   & A^{p+1:n}B_{\N}  & y^{\A \backslash \P}\\
+    0       &- I_{m-n}         & y^{\N}\\
+- A^{p+1:n} & - A^{p+1:n}B_{\N}& - y^{\A \backslash \P}\\
+- u     & - v_{\N}     &  f
+\ea{]}.
+\]
+After having dropped superfluous parts again, the reduced tableau becomes
+\[
+\wi{{\bf T}}(y) :=
+\ba{[}{ccc}
+A^{1:p}   & A^{1:p}B_{\N}     & y^{\P} \\
+A^{p+1:n} & A^{p+1:n}B_{\N}  & y^{\A \backslash \P}\\
+- u       & - v_{\N}          & f
+\ea{]}.
+\]
+The rules for the choice in the basis swapping now read
+\begin{equation} \label{e51}
+\fbox{$
+\ba{.}{l}
+j = \max \arg_k \max \{- v_{\sigma _k}, \; k \in \{1, \ldots, m- n\}
+\},\\[2mm]
+\dis i = \min \arg_k \min \{ \frac{y_{\rho _k}}{a^kb_{\sigma _j}}, \;
+a^kb_{\sigma _j} > 0, \; k \in \{p+1, \ldots, n\}\}.
+\ea{.}
+$}
+\end{equation}
+With these pivot rules the element at the position $(i,n+j)$ is
+the pivot element.
+\par
+In the optimum finally, with $r^{*\N} = B^{\N}x^* - c^{\N}$, and
+$f^* = cy^* = ax^*$,
+\[
+\wi{{\bf T}}(y^*) :=
+\ba{[}{ccc}
+A^{1:p}    & A^{1:p}B_{\N} & y^{*\P} \\
+A^{p+1:n}  & A^{p+1:n}B_{\N} & y^{*\A \backslash \P}\\[0mm]
+[x^*]^T  & [r^{*\N}]^T  & f
+\ea{]},
+\]
+which is the transposed tableau of (\ref{e48}).
+

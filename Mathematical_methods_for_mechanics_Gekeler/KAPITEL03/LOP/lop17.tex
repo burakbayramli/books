@@ -1,0 +1,151 @@
+\section{Projection Method IV}
+For $\min \{ax, \; Bx = c, \; [0, \; -I_{m-p}]x \leq 0,
+\; c \geq 0,$, phase 1 and phase 2.\\
+$B \in \Bbb{R}^n{}_m$ with $\rank (B_{1:p}) = p$ and
+$\rank (B) = n$.\\
+{\bf (a) Augmented Auxiliary Problem}.
+%
+\[
+\max\{bx, \; \ba{[}{cc} -I_p & O\\ B_{1:p} & B_{(p+1):m}\\O  &
+-I_{m-p} \ea{]} \leq \ba{[}{c}0 \\ a \\ 0 \ea{]}\}.
+\]
+Compute  $b = \sum_{i=1}^nb_i, \;  \delta  = \sum_{i=1}^n\gamma^i$,
+\[ \ba{.}{rclcrl}
+A &=& [-I_p, \; O]          &     x^{1:p} &=& 0,\\
+D &=&  - B                  &     r       &=& - c,        \\
+w &=&  - b                  &     f       &=& 0.
+\ea{.}
+\]
+Index vectors for initial feasible point $x = 0$:
+\[ \ba{.} {rclcl}
+\A(x) &=&  \{\rho _1,\ldots,\rho _m\} = \{0, \ldots ,0,1,\ldots ,m-p\},\\
+\N(x) &=&  \{\sigma _1, \ldots,\sigma _n\} = \{m-p+1, \ldots, m-p+n\},\\
+  q   &=&  0 \; \mbox{number of active $b^ix \leq \gamma ^i$}\\
+  h   &=&  n \; \mbox{number of inactive $b^ix \leq \gamma ^i$}.
+\ea{.}
+\]
+Compute tableau
+\[
+{\bf P} = [P^i{}_k] = \ba{[}{cc} A & x^{1:p}\\ D & r\\ w & f\ea{]}.
+\]
+{\bf Step 1.1.} (Compute search direction.)\\
+If $0 \in \A(x)$ then :\\
+Compute
+\[
+j := \min \arg_k \max \{|w_k|, \; \A(x)_k = 0, \; q < k\}.
+\]
+{\bf Step 1.2.} Compute search direction,
+\[
+d = D^{p+1:p+h}{}_j.
+\]
+If $0 \in \A(x)$ and ($w_j \neq 0$ or $w_{q+1:m} \geq 0$) then\\
+\hspace*{1cm} if $w_j > 0$ then $d = d$,\\
+\hspace*{1cm} if $w_j < 0$ then $d = - d$,\\
+\hspace*{1cm} if $w_j = 0$ and $d \geq 0$ then $d := -d$\\
+else
+\[
+j = \min \arg_k \min \{w_k, \; k > q, \; \rho _k > 0\},
+d = D^{p+1:p+h}{}_j.
+\]
+{\bf Step 2.} Compute step width.\\
+If $d \geq 0$ then a solution does not exist else compute
+\[
+i  := \dis \min \arg_k \min\{\frac{r^k}{d^k}, \; d^k < 0\}.
+\]
+%
+{\bf Step 3.} (Change of basis.) Compute
+\[
+{\bf P} = \mbox{swap}({\bf P},p+i,j).
+\]
+If $i > n - q$ then
+\beqn \ba{.}{rcl}
+\A(x)  &=& \{\rho_1 , \ldots , \rho_{j -1},
+             \sigma_i,\rho_{j+1}, \ldots, \rho_n\},\\
+\N(x)  &=& \{\sigma_1, \ldots ,
+             \sigma_{i-1},\rho _j,\sigma _{i+1} \, \ldots, \sigma_h\}.
+\ea{.}
+\eeqn
+%
+If $i \leq n - q$ then after swapping move column $j$ at position $q
++ 1$ and row $p+i$ at position $n$ in tableau ${\bf P}$,
+%
+\beqn \ba{.}{rcl}
+\A(x)  &=& \{\rho _1,\ldots,\rho _q,\sigma _i,
+               \rho_{q+1} , \ldots , \rho_{j - 1},
+               \rho_{j+1}, \ldots, \rho_m\},\\
+\N(x)  &=& \{\sigma_1 , \ldots ,
+\sigma_{i-1},\sigma _{i+1} \, \ldots, \sigma_h, \rho _j\},\\
+q        &=& q + 1.
+\ea{.}
+\eeqn
+If $\rho _j = 0$ then  cancel pivot row $p+i$ in tableau
+${\bf P}$,
+\[
+\ba{.}{rcl}
+\N(x)   &=& \{\sigma _1 , \ldots , \sigma _{i-
+  1},\sigma _{i+1} , \ldots, \sigma_h\}, \\
+h       &=& h - 1.
+\ea{.}
+\]
+%
+{\bf Test for Optimum}.\\
+If not $(\A(x) > 0$ and  $w_{(q+1):m} \geq 0)$ then
+return to step 1.1 else\\
+{\bf Adaption of tableau and index vectors}.\\
+If $f < \delta $ then feasible domain empty else\\
+{\bf Step 4.}
+If $q < n$ choose $\sigma _i \in \N(x)$ with $\sigma _i \leq n$,
+compute
+%
+\[\ba{.}{c}
+j := \min \arg_k \max \{|w_k|, \; k > q\},\\
+{\bf P} = \mbox{swap}({\bf P},p+i,j).
+\ea{.}
+\]
+Move column $j$ at position $q + 1$ and row $p+i$ at position $n$ in tableau
+${\bf P}$,
+%
+\beqn \ba{.}{rcl}
+\A(x)  &=& \{\rho _1,\ldots,\rho _q,\sigma _i,
+               \rho_{q+1} , \ldots , \rho_{j - 1},
+               \rho_{j+1}, \ldots, \rho_m\},\\
+\N(x)  &=& \{\sigma_1 , \ldots ,
+\sigma_{i-1},\sigma _{i+1} \, \ldots, \sigma_h, \rho _j\},\\
+q        &=& q + 1.
+\ea{.}
+\eeqn
+Return to Step 4.\\
+Set
+\[
+\R       = \{\sigma _1, \ldots \sigma _{n-p}\}, \;
+{\cal S} = \{\rho _{m-n+1},\ldots, \rho _m\}
+\]
+set in tableau ${\bf P}$
+\[
+\ba{.}{rcl}
+w &=& [a_{\R}P^{(p+1):n}{}_{1:n} -a_{1:p}P^{1:p}{}_{1:n}, \;
+     a_{\cal S} + a_{\R}P^{(p+1):n}{}_{(n+1):m}
+-a_{1:p}P^{1:p}{}_{(n+1):m}],\\
+f &=& a_{\R}P^{(p+1):n}{}_{m+1} - a_{1:p}P^{1:p}{}_{m+1}.
+\ea{.}
+\]
+{\bf Test for Optimum}.\\
+If not $(\A(x) > 0$ and $w_{(q+1):m} \geq 0)$ then
+return to step 1.1.\\
+{\bf Result}. $x$ is solution of primal problem and $y$ is solution of dual
+problem.
+\[
+\B := \{\rho _1, \ldots,\rho _n\} - m, \;
+\C := \{\rho _{n+1}, \ldots, \rho _m\} - n,
+\]
+\[ \ba{.}{rclcrlcrl}
+y^{1:p}&=& P^{1:p}{}_{m+1},& y^{\N} &=& - P^{(p+1):n}{}_{m+1}, &y^{\A} &=&
+0,\\
+z(\B)  &=&   P^{n+1}{}_{1:n},&z(\C) &=& P^{n+1}{}_{n+1:m}, &  z(\N) &=& 0 .
+\ea{.}
+\]
+\par
+\[
+x = - [z_{1:n}]^T, \; y := y^T.
+\]
+

@@ -1,0 +1,320 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 9 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+\bc
+{\bf Re-Entry Problem mit X-38}
+\ec
+{\sc Stoer:} {\sl Introduction to Numerical Analysis.}
+Heidelberg: Springer-Verlag 1980.\\
+{\sc W. Grimm:} Inst. f"ur Flugmechanik, Universit"at Stuttgart\\
+\par\vspace{1ex}
+{\bf Allgemeines}\\
+{\em Vereinfachungen:} kugelf"ormige Erde, Massenpunktmodel (keine Lagedynamik),
+symmetrischer Flug (Geschwindigkeitsvektor in der Symmetrieebene des Fahrzeugs),
+kein Wind.\\
+{\em Umrechnungen} L"ange: $1 \ [ft] = 0.3048 \ [m]$, Gewicht:
+$1\ [sl]  =  14.59\ [kg] $ \ (slugs).
+\par\vspace{0.5ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\em Bezeichnungen:}
+\renewcommand{\arraystretch}{1.2}
+\bc
+\par\vspace{-2ex}
+\begin{tabular}{|l|l|l|l|}\hline
+Symbol & Bezeichnung & SI-Einheit & am. Einheit\\ \hline \hline
+$\gamma$ & Gravitationskonstante & $m^3/kg\, s^2$ & ??\\
+$R_{\rm E} $ & Erdradius & m  & ft\\
+$M_{\rm E} $ & Erdmasse  & kg & sl (slugs)\\
+$g_E = \gamma M_E/R^2_E$ & Fallbeschleunigung & $m/s^2$ & ??\\
+$\omega_E$ & Drehgeschwindigkeit der Erde & rad/s & rad/s\\
+$\rho_0$ & Luftdichte in Meeresh"ohe & $kg/m^3$ &\\ \hline
+$V$ & Geschwindigkeit & m/s & ft/s\\
+$\Gamma$ & Bahnneigungswinkel & rad & rad\\
+$R = R_{\rm E} + H$ & Abstand zum Erdmittelpunkt & m & ft\\
+$H$       & H"ohe "uber Erdoberfl"ache & m & ft\\
+$A$ & Auftrieb & N & ??\\
+$W$ & Luftwiderstand & N & ??\\
+$c_A$ & Auftriebsbeiwert & ?? & ??\\
+$c_W$ & Widerstandsbeiwert & ?? & ??\\
+$S$ & Bezugsfl"ugelfl"ache & $m^2$ & ??\\
+$M$ & Masse des Raumschiffs & kg & sl\\
+$g(H) = \gamma M^2_E/(R_E + H)^2$ & Erdbschl. h"ohenabh"angig & $m/s^2$ & ??\\
+$G(H) = M \, g(H)$ & Gewicht& N & ??\\ \hline
+$\rho(H)$ & Luftdichte h"ohenabh"angig & $kg/m^3$ & ??\\
+$\mu_A$  & Winkel zur Bahntangente & rad & rad\\
+$\mu_X$  & Flugwindh"angewinkel  & rad & rad\\
+\hline
+$\lambda$ & geografische Breite & rad & rad\\
+$\chi$ & Flugwindazimut & rad & rad\\\hline
+$\tau$ & geografische L"ange & rad & rad \\ \hline
+\end{tabular}
+\ec
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\em Konstanten:}
+$\gamma = 6.672\cdot10^{-11} \ [m^3/kg \, s^2]$,
+$R_E = 6370320 \ [m]$, $\gamma\cdot M_E = 3.98603\cdot 10^{14} \ [m^3/s^2]$,
+$g_E = 9.806 \ [m/s^2]$,
+$\omega_E = 7.292115\cdot 10^{-5} [rad]$, $ \rho_0 = 1.2255 \ [kg/m^3]$. Zur
+Approximation in der H"ohe ab 50 km wird aber gew"ahlt
+%
+\[
+\rho(H) = \rho_1 \ e^{-\beta H}\,,\;\;
+\rho_1 = 1.3932 \ [kg/m^3]\,,\;\;
+\beta = 1.3976\cdot 10^{-4}\ [1/m]\,.
+\]
+F"ur das Verh"altnis $S/m$ wird gew"ahlt:
+\[
+\text{{\sc Apollo}:} \; S/M = 3.3876 \cdot 10^{-3} \ [m^2/kg]\,,\;\;
+\text{{\sc X-38}:} \; S = 21.31 / [m^2]\,,\; M = 9060\ [kg]
+\]
+
+F"ur Auftrieb $A$ und Widerstand $W$ wird gew"ahlt:
+\bc
+\par\vspace{-2ex}
+\begin{tabular}{|l|l|l|l|}\hline
+Typ & $A$ &  $W$ \\ \hline \hline
+{\sc Apollo} &
+$ S\rho(H)V^2c_A(\mu_A)/2$ &
+$ S\rho(H)V^2c_W(\mu_A)/2$\\ \hline
+{\sc X-38} &
+$ S \rho(H)V^2c_A(V)/2$ &
+$ S\rho(H)V^2c_W(V)/2$ \\ \hline
+\end{tabular}
+\ec
+F"ur {\sc X-38} werden die Werte von $c_A$ und $c_W$ tabellarisch angegeben
+und quadratisch interpoliert; f"ur {\sc Apollo} wird gew"ahlt
+\[
+c_A(\mu_A) = 0.6\, \sin(\mu_A)\,,\;\; c_W(\mu_A) = 1.174 - 0.9\ \cos (\mu_A)\,.
+\]
+\par
+$\Gamma$ und $\chi$ beschreiben die Richtung des Geschwindigkeitsvektors,
+also die Bahntangente; $\Gamma$ ist der Winkel zu lokalen Horizontalebene,
+$\Gamma$ ist positiv, wenn der Geschwindigkeitsvektor nach oben zeigt;
+$\chi$ beschreibt die Richtung in der lokalen Horizontalebene von Ost
+zu Nord. Bei {\sc Apollo} ist die Kontrolle $u = \mu_A$ der Winkel zwischen
+der Symmetrieachse des Kegels (zur Spitze weisend (!)) und der Bahntangente.
+Bei {\sc X-38} ist die {\em Kontrolle} $u = \mu_x$ der Winkel zwischen dem
+Auftriebsvektor und der Vertikalebene durch die momentane Bahntangente.
+\par
+Bei {\sc Apollo} wird die totale Erw"armung und bei {\sc X-38}
+der totale W"armefluss jeweils am Stagnationspunkt und pro Fl"acheneinheit
+minimiert:
+\[
+\ba{.}{llll}
+\text{{\sc Apollo}:} & J(V,H) &=& \dis 10 \int_0^T [\rho(H)]^{1/2}V^3\, dt\\[2ex]
+\text{{\sc X-38}:}  & J(V,H) &=& \dis  10^4 \int_0^T [\rho(H)]^{1/2}V^{3.15}\, dt\,.
+\ea{.}
+\]
+{\em Bewegungsgleichungen f"ur {\sc Apollo}:
+\[
+\fbox{$
+\ba{.}{lll}
+\dot{V} &=& \dis -\frac{W}{m} - g \,\sin \Gamma\\[2ex]
+%
+\dot{\Gamma} &=& \dis \frac{A}{m \,V}
++ \frac{V \cos \Gamma}{R}
+- \frac{g \,\cos \Gamma}{V}\\[2ex]
+%
+\dot{R} &=& \dis V \sin \Gamma
+\ea{.}
+$}
+\]
+
+{\em Bewegungsgleichungen f"ur {\sc X-38}:
+\[
+\fbox{$
+\ba{.}{lll}
+\dot{V}      &=& \dis  - \frac{W}{m} - g \sin \Gamma\\[2ex]
+\dot{\Gamma} &=& \dis  \frac{A \; \cos \mu}{m \, V}
+                 + \frac{V \cos \Gamma}{R}
+                 -  \frac{g \cos \Gamma}{V}
+                 + 2 \omega_E \sin \chi \cos \lambda\\[2ex]
+\dot{R}      &=& \dis V \sin \Gamma\\[2ex]
+%
+\dot{\chi} &=& \dis \frac{A \sin \mu}{m V \cos \Gamma}
++ \frac{V \, \cos \Gamma  \sin \chi \tan \lambda}{R}
+-  2 \omega_E \tan \Gamma \cos \chi \cos \lambda
++ 2 \omega_E \sin \lambda\\[2ex]
+%
+\dot{\lambda} &=& \dis  \frac{V \cos \Gamma \cos \chi}{R}\\[2ex]
+%
+\dot{\tau} &=& \dis \frac{V \cos \Gamma \sin \chi}{R \cos \lambda}
+\ea{.}
+$}\; .
+\]
+\par
+{\em Dauer des Man"overs:} {\sc Apollo}: \; T = 225 \ [s]\,,\;\;
+{\sc X-38}: \; T = 1150 \ [s]\,.
+\par
+{\em Randbedingungen:} ($\Gamma(0)$ ist besonders kritisch,
+L"ange in [km], Winkel in [rad] (!))\\
+{\sc Apollo:}
+\[
+V(0) = 11 \,,\;\; \Gamma(0) = - 0.14137167\,, \;\; H(0) = 122 \,,\;\;
+V(T) = 8 \,, \;\; H(T) = 76\,.
+\]
+{\sc X-38:}
+\[
+\ba{.}{l}
+V(0) = 7.669 \,,\;\; \Gamma(0) = - 0.0025656\,, \;\;  H(0) = 80 \,,\\
+\chi(0) = 1.9199\,,\;\; \lambda(0) = 1.22171\,,\;\; \tau(0) = -0.41888\,,\\
+V(T) = 1\,, \;\; H(T) = 25 \,,\;\; \lambda(T) = 2.35584\,, \;\;
+\tau(T) = -0.49292\,.
+\ea{.}
+\]
+\par\vspace{0.5ex}
+\bc
+\begin{minipage}{10cm}
+% B = 476, H = 387, H/B = 0.8
+%\epsfig{file=bild05a.eps,height=8cm,width=10cm}
+\end{minipage}
+\ec
+\bc
+\begin{minipage}{10cm}
+% B = 490, H = 389, H/B = 0.8
+%\epsfig{file=bild05b.eps,height=8cm,width=10cm}
+\end{minipage}
+\ec
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Berechnungen}
+\[
+V = x_1\,,\;\;  \gamma = x_2\,,\;\; R = x_3\,, \;\; \chi = x_4\,,\;\;
+\lambda = x_5\,,\;\; \tau = x_6\,,\;\; \mu = u
+\]
+\par\vspace{2ex}
+\[
+\ba{.}{lll}
+\dot{x}_1 &=& \dis - \frac{W(x_1,x_3)}{M}  - g \sin x_2\\[2ex]
+\dot{x}_2 &=& \dis
+\frac{A(x_1,x_3) \cos u}{M\,x_1} + \frac{x_1\cos x_2}{x_3}
+- \frac{g \cos x_2}{x_1} + 2\omega_E \sin x_4 \cos x_5 \\[2ex]
+\dot{x}_3 &=& \dis x_1 \sin x_2\\[2ex]
+\dot{x}_4 &=& \dis \frac{A(x_1,x_3) \, \sin u}{M\, x_1 \cos x_2}
++ \frac{x_1\cos x_2 \sin x_4 \tan x_5}{x_3}\\[2ex]
+&-& \dis 2 \omega_E \tan x_2 \cos x_4 \cos x_5
++ 2 \omega_E \sin x_5\\[2ex]
+\dot{x}_5 &=& \dis \frac{x_1\cos x_2 \cos x_4}{x_3}\\[2ex]
+
+\dot{x}_6 &=& \dis \frac{x_1\cos x_2 \sin x_4}{x_3 \cos x_5}\\[2ex]
+\ea{.}
+\]
+\par\vspace{1ex}
+\[
+f11 = - D1W/M\,, \quad f12 = - g \cos x_2\,, \quad f13 = - D3W/M
+\]
+\par\vspace{1ex}
+\[
+\ba{.}{lll}
+f21 &=& \dis  \frac{D1A \cos u}{M\,x_1}
+- \frac{A(x_1,x_3) \cos u}{M\,x^2_1} + \frac{\cos x_2}{x_3}
++ \frac{g \cos x_2}{x^2_1}\\[2ex]
+f22 &=& \dis
+- \frac{x_1\sin x_2}{x_3} + \frac{g \sin x_2}{x_1}\\[2ex]
+f23 &=& \dis \frac{D3A\, \cos u}{M\, x_1}
+        - \frac{x_1 \cos x_2}{x_3^2}\\[2ex]
+%
+f24 &=& \dis 2\omega_E \cos x_4 \cos x_5\\[2ex]
+f25 &=& \dis - 2\omega_E \sin x_4 \sin x_5 \\[2ex]
+f2U &=& \dis - \frac{A(x_1,x_3) \sin u}{M\,x_1}
+\ea{.}
+\]
+\par\vspace{1ex}
+\[
+f31 = \sin x_2\,,\quad f32 = x_1 \cos x_2
+\]
+\par\vspace{1ex}
+
+\par\vspace{1ex}
+\[
+\ba{.}{lll}
+f41  &=& \dis
+ \frac{D1A \, \sin u}{M\, x_1 \cos x_2}
+- \frac{A \sin u}{M\, x^2_1 \cos x_2}
++ \frac{\cos x_2 \sin x_4 \tan x_5}{x_3}\\[2ex]
+%
+f42 &=& \dis
+\frac{A(x_1,x_3) \sin x_2 \sin u}{M\, x_1 \cos^2 x_2}
+- \frac{x_1\sin x_2 \sin x_4 \tan x_5}{x_3}
+- \frac{2 \omega_E\cos x_4 \cos x_5}{\cos^2 x_2}\\[2ex]
+%
+f43  &=& \dis
+\frac{D3A \, \sin u}{M\, x_1\cos x_2}
+- \frac{x_1\cos x_2 \sin x_4 \tan x_5}{x_3^2}\\[2ex]
+%
+f44 &=& \dis
+\frac{x_1 \cos x_2 \cos x_4 \tan x_5}{x_3}
++ 2 \omega_E \tan x_2 \sin x_4 \cos x_5\\[2ex]
+%
+f45 &=& \dis
+\frac{x_1\cos x_2 \sin x_4}{x_3\cos^2x_5}
++ 2 \omega_E\tan x_2 \cos x_4 \sin x_5
++ 2 \omega_E\cos x_5\\[2ex]
+%
+f4U &=& \dis \frac{A(x_1,x_3) \cos u}{M\, x_1 \cos x_2}
+\ea{.}
+\]
+\[
+\ba{.}{llllll}
+f51 &=& \dis \frac{\cos x_2 \cos x_4}{x_3} & \quad
+f52 &=& \dis - \frac{x_1\sin x_2 \cos x_4}{x_3}\\[2ex]
+%
+f53 &=& \dis  - \frac{x_1\cos x_2 \cos x_4}{x_3^2} & \quad
+f54 &=& \dis - \frac{x_1\cos x_2 \sin x_4}{x_3}
+\ea{.}
+\]
+\[
+\ba{.}{llllll}
+f61 &=& \dis \frac{\cos x_2 \sin x_4}{x_3\cos x_5} & \quad
+f62 &=& \dis -\frac{x_1\sin x_2 \sin x_4}{x_3\cos x_5}\\[2ex]
+f63 &=& \dis - \frac{x_1\cos x_2 \sin x_4}{x_3^2 \cos x_5} & \quad
+f64 &=& \dis \frac{x_1\cos x_2 \cos x_4}{x_3 \cos x_5}\\[2ex]
+f65 &=& \dis \frac{x_1\cos x_2 \sin x_5\sin x_4}{x_3\cos^2 x_5}
+\ea{.}
+\]
+\par\vspace{0.5ex}
+\newpage
+{\bf (c) Umskalierung} F"ur das numerische Verfahren m"ussen $V$ und $R$
+umskaliert und damit an die Winkelgr"o\ss en angepasst werden:
+\[
+V = 10^5\wi{V}\,, \; \; R = 10^5\wi{R}_E(1 + \wi{H})\,,\;\;
+R_E = 10^5\wi{R}_E
+\]
+bzw. $x_1 = 10^5\wi{x}_1\,,\; x_3 = 10^5\wi{R}_E(1 + \wi{x}_3)$.
+\[
+\ba{.}{lllll}
+\rho(H) &=& \dis \rho(\wi{x}_3) &=& \rho_1\exp(-\beta\, 10^5\wi{R}_E\wi{x}_3)
+\\[0.5ex]
+A(x_1,x_3) &=& \wi{A}(\wi{x}_1,\wi{x}_3) &=&
+10^{10}S\rho(\wi{x}_3)\wi{x}^2_1c_A(x_1)/2\\[0.5ex]
+W(x_1,x_3) &=& \wi{W}(\wi{x}_1,\wi{x}_3) &=&
+10^{10}S\rho(\wi{x}_3)\wi{x}^2_1c_W(x_1)
+\ea{.}
+\]
+Skalierte Bewegungsgleichungen f"ur {\sc X-38} (ohne Schlange !):
+\[
+\ba{.}{lll}
+\dot{x}_1 &=& \dis - \frac{10^{-5}W(x_1,x_3)}{M}  - 10^{-5}g \sin x_2\\[2ex]
+\dot{x}_2 &=& \dis
+10^{-5}\frac{A(x_1,x_3) \cos u}{M\, x_1}
++ \frac{x_1\cos x_2}{\wi{R}_E(1 + x_3)}
+- \frac{10^{-5}g \cos x_2}{x_1} + 2\omega_E \sin x_4 \cos x_5\\[2ex]
+\dot{x}_3 &=& \dis \frac{\dis x_1 \sin x_2}{\wi{R}_E}\\[2ex]
+\dot{x}_4 &=& \dis \frac{10^{-5}A(x_1,x_3) \, \sin u}{M\,x_1 \cos x_2}
++ \frac{x_1\cos x_2 \sin x_4 \tan x_5}{\wi{R}_E(1 + x_3)}\\[2ex]
+&-& \dis 2 \omega_E \tan x_2 \cos x_4 \cos x_5
++ 2 \omega_E \sin x_5\\[2ex]
+\dot{x}_5 &=& \dis \frac{x_1\cos x_2 \cos x_4}{\wi{R}_E(1 + x_3)}\\[2ex]
+\dot{x}_6 &=& \dis \frac{x_1\cos x_2 \sin x_4}
+              {\wi{R}_E(1 + x_3)\cos x_5}\\[2ex]
+\ea{.}
+\]
+\end{document}
+

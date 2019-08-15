@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper,leqno]{book}
+\input aaformat
+\begin{document}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1ex}
+\parskip1ex
+%
+\bc
+{\bf Beispiele zum Babuska-Paradoxon}
+\ec
+%
+{\sc Laplace}-Operator in kartesischen Koordinaten
+\[
+\Delta^2 w = w_{xxxx} + 2w_{xxyy} + w_{yyyy}
+\]
+{\sc Laplace}-Operator in Polarkoordinaten
+\[
+\ba{.}{rcl}
+\Delta w &=& \dis w_{rr} + \frac{1}{r}w_r + \frac{1}{r^2}w_{\phi \phi } =: v\\
+v_r &=& \dis w_{rrr} + \frac{1}{r}w_{rr} - \frac{1}{r^2}w_r
+- \frac{2}{r^3}w_{\phi \phi } + \frac{1}{r^2}w_{r\phi \phi }\\[2ex]
+v_{rr} &=& \dis
+w_{rrrr} - \frac{2}{r^2}w_{rr} + \frac{1}{r}w_{rrr}
+ + \frac{2}{r^3}w_r
+ + \frac{6}{r^4}w_{\phi \phi } - \frac{4}{r^3}w_{r\phi \phi }
+ + \frac{1}{r^2}w_{rr\phi \phi }\\[2ex]
+v_{rr} &=& \dis w_{rrrr} - \frac{2}{r^2}w_{rr} + \frac{2}{r^3}w_r
+ + \frac{1}{r}w_{rrr}
+ + \frac{6}{r^4}w_{\phi \phi } - \frac{4}{r^3}w_{r\phi \phi } +
+\frac{1}{r^2}w_{rr\phi \phi }\\[2ex]
+v_{\phi \phi } &=& \dis w_{rr\phi \phi } + \frac{1}{r}w_{r\phi \phi } +
+\frac{1}{r^2}w_{\phi \phi \phi \phi }\\[2ex]
+\Delta^2w &=& \dis w_{rrrr} + \frac{2}{r}w_{rrr}- \frac{1}{r^2}w_{rr}
++ \frac{1}{r^3}w_r + \frac{2}{r^2}w_{rr\phi \phi }
+ - \frac{2}{r^3}w_{r\phi \phi }
+ + \frac{4}{r^4}w_{\phi \phi } + \frac{1}{r^4}w_{\phi \phi \phi \phi }
+\ea{.}
+\]
+Es sei $\kappa = 1$ und $\Omega$ der Einheitskreis,
+dann ist $\chi = 1$. Die jeweilige {\sc Poisson}-Zahl $\nu$ ergibt sich aus der
+Gleichung
+\[
+v(1,\phi) = (\nu - 1)[\chi w_n(1,\phi) + p''(\phi)] \,.
+\]
+
+\par
+{\bf Beispiel 1.}
+\[
+\ba{.}{rcl}
+w(r,\phi ) &=& (1 - r^2)(5 - r^2)\,,\;\; w(1,\phi) = 0\\
+w_r = w_n &=& -12r + 4r^3\\
+- \Delta w(r,\phi ) = v(r,\phi ) &=& -(16r^2 - 24)
+\ea{.}
+\]
+
+\[
+\fbox{$
+\Delta^2w          = 64, \;\;
+v(1,\phi ) =  8, \;\;
+w_n(1,\phi )        = - 8 ,\;\; \nu = 0
+$} \; .
+\]
+\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 2.}
+\[
+\ba{.}{rcl}
+w(r,\phi ) &=& (1 - 2r^2)(5 - r^2)\,,\;\; w(1,\phi) = - 4\\
+w_r = w_n &=& -22r + 8r^3\\
+-\Delta w(r,\phi ) = v(r,\phi ) &=& -(32r^2 - 44)
+\ea{.}
+\]
+
+\[
+\fbox{$
+\Delta^2w         =  128, \;\;
+v(1,\phi ) = 12, \;\;
+w_n(1,\phi )       =  - 14,\;\; \nu = 1/7
+$} \; .
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 3.}
+\[
+\ba{.}{rcl}
+w(r,\phi ) &=& (r^6 - 2r^4 - 4r^2)\cos(2\phi )/10\,,\;\;
+w(1,\phi) = - \cos(2\phi)/2\\[0.5ex]
+w_r = w_n &=& (6r^5 - 8r^3 - 8r)\cos(2\phi )/10\,,\;\;
+w_n(1,\phi) = - 10\cos(2\phi)/10;\\[0.5ex]
+-\Delta w(r,\phi ) = v(r,\phi ) &=& -(32r^4 - 24r^2)\cos(2\phi )/10\\[0.5ex]
+p(\phi) &=&  -\cos(2\phi)/2\,,\;\; p''(\phi) = 2\cos(2\phi)\\[0.5ex]
+w_n(1,\phi ) + p''(\phi ) &=& 10\cos(2\phi )/10
+\ea{.}
+\]
+\par
+\[
+\fbox{$
+\ba{.}{ll}
+\Delta^2w         =  384r^2\cos(2\phi)/10, \;\;
+v(1,\phi ) = -8\cos(2\phi)/10, \\[0.5ex]
+w_n(1,\phi ) + p''(\phi )      =  10\cos(2\phi )/10\,,\;\; \nu = 1/5
+\ea{.}
+$} \; .
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+{\bf Beispiel 4.}
+\[
+\ba{.}{rcl}
+w(r,\phi ) &=& (2r^6 - 5r^4)\cos(2\phi )/12, \;\;
+w(1,\phi) = - 3\cos(2\phi)/12\\[0.5ex]
+w_r = w_n &=& (12r^5 - 20r^3)\cos(2\phi )/12,\;\;
+w_n(1,\phi) = -8\cos(2\phi)/12\\[0.5ex]
+- \Delta w(r,\phi ) = v(r,\phi ) &=& - (64r^4 - 60r^2)\cos(2\phi )/12\\[0.5ex]
+p(\phi) &=& -3\cos(2\phi)/12,\;\; p''(\phi) = 12\cos(2\phi)/12\\[0.5ex]
+w_n(1,\phi ) + p''(\phi ) &=& 4\cos(2\phi )/12
+\ea{.}
+\]
+\par
+\[
+\fbox{$
+\ba{.}{ll}
+\Delta^2w =  64r^2\cos(2\phi), \;\;
+v(1,\phi ) = - 4\cos(2\phi)/12, \\[0.5ex]
+w_n(1,\phi ) + p''(\phi ) =  4\cos(2\phi )/12, \;\;
+\nu  = 0
+\ea{.}
+$} \; .
+\]
+
+\renewcommand{\arraystretch}{1.5}
+Maximaler Fehler:
+\bc
+\begin{tabular}{|c|c|c|c|} \hline
+ & $\chi = 0$ & $\chi = 1$, 5 Schritte& $\chi = 1$, 10 Schritte  \\ \hline
+Beisp. 1 & 2.0534   & 0.1692  & 0.0812 \\ \hline
+Beisp. 2 & 3.1077   & 0.1865  & 0.1133 \\ \hline
+Beisp. 3 & 0.0190   & 0.0061  & 0.0061 \\ \hline
+Beisp. 4 & 0.0188   & 0.0076  & 0.0076 \\ \hline
+
+\end{tabular}
+\ec
+\renewcommand{\arraystretch}{1}
+
+
+\end{document}
+

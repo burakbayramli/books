@@ -1,0 +1,162 @@
+\section{Projection Method III}
+For $\max \{ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}
+\}, \; c^{\P} \geq 0,$, phase 1 and phase 2.\\
+$B \in \Bbb{R}^m{}_n$ with $\rank (B^{\P}) = p$ and
+$\rank (B) = n$.\\
+{\bf (a) Auxiliary Problem}:
+\[
+\ba{.}{rcl}
+\xi ^0  &=& \max\{0,-\gamma ^{p+1}, \ldots, -\gamma ^{m}\},\\
+b       &=& \dis \sum_{i=1}^pb^i ,\; \mbox{if} \; p = 0 \; \mbox{then} \;
+        b = 0 \in \Bbb{R}^n,\\
+\delta  &=& \dis \sum_{i=1}^p\gamma ^i, \; \mbox{if} \; p = 0 \; \mbox{then}
+            \; \delta  = 0 \in \Bbb{R}.
+\ea{.}
+\]
+If $-\xi ^0 = \delta $ then compute (phase 2, $x = 0$, only possible if $\delta
+= 0$)
+%
+\[
+\A(x) = \{\rho _1,\ldots, \rho _n\} =  \{1, \ldots, p,0, \ldots, 0\}, \;
+\N(x) = \{p + 1,\ldots ,m\},
+\]
+$Q \cdot R = [B^{\P}]^T$ QR-decomposition of $[B^{\P}]^T$. Compute
+\[ \ba{.}{rclcllll}
+Q       &=& [q_1,\ldots q_n], & U &=& [q_{p+1}, \ldots,q_n]^T,\\
+ B^{\A} &:=& \ba{[}{c}B^{\P}\\ U\ea{]},
+                      & [B^{\A}]^{-1} &=& A  = [a_i]_{i = 1}^n, &D = B^{\N}A,\\
+x       &=& 0 \in \Bbb{R}^n, & r &=&  - c^{\N}, &w = aA, & f =  0.
+\ea{.}
+\]
+and index vectors
+\[ \ba{.}{rclcl}
+\A(x) &=& \{\rho _1, \ldots, \rho _n\} &=& \{2,\ldots,p+1,0,
+\ldots,0\},\\
+\N(x) &=& \{\sigma _1, \ldots, \sigma _m\} &:=& \{p+2, \ldots, m+1\},\\
+q &=& p.
+\ea{.}
+\]
+%
+If $-\xi ^0 < \delta $ then compute (phase 1)
+\[ \ba{.}{rclcrl}
+A &=& I_{n+1},            &         x &=& [\xi ^0,0, \ldots ,0]^T \in
+\Bbb{R}^{n+1},\\
+D &=& \ba{[}{cc} - 1     &   0      \\
+                   0     & B^{1:p}  \\
+                  -e     & B^{p+1:m} \ea{]}
+&    r &=&  -\xi ^0\ba{[}{c}1 \\ 0       \\ e \ea{]}
+                - \ba{[}{c}0 \\ c^{1:p} \\ c^{p+1:m} \ea{]}.\\
+w &=& [-1, \; b] & f &=& wx = - \xi ^0.
+\ea{.}
+\]
+and index vectors
+\[ \ba{.} {rcl}
+\A(x) &=&  \{\rho _1, \ldots, \rho _{n+1}\}    := \{0, \ldots, 0\},\\
+\N(x) &=& \{\sigma _1, \ldots, \sigma _{m+1}\} := \{1, \ldots,m+1\},\\
+      n &=& n+1,\\
+      m &=& m+1,\\
+      q &=& 0.
+\ea{.}
+\]
+Compute tableau
+\[
+{\bf P} = \ba{[}{cc} A & x\\ D & r\\ w & f\ea{]}.
+\]
+{\bf Step 1.1.} (Compute search direction $s$.)\\
+If $0 \in \A(x)$ then :\\
+Compute
+\[
+j := \min \arg_k \max \{|w_k|, \; \A(x)_k = 0, \; q < k\}.
+\]
+{\bf Step 1.2.} Compute search direction $s$.\\
+If $0 \in \A(x)$ and ($w_j \neq 0$ or $w_{(q+1):n} \geq 0$) then\\
+\hspace*{1cm} if $w_j > 0$ then $s = - a_j$ and $d = - B^{\N}a_j$,\\
+\hspace*{1cm} if $w_j \leq 0$ then $s =   a_j$ and $d = B^{\N}a_j$,\\
+\hspace*{1cm} if $w_j = 0$ and $d \geq 0$ then $s := -s, \; d := - d,$\\
+else
+\[
+j:= \min \arg_k \min \{w_k, \; k > q, \; \rho _k > 0\}.
+\]
+{\bf Step 2.} Compute step width.\\
+If $d \geq 0$ then a solution does not exist else compute
+\[
+i  := \dis \min \arg_k \min\{\frac{r^k}{d^k}, \; d^k < 0\}.
+\]
+%
+{\bf Step 3.} (Change of basis.) Compute
+\[
+{\bf P} = \mbox{swap}({\bf P},n+i,j).
+\]
+If $\rho _j = 0$ then cancel row $n+i$ from tableau ${\bf P}$,
+\beqn \ba{.}{rcl}
+\A(x)  &=& \{\rho_1 , \ldots , \rho_{j -
+  1},\sigma_i,\rho_{j+1}, \ldots, \rho_n\},\\
+\N(x) &=& \{\sigma_1 , \ldots ,
+\sigma_{i-1},\sigma _{i+1} \, \ldots, \sigma_m\},\\
+m &=& m - 1.
+\ea{.}
+\eeqn
+%
+If $\rho _j > 0$ then
+\begin{equation} \label{vvv}
+\ba{.}{rcl}
+\A(x)  &=& \{\rho_1 , \ldots , \rho_{j -
+  1},\sigma_i,\rho_{j+1}, \ldots, \rho_n\},\\
+\N(x) &=& \{\sigma_1 , \ldots ,
+\sigma_{i-1},\rho _j,\sigma _{i+1} \, \ldots, \sigma_m\},\\
+\ea{.}
+\end{equation}
+If $\sigma _i = 1$ then  cancel row $1$ and column $j$ from tableau ${\bf P}$,
+$\N(x)$ as in (\ref{vvv}),
+\[ \ba{.}{rcl}
+\A(x)  &=& \{\rho_1 , \ldots , \rho_{j-
+  1},\rho_{j +1} , \ldots, \rho_n\}, \\
+n &=& n - 1.
+\ea{.}
+\]
+If $1 < \sigma _i \leq p + 1$ then interchange column $j$ and column $q + 1$ in
+tableau ${\bf P}$, $\N(x)$ as in (\ref{vvv}),
+\[ \ba{.}{rcl}
+\A(x)  &=& \{1,\ldots,q,\sigma _i,\rho_{q+2} , \ldots , \rho_{j -
+  1},\rho _{q+1},\rho_{j +1} , \ldots \rho_n\},\\
+q &=& q + 1.
+\ea{.}
+\]
+{\bf Test for Optimum}:
+If not $(\A(x) > 0$ and  $w_{(q+1):n} \geq 0)$ then
+return to step 1.1.\\
+{\bf Adaption of tableau and index vectors after phase 1}:
+If $f < \delta $ then feasible domain empty else\\
+{\bf Step 4.}
+If $q < p$ choose $\sigma _i \in \N(x)$ with $\sigma _i \leq p$, compute
+\[\ba{.}{c}
+j := \min \arg_k \max \{|w_k|, \; k > q\},\\
+{\bf P} = \mbox{swap}({\bf P},n+i,j).
+\ea{.}
+\]
+\hspace*{1cm}Interchange column $j$ and column $q+1$ in tableau ${\bf P}$.
+%
+\[ \ba{.}{rcl}
+\A(x)  &=& \{1,\ldots,q,\sigma _i,\rho_{q+2} , \ldots , \rho_{j -
+  1},\rho _{q+1},\rho_{j +1} , \ldots \rho_n\},\\
+\N (x) &=& \{\sigma _1, \ldots,\sigma _{i-1},\rho _j,\sigma _{i+1},
+\ldots, \sigma _m\},\\
+q &=& q + 1.
+\ea{.}
+\]
+Return to Step 4.\\
+Now $\{1,\ldots, p\} \subset \A(x)$.
+Set $w = aA$ and $f = ax$ in tableau ${\bf P}$.\\
+{\bf Test for Optimum}:
+If not $(\A(x) > 0$ and $w_{(q+1):n} \geq 0)$ then
+return to step 1.1.\\
+{\bf Result}:
+$\A (x) = \A(x) - 1, \;\N(x) = \N(x) - 1$, i.e., $\rho _i := \rho _i - 1$
+etc.,
+%
+\[
+x = P^{1:n}{}_{n+1} \; \mbox{or} \; B^{\A}x = b^{\A}, \;
+y_{\A} = P^{n+m+1}{}_{1:n}, \; y_{\N} = 0, \;
+f = P^{m+1}{}_{n+1}.
+\]
+

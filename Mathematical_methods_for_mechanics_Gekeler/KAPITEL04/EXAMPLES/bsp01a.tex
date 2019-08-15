@@ -1,0 +1,168 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 1 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Thrust-Problem}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, \S \, 2.4.\\
+In einem $(x_1,x_2)$-Koordinatensystem wird ein Raumschiff von der Masse $m$
+und der Schubkraft $ma(t)$ in Richtung seiner K"orperachse beschleunigt.
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Raumschiffes}\\
+x_3(t)           & \mbox{Geschw. in $x_1$-Richtung}\\
+x_4(t)           & \mbox{Geschw. in $x_2$-Richtung}\\
+u(t)  & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+Das Raumschiff soll in einer vorgegebenen Zeit $T$ auf eine Flugbahn parallel
+zur $x_1$-Achse in H"ohe $h$ gebracht werden. Dabei soll die Geschwindigkeit
+$x_3(T)$ maximal sein. Es sei $x(0) = {0}$. Bei diesem Problem wird die
+Kontrolle mit Hilfe der Kozustandsgleichungen eliminiert.
+\par
+Hinweis: Der Gradient einer Abbildung $f:\mb{R}^m \to \mb{R}^n$ ist eine
+(n,m)-Matrix.
+\par
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$\,:
+\begin{equation} \label{e1.1}
+\fbox{$
+\dot{x}_1 = x_3(t), \quad
+\dot{x}_2 = x_4(t), \quad
+\dot{x}_3 = a(t) \cos(u(t)), \quad
+\dot{x}_4 = a(t) \sin(u(t))
+$}\; .
+\end{equation}
+%
+Zielfunktion und {\sc Hamilton}-Funktion:
+\begin{equation} \label{e1.2}
+\ba{.}{rcl}
+J(x) &:=& p(x(T)) + \int_0^TL(x(t),u(t),t)dt = x_3(T)  = \Max !,\\
+H(x,y,u,t) &=&  y^Tf = y_1x_3 + y_2x_4 + y_3a(t)\cos(u) + y_4a(t)\sin(u),\\
+\nabla_x H &=& (0,0,y_1,y_2)\quad \mbox{(Zeilenvektor)}.
+\ea{.}
+\end{equation}
+\par
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen) $\dot{y} = -
+[\nabla_x H]^T$:
+\begin{equation} \label{e1.3}
+\fbox{$
+\dot{y}_1 = 0,\quad
+\dot{y}_2 = 0,\quad
+\dot{y}_3 = - y_1,\quad
+\dot{y}_4 = - y_2
+$}\; .
+\end{equation}
+L"osung von (\ref{e1.3})
+\[
+y(t) = [c_1,c_2,-c_1t + c_3,-c_2t + c_4]^T.
+\]
+\par
+\vspace{1mm}
+Weil die Kontrolle $u(t)$ nicht beschr"ankt ist, gilt
+$H_u = 0$. Es folgt
+\par
+\begin{equation} \label{e1.4}
+H_u = -y_3a\sin(u) + y_4a\cos u = 0,
+ \quad \Longrightarrow \quad
+\tan (u) = \dis \frac{y_4}{y_3} = \frac{-c_2t+c_4}{-c_1t + c_3}.
+\end{equation}
+%
+F"ur den Zustand $x$ gelten die Randbedingungen
+\[
+x(0) = 0, \; x_2(T) = h, \; x_4(T) = 0, \;
+x_1(T) \; \mbox{frei}, \; x_3(T) \; \mbox{frei},
+\]
+also
+\[
+q_1(x(0)) = x(0) = 0, \qquad q_2(x(T)) = [x_2(T) - h, x_4(T)]^T = 0\,.
+\]
+F"ur den Kozustand $y$ gelten die Randbedingungen
+\[
+y(0)^T = - z_1^T\nabla q_1(x(0)) = - z_1^T, \quad
+y(T)^T = \nabla p(x(T)) + z_2^T\nabla q_2(x(T))
+\]
+mit Vektoren $z_1 \in \mb{R}^4$ und $z_2 \in \mb{R}^2$.
+Also ist $y(0)$ frei und
+\[
+y(T) =
+\ba{[}{c}y_1\\y_2\\y_3\\y_4\ea{]} =
+\ba{[}{c}0\\0\\1\\0\ea{]} + z_1
+\ba{[}{c}0\\1\\0\\0\ea{]} + z_2
+\ba{[}{c}0\\0\\0\\1\ea{]} =
+\ba{[}{c}0\\z_1\\1\\z_2\ea{]},
+\]
+d.\ h.
+\[
+y_1(T) = 0, \quad y_2(T) \; \mbox{frei}, \quad y_3(T) = 1, \quad
+y_4(T) \; \mbox{frei}.
+\]
+%
+$y_1(t) = c_1$ und $y_1(T) =  0$ ergibt $c_1 = 0$.\\
+$y_3(t) = -c_1t + c_3$ und $y_3(T) = 1$ ergibt mit $c_1 = 0$, daá
+$c_3 = 1$.\\
+Im Optimum muss also mit $c_2 = c$ nach (\ref{e1.4}) gelten
+\[
+\tan (u(t)) = c_4 - ct = \tan (u(0)) - ct = y_4.
+\]
+Erinnerung:
+\[
+\dis \cos (u) = \frac{\pm 1}  {(1 + \tan^2(u))^{1/2}}, \quad
+\sin (u) = \frac{\pm \tan (u)}{(1 + \tan^2(u))^{1/2}}
+\]
+%
+Einsetzen von $y_4 = \tan(u)$ ergibt
+\[
+\cos (u) = \frac{1}  {(1 + y_4^2)^{1/2}}, \quad
+\sin (u) = \frac{y_4}{(1 + y_4^2)^{1/2}}\, .
+\]
+Einsetzen dieser Werte in die Zustandsgleichungen ergibt mit $y_i = x_{4+i}$
+das Randwertproblem
+\[
+\ba{.}{rclrclrclrcl}
+\dot{x_1} &=& x_3, &
+\dot{x_2} &=& x_4, &
+\dot{x_3} &=& a(t)/(1 + x_8^2)^{1/2}, &
+\dot{x_4} &=& a(t)x_8/(1 + x_8^2)^{1/2},\\[2mm]
+\dot{x_5} &=& 0, &
+\dot{x_6} &=& 0, &
+\dot{x_7} &=& - x_5, &
+\dot{x_8} &=& - x_6,
+\ea{.}
+\]
+mit den Randbedingungen
+%
+\[
+D_1x(0) = A, \quad D_2x(T) = B,
+\]
+%
+und
+\[
+D_1 = \ba{[}{cccccccc}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0
+\ea{]}, \;
+A = \ba{[}{c} 0 \\ 0 \\ 0 \\ 0\ea{]},
+\]
+\par
+\[
+D_2 = \ba{[}{cccccccc}
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+\ea{]}, \;
+B = \ba{[}{c}  h\\ 0\\ 0 \\1 \ea{]}.
+\]
+%
+Das nichtlineare Randwertproblem wird mit dem Box-Schema und dem
+{\sc Newton}-Verfahren f"ur konstantes $a(t) = a$ gel"ost.
+Die erreichbare H"ohe $h$ h"angt von der Zeit $T$ ab.
+\end{document}
+

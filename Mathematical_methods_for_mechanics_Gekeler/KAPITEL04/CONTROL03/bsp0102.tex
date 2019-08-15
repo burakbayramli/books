@@ -1,0 +1,136 @@
+\documentclass[12pt,a4paper,twoside]{article}
+%\documentclass[12pt,a4paper]{article}
+\input aaformat
+\newcommand{\Release}{07/09/04} %%%%%%%%%%%%%%
+
+\begin{document}
+%
+\addtolength{\abovedisplayskip}{-1ex}
+\addtolength{\belowdisplayskip}{-1ex}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\addtolength{\belowdisplayshortskip}{-1ex}
+\setlength{\fboxsep}{2mm}
+%
+
+{\large\bf Kontrolltheorie: CONTROL03, Beispiel 1/2 \hfill E.Gekeler}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}\\
+\par
+\vspace{-3mm}
+Vgl. {\sc Dyer--McReynolds}, S. 127/128.
+
+{\bf Beispiel 1:}\\
+Zielfunktion
+\[
+J(x,u) = \int_0^1(x_1(t)^2 + u(t)^2)\, dt = \Min\, !
+\]
+Bewegungsgleichungen
+\[
+\fbox{$
+\dot{x}_1 = x_2 + u\,, \quad \dot{x}_2 = - u
+$}\; .
+\]
+Anfangsbedingungen f"ur den Zustand $x$
+\[
+x(0) = a = \ba{[}{c}2\\-1\ea{]}\, .
+\]
+{\sc Hamilton}-Funktion
+\[
+\ba{.}{rcl}
+H(x,u) &=& x_1^2 + u^2 + y_1(x_2 + u) + y_2(-u)\,,\\[2mm]
+\nabla_x H(x,u) &=& [2x_1\,, \; y_1]\,,\\[2mm]
+H_u(x,u) &=& 2u + y_1 -y_2\, .
+\ea{.}
+\]
+Kozustandsgleichungen
+\[
+\fbox{$
+\dot{y}_1 = -2x_1\,, \quad \dot{y}_2 = -y_1
+$}\; .
+\]
+Endbedingungen f"ur den Kozustand $y$
+\[
+y(1) = \ba{[}{c}0\\0\ea{]}\,.
+\]
+Nominalkontrolle $u = 0$.
+\par
+\vspace{3mm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 2:} Problem der Brachistochrone.\\
+Zielfunktion
+\[
+J(x,u) =
+\int_0^1\ell(x,u)\, dt
+= \int_0^1\frac{[1 + u(t)^2]^{1/2}}{[1 - x(t)]^{1/2}}\, dt = \Min \, !
+\]
+
+Bewegungsgleichung mit Anfangsbedingung
+
+\[
+\fbox{$
+\dot{x} = u\,, \quad x(0) = 0
+$}\; .
+\]
+{\sc Hamilton}-Funktion
+\[
+\ba{.}{rcl}
+H(x,u) &=& \dis
+\frac{[1 + u(t)^2]^{1/2}}{[1 - x(t)]^{1/2}} + yu\,,\\[5mm]
+H_x(x,u) &=& \dis
+\frac12\cdot \frac{(1+u^2)^{1/2}}{(1 - x)^{3/2}}\,,\\[5mm]
+H_u(x,u) &=& \dis
+\frac{u}{(1+u^2)^{1/2}(1 - x)^{1/2}} + y\,.
+\ea{.}
+\]
+Kozustandsgleichungen mit Endbedingung
+
+\[
+\fbox{$
+\dot{y}= \dis -
+\frac12\cdot \frac{(1+u^2)^{1/2}}{(1 - x)^{3/2}}\,, \quad y(1) = 0
+$}\; .
+\]
+Zus"atzliche Endbedingung
+\[
+\ba{.}{rcl}
+K = q(x(T)) &=& \dis x(1) + \frac12 = 0\,,\\[2mm]
+q_x(x(T))   &=&  1\,.
+\ea{.}
+\]
+Nominalkontrolle $u(t) = 0\,, \; 0 \leq t < 0.5\,, \quad u(t) = - 1\,,\;
+0.5 \leq t \leq 1$.
+
+Zus"atzliches System f"ur $K$
+\[
+H_1 = y_1f\,, \quad \dot{y}_1 = -(H_1)_x = 0\,,
+\quad y_1(T) = q_x(x(T)) = 1\,.
+\]
+
+\[
+\ba{.}{rcl}
+\delta u &=& \dis \epsilon [(H_u + z (H_1)_u]\\[4mm]
+\da K &=& \dis
+\epsilon \left[\int_0^T (H_1)_u \cdot H_u\, dt
++ z \int_0^T [(H_1)_u]^2\, dt\right] =: \epsilon [b + Qz]
+\ea{.}
+\]
+
+{\em W"ahle}  $\da K = K$ (Residuum), dann folgt f"ur $z$
+\[
+z = Q^{-1}[K/\epsilon  - b]\, .
+\]
+%\newpage
+
+%\bc
+%\begin{minipage}{10.cm}
+%   \epsfxsize=9.9cm
+%   \epsffile{fig1.eps}
+%\end{minipage}
+%\ec
+%\centerline{\epsfig{file=stab.eps,height=6cm},bbllx=-6cm,bblly=5mm}
+\end{document}
+

@@ -1,0 +1,128 @@
+\documentclass[12pt,a4paper,leqno]{article}
+\input aaformat
+\begin{document}
+%
+\setlength{\fboxsep}{1.5ex}
+\parindent0ex
+%
+\bc
+{\bf Beispiele zur Konvektion}
+\ec
+\bc
+\begin{tabular}{|lll|} \hline
+Phys. Gr"o\ss e & SI-Einheit & Definition \\ \hline
+Kraft & Newton (N) & $kg\cdot m/s^2$\\
+Druck & Pascal (Pa)& $N/m^2 = kg/(m \cdot s^2)$\\
+Energie & Joule (J) & $N \cdot m = kg \cdot m^2/s^2$\\
+Leistung & Watt (W) & $J/s = kg \cdot m^2/s^3$\\ \hline \hline
+Druck & stand. Atmosph"are (atm) & $1\: atm = 101325\: Pa$\\
+Temperatur & Grad Celsius &$1 {}^o C = T - 273.15  \: K$\\
+Energie    & Kalorie (kal) & $1\: cal\: (15 {}^oC) =  4.1855\: J$\\ \hline
+\end{tabular}
+\ec
+Physikalische Konstanten:
+\nopagebreak
+\bc
+\begin{tabular}{|lll|}\hline
+Bezeichnung      & Phys. Gr"o\ss e        & Definition \\ \hline
+$g = 9.81$       & Fallbeschl. (Erde)     & $m/s^2$\\
+%
+$\rho$           & Massendichte           & $kg/m^3$\\
+%
+$\mu $           & Viskosit"at             & $Pa\cdot s = kg/(m\cdot s)$\\
+%
+$\nu = \mu/\rho$ & spez. o. kinemat. Viskosit"at    & $m^2/s$\\
+%
+$\eta$       & mech. Diffusionskoeffizient  & $m^2/s$\\
+%
+$\kappa$         & W"armeleitf"ahigkeit    &$W/(K\cdot m) = kg \cdot m/(K \cdot s^3)$\\
+%
+$c$              & spez. W"armekapazit"at        & $J/(K\cdot kg) = m^2/K\cdot s^2)$ \\
+%
+$\lambda = \kappa/(\rho \cdot c) $          & spez. W"armediffusionskoeffizient
+& $m^2/s$ \\
+%
+$r$       & spezif. W"armequelldichte   & $J/(s \cdot kg)$ \\
+%
+$h$       & W"armedurchgangskoeffizient & $J/(m^2\cdot s \cdot K)$\\
+%
+$\beta$      & W"armeleitungskoeffizient & $1/K$\\
+\hline
+\end{tabular}
+\ec
+%
+Dimensionslose Gr"o\ss en:
+($L\,, \: U$ charakteristische L"ange und Geschwindigkeit, $\Delta T$
+charakteristische Temperaturdifferenz)
+%
+\bc
+\begin{tabular}{|ll|}\hline
+Gr"o\ss e     & Definition \\ \hline
+Reynolds-Zahl & $Re = U\cdot L/\nu $\\
+Peclet-Zahl   & $Pe = U \cdot L/\lambda $ \\
+Grashoff-Zahl  & $Gr = g \cdot \beta \cdot \Delta T \cdot L^3/\nu ^2$\\
+Prandl-Zahl   & $Pr = \nu /\lambda $ \\
+Schmidt-Zahl  & $Sc = \nu /\eta $\\
+Rayleigh-Zahl & $Ra = Gr\cdot Pr$\\
+Froude-Zahl   & $Fr = (Re)^2/Gr$\\
+\hline
+\end{tabular}
+\ec
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+{\bf Beispiel 7} Instation"arer Fall
+$g = 9.81, \; \beta = 0.21\cdot 10^{-3}; \; \Delta T = 40, \; L = 3$,\\
+$\nu = \lambda = 1.49 \cdot 10^{-2}$ bei $R_a = 10^4$;\\
+$\nu = \lambda = 4.71\cdot 10^{-3}$ bei $R_a = 10^5$;\\
+Station"arer Fall: $R_a = 10^3, \; Pr = 1$;
+\newpage
+\begin{equation}\label{e1107.7}
+\fbox{$
+\ba{.}{lll}
+M_{\N,\N}W_{\N} - K_{\N,\M}Z_{\M}
+&=& \dis K_{\N,\R}Z_{\R} - [S]_{\N}[Z]_{\Gamma}\\[2ex]
+%
+[K + P(Z_{\N})]_{\M,\N}W_{\N} - G_r[C]_{\M,\N}[T]_{\N}
+&=& \dis [S]_{\M}[W]_{\Gamma}\\[2ex]
+%
+[K + P_r P(Z_{\N})]_{\N,\N}T_{\N}
+&=& \dis [S]_{\N}[T]_{\Gamma}
+\ea{.}
+$}\;.
+\end{equation}
+\begin{equation}\label{e1107.8}
+\fbox{$
+\ba{.}{lll}
+M_{\N,\N} & - K_{\N,\M} & O_{\N,\N}\\
+%
+K_{\M,\N}         & \epsilon\,M_{\M,\M}   & - G_r[C]_{\M,\N}\\
+O_{\N,\N} & O_{\N,\M}   & K_{\N,\N}
+\ea{]}
+\ba{[}{l}
+ W_{\N}\\Z_{\M}\\T_{\N}
+\ea{]}
+= \ \ba{[}{l}
+K_{\N,\R}Z_{\R} - [S]_{\N}[Z]_{\Gamma}\\
+- P(Z_{\N})]_{\M,\N}W_{\N} + [S]_{\M}[W]_{\Gamma}\\
+-P_r P(Z_{\N})_{\N,\N}T_{\N} + [S]_{\N}[T]_{\Gamma}
+\ea{]}
+$}\;.
+\end{equation}
+\begin{equation}\label{e1107.9}
+\fbox{$
+\ba{.}{l}
+\nabla \Phi(W,Z,T) = \\[2ex]
+\ba{[}{lll}
+M_{\N,\N} & - K_{\N,\M} & O_{\N,\N}\\[0ex]
+%
+[K + P(Z_{\N})]_{\M,\N}         &
+\nabla_Z[P(Z_{\N})_{\M,\N}W_{\N}]_{\M,\M}  &
+ - G_r[C]_{\M,\N}\\
+O_{\N,\N}  & P_r\nabla_Z[P(Z_{\N})_{\M,\N}W_{\N}]_{\N,\M}& [K + P_rP(Z_{\N})]_{\N,\N}
+\ea{]}
+\ea{.}
+$}\;.
+\end{equation}
+
+\end{document}
+
+

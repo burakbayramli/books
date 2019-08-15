@@ -1,0 +1,701 @@
+\section{Bounded Variables}
+Simplifications can be performed in the projection method and in the simplex
+method which reduce the computational amount of work if special structures of
+the side conditions are regarded.  Examples for such reduced forms are the
+transport problem, cf.  e.g.  \cite{ColWe}, and the simplex problem $\Min \{
+cy, \; yB = a, \; y \geq 0 \}$ itself.  In the present section we consider the
+case of additional lower and upper bounds for $x$.  Let again $\I_q = \{1,
+\ldots, q\}$,
+\[
+a \in \Bbb{R}_n, \; B \in \Bbb{R}^m{}_n, \; c \in \Bbb{R}^m, \; 0 \leq p \leq
+n,
+\]
+and let
+\[
+l = [l^i] \in \{\Bbb{R} \cup \{- \infty\}\}^n, \;
+u = [u^i] \in \{\Bbb{R} \cup \{\infty\}\}^n
+\]
+be two vectors with
+%
+\begin{equation} \label{u1}
+l \leq u, \; \forall \; i \in \I_n: \; l^i \neq u^i.
+\end{equation}
+The problem to be considered then has the form
+%
+\begin{equation} \label{u2}
+\fbox{$
+\max \{ ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}, \; l \leq
+x \leq u \}.
+$}
+\end{equation}
+A side condition $b^ix = \gamma ^i, \; i = 1, \ldots, p,$ becomes never
+inactive and a side condition $- \infty \leq x^i$ or $x^i \leq \infty$ becomes
+never active. Naturally, this problem  contains the other problems treated
+above as special cases.
+\par
+Writing
+\[
+\wi{B} = \ba{[}{c} B \\ - I_n \\ I_n \ea{]}, \;
+\wi{c} = \ba{[}{c} c \\ -l    \\ u \ea{]},
+\]
+the standard primal form of (\ref{u2}) is
+%
+\begin{equation} \label{u3}
+\max \{ ax, \; \wi{B}^{1:p}x = \wi{c}^{1:p}, \; \wi{B}^{p+1:m+2n}x
+\leq \wi{c}^{p+1:m+2n} \}
+\end{equation}
+and the full tableau has the form
+%
+\begin{equation} \label{u4}
+\wi{{\bf P}} = \ba{[}{cc}  \wi{A}           & \wi{x}\\
+                          \wi{B}^{\N}\wi{A} & \wi{r}\\
+                          \wi{w}            & f
+               \ea{]}.
+\end{equation}
+With the index vectors $\R = \{i \in \I_n, \; l^i \neq - \infty\}$
+and ${\cal S} = \{i \in \I_n, \; u^i \neq \infty\}$,
+we suppose again that the rank condition is fulfilled:
+%
+\begin{equation} \label{u5}
+\rank (\wi{B}^{1:p}) = p, \; \rank(\ba{[}{c}B\\ - I^{\R} \\ I^{{\cal S}}
+\ea{]}) = n.
+\end{equation}
+%
+According to the triple splitting of the matric $\wi{B}$ we have to split up
+the index vector $\A(x)$ of a row basis of a vertex $x$ and the complementary
+index vector $\N(x)$ of a vertex $x$, and we have also to introduce a
+permutation of $x$ to $\wi{x}$ because column permutations are necessary in
+tableau (\ref{u4}) for a better representation.
+\par
+For $\A(x)$ we choose the following decomposition where the argument $x$ is
+partly omitted:
+%
+\begin{equation} \label{u6}
+\fbox{$
+\ba{.}{ll}
+\A(x) &= \{\rho _1, \ldots, \rho _n \} = \{\A_1, \; \A_2, \; \A_3 \}\\
+      & = \{\C, \; m + \L , \; m + n + \U \},\\
+\C    &= \{1, \ldots,p,\rho _{p+1}, \ldots , \rho _{n_c}\}, \;
+      |\C| = n_c \geq p, \\
+\L    & \subset \I_n,   \; |\L| = n_l, \\
+\U    & \subset \I_n,   \; |\U| = n_u,
+\ea{.}
+$}
+\end{equation}
+where
+\[
+\ba{.}{l}
+n_c + n_l + n_u = n,\\
+i \in \C \wedge j \in \L \wedge k \in \U  \; \mbox{if and only if} \;
+       b^ix = \gamma ^i, \; x^j = l^j, \; x^k = u^k, \\
+\mbox{{\bf and}} \; \rank \ba{[}{c} B^{\C}\\ -I^{\L} \\ I^{\U} \ea{]} = n
+ \ea{.}
+\]
+%
+($I^{\U}$ is the matrix with the rows $e^i, \; i \in \U$). It should be noted
+again that these index sets are not uniquely determined if vertex
+$x$ is degenerated.
+\par
+%
+Because of (\ref{u1}) and (\ref{u6}) we have
+%
+\begin{equation} \label{u7}
+ \L \cap \U = \emptyset, \; \W := I_n \backslash (\L \cup \U), \;
+|\W| \equiv n_w = n_c.
+\end{equation}
+therefore we can write
+%
+\[
+\W := \{\xi _1, \ldots, \xi _{n_c}\}, \;
+\L := \{\xi _{n_c + 1} \ldots, \xi _{n_c + n_l}\}, \;
+\U := \{\xi _{n_c + n_l + 1},\ldots, \xi _n\}
+\]
+%
+where e.g.  $m + \L = \{m + \xi_{n_c + 1}, \ldots, m + \xi _{n_c + n_l}\}$.
+\par
+In a similar way, we have to split up the non--basis $\N(x)$ into five
+disjunct subsets:
+%
+\begin{equation} \label{u8}
+\fbox{$
+\ba{.}{ll}
+\N(x) &= \{\sigma _1, \ldots, \sigma _{m+n} \}
+      = \{\N_1, \ldots, \N_5\} \\
+     &= \{\D, \; m + \W , \;  m + \U, \; m + n + \W, \; m + n + \L \},\\
+\D   & = \{\sigma _1, \ldots , \sigma _{m - n_c}\}.
+\ea{.}
+$}
+\end{equation}
+%
+%
+If now the permutation matrix $Q$ is defined by
+\[
+Qx = \ba{[}{c}x^{\W} \\ x^{\L} \\ x^{\U} \ea{]}
+\]
+then the side conditions of the problem (\ref{u2}) can be written as
+%
+\[ \wi{B}Q^TQx =
+\ba{[}{ccc}
+B^{\C}{}_{\W} & B^{\C}{}_{\L} & B^{\C}{}_{\U}\\
+B^{\D}{}_{\W} & B^{\D}{}_{\L} & B^{\D}{}_{\U}\\
+- I_{n_c}     & O             & O\\
+O             & - I_{n_l}     & O\\
+O             & O             & - I_{n_u}\\
+  I_{n_c}     & O             & O\\
+O             & I_{n_l}       & O\\
+O             & O             & I_{n_u}
+\ea{]}
+\ba{[}{c} x^{\W} \\ x^{\L} \\ x^{\U} \ea{]}
+=
+\ba{[}{c} c^{\C} \\ c^{\D} \\ -l^{\C} \\ -l^{\L} \\  -l^{\U} \\
+u^{\C} \\  u^{\L} \\ u^{\U}
+\ea{]}
+\]
+after some row permutations which do not affect generality.
+Accordingly, the gradient matrix $\wi{B}^{\A}$ and the complementary matrix
+$\wi{B}^{\N}$ belonging to the vertex $x$ with row basis $\A (x)$
+have the form
+\begin{equation} \label{u6a}
+\wi{B}^{\A}Q^T = \ba{[}{ccc}
+B^{\C}{}_{\W} & B^{\C}{}_{\L} & B^{\C}{}_{\U}\\
+O & - I_{n_l} & O\\
+O & O & I_{n_u}
+\ea{]}, \;
+\wi{B}^{\N}Q^T = \ba{[}{ccc}
+B^{\D}{}_{\W} & B^{\D}{}_{\L} & B^{\D}{}_{\U}\\
+-I_{n_c}      & O             & O        \\
+O             & O             & - I_{n_u}\\
+I_{n_c}       & O             & O\\
+O             &   I_{n_l}     & O
+\ea{]}.
+\end{equation}
+The matrix $B^{\C}{}_{\W}$ is regular by assumption of $x$ being vertex.
+Writing again $A := [B^{\C}{}_{\W}]^{-1}$ the matrix $\wi{A}$ of the
+edges in obtains the form
+%
+\begin{equation} \label{u9}
+\wi{A} := [\wi{B}^{\A}]^{-1} = Q^T\ba{[}{ccc}
+A & AB^{\C}{}_{\L} & - AB^{\C}{}_{\U} \\
+O & - I_{n_l}      & O               \\
+O & O              & I_{n_u}
+\ea{]},  \; A = [B^{\C}{}_{\W}]^{-1}.
+\end{equation}
+%
+
+\begin{equation} \label{u10}
+\wi{B}^{\N}\wi{A} = \ba{[}{ccc}
+B^{\D}{}_{\W}A & B^{\D}{}_{\W}AB^{\C}{}_{\L} - B^{\D}{}_{\L}
+& - B^{\D}{}_{\W}AB^{\C}{}_{\U} + B^{\D}{}_{\U} \\
+- A & -AB^{\C}{}_{\L} &  AB^{\C}{}_{\U}\\
+O   &  O              & - I_{n_u}       \\
+A   & AB^{\C}{}_{\L}  &  - AB^{\C}{}_{\U}\\
+O   & - I_{n_l}       &  O
+\ea{]},
+\end{equation}
+%
+and
+\begin{equation} \label{u11}
+\ba{.}{ll}
+\wi{x} := Q^Tx &=
+\ba{[}{ccc}
+A & AB^{\C}{}_{\L} & - AB^{\C}{}_{\U} \\
+O & - I_{n_l}      & O               \\
+O & O              & I_{n_u}
+\ea{]}
+\ba{[}{c} c^{\W} \\ - l^{\L} \\ u^{\U} \ea{]}\\[7mm]
+&=
+\ba{[}{c}
+A(c^{\W} - B^{\C}{}_{\L}l^{\L} - B^{\C}{}_{\U}u^{\U})\\
+l^{\L}\\
+u^{\U}
+\ea{]}.
+\ea{.}
+\end{equation}
+in a vertex $x$.  The remaining entries of the tableau (\ref{u4}) are the {\sc
+Lagrange} multiplier $ \wi{y} = a \wi{A} = [y_{\W}, \; y_{\L}, \; y_{\U} ]Q
+\equiv \wi{w}Q$ where
+%
+\[ \ba{.}{ll}
+y_{\W} &=   a_{\W}A,\\
+y_{\L} &=   a_{\W}AB^{\C}{}_{\L} - a_{\L}, \\
+y_{\U} &= - a_{\W}AB^{\C}{}_{\U} + a_{\U},
+\ea{.}
+\]
+the residuum $\wi{r} = [r_1, \ldots , r_5]^T$ where
+%
+\[ \ba{.}{ll}
+r_1 = B^{\D}x - c^{\D},\\
+r_2 = - x^{\W} + l^{\W}, & r_3 = -x^{\U} +l^{\U},\\
+r_4 = x^{\W} - u^{\W}, & r_5 = x^{\L} - u^{\L},
+\ea{.}
+\]
+and the actual value of the objective function $f = ax$.
+\par
+No block row of $\wi{B}^{\N}\wi{A}$ can be cancelled here in advance because
+every row can be a pivot row.  Thus the tableau (\ref{u4}) without first block
+row $[\wi{A}, \; \wi{x}]$ has the form
+%
+\begin{equation} \label{u12}
+\wi{{\bf P}}^* =
+\ba{[}{cccc}
+B^{\D}{}_{\W}A & B^{\D}{}_{\W}AB^{\C}{}_{\L} - B^{\D}{}_{\L}
+& - B^{\D}{}_{\W}AB^{\C}{}_{\U} + B^{\D}{}_{\U} & B^{\D}x - c^{\D}\\
+- A & -AB^{\C}{}_{\L} &  AB^{\C}{}_{\U} & -x^{\W} + l^{\W}\\
+O   &  O              & - I_{n_u}  &-x^{\U} + l^{\U}\\
+A   & AB^{\C}{}_{\L}  &  - AB^{\C}{}_{\U} & x^{\W} - u^{\W}\\
+O   & - I_{n_l}       &  O  & x^{\L} - u^{\L}\\
+y_{\W} & y_{\L} & y_{\U} & f
+\ea{]}
+\end{equation}
+%
+With $\wi{w} = [y_{\W}, \; y_{\L}, \; y_{\U}]$, the optimality condition reads
+\[
+\wi{w}_k \geq 0, \; k = p+1, \ldots, n.
+\]
+If she is violated then the vertex $x$ is not optimum.  In this case we remove
+a gradient $\wi{b}^{\rho _j}, \; \rho _j \in \A(x)$, from the row basis and
+take $\wi{b}^{\sigma _i}, \; \sigma _i \in \N(x)$, into the row basis according
+to the following rule
+%
+\begin{equation} \label{u13}
+\ba{.}{l}
+j = \min \arg_k \min \{ \wi{w}_k, \; k \in \{ p+1, \ldots, n \}\},\\
+\dis i = \min \arg_k \min \{ \frac{\wi{r}^k}{\wi{b}^k\wi{a}_j},\;
+\wi{b}^k\wi{a}_j < 0, \; k \in \{1, \ldots, m + n\} \}.
+\ea{.}
+\end{equation}
+%
+Because
+\[
+\ba{.}{ll}
+\rho _j &\in \A_1 \cup \A_2 \cup \A_3 \\
+        &\equiv \C \cup m + \L \cup m + n + \U,\\[1mm]
+\sigma _i & \in \N_1 \cup \N_2 \cup \N_3 \cup \N_4 \cup \N_5\\
+        & \equiv  \D \cup (m + \W) \cup (m + \U) \cup (m + n + \W) \cup (m + n
++ \L), \ea{.}
+\]
+$j$ can fall into three disjunct
+index sets and the index $i$ can fall into five disjunct index sets:
+\[
+\ba{.}{lccl}
+\mbox{Case I:} & \rho _j \in \A_1 &\Longleftrightarrow &j \in
+\{p+1, \ldots,n_c\}, \\
+%
+\mbox{Case II:} & \rho _j \in \A_2 &\Longleftrightarrow &j \in
+\{n_c+1, \ldots,n_c + n_l\}, \\
+%
+\mbox{Case III:} & \rho _j \in \A_3 &\Longleftrightarrow &j \in
+\{n_c + n_l +1, \ldots,n\}, \\
+%
+*\hfill\\
+\mbox{Case A:} & \sigma _i \in \N_1 &\Longleftrightarrow &i \in
+\{1, \ldots, m - n_c\}, \\
+%
+\mbox{Case B:} & \sigma _i \in \N_2 &\Longleftrightarrow &i \in
+\{m - n_c +1, \ldots,m\}, \\
+%
+\mbox{Case C:} & \sigma _i \in \N_3 &\Longleftrightarrow &i \in
+\{m + 1, \ldots, m + n_u\}, \\
+%
+\mbox{Case D:} & \sigma _i \in \N_4 &\Longleftrightarrow &i \in
+\{m + n_u + 1, \ldots, m + n_u + n_c\}, \\
+%
+\mbox{Case E:} & \sigma _i \in \N_5 &\Longleftrightarrow &i \in
+\{m + n_u + n_c + 1, \ldots, m + n\},
+\ea{.}
+\]
+\par
+Altogether we have 15 possibilities
+but some combinations cannot occur because of the zero entries in $\wi{{\bf
+P}}^*$. The possible combinations ``(x)'' are listed up in the following
+table:
+\newpage
+Table 1:
+\begin{center}
+\begin{tabular}{|c|c|c|c|l|} \hline
+ cases          &  case I    &  case II     &  case III  &       \\ \hline
+ case A         &   (1)      &  (4)         &  (8)       &  $i_1 := i$  \\
+                                                                    \hline
+ case B         &   (2)      &  (5)         &  (9)       &
+                                          $i_2 := i - (m - n_c)$  \\ \hline
+ case C         &            &              &  (10)      &
+                                          $i_3 := i - m$          \\ \hline
+ case D         &   (3)      &  (6)         &  (11)      &
+                                          $i_4 := i - (m + n_u)$   \\ \hline
+ case E         &            &  (7)         &            &
+                                 $ i_5  := i - (m + n_u + n_c)$    \\ \hline
+                &   $j_1 = j$      & $j_2:=j-n_c$  &$j_3:=j-n_c-n_l$ &
+\\ \hline \end{tabular}
+\end{center}
+\par
+According to the case (1) -- (11) displayed in Table 1, the index vectors of
+the new vertex $\wi{x}$ have the following form where only alterations are
+listed up. The asterisks indicate those subsets from which $\rho _j$ and
+$\sigma _i$ are extracted, respectively. We write again
+\[
+A = [a_1, \ldots, a_{n_c}] \in \Bbb{R}^{n_c}{}_{n_c}, \;
+b = [\beta _1, \ldots, \beta _{n_c}] \in \Bbb{R}_{n_c}
+\]
+\par
+%\newpage %--------------------------------------------------------------
+\begin{itemize}
+\item
+Case (1):
+\[ \ba{.}{llll}
+(*) &\A_1(\wi{x})
+&= \{1, \ldots, p,\rho _{p+1}, \ldots,\rho _{j-1},\sigma _i,\rho _{j+1},
+\ldots, \rho _{n_c}\} &= \C(\wi{x}),\\
+(*) &\N_1(\wi{x})
+&= \{\sigma _1, \ldots, \sigma _{i-1},\rho _j, \sigma _{i+1},
+\ldots, \sigma _{m-n_c}\}&= \D(\wi{x}).
+\ea{.}
+\]
+We have to interchange row $j$ of $B^{\C}{}_{\W}$ and row $i$ of
+$B^{\D}{}_{\W}$. Update A:
+\[
+b := [B^{\D}{}_{\W}]^iA, \; D := A - (a_j \otimes b)/\beta _j, \;
+d_j = a_j/\beta _j, \;  A = D.
+\]
+Update $\C$ and $\D$ as indicated.
+%
+\item
+Case (2):
+\[ \ba{.}{llll}
+(*) &\A_1(\wi{x})
+&= \{1, \ldots, p,\rho _{p+1}, \ldots,\rho _{n_c}\} \backslash
+\{\rho _j\}
+ &= \C(\wi{x}),\\
+& \N_1(\wi{x}) &=  \{\sigma _1, \ldots,\sigma _{m- n_c}, \rho _j \}
+&= \D(\wi{x}),\\
+(*) &\N_2(\wi{x})
+&= \{\sigma _{m - n_c + 1}, \ldots, \sigma _m\} \backslash
+\{\sigma _i\}
+&= m + \W(\wi{x}),\\
+& \A_2(\wi{x}) &= \{\sigma _{n_c + 1}, \ldots, \sigma _{n_c + n_l},\sigma _i\}
+&= m + \L(\wi{x}).
+\ea{.}
+\]
+Replace row $j$ of $B^{\C}{}_{\W}$ by $- e^{i_2} \in \Bbb{R}_{n_c}$. Update
+$A$:
+\[
+b = - e^{i_2}A = - a^{i_2}, \; D = A - (a_j \otimes b)/\beta _j,
+\; A = D.
+\]
+(The step $d_j = - a_j/\beta _j$ may be omitted.) Cancel column $j$ and
+row $i_2$ of new A. Update $\C, \; \D, \; \W, \; \L$ with
+\[ \ba{.}{ll}
+\W(\wi{x}) &= \{\xi _1, \ldots, \xi_{i_2 - 1},
+\xi_{i_2 + 1}, \ldots \xi _{n_c}\},\\
+\L(\wi{x}) &= \{\xi _{n_c + 1}, \ldots, \xi _{n_c + n_l}, \xi _{i_2}\}.
+\ea{.}
+\]
+\item
+Case (3):
+\[ \ba{.}{llll}
+(*) &\A_1(\wi{x})
+&= \{1, \ldots, p,\rho _{p+1}, \ldots, \rho _{n_c}\}\backslash
+\{\rho _j\}
+&= \C(\wi{x}),\\
+& \N_1(\wi{x}) &=  \{\sigma _1, \ldots,\sigma _{m- n_c}, \rho _j \}
+&= \D(\wi{x}),\\
+(*) &\N_4(\wi{x})
+&= \{\sigma _{m + n_u + 1}, \ldots, \sigma _{m + n_u + n_c} \}
+\backslash \{\sigma _i\}
+&= m + n + \W(\wi{x}),\\
+&\A_3(\wi{x}) &= \{\rho _{n_c + n_l + 1}, \ldots \rho _n, \sigma _i \}
+& = m + n + \U(\wi{x}).
+\ea{.}
+\]
+Replace row $j$ of $B^{\C}{}_{\W}$ by $e^{i_4} \in \Bbb{R}_{n_c}$. Update $A$:
+\[
+b = e^{i_4}A =  a^{i_4}, \; D = A - (a_j \otimes b)/\beta _j,
+\; A = D.
+\]
+(The step $d_j =  a_j/\beta _j$ can be omitted again.) Cancel column $j$
+and row $i_4$ of new A. Update $\C, \; \D, \; \W, \; \U$ with
+\[
+\ba{.}{ll}
+\W(\wi{x}) &= \{\xi _1, \ldots, \xi_{i_4 - 1},
+\xi_{i_4 + 1}, \ldots \xi _{n_c}\},\\
+\U(\wi{x}) &= \{\xi _{n_c + n_l + 1}, \ldots, \xi _n, \xi _{i_4}\}.
+\ea{.}
+\]
+%
+\item
+Case (4):
+\[ \ba{.}{llll}
+(*) &\A_2(\wi{x})
+&= \{\rho _{n_c + 1}, \ldots, \rho _{n_c + n_l} \}
+\backslash \{\rho _j\}
+ &= m + \L(\wi{x}),\\
+& \N_2(\wi{x}) &=  \{\sigma _{m-n_c+1}, \ldots, \sigma _m, \rho _j\}
+ &= m + \W(\wi{x}),\\
+(*) &\N_1(\wi{x})
+&= \{\sigma _1, \ldots, \sigma _{m-n_c} \}
+\backslash \{\sigma _i\}
+ &= \D(\wi{x}),\\
+& \A_1(\wi{x}) &= \{1, \ldots, p,\rho _{p+1}, \ldots,
+\rho _{n_c}, \sigma _i \} &= \C(\wi{x}).\\
+\ea{.}
+\]
+In this case $A$ is augmented by one row and one column because $\C$ and $\W$
+are both enlarged by one element. We have to compute the new matrix
+$A_{new} = C^{-1}$ where
+\[
+C = \ba{[}{cc}
+B^{\C}{}_{\W} & [B^{\C}{}_{\L}]_{j_2}\\[0mm]
+[B^{\D}{}_{\W}]^{i_1} & [B^{\D}{}_{\L}]^{i_1}{}_{j_2}\ea{]}.
+\]
+\par
+from the old matrix $A = [B^{\C}{}_{\W}]^{-1}$.  Let $g_4 =
+A[B^{\C}{}_{\L}]_{j_2}$.  We compute at first the inverse $A^* = [a^*_1,
+\ldots a^*_{n_c+1}]$ of
+\[
+[A^*]^{-1} = \ba{[}{cc}
+B^{\C}{}_{\W} & [B^{\C}{}_{L}]_{j_2}\\
+O & -1 \ea{]}
+\]
+yielding
+\[
+A^* = [a^*_1, \ldots, a^*_{n_c+1}] = \ba{[}{cc} A &  Ag_4\\ 0 & -1 \ea{]}
+\]
+then replace the last row $[0, \; -1]$ of $[A^*]^{-1}$ by the last row of $C$
+named $d$ and update $A^*$.  Finally, we have to update $\C$ and $\D$ as
+indicated, as well as $\W, \; \L$ with
+\[
+\ba{.}{ll}
+\W(\wi{x}) &=  \{\xi _1,\ldots,\xi _{n_c}, \xi _{j_2}\},\\
+\L(\wi{x})
+&= \{\xi _{n_c + 1}, \ldots, \xi _{j_2-1}, \xi _{j_2+1}, \ldots, \xi _{n_c +
+n_l} \}.
+\ea{.}
+\]
+%
+\item
+Case (5):
+\[ \ba{.}{llll}
+(*) &\A_2(\wi{x})
+&= \{\rho _{n_c + 1}, \ldots, \rho _{j-1}, \sigma _i, \rho _{j+1}, \ldots,
+\rho _{n_c + n_l} \} &= m + \L(\wi{x}),\\
+(*)& \N_2(\wi{x}) &=  \{\sigma _{m-n_c+1}, \ldots, \sigma_{i-1},
+\rho_j,\sigma _{i+1}, \ldots, \sigma _m\}
+&= m + \W(\wi{x}).\\
+\ea{.}
+\]
+$\W$ has changed. Replace {\bf column} $j_2$ of $B^{\C}{}_{\W}$ by
+$[B^{\C}{}_{\L}]_{i_2}$. Update $A$:
+\[
+b = A[B^{\C}{}_{\L}]_{i_2}, \; D = A - b \otimes a^{j_2}/\beta ^{j_2},
+\; d^{j_2} = a^{j_2}/\beta ^{j_2}, \; A = D.
+\]
+Update $\W, \; \L$ with
+\[ \ba{.}{ll}
+\W(\wi{x})
+&= \{\xi _1, \ldots, \xi _{i_2-1}\xi _{j_2},\xi _{i_2+1},
+\ldots, \xi _{n_c}\},\\
+\L(\wi{x})
+&= \{\xi _{n_c + 1}, \ldots, \xi _{j_2-1}, \xi _{i_2}, \xi _{j_2+1}, \ldots,
+\xi _{n_c + n_l} \}.
+\ea{.}
+\]
+%
+\item
+Case (6):
+\[ \ba{.}{llll}
+(*) &\A_2(\wi{x})
+&= \{\rho _{n_c + 1}, \ldots, \rho _{n_c + n_l} \}
+\backslash \{\rho _j\},\\
+& \N_2(\wi{x}) &=  \{\sigma _{m-n_c+1}, \ldots,
+\sigma _{m-n_c+i_4-1},\rho _j,\sigma _{m-n_c+i_4+1}, \ldots, \sigma _m\},\\
+(*) &\N_4(\wi{x})
+&= \{\sigma _{m+n_u+1}, \ldots, \sigma _{m+n_u+i_4-1}, \rho _j,
+\sigma _{m+n_u+i_4+1}, \ldots, \sigma _{m+n_u+n_c} \},\\
+& \A_3(\wi{x}) &= \{\rho _{n_c+n_l+1}, \ldots, \rho _n, \sigma _i\}.
+\ea{.}
+\]
+$\W$ has changed. Replace column $j_2$ of $B^{\C}{}_{\W}$ by
+$[B^{\C}{}_{\L}]_{i_4}$. Update $A$:
+\[
+b = A[B^{\C}{}_{\L}]_{i_4}, \; D = A - b \otimes a^{j_2}/\beta ^{j_2},
+\; d^{j_2} = a^{j_2}/\beta ^{j_2}, \; A = D.
+\]
+Update $\W, \; \L, \; \U$ with
+\[ \ba{.}{ll}
+\W(\wi{x}) &= \{\xi _1, \ldots, \xi _{i_4-1}, \xi _{j_2}
+\xi _{i_4+1}, \ldots, \xi _{n_c}\},\\
+\L(\wi{x}) &= \{\xi _{n_c + 1}, \ldots, \xi _{j_2 - 1}, \xi _{j_2+1}, \ldots,
+\xi _ {n_c + n_l} \},\\
+\U(\wi{x}) &= \{\xi _{n_c+n_l+1}, \ldots, \xi _n,\xi _{i_4}\}.
+\ea{.} \]
+%
+\item
+Case (7):
+\[ \ba{.}{llll}
+(*) &\A_2(\wi{x})
+&= \{\rho _{n_c + 1}, \ldots, \rho _{n_c + n_l} \}
+\backslash\{\rho _j\}
+&= m + \L(\wi{x}),\\
+& \N_3(\wi{x}) &=  \{\sigma _{m-n_c+1}, \ldots, \sigma _m, \rho _j\}
+ &= m + \U(\wi{x}),\\
+(*) &\N_5(\wi{x})
+&= \{\sigma _{m+n_u+n_c+1}, \ldots, \sigma _{m+n}\}
+\backslash \{\sigma _i\}
+&= m + n + \L(\wi{x}),\\
+& \A_3(\wi{x}) &= \{\rho _{n_c+n_l+1}, \ldots, \rho _n, \sigma _i\}
+&= m + n + \U(\wi{x}),\\
+\ea{.}
+\]
+Here we have $j_2 = i_5$ because of the negative identity matrix at the
+position $(2,5)$ in $\wi{B}^{\N}\wi{A}$, cf.  (\ref{u10}).  Therefore $A$
+remains unchanged and we have only to update $\L, \; \U$ with
+%
+\[ \ba{.}{ll}
+\L(\wi{x}) &= \{\xi _{n_c + 1}, \ldots, \xi _ {n_c + n_l} \}
+\backslash \{\xi _{j_2}\},\\
+\U(\wi{x}) &= \{\xi _{n_c+n_l+1}, \ldots, \xi _n,\xi _{i_5}\}.
+\ea{.} \]
+%
+\item
+Case (8):
+\[ \ba{.}{llll}
+(*) &\A_3(\wi{x})
+&= \{\rho _{n_c +n_l + 1}, \ldots, \rho _n \}
+\backslash \{\rho _j\}
+ &= m + n + \U(\wi{x}),\\
+& \N_4(\wi{x}) &=  \{\sigma _{m+n_u+1}, \ldots, \sigma _{m + n_u + n_c}, \rho
+_j\}
+ &= m + n + \W(\wi{x}),\\
+(*) &\N_1(\wi{x})
+&= \{\sigma _1, \ldots, \sigma _{m-n_c} \}
+\backslash \{\sigma _i\}
+ &= \D(\wi{x}),\\
+& \A_1(\wi{x}) &= \{1, \ldots, p,\rho _{p+1}, \ldots,
+\rho _{n_c}, \sigma _i \} &= \C(\wi{x}).\\
+\ea{.}
+\]
+Same situation as in case (4).  $A$ is augmented again by one row and one
+column because $\C$ and $\W$ are both enlarged by one element.  We have to
+compute the new matrix $A_{new} = C^{-1}$ where
+\[
+C = \ba{[}{cc}
+B^{\C}{}_{\W} & [B^{\C}{}_{\U}]_{j_3}\\[0mm]
+[B^{\D}{}_{\W}]^{i_1} & [B^{\D}{}_{\U}]^{i_1}{}_{j_3}\ea{]}.
+\]
+\par
+from the old matrix $A = [B^{\C}{}_{\W}]^{-1}$.  Let $g_2 =
+A[B^{\C}{}_{\U}]_{j_3}$.  We compute at first the inverse $A^* = [a^*_1,
+\ldots a^*_{n_c+1}]$ of
+\[
+[A^*]^{-1} = \ba{[}{cc}
+B^{\C}{}_{\W} & [B^{\C}{}_{U}]_{j_3}\\
+O & 1 \ea{]}
+\]
+yielding
+\[
+A^* = [a^*_1, \ldots, a^*_{n_c+1}] = \ba{[}{cc} A &  - Ag_2\\ 0 & 1 \ea{]}
+\]
+then replace the last row $[0, 1]$ of $[A^*]^{-1}$ by the last row of $C$
+named $d$ and update $A^*$.  Finally, we have to update $\C$ and $\D$ as
+indicated as well as $\W, \; \U$ with
+\[
+\ba{.}{ll}
+\W(\wi{x}) &=  \{\xi _1,\ldots,\xi _{n_c}, \xi _{j_3}\},\\
+\U(\wi{x}) &= \{\xi _{n_c + n_l + 1}, \ldots, \xi _n \}
+\backslash \{\xi _{j_3}\}.
+\ea{.}
+\]
+%
+\item
+Case (9):
+\[ \ba{.}{llll}
+(*) &\A_3(\wi{x})
+&= \{\rho _{n_c + n_l + 1}, \ldots, \rho _n \}
+\backslash \{\rho _j\}
+ &= m + n + \U(\wi{x}),\\
+& \N_4(\wi{x}) &=  \{\sigma _{m+n_u+1}, \ldots, \sigma _{m + n_u + n_c}, \rho
+_j\}
+ &= m + n + \W(\wi{x}),\\
+(*)& \N_2(\wi{x}) &=  \{\sigma _{m-n_c+1}, \ldots, \sigma _m\}
+\backslash \{\sigma _i\}
+&= m + \W(\wi{x}),\\
+&\A_2(\wi{x}) &= \{\rho _{n_c+1}, \ldots, \rho _{n_c + n_l}, \sigma _i\}
+&= m + \L(\wi{x}).
+\ea{.}
+\]
+$\W$ has changed. Replace {\bf column} $j_3$ of $B^{\C}{}_{\W}$ by
+$[B^{\C}{}_{\U}]_{i_2}$. Update $A$:
+\[
+b = A[B^{\C}{}_{\U}]_{i_2}, \; D = A - b \otimes a^{j_3}/\beta ^{j_3},
+\; d^{j_3} = a^{j_3}/\beta ^{j_3}, \; A = D.
+\]
+Update $\W, \; \L, \: \U$ with
+\[ \ba{.}{ll}
+\W(\wi{x}) &= \{\xi _1, \ldots, \xi _{n_c},\xi _{j_3}\}
+\backslash \{\xi _{i_2}\},\\
+\L(\wi{x}) &= \{\xi _{n_c + 1}, \ldots,
+\xi _{n_c + n_l}, \xi _{i_2} \},\\
+%
+\U(\wi{x}) &= \{\xi _{n_c + n_l + 1}, \ldots, \xi _n \}
+\backslash \{\xi _{j_3}\}.
+\ea{.}
+\]
+%
+\item
+Case (10):
+\[ \ba{.}{llll}
+(*) &\A_3(\wi{x})
+&= \{\rho _{n_c + n_l + 1}, \ldots, \rho _n \}
+\backslash \{\rho _j\}
+&= m + n + \U(\wi{x}),\\
+%
+& \N_5(\wi{x}) & = \{\sigma _{m+n_u+n_c+1}, \ldots,
+\sigma _{m+n},\rho _j\}
+&= m + n + \L(\wi{x}),\\
+%
+(*) &\N_3(\wi{x})
+&= \{\sigma _{m+1}, \ldots, \sigma _{m+n} \}
+\backslash \{\sigma _i\}
+&= m + \U(\wi{x}),\\
+& \A_2(\wi{x}) &= \{\rho _{n_c+1}, \ldots, \rho _{n_c+n_l},
+\sigma _i\} &= m + \L(\wi{x}).
+\ea{.}
+\]
+Here we have $j_3 = i_3$ because of the negative identity matrix at
+position $(3,3)$ in $\wi{B}^{\N}\wi{A}$, cf.  (\ref{u10}).  Therefore $A$
+remains unchanged and we have only to update $\L, \; \U$ with
+\[ \ba{.}{ll}
+\L(x) &= \{\xi _{n_c + 1}, \ldots,
+\xi _{n_c+n_l}, \xi _{i_3}\},\\
+\U(x) &= \{\xi _{n_c+n_l+1}, \ldots,
+\xi _n\} \backslash \{\xi _{i_3}\}
+\ea{.} \]
+%
+\item
+Case (11):
+\[ \ba{.}{llll}
+(*) &\A_3(\wi{x})
+&= \{\rho _{n_c + n_l + 1}, \ldots, \rho _{j-1},
+\sigma _i, \rho _{j+1}, \ldots, \rho _n \}
+&= m + n + \U(\wi{x}),\\
+(*)&\N_4(\wi{x}) &=\{\sigma _{m+n_u+1}, \ldots, \sigma _{i-1},
+\rho _j, \sigma _{i+1}, \ldots, \sigma _{m + n_u + n_c}
+\}
+ &= m + n + \W(\wi{x}),
+\ea{.}
+\]
+$\W$ has changed. Replace column $j_3$ of $B^{\C}{}_{\W}$ by
+$[B^{\C}{}_{\U}]_{i_4}$. Update $A$:
+\[
+b = A[B^{\C}{}_{\U}]_{i_4}, \; D = A - b \otimes a^{j_3}/\beta ^{j_3},
+\; d^{j_3} = a^{j_3}/\beta ^{j_3}, \; A = D.
+\]
+Update $\W, \; \U$ with
+%
+\[ \ba{.}{ll}
+\W(\wi{x}) &= \{\xi _1, \ldots, \xi _{i_4-1},
+\xi _{j_3}, \xi _{i_4+1}, \ldots, \xi _{n_c} \},\\
+\U(\wi{x}) &= \{\xi _{n_c+n_l+1}, \ldots, \xi _{j_3-1},
+\xi _{i_4}, \xi _{j_3-1}, \ldots,\xi _n\}.
+\ea{.} \]
+\end{itemize}
+

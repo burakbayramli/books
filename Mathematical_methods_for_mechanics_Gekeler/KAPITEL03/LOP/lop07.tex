@@ -1,0 +1,289 @@
+\section{Change of Basis}
+In this section we describe how a change of basis in projecton method and
+simplex method is managed numerically. In particular, we show that the large
+tableau can be updated with one and the same swapping step. This global
+updating is however only of interest in problems of moderate size.
+\par
+{\bf (a) Change of a Row}\\
+Let again $e^j = [\delta ^j{}_k]_{k=1}^n$ denote the $j$-th row identity vector
+and $e_k = [\delta^j{}_k]_{j=1}^n$ the $k$-th column identity vector.  Further,
+let
+\[
+B = \ba{[}{l}b^1 \\ \vdots \\ b^n \ea{]} \in \Bbb{R}^n{}_n
+\]
+be a regular matrix with rows $b^k$, and let $c \in \Bbb{R}_n$ be a row vector.
+The $j$-th row $b^j$ of $B$ shall be replaced by $c$.  We obtain immediately
+\[
+\wi{B} := \ba{[}{l}b^1 \\ \vdots \\ b^{j-1}\\c \\ b^{j+1} \\ \vdots\\ b^n
+          \ea{]}
+= B + e_j \otimes (c - b^j) = [I + e_j \otimes (c - b^j)B^{-1}]B =
+TB,
+\]
+with the transformation matrix
+\[
+T := I + e_j \otimes (c - b^j)B^{-1} \equiv I + e_j \otimes b - e_j \otimes
+e^j, \quad b = cB^{-1}.
+\]
+In $T$ the $j$-th row $e^j$ of the identity $I$ is replaced by $b = cB^{-1}$.
+If now
+\[
+A = [a_1, \ldots, a_n] :=B^{-1}
+\]
+is given and $\wi{A} = \wi{B}^{-1}$ is sought then $b = cA$ is found easily and
+we obtain
+\[
+\wi{A} = AT^{-1}.
+\]
+However, with $b = [\beta _1, \ldots, \beta _n] \in \Bbb{R}_n$, the inverse
+matrix $T^{-1}$ can be written down without difficulty,
+\[
+\dis T^{-1} = I - \frac{1}{\beta _j}e_j \otimes b + \frac{1}{\beta _j}e_j
+\otimes e^j,
+\]
+and thus
+\[
+\dis \wi{A} = A - \frac{1}{\beta _j}a_j \otimes b +
+\frac{1}{\beta _j}a_j \otimes e^j.
+\]
+We see that $\beta _j$ must be nonzero in order that $\wi{A}$ exists and
+notice that
+\[
+[A - \frac{1}{\beta _j}a_j \otimes b]_j = 0
+\]
+therefore we compute $\wi{A}$ in the following way:
+%
+\begin{equation} \label{e40a}
+\fbox{$ \ba{.}{rcl}
+C &=& \dis A - \frac{1}{\beta _j}a_j \otimes b,\\[0mm]
+c_j &=& a_j/\beta _j,\\
+\wi{A} &=&  C,
+\ea{.}
+$}
+\end{equation}
+where $c_j$ denotes the $j$-th column of $C$. In elementwise form, with $A =
+[a^k{}_l]$ and $\wi{A} = [\wi{a}^k{}_l]$, the same procedure reads
+%
+\[ \ba{.}{ll}
+\wi{a}_j = a_j/\beta _j, &\mbox{pivot column},\\
+\dis \wi{a}^k{}_l = a^k{}_l -\frac{a^k{}_j\beta _l}{\beta _j}, \; l \neq
+j, & \mbox{else}.
+\ea{.}
+\]
+\par
+%
+%----------------------------------------------------------------------
+{\bf (b) Change of a Column}\\
+The change of a column is merely a transposition of the above relations but we
+give it here explicitely for completeness. If
+\[
+B = [b_1, \ldots, b_n] \in \Bbb{R}^n{}_n
+\]
+is a regular matrix in which the $j$-th column $b_j$ shall be replaced by a
+column $c$ and
+\[
+A = \ba{[}{c}a^1 \\ \vdots \\ a^n\ea{]} := B^{-1}
+\]
+then the new inverse $\wi{A}$ after column change is found by
+\[
+\wi{A} = A - \frac{1}{\beta ^j}b \otimes a^j +
+\frac{1}{\beta ^j}e_j \otimes a^j, \; b = Ac.
+\]
+The modified device (\ref{e40a}) reads
+%
+\begin{equation} \label{e41a}
+C = A - \frac{1}{\beta ^j}b \otimes a^j, \;
+c^j = a^j/\beta ^j, \; \wi{A} =  C.
+\end{equation}
+%
+With $A = [a^k{}_l]$ and $\wi{A} = [\wi{a}^k{}_l]$, the pointwise form is now
+\[
+\ba{.}{ll}
+\wi{a}^j = a^j/\beta ^j, &\mbox{pivot row},\\
+\dis \wi{a}^k{}_l = a^k{}_l -\frac{\beta ^ka^j{}_l}{\beta  _j}, \; k
+\neq j, & \mbox{else}.
+\ea{.}
+\]
+\par
+%------------------------------------------------------------------------
+{\bf (c) Change of Basis in the Projection Method}\\
+We consider a global swapping step for the problem $\Max\{ax, \; Bx \leq c\}$
+and make the following assumption without loss of generality:
+%
+\begin{assumption} \label{a7}
+$B \in \Bbb{R}^m{}_n$ with $\rank (B) = n < m$.\\
+$\A(x) = \{1,\ldots,n\}$ index vector of a row basis of a vertex
+$x$,\\
+$\N(x) = \{n+k, k = 1,\ldots,m - n\} \equiv \I_m \backslash \A(x)$.
+\end{assumption}
+%
+{\bf Notations:} $A = [B^{\A}]^{-1}$,
+%
+\beqn \ba{.}{lllll}
+B^{\A} = \ba{[}{l} b^1 \\ \vdots \\
+b^n \ea{]}, & B^{\N} = \ba{[}{l} b^{n+1} \\  \vdots \\b^m \ea{]},
+& c^{\A} = \ba{[}{l}\gamma ^1\\ \vdots \\ \gamma ^n \ea{]},
+& c^{\N} = \ba{[}{l}\gamma ^{n+1}\\ \vdots \\ \gamma ^m \ea{]},\\[8mm]
+%
+x = Ac^{\A}, & w = aA,
+&f = aAc^{\A}, & r = B^{\N}Ac^{\A} - c^{\N}.
+\ea{.}\eeqn
+%
+The $j$-th row of $B^{\A}$ shall be changed for the $i$-th row of
+$B^{\N}$ with the absolute number $n + i$ and all above entries of the
+tableau shall be updated.
+\par
+The corresponding entries after change are denoted by ``$\; \wi{\cdot } \; $'',
+e.g.
+\[
+\wi{B}^{\A} = \ba{[}{l}
+b^1\\ \vdots \\ b^{j-1}\\ b^{n+i}\\ b^{j+1}\\ \vdots \\ b^n \ea{]},
+\quad
+\wi{B}^{\N} = \ba{[}{l}
+b^{n+1}\\ \vdots \\ b^{n+i-1}\\ b^j\\ b^{n+i+1}\\ \vdots \\ b^m \ea{]}.
+\]
+So we have to manage the following transformation:
+\beqn
+{\bf P} = [p^k{}_l] = \ba{[}{cc} A & x\\
+B^{\N}A & r\\
+aA & f \ea{]}
+\longrightarrow
+                \ba{[}{cc} \wi{A} & \wi{x}\\
+\wi{B}^{\N}\wi{A} & \wi{r}\\
+aA & \wi{f} \ea{]} =: \wi{{\bf P}}.
+\eeqn
+In this large tableau, the $(n+i)$-th row is the pivot row and the $j$-th
+column is the pivot column hence we suppose that $p^{n+i}{}_j \neq 0$, and the
+transformation matrix ${\bf T} \in \Bbb{R}^{n+1}{}_{n+1}$ becomes
+%
+\beqn \ba{.}{l}
+\dis {\bf T} = I + e_j \otimes p^{n+i} - e_j \otimes e^j, \;
+{\bf T}^{-1} = I - \frac{1}{p^{n+i}{}_j}e_j \otimes p^{n+i}
++ \frac{1}{p^{n+i}{}_j}e_j \otimes e^j,\\
+ p^{n+i} = [b^{n+i}A, r^i].
+\ea{.}
+\eeqn
+%
+Let $T := T_-$ be the matrix ${\bf T}$ without last row and column then
+$(T_-)^{-1} = (T^{-1})_- = T^{-1}$.
+\par
+${\bf Q} = [q^k{}_l]$ shall be the matrix after change with
+\beqn \ba{.}{rcll}
+q^{n+i}{}_j &=& 1/p^{n+i}{}_j & \mbox{(pivot element)},\\
+ q^k{}_j &=& p^k{}_j/p^{n+i}{}_j, \; k \neq n+i & \mbox{(pivot column)},\\
+q^{n+i}{}_l&=& - p^{n+i}{}_l/p^{n+i}{}_j, \; l \neq j & \mbox{(pivot row)},\\
+q^k{}_l &=& p^k{}_l - p^k{}_jp^{n+i}{}_l/p^{n+i}{}_j, & \mbox{(other
+elements)}
+\ea{.} \eeqn
+Then we obtain the relation ${\bf Q = PT}^{-1}$ and, moreover,
+$\wi{B}^{\A} = TB^{\A}$ and $[\wi{B}^{\A}]^{-1} = \wi{A} = AT^{-1}$.
+%
+\begin{theorem} \label{jjj}
+$\wi{{\bf P}} = {\bf Q}$.
+\end{theorem}
+%
+Proof.
+(a) For all elements besides the pivot row and the last column, the assertion
+follows from the transformation rule for $B^{\A}$ because it holds {\bf
+without} pivot row that $\wi{B}^{\N}\wi{A} = B^{\N}AT^{-1}$, and it holds
+$a\wi{A} = aAT^{-1}$.
+\par
+(b)
+\[
+ \ba{.}{ll}
+\dis \wi{x} &= \dis \wi{A}\wi{c}^{\A}
+= A(I - \frac{1}{p^{n+i}{}_j}e_j \otimes p^{n+i}_- +
+\frac{1}{p^{n+i}{}_j}e_j \otimes e^j)\wi{c}^{\A}\\
+&\dis = A[I - \frac{1}{p^{n+i}{}_j}e_j \otimes p^{n+i}_-)c^{\A} +
+\frac{1}{p^{n+i}{}_j}e_j \gamma ^{n+i}\\
+&\dis + (I - \frac{1}{p^{n+i}{}_j}e_j \otimes p^{n+i}_-)(\wi{c}^{\A} -
+c^{\A})]. \ea{.}
+\]
+Because $\wi{c}^{\A} - c^{\A} = (\gamma ^{n+i} - \gamma ^j)e_j, \;
+p^{n+i}_-e_j = p^{n+i}{}_j$ and $\gamma ^{n+i} - p^{n+i}_- c^{\A} = r^i$, it
+follows that
+\[
+(I - \frac{1}{p^{n+i}{}_j}e_j \otimes p^{n+i}_-)(\wi{c}^{\A} - c^{\A}) = 0
+\]
+and
+\[ \ba{.}{ll}
+\wi{x} &\dis = x + a_j\frac{1}{p^{n+i}{}_j}(\gamma ^{n+i} -
+p^{n+i}_- c^{\A})\\
+&\dis  = x - \tau a_j = [q^k{}_{n+1}]_{k=1}^n, \quad \tau =
+\frac{r^i}{p^{n+i}{}_j}.
+\ea{.}
+\]
+%
+(c) For the pivot row $n + i$ without last element we obtain
+\[
+\wi{p}^{n+i}_- = b^j\wi{A} = b^jAT^{-1} = e^jT^{-1}
+= e^j - \frac{1}{p^{n+i}{}_j}p^{n+i}_- + \frac{1}{p^{n+i}{}_j}e^j = q^{n+i}_-.
+\]
+(d) For the last element of the pivot row we obtain because
+$B^{\A}x = c^{\A}$ that
+\[
+\wi{p}^{n+i}{}_{n+1} = b^j\wi{x} - \gamma ^j = b^jx - \gamma ^j - \tau
+b^ja_j = 0 - \tau  = - \frac{r^i}{p^{n+i}{}_j} = q^{n+i}{}_{n+1}.
+\]
+%
+(e) For the last column without the first $n$ elements, without the pivot
+element and without the last element, i.e., for $n \leq l, \; l \neq n +i$ and
+$l \neq m +1$, we obtain
+%
+\beqn \ba{.}{l}
+\wi{p}^l{}_{n+1} = \wi{r}^l = b^l\wi{x} - \gamma ^l\\
+\dis
+= r^l - \tau  b^la_j
+= r^l - \frac{p^l{}_jr^i}{p^{n+i}{}_j} = q^l{}_{n+1}, \quad l \neq j, \; l
+\neq m-n+1.
+\ea{.} \eeqn
+%
+(f) For the element $q^{m+1}{}_{n+1}$ we obtain with $w = aA$
+%
+\[ \ba{.}{l}
+\wi{p}^{m+1}{}_{n+1} = a \, \wi{x} = a(x - \tau a_j)\\
+\dis = ax - \tau aa_j
+= p^{m+1}{}_{n+1} - \frac {w_jr^i}{p^{n+i}{}_j} = q^{m+1}{}_{n+1}.
+\ea{.}
+\]
+\par
+%------------------------------------------------------------------------
+{\bf (c) Change of Basis in Simplex Method}\\
+The reduced tableau for the dual problem in row form,
+\[
+\min \{yc, \; yB = a, \; y_{\Q} \geq 0\}
+\]
+agrees formally with the tableau {\bf P} of the primal problem,
+\[
+{\bf P} = [p^k{}_l] = \ba{[}{ccc}  A   &  x\\
+                             B^{\N}A   &  r\\
+                             w         & f  \ea{]}.
+\]
+``Formally'' means here that dimensions do conform and that in the respective
+optimum both tableaus coincide in all elements under suitable uniqueness
+suppositions.
+\par
+However, the rules for the choice of the pivot element $p^i{}_j$ are different
+in this problem and the primal problem, $\max \{ax, \; B^{\P} x = c^{\P}, \;
+B^{\Q}x \leq c^{\Q}\}$.  Neglecting {\sc Bland}'s rule, we have for the primal
+problem the devices
+\[ \ba{.}{rcl}
+j &=& \min\arg_k\min\{w_k, \; k \in {p+1, \ldots, n}\},\\
+i &=& \dis \min \arg_k \min\{\frac{r^k}{b^ka_j}, \; b^ka_j < 0, \;
+k \in \{1, \ldots,m-n\}\} + n.
+\ea{.}.
+\]
+And in the dual problem we have the pivot rules
+\[ \ba{.}{rcl}
+i &=& \max \arg_k \max \{ r^k, \; k \in \{1, \ldots, m - n\}\} + n,\\
+j &=& \dis \min \arg_k\min \{\frac{w_k}{b^ia_k}, \; b^ia_k > 0, \;
+k = p+1, \ldots, n\}\}.
+\ea{.}
+\]
+In the primal problem, we have to start with a vertex $x$ for the primal
+feasible domain and in the dual problem we have to start with a vertex
+$y$ for the dual feasible domain where $y = [y_{\A},y_{\N}]P$ after
+permutation $P$, and $y_{\N} = 0$.
+\par
+Accordingly, the rules for the global change derived above remain the same
+in the present dual row problem.
+

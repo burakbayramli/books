@@ -1,0 +1,331 @@
+\documentclass[12pt,a4paper,USenglish,twoside]{book}
+\input aaformat_e
+%%%%%%%%%%%% Springer-Format %%%%%%%%%%
+%\documentclass[envcountchap,USenglish,natbib]{svmono}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{graphics}
+%\input aaformat_s
+\smartqed
+\begin{document}
+\setlength{\fboxsep}{1ex}
+\newcommand{\Release}{22/10/09}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1.5ex}
+\parskip0.5ex
+\parindent0ex
+\mainmatter
+%
+{\large\bf Supplements 3 to Chapter IX\hfill E.\ Gekeler
+}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}
+\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Case Study: Navier-Stokes equations}
+\par
+%
+Transient NS equations (Gresho, p. 450)
+%
+\[
+\rho \frac{D\u}{D t} \equiv 
+\rho \left(\frac{\da \u}{\da t} +  (\grad \u)\u\right) 
+= \mu \Delta \u - \nabla p 
+\] 
+Non-dimensional form:\\
+$u_0$ char. velocity, $L$ char. length, $\tau$ char. time, $P_c$ char. pressure\\
+{\sc Reynolds} number Re = $\rho u_0 L/\mu$ 
+(ratio of advective to diffusive momentum transport). Then
+\[
+\frac{\da \u}{\da t} +  Re \,(\grad \u)\u 
+=   \Delta \u - \nabla p \quad \quad
+\text{for $\tau = \rho L^2/\mu$ (with $P_v =  \mu u_0/L$)}
+\] 
+%
+\[
+\frac{\da \u}{\da t} +  (\grad \u)\u 
+= \nu\, \Delta \u - \nabla p \quad \quad
+\text{for $\tau = L/u_0$ (with $P_c = \rho u^2_0$)}\,.
+\] 
+Weak form with $\nu = 1/Re$\,:
+\begin{equation} \label{e0811.4}
+\fbox{$\
+\ba{.}{llllll}
+(\v,\da \u/\da t)\\
+ + a(\v,\u)  + c(\v,\u,\w)&-&(\div \v,p_{\rm spec}) &=& (\v,\f)
++ (\v,\ul{\sigma}_n(\u,p_{\rm spec}))_{\Gamma}\,, & \v \in \V \\[0.5ex]
+&-&(\div \v,q) &=& 0\,, & q \in \Q\\[0.5ex]
+&&(\v,\ul{\sigma}_n(\u,p_{\rm spec}))_{\Gamma}
+&=& -(p_{\rm spec}\v\cdot \n)_{\Gamma} + \nu(\v\cdot (\grad \u)\n)_{\Gamma} 
+\ea{.}
+$}
+\end{equation}
+DA problem
+\[
+\dot{x} = f(x,y)\,,\;\; g(y) = 0\,,\;\; \grad_xg \grad_yf \; \text{regular}
+\]
+Semi-explicit Runge-Kutta method $\tau_{r+1} = 1$\,:
+\[
+\ba{.}{lll}
+u_1 &=& u\\
+u_2 &=& u + \tau \alpha_{21}f(u_1,v_1)\\[1ex]
+v_1 &\; \text{by}& \; g(u_2) = 0\\[1ex]
+u_3 &=& u + \tau \big(\alpha_{31}f(u_1,v_1) + \alpha_{32}f(u_2,v_2)\big)\\[1ex]
+v_2 &\; \text{by}& \; g(u_3) = 0\\[1ex]
+
+u_4 &=& u + \tau \big(\alpha_{41}f(u_1,v_1) + \alpha_{42}f(u_2,v_2)
++ \alpha_{43}f(u_3,v_3)\big)\\[1ex]
+v_3 & \text{by}& \; g(u_4) = 0\\[1ex]
+\cdots \quad \cdots\\
+u(t+\tau) &=& \dis u + \tau \sum_{i=1}^r\beta_i(f(u_i,v_i)\\[1ex]
+v(t + \tau) & \;\text{by} &\; g(u(t+\tau)) = 0.
+\ea{.}
+\]
+Example: Method of order 3 for $\dot{x} = f(t,x)$:
+\renewcommand{\arraystretch}{1.5}
+\[
+\ba{[}{c|c} A \; &\; c\\ \hline  b \; & \ea{]}
+= \ \ba{[}{ccc|c}
+  - & - & - &     0\\
+  1/3 & - & - &   1/3\\
+  -1 & 2 & - &  1\\ \hline
+   0 & 3/4 & 1/4
+\ea{]}\; .
+\]
+\renewcommand{\arraystretch}{1}
+\[
+\ba{.}{lll}
+u_1 &=& u \\[1ex]
+u_2 &=& u + \tau(1/3)f(t,u_1)\\[1ex]
+u_3 &=& u + \tau[(-1)f(t,u_1) + (2)f(t+\tau/3,u_2)]\\[1ex]
+u(t+\tau) &=& u + \tau[0\cdot f(t,u_1) + (3/4)f(t+\tau/3,u_2) + (1/4)f(t+\tau,u_3)]
+\ea{.}
+\]
+Heat equation in buoyancy problems, multiplied by test function $v$:
+\[
+(v,\theta_t) = -  (v,\grad \theta \cdot \u)  + \lambda (v,\Delta \theta) 
+\]
+Green:
+\[
+(v,\Delta \theta) = -(\nabla v,\nabla \theta) + (v,\nabla \theta \cdot \n)
+\]
+
+\[
+(v,\theta_t) = -  (v,\grad \theta \cdot \u) 
+ - \lambda (\nabla v,\nabla \theta) + \lambda(v,\nabla \theta \cdot \n)_{\Gamma}
+\]
+specified radiation on boundary part, $\q = - \kappa \grad \theta$:
+\[
+ \q \cdot \n = h(\theta - \theta_{\rm ext})\,, \qquad
+\nabla \theta\cdot \n = - (h/\kappa)(\theta - \theta_{\rm ext}) 
+\; \text{on} \; \Gamma_S\,, \qquad
+\]
+also
+\[
+(v,\theta_t) = -  (v,\grad \theta \cdot \u) 
+ - \lambda (\nabla v,\nabla \theta) - \lambda(h/\kappa)(v,(\theta - \theta_{\rm ext})) 
+\]
+\newpage
+{\sc Brazey}'s method of order 3 for NS equatoins:
+
+\[
+MU_t = -A(U)U + CP + MF =: G(U,P) 
+\] 
+
+\[
+U_t = M^{-1}[-A(U)U + CP + MF] =: M^{-1}G(U,P) 
+\] 
+
+\[
+\ba{.}{lll}
+U_1 &=& U\\
+U_2 &=& U_1 + \tau \alpha_{21} M^{-1}[-A(U_1)U_1 + CP_1 + MF]\\[1ex]
+0 &=& C^T\Big[U_1 + \tau \alpha_{21} M^{-1}[-A(U_1)U_1+ CP_1 + MF]\Big] \\[1ex]
+0 &=& C^TU_1 + 
+\tau \alpha_{21}C^TM^{-1}(-A(U_1)U_1 + MF) +  \tau\alpha_{21}C^TM^{-1}CP_1\\[1ex]
+QP_1
+&=& - C^TU_1/(\tau\alpha_{21}) - C^TM^{-1}(-A(U_1)U_1 + MF);\quad Q = C^TM^{-1}C
+\ea{.}
+\]
+
+\[
+\ba{.}{lllll}
+U_3 &=&  U_1 &+& \tau \alpha_{31} M^{-1}[-A(U_1)U_1 + CP_1 + MF]\\[0.5ex]
+&&&+& \tau \alpha_{32} M^{-1}[-A(U_2)U_2 + CP_2 + MF]\\[1ex]
+%
+0 &=& C^T U_1 &+& \tau \alpha_{31}C^T M^{-1}[-A(U_1)U_1 + CP_1 + MF]\\[0.5ex]
+&&     &+&+ \tau \alpha_{32}C^T M^{-1}[-A(U_2)U_2 + CP_2 + MF]\\[1ex]
+%
+0 &=& C^T U_1 &+& \tau \alpha_{31}C^T M^{-1}[-A(U_1)U_1 + CP_1 + MF]\\[0.5ex]
+   &&&+& \tau \alpha_{32}C^T M^{-1}(-A(U_2)U_2  + MF)
+   + \tau \alpha_{32}C^T M^{-1}CP_2\\[1ex]
+%
+\tau \alpha_{32}QP_2 &=&
+- C^T U_1 &-& \tau \alpha_{31}C^T M^{-1}[-A(U_1)U_1 + CP_1 + MF]\\[0.5ex]
+&&&-& \tau \alpha_{32}C^T M^{-1}(-A(U_2)U_2 + MF) 
+\ea{.}
+\]
+
+\[
+\ba{.}{lllll}
+U_4 &=&  U_1 &+& \tau \beta_2 M^{-1}[-A(U_2)U_2 + CP_2 + MF]\\[0.5ex]
+&&&+& \tau \beta_3 M^{-1}[-A(U_3)U_3 + CP_3 + MF]\\[1ex]
+%
+0 &=& C^T U_1 &+& \tau \beta_2C^T M^{-1}[-A(U_2)U_2 + CP_2 + MF]\\[0.5ex]
+&&&+& \tau \beta_3C^T M^{-1}[-A(U_3)U_3 + CP_3 + MF]\\[1ex]
+%
+0 &=& C^T U_1 &+& \tau \beta_2C^T M^{-1}[-A(U_2)U_2 + CP_2 + MF]\\[0.5ex]
+&&&+& \tau \beta_3C^T M^{-1}(-A(U_3)U_3 + MF) + \tau \beta_3C^T M^{-1}CP_3\\[1ex]
+%
+\tau \beta_3QP_3  &=&
+- C^T U_1 &-& \tau \beta_2C^T M^{-1}[-A(U_2)U_2 + CP_2 + MF]\\[0.5ex]
+&&&-& \tau \beta_3C^T M^{-1}(-A(U_3)U_3 + MF) 
+\ea{.}
+\]
+\newpage
+Lumping after Zienkiewicz, p. 320:\\
+Instead full mass matrix $M$ choose diagonal matrix matrix $\wi{M}$ with 
+elements $aM_{ii}$ where $M_{ii}$ are the diagonal elements of $M$; choose factor
+$a = |\Omega|/\sum M_{ii}$ where $|\Omega|$ is the area of domain $\Omega$\,.
+%\newpage
+
+{\bf \large Mixed Applications}
+
+Recall that $N = kg\cdot m/s^2$ (Newton), $J = N\cdot m$ (Joule),
+$Pa = N/m^2$ (Pascal),\\
+$K = 273.15 + {}^0C$ (Kelvin), $g = 9.81\ [m/s^2]$ gravity acceleration.
+\par
+Physical constants for water and air at $15 \, {}^0C$\,, and 1 atm atmospheric pressure;
+cf., e.g., (\cite{Ninomiya}):
+\par
+\renewcommand{\arraystretch}{1.1}
+\bc
+\begin{tabular}[H]{|lllll|}\hline
+ \multicolumn{3}{|c}{Material constants}  & Water & Air \\ \hline
+\ $\rho$ &$ [kg/m^3]$  & mass density & $999.1$ & $1.225$\\
+\ $\mu $&$ [Pa\cdot s])$  & dynamic viscosity
+& $1.14\cdot 10^{-3}$  & $1.78 \cdot 10^{-5}$ \\
+\ $\nu$&$ [m^2/s]$     & kinematic viscosity
+& $1.14\cdot 10^{-6}$ & $1.45 \cdot 10^{-5}$\\
+\ $c$&$[J/K \cdot kg]$  & specific heat capacity 
+& $4.182 \cdot 10^3$ & $1.005 \cdot 10^3$\\
+
+\ $\rho\,c$&$ [J/m^3\cdot K]$   & heat capacity/mass unit & $4.174 \cdot 10^5$& 
+$1.298\cdot 10^3$\\
+\ $\kappa $&$ [J/m\cdot s \cdot K]$  & thermal conductivity
+& $5.9 \cdot 10^{-1}$ & $2.51 \cdot 10^{-2}$\\
+\ $\lambda$&$ [m^2/s]$ & heat conduction coeff. &
+$1.40 \cdot 10^{-7}$ & $2.02 \cdot 10^{-5}$\\
+\ $\beta$&$ [1/K]$  &  thermal expansion coeff. &
+$1.5\cdot 10^{-4}$ & $3.48 \cdot 10^{-3}$\\ \hline
+\end{tabular}
+\ec
+($\nu = \mu/\rho\,$, $\lambda = \kappa/\rho \cdot c$ and always 
+$a/b \cdot c := a/(b\cdot c)$\,).
+\index{viscosity}
+\index{heat conduction coefficient}
+\index{heat capacity}\index{thermal conductivity}
+\index{thermal expansion coefficient}
+%
+%\par
+
+{\bf (a) Heat Conduction}
+\index{heat conduction}
+Physical quantities:
+%
+\bc
+\begin{tabular}[H]{|ll|}\hline
+\ $\theta\,, \,\theta_{\rm ext}\, (K)$       & temperature, neighboring temperature\\    \ $r\, (J/s \cdot kg)$       & spezific thermal source density  \\
+\ $h \, (J/m^2\cdot s \cdot K)$       & thermal transmission coefficient\\
+\ $\q \, (J/m^2 \cdot s)$      & thermal flux vector       \\
+\hline
+\end{tabular}
+\ec
+
+\[
+\frac{\da \theta}{\da t} =  \frac{\kappa}{\rho c}\div \grad \theta 
+ + \frac{r}{c} \quad [K/s]\; .
+\]
+%
+\[
+x = L \wi{x}\,,\;\; y = L \wi{y}\,,\;\;t = \frac{L^2}{\nu}\wi{t} \,, \;\;
+\wi{\theta} = (\theta - \theta_0)/\Delta \theta\,.
+\]
+
+\[
+\frac{\da \wi{\theta}}{\da \wi{t}} = 
+\frac{L^2}{\nu \, \Delta \theta}\left[ \frac{\kappa}{\rho c}
+\frac{\Delta \theta}{L^2} \div_{\wi{x}}\grad_{\wi{x}}\wi{\theta}
+  + \frac{r}{c}\right]
+\quad [\;]\; .
+\]
+\[
+\frac{\kappa}{\nu \cdot \rho \cdot c} = \frac{\lambda}{\nu} =: \frac{1}{P_r}
+\]
+
+\[
+\frac{\da \wi{\theta}}{\da \wi{t}} = 
+\frac{\lambda}{\nu }\,\Delta_{\wi{x}}\wi{\theta}
+  + \frac{L^2}{\Delta \theta}\, \frac{r}{ \nu\, c}\,, \quad [{}\;]
+\]
+
+\newpage
+
+
+
+\begin{figure}[H]
+\centering
+% B = 470, H = 69, H/B = 0.147
+%\epsfig{file=bild03a.eps,height=1.6cm,width=11cm}
+\caption{Benard cell, stream lines}\label{fig0908.10a}
+\end{figure}
+\par\vspace{-5ex}
+\begin{figure}[H]
+\centering
+% B = 470, H = 69, H/B = 0.147
+%\epsfig{file=bild03c.eps,height=1.6cm,width=11cm}
+\caption{Benard cell, temperature}\label{fig0908.10b}
+\end{figure}
+\par\vspace{-5ex}
+\begin{figure}[H]
+\centering
+% B = 470, H = 69, H/B = 0.147
+%\epsfig{file=bild03b.eps,height=1.6cm,width=11cm}
+\caption{Benard cell, pressure}\label{fig0908.10c}
+\end{figure}
+%
+\begin{example} Example with exact solution for NS-problem with convection after
+\cite{Boukir}. $\Omega = ]0\,,\,1[\, \times\, ]- 0.5\,,\, 0.5\,[\, $; $b > 0$\,,
+%parameter, $\nu  = 1/b $\,. Body forces:
+
+\[
+\f =\ \ba{[}{c}
+\pi b^2\cos(\pi x)\sin(\pi x)\\
+-\pi b^2 \sin(\pi y)\cos (\pi y) + 4\pi^2\cos(\pi x)\cos(\pi y)
+\ea{]}
+\]
+Solution:
+\[
+u_1(x,y) = b\sin(\pi x)\sin(\pi y)\,,\;\;
+u_2(x,y) = b\cos(\pi x)\cos(\pi y)\,,\;\;
+p(x,y) = 2\pi \cos(\pi x)\sin(\pi y)\,.
+\]
+Boundary conditions:
+\[
+\ba{.}{llllll}
+u_1(0,y) &=& 0\,, & u_2(0,y) &=& b\cos(\pi y)\\
+u_1(1,y) &=& 0\,, & u_2(1,y) &=& - b\cos(\pi y)\\
+u_1(x,-0.5) &=& - b\sin(\pi x)\,, & u_2(x,-0.5) &=& 0\\
+u_1(x,0.5) &=& b\sin(\pi x)\,,    & u_2(x,0.5)  &=& 0\,.
+\ea{.}
+\]
+$\dis \int_{\Omega}p(x,y)\,dxdy = 0$\,. 
+Numerical results for $b = 10$\,. (Fig. \ref{xxx})
+\end{example}
+
+\end{document}

@@ -1,0 +1,38 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 9 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Problem der Brachistochrone}\\
+Die $x_2$-Achse weise nach unten. Setzt man
+\begin{equation}\label{se1}
+\dot{x}_1 = (2gx_2(t))^{1/2}\cos u(t)\,,\quad
+\dot{x}_2 = (2gx_2(t))^{1/2}\sin u(t)\,,
+\end{equation}
+dann wird der Energieerhaltungssatz $mv(t)^2 = 2mgx_2(t)$ respektiert, und
+das Problem lautet zusammen mit (\ref{se1})
+\[
+\ba{.}{rcl}
+T &=& \Min!\,,\; x(0) = (0,0)\,,\; x(T) = a \,,\; 0 < a\,, \; 0 < b\,,\\[0.5ex]
+%
+0 &\leq& g(x_1,x_2)\,.
+\ea{.}
+\]
+Die Kontrolle $u$ ist der Winkel
+zwischen der Kurventangente und der $x_1$-Achse. Die Substitution $t = Ts$
+ergibt das Problem
+\[
+\ba{.}{rcl}
+T &=& \Min!\,,\; x(0) = (0,0)\,,\; x(1) = a\,,\\[0.5ex]
+%
+x'_1 &=& T(2gx_2(s))^{1/2}\cos u(s)\,,\;
+x'_2 = T(2gx_2(s))^{1/2}\sin u(s)\,,\\[0.5ex]
+0 &\leq& g(x_1,x_2)\,.
+\ea{.}
+\]
+\end{document}

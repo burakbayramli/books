@@ -1,0 +1,432 @@
+\section{Computation of a Vertex}
+In general, the computation of a solution of a linear programming problem
+divides into three steps:
+\begin{itemize}
+\item
+computation of a feasible point,
+\item
+computation of a vertex starting from a feasible point,
+\item
+computation of an optimal vertex starting from a vertex.
+\end{itemize}
+The first step is called {\bf phase 1} and step 2 and 3 together are called
+{\bf phase 2} of the problem.  The Vertex Theorem \ref{s5} describes how to
+attain a vertex from a feasible point.  Suitable search directions $s$ are
+found here by introduction of auxiliary side conditions which make the feasible
+point of the problem to a vertex of an intermediate problem which then is
+reduced to the original problem step by step.  The Main Theorem \ref{s2} then
+yields a device for the computation of an optimal vertex point (solution) of
+the feasible domain.
+\par
+%
+{\bf (a) Primal Problem} \hfill\\
+For the computation of a feasible point
+\[
+x \in \Omega = \{x \in \Bbb{R}^n, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq
+c^{\Q}\}, \; c^{\P} \geq 0, \]
+of the primal problem (\ref{e1}) we suppose without loss of
+generality  $c^{\P} \geq 0$ and recall that $c = [\gamma ^i]_{i=1}^m$. We use
+the notations
+\[
+b = \sum_{i=1}^pb^i, \; \delta  = \sum_{i=1}^p\gamma ^i, \;
+e = [1, \ldots, 1]^T \in \Bbb{R}^{m-p}, \; \xi  \in \Bbb{R},
+\]
+and consider the slightly augmented linear problem
+%
+\[
+\max \{- \xi + bx, \; B^{\P}x \leq c^{\P}, \; -e\xi + B^{\Q}x \leq
+c^{\Q}, \; \xi  \geq 0\},
+\]
+%
+i.e., the problem
+%
+\begin{equation} \label{e20}
+\max \{ \wi{a}
+\ba{[}{r}\xi \\ x \ea{]}, \; \wi{B}
+\ba{[}{r}\xi \\ x\ea{]}
+\leq \wi{c}\}
+\end{equation}
+with the entries
+\[
+\wi{a} = [-1, \; b], \;
+\wi{B} = \ba{[}{rr} -1 & 0\\0 & B^{\P}\\-e & B^{\Q}\ea{]}, \;
+\wi{c} = \ba{[}{l} 0\\ c^{\P} \\ c^{\Q} \ea{]}.
+\]
+%
+For the problem
+\[
+\max \{ax, \; Bx \leq c\}
+\]
+the augmented auxiliary problem (\ref{e20}) reads
+%
+\begin{equation} \label{e21}
+\max \{- \xi , \; Bx - e\xi  \leq c, \; \xi  \geq 0\}.
+\end{equation}
+Let
+\[
+\xi ^0 = \max\{0, -\gamma^{p+1}, \ldots, - \gamma ^m\}
+\]
+then $[\xi ^0, \; 0]$ is a feasible point of
+the problem (\ref{e20}).  The objective function of the auxiliary problem is
+bounded on the feasible domain of this problem because $\xi \geq 0$ and
+\[
+bx - \xi \leq bx \leq \delta .
+\]
+Hence the problem (\ref{e20}) has a solution. Also the rank condition is
+fulfilled since
+\[
+\rank \ba{[}{rr} -1 & 0\\0 & B^{\P}\\-e & B^{\Q} \ea{]}
+= \Rang \ba{[}{l}B^{\P}\\B^{\Q} \ea{]} + 1.
+\]
+%
+%
+\begin{lemma} \label{l6}
+Let $(\xi ^*,x^*)$ be a solution of (\ref{e20}). Then $x^* \in
+\Omega$ if and only if $bx^* - \xi ^* = \delta $.
+\end{lemma}
+%
+Proof. Cf. \cite{BeRi}. Let $(\xi ^*, x^*)$ be a solution of
+(\ref{e20}).\\
+(a) Let $x^* \in \Omega$ then $(0,x^*)$ is a feasible point of
+(\ref{e20}) and, in particular, $bx^* = \delta $. For $\xi ^* >
+0$ we obtain
+\[
+\delta = bx^* - 0 > bx^* - \xi ^*
+\]
+in contradiction to the assumption that $(x^*,\xi ^*)$ optimum.  Hence $\xi ^*
+= 0$.\\
+%
+(b) Let $bx^* - \xi ^* = \delta $.  Because of the feasibility of $(\xi
+^*,x^*)$ with respect to (\ref{e20}), we have $B^{\P}x^* \leq c^{\P}$ and $\xi
+^* \geq 0$.  Thus we have to show that $B^{\P}x^* \geq c^{\P}$ and $\xi ^* \leq
+0$ then $x^*$ must be feasible and $\xi ^* = 0$.  However, if $b^ix^* < \gamma
+^i$ for some $i \in \{1, \ldots, p\}$ or $\xi ^* > 0$ then
+\[
+bx^* - \xi ^* < \delta
+\]
+in contradiction to the assumption.
+%$\Box$ \hfill
+%
+\begin{corollary} \label{f6} Let $(\xi ^*,x^*)$ be a solution of
+(\ref{e20}). Then $x^* \in \Omega$ if and only if $\xi ^* = 0$.
+\end{corollary}
+\par
+\par
+Let us now put the question whether the final tableau of the auxiliary problem
+(\ref{e20}) can be taken for start tableau in the original problem (\ref{e1}),
+\[
+\max \{ax ,\; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}\}, \; c^{\P} \geq 0,
+\]
+in the case where the feasible domain is not empty.  The answer is positive as
+the following result of \cite{BeRi} and \cite{Bau} shows.  Without loss of
+generality we suppose that the index vector $\N(\xi ^0, 0)$ of the initial
+feasible point $(\xi ^0, 0)$ of (\ref{e20}) is chosen such that
+\[
+\sigma _1 = 1 \in \N(\xi ^0, 0)
+\]
+and we also suppose that the pivot row in the tableau is chosen according to
+the rule (\ref{e36a}),
+\[
+i = \dis \min \arg_k \min \{\frac{r^k}
+{d^k{}_j}, \; d^k{}_j < 0, \; k \in \{1, \ldots, m - n \}\}.
+\]
+%
+\begin{theorem} \label{tev1} (a)
+Let $(\xi ^*, x^*)$ be a solution of (\ref{e20}) with basis index vector
+$\A(\xi ^*,x^*)$ and let $\xi ^* = 0$ then $1 \in \A(\xi ^*,x^*)$.\\
+(b)
+Let $p = 0$, let $(\xi ^*, x^*)$ be a vertex of (\ref{e20}) with basis index
+vector $\A(\xi ^*,x^*)$, let $\xi ^* = 0$ and $1 \in \A(\xi ^*,x^*)$
+then $(\xi ^*,x^*)$ is a solution of (\ref{e20}).
+\end{theorem}
+%
+Proof. (a) Suppose that $1 \notin \A(\xi ^*,x^*)$ then $1 \in \N(\xi ^*,x^*)$
+and the solution is degenerate because (in the tableau of the auxiliary
+problem)
+\[
+\wi{r}^1 = \wi{b}^1\ba{[}{c}\xi ^*\\x^*\ea{]} - \wi{\gamma }^1 = 0 - 0 .
+\]
+Without loss of generality we may suppose that in the step last but one
+\[
+\widehat{r}^1 = - \widehat{\xi }^0 < 0.
+\]
+Then $\wi{r}^1 = \widehat{r}^1 - \tau \widehat{d}^1{}_j < 0$ hence
+also $\widehat{d}^1_j < 0$. Therefore we have
+\[
+\wi{\tau}  = \frac{\widehat{r}^1}{\widehat{d}^1{}_j}
+\]
+which yields $i = 1$ by the pivot rule (\ref{e36a}) in contradiction to the
+assumption that $1 \notin \A(\xi ^*,x^*)$.\\
+(b) If $1 \in \A(\xi ^*,x^*)$ and $\xi ^* = 0$ then in that vertex
+\[
+\wi{w}_{\A} = [-1, 0, \ldots,0]\wi{A} = [0, \ldots,0,1,0,\ldots,0] \geq 0
+\]
+hence $(\xi ^*,x^*)$ is optimum.\\
+%$\Box$ \hfill\\
+\par
+By this result and Lemma \ref{f6} we have $\xi ^* = 0$ and $1 \in \A(\xi
+^*,x^*)$ if $x^*$ is feasible for the original problem (\ref{e1}).  Therefore
+we can cancel row $1$ and column $j$ with $1 = \rho _j \in \A(\xi ^*,x^*)$ from
+the tableau of the auxiliary problem,
+\begin{equation} \label{vt4}
+\wi{\bf P} = \ba{[}{cc} \wi{A} &  \wi{x}\\ \wi{D} & \wi{r}\\
+\wi{w} & \wi{\zeta } \ea{]}.
+\end{equation}
+Naturally, we also cancel  $1$ from $\A(\xi ^*,x^*)$ to obtain a basis
+index vector $\A(x^*)$ of the feasible point $x^*$. Because $(\xi ^*,x^*)$
+is an optimum vertex of the auxiliary problem with $\xi ^* = 0$ and $x^*$ is
+feasible for the original problem, $x^*$ is a vertex of the domain
+\[
+\wi{\Omega} = \{x \in \Bbb{R}^n, \; Bx \leq c\}.
+\]
+satisfying $B^{\P}x^* = c^{\P}$ but not necessarily $\{1,\ldots,p\} \subset
+\A(x^*)$. Therefore we have to take all $b^i, \; i = 1,\ldots,p$, into the
+basis of $x^*$ by an intermediate iteration in order to obtain a
+a basis index vector of the form $\A(x^*) = \{1,\ldots,p,\rho
+_{p+1},\ldots,\rho _n\}$.
+\par
+In any case, the last row of (\ref{vt4}) must be changed for the original
+problem because the objective function has changed.  So we have the last row of
+(\ref{vt4}) to replace by
+\[
+w = aA, \; \zeta  = ax^*.
+\]
+There is also a second possibility to find a vertex point of the primal problem
+(\ref{e1}) starting from a feasible point $v$ which however needs an
+intermediate blow up of the tableau.  We may attach some additional trivial
+side conditions to (\ref{e1}) such that $v$ becomes a vertex point of the new
+auxiliary problem.  If e.g.  the primal problem is
+\[
+\max \{ax, \; Bx \leq c\}
+\]
+and $v$ is a feasible point then we may add the side conditions $x \leq v$,
+i.e., we consider the problem
+%
+\[
+\max \{ax, \; Bx \leq c, Ix \leq v\}
+\]
+which certainly has $v$ for vertex point because $\rank (I) = n$ and $v$ is
+feasible in the original problem. The spurious side conditions $e^ix \leq
+v^i$ are then replaced one after the other by a genuine side condition $b^ix
+\leq \gamma ^i$ in a suitable way.
+\par
+In the original primal problem (\ref{e1}),
+\[
+\max \{ ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q} \}
+\]
+we remember that the $(p,m)$-matrix $B^{\P}$ has rank $p$ by assumption. Thus
+we have to complete the rows of $B^{\P}$ to a row basis of $\Bbb{R}^n$. Let
+\[
+Q \cdot R = [B^{\P}]^T
+\]
+be a QR-decomposition of $[B^{\P}]^T$ with $Q^TQ = I$ and upper triangular
+matrix
+\[
+R = \ba{[}{l}S\\ O \ea{]}
+\]
+where $S$ is a regular upper triangular matrix of dimension $p$ by assumption.
+Then
+\[
+B^{\P}\cdot Q = [S^T, O^T], \; Q = [q_1, \ldots, q_n],
+\]
+hence the independent columns $q_{p+1}, \ldots, q_n$ span the kernel of
+$B^{\P}$ and thus are a supplement of the rows of $B^{\P}$ to a row basis.
+Accordingly, if $v$ is a feasible point again then we have to add the side
+conditions
+\[
+q^T_ix \leq q^T_iv, \; i = p+1, \ldots, n.
+\]
+\par
+%------------------------------------------------------------------------
+{\bf (b) Dual Problem} \hfill\\
+In the dual problem (simplex problem)
+\begin{equation} \label{e21a}
+\min\{yc, \; yB = a, \; y \geq 0\}, \; a \geq 0,
+\end{equation}
+we also suppose without loss of generality that $a \geq 0$.  Then an initial
+vertex point may be computed directly by solving an augmented problem of the
+same form, namely
+%
+\begin{equation} \label{e21b}
+\min \{ve, \; yB + v = a, \; y \geq 0, \; v \geq 0\}
+\end{equation}
+%
+where $e = [1, \ldots , 1]^T \in \Bbb{R}^n$.  This problem has
+\[
+(y,v) = (0,a), \; \A(y,v) = \{m+1,m+n\},
+\]
+for vertex point being possibly degenerated and $ve$ is bounded from
+below for $v \geq 0$.  Hence the auxiliary problem (\ref{e21b}) is always
+solvable and it therefore has also a vertex $(y^*,v^*)$ for solution
+with index vector $\A(y^*,v^*)$.\\
+%
+{\bf Case 1.} If $v^* \geq 0$ and $v^* \neq 0$ then the original problem
+(\ref{e21a}) has no feasible point and thus is unsolvable.\\
+%
+{\bf Case 2.} If $v^* = 0$ then $y^*$ is an intial vertex point for
+(\ref{e21a}).
+\par
+However, in the dual problem we also have to transfer an index vector $\A(y^*)$
+into phase 2.  If $y^*$ is not degenerate then $\A(y^*) =  A(y^*,v^*)$ else let
+$\B(y^*)$ be obtained from $\A(y^*,v^*)$ by cancelling all indices $i > m$.
+Then $|\B(y^*)| < n$ and we have to fill up $\B(y^*)$ to an index vector of
+size $n$ by arbitrary indices $i \in \I_m \backslash \B(y^*)$.
+%-------------------------------------------------------------------------
+\par
+Let us now turn to the general dual problem
+%
+\begin{equation} \label{e21c}
+\min\{yc, \; yB = a, \; y_{\Q} \geq 0\}
+\end{equation}
+with auxiliary problem
+%
+\begin{equation} \label{e21d}
+\min \{ve, \; yB + v = a, \; y_{\Q} \geq 0, \; v \geq 0\}
+\end{equation}
+%
+and $p > 0$.  Here
+we have to find an initial vertex $(y,v)$ for (\ref{e21c}) with index
+vector of the form
+\[
+\A(y,v) = \{1,\ldots,p,\rho _{p+1},\ldots,\rho _n\}
+, \; \rho _i \in \{p+1, \ldots, m+n\},
+\]
+because the first $p$ components of $y$ are now unrestricted.
+\par
+In the present case the original rank condition,
+\[
+\rank (B^{1:p}) = p, \; \rank(B) = n,
+\]
+must be slightly strengthened to
+\[
+\rank (B^{1:p}{}_{1:p}) = p, \; \rank (B) = n.
+\]
+Let for the moment $0 \in \Bbb{R}_k$ be the zero vector of size $k$, and let
+$u \in \Bbb{R}_p$ be the unique solution of
+\[
+uB^{1:p}{}_{1:p} = a_{1:p}.
+\]
+Then we consider the point $(\wi{y},\wi{v})$ where
+\[
+\wi{y} = [u, \; 0_{m-p}], \; \wi{v} = [0_p, \; v], \; v \in \Bbb{R}_{n-p}.
+\]
+The side condition $yB + v = a$ splits up into two equations
+\[
+uB^{1:p}{}_{1:p} = a_{1:p}, \;
+uB^{1:p}{}_{p+1:n}S + vS = a_{p+1:n}S
+\]
+where the sign matrix $S$ is a diagonal matrix with diagonal elements $\pm 1$.
+Now, choosing
+\[
+vS = a_{p+1:n}S - uB^{1:p}{}_{p+1:n}S
+\]
+and $S$ such that $vS \geq 0$, the point $(\wi{y}, \wi{v})$ is a vertex of the
+problem (\ref{e21d}) where the equality restriction are replaced by
+\[
+yB_{1:p} + v_{1:p} = a_{1:p}, \; yB_{p+1:n}S + v = a_{p+1:n}S.
+\]
+An index vector of a basis of $(\wi{y}, \wi{v})$ is
+\[
+\A(y,v) = \{1, \ldots, p, m+p+1, \ldots , m+n\}.
+\]
+The remaining part of the phase 1 problem remains the same as above and also
+the index vector $\A(y^*)$ being transferred to phase 2 is found in the same
+way.
+\par
+The auxiliary problem (\ref{e21d}) has the drawback that the number of
+variables is $n+m$ instead of $m$ and that the present rank condition needs
+possibly a column permutation of the design matrix $B$.  However, let
+\[
+Q \cdot R = B^T, \; L = R^T,
+\]
+be a QR-decomposition of $B^T$. Then the equality side conditions of
+(\ref{e21a}) can be written as
+%
+\begin{equation} \label{e21g}
+yBQ = yL = aQ =: \wi{a}.
+\end{equation}
+%
+The submatrix $L^{1:p}{}_{1:p} = [l^i{}_k]_{i,k=1}^p$ is regular by the rank
+condition $\rank (B^{\P}) = p$ hence the system
+\[
+uL^{1:p}{}_{1:p} = [a_{1:p}, \; 0]Q
+\]
+has a unique solution $u$.  Observing (\ref{e21g}) we may also solve the {\bf
+modified} problem
+%
+\begin{equation} \label{e21h}
+\min \{yc, \; yLS = \wi{a}S, \; y_{\Q} \geq 0 \}
+\end{equation}
+%
+with side conditions
+\[
+y\ba{[}{cc}[LS]^{1:p} & 0\\[0mm]
+           [LS]^{p+1:m} & -I_{m-p} \ea{]} \leq [\wi{a}S, \; 0_{m-p}]
+\]
+and the first $n$ conditions being always active. $S$ denotes the sign matrix
+\[
+S = [s^{i}{}_k], \; s = \ba{\{}{ll} \mbox{sign}(\wi{a}_i), & i = k,\\
+                                    0              & \mbox{else}
+                        \ea{.}
+\]
+($\mbox{sign}(0) = 1$). This problem has the degenerate vertex $y = 0$ with
+index vector
+\[
+\A(y) = \{1,\ldots, p, n+1, \ldots,n+m-p\}.
+\]
+If $A = [[LS]^{\A}]^{-1}$ in optimum then the solution $x^*$ of the primal
+problem is obtained by
+\[
+x^* = QSAc^{\A} = [B^{\A}]^{-1}c^{\A}.
+\]
+However, in the modified problem (\ref{e21h}) a possible sparsity of the design
+matrix is destroyed therefor we use the auxiliary problem (\ref{e20}) in the
+next section for the computation of a feasible point in the simplex
+problem.
+\par
+% --------------------------------------------------------------------------
+{\bf (c) Bounded Variables} \hfill\\
+In the primal problem (\ref{e1}) with bounded variables,
+\begin{equation} \label{e22}
+\max \{ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}, \; l \leq x \leq u \}
+\end{equation}
+let
+\[ \ba{.}{ll}
+l = [l^i] \in \{\Bbb{R} \cup \{- \infty\}\}^n, &
+u = [u^i] \in \{\Bbb{R} \cup \{\infty\}\}^n,\\
+\R = \{i \in \{1,\ldots,n\}, \; l^i \neq -\infty\}, &
+{\cal S} = \{k \in \{1,\ldots,n\}, \; u^k \neq \infty\}.
+\ea{.}
+\]
+Further, let
+\[ \ba{.}{l}
+\widehat{x} = [\widehat{x}^i]_{i=1}^n, \;
+\widehat{x}^i = \ba{\{}{ll}
+l^i, & i \in \R,\\
+u^i, & i \in {\cal S}, \; i \notin \R,\\
+0,   & \mbox{else}, \ea{.}               \\
+\widehat{\xi } = \max \{b^1 \widehat{x} - \gamma ^1,
+                 \ldots, b^n\widehat{x} - \gamma ^n, 0\}
+\ea{.}
+\]
+and let again $b = \sum_{i=1}^pb^i, \; \delta  = \sum_{i=1}^p\gamma ^i, \; e
+= [1,\ldots,1]^T \in \Bbb{R}^n$. Then $(\widehat{\xi },\widehat{x})$ is a
+feasible point of the auxiliary problem
+%
+\begin{equation} \label{bv8}
+\max\{[-(p+1)\xi  + bx]\ba{[}{c}\xi \\ x\ea{]},
+\;[-e, \; B]\ba{[}{c} \xi  \\ x \ea{]} \leq c, \;
+\ba{[}{c}0 \\ l\ea{]} \leq \ba{[}{c}\xi  \\ x\ea{]} \leq \ba{[}{c} \infty \\
+u\ea{]} \}
+\end{equation}
+%
+of which the dimension is also augmented by one.
+If $(\xi ^*,x^*)$ is a solution of (\ref{bv8}) then
+\begin{equation} \label{bv9}
+bx^* -(p+1)\xi  = \delta
+\end{equation}
+if and only if $\xi ^* = 0$, and a slight modification of Lemma \ref{uuu} shows
+that the objective function of (\ref{bv8}) has the value $\delta $ in optimum,
+i.e., that (\ref{bv9}) holds in optimum if and only if $x^*$ is feasible for
+(\ref{e22}).
+

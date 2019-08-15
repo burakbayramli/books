@@ -1,0 +1,74 @@
+\section{Projection Method II}
+For $\max \{ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}
+\}$,\\ $B \in \Bbb{R}^m{}_n$ with $\rank (B^{\P}) = p$ and
+$\rank (B) =n$.\\
+{\bf Given:} {\bf Feasible point} $x \in \Bbb{R}^n$.  $ Q\cdot R = [B^{\P}]^T
+\; \mbox{QR-decomposition of} \; [B^{\P}]^T$.
+%
+\[
+\A(x) = \{\rho _1,\ldots, \rho _n\} =  \{1, \ldots, p,0, \ldots, 0\}, \;
+\N(x) = \{p + 1,\ldots ,m\},
+\]
+\[ \ba{.}{lll}
+Q = [q_1,\ldots q_n], & U = [q^T_i]_{i=p+1}^n,\\
+B^{\A} := \ba{[}{c}B^{\P}\\ U\ea{]},
+ & [B^{\A}]^{-1} = A  = [a_i]_{i = 1}^n, &B^{\N}A
+\\
+r = B^{\N}x - c^{\N}, & w =aA, & f = ax.
+\ea{.}
+\]
+%
+{\bf Step 1.1.} (Compute search direction $s$.)\\
+If $0 \in \A(x)$ then :\\
+Compute
+\[
+j := \min \arg_k \max \{|w_k|, \; \A(x)_k = 0, \; p < k\}.
+\]
+If $w_j > 0$ then $s = - a_j$,\\
+if $w_j \leq 0$ then $s = a_j$,\\
+If $w_j = 0$ and $B^{\N}s \geq 0$ then $s := -s$.\\
+Go to Step 2.\\
+{\bf Step 1.2.}\\
+If $0 \notin \A(x)$ then:
+If $w_k \geq 0, \; k = p+1, \ldots,n$ then $x$ is optimum else compute
+\[\ba{.}{ll}
+j := \min \arg_k \min \{ w_k, \; p < k\}
+&\mbox{(fast)},\\
+j := \arg_k \min \{\rho _k \in \A(x), \; w_k < 0, \; p < k\} &
+\mbox{({\sc Bland}'s rule, in deg. vertex)}.\\
+\ea{.}
+\]
+Set $s = a_j$.\\
+%
+{\bf Step 2.} (Which step width $\tau^*$?)\\
+If $d_j := B^{\N}s \geq 0$ then a solution does not exist else compute
+\[
+\tau := \min  \{r^k/d^k{}_j, \; d^k{}_j < 0\}, \; i =
+\min \{ k, \; d^k{}_j < 0, \; \; r^k/d^k{}_j = \tau \},
+\]
+or ({\sc Bland}'s rule)
+\[
+i =  \arg_k \min \{\sigma _k \in \N(x), \; d^k{}_j < 0, \; r^k/d^k{}_j =
+\tau \}.
+\]
+%
+{\bf Step 3.} (Change of basis.)\\
+\[
+{\bf Q} = \mbox{swap} (P,i+n,j).
+\]
+Set
+\beqn \ba{.}{rcl}
+\A(x)  &=& \{\rho_1 , \ldots , \rho_{j -
+  1}\,,\,\sigma_{i}\,,\,\rho_{j +1} , \ldots \rho_n\},\\
+\N(x) &=& \{\sigma_1 , \ldots ,
+\sigma_{i-1}\,,\,\rho_j \,,\,\sigma_{i+1}, \ldots
+, \sigma_m\} \; \mbox{if} \; \rho _j \neq 0,\\
+\N(x) &=& \{\sigma_1 , \ldots ,
+\sigma_{i -1}\,\,\sigma_{i +1}, \ldots
+, \sigma_m\} \; \mbox{if} \; \rho _j = 0,\\
+\ea{.}
+\eeqn
+If $\rho _j = 0$ then  cancel row $i$ in tableau {\bf P}.
+\par
+Return to Step 1.
+

@@ -1,0 +1,599 @@
+\section{Characterization of Solutions}
+In algorithmic design of linear programming problems by ``vertex methods'',
+optimality or possible improvement is checked by a geometric property of the
+gradient $a$ of the objective function $x \mapsto ax$.  Because $a$ is an
+element of the dual space $\Bbb{R}_n$ to the column space $\Bbb{R}^n$, the
+optimum is characterized in the following {\bf main theorem of linear
+programming } problem (\ref{e1}) by ``dual'' properties of a solution.
+In contrast to many authors, a {\bf solution} of a problem is always an
+optimum here and not only a feasible point. Recall that
+\[
+\P = \{1, \ldots, p\}, \quad \Q = \{p+1, \ldots,m\}.
+\]
+%
+\begin{theorem} \label{s2} ({\sc Farkas}, Characterization Theorem)
+Let
+$
+a \in \Bbb{R}_n, \; B \in \Bbb{R}^m{}_n, \; c \in \Bbb{R}^m.
+$
+Then $x^* \in \Bbb{R}^n$ is a solution of
+%
+\begin{equation} \label{e4}
+ \max\{ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}\}
+\end{equation}
+%
+if and only if there exists a pair $(x^*,y^*) \in \Bbb{R}^n \times
+\Bbb{R}_m $ with the following three properties
+%
+\begin{equation} \label{e5}
+\fbox{$
+\ba{.}{lll}
+(a) & B^{\P}x^* = c^{\P}, \; B^{\Q}x^* \leq c^{\Q},        & \mbox{primal
+feasibility},\\
+(b) & y^*B = a, \; y^*_{\Q} \geq 0,  & \mbox{dual feasibility},\\
+(c) & y^*_{\Q}(B^{\Q}x^* - c^{\Q}) = 0,               & \mbox{complement
+condition}. \ea{.}
+$}
+\end{equation}
+\end{theorem}
+%
+%
+A vector $y^*$ with the above properties is called {\sc
+Lagrange} multiplier of the problem.
+\par
+%
+Proof. If $(x^* ,y^*)$ is a pair with the above properties then
+$x^*$ is feasible by (a) and we have for all feasible $x$
+%
+\beqn
+\ba{.}{rcl}
+ax^* - ax & \stackrel{(b)}{=} & y^*Bx^* - y^*Bx\\
+& \stackrel{(a)}{=}&
+y^*_{\P}c^{\P} + y^*_{\Q}B^{\Q}x^* - y^*_{\P}c^{\P} - y^*_{\Q}B^{\Q}x\\
+& \stackrel{(c)}{=}&
+y^*_{\Q}c^{\Q} - y^*_{\Q}B^{\Q}x = y^*_{\Q}(c^{\Q} - B^{\Q}x)  \geq 0
+\ea{.}
+\eeqn
+hence $x^*$ is optimum.
+\par
+On the other side, if $x^*$ is a solution of the problem (\ref{e4})
+then $x^*$ is feasible and thus (a) is fulfilled. Let
+\[
+A := \ba{[}{r} B^{\P}\\ -B^{\P} \\B^{\Q} \ea{]}, \; g := \ba{[}{r} c^{\P}\\
+-c^{\P}\\  c^{\Q} \ea{]}, \; q := g - Ax^* = \ba{[}{c}0\\ 0 \\ c^{\Q} -
+B^{\Q}x^* \ea{]} \geq 0 \]
+and let
+%
+\beqn \ba{.}{lll}
+\L &:= \{(x,r) \in \Bbb{R}^{n+1}, & [-A,q]\ba{[}{l}x\\r\ea{]} \geq 0 \},\\
+\M &:= \{(x,r) \in \Bbb{R}^{n+1}, & [-a,0]\ba{[}{l}x\\r\ea{]} \geq 0 \}.
+\ea{.} \eeqn
+%
+Both these sets are convex cones.  If $(x,r) \in \L$ and $0 < \alpha , \;
+\alpha r \leq 1$, then
+\[
+q - \alpha Ax = q(1 - \alpha r) + \alpha (- Ax + qr) \geq 0,
+\]
+because $q \geq 0$, $1 - \alpha r \geq 0$ and we have $- Ax + qr \geq 0$.
+Hence, by definition of $q$,
+\[
+0 \leq g - A(x^* + \alpha x).
+\]
+Therefore $x^* + \alpha x$ is also feasible and thus
+\[
+a(x^* + \alpha x) \leq ax^*,
+\]
+because $x^*$ was optimum.  It follows that $- a \, x \geq 0$, i.e., $(x,r) \in
+\M$.  By this way the inclusion $\L \subset \M$ is shown which means that
+\[
+[-A,q]\ba{[}{l}x\\r\ea{]} \geq 0  \Longrightarrow
+[-a,0]\ba{[}{l}x\\r\ea{]} \geq 0.
+\]
+By the corollary to the Lemma of {\sc Farkas} there exists a $0 \leq u^* =
+(v^*_1, v^*_2, w^*) \in \Bbb{R}_p \times \Bbb{R}_p \times \Bbb{R}_{m-p}$ with
+\[
+u^*[- A, \; q] = [-a, \; 0].
+\]
+This equation is equivalent to
+\beqn \ba{.}{rl}
+- v_1^*B^{\P} + v_2^*B^{\P} - w^*B^{\Q}  &= - a,\\
+w^*(c^{\Q} - B^{\Q}x^*)             & = 0.
+\ea{.}
+\eeqn
+Because $w^* \geq 0$ the second part of the assertion now follows for
+$y^*_{\P} = v^*_1 - v^*_2, \; y^*_{\Q} = w$.\\
+%$\Box$ \hfill\\
+%
+%
+%
+By simple transposition we derive from Theorem  \ref{s2}
+%
+\begin{corollary} \label{f3}
+Let
+$
+a \in \Bbb{R}^n, \; B \in \Bbb{R}^n{}_m, \; c \in \Bbb{R}_m.
+$
+Then $x^* \in \Bbb{R}_n$ is a solution of
+%
+\begin{equation} \label{e6}
+\max\{xa, \; xB_{\P} = c_{\P}, \; xB_{\Q} \leq c_{\Q}\}
+\end{equation}
+%
+if and only if there exists a pair $(x^*,y^*) \in (\Bbb{R}_n
+\times \Bbb{R}^m)$ with the following three properties
+%
+\begin{equation} \label{e7}
+\ba{.}{lll}
+(a) & x^*B_{\P} = c_{\P}, \; x^*B_{\Q} \leq c_{\Q},       & \mbox{primal
+feasibility},\\
+(b) & By^* = a, \; y^{*\Q} \geq 0,    & \mbox{dual feasibility},\\
+(c) & (x^*B_{\Q} - c_{\Q})y^{*\Q} = 0,              & \mbox{complement
+condition}.  \ea{.}
+\end{equation}
+\end{corollary}
+%
+The next result corresponds to Theorem \ref{s2} and characterizes a solution
+$y^*$ of the dual problem.
+\par
+\begin{corollary} \label{f4}
+Let
+$
+a \in \Bbb{R}_n, \; B \in \Bbb{R}^m{}_n, \; c \in \Bbb{R}^m.
+$
+Then $y^* \in \Bbb{R}_m$ is a solution of
+%
+\begin{equation} \label{e8}
+\min\{yc, \; yB = a, \; y_{\Q} \geq 0\}
+\end{equation}
+%
+if and only if there exists a pair $(y^*,z^*) \in \Bbb{R}_m \times
+\Bbb{R}^{n+m-p}$ with the following three
+properties where $z^* = (u^*, v^*), \; u^* \in \Bbb{R}^n, \; v^* \in
+\Bbb{R}^{m-p}$,
+%
+\begin{equation} \label{e9}
+\fbox{$
+\ba{.}{lll}
+(a) & y^*B = a, \; y^*_{\Q} \geq 0, &\mbox{primal feasibility},\\
+(b) & B^{\P}u^* + c^{\P} = 0, \; B^{\Q}u^* + c^{\Q} = v^* \geq 0,
+                                      & \mbox{dual feasibility},\\
+(c) & y^*_{\Q}v^* = 0,              & \mbox{complement condition}.
+\ea{.}
+$}
+\end{equation}
+\end{corollary}
+%
+%
+Proof. We apply Corollary \ref{f3} and substitute for this
+\[
+\wi{x} = y, \; \wi{a} = - c,\;
+\wi{B} = \ba{[}{cc} B^{\P} & O\\ B^{\Q} & - I_{m-p} \ea{]}, \;
+\wi{c} = a, \;  \wi{d} = 0,
+\]
+into the equivalence conditions of Corollary \ref{f3}.  In order to avoid
+confusions, we denote the {\sc Lagrange} multiplicators of the dual problem
+(\ref{e8}) always by $z = (u,v) \in \Bbb{R}^{n+m-p}$.  Then the following
+optimality conditions follow immediately from Corollary \ref{f3} for (\ref{e8})
+\[
+\ba{.}{l}
+\wi{x}^*\wi{B}_{\P} = \wi{c}_{\P}, \; \wi{x}^*\wi{B}_{\Q} \leq \wi{c}_{\Q}
+\Longleftrightarrow  y^*B = a, \; y^*_{\Q} \geq 0;\\[2mm]
+\wi{B}\ba{[}{c}u^*\\v^*\ea{]} = \wi{a}, \; v^* \geq 0\\
+\Longleftrightarrow \ba{[}{l} B^{\P}\\ B^{\Q}\ea{]}u^*
++ \ba{[}{c} O \\ -I_{m-p} \ea{]}v^* = - \ba{[}{l}c^{\P}\\ c^{\Q} \ea{]}, \; v^*
+\geq 0\\ \Longleftrightarrow
+B^{\P}u^* + c^{\P} = 0, \; B^{\Q}u^* + c^{\Q} = v^* \geq 0,\\[2mm]
+y^*\ba{[}{c} 0 \\ -I_{m-p}\ea{]}v^* = 0
+\Longleftrightarrow y^*_{\Q}v^* = 0.
+\ea{.}
+\]
+%$\Box$ \hfill \\
+Now, writing $u^* = - x^*$, the three conditions (\ref{e9}) coincide with the
+three conditions (\ref{e5}) of the Main Theorem \ref{s2}. Moreover, we have
+by (a), (b) and (c)
+\[
+ax^* = y^*Bx^*
+     = y^*B^{\P}x^* + y^*B^{\Q}x^*
+     = y^*c^{\P} + y^*c^{\Q} = y^*c.
+\]
+Therefore the following important result is a direct conclusion from the Main
+Theorem \ref{s2} and Corollary \ref{f4} and justifies geometrically the
+notation {\bf primal problem} and {\bf dual problem}:
+%
+\begin{theorem} \label{f5} (Duality Theorem)\\
+(a) The problem (\ref{e4}),
+\[
+\max \{ax, \; x \in \Omega\}, \; \Omega = \{x \in \Bbb{R}^n, \; B^{\P}x =
+c^{\P}, \; B^{\Q}x \leq c^{\Q}\},
+\]
+has a solution $x^*$ if and only if the problem (\ref{e8})
+\[
+\min \{yc, \; y \in \Omega'\}, \;
+\Omega' = \{y \in \Bbb{R}_m, \; yB = a, \; y_{\Q} \geq 0\},
+\]
+has a solution $y^*$.\\
+(b)
+\begin{equation} \label{e10}
+\max \{ax, \; x \in \Omega\} = ax^* = y^*c
+= \min \{yc, \; y \in \Omega'\}.
+\end{equation}
+(c) A {\sc Lagrange} multiplier $y^*$ of (\ref{e4}) is
+a solution of (\ref{e8}).\\
+(d) If $z^* = (u^*,v^*)$ is a {\sc Lagrange} multipliers of
+(\ref{e8}) then $- u^*$ is a solution of (\ref{e4}).\\
+(e) A solution $x^*$ of (\ref{e4}) and a {\sc Lagrange}
+multiplier $z^* = (u^*,v^*)$ (\ref{e8}) satisfy the relation
+\begin{equation} \label{e11}
+\fbox{$
+x^* = - u^*, \; r^* := B^{\Q}x^* - c^{\Q} = - v^*.
+$}
+\end{equation}
+(f) If $x^*$ is feasible for (\ref{e4}) and $y^*$ is feasible for
+(\ref{e8}) then $x^*$ is a solution of (\ref{e4}) and $y^*$ is a solution
+of (\ref{e8}) if and only if the complement condition is satisfied,
+\[
+y^*_{\Q}(B^{\Q}x^* - c^{\Q}) = 0.
+\]
+\end{theorem}
+%
+The dual of a dual problem is always a primal problem.  However, in some
+special problems, the dual problem has a slightly different form to that given
+in Theorem \ref{f5}, because trivial parts of a {\sc Lagrange} multiplier
+are omitted.  If, for instance, the primal problem has the form
+\[
+\max\{ax, \; Bx \leq c, \; x \geq 0\},
+\]
+then the dual problem can be written in the simpler form
+\[
+\min \{yc, \; yB \geq a, \; y \geq 0\},
+\]
+as is verified easily.
+\par
+In the next definition, $b^k$ denotes again a row of $ B = [b^k]_{k=1}^m$ and
+$\gamma ^k$ an element of the vector $c$.  Recall that an {\bf index vector}
+$\A$ is an {\bf index set} where the position of the entries is fixed.  The
+length of $\A$ is denoted by $|\A|$.
+%
+\begin{definition} \label{d2}
+(a) Let $\C \subset \Bbb{R}^n$ be convex then  $v \in \C$ is an
+{\bf extreme point} if
+\beqn
+\forall \: x, \, y \in \C: \; v \in [x,y] \Longrightarrow v = x \;
+\vee \; v = y.
+\eeqn
+(b) An extreme point $x$ of the polyeder $\Omega := \{ x \in \Bbb{R}^n, \;
+B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}\}$ is a {\bf vertex} of $\Omega$.\\
+(c) For $x \in \Omega := \{ x \in \Bbb{R}^n, \; Bx \leq c \}, \; B \in
+\Bbb{R}^m{}_n$, let
+%
+\beqn \ba{.}{lll}
+\A^*(x)   &:= \{k \in \{1,\ldots ,m\}, \; b^kx = \gamma ^k\},\\
+\N^*(x)   &:= \{1,\ldots,m\} \backslash \A^*(x),
+\ea{.} \eeqn
+be the index vector of the active side conditions and of the inactive side
+conditions in $x$, respectively.
+\end{definition}
+%
+\par
+For the remaining part of this section, it suffice to consider the somewhat
+simpler primal problem
+%
+\begin{equation} \label{e12}
+\fbox{$
+\max\{a x, \; Bx \leq c\}, \; B \in \Bbb{R}^m{}_n.
+$}
+\end{equation}
+%
+\begin{theorem} \label{s3} (Characterization of a vertex)
+Let $\rank (B) = n$.  Then $x \in \Omega = \{x \in \Bbb{R}^n, \:
+Bx \leq c\}$ is a vertex if and only if there exists an index vector of
+length $n$,
+\[
+\A (x) = \{\rho _1, \ldots, \rho _n\}, \; \rho _k \in \A^*(x),
+\]
+such that the matrix
+\[
+B^{\A} := \ba{[}{c}b^{\rho _1} \\ \vdots \\ b^{\rho _n} \ea{]}, \;
+\A := \A(x),
+\]
+is regular.
+\end{theorem}
+%
+%
+Proof. (a) If there exists an index vector $\A(x)$ of length $n$ with the
+mentioned property then the system of equations
+\beqn
+b^{\rho _k}x = \gamma  ^{\rho _k}, \; \rho _k \in {\A}(x),
+\eeqn
+i.e.  the system $B^{\A}x = c^{\A}$, has a unique solution $x$.  Let $x + \tau
+\, v \in \Omega$, i.e., $B(x + \tau \, v) \leq c$ then $\tau \, b^{\rho _k}v
+\leq 0$ must hold for all $\rho _k \in {\A}(x)$ hence we have $\tau \geq 0$ or
+$ \tau \leq 0$.  Then $x$ cannot be a genuine convex combination and therefore
+must be a vertex.
+\par
+(b) If $\rank (B^{\A}) < n$ holds for all index vectors $\A(x)$ which --- as
+index sets --- satisfy ${\A}(x) \subset \A^*(x)$ then let $\A(x) = \{1, \ldots,
+j\}, \; j < n$ without loss of generality.  Then there exists a $0 \neq v \in
+\Bbb{R}^n$ such that $b^kv = 0, \; k = 1, \dots ,j$, and we obtain
+%
+\beqn \ba{.}{ll}
+b^k(x + \tau v) = \gamma ^k, \; \tau \in \Bbb{R}, &k \in
+{\cal A}(x), \\
+\dis b^k(x + \tau v)  = (\sum^j_{i=1}\kappa ^k{}_ib^i)(x + \tau v)
+= \sum^j_{i=1}\kappa ^k{}_ib^ix = b^kx = \gamma ^k, & k \in {\cal A}^*(x)
+\backslash {\cal A}(x).
+\ea{.} \eeqn
+%
+Consequently $x + \tau v \in \Omega$ for all sufficient small $\tau \in
+\Bbb{R}$ (because of the inactive side conditions) therefore $x$ cannot be a
+vertex.\\
+%$\Box$ \hfill \\
+%
+In other words, $x$ is a vertex of the feasible domain $\Omega = \{x \in
+\Bbb{R}^n, \; Bx \leq c\}$ if and only if there exists an index set $\A$
+such that the following representation holds for $x$:
+\[
+x = [B^{\A}]^{-1}c^{\A}.
+\]
+At least $n$ side conditions $b^kx \leq \gamma ^k$ are active in a vertex
+$x$ and exactly $n$ gradients of these side conditions are linear independent.
+A vertex $x$ is called {\bf degenerate} if $|\A^*(x)| > |\A (x)| = n$, i.e.,
+if more than $n$ side conditions are active in $x$ with the maximum
+number $n$ of independent gradients.  In this case the index set $\A(x)$ of
+Theorem \ref{s3} is not determined uniquely.
+\par
+If $x$ is a vertex and $\rho _k \in \A(x)$ then we say that $b^{\rho _k}$ is
+``in the basis of $x$'' or briefly that $\rho _k$ is in the basis of $x$
+because the vectors $b^{\rho _k}$ with $\rho _k \in \A(x)$ form a basis of the
+row space $\Bbb{R}_n$.
+\par
+%
+Equality restrictions
+\[
+B^{\P}x = c^{\P}, \;  \rank (B^{\P}) = p
+\]
+can be incorporated into (\ref{e12}) easily if we require that for all index
+vectors defined by Theorem \ref{s3} holds
+%
+\begin{equation} \label{e14}
+\A(x) = \{1, \ldots , p, \rho _{p+1}, \ldots, \rho _n\},
+\end{equation}
+%
+i.e., if we require that the first $p$ restrictions remain always active.
+\par
+%
+The next result shows that the set of solutions of the primal and of the dual
+problem is a convex set.
+%
+\begin{theorem} \label{s4} Let $x_1, \ldots x_k$ be solutions of the problem
+\[
+\max \{ ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}\}.
+\]
+Then also every {\bf convex combination}
+\[
+x = \sum_{i=1}^k\lambda ^ix_i, \; 0 \leq \lambda ^i \leq 1, \;
+\sum_{i=1}\lambda ^i = 1,
+\]
+is a solution.
+\end{theorem}
+%
+Proof. We have $x \in \Omega$ because $\Omega$ is a convex set and
+$ax_1 = \ldots = ax_k$ by assumption. Consequently,
+\[
+ax = \lambda ^1ax_1 + \ldots + \lambda ^kax_k
+= (\lambda ^1 + \ldots + \lambda ^k)ax_1 = ax_1.
+\]
+%$\Box$ \hfill\\
+%
+The following theorem now shows that it suffices to consider the vertices of
+the feasible domain in solving a linear programming problem, and it
+also explains the way to find a vertex starting from a feasible point.
+%
+\begin{theorem} \label{s5}
+(Vertex Theorem) Let $\rank (B) = n$, let $u \in \Omega = \{x \in \Bbb{R}^n, \;
+Bx \leq c\}, \; B \in \Bbb{R}^m{}_n$, and let the objective function $x \mapsto
+ax$ be bounded on $\Omega$.  Then there exists a vertex $v \in \Omega$ with $av
+\geq au$.
+\end{theorem}
+%
+%
+Beweis. We consider a sequence of corrections
+\[
+v = u + \sigma s, \quad \sigma  > 0,
+\]
+with search direction $s$ and feasible points
+$u$ and $v$. If $u$ is an interior point of
+$\Omega$ then we choose $s = a^T$, i.e., that direction in which the
+objective function grows in the strongest way. In the other cases let
+without loss of generality
+\begin{equation} \label{e15}
+\ba{.}{ll}
+b^ku = \gamma^k \; \mbox{and} \; b^k \; \mbox{linear independent}, \quad
+k = 1, \ldots ,j \; ( 0 \leq j \; \mbox{maximum}),\\
+b^ku = \gamma^k, \quad k = 1, \ldots ,l,\\
+b^ku < \gamma  ^k, \quad k = l+1, \ldots ,m.
+\ea{.}
+\end{equation}
+If $j = n$ then $v = u$ is a vertex by Theorem \ref{s3}.
+If $j < n$ then there exists a search direction
+$s \neq 0$ with
+%
+\[
+b^ks = 0, \quad k = 1, \dots ,j.
+\]
+Because of the linear dependence of the vectors $b^{j+1}, \ldots, b^l$ from
+$b^1, \ldots, b^j$ we also have
+\[
+b^ks = 0, \quad k = 1, \ldots, l.
+\]
+Let without loss of generality $as \geq 0$ else replace $s$
+by $-s$. Then
+%
+\begin{equation} \label{e16}
+\forall \: \sigma  > 0: \; a(u + \sigma s) \geq a \, u
+\end{equation}
+(for all $\sigma  \in \Bbb{R}$ if $as = 0$). Substitution of $u +
+\sigma s$ in the side conditions yields
+\beqn
+b^k(u + \sigma s) = b^ku = \gamma ^k, \; k = 1, \ldots, l,
+\eeqn
+and the conditions for feasibility
+\beqn
+b^k(u + \sigma s) &= b^ku + \sigma c^ks \leq \gamma ^k, \; k = l+1, \ldots, m.
+\eeqn
+These inequalities imply that
+%
+\begin{equation} \label{e17}
+\sigma b^ks \leq \gamma ^k - b^ku \; (\geq 0), \quad k = l+1, \ldots ,m,
+\end{equation}
+are to be satisfied.
+\par
+{\bf Case 1.}
+$\exists \;  k \in \{l+1, \ldots, m\}: \; b^ks > 0$. Then let
+\beqn \ba{.}{rcl}
+i  &=& \arg_k \min \{\psi (k) := \dis \frac{b^ku - \gamma ^k}{- b^ks}, \;
+b^ks > 0, \; k = l+1, \dots ,m\}\\
+\Longrightarrow \sigma  &:=& \psi(i) > 0.
+\ea{.} \eeqn
+Then $i$ is that index for which the index function $\psi:  k \mapsto \psi(k)$
+attains its minimum under the given conditions.  Without loss of generality
+let $i = l+1$ then it follows that
+\beqn
+b^{l+1}(u + \sigma s) &\dis = b^{l+1}u + \frac{\gamma ^{l+1} -
+b^{l+1}u}{b^{l+1}s} b^{l+1}s
+\dis = b^{l+1}u + \gamma ^{l+1} - b^{l+1}u = \gamma ^{l+1}.
+\eeqn
+Moreover, we have
+%
+\beqn \ba{.}{lll}
+b^k(u + \sigma s) &=    \gamma ^k, &k = 1, \ldots ,l,\\
+b^k(u + \sigma s) &\leq \gamma ^k, &k = l+2, \ldots ,m.
+\ea{.} \eeqn
+%
+Thus at least $l+1$ side conditions are active in $v = u + \sigma s \in \Omega$
+and $av \geq au$ because $as \geq 0$ by (\ref{e16}).  Besides, $b^{l+1}$ is
+linear independent from $b^1, \ldots , b^l$ because
+\beqn
+b^{l+1}s > 0 \; \mbox{und} \; b^ks = 0, \; k = 1, \ldots ,l.
+\eeqn
+%
+%
+{\bf Case 2.} $\forall \; k \in \{l+1, \ldots, m\}:  \; b^ks \leq 0$.  By
+assumption we have $b^ks = 0, \; k = 1, \ldots ,l < n$ therefore we obtain
+because (\ref{e15}) that
+\[
+\ba{.}{lll}
+b^k(u + \sigma s) &= \gamma ^k, &\forall \: \sigma  > 0, \; k = 1, \ldots
+,l,\\
+b^k(u + \sigma s) &< \gamma ^k, &\forall \: \sigma  > 0, \; k = l+1,
+\ldots ,m.
+\ea{.}
+\]
+Hence $u + \sigma s \in \Omega $ holds for all $\sigma > 0$ and this second
+case can appear only if the feasible set $\Omega$ is not bounded.  Because $as
+\geq 0$ we have $a(u + \sigma s) \geq au$.  If $as > 0$ then the objective
+function is not bounded on $\Omega$ and the problem has no solution.  If $as =
+0$ then the search direction is perpendicular to the gradient of the objective
+function.
+\par
+If now $b^ks = 0, \; k = 1, \ldots ,m \geq n$ then all $b^k$ are contained in
+the hyperplane defined by $s^Tx = 0$ which is a contradiction to the assumption
+that $\rank(B) = n$.  Hence there exists a $k \in \{l+1, \ldots ,m\}$ with
+$b^ks < 0$.  Choose
+\beqn \ba{.}{rcl}
+i  &:=& \dis \arg_k \min \{\psi(k) := \frac{b^ku - \gamma ^k}{b^ks}, \; b^ks
+< 0, \; k = l+1, \ldots ,m\}\\
+\Longrightarrow \sigma  &:=& \psi(i) > 0.
+\ea{.} \eeqn
+Without loss of generality let $i = l+1$ then we obtain in the same way as
+above
+%
+%
+\beqn \ba{.}{ll}
+b^k(u - \sigma s) &= \gamma ^k, \quad k = 1, \ldots ,l, \; \mbox{since} \;
+b^ks = 0, \\
+b^{l+1}(u - \sigma s) &\dis = b^{l+1}u - \frac{\gamma ^{l+1} -
+b^{l+1}u}{- b^{l+1}s} b^{l+1}s = \gamma ^{l+1},\\
+b^k(u - \sigma s) &\leq \gamma ^k, \quad k = l+2, \ldots ,m.\\
+ \ea{.} \eeqn
+%
+%
+Now at least $l+1$ side conditions are active in $v = u - \sigma s$ and we have
+$av = au$ because of $as = 0$.  In the present case, too, $c^{l+1}$ is linear
+independent from $b^k, \; k = 1, \ldots ,l$, because
+\beqn
+b^{l+1} s < 0 \; \mbox{and} \; b^ks= 0, \; k = 1, \ldots ,l.
+\eeqn
+%
+A comparison shows that the improvement of Case 2 is also attained if one
+replaces here $s$ by $-s$ and then returns to Case 1.
+\par
+The continuation of this process yields finally a $v \in \Omega$ with $n$
+active side conditions of which the gradients are linear independent hence a
+vertex $v$.\\
+%$\Box$ \hfill\\
+%
+Naturally, the Vertex Theorem \ref{s5} holds also for inequalities in the row
+form $xB \leq c \in \Bbb{R}_m$, for the full primal problem (\ref{e1}), and for
+the dual problem problem (\ref{e8}).  It shows that the feasible domain has
+vertices if the rank condition is fulfilled and their number is bounded because
+$m$ side conditions allow at most ${m \choose n}$ different basis sets.  For
+every solution there exists a vertex being also solution.
+%
+\par
+%
+If $\rank (B) < n$ then the feasible domain has no vertices but the boundary
+consists of edges and of linear varieties of higher dimension. Let again
+$\A(x)$ denote an index vector of active side conditions in $x$ with linear
+independent gradients.
+%
+\begin{definition} \label{d3}
+Let $\rank (B) < n$ and let
+\[
+\E := \{x \in \Omega , \; {\cal A}(x) = {\cal A}(\E) \; \mbox{konstant}, \;
+|{\cal A}(\E)| = \rank (B)\} \neq \emptyset,
+\]
+Then $\E$ is a {\bf extreme set} of $\Omega$.
+\end{definition}
+%
+Thus the set ${\cal E}$ is characterized by the fixed index set
+ ${\cal A}({\cal E})$.
+\par
+Let $l = \rank (B)$, let $\E$ be an extreme set of
+$\Omega$ and let without loss of generality
+\[
+b^kx = \gamma ^k, \; k \in {\cal A}(\E) = \{1,\ldots, l\}, \; b^kx \leq \gamma
+ ^k, \; k = l+1, \ldots, m.
+\]
+If $u \in \E$ and $v$ satisfies
+%
+\begin{equation} \label{e18}
+b^kv = 0, \; k = l + 1,\ldots , m,
+\end{equation}
+%
+then also $u + v \in \E$.  However, the system (\ref{e18}) has a nontrivial
+solution therefore every extreme set contains an infinite number of elements.
+Moreover, we have
+\[
+u, v \in \E \Longrightarrow \; \forall \; \lambda: \; u + \lambda (v - u) \in
+\E .
+\]
+If the objective function is bounded on $\Omega$ then $ a(v - u) = 0 $ must be
+fulfilled, i.e.,
+\[
+\forall \; u, v \in \E: \; au = av.
+\]
+Consequently the objective function is constant on $\E$.  By definition, two
+different extreme sets cannot have the same set of active side conditions,
+hence there exists only a finite number of extreme sets.  A suitable
+modifications of the proof of Theorem \ref{s5} shows that for every $x \in
+\Omega$ there exists an extreme set $\E$ such that $ax \leq av, \; \forall \; v
+\in \E$.  Thus we obtain the following result:
+%
+\begin{theorem} \label{s6}
+If $\rank (B) < n$ then the feasible domain $\Omega = \{x \in \Bbb{R}^n, \; Bx
+\leq c\}$ has a finite number of extreme sets.  If the problem has a solution
+then there exists an extreme set of solutions.
+\end{theorem}
+%
+

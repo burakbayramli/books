@@ -1,0 +1,29 @@
+Kapitel XI/FEM_4, Konvektion, Stromfunktion-Wirbel-Form
+Instationaere Form nach H.Ninomiya/K.Onishi; zusaetzlich
+werden die kuenstlichen Randbedingungen fuer die Wirbelstaerke
+automatisiert erzeugt.
+Stationaere From als elliptisches System nach W.N. Stevens
+Zur Netzerzeugung wird teilweise die MATLAB PDE TOOLBOX
+verwendet.
+Im instationaeren Fall ist die unnormalisierte Form vorzuziehen!
+demo1.m       Thermal flow in a cup, instationaer
+demo2.m       Convection in a closed compartment, instationaer
+demo3.m       Convection in a unit square, instationaer
+demo4.m       Thermal flow in a cup, stationaer, einfache Iteration
+demo5.m       Convection in a unit square, stationaer, Newton-Verfahren
+demo6.m       Bsp. mit exakter Loesung, stationaer, einfache Iteration
+demo7.m       Bsp. mit exakter Loesung instationaer
+              mit kuenstl. und exakter Randbedingung fuer W
+              zum Vergleich
+demo8.m       Benard cell, instationaer
+convection.m  Berechnet Temperatur
+vorticity_k.m Berechnet Wirbelstaerke fuer Konvektion
+matrizen.m    Matrizen fuer gekoppeltes System
+rightsides.m  Rechte Seiten fuer elliptisches System
+
+Die kuenstlichen Randbedingungen fuer die Wirbelstaerke W koennen durchaus 
+feste Randbedingungen ersetzen, aber der richtige Zeitschritt DT im 
+Verhaeltnis zur Gittergroesse ist schwierig zu ermitteln.
+Dies aendert sich, wenn ein ODE-Solver verwendet wird,
+muss aber mit einem erheblich hoeheren Zeitaufwand erkauft werden. 
+

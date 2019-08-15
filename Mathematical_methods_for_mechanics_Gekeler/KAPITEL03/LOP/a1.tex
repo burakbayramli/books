@@ -1,0 +1,310 @@
+Let $C \in \Bbb{R}^m{}_n$ denote a matrix with $m$ rows and $n$ columns, let
+$\Bbb{R}^n := \Bbb{R}^n{}_1, \; \Bbb{R}_n := \Bbb{R}^1{}_n$, and let $a \in
+\Bbb{R}_n, \; B \in \Bbb{R}^p{}_n, \; c \in \Bbb{R}^p, \; d \in \Bbb{R}^m$.
+We consider the pair of linear problems
+\[
+\ba{.}{ll}
+ (P) & \Max\{a x, \; Bx = c, \; Cx \leq d \},\\
+ (D) & \Min\{yc + zd, \; yB + zC = a, \; z \geq 0\}
+\ea{.}
+\]
+and compare the tableaus of both problems without using slack variables;
+cf. e.g. \cite{BeRi}, \cite{GroTer}.
+\par
+An application of the Lemma of {\sc Farkas}, cf. \cite{Spe}, \cite{BeRi},
+yields the following characterization of a solution of (P) and (D):
+
+\begin{theorem} \label{1} (a)
+$x^{\ast} \in \Bbb{R}^n$ is a solution of (P) iff there exists a tripel
+$(x^*,y^*,z^*) \in \Bbb{R}^n \times \Bbb{R}_p \times \Bbb{R}_m)$ satisfying
+%
+\[
+\ba{.}{lll}
+(i) & Bx^{\ast} = c, \; Cx^* \leq d	& \mbox{primal feasibility},\\
+(ii) & y^*B + z^*C = a, \; z^* \geq 0	& \mbox{dual feasibility},\\
+(iii) & z^*(Cx^* - d) = 0		& \mbox{complementary slackness}.
+\ea{.}
+\]
+(b) $(y^*,z^*) \in \Bbb{R}_p \times \Bbb{R}_m$ is a solution of (D) iff there
+exists a quadrupel $(y^*,z^*,u^*,v^*) \in \Bbb{R}_p \times \Bbb{R}_m \times
+\Bbb{R}^n \times \Bbb{R}^m$ satisfying
+\[
+\ba{.}{lll}
+(i)   & z^*C + y^*B = a, \; y^* \geq 0	& \mbox{primal feasibility},\\
+(ii)  & B u^* + c = 0, \; Cu^* + d = v^* \geq 0 & \mbox{dual
+feasibility},\\
+(iii) & z^*v^* = 0			& \mbox{complementary slackness}.
+\ea{.}
+\]
+\end{theorem}
+%
+In the Problem (P), $y^*$ and $z^*$ are called the {\sc Lagrange} multipliers
+of the solution $x^*$, and in the problem (D), $u^*$ and $v^*$ are called the
+{\sc Lagrange} multipliers of the solution $(y^*, z^*)$.
+Writing
+\begin{equation} \label{2}
+x^* = - u^*, \; d - Bx^* = v^*,
+\end{equation}
+we see that the conditions in (a) and in (b) do coincide and, moreover,
+\begin{equation} \label{3}
+ax^* = y^*Bx^* + z^*Bx^* = y^*c + z^*d.
+\end{equation}
+Therefore we have the following inference to Theorem \ref{1}:
+%
+\begin{theorem} \label{4}
+The problem (P) has a solution $x^*$ iff the problem (D) has a solution
+$(y^*,z^*)$ and then (\ref{3}) holds.
+\end{theorem}
+%
+%
+In the sequel we suppose that the rank condition is fulfilled:
+\[
+\mbox{rank} (B) = p  \; \mbox{and} \; \mbox{rank} \ba{[}{l}B\\C \ea{]} = n.
+\]
+Instead of (P) we now consider the problem
+%
+\begin{equation} \label{8}
+\Max\{ax, \; Cx \overset{[p]}{\leq} d\}
+\end{equation}
+%
+where ``$\, \overset{[p]}{\leq} \,$'' indicates that in $Cx \leq d$ always the
+first $p$ inequalities are active, i.e., hold as equations.  Using the {\sc
+Matlab}-convention we write $C^{\A} := C(\A,:)$ and $C_{\A} := C(:,\A)$ with
+any suitable index set $\A$.  Let then $x$ be an extreme point of (P), let
+$\A(x)$ be the index set of a basis of $x$,
+\[
+\A(x) = \{1, \ldots,p,\rho _1, \ldots, \rho _{n-p}\}, \;
+\N(x) = \{1, \ldots, m\} \backslash
+\A(x),
+\]
+and let
+\begin{equation} \label{9}
+C^{\A} = \ba{[}{l} c^{\rho _1} \\ \vdots \\ c^{\rho _{n-p}}\ea{]}, \;
+\ba{[}{l}B \\ C^{\A} \ea{]}^{-1} =: A = [A_B, \;  A_C] = [[a_1, \ldots, a_p],
+\; [a_{p+1},\ldots, a_n]],
+\end{equation}
+where row vectors are denoted with upper indices and column vectors with lower
+indices.  The columns of $A$ are the edges of the feasible set in the extreme
+point $x$ with direction pointing to $x$.  Supposing that the problem (P) is
+solvable and omitting {\sc Bland}'s rule we choose with $d = [\delta ^1,
+\ldots, \delta ^m]^T$
+\[ \ba{.}{ll}
+j &:= \Min \Arg \Min \{\phi (k) := aa_k, \; k = p, \ldots, n\},\\
+
+i &\dis := \Min \Arg \Min \{\psi(k) := \frac{c^kx - \delta ^k}{c^ka_j}, \;
+c^ka_j < 0, \; k \in \N(x)\}.
+\ea{.}
+\]
+Then a better --- at least not worse --- extreme point $\wi{x}$ is found from
+$x$ by $ \wi{x} = x - \psi(i)a_j $ which means the row vector $c^{\rho _j}$ is
+removed from and $c^i$ is taken into the row basis of $x$ yielding the basis of
+$\wi{x}$.  The tableau of the primal problem (P) has thus the following form in
+the extreme point $x$:
+%
+\begin{equation} \label{10}
+{\bf P}(x) = [p^k{}_l] :=
+\ba{[}{ll} A & x\\C^{\N}A & r\\w & \zeta  \ea{]}
+= \ba{[}{lll} A_B & A_C & x\\
+		     C^{\N}A_B & C^{\N}A_C & r\\
+		     y & z_{\A} & \zeta
+	   \ea{]}, \quad \ba{[}{l}x = Ac\\r = B^{\N}x - c^{\N}\\
+				  y = aA_B\\ z_{\A} = aA_C\\
+				  \zeta  = aAc
+			 \ea{]}.
+\end{equation}
+The tableau ${\bf Q}(\wi{x}) = [q^k{}_l]$ of the extreme point $\wi{x}$ is
+obtained from ${\bf P}(x)$ by the well-known {\sc Gauss-Jordan} step
+%
+\beqn
+\ba{.}{lll}
+q^i{}_j = 1/p^i{}_j & \mbox{(pivot element)}\,,\; &
+q^k{}_j = p^k{}_j/p^i{}_j \,,\;k \neq i  \quad \mbox{(pivot column)}\,,\\
+q^i{}_l = - p^i{}_l/p^i{}_j\,,\: l \neq j
+& \mbox{(pivot row)}\,,\; & q^k{}_l =  p^k{}_l - p^k_jp^i{}_l/p^i{}_j
+\quad\mbox{(others)}.
+\ea{.}
+\eeqn
+%
+\par
+Let us now turn to the dual problem (D) which is is written in row form here
+for convenience.  This problem has $m + p$ variables and $m + n$ side
+conditions which can be written in the form
+%
+\begin{equation} \label{11}
+[y, z]\ba{[}{rr}  B & 0 \\C & - I_m \ea{]} \leq [a, 0] \in \Bbb{R}_{m+n}
+\end{equation}
+%
+where the first $n$ conditions are always active.  The matrix of these side
+conditions has the full rank $m + p$.  A row vector $(y, z)$ is extreme point
+iff besides the $n$ active restrictions $yB + zC = a \in \Bbb{R}_n$ at least
+further $m - n + p$ conditions $y^i \leq 0$ are active, i.e., the equality sign
+holds there.  The gradients of these conditions are independent by (\ref{11}).
+Let $(y , z)$ be an extreme point of (D) and let --- by historical reasons ---
+%
+\[ \ba{.}{lll}
+ \N(z) &= \{i \in \{1, \ldots, m\}, \; z^i = 0\}, & |\N(z)| = m - n + p,\\
+\A(z)  &= \{1, \ldots, m\} \backslash \N(z),	  & |\A(z)| = n - p,\\
+z_A    &:= z(\A(y)), \; z_N := z(\N(z)).
+\ea{.}
+\]
+In the present ``row problem'' the gradients of active side conditions are
+column vectors and the matrix $\wi{C}_{\N}$ of the gradients of the active
+conditions --- corresponding to the matrix $C^{\A}$ in the problem (P) --- has
+the following form after a suitable row permutation $Q$
+\[
+Q\wi{C}_{\N} = \ba{[}{cc}  B & 0 \\C^{\A} & 0 \\ C^{\N} & - I_{m-n+p}\ea{]},
+\; Q\wi{B}_{\A} = \ba{[}{c}0 \\-I_{n-p} \\ 0 \ea{]}.
+\]
+We write again briefly
+\[
+\ba{[}{l}B \\ C^{\A}\ea{]}^{-1} =: A = [A_B, A_C], \; A_B \in \Bbb{R}^n{}_p,
+\; A_C \in \Bbb{R}^n{}_{n-p}.
+\]
+Then the matrix $\wi{A}$ of the edges in the extreme point
+$(y, z)$ has here the form
+\[
+\wi{A} \equiv \ba{[}{l}\wi{a}^1\\\vdots\\ \wi{a}^{m+p}\ea{]}
+:= [\wi{C}_{\N}]^{-1} =
+\ba{[}{cc} A & 0\\C^{\N}A & -I_{m-n+p}\ea{]}Q^T.
+\]
+The first $n$ rows of $\wi{A}$ cannot be chosen for descent
+directions because they leave the feasible set.
+In the present minimum problem, the optimality condition thus has the form
+%
+\begin{equation} \label{12}
+v^{\rho _k} := - \wi{a}^{n+k}\ba{[}{l}c \\ d\ea{]} \geq 0, \; k = 1, \ldots,
+m-n+p, \end{equation}
+%
+i.e. $- v^{\rho _k} \leq 0, \; k = 1, \ldots, m-n+p,$ where
+%
+\begin{equation} \label{13}
+\wi{a}^{n+k}
+= [c^{\rho _k}A, \; - [\delta ^k{}_l]_{l=1}^{m-n+p}]Q^T \in \Bbb{R}_{m+p}.
+\end{equation}
+%
+($\delta ^k{}_l$ {\sc Kronecker} symbol). Writing
+\[
+Q\ba{[}{l}c\\ d\ea{]} = \ba{[}{l}c\\d^{\A}\\d^{\N}\ea{]},
+\; \ba{[}{l}c\\ d \ea{]} = Q^T\ba{[}{l}c\\d^{\A}\\d^{\N}\ea{]}
+\]
+we obtain from (\ref{12})
+%
+\begin{equation} \label{14}
+v^{\N} := d^{\N} - C^{\N}A_Cd^{\A} - C^{\N}A_Bc \geq 0 \in \Bbb{R}^{m-n+p}.
+\end{equation}
+\par
+If $(y, z)$ is not optimal then (\ref{14}) is violated and
+%
+\[
+\mbox{a column $e_r$ of} \;\ba{[}{c}0\\ 0\\- I_{m-n+p}\ea{]} \;
+\mbox{and a column $e_s$ of} \ba{[}{c} 0\\
+- I_{n-p}\\ 0 \ea{]} \; \mbox{are to be exchanged}.
+\]
+In the matrix $Q\wi{C}_{\N}$ this corresponds to an exchange of
+{\bf row} of $C^{\N}$ with a row of $C^{\A}$.
+We choose  $e_r, \; r = \N(z)_j$ with
+%
+\begin{equation} \label{15}
+j = \Max \Arg_k \Max \{\phi(k) := \wi{a}^{n+k} \ba{[}{l}c \\ d \ea{]}, \; k
+\in \{1, \ldots, m - n + p\}\},
+\end{equation}
+%
+i.e. $j = \Max \Arg_k \Max \{- v^{\rho _k}, \; k \in \{1, \ldots, m-n+p\}\}$.
+The search direction
+$\wi{a}^{n+j}$ yields for $(\wi{y}, \wi{z}) = (y, z) -
+\tau \wi{a}^{n+j}$ and $\tau > 0$
+\[
+[(y,z) - \tau \wi{a}^{n+j}]\ba{[}{l}c \\ d\ea{]}
+<  yc + zd. \]
+\par
+For the computation of the optimum step length $\tau $ we have to substitute
+$(\wi{y}, \wi{z})$ into the inactive conditions being simple sign conditions in
+here,
+%
+\begin{equation} \label{16}
+z_{\sigma _k} \geq 0 \Longleftrightarrow - (y, z)
+\, e_{p + \sigma _k} \leq 0, \; k = 1, \ldots, n - p,
+\end{equation}
+recalling that $\A(z) = \{\sigma _1, \ldots, \sigma _{n-p}\}$.
+Substitution of
+ $(\wi{y}, \wi{z}) = (y,z) - \tau \wi{a}^{n+j}$ into
+(\ref{16}) yields with	(\ref{13}) the condition for feasibility
+\[
+- z_{\sigma _k} + \tau [c^{\rho _j}A]_{p+k} \leq 0, \; k = 1, \ldots ,n - p.
+\]
+Supposing that the problem is solvable and omitting {\sc Bland}'s rule we
+choose
+%
+\begin{equation} \label{17}
+\dis i = \Min \Arg \Min \{\psi(k) := \frac{z_{\sigma
+_k}}
+{[c^{\rho _j}A]_{p+k}}, \;
+%
+[c^{\rho _j}A]_{p+k} > 0, \;  k \in \{1, \ldots, n - p\}\}.
+\end{equation}
+%
+Then $\tau ^* := \psi(i) \geq 0$ is the optimum step length.
+\par
+For the tableau of the present row problem $\Max\{\wi{x}\wi{a}, \;
+\wi{x}\wi{C} \leq \wi{d}\}$ we have in complete analogy to (\ref{10})
+%
+\begin{equation} \label{18}
+\wi{{\bf P}} :=
+\ba{[}{ccc} \wi{A} & \wi{A}\wi{C}_{\A} & \wi{w}\\
+\wi{x} & \wi{r} & \wi{\zeta} \ea{]}
+\end{equation}
+%
+where $\wi{x}$ is now the actual extreme point and $\wi{w}$ contains the
+relevant parts of the multipliers:
+\[
+\wi{x} = [y, \; z_{\A}, \; z_{\N}] \in \Bbb{R}_{m+p}, \;
+\wi{w} = - \ba{[}{l}u \\v^{\N}\ea{]} \in \Bbb{R}^{m+p}, \;
+\wi{\zeta} = zd + yc \in \Bbb{R}.
+\]
+Moreover, we have
+\[
+\wi{r} = \wi{x}\wi{C}_{\A} - \wi{d}_{\A} = \wi{x}\ba{[}{l}0\\-I_{n-p}\\ 0\ea{]}
+= -z_{\A}
+\]
+and
+%
+\[
+\wi{A}\wi{C}_{\A} =
+\ba{[}{ccc} A_B & A_C & 0\\ C^{\N}A_B & C^{\N}A_C & - I_{m-n+p}
+\ea{]}\ba{[}{c} 0 \\ - I_{n-p} \\ 0 \ea{]}
+= \ba{[}{c}- A_C \\ - C^{\N}A_C \ea{]}.
+\]
+Therefore we obtain for the tableau of the dual problem
+%
+\[
+\wi{{\bf P}}(y,z)
+=
+\ba{[}{ccccc}
+A_B	  & A_C       & 0	    & -A_C	      &  - u \\
+C^{\N}A_B & C^{\N}A_C & - I_{m-n+p} & -C^{\N}A_C      &  - v^{\N}\\
+y	  & z_{\A}    & z_{\N}	    & -z_{\A}	      & \wi{\zeta}
+\ea{]}.
+\]
+In this tableau the second block column appears in the fourth block column
+again with negative sign therefore the fourth block column can be cancelled.
+The third block row can be cancelled, too, because the index set $\A(z)$ has
+always to be updated and $z_{\N}$ equals zero by definition of the index set
+$\N(z)$.  Hence recalling (\ref{2}) we obtain the desired result namely
+\[
+{\bf P}(x^*) = \wi{\bf{P}}_{red}(y^*,z^*)
+\]
+if $x^*$ is a unique and nondegenerate solution of the problem (P). (Then
+$(y^*,z^*)$ is a unique and nondegenerate solution of the problem (D).)
+In particular, the matrix $A$ has the same dimension in
+both problems. Usually the last column of $\wi{{\bf P}}(y,z)$ is multiplied by
+$-1$ in most presentations but a sign change of a not--pivot column does not
+affect the global {\sc Gauss-Jordan} step.
+\par
+If $x$ is a non--optimum extreme point of (P) then $(y,z)$ in the
+tableau ${\bf P}(x)$ is not feasible for (D) and, vice versa, if $(y,z)$ is a
+non--optimum extreme point of (D) then the point $x$ associated to
+this problem by (\ref{2}) is not feasible for (P). Therefore, if e.g. a primal
+problem is solved by the dual method, i.e. the method for solving
+(D), then the solution is approximated from the unfeasible domain and hence an
+approximation is an unfeasible point.
+

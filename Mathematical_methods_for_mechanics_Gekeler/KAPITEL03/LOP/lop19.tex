@@ -1,0 +1,159 @@
+\section{Simplex Method II}
+For $\min \{yc, \; yB = a, \; y\ba{[}{c}0\\ -I_{m-p}\ea{]} \leq 0\},
+\; a \geq 0$, phase 1 and phase 2.\\
+$B \in \Bbb{R}^m{}_n$ with $\rank (B^{1:p}) = p$ and
+$\rank (B) = n$.\\
+{\bf (a) Augmented Auxiliary Problem}.
+%
+\[
+\max\{yb, \; y\ba{[}{ccc} -I_p & B^{1:p} & O \\O  & B^{(p+1):m} & -I_{m-p}
+\ea{]} \leq [0, \; a, \; 0]\}.
+\]
+This problem is considered for a primal problem in row form.\\
+%
+Compute  $ b = \sum_{i=1}^nb_i, \; \delta  = \sum_{i=1}^n\alpha _i$,
+%
+\[
+\ba{.}{lll}
+A = \ba{[}{c}-I_p \\ 0\ea{]}, & D = - B, &w = - b,\\
+y_{1:p} = 0,  &   r = - a, & f = 0.
+\ea{.}
+\]
+Index vectors for initial feasible point $y = 0$:
+\[ \ba{.} {rclcl}
+\A(y) &=&  \{\rho _1,\ldots,\rho _m\} = \{0, \ldots ,0,1,\ldots
+,m-p\},\\
+\N(y) &=&  \{\sigma_1, \ldots,\sigma_n\} = \{m-p+1, \ldots, m-p+n\},\\
+  q   &=&  0 \; \mbox{number of active $yb_i \leq \alpha _i$}\\
+  h   &=&  n \; \mbox{number of inactive $yb_i \leq \alpha _i$}.
+\ea{.}
+\]
+Compute tableau
+\[
+{\bf P} = [P^i{}_k] = \ba{[}{ccc} A & D & w\\ y_{1:p} & r & f\ea{]}.
+\]
+{\bf Step 1.1.} (Compute search direction.)\\
+If $0 \in \A(y)$ then :\\
+Compute
+\[
+j := \min \arg_k \max \{|w^k|, \; \A(y)_k = 0, \; q < k\}.
+\]
+{\bf Step 1.2.} Compute search direction,
+\[
+d = D^j{}_{p+1:p+h}.
+\]
+If $0 \in \A(y)$ and ($w^j \neq 0$ or $w^{q+1:m} \geq 0$) then\\
+\hspace*{1cm} if $w^j > 0$ then $d = d$,\\
+\hspace*{1cm} if $w^j < 0$ then $d = - d$,\\
+\hspace*{1cm} if $w^j = 0$ and $d \geq 0$ then $d := -d$\\
+else
+\[
+j = \min \arg_k \min \{w^k, \; k > q, \; \rho _k > 0\}, \:
+d = D^j{}_{p+1:p+h}.
+\]
+{\bf Step 2.} Compute step width.\\
+If $d \leq 0$ then a solution does not exist else compute
+\[
+i := \dis \min \arg_k \min\{\frac{r_k}{d_k}, \; d_k > 0\}.
+\]
+%
+{\bf Step 3.} (Change of basis.) Compute
+\[
+{\bf P} = \mbox{swap}({\bf P},j,p+i).
+\]
+If $i > n - q$ then after swapping
+\beqn \ba{.}{rcl}
+\A(y)  &=& \{\rho_1 , \ldots,\rho_{j-1},\sigma_i,\sigma_{j+1},
+                      \ldots,\rho_n\},\\
+\N(y)  &=& \{\sigma_1,\ldots,\sigma_{i-1},\rho _j,\sigma_{i+1},
+                      \ldots,\sigma_h\}.
+\ea{.}
+\eeqn
+%
+If $i \leq n - q$ then after swapping move row $j$ at position $q+1$ and
+column $p+i$ at position $n$ in tableau ${\bf P}$,
+%
+\beqn \ba{.}{rcl}
+\A(y)  &=& \{\rho_1,\ldots,\rho_q,\sigma_i,
+             \rho_{q+1} , \ldots , \rho_{j - 1},
+             \rho_{j+1}, \ldots, \rho_m\},\\
+\N(y)  &=& \{\sigma_1 , \ldots ,
+             \sigma_{i-1},\sigma_{i+1} \, \ldots, \sigma_h, \rho _j\},\\
+q        &=& q + 1.
+\ea{.}
+\eeqn
+If $\rho_j = 0$ then  cancel pivot column $p+i$ in tableau
+${\bf P}$,
+\[
+\ba{.}{rcl}
+\N(y)   &=& \{\sigma_1 ,\ldots,\sigma_{i-1},\sigma_{i+1},
+                         \ldots, \sigma_h\}, \\
+h       &=& h - 1.
+\ea{.}
+\]
+%
+{\bf Test for Optimum}.\\
+If not $(\A(y) > 0$ and  $w^{(q+1):m} \geq 0)$ then
+return to step 1.1 else\\
+{\bf Adaption of tableau and index vectors}.\\
+If $f < \delta $ then feasible domain empty else\\
+{\bf Step 4.}
+If $q < n$ choose $\sigma_j \in \N(y)$ with $\sigma_j \leq n$, compute
+%
+\[\ba{.}{c}
+i := \min \arg_k \max \{|w^k|, \; k > q\},\\
+{\bf P} = \mbox{swap}({\bf P},j,p+i).
+\ea{.}
+\]
+Move row $j$ at position $q + 1$ and column $p+i$ at position $n$
+in tableau ${\bf P}$,
+%
+\beqn \ba{.}{rcl}
+\N(y)  &=& \{\sigma_1 , \ldots ,
+           \sigma_{i-1},\sigma_{i+1} \, \ldots, \sigma_h, \rho_j\},\\
+\A(y)  &=& \{\rho _1,\ldots,\rho_q,\sigma_i,
+               \rho_{q+1} , \ldots , \rho_{j - 1},
+               \rho_{j+1}, \ldots, \rho_m\},\\
+q        &=& q + 1.
+\ea{.}
+\eeqn
+Return to Step 4.\\
+Set
+%
+\[
+\R       = \{\sigma_1, \ldots \sigma_{n-p}\}, \;
+{\cal S} = \{\rho _{m-n+1},\ldots, \rho_m\}
+\]
+set in tableau ${\bf P}$
+\[
+\ba{.}{rcl}
+w &=& \ba{[}{l} P^{1:n}{}_{(p+1):n}c^{\R}  -P^{1:n}{}_{1:p}c^{1:p}\\
+     c^{\cal S} + P^{n+1:m}{}_{(p+1):n}c^{\R}
+       - P^{(n+1):m}{}_{1:p}c^{1:p} \ea{]},\\[2mm]
+f &=& P^{m+1}{}_{(p+1):n}c^{\R} - P^{m+1}{}_{1:p}c^{1:p}.
+\ea{.}
+\]
+{\bf Test for Optimum}\\
+If not $(\A(y) > 0$ and $w^{(q+1):m} \geq 0)$ then
+return to step 1.1.\\
+{\bf Result} Let
+\[
+\B := \{\rho_1, \ldots,\rho_n\} - m, \;
+\C := \{\rho_{n+1}, \ldots, \rho_m\} - n,
+\]
+\[ \ba{.}{rclcrlcrl}
+y_{\P}&=& P^{m+1}{}_{1:p},& y_{\N} &=& - P^{m+1}{}_{(p+1):n},
+&y_{\A} &=& 0,\\
+z(\B)  &=& P^{1:n}{}_{n+1},& z(\C) &=& P^{n+1:m}{}_{n+1}, &  z(\N) &=& 0 .
+\ea{.}
+\]
+\[
+x = - z^{1:n}.
+\]
+In case of success, $x$ is a solution of the primal problem and $y$ is a
+solution of the above dual problem. For a common pair of basis and non-basis
+index vectors, say $\wi{\A}(y), \wi{\N}(y)$, we obtain
+\[
+\wi{\A}(y) := \{1,\ldots,\N(y)\}, \wi{N}(y) := \A(y) .
+\]
+

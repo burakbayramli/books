@@ -1,0 +1,158 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/03/03} %%%%%%%%%%%%%%
+
+\begin{document}
+\addtolength{\belowdisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1ex}
+\parskip1ex
+%
+{\bf Math. Methoden zur Mechanik}
+\par\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par\vspace{-2mm}
+\rule{\textwidth}{1pt}\\
+\par\vspace{-3mm}
+Nebenrechnungen zu Beispiel 2.6.3.
+\[
+\ba{.}{rcl}
+\dot{u}_1 &=& u_2\\[1ex]
+\dot{u}_2 &=& \dis \alpha(u_1 + 2u_4)
+ - \mu'\frac{u_1 + \mu }{D_1(u)^{3/2}} - \mu \frac{u_1 - \mu'}{D_2(u)^{3/2}}\\[1ex]
+\dot{u}_3 &=& u_4\\[1ex]
+\dot{u}_4 &=& \dis \alpha(u_3 - 2u_2)
+- \mu'\frac{u_3}{D_1(u)^{3/2}} - \mu\frac{u_3}{D_2(u)^{3/2}}
+\ea{.}
+\]
+\[
+D_1(u) = (u_1 + \mu )^2 + u^2_3\,, \quad
+D_2(u) = (u_1 - \alpha \mu ')^2 + u^2_3\,.
+\]
+
+Umwandlung in ein parameterabh"angiges Problem mit Periode $T = 1$:
+\begin{equation}\label{e0204.3}
+\ba{.}{rcl}
+x'_1 &=&  Tx_2\\[1ex]
+x'_2 &=& \dis T\left[\alpha(x_1 + 2x_4)
+ - \mu'\frac{x_1 + \mu }{D_1(x)^{3/2}}
+ - \mu \frac{x_1 - \mu'}{D_2(x)^{3/2}}\right]\\[1ex]
+x'_3 &=& Tx_4\\[1ex]
+x'_4 &=& \dis T\left[\alpha(x_3 - 2x_2)
+- \mu'\frac{x_3}{D_1(x)^{3/2}}
+- \mu \frac{x_3}{D_2(x)^{3/2}}\right]
+\ea{.}
+\end{equation}
+\[
+D_1(x) = (x_1 + \mu )^2 + x^2_3\,, \quad
+D_2(x) = (x_1 - \alpha \mu ')^2 + x^2_3\,.
+\]
+Zur Berechnung des Anfangswertproblems f"ur die Ableitung nach dem Parameter
+sei $f(x)$ die rechte Seite von (\ref{e0204.3}), und es sei
+\[
+D_{1,1} =  3(x_1+\mu)D^{1/2}_1\,, \; D_{1,3} =  3x_3D^{1/2}_1\,, \;
+D_{2,1} =  3(x_1- \mu')D^{1/2}_2\,, \; D_{2,3} =  3x_3D^{1/2}_2
+\]
+dann gilt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5555
+{\large
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\[
+\grad f(x)_1
+= T\ \ba{[}{c}
+0\\
+\alpha
+ - \mu'\left[D^{3/2}_1 - (x_1 +\mu)D_{1,1}\right]/D^3_1
+ - \mu\left[D^{3/2}_2 - (x_1-\mu')D_{2,1}\right]/D^3_2\\
+0\\
+\mu'x_3D_{1,1}/D^3_1+\mu x_3D_{2,1}/D^3_2
+\ea{]}
+\]
+
+\[
+\grad f(x)_2
+= \ba{[}{c}1\\0\\0\\-2\alpha \ea{]}
+\]
+
+\[
+\grad f(x)_3
+= T\ \ba{[}{c}
+0\\
+\mu'(x_1+\mu)D_{1,3}/D^3_1 + \mu(x_1-\mu')D_{2,3}/D^3_2\\
+0\\
+\alpha - \mu'(D^{3/2}_1 - x_3D_{1,3})/D^3_1
+-\mu(D^{3/2}_2 - x_3D_{2,3})/D^3_2
+\ea{]}
+\]
+
+\[
+\grad f(x)_4 = \ba{[}{c} 0\\2\\1\\ 0\ea{]}
+\]
+
+\[
+\grad f(x)_1
+= T\ \ba{[}{c}
+0\\
+\alpha - \mu'\left[x^2_3 - 2(x_1 +\mu)^2\right]/D^{5/2}_1
+ - \mu\left[x^2_3 - 2(x_1-\mu')^2\right]/D^{5/2}_2\\
+0\\
+\mu'3x_3(x_1+\mu)/D^{5/2}_1+\mu 3x_3(x_1-\mu')/D^{5/2}_2
+\ea{]}
+\]
+
+\[
+\grad f(x)_2
+= T\ \ba{[}{c}1\\0\\0\\-2\alpha\ea{]}
+\]
+
+\[
+\grad f(x)_3
+= T\ \ba{[}{c}
+0\\
+\mu'3x_3(x_1+\mu)/D^{5/2}_1 + \mu3x_3(x_1-\mu')/D^{5/2}_2\\
+0\\
+\alpha - \mu'((x_1+\mu)^2 -2x^2_3)/D^{5/2}_1-\mu((x_1-\mu')^2 - 2x^2_3)/D^{5/2}_2\\
+0
+\ea{]}
+\]
+
+\[
+\grad f(x)_4
+= T\ba{[}{c} 0\\2\alpha\\1\\0\ea{]}
+\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Exakte Anfangsbedingungen:\\
+{\sc Arenstorf}-Orbit I:
+\[
+\left. \begin{array}{lcl}
+t_{anf} = 0, \;
+t_{end} &=& 6.192 \, 169 \, 331 \, 319 \, 639 \, 706 \, 74,\\
+(x_0,y_0,\dot{x}_0, \dot{y_0}) &=& (1.2, 0, 0, -1.049 \, 357 \, 509 \, 830 \,
+319 \, 907 \, 26),\\
+\mu  &=& 0.012 \, 128 \, 562 \, 765 \, 312 \, 310 \, 491 \, 206 \, 8.
+\ea{.}
+\]
+%
+{\sc Arenstorf}-Orbit II:
+\[
+\ba{.}{rcl}
+t_{anf} = 0, \;
+t_{end} &=& 11.124 \, 340 \, 337 \, 266 \, 085 \, 135 \, 970.\\
+(x_0, y_0, \dot{x}_0, \dot{y}_0) &=& (0.994, 0 , 0, -2.031 \, 732 \, 629 \, 557
+\, 336 \, 835 \, 66),\\
+\mu  &=& 0.012 \, 277 \, 471.
+\ea{.}
+\]
+{\sc Arenstorf}-Orbit III:
+\[
+\ba{.}{rcl}
+t_{anf} = 0, \;
+t_{end} &=& 5.436 \, 795 \, 439 \, 260 \, 189 \, 996 \, 897 \, 945\\
+(x_0, y_0, \dot{x}_0, \dot{y}_0) &=& (0.994, 0, 0, -2.113 \, 898 \, 796 \, 694
+\, 502 \, 668 \, 23),\\
+\mu  &=& 0.012 \, 277 \, 471.
+\ea{.}
+\]
+\end{document}
+

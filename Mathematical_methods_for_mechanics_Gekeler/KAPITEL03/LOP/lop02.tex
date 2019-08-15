@@ -1,0 +1,294 @@
+\section{Notations and Examples}
+As usual in general tensor algebra, we make a strict difference between {\bf
+column vectors} $a \in \Bbb{R}^m$ and {\bf row vectors} $b \in \Bbb{R}_n$.  For
+a {\bf matrix} $A \in \Bbb{R}^m{}_n$ with $m$ rows and $n$ columns, we write
+%
+\beqn
+A = \left[ \begin{array}{l} a^1 \\ \vdots \\ a^m \end{array}
+\right] = [a_1 , \ldots , a_n] = [a ^i{}_k]^m_{i=1}{}^n_{k=1}
+\eeqn
+%
+with {\bf rows} $a^i$, {\bf columns} $a_k$ and {\bf entries} $a ^i{}_k$.  We
+also use sometimes the notation $[A]^i{}_k$ or $\alpha ^i{}_k$ for the
+components of a matrix $A$.  Accordingly, the column vector $a \in
+\Bbb{R}^m{}_1 := \Bbb{R}^m$ has the one-dimensional rows $a ^k \in
+\Bbb{R}^1{}_1$ for elements and the row vector $a \in \Bbb{R}^1{}_n :=
+\Bbb{R}_n$ has the one-dimensional columns $a _i \in \Bbb{R}^1{}_1$ for
+elements.  Summarizing, we always regard the following rule:
+%
+\beqn
+\fbox{$ \ba{.}{rcl}
+\mbox{upper index } &\simeq & \mbox{row vector}\\
+\mbox{lower index } &\simeq& \mbox{column vector}.
+\ea{.}
+$}
+\eeqn
+Let
+\beqn
+A = [a ^i{}_j] = \ba{[}{l}a^1 \\ \vdots \\ a^m\ea{]}, \;
+B = [b ^k{}_l] = [b_1,\ldots ,b_p]
+\eeqn
+be a (m,n)-matrix with rows $a^i \in \Bbb{R}_n$ and a
+(n,p)-matrix with columns $b_l \in \Bbb{R}^n$, respectively, then
+\beqn
+C = [c ^i{}_l] = A \cdot B \in \Bbb{R}^m{}_p
+\eeqn
+denotes the inner or {\bf matrix product} with elements
+\beqn
+c^i{}_l = a^i \cdot b_l := \sum^n_{j=1}a ^i{}_j b ^j{}_l.
+\eeqn
+The dot ``$\, \cdot \, $'' is omitted henceforth.  In matrix product we have to
+regard the compatibility condition
+\bc
+\fbox{column number of left factor $=$ row number of right factor.}
+\ec
+In particular we have
+\[
+ab = \sum_{i=1}^na _i b ^i
+\]
+for a row vector $a \in \Bbb{R}_n$ and a column vector $b \in \Bbb{R}^n$.
+\par
+$A^T$ denotes the {\bf transposed} matrix $A$ in which rows and columns are
+interchanged, and a matrix $A$ is called {\bf symmetric} if $A = A^T$.  A
+quadratic matrix $A$ is {\bf regular} if the inverse $A^{-1}$ exists and
+this inverse then is both left inverse and right inverse of $A$ , $A^{-1} \, A
+= A \, A^{-1} = I$.  A real matrix $A$ is called {\bf orthogonal} if $A^T \, A
+= A \, A^T = I$ then $A^{-1} = A^T$.
+\par
+The symmetric product
+\[
+a^Tb = \sum_{i=1}^n a ^i b ^i
+\]
+of two column vectors
+$a,b \in \Bbb{R}^n$ is called {\bf
+scalar product} and
+\[
+|a| := [a^Ta]^{1/2}
+\]
+is the {\sc Euklid}--{\bf norm}.  The matrix product of a column vector $a \in
+\Bbb{R}^m$ with a row vector $b \in \Bbb{R}_n$ is called {\bf tensor product}
+or dyadic product.  We write this special matrix product as $a \otimes b$ in
+order to distinguish it from the scalar product:
+\[
+a \otimes b := \ba{[}{llll}
+a ^1 b _1 & a ^1 b _2 & \cdots & a ^1 b _n\\
+a ^2 b _1 & a ^2 b _2 & \cdots & a ^2 b _n\\
+       & \cdots & \cdots &       \\
+a ^m b _1 & a ^m b _2 & \cdots & a ^m b _n
+\ea{]}, \; a \in \Bbb{R}^m, \; b \in \Bbb{R}_n.
+\]
+%
+Finally,
+\beqn
+I_n = [\delta ^i{}_k]_{i=1}^n{}_{k=1}^n \in \Bbb{R}^n{}_n
+\eeqn
+is the identity matrix of dimension $n$ where the index ``n'' is partly omitted
+and $\delta ^i{}_k$ is the {\sc Kronecker} symbol,
+\[
+\delta ^i{}_k = \ba{\{}{ll} 1 & i = k,\\ 0 & \mbox{else}. \ea{.}
+\]
+\par
+Throughout this volume we use the following index vectors (ordered
+index sets)
+\[
+\fbox{$
+\ba{.}{rclcrll}
+\I_n &=& \{1,\ldots,n\}, &  \I_m &=& \{1,\ldots, m\},\\
+\P   &=& \{1, \ldots,p\},&  \Q   &=& \{p+1,\ldots, m \},\\
+\A   &=& \{\rho _1, \ldots, \rho _n\}, & \N &=& \I_m \backslash  \A
+= \{\sigma _1, \ldots , \sigma _{m-n}\}.
+\ea{.}
+$}
+\]
+\par
+In linear programming one works  with suitable subsets of side conditions
+therefore we have to introduce an absolute and a relative indication of these
+conditions.  For instance, let
+\[
+B = [b^j]_{j=1}^m = [b_k]_{k=1}^n \in \Bbb{R}^m{}_m,
+\]
+be a matrix with rows $b^j$ and columns $b_k$ and let $p \leq n \leq m$
+then we write e.g.
+\[
+B^{\P} := B^{1:p} = \ba{[}{l}b^1\\ \vdots \\ b^p \ea{]},  \quad
+B_{\P} := B_{1:p} = [b_1, \ldots, b_p],
+\]
+and
+\[
+B^{\A} := B(\A,:) = \ba{[}{l}b^{\rho _1}\\ \vdots \\ b^{\rho _n }
+\ea{]},  \quad
+B_{\A} := B(:,\A) = [b_{\rho _1}, \ldots, b_{\rho  _n}]
+\]
+using the {\sc Matlab} notation.  Thus a row vector standing in $B$ at {\bf
+absolute position}
+$\rho _i$ stands in $B^{\A}$ at {\bf relative position} $i$.  In an analogous
+way, a column
+vector standing in $B$ at position $\rho _j$ stands in $B_{\A}$ at position
+$j$.  In particular, for a column vector $a \in \Bbb{R}^m$ and a row vector $b
+\in \Bbb{R}_m$, we have
+%
+\[
+a^{\A} := a(\A) = \ba{[}{l}a ^{\rho _1}\\ \vdots \\ a ^{\rho
+_n}\ea{]}, \quad
+b_{\A} := b(\A) = [b _{\rho  _1}, \ldots, b _{\rho  _n}].
+\]
+\par
+As preliminary illustration of the problems arising in linear programming
+we give now two simple examples:
+
+\begin{example} \label{b1}
+(Cost minimization) For a certain type of livestock
+there are n types of food $j = 1, \ldots, n$ available and each contains
+varying
+amounts of m kinds of nutrients $i = 1, \ldots, m$ (e.g.  carbohydrates,
+proteines, vitamines, etc.). Let
+%
+\beqn \ba{.}{ll}
+\alpha  _j    &= \mbox{cost of one unit of food $j$},\\
+\beta ^i{}_j  &= \mbox{quantity of nutrient $i$ per one unit of food
+$j$},\\
+\gamma  ^i    &= \mbox{livestock requirement for nutrient $i$},\\
+\xi  ^j       &= \mbox{amount of food $j$ in the diet}.
+\ea{.} \eeqn
+%
+With $a := [\alpha  _i], \; B = [\beta  ^i{}_j], \; c = [\gamma  ^i], \; x =
+[\xi  ^i]$, we then obtain the minimium problem
+%
+\beqn \ba{.}{rcl}
+\sum_{j=1}^n\alpha  _j \xi  ^j &=& \min !,\\
+%
+\sum_{j=1}^n\beta  ^i{}_j \xi  ^j &\geq& \gamma ^i, \; i = 1,\ldots,m,\\
+%
+\xi ^j &\geq& 0, \; j = 1, \ldots, n,
+\ea{.}
+\eeqn
+%
+or, in matrix-vector notation
+\beqn
+\min \{a x, \; Bx \geq c, \; x \geq 0\}
+\eeqn
+%
+with nonnegative entries. The vector $a$ is a row vector here,
+$a \in \Bbb{R}_n$, and the vector $c$ is a column vector,
+$c \in \Bbb{R}^m$.
+\end{example}
+%
+\begin{example} \label{b2}
+(Profit maximization) A plant produces $n$ different articles $j = 1, \ldots
+,n$ with profit $\alpha _j$ per piece of article $j$.  There are $m$ different
+machines $i = 1, \ldots, m$ necessary for production.  Article $j$ requires
+$\beta ^i{}_j$ hours (e.g.  per month) on machine $i$ but there are at most
+$\gamma ^i$ hours available.  With the same notations as above we then obtain
+the maximization problem
+%
+\beqn
+\max\{a x, \; Bx \leq c, \; x \geq 0 \}.
+\eeqn
+\end{example}
+\par
+%
+%
+In this volume, we deal with the following pair of general linear
+programming problems
+%
+\begin{equation} \label{e1}
+\fbox{\fbox{$
+\ba{.}{lllll}
+(P) & \max\{a x, & B^{1:p}x = c^{1:p}, & B^{p+1:m}x \leq c^{p+1:m}\},\\
+(D) & \min\{yc,  & yB = a, & y_{p+1:m} \geq 0\}
+\ea{.} \; p \in \Bbb{N}_0,
+$}}
+\end{equation}
+%
+where $B \in \Bbb{R}^m{}_n$ is a matrix with $m$ rows and $n$ columns.  Note
+that the problem (P) is a ``column'' problem, i.e., a problem for an unknown
+column vector $x$, and the problem (D) is a ``row'' problem, i.e., a problem
+for an unknown row vector $y$.  The first $p$ inequalities are equations in
+problem (P), and the first $p$ components of $y$ are unrestricted variables in
+problem (D).  In a more compact form both problems can be written as
+\[
+\ba{.}{llll}
+(P) & \max\{a x, & B^{\P}x = c^{\P}, & B^{\Q}x \leq c^{\Q}\},\\
+(D) & \min\{yc,  & yB = a, & y_{\Q} \geq 0\}.
+\ea{.}
+\]
+and, if $p = 0$,
+\[
+\ba{.}{llll}
+(P) & \max\{a x, & B \leq c\},\\
+(D) & \min\{yc,  & yB = a, & y \geq 0\}.
+\ea{.}
+\]
+In difference to the usual notations, being somewhat arbitrary by the way, we
+refer to (P) as {\bf primal problem} and to (D) as {\bf dual problem} because
+the problem (P) in (\ref{e1}) is more general.
+\par
+The data of these problems are denoted by small greek letters in order to make
+a difference between given data and auxiliary matrices and vectors.  E.g.  the
+general problem (P) in (\ref{e1}) reads explicitely
+%
+\beqn \ba{.}{rclc cc lll}
+\sum_{j=1}^n \alpha  _j \xi  ^j &=& \max !,\\
+%
+\sum_{j=1}^n \beta  ^i{}_j \xi  ^j &=& \gamma ^i
+&\mbox{or}& b^ix &=& \gamma ^i, \; i = 1,\ldots,p,\\
+%
+\sum_{j=1}^n\beta  ^i{}_j \xi ^j &\leq& \gamma  ^i
+&\mbox{or}& b^ix &\leq& \gamma ^i, \; i = p+1,\ldots,m.
+\ea{.}
+\eeqn
+However, such a representation is used only if it is necessary for
+understanding.  A side condition $b^ix \leq \gamma ^i $ is called {\bf active}
+in $x$ if the equality sign holds there, $b^ix = \gamma ^i$, and {\bf inactive}
+if $b^ix < \gamma ^i$ holds.  Equations are always active and are excluded from
+possible inactivation considerations.
+\par
+The closed set
+\[
+\Omega := \{x \in \Bbb{R}^n, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq b^{\Q}\}
+\]
+is called {\bf set of feasible points} of (P) (may be empty), and the linear
+functional $f:  x \mapsto ax$ is called {\bf objective function}.  Similar
+notations hold for (D). Recalling the {\sc Taylor} expansion of a scalar
+function $f: \Bbb{R}^n \ni x \mapsto f(x) \in \Bbb{R}$,
+\[
+f(x + h) = f(x) + \nabla f(x)h + O(|h|^2),
+\]
+we see that the {\bf gradient} of a scalar--valued function $f$ in the point
+$x$,
+\[
+\nabla f(x) := [\frac{\da f}{\da x^1}(x), \ldots, \frac{\da f}{\da x^n}(x)] ,
+\]
+is a {\bf row} vector.  If $f$ is defined on the dual space $\Bbb{R}_n$ then
+$\nabla f(y)$ is a {\bf column} vector.  In case of a linear objective
+function, $f(x) = ax$, we have $\nabla f(x) = a$.
+\par
+The equation $bx = \gamma, \; \gamma \in \Bbb{R}$, describes a hyperplane $H
+\subset \Bbb{R}^n$.  The normal vector $b$ points in the direction of the
+positive half-room $H_+ := \{x \in \Bbb{R}^n, \; bx \geq \gamma\}$.  If $\gamma
+> 0$ then the origin is not contained in $H_+$.
+\par
+The problem \ref{e1}(P) has at least one solution if and only if the feasible
+domain $\Omega$ is not empty and if the objective function is bounded from
+above on $\Omega$ because in this case $\sup \{f(x), \; x \in \Omega \}$ exists
+and is attained because of the closure of $\Omega$.  Both assumptions have to
+be verified during numerical calculation.
+\par
+The set $\Omega$ describes a polyeder in $\Bbb{R}^n$ which is not necessarily
+bounded and has not necessarily interior points.  In order to guarantee that
+$\Omega$ has vertex points and does not consist only of a ``strip'' we make the
+following assumption :
+%
+\begin{assumption} \label{v1} (Rank Condition) Let
+\[
+\rank (B^{\P}) = p \leq n, \; \rank (B) = n.
+\]
+\end{assumption}
+%
+In particular, this assumption of maximum rank yields the condition
+\[
+\fbox{$
+p \leq n \leq m.
+$}
+\]
+

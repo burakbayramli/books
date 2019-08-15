@@ -1,0 +1,175 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 3 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Zermelosches Problem}
+Vgl. {\sc Bryson-Ho}: Applied Optimal control, S. 67.\\
+In einem
+$(x_1,x_2)$-Koordinatensystem soll ein Schiff mit konstanter Geschwindigkeit
+$S$ relativ zum Wasser in m"oglichst kurzer Zeit $T$ von dem Punkt $A =
+(a_1,a_2)$ zu dem Punkt $B = (b_1,b_2)$ fahren ($x = (x_1,x_2)$).
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Schiffes}\\
+v_1(x) & \mbox{Str"omungsgeschwindigkeit in $x_1$-Richtung}\\
+v_2(x) & \mbox{Str"omungsgeschwindigkeit in $x_2$-Richtung}\\
+u & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+Bei diesem Problem werden die {\sc Lagrange}-Multiplikatoren eliminiert und
+$T$ als neue abh"angige Ver"anderliche eingef"uhrt.
+
+Hinweis: Der Gradient einer Abbildung $f:\mb{R}^m \to \mb{R}^n$ ist eine
+(n,m)-Matrix.
+
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$:
+\begin{equation} \label{1}
+\fbox{$
+\dot{x}_1 = S \cos(u(t)) + v_1(x(t)),\quad
+\dot{x}_2 = S \sin(u(t)) + v_2(x(t))
+$}\; .
+\end{equation}
+
+Zielfunktion und {\sc Hamilton}-Funktion:
+\begin{equation} \label{2}
+\ba{.}{rcl}
+J(T) &=& \int_0^T1\, dt = \Min!\\
+H(x,y,u) &=& y_1[S \cos(u) + v_1(x)] + y_2[S \sin(u) + v_2(x)] + 1.
+\ea{.}
+\end{equation}
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen)
+$\dot{y} =  - [\nabla_x H]^T$:
+\begin{equation} \label{3}
+\fbox{$
+\dot{y}_1 = -y_1(v_1)_{x_1} - y_2(v_2)_{x_1}, \quad
+\dot{y}_2 = -y_1(v_1)_{x_2} - y_2(v_2)_{x_2}
+$}\; .
+\end{equation}
+$H$ und die rechte Seite von (\ref{1}) h"angen  nicht explizit von der Zeit $t$
+ab. Daraus folgt die Bedingung $H(x(T),y(T),u(T)) = 0$. Es gilt also
+im Optimum
+\[
+H(x(t),y(t),u(t)) = \dot{H}(x(t),y(t),u(t)) = 0 \qquad \forall
+\; t.
+\]
+Weil die Kontrolle nicht beschr"ankt ist, gilt $H_u = 0$, und es folgt
+aus (\ref{2})
+\[
+\ba{.}{rcl}
+y_1(S \cos(u) + v_1) + y_2(S \sin(u) + v_2 &=& - 1,\\
+- y_1 \sin(u)  + y_2 \cos(u)              &=& 0.
+\ea{.}
+\]
+Also
+\begin{equation} \label{4}
+y_1 = \frac{- \cos(u)}{S + v_1 \cos(u) + v_2 \sin(u)}, \quad
+y_2 = \frac{- \sin(u)}{S + v_1 \cos(u) + v_2 \sin(u)}.
+\end{equation}
+Durch Einsetzen von (\ref{4}) in eine der Gleichungen von (\ref{3})
+erh"alt man eine Differentialgleichung f"ur die Kontrolle $u$
+\par
+\begin{equation} \label{5}
+\fbox{$
+\dot{u} = \sin^2(u)(v_2)_{x_1} + \sin(u) \cos(u)[(v_1)_{x_1} - (v_2)_{x_2}]
+- \cos^2(u)(v_1)_{x_2}.
+$}
+\end{equation}
+\par
+{\sc Goh-Teo}-Transformation, vgl.\ {\sc Craven}: Control and Optimization,
+\S 6.4.3: Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+gew"ahlt und die unbekannte Zeit $T$ als neue (abh"angige) Ver"anderliche
+eingef"uhrt:
+\[
+\ba{.}{rclrcl}
+X_3(s) &=& T, &
+X_1(s) &=& x_1(sT) = x_1(sX_3(s)), \\
+X_2(s) &=& x_2(sT) = x_2(sX_3(s)), &
+U(s) &=& u(sX_3(s))\,.
+\ea{.}
+\]
+Man erh"alt dann ein Differentialsystem der Ordnung 4:
+\[
+\ba{.}{rclrcl}
+X_3'(s) &=& 0, &
+X_1'(s) &=& \dot{x}_1(sX_3)\cdot X_3(s), \\
+X_2'(s) &=& \dot{x}_2(sX_3)\cdot X_3(s), &
+U'(s) &=& \dot{u}(sX_3)\cdot X_3(s).
+\ea{.}
+\]
+Der Einfachheit halber sei $y(s) = [X_1,X_2,X_3,U]$, dann ergibt sich das
+folgende Randwertproblem:
+\[
+\ba{.}{rcl}
+y'_1 &=& [S \cos(y_4) + v_1(y_1,y_2)]y_3,\\
+y'_2 &=& [S \sin(y_4) + v_2(y_1,y_2)]y_3,\\
+y'_3 &=& 0,\\
+y'_4 &=& [\sin^2(y_4)(v_2)_{y_1} + \sin(y_4)\cos(y_4)
+((v_1)_{y_1} - (v_2)_{y_2})
+- \cos^2(y_4)(v_1)_{y_2}]y_3.
+\ea{.}
+\]
+mit den Randbedingungen
+\[
+y(0) = (a_1,a_2,0,0), \quad y(1) = (b_1,b_2,0,0).
+\]
+Es sei $\dot{y} = f(y)$ und $\grad v = [v_{ik}]$. Dann gilt
+\[
+\grad f(y) = \ba{[}{cccc}
+v_{11}y_3 & v_{12}y_3 & S\cos(y_4) + v_1& - S \sin(y_4)y_3\\
+v_{21}y_3 & v_{22}y_3 & S\sin(y_4) + v_2&  S \cos(y_4)y_3\\
+0 & 0 & 0 & 0\\
+p_1 & p_2 & p_3 & p_4
+\ea{]}
+\]
+mit
+\[
+\ba{.}{rcl}
+p_1 &=& y_3\big(\sin^2(y_4)v_{211} + \sin(y_4)\cos(y_4)(v_{111} - v_{221})
+- \cos^2(y_4)v_{121}\big)\\[1mm]
+p_2 &=& y_3\big(\sin^2(y_4)v_{212} + \sin(y_4)\cos(y_4)(v_{112} - v_{222})
+- \cos^2(y_4)v_{122}\big)\\[1mm]
+p_3 &=& \sin^2(y_4)v_{21} + \sin(y_4)\cos(y_4)
+(v_{11} - v_{22}) - \cos^2(y_4)v_{12},\\[1mm]
+p_4 &=& y_3\big(2\sin(y_4)\cos(y_4)v_{21} + (\cos^2(y_4) - \sin^2(y_4))(v_{11}
+- v_{22}) + 2\cos(y_4)\sin(y_4)v_{12}\big)
+\ea{.}
+\]
+Man braucht also zus"atzlich die Matrix
+\[
+D = \ba{[}{cc} v_{111}  & v_{221}\\ v_{112} & v_{222}\ea{]}
+\]
+\par
+% ----------------------------------------------------------
+Das nichtlineare Randwertproblem wird mit dem Box-Schema und dem
+{\sc Newton}-Verfahren gel"ost. Als Startwert wird die direkte Fahrt von $A$
+nach $B$ gew"ahlt. Im folgenden einfachen Beispiel ist dies eine Strecke.
+
+{\bf Beispiel}: Fahrt  von $A = (a_1,a_2)$ nach $B = (0,0)$ mit $v = (- S/2,0)$.
+Winkel $\psi$ zwischen $\ol{AB}$ und $x_1$-Achse:
+\[
+\cos \psi = - \frac{a_1}{a^2_1 + a^2_2}, \;
+\sin \psi = - \frac{a_2}{a^2_1 + a^2_2}.
+\]
+Kosinussatz:
+\[
+S^2 =  d^2 + \frac{S^2}{4} - dS \cos(\psi), \qquad
+d = \dis \frac{S}{2}(\cos \psi + (3 + \cos^2  \psi)^{1/2})\,.
+\]
+Winkel $\phi $ zwischen Schiffsachse und Achse $\ol{AB}$:
+\[
+\frac{S^2}{4} = d^2 + S^2 - 2dS \cos \phi
+\quad \Longrightarrow \quad
+\cos \phi  = \dis \frac{d^2 + 3S^2/4}{2dS}.
+\]
+\end{document}
+

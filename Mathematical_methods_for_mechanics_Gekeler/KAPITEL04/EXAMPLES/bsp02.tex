@@ -1,0 +1,377 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 2 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Orbit-Problem}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, \S \, 2.5.\\
+Ein Raumschiff soll in einer vorgegebenen Zeit $T$ von einem kreisf"ormigen
+Orbit mit Radius $r_0$ den h"ochstm"oglichen kreisf"ormigen Orbit erreichen.  Der
+Einfluss weiterer Himmelsk"orper wird vernachl"assigt.  Das Raumschiff fliegt im
+Gegenuhrzeigersinn.  In Polarkoordinaten $(r,\phi )$ mit dem (punktf"ormigen)
+Zentralk"orper als Zentrum sei
+\[
+\ba{.}{ll}
+r(t)               & \mbox{radiale Entfernung des Raumschiffes}\\
+u = \dot{r}        & \mbox{radiale Geschwindigkeit}\\
+v = r\dot{\phi }   & \mbox{Geschwindigkeit senkrecht zum Radius}\\
+m(t)               & \mbox{Masse des Raumschiffes}\\
+|\dot{m}(t)|       & \mbox{{\em konstante} Treibstoffverbrauchsrate}\\
+S = |\dot{m}(t)|a  & \mbox{Schubkraft}\\
+a                  & \mbox{Maschinenkonstante}\; [m/s] \\
+\alpha (t)         & \mbox{Schubwinkel}\\
+\gamma             & \mbox{Gravitationskonstante}\\
+M                  & \mbox{Masse des Zentralk"orpers}\\
+G                  & = \gamma\cdot M\\
+\rho               & = |\dot{m}(t)|/m(0) \; [1/s]\\
+S                  & = \rho \cdot a \cdot m(0)
+\ea{.}
+\]
+Die Kontrolle $\alpha (t)$  ist der Winkel zwischen der Tangente des
+kreisf"ormigen Orbits zum Zeitpunkt $t$ und der Schiffsachse in Flugrichtung
+gesehen (lokales Koordinatensystem). Bei diesem Problem wird die Kontrolle mit
+Hilfe der Kozustandsgleichungen eliminiert.
+\par
+Hinweis: der Gradient einer Abbildung $f:\mb{R}^m \to \mb{R}^n$ ist eine
+(n,m)-Matrix.
+\par
+Bewegungsgleichungen:
+\[
+\ba{.}{rclcl}
+\dot{r} &=& u(t),\\[5mm]
+\dot{u} &=& \dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{S(t)\sin (\alpha(t) )}{m(0)(1 - \rho \, t)}
+&=&
+\dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{\rho \cdot a \cdot \sin (\alpha(t) )}{1 - \rho \, t},\\[5mm]
+\dot{v} &=& \dis - \frac{u(t)\cdot v(t)}{r(t)}
+ + \frac{S(t)\cos (\alpha(t) )}{m(0)(1 - \rho \, t)}.
+&=& \dis - \frac{u(t)\cdot v(t)}{r(t)}
+ + \frac{\rho \cdot a \cdot \cos (\alpha(t) )}{1 - \rho \, t}.
+\ea{.}
+\]
+%
+Randbedingungen:
+\[
+r(0) = r_0, \; u(0) = 0, \; v(0) = \sqrt{G/r_0}, \;
+u(T) = 0, \; v(T) = \sqrt{G/r(T)}.
+\]
+%
+Reduktion auf dimensionsloses System:\\
+Der Radius $r$ und die Zeit $t$ m"ussen durch dimensionslose Gr"o\ss en ersetzt
+werden:
+\[
+s = \frac{G^{1/2}}{r_0^{3/2}}\, t, \quad R(s) = \frac{1}{r_0}\, r(t).
+\]
+Die zweite und dritte Bewegungsgleichung m"ussen dann mit $r^2_0/G$
+multipliziert werden. F"ur $U(s) = R'(s)$ und $V(s) = R(s)\phi '(s)$
+folgt dann mit der dimensionlosen Konstanten
+\[
+\kappa = \rho  \cdot a \cdot r^2_0 /G
+\]
+%
+\[
+R' = U, \quad
+U' =  \frac{V^2}{R} - \frac{1}{R^2} + \kappa\,\frac{\sin (\alpha )}{1 - \rho\,
+t}, \quad
+V' =  - \frac{UV}{R} + \kappa\,\frac{\cos (\alpha )}{1 - \rho\,  t}.
+\]
+%
+Wir schreiben wieder $t$ statt $s$, $T$ statt $s_f = TG^{1/2}/r_0^{3/2}$, $u$
+statt $\alpha $ und
+\[
+x = [x_1,x_2,x_3]^T = [R,U,V]^T\,.
+\]
+%
+Dann lauten die Zustandsgleichungen (Bewegungsgleichungen):
+\[
+\fbox{$
+\ba{.}{rcl}
+\dot{x}_1 &=& x_2(t),\\[5mm]
+\dot{x}_2 &=& \dis \frac{x_3^2(t)}{x_1(t)} - \frac{1}{x_1^2(t)}
++ \kappa \,\frac{\sin (u(t))}{1 - \rho \, t},\\[5mm]
+\dot{x}_3 &=& \dis - \frac{x_2(t)x_3(t)}{x_1(t)}
+ + \kappa \,\frac{\cos (u(t))}{1 - \rho \,t}
+\ea{.}
+$}\; .
+\]
+Weil die Zielfunktion nur aus einer ``Terminal-Payoff''-Bedingung besteht,
+ist es ratsam, diese mit einem Gewicht $P >0$ zuversehen, z.B.\ $P = 20$.
+\par
+Zielfunktion und {\sc Hamilton}-Funktion:
+%
+\[
+\ba{.}{rcl}
+J(x) &=& p(x(T)) + \int_0^TL(x(t),u(t),t)dt = P\,x_1(T) = \Max !\\[3mm]
+%
+H(x,y,u,t) &=&  \dis y_1x_2
++ y_2\left[ \frac{x^2_3}{x_1} - \frac{1}{x_1^2} +
+\kappa\, \frac{\sin(u)}{1 - \rho \,t}\right]
++ y_3\left[\kappa\, \frac{\cos (u)}{1 - \rho \,t}
+- \frac{x_2x_3}{x_1}\right]
+\\[5mm]
+%
+H_u &=& \dis \kappa\, [y_2 \cos (u) - y_3 \sin(u)]\frac{1}{1 - \rho \, t}\\
+\ea{.}
+\]
+
+\[
+\nabla_x H  = \left[\frac{2y_2}{x_1^3} - \frac{y_2x_3^2}{x_1^2} +
+         \frac{y_3x_2x_3}{x_1^2}, \quad
+          y_1 - \frac{y_3x_3}{x_1}, \quad
+         \frac{2y_2x_3}{x_1} - \frac{y_3x_2}{x_1}\right].
+\]
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen)
+$\dot{y} = - [\nabla_x H]^T$:
+%
+\[
+\fbox{$
+\ba{.}{rcl}
+\dot{y}_1 &=& \dis \frac{y_2x_3^2}{x_1^2} - \frac{2y_2}{x_1^3}
+                   -\frac{y_3x_2x_3}{x_1^2}\\[5mm]
+\dot{y}_2 &=& \dis \frac{y_3x_3}{x_1} - y_1\\[5mm]
+\dot{y}_3 &=& \dis \frac{y_3x_2}{x_1} - \frac{2y_2x_3}{x_1}
+\ea{.}
+$}\; .
+\]
+%
+Weil die Kontrolle $u(t)$ nicht beschr"ankt ist, gilt $H_u = 0$, daraus
+folgt $\tan(u) = y_2/y_3$, also mit
+
+\[
+\dis \cos (u) = \frac{1}  {\pm(1 + \tan^2(u))^{1/2}}, \quad
+\sin (u) = \frac{\tan (u)}{\pm(1 + \tan^2(u))^{1/2}},
+\]
+
+\[
+\cos (u) = \alpha \,\frac{y_3}{(y_2^2 + y_3^2)^{1/2}}, \quad
+\sin (u) = \alpha \,\frac{y_2}{(y_2^2 + y_3^2)^{1/2}}, \quad
+\alpha
+= \: \mbox{sign}(y_2\cdot y_3)\cdot\mbox{sign}(y_2)\cdot\mbox{sign}(y_3)\,.
+\]
+%
+Einsetzen in die
+Zustandsgleichungen ergibt mit $y_i = x_{3+i}$ das System
+%
+\begin{equation} \label{e2.1}
+\ba{.}{rcl}
+\dot{x}_1 &=& x_2\\[5mm]
+%
+\dot{x}_2 &=& \dis \frac{x_3^2}{x_1} - \frac{1}{x_1^2}
++ \kappa \,\frac{x_5}{(x_5^2 + x_6^2)^{1/2}(1 - \rho \, t)}\\[5mm]
+%
+\dot{x}_3 &=& \dis \kappa \,\frac{x_6}{(x_5^2 + x_6^2)^{1/2}(1 - \rho \,t)}
+- \frac{x_2x_3}{2 \cdot x_1}\\[5mm]
+%
+\dot{x}_4 &=& \dis \frac{x_3^2x_5}{x_1^2} - \frac{2x_5}{x_1^3}
+                   -\frac{x_2x_3x_6}{2x_1^2}\\[5mm]
+\dot{x}_5 &=& \dis \frac{x_3x_6}{2x_1} - x_4\\[5mm]
+\dot{x}_6 &=& \dis \frac{x_2x_6}{2x_1} - \frac{2x_3x_5}{x_1}
+\ea{.}
+\end{equation}
+
+Zur Bestimmung der Randbedingungen beachte man,
+dass f"ur die oben eingef"uhrte Gr"o\ss e $V$ gilt
+%
+\[
+V(0) = 1, \; V(T) = R(T)^{-1/2}
+\quad \Longrightarrow \quad
+x_3(0) = 1, \; x_3(T) - x_1(T)^{-1/2} = 0\, .
+\]
+Randbedingungen f"ur den Zustand $x$ insgesamt (nach Transformation):
+\begin{equation} \label{e2.2}
+\ba{.}{rcccl}
+\ba{[}{c}q_1\\q_2\\q_3\ea{]}(X(0)) &=&
+\ba{[}{c} x_1(0) - 1\\ x_2(0)\\ x_3(0) - 1\ea{]} &=& 0\\[6mm]
+%
+\ba{[}{c}q_4\\q_5\ea{]}(X(T)) &=&
+\ba{[}{c} x_2(T)\\x_3(T) - x_1(T)^{-1/2} \ea{]} &=& 0\, .
+\ea{.}
+\end{equation}
+
+Also ist $y(0)$ frei. Ferner gilt
+\[
+y(T)^T = \nabla p(x(T))
+       + z^T\ba{[}{c}\nabla q_4(x(T))\\ \nabla q_5(x(T))\ea{]}, \quad
+z \in \mb{R}^2
+\]
+mit $p(x(T))    = P\, x_1(T)$,
+\[
+\nabla p(x(T))  = [P, \, 0, \, 0],\quad
+\ba{[}{c}\nabla q_4(x(T))\\\nabla q_5(x(T))\ea{]}
+ = \ba{[}{ccc}                 0 & 1 & 0\\
+              0.5\,x_1(T)^{-3/2} & 0 & 1\ea{]},
+\]
+also
+\[
+y(T)  = \ba{[}{c}P\\0\\0\ea{]} +
+\ba{[}{c}0\\1\\0\ea{]}z_1 + \ba{[}{c}
+0.5\,x_1(T)^{-3/2}\\0\\1\ea{]}z_2
+\]
+%
+Daraus folgt, dass $y_2(T)$ und $y_3(T)$ frei sind. F"ur $y_1(T)$ gilt
+\[
+y_1(T) =  P + 0.5\, y_3(T)x_1(T)^{-3/2}\,.
+\]
+%
+Zus"atzlich zu den Bedingungen (\ref{e1.2}) erhalten wir somit als vierte
+Randbedingung
+%
+\begin{equation} \label{e2.3}
+q_6(x(T)) = x_4(T) - 0.5\, x_6(T)x_1(T)^{-3/2} - P = 0\, .
+\end{equation}
+%
+Physikalische Daten f"ur das Problem
+\[
+\ba{.}{lll}
+\mbox{Kraft in Newton} & N  & [kg \cdot m/s^2]\\
+\mbox{Grav.-konstante}  & \gamma  = 6.67\cdot 10^{-11} & [m^3/(kg\cdot s^2)]\\
+M_{erde}  & 5.977 \cdot 10^{24}  & [kg]\\
+M_{sonne} & 3.334 \cdot 10^5 \; M_e,\\
+\mbox{Erdradius ("Aq.) R} & 6378,160 & [km]\\
+\mbox{Erdradius (Pol)} & 6356,775   & [km]\\
+r_0 = \mbox{Abstand Sonne -- Erde} & 150\cdot 10^6 & [km]\\
+r_1 = \mbox{Abstand Sonne -- Mars} & 228\cdot 10^6 & [km]\\
+G_{erde}        & \gamma\cdot M_e \sim 4 \cdot 10^{14} & [N\cdot m^2/kg]\\
+G_{sonne}        & \gamma\cdot M_s \sim 1.3 \cdot 10^{21} & [N\cdot m^2/kg]\\
+\mbox{Fallbeschl.}  &  g = G/R^2  = 9.81 & [m/s^2]\\
+\mbox{Grav.-kraft}  &  F = \gamma  M m/r^2,\\
+\mbox{Zentrifug.-kraft}  &  Z = m v^2/r.
+\ea{.}
+\]
+Nach dem Prinzip Actio = Reactio gilt auf einem Orbit
+\[
+\dis \gamma \frac{M\cdot m}{r^2} = m\frac{v^2}{r}.
+\]
+Geschwindigkeit und Umlaufzeit auf einer stabilen Kreisbahn sind also
+\[
+v = \frac{2 \pi r }{T} = \sqrt{\gamma \frac{M}{r}}, \qquad
+T = 2\pi \sqrt{\frac{r^3}{\gamma  \cdot M}}.
+\]
+Spezielle Daten f"ur eine kleine Sonde mit Ionentriebwerk Problem ({\bf nach}
+Transformation)
+\[ \ba{.}{rcl}
+1 \; \mbox{Pfund (lb)}             &=& 0.45359 \; \mbox{kp},\\
+m_0 &=& 10 000 \; \mbox{lb}          = 45359 \; \mbox{kp},\\
+(\dot{m} &=&  12.9 \; \mbox{lb/Tag} =  5.8513 \; \mbox{kp/Tag}),\\
+\rho                               &=& 0;\\
+\mbox{Schub} \;  &=& 0.85 \; \mbox{lb} = 0.38555 \; \mbox{kp},\\
+R_0 = \mbox{Abstand Sonne -- Erde}    &=& 1.0,\\
+\mbox{Abstand Sonne -- Mars}      &=& 1.5\\
+\mbox{Flugdauer Erde -- Mars}     &=& 193 \; \mbox{Tage}\\
+\mbox{Flugdauer}                  &=& s_f = 3.32.
+\ea{.}
+\]
+%
+\[
+\kappa = \frac{S\cdot r_0^2}{m_0 \cdot G_s}
+=\frac{0.386 \cdot 225 \cdot 10^{20}}{45.4 \cdot 1.3 \cdot 10^{21}}
+= 0.1471\, .
+\]
+%
+Der Winkel wird in Polarkoordinaten gemessen.
+\par
+F"ur das {\sc Newton}-Verfahren mit Box-Schema ben"otigt man den
+Gradienten $\nabla F$ der rechten Seite $F$ von (\ref{e2.1})
+und den Gradienten der kompletten Randbedingungen
+aus (\ref{e2.2}) und (\ref{e2.3}):
+\[
+\ba{.}{rcl}
+\nabla \ba{[}{c}q_1\\q_2\\q_3\ea{]}
+&=& \ba{[}{cccccc}
+1 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0\ea{]}\\[6mm]
+%
+\nabla \ba{[}{c}q_4\\q_5\\q_6\ea{]}
+&=& \ba{[}{llllll}
+0        & 1 & 0    & 0    & 0 & 0   \\
+0.5\,x_1^{-3/2} & 0 & 1 & 0    & 0 & 0    \\
+0.75\,x_1^{-5/2}x_6 & 0 & 0 & 1 & 0 & -0.5x_1^{-3/2} \ea{]}
+\ea{.}
+\]
+%
+\newpage
+\[
+\ba{.}{l}
+\nabla F = \\
+\ba{[}{ccc}
+0                      & 1           & 0\\
+(2 -x_1x_3^2)/x_1^3 & 0           & 2x_3/x_1\\
+x_2x_3/x_1^2        & -x_3/x_1 & - x_2/x_1\\
+(6x_5-2x_1x_3^2x_5+ 2x_1x_2x_3x_6)/x_1^4
+& -x_3x_6/x_1^2
+& (2x_3x_5 - x_2x_6)/x_1^2\\
+-x_3x_6/x_1^2 & 0 & x_6/x_1\\
+(2x_3x_5 - x_2x_6)/x_1^2 & x_6/x_1 & -2x_5/x_1\\
+\ea{.}  \\[8mm]
+  \ba{.}{ccc}
+0  & 0 & 0\\
+0  & \kappa x_6^2(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)
+   & -\kappa x_5x_6(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)\\
+0  & -\kappa x_5x_6(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)
+   &  \kappa x_5^2(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)\\
+0  & (x_1x_3^2 - 2)/x_1^3 & - x_2x_3/x_1^2\\
+-1 & 0 & x_3/x_1\\
+ 0 & -2x_3/x_1 & x_2/x_1
+\ea{]}
+\ea{.}
+\]
+%
+Als Nominaltrajektorie wird die antrieblose Umlaufbahn mit Radius Eins
+gew"ahlt:
+%
+\[
+x_1(t) = 1, \quad x_2(t) = 0, \quad x_3(t) = 1,
+\]
+%
+Dann ergibt sich f"ur $y$ das Randwertproblem
+%
+\[
+\dot{y} = Ay\,, \qquad
+A = \ba{[}{ccc} 0 & -1 & 0\\ -1 & 0 & 1/2\\ 0 & -2 & 0\ea{]}
+\]
+mit der Randbedingung
+\[
+y_1(T) - \frac12 y_3(T) - P = 0\,.
+\]
+Wir w"ahlen
+\[
+y_1(T) = P + 1/2\,, \quad y_2(T) = 0\,, \quad y_3(T) = 1\,.
+\]
+
+{\em Physikalische Daten f"ur das Problem :}
+Kraft in Newton $N \; [kg \cdot m/s^2]$\,,
+Gravitationskonstante $\gamma  = 6.67\cdot 10^{-11} \; [m^3/(kg\cdot s^2)]$\,,
+$M_{erde}  = 5.977 \cdot 10^{24}\; [kg]$\,,
+$M_{sonne} = 3.334 \cdot 10^5 \; M_e$\,,
+Erdradius am "Aquator $R = 6378,160 \; [km]$\,,
+Erdradius am Pol  $6356,775 \; [km]$\,,
+$r_0 =$ Abstand Sonne -- Erde $= 150\cdot 10^6 \; [km]$\,
+$r_1 =$ Abstand Sonne -- Mars $= 228\cdot 10^6 \; [km]$\,,
+$G_{erde} = \gamma\cdot M_e \sim 4 \cdot 10^{14} \; [N\cdot m^2/kg]$\,,
+$G_{sonne} = \gamma\cdot M_s \sim 1.3 \cdot 10^{21} \; [N\cdot m^2/kg]$\,,
+Fallbeschleunigung  $g = G/R^2  = 9.81 \; [m/s^2]$\,,
+Gravitationskraft   $F = \gamma  M m/r^2$\,,
+Zentrifugalkraft    $Z = m v^2/r$.
+\par
+{\em Spezielle Daten f"ur eine kleine Sonde mit Ionentriebwerk (nach
+Transformation)\,:}
+1 \ Pfund (lb) $= 0.45359 \; [kp]$\,,
+$m_0 = 10 000 \; [lb] = 45359 \; [kp]$\,,
+$\dot{m} =  12.9 \; [lb/Tag] =  5.8513 \; [kp/Tag]$\,,
+$\rho = 0$\,,
+Schub $= 0.85 \; [lb] = 0.38555 \; [kp]$\,,
+$R_0 =$ Abstand Sonne -- Erde   $= 1.0$\,,
+Abstand Sonne -- Mars $= 1.5$\,,
+Flugdauer Erde -- Mars $= 193 \; [Tage]$\,,
+Flugdauer $ = s_f = 3.32$; vgl. \cite{Bryson}.
+
+\end{document}
+

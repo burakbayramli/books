@@ -1,0 +1,126 @@
+\section{Change of Basis in Column Simplex Problem}
+We study a global change of the tableau in the problem $\min\{cy, \; By = a, \;
+y \geq 0\}$ under the following assumption without loss of generality:
+\par
+\begin{assumption} \label{as4}
+$B \in \Bbb{R}^n{}_m$ with $\rank (B) = n < m$.\\
+$\A(y) = \{1,\ldots,n\}$ index vector of a column basis of a vertex $y$.\\
+$\N(y) = \{n+k, k = 1,\ldots,m-n\} \equiv \I_m\backslash \A(y)$.
+\end{assumption}
+%
+Recall that, by the agreement in section 6, $\A(y)$ contains at least all
+indices $i$ with $y^i > 0$ and we have $y^k = 0$ for all indices $k \in
+\N(y)$.
+\par
+{\bf Notations:} $A = [B_{\A}]^{-1}$,
+%
+\beqn \ba{.}{lll}
+B = [B_{\A}, B_{\N}], & B_{\A} = [b_1,\ldots, b_n], & B_{\N} =
+[b_{n+1},\ldots, b_m],\\
+c_{\A} = [\gamma _1,\ldots,\gamma _n], & c_{\N} = [\gamma
+_{n+1},\ldots, \gamma _m], & \\
+x = c_{\A}A, & w = c_{\A}AB_{\N} - c_{\N}, & f =  c_{\A}Aa.
+\ea{.}\eeqn
+%
+The column $i \in \A_S(y)$ shall be changed for the column $n + j \in \N_S(y)$
+and all entries of the tableau shall be updated.  The corresponding entries
+after change are again denoted by ``$\; \wi{\cdot} \;$'', e.g.
+%
+\beqn
+\wi{B}_{\A} = [b_1,\ldots,b_{i-1},b_{n+j},b_{i+1},\ldots,b_n].
+\eeqn
+%
+A global step of transformation then has the form
+\beqn
+{\bf P} = [p^k{}_l] = \ba{[}{ccc} A & AB_{\N} & Aa\\ x & w & f
+\ea{]} \longrightarrow
+\ba{[}{ccc}
+\wi{A} & \wi{A}\wi{C}_{\N} & \wi{A}a\\
+\wi{x} & \wi{w} & \wi{f} \ea{]} =: \wi{{\bf P}}.
+\eeqn
+%
+The $i$-th row is the pivot row and the $(n+j)$-th column is the pivot column
+hence let $p^i{}_{n+j} \neq 0$ and let ${\bf T} \in \Bbb{R}^{n+1}{}_{n+1}$ be
+the transformation matrix, namely
+%
+\[
+{\bf T} = I + p_{n+j} \otimes e^i - e_i \otimes e^i
+\]
+then
+\[ {\bf T}^{-1} = I - \frac{1}{p^i{}_{n+j}}p_{n+j} \otimes e^i
++ \frac{1}{p^i{}_{n+j}}e_i \otimes e^i, \quad p_{n+j} = \ba{[}{c} Ab_{n+j}\\
+w_j\ea{]}.
+\]
+%
+The matrix $T$ shall be again the matrix ${\bf T}$ without last row and
+column.
+\par
+${\bf Q} = [q^k{}_l]$ shall be the matrix with the elements
+\beqn \ba{.}{rcll}
+q^i{}_{n+j} &=& 1/p^i{}_{n+j} &\mbox{(pivot element)},\\
+q^k{}_{n+j} &=& - p^k{}_{n+j}/p^i{}_{n+j}, \; k \neq i & \mbox{(pivot
+column)},\\
+q^i{}_l &=& p^i{}_l/p^i{}_{n+j}, \; l \neq n+j & \mbox{(pivot row)},\\
+q^k{}_l &=& p^k{}_l - p^k{}_{n+j}p^i{}_l/p^i{}_{n+j}, & \mbox{(other elements)
+}. \ea{.}
+\eeqn
+%
+Then ${\bf Q} = {\bf T}^{-1}{\bf P}$, $\wi{B}_{\A} = B_{\A}T$ and
+$\wi{A} = T^{-1}A$.
+%
+\begin{theorem} $\wi{{\bf P}} = {\bf Q}$.
+\end{theorem}
+%
+Proof. (a) For all elements besides the pivot column and the last row,
+the assertion follows from the transformation rule for
+$B_{\A}$.
+\par
+(b) For the pivot column without last element we obtain
+\[
+\ba{.}{l}
+\wi{p}_{n+j,-} = [\wi{A}\wi{B}_{\N}]_{j,-} = \wi{A}b_i
+=T^{-1}Ab_i = T^{-1}e_i\\
+\dis
+= e_i - \frac{1}{p^i{}_{n+j}}p_{n+j,-} + \frac{1}{p^i{}_{n+j}}e_i = q_{n+j,-}.
+\ea{.}
+\]
+\par
+%
+%
+(c) As in part (b) of the proof of Theorem \ref{jjj} one shows that
+%
+\begin{equation} \label{kkk}
+\wi{c}_{\A}\wi{A} = c_{\A}A - \tau a^i, \quad
+\tau  = \frac {w_j}{p^i{}_{n+j}}.
+\end{equation}
+%
+Then it follows for the last element of the pivot column
+\[ \ba{.}{l}
+\dis \wi{p}^{n+1}{}_{n+j}
+ = \wi{w}_j = \wi{c}_{\A}\wi{A}b_i - \gamma _i
+= [c_{\A}A - \frac{w_j}{p^i{}_j}e^iA]b_i - \gamma _i\\
+\dis = [\gamma  _i - \frac{w_j}{p^i{}_j}] - \gamma _i = q^{n+1}{}_j.
+\ea{.}
+\]
+%
+%
+(d) Consider the last row without the first n elements, without the pivot
+element and without last element. For $l \neq j, \; l \neq m-n$ holds
+\[  \ba{.}{l}
+\dis \wi{p}^{n+1}{}_{n+l} = \wi{w}_l =
+\wi{c}_{\A}\wi{A}b_{n+l} - \gamma _{n+l}
+= [c_{\A}A - \frac{w_j}{p^i{}_j}e^iA]b_{n+l} - \gamma _{n+l}\\
+\dis = w_l - \frac{w_jp^i{}_l}{p^i{}_j} = q^{n+1}{}_{n+l}, \quad l \neq j, \;
+l \neq m - n.
+\ea{.}
+\]
+%
+%
+(e) Consider $q^{n+1}{}_{m+1}$. We obtain
+\[ \ba{.}{l}
+\dis \wi{p}^{n+1}{}_{m+1} = \wi{c}_{\A}\wi{A}a
+= [c_{\A}A - \frac{w_j}{p^i{}_j}e^iA]a\\
+\dis = f - \frac{w_jp^i{}_{m+1}}{p^i{}_j} = q^{n+1}{}_{m+1}.
+\ea{.}
+\]
+

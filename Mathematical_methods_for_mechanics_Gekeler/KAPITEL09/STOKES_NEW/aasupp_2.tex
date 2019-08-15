@@ -1,0 +1,265 @@
+\documentclass[12pt,a4paper,USenglish,twoside]{book}
+\input aaformat_e
+%%%%%%%%%%%% Springer-Format %%%%%%%%%%
+%\documentclass[envcountchap,USenglish,natbib]{svmono}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{graphics}
+%\input aaformat_s
+\smartqed
+\begin{document}
+\setlength{\fboxsep}{1ex}
+\newcommand{\Release}{22/10/09}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1.5ex}
+\parskip0.5ex
+\parindent0ex
+\mainmatter
+%
+{\large\bf Supplements 2 to Chapter IX\hfill E.\ Gekeler
+}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}
+\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Case Study: Navier-Stokes equations}
+\par
+%
+Transient NS equations (Gresho, p. 450)
+%
+\[
+\rho \frac{D\u}{D t} \equiv 
+\rho \left(\frac{\da \u}{\da t} +  (\grad \u)\u\right) 
+= \mu \Delta \u - \nabla p 
+\] 
+Non-dimensional form:\\
+$u_0$ char. velocity, $L$ char. length, $\tau$ char. time, $P_c$ char. pressure\\
+{\sc Reynolds} number Re = $\rho u_0 L/\mu$ 
+(ratio of advective to diffusive momentum transport). Then
+\[
+\frac{\da \u}{\da t} +  Re \,(\grad \u)\u 
+=   \Delta \u - \nabla p \quad \quad
+\text{for $\tau = \rho L^2/\mu$ (with $P_v =  \mu u_0/L$)}
+\] 
+%
+\[
+\frac{\da \u}{\da t} +  (\grad \u)\u 
+= \nu\, \Delta \u - \nabla p \quad \quad
+\text{for $\tau = L/u_0$ (with $P_c = \rho u^2_0$)}\,.
+\] 
+Weak form with $\nu = 1/Re$\,:
+\begin{equation} \label{e0811.4}
+\fbox{$\
+\ba{.}{llllll}
+(\v,\da \u/\da t)\\
+ + a(\v,\u)  + c(\v,\u,\w)&-&(\div \v,p_{\rm spec}) &=& (\v,\f)
++ (\v,\ul{\sigma}_n(\u,p_{\rm spec}))_{\Gamma}\,, & \v \in \V \\[0.5ex]
+&-&(\div \v,q) &=& 0\,, & q \in \Q\\[0.5ex]
+&&(\v,\ul{\sigma}_n(\u,p_{\rm spec}))_{\Gamma}
+&=& -(p_{\rm spec}\v\cdot \n)_{\Gamma} + \nu(\v\cdot (\grad \u)\n)_{\Gamma} 
+\ea{.}
+$}
+\end{equation}
+Pressure phase (Quartapelle 1982)
+\[
+\ba{.}{llll} \dis
+\left(\v \,,\, \frac{\u^{n+1} - \u^{n+1/2}}{\Delta t}\right)
+- (\div \v, p^{n+1}) &=& \dis \int\v \cdot \c\, d\Gamma_2\,, & \forall \v \,,\;
+\n\cdot\v|_{\Gamma_1} = 0\\[2ex]
+(\div \u^{n+1},q) &=& 0\,, & \n\cdot\u^{n+1}|_{\Gamma_1}  = \n\cdot \b\,.\\[2ex]
+(-p\,I + \nu \,\grad \u)\n &=& \c
+
+\ea{.}
+\]
+For the linear {\sc Stokes} equation $-\Delta \u + \grad p = \f$ follows the
+pressure equation 
+\[
+-\Delta p = - \div f\,,\quad 
+\frac{\da p}{\da n} = \Delta \u \cdot \n + \f\cdot \n \;\; \text{on} \;\; \Gamma
+\]
+which is equivalent with
+\[
+\w = -\grad p \,,\quad \div\w = - \div \f
+\]
+\par\vspace{1ex}\hrule\vspace{1ex}
+\newpage
+Manuskript p. 204:
+\begin{example}\label{b2} (Application of the complementary energy principle.)
+Consider the simple {\sc Dirichlet} problem: Find $u^* \in H^1_0(\Omega)$ such that
+%
+\begin{equation}\label{e2}
+u^* = \arg\min\left\{\frac12 \int_{\Omega}\big[|\grad u|^2 \, dx - f\,u\big]\, dx\,;
+\; u \in H^1_0(\Omega)\right\}
+\end{equation}
+\index{Dirichlet problem}
+%
+where $u = 0$ on the entire boundary of the domain $\Omega$\,; see Sects.\ 
+\ref{sec0107}, \ref{sec0901} for notations. We insert the relation
+%
+\[
+\frac12\int_{\Omega}|\grad u|^2\, dx = \sup_{\v\in (\L^2(\Omega))^2}
+\int_{\Omega}\left[\v \cdot \grad u - \frac12 |\v|^2\right]\, dx
+\]
+and recall that
+%
+\begin{equation}\label{e3}
+\dis \int_{\Omega}\grad u \cdot \v \,dx  =  - \int_{\Omega}u \,\div \v\, dx
+\end{equation}
+%
+in the present case of homogeneous {\sc Dirichlet} boundary conditions. Then we get 
+again the saddlepoint problem corresponding to (\ref{e2}) in two alternative forms: Find $(u^*,\v^*) \in \U\times \V$ such that
+%
+\begin{equation}\label{e4}
+\ba{.}{lll}
+(u^*,\v^*) &=& \dis \arg\min{}_u\sup{}_{\v}
+\left\{\int_{\Omega}\left[-\frac12|\v|^2 - f\,u  + \grad u \cdot \v\right] dx\,,
+\; u \in \U\,,\; \v \in \V \right\}\\
+%
+ &=& \dis \arg\max{}_{\v} \inf{}_u
+\left\{\int_{\Omega}\left[-\frac12|\v|^2 - f\,u  - u \div \v\right] dx\,,
+\; u \in \U\,,\; \v \in \V \right\}\,.
+\ea{.}
+\end{equation}
+%
+where $\U = \H^1_0(\Omega)$ and $\V = \L^2(\Omega) \times \L^2(\Omega)$\,.
+\index{saddlepoint problem}
+Both representations are equivalent in the case where a saddlepoint exists. Again  
+the infimum over $u$ must exist finitely and the {\em dual maximum problem} is readily 
+obtained from the second form (written as minimum problem): Find $\v^* \in \W$ such that
+%
+\begin{equation}\label{e5}
+\v^* = \arg\inf_{\v \in \W} \int_{\Omega}|\v|^2\, dx\,, \;\; 
+\W   = \left\{\v \in \V\,,\; \div \v + f = 0\right\}\,.
+\end{equation}
+\index{principle!complementary energy}
+The saddlepoint $(u^*,\v^*)$ is also characterized by the two variational equations
+associated, e.g., to the first form in (\ref{e4}) where we use (\ref{e3}) once more
+\[
+\ba{.}{llll}
+\dis \int_{\Omega}\big[ \v\cdot \w -  \grad u \cdot \w \big] dx &=& 0\,,&
+\forall \; \w \in \V\\[1ex]
+\dis \int_{\Omega}\big[ u \div  \v \,dx + f\,u\big]dx  &=& 0\,, &
+\forall \; u \in \U\,.
+\ea{.}
+\]
+\index{Dirichlet problem!dual} 
+Passing to the associated boundary value problem of this {\em dual} form of the {\sc 
+Dirichlet} problem we get two {\em separated} first order equations
+%
+\begin{equation}\label{e6}
+\fbox{$\
+\v = \grad u\,, \;\; \div \v + f = 0\,,\;\; u \in H^1_0(\Omega)
+$}
+\end{equation}
+which of course are also found directly by decomposing $- \Delta u = - \div \grad u = 
+f$\,. The dual form is well-suited in cases where the {\em gradient} of the unknown 
+function $u$ is more important than $u$ as maybe in stationary heat distribution of 
+a disc etc., see for instance Example \ref{b0902.2}.)
+\end{example}
+\par
+Manuskript, p. 433:\\
+{\bf (f) Pressure Poisson equation}
+In solving {\sc Navier-Stokes} equations, the results for pressure $p$ are 
+frequently not very convincing. Rather it is calculated by a separate
+{\sc Poisson} problem which however has only {\sc Neumann} boundary conditions
+such that a reference value of $p$ must be specified somewhere in the domain
+$\Omega$ or $\dis \int_{\Omega}p\, dV = 0$ must be required for
+normalization but nevertheless the problem is and remains {\em unstable}.
+\par
+{\bf (f1)} For the computation of  $p$ by the flow field $\u$\,,
+remember that
+\[
+\Delta \v = \div (\grad \v)^T = [\grad \div \v]^T\,.
+\]
+and apply divergence to the {\em linear} {\sc Stokes} equation,
+$- \Delta \u + \grad p = \f\,$, yielding
+\enlargethispage{6ex}
+\[
+- \div \Delta \u + \div \grad p = \div \f\,.
+\]
+But
+\[
+\div \Delta \u = \div \div \grad \u = \div \grad \div \u
+= \Delta \div \u = 0\,,
+\]
+because $\div \u = 0$ by assumption hence
+\[
+\fbox{$\
+\Delta p = \div \f
+$} \; .
+\]
+On the other side, multiplying the {\sc Stokes} equation on the boundary $\Gamma$ by the 
+normal vector $\n$, yields the condition
+$
+\Delta \u \cdot \n + \da p/\da \n = \f \cdot \n
+$\,.
+On summarizing we obtain a {\sc Neumann} problem for the pressure $p$\,,
+%
+\[
+\fbox{$\
+\ba{.}{rcll}
+\Delta p &=& \div \f &\mbox{in} \; \Omega\\
+\dis \frac{\da p}{\da n} &=&
+ \Delta \u\cdot \n + \f\cdot \n  & \mbox{on} \; \da \Omega
+\ea{.}
+$}\;.
+\]
+%
+\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf (f2}) \cite{Sohn}. Reconsider the homogeneous non-dimensional {\sc Navier-Sto\-kes} 
+equation (\ref{e0811.5e}),
+%
+\begin{equation}\label{e0811.16}
+\frac{\da\u}{\da t} + (\nabla \u)\u
+ - \frac{1}{R_e}\Delta \u + \nabla p = \ul{0}\,,\;\; \div \u = 0\,. 
+\end{equation}
+%
+An alternative pressure {\sc Poisson} equation is obtained by differentiating
+the first momentum equation in (\ref{e0811.16}) with respect to $x$ and the second 
+with respect to $y$\,, and adding them. The result can be written as
+%
+\begin{equation}\label{e0811.17}
+\Delta p = - \nabla[(\nabla \u)\u] + R_e^{-1}[(\Delta u)_x + (\Delta v)_y]\,.
+\end{equation}
+\index{pressure Poisson equation}
+%
+Let $q$ be an arbitrary test function for $p$ and apply {\sc Green}'s theorem then we 
+obtain the weak form where $\n$ is the unit vector normal to boundary $\Gamma = \da 
+\Omega$ pointing outward from $\Omega$\,,
+%
+\begin{equation}\label{e0811.18}
+\ba{.}{lll} \dis
+\int_{\Omega}\nabla q\cdot \nabla p \, d\Omega
+&=& \dis - \int_{\Omega}\nabla q \cdot (\nabla \u)\u\, d\Omega
++ R_e^{-1}\int_{\Omega}\nabla q\cdot \Delta \u\, d \Omega\\[2ex]
+&+& \dis  \int_{\Gamma}q\n\cdot[(\nabla \u)\u + \nabla p
+ - R_e^{-1}\Delta \u]\, d \Gamma\,.
+\ea{.}
+\end{equation}
+%
+Substituting once more the momentum equation (\ref{e0811.16}) into the line integral
+yields
+%
+\begin{equation}\label{e0811.19}
+\int_{\Omega}\nabla q\cdot \nabla p \, d\Omega
+= - \int_{\Omega}\nabla q \cdot (\nabla \u)\u\, d\Omega
++ R_e^{-1}\int_{\Omega}\nabla q\cdot \Delta \u\, d \Omega
+-\int_{\Gamma}q \frac{\da \u}{\da t} \cdot \n\, d\Gamma\,.
+\end{equation}
+%
+The line integral involving the time rate of change of the velocities will 
+vanish at all solid boundaries or when steady-state solutions are sought. It is non-zero 
+only along open boundaries in time-dependent flows, or if the flow is excited by the 
+time-varying motion of a wall \cite{Sohn}. On the other side, the evaluation of the 
+right side of (\ref{e0811.19}) requires the second derivatives of the velocity 
+components (which, by the way, are known globally only as continuous functions). To 
+overcome this difficulty at least locally, \cite{Sohn} 
+proposes a least squares approximation of the first derivatives on the ansatz functions 
+in case they are linear or bilinear and gets appealing results for the latter case.   
+\end{document}

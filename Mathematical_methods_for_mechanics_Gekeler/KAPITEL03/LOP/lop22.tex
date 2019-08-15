@@ -1,0 +1,80 @@
+\section{Short Form of Column Simplex Problem}
+For $\min \{cy, \; By = a, \; y^{\Q} \geq 0\}$, $B
+\in \Bbb{R}^n{}_m$ with $\rank (B_{\P}) = p, \; \rank (B) = n$ and
+columns $b_j$.\\
+%
+{\bf Given:} {\bf vertex} $y$ with\\
+$\A(y) = \{1, \ldots, p, \rho _{p+1}, \ldots , \rho _n\}$ index vector of a
+column basis of $y$,\\
+$\N(y) = (\sigma  _1, \ldots , \sigma _{m-n})$ index vector of other
+columns of $B$, ($y^{\sigma  _i} = 0$).
+\[
+B_{\A} := [b_j]_{j \in \A(y)}, \; B_{\N} := [b_j]_{j \in \N(y)}, \;
+c_{\A} := [\gamma _j]_{j \in \A(y)}, \; c_{\N} := [\gamma _j]_{j \in
+\N(y)}.
+\]
+%
+Compute
+\[
+A = B_{\A}^{-1}, \; AB_{\N}, \; w = Aa, \;
+x = c^{\A}A, \; r = c_{\A}AB_{\N} - c_{\N}, \;  f := cy.
+\]
+{\bf Step 1.} (Which column is taken into basis?)\\
+If $r \leq 0$ then $y$ is optimum else compute
+\[ \ba{.}{ll}
+j:= \max \arg_k \max  \{r_k \} + n & \mbox{(fast)}, \;
+(c_{\sigma  _j} \;\mbox{into basis }),\\
+j := \arg_k \max \{\sigma _k \in \N_S(z), r_k > 0\} + n, &
+\mbox{({\sc Bland}'s rule, in deg. vertex)}.\\
+\ea{.}
+\]
+{\bf Step 2.} (Which column is taken into non-basis?)\\
+$d_j := [AB_{\N}]_j$. If $d^k{}_j \leq 0, \; k = p+1, \ldots , n$ then a
+solution does not exist else compute
+\[
+i := \min \arg_k \min \{w^k/d^k{}_j, \; d^k{}_j > 0, \; k > p\},
+ \quad (b_{\rho _i}\;\mbox{into non-basis}),
+\]
+or ({\sc Bland}'s rule)
+\[
+\ba{.}{rcl}
+ \tau  &=& \min\{w^k/d^k{}_j, \; d^k{}_j > 0, \; k > p\},\\
+i &:=&  \arg_k \min  \{\rho  _k \in \A(y), \; d^k{}_j > 0, \;
+w^k/d^k{}_j = \tau, \; k > p\}. \ea{.}
+\]
+{\bf Step 3.} (Change of basis.)
+\[
+{\bf P} = [p^k{}_l] := \ba{[}{ccc}
+A & AB_{\N} & w \\
+x & r &f \\
+\ea{]},
+\]
+compute ${\bf Q} = [q_{kl}]$ according to
+\[ \ba{.}{llll}
+q^i{}_j = 1/p^i{}_j            & \mbox{(pivot element)}, &
+q^k{}_j = - p^k{}_j/p^i{}_j, \; k \neq i &\mbox{(pivot column)},\\
+%
+q^i{}_l = p^i{}_l/p^i{}_j,\; l \neq j
+& \mbox{(pivot row)}, &q^k{}_l = p^k{}_l - p^k{}_j
+p^i{}_l/p^i{}_j & \mbox{(else)}.
+\ea{.}
+\]
+Set
+\[ \ba{.}{rclcrclcrcl}
+AB_{\N} &=& [q^k{}_l]_{k = 1}^n{}_{l=n+1}^m,
+&w &=&  [q^k{}_{m+1}]_{k=1}^n,\\
+x &=& [q^{n+1}{}_l]_{l=1}^n, &  r &=& [q^{n + 1}{}_l]_{l=n+1}^m, &f &=&
+q^{n+1}{}_{m+1}; \ea{.}
+\]
+and
+\[ \ba{.}{l}
+\A(y) = \{1, \ldots,p, \rho  _{p+1} , \ldots , \rho _{i - 1},
+           \sigma  _j ,\rho  _{i+1}, \ldots , \rho _n\},\\
+\N(y)   = \{\sigma _1 , \ldots , \sigma _{j - 1},
+           \rho _i,\sigma _{j+1}, \ldots , \sigma _{n-m}\}.
+\ea{.}
+\]
+Return to Step 1.\\
+$\A(y)$ and $N(y)$ must be updated because in columns are
+interchanged in matrix $B$. $y^{\A} = w, \; y^{\N} = 0$.
+

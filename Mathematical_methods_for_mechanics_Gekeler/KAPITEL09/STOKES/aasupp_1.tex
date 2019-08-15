@@ -1,0 +1,360 @@
+\documentclass[12pt,a4paper,USenglish,twoside]{book}
+\input aaformat_e
+%%%%%%%%%%%% Springer-Format %%%%%%%%%%
+%\documentclass[envcountchap,USenglish,natbib]{svmono}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{graphics}
+%\input aaformat_s
+\smartqed
+\begin{document}
+\setlength{\fboxsep}{1ex}
+\newcommand{\Release}{11/10/06}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1.5ex}
+\parskip0.5ex
+\parindent0ex
+\mainmatter
+%
+{\large\bf Supplements 1 to Chapter IX\hfill E.\ Gekeler
+}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}
+\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Case Study: Taylor-Hood element}
+\par
+%
+Complete quadratic ``ansatz'' for each of the velocity components and linear ansatz for 
+the pressure component in unit triangle $S$:
+\[
+\ba{.}{lll}
+v(\xi,\eta) &=& a_1 + a_2\xi + a_3\eta + a_4\xi^2 + a_5\xi\eta + a_6\eta^2\\
+q(\xi,\eta) &=& b_1 + b_2\xi + b_3\eta
+\ea{.}
+\]
+{\bf (a)} 
+\[
+\ba{.}{llll}
+\Theta(\xi,\eta) &=& [1,\ \xi,\ \eta,\ \xi^2 ,\ \xi\eta, \ \eta^2]^T
+& \text{{\em column} vector of algebraic basis}\\
+\Psi(\xi,\eta) &=& [\psi_1(\xi,\eta)\,,\ldots\,, \psi_6(\xi\eta)]^T
+& \text{{\em column} vector of shape functions in unit triangle}
+\ea{.}
+\]
+Then $v(\xi,\eta) = \Theta(\xi,\eta)^T\a$\,. The connection between both bases
+is given by  the design matrix $B$\,:
+\begin{equation}\label{e1}
+\Psi(\xi,\eta)^T = \Theta(\xi,\eta)^TB \quad \text{(row vector)}\,.
+\end{equation}
+
+For the 6 node points $(0,0), (1,0), (0,1), (1/2,0), (1/2,1/2), (0,1/2)$
+in unit triangle we find
+\[
+\ba{.}{lll}
+u_1 = v(0,0) &=& a_1\\
+u_1 = v(1,0) &=& a_1 + a_2 + a_4\\
+u_3 = v(0,1) &=& a_1 + a_3 + a_6\\
+u_4 = v(1/2,0) &=& a_1 + a_2/2 + a_4/4\\
+u_5 = v(1/2,1/2) &=& a_1 + a_2/2 + a_3/2 + a_4/4 + a_5/4 + a_6/4\\
+u_6 = v(0,1/2) &=& a_1 + a_3/2 + a_6/4
+\ea{.}
+\]
+It follows that $\u = A\a, \; \a = B\u$ where
+   \[
+A = \ \ba{[}{cccccc}
+     1 &   0 &   0 &   0 &   0 &   0\\
+     1 &   1 &   0 &   1 &   0 &   0\\
+     1 &   0 &   1 &   0 &   0 &   1\\
+     1 & 1/2 &   0 & 1/4 &   0 &   0\\
+     1 & 1/2 & 1/2 & 1/4 & 1/4 & 1/4\\
+     1 &   0 & 1/2 &   0 &   0 & 1/4 \ea{]}\,,\;
+B = A^{-1} = \ \ba{[}{cccccc}
+      1 &    0 &    0 &    0 &    0&     0\\
+     -3 &   -1 &    0 &    4 &    0 &    0\\
+     -3 &    0 &   -1 &    0 &    0 &    4\\
+      2 &    2 &    0 &   -4 &    0 &    0\\
+      4 &    0 &    0 &   -4 &    4 &   -4\\
+      2 &    0 &    2 &    0 &    0 &   -4\ea{]}\,.
+\]
+and then, by (\ref{e1}),
+\[
+\ba{.}{rclcl}
+\psi_1 &=& (1-\xi -\eta )(1-2\xi -2\eta )
+&=& \zeta _1(2\zeta _1 - 1)\\
+\psi_2 &=& \xi (2\xi   - 1) &=& \zeta _2(2\zeta _2 - 1)\\
+\psi_3 &=& \eta (2\eta  - 1) &=& \zeta _3(2\zeta _3 - 1)\\
+\psi_4 &=& 4\xi (1-\xi -\eta ) &=& 4\zeta _1\zeta _2\\
+\psi_5 &=& 4\xi \eta  &=& 4\zeta _2\zeta _3\\
+\psi_6 &=& 4\eta (1-\xi -\eta ) &=& 4\zeta _1\zeta _3
+\ea{.}
+\]
+($\zeta_1\,, \zeta_2\,, \zeta_3$ are the barycentric coordinates.)
+Now we calculate the following matrices in unit triangle
+\[
+\ba{.}{llllll}
+S_1 &=& \dis \int_S\Psi_{\xi}\Psi_{\xi}^T\, d\xi d\eta\,, &
+S_2 &=& \dis \int_S[\Psi_{\xi}\Psi_{\eta}^T + \Psi_{\eta}\Psi_{\xi}^T]\, d\xi d\eta\\
+S_3 &=& \dis \int_S\Psi_{\eta}\Psi_{\eta}^T\, d\xi d\eta\,,  &
+S_4 &=& \dis \int_S\Psi\Psi^T\, d\xi d\eta
+\ea{.}
+\]
+then
+\[
+S_1 = \ \frac16\,\ba{[}{rrrrrr}
+      3 & 1 & 0 & -4 & 0 & 0\\
+     1 & 3 & 0 & -4 & 0 & 0\\
+     0 & 0 & 0 & 0 & 0 & 0\\
+     -4 & -4 & 0 & 8 & 0 & 0\\
+     0 & 0 & 0 & 0 & 8 & -8\\
+     0 & 0 & 0 & 0 & -8 & 8\ea{]}\,, \;\;
+%
+S_2 = \ \frac16\,\ba{[}{rrrrrr}
+      6 & 1 & 1 & -4 & 0 &-4\\
+     1 & 0 &-1 & -4 & 4 & 0\\
+     1 &-1 & 0 & 0 & 4 &-4\\
+     -4 & -4 & 0 & 8 &-8 & 8\\
+     0 & 4 & 4 &-8 & 8 & -8\\
+    -4 & 0 &-4 & 8 & -8 & 8\ea{]}\,,
+\]
+\[
+S_3 = \ \frac16\,\ba{[}{rrrrrr}
+      3 & 0 & 1 & 0 & 0 & -4\\
+     0 & 0 & 0 &  0 & 0 & 0\\
+     1 & 0 & 3 & 0 & 0 &-4\\
+     0 & 0 & 0 & 8 &-8 & 0\\
+     0 & 0 & 0 &-8 & 8 &  0\\
+    -4 & 0 &-4 & 0 &0 & 8\ea{]}\,, \;\;
+%
+S_4 = \ \frac{1}{360}\,\ba{[}{rrrrrr}
+      6 &-1 &-1 &  0 &-4 & 0\\
+    -1 & 6 &-1 &  0 & 0 &-4\\
+    -1 &-1 & 6 &-4 & 0 & 0\\
+     0 &  0 &-4 &32 &16 &16\\
+    -4 & 0 & 0 &16 &32 & 16\\
+     0 &-4 & 0 &16 & 16 &32\ea{]}\,,
+\]
+Likewise one calculates the shape functions for linear approximation in unit triangle:
+\[
+\wi{\Psi} = [1 - \xi -\eta\,, \ \xi\,, \eta]^T
+\]
+and the both integrals
+ \[
+C_1 = \int_S\Psi_{\xi}\wi{\Psi}^T\, d\xi d\eta
+= \frac16 \, \ba{[}{rrr}
+ -1 & 0&  0\\
+  0 & 1&  0\\
+  0 & 0&  0\\
+  1 &-1&  0\\
+  1 & 1&  2\\
+ -1 &-1& -2\ea{]}\,,\;\;
+%
+C_2 = \int_S\Psi_{\eta}\wi{\Psi}^T\, d\xi d\eta
+= \frac16 \, \ba{[}{rrr}
+ -1&  0&  0\\
+  0&  0&  0\\
+  0&  0&  1\\
+ -1& -2& -1\\
+  1&  2&  1\\
+  1&  0& -1\ea{]}
+\]
+and the mass matrix for linear elements
+\[
+S_5 = \int_S\wi{\Psi}\wi{\Psi}^T\, d\xi d\eta =
+\frac{1}{24}\,\ba{[}{ccc} 2 & 1 & 1\\ 1 & 2 & 1\\1 & 1 & 2\ea{]}\,.
+\]
+Stationary {\sc Navier-Stokes} equations with convection term:
+\[
+\ba{.}{rclcll}
+a(\v,\u) + c(\v,\u,\u) &-&(\div \v,p) &=& (\v,\f)
++ (\v,\ul{\sigma}_n(\u,p))_{\Gamma}\,, &\v \in \V \\[1ex]
+-(\div \v,q) && &=& 0\,,     & q \in \Q\\[1ex]
+\ul{\sigma}_n(\u,p) && &=& (2\nu \eps(\u) - p)\n
+\ea{.}
+\]
+In arbitrary triangle $T(x,y)$ we have
+\[
+\ba{.}{lll}
+a(\u,\v) &=& \nu \dis \int_T\grad \u :\grad \v \, dxdy\\[1ex]
+&=& \dis \nu \int_T[u_{1,x}v_{1,x} + u_{1,y}v_{1,y}]\, dxdy
++ \nu \int_T[u_{2,x}v_{2,x} + u_{2,y}v_{2,y}]\, dxdy\\[1ex]
+&=& \wi{a}(u_1,v_1) + \wi{a}(u_2,v_2)\\[1ex]
+b(\u,q) &=& \dis \int_T\div \u \cdot q\, dxdy
+= \int_T(u_{1,x} + u_{2,y})\,q \, dxdy\\[1ex]
+c(\u,\v,\w) &=& \dis \int_T\u \cdot (\grad \v)\w\, dxdy
+\ea{.}
+\]
+For transformation on the unit triangle we have e.g.
+\[
+\ba{.}{lll}
+b(\u,q)
+&=& \dis
+\int_T(u_{1,\xi}\xi_x + u_{1,\eta}\eta_x)\,q\,dxdy
++ \int_T(u_{2,\xi}\xi_y + u_{2,\eta}\eta_y)\,q\,dxdy\\[1ex]
+&=& \dis
+J \int_S(u_{1,\xi}\xi_x + u_{1,\eta}\eta_x)\,q\,d\xi d\eta
++ J \int_S(u_{2,\xi}\xi_y + u_{2,\eta}\eta_y)\,q\,d\xi d\eta\\[1ex]
+&=& \dis
+\frac{J}{J}U_1^T(C_1y_{31} - C_2y_{21})Q
++ \frac{J}{J}U_2^T(C_2 x_{21} -C_1x_{31})Q\,,
+\ea{.}
+\]
+where $U_1,U_2 \in \mb{R}^6\,,\; Q \in \mb{R}^3$ are the local vectors of the node
+variables in the triangle
+\par
+{\bf (b) Trilinear Form} with shape functions.\\
+$
+P(\u,\v,\w) = \u^T[\grad \v]\w
+$
+\[
+\u \simeq \ \ba{[}{r}\Phi(x,y)^TU_1\\ \Phi(x,y)^TU_2\ea{]}\,,\;
+\]
+\par\vspace{1ex}
+\[
+N(\u,\v,\w) \simeq \
+[U^T_1,U^T_2]\ \ba{[}{cc}
+(\Phi_x^TV_1)\Phi\,\Phi^T &
+(\Phi_y^TV_1)\Phi\,\Phi^T \\
+(\Phi_x^TV_2)\Phi\,\Phi^T &
+(\Phi_y^TV_2)\Phi\,\Phi^T \ea{]}\,
+\ba{[}{r}W_1\\ W_2\ea{]}\,,\;
+\]
+\par
+\[
+\Phi_x = \Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x\,,\;\;
+\Phi_y = \Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y\,,
+\]
+\par\vspace{1ex}
+\[
+\int_TN(\u,\v,\w) \simeq
+[U_1^T,U^T_2]\, \ba{[}{rr} A(V_1) & B(V_1)\\ C(V_2) & D(V_2)\ea{]}
+\ba{[}{r}W_1\\ W_2\ea{]}\,,\;
+\]
+where
+\begin{equation}\label{e2}
+\ba{.}{lll}
+A(V_1) &=& \dis J\int_S\big((\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)^TV_1\big)
+\Psi\,\Psi^T\, d\xi d\eta\,, \\[1ex]
+B(V_1) &=& \dis J\int_S\big((\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)^TV_1\big)
+\Psi\,\Psi^T\, d\xi d\eta\\[1ex]
+C(V_2) &=& \dis J\int_S\big((\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)^TV_2\big)
+\Psi\,\Psi^T\, d\xi d\eta \,,\\[1ex]
+D(V_2) &=& \dis J\int_S\big((\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)^TV_2\big)
+\Psi\,\Psi^T\, d\xi d\eta
+\ea{.}
+\end{equation}
+Now we have the representation
+\[
+\Psi_{\xi} = \ \ba{[}{rrr}
+ -3 & 4 & 4\\
+ -1 & 4 & 0\\
+ 0 & 0 & 0\\
+ 4 & -8 & -4\\
+ 0 & 0 & 4\\
+0 & 0 & -4\ea{]}
+\ba{[}{r}1\\ \xi \\ \eta\ea{]}
+ =: [A_1\,,\, A_2\,,\, A_3]\ \ba{[}{r}1\\ \xi \\ \eta\ea{]}
+\]
+\[
+\Psi_{\eta} = \ \ba{[}{rrr}
+ -3 & 4 & 4\\
+  0 & 0 & 0\\
+ -1 & 0 & 4\\
+ 0 & -4 & 0\\
+ 0 & 4 & 0\\
+ 4 & -4 & -8\ea{]}\
+\ba{[}{r}1\\ \xi \\ \eta\ea{]}
+ =: [B_1\,,\, B_2\,,\, B_3]\ \ba{[}{r}1\\ \xi \\ \eta\ea{]}
+\]
+Accordingly, only the both matrices $P\,,Q$ are to be calculated:
+\[
+M := S_4 = \int_S \Psi\,\Psi^T\, d\xi d\eta\,, \;\;
+P = \int_S\xi \Psi\,\Psi^T\, d\xi d\eta\,, \;\;
+Q = \int_S\eta \Psi\,\Psi^T\, d\xi d\eta\,,
+\]
+Then we obtain
+\[
+\ba{.}{lll}
+\dis \int_S(\Psi_{\xi}V)\Psi\Psi^T \,d\xi d\eta
+&=& (A_1^TV)M + (A_2^TV)P + (A_3^TV)Q\\[1ex]
+\dis \int_S(\Psi_{\eta}V)\Psi\Psi^T \,d\xi d\eta
+&=& (B_1^TV)M + (B_2^TV)P + (B_3^TV)Q\\[1ex]
+\ea{.}
+\]
+and the integrals (\ref{e2}) are linear combinations of these both integrals with the 
+corresponding arguments $V_1$ resp.\ $V_2$
+\[
+\ba{.}{lll}
+A(V_1) &=& [(A^T_1y_{31} + B^T_1y_{12})V_1]M + [(A^T_2y_{31} + B^T_2y_{12})V_1]P
++ [A^T_3y_{31} + B^T_3y_{12})V_1]Q\\[0.5ex]
+%
+B(V_1) &=& [(A^T_1x_{13} + B^T_1x_{21})V_1]M + [(A^T_2x_{13} + B^T_2x_{21})V_1]P
++ [(A^T_3x_{13} + B^T_3x_{21})V_1]Q\\[0.5ex]
+%
+C(V_2) &=& [(A^T_1y_{31} + B^T_1y_{12})V_2]M + [(A^T_2y_{31} + B^T_2y_{12})V_2]P
++ [A^T_3y_{31} + B^T_3y_{12})V_2]Q\\[0.5ex]
+%
+D(V_2) &=& [(A^T_1x_{13} + B^T_1x_{21})V_2]M + [(A^T_2x_{13} + B^T_2x_{21})V_2]P
++ [(A^T_3x_{13} + B^T_3x_{21})V_2]Q
+\ea{.}
+\]
+{\bf(c)}
+The nonlinear problem may be solved by a simple iteration method or by {\sc Newton}'s 
+method. The latter allows higher {\sc Reynolds} numbers $Re = 1/\nu$. Also, in {\sc 
+Newton}'s method the gradient of the nonlinear part must be calculated. From {\bf (b)}
+\[
+\ba{.}{l}
+\grad_{U_1,U_2}
+\, \ba{[}{rr} A(U_1) & B(U_1)\\ C(U_2) & D(U_2)\ea{]}
+\ba{[}{r}U_1\\ U_2\ea{]}
+= \ \ba{[}{rr} A(U_1) & B(U_1)\\ C(U_2) & D(U_2)\ea{]}
+\\[3ex]
+ + \ \ba{[}{cc} \grad_{U_1}A(U_1)U_1 + \grad_{U_1}B(U_1)U_2 & \text{Null} \\ 
+     \text{Null} & \grad_{U_2}C(U_2)U_1 + \grad_{U_2}D(U_2)U_2\ea{]}
+\ea{.}     
+\]
+\par
+{\bf (d) Postprozessor}
+Let $\u = (u,v)$ be the velocity field then the streamlines $z$ satisfy
+%
+\[
+\int _{\Omega}\nabla \delta z\, \nabla z
+= \int_{\Omega}\delta z\, w  + \int_{\Gamma}\delta z \, z_{\n}
+\]
+\[
+\int_T\phi_iw = \int_T\phi_i(v_x - u_y) + \int_{\Gamma}\delta z \, z_{\n}
+\]
+\[
+\ba{.}{l}
+\dis \int_T\delta z\, w \,dxdy\\[1ex]
+\simeq \dis
+JZ\int_S\Psi(\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)^T\,d\xi d\eta V
+- JZ \int_S\Psi(\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)^T\,d\xi d\eta U\\[1ex]
+= \dis
+JZ \left[\int_S\Psi\Psi_{\xi}^T\,d\xi d\eta\right](V\xi_x - U\xi_y)
++
+JZ\left[\int_S\Psi\Psi_{\eta}^T\,d\xi d\eta\right](V\eta_x - U\eta_y)
+\ea{.}
+\]
+Accorcingly, the matrices
+\[
+\int_S\Psi\Psi_{\xi}^T\,d\xi d\eta\,,\;\;
+\int_S\Psi\Psi_{\eta}^T\,d\xi d\eta
+\]
+are to be calculated.
+%
+\[
+z_x = - v\,,\;\; z_y = u\,,\;\; \grad z\cdot \n = -v\,n_1 + u\,n_2.
+\]
+%
+\[
+\xi _x = y_{31}/J, \;\; \xi _y = x_{13}/J, \;\;
+\eta _x = y_{12}/J, \;\; \eta _y = x_{21}/J\,.
+\]
+
+\end{document}

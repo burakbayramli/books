@@ -1,0 +1,376 @@
+\section{Projection Method}
+%
+In this volume we treat a class of linear programming methods where one
+computes at first a vertex of the feasible domain and then proceeds from one
+vertex to the next until an optimum vertex is found.  However we follow here
+an idea proposed first by \cite{BeRi} and consider for basic problem a problem
+where no equalities occur:
+%
+\begin{equation} \label{e24}
+\fbox{$
+\max\{ax, \; Bx \leq c\}, \; B \in \Bbb{R}^m{}_n, \; \rank (B) = n.
+$}
+\end{equation}
+%
+This way has some striking advantages in the development of more specific
+techniques for linear and nonlinear programming problems.  By Theorem \ref{s3},
+a point $x \in \Omega$ is a vertex if and only if in this point the gradients
+of
+the active side conditions span the entire row space $\Bbb{R}_n$.  By Theorem
+\ref{s2}, a vertex $x^*$ is optimum if in this point the gradient $a$ of the
+objective function is contained in the positive cone of the gradients of the
+active side conditions.  This means that all edges {\bf pointing to} $x$ form
+with $a$ an angle $0 \leq \phi \leq \pi/2$.  If the vertex is not optimum then
+one has to leave this vertex in direction of an edge to an other vertex point
+such that the objective function is improved or at least is not deteriorated.
+By this way one remains always in the feasible domain or --- more exactly ---
+on its boundary.  In marching from one vertex to the other, the optimum
+direction to be chosen can be read directly from the {\sc Lagrange} multipliers
+in the Main Theorem \ref{s2} which are calculated also in the
+numerical procedure.
+\par
+So, let $x$ be an arbitrary vertex point of the primal problem (\ref{e24}).
+Then the associated index vector $\A(x)$ contains a collection of $n$ indices
+of active side conditions with linear independent gradients and the other
+indices are assembled in the index vector $\N(x)$.  Let henceforth
+\[ \ba{.}{l}
+\A(x) = \{\rho _1, \ldots, \rho _n\}, \;
+\N (x) = \{ \sigma _1, \ldots, \sigma _{m-n}\},\\
+\A(x) \cap \N(x) = \emptyset, \; \A(x) \cup \N(x) = \{1,\ldots,m\}.
+\ea{.}
+\]
+in a fixed order which can be chosen at the beginning and let
+\[
+\fbox{$
+B^{\A} = \ba{[}{l} b^{\rho _1}\\ \vdots\\ b^{\rho _n} \ea{]}, \; b^{\rho _j}
+\; \mbox{rows}, \quad A := [B^{\A}]^{-1} =: [a_1, \ldots, a_n], \; a_k \;
+\mbox{columns}.
+$}
+\]
+Then the matrix $B^{\A}$ is regular by assumption and because
+$B^{\A}A = I$ we have
+%
+\beqn
+b^{\rho _j}a_k = \delta ^j{}_k \quad (\mbox{{\sc Kronecker} symbol}).
+\eeqn
+%
+Accordingly, a fixed column vector $a_k$ is contained in
+$n - 1$ hyperplanes
+%
+\begin{equation} \label{e25}
+b^{\rho _j}x = 0, \; \rho _j \in \A(x), \; \rho _j \neq \rho _k,
+\end{equation}
+%
+which lie parallel to the corresponding boundary planes $b^{\rho _j}x = \gamma
+^{\rho _j}$ of the feasible domain.  Hence every fixed $a_k$ is parallel
+to exactly one edge of $\Omega$:
+\par
+\[
+\fbox{$
+\mbox{The columns of $A$ are the edges of $\Omega$ pointing to $x$}
+$}
+\]
+\par
+and the matrix $A$ is called {\bf edge matrix}.  By assumption, the vectors
+$b^{\rho _j}, j = 1, \ldots n $, form a {\bf basis} of the row space
+$\Bbb{R}_n$ and $B^{\A}$ is called therefore {\bf basis matrix} (in vertex
+$x$).  There exists a $w \in \Bbb{R}_n$ such that
+%
+%
+\begin{equation} \label{e26}
+a = \sum_{k=1}^n w_kb^{\rho _k} \Longleftrightarrow a = wB^{\A}
+\Longleftrightarrow w = aA.
+\end{equation}
+%
+%
+The vector $w_ka_k/\|a_k\|^2$ is the orthogonal projection of the gradient $a$
+of the objective function on the edge $a_k$ hence the present method is called
+projection method.  The vector $y \in \Bbb{R}_m$ with
+\[
+\fbox{$
+y_{\rho _k} = \ba{\{}{ll} w_k, &k= 1, \ldots, n,\\
+                          0    & \mbox{else},       \ea{.}
+$}
+\]
+i.e., the vector
+\[
+y \in \Bbb{R}_m, \; y_{\A} = w, \; y_{\N} = 0,
+\]
+satisfies the optimality condition of Theorem \ref{s2}, $yB = a, \; y \geq 0,$
+if and only if $w \geq 0$ does hold.  Hence, by Corollary \ref{f4}, this $y$ is
+solution of the dual row problem
+%
+\[
+\min \{yc, \; yB = a, \; y \geq 0\}.
+\]
+Summing up, the {\bf optimality condition} found from (\ref{e26})  has
+the following form
+%
+\begin{equation} \label{e27}
+\fbox{$
+y_{\rho _k} \equiv w_k := aa_k \geq 0, \; k = 1, \ldots, n.
+$}
+\end{equation}
+%
+\par
+If the vertex $x$ is {\bf not optimum} then the optimality condition of the
+Main Theorem is violated.  We now introduce two {\bf index functions}, $\phi$
+and $\psi$.  The first determines the side condition with the absolute number
+$\rho _j$ whose gradient is removed from the row basis $\{b^{\rho _k}, \; k =
+1, \ldots, n\}$, and the second determines the side condition with the absolute
+number $\sigma _i$ whose gradient is taken into the row basis instead.
+Geometrically, this means that we exchange one vertex of the feasible domain
+for another in a way that the objective function is improved and the entire
+process is called {\bf swapping} below.  In order to have a unique value, we
+choose
+%
+\begin{equation} \label{e28}
+\fbox{$
+j = \min \arg_k \min \{\phi (k) := aa_k, \; k \in \{1, \ldots, n\}\},
+$}
+\end{equation}
+i.e., we choose the smallest index $j$ for which $\phi (k), \; k = 1, \ldots,
+n$, becomes minimum.  Then $aa_j < 0$ as the optimality conditions is
+assumed to be violated , and minimum, therefore the angle between the gradient
+$a$ of the objective function and $a_j$ is maximum for all $k = 1, \ldots ,n$.
+Consequently, $- a \, a_j > 0$ is maximum and $- a_j$ is the {\bf optimum
+search direction} in vertex $x$.  For the new point
+\[
+\wi{x} := x - \tau a_j, \; \tau  > 0,
+\]
+we obtain by this construction
+%
+\begin{equation} \label{e29}
+a\tilde{x} = a(x - \tau a_j) \geq a \, x.
+\end{equation}
+In order to compute the {\bf optimum step width} $\tau $, we substitute
+$\wi{x}$ into the inactive side conditions and determine the maximum $\tau
+$ such that all of these conditions remain still valid:
+%
+\[
+b^{\sigma _k}(x - \tau a_j) \leq \gamma ^{\sigma _k}, \; \sigma _k \in \N(x),
+\]
+i.e.,
+\begin{equation} \label{e30}
+b^{\sigma _k}x - \gamma ^{\sigma _k} \leq \tau b^{\sigma _k} a_j, \;
+\sigma _k \in \N(x).
+\end{equation}
+%
+\par
+%
+{\bf Case 1.} $\forall \; \sigma _k \in \N (x):  \; b^{\sigma _k}a_j
+\geq 0$.  Then (\ref{e30}) holds for all $\tau > 0$.  In this case the
+objective function $ax$ is unbounded from above in the feasible domain $\Omega$
+and the problem has no solution.
+\par
+{\bf Case 2.} $\exists \; \sigma _k \in \N(x): \; b^{\sigma _k}a_j < 0$.
+Then we choose
+%
+\begin{equation} \label{e31}
+\fbox{$ \dis
+i := \min \arg_k \min \{\psi(k) := \frac{b^{\sigma _k}x - \gamma
+^{\sigma _k}}{b^{\sigma _k}a_j}, \; b^{\sigma _k}a_j < 0, \; \sigma _k \in
+\N(x)\}.
+$}
+\end{equation}
+%
+It follows that $\tau ^* := \psi(i) \geq 0$ holds because $b^{\sigma _k}x -
+\gamma ^{\sigma _k} \leq 0, \; \sigma _k \in \N(x)$.  But in a degenerated
+vertex we obtain $\tau ^* = 0$ because $b^{\sigma _k}x - \gamma ^{\sigma _k} =
+0$ holds also for some $\sigma _k \in \N(x)$.  Then the basis is exchanged in
+the vertex $x$ but the vertex itself is not changed.  This situation can lead
+to a cyclic altering of basis elements yielding no remove from the vertex $x$.
+If the vertex is not degenerate then we always have $\tau ^* > 0$.  Degenerate
+vertices appear frequently but cycles are very seldom nevertheless they must be
+prevented by suitable arrangements in order that the algorithm always comes to
+an end (`` {\sc Bland}'s rule'').
+\par
+By construction we now have $a\wi{x} \geq ax$ and, for $i$ and $j$
+fixed,
+\beqn \ba{.}{lll}
+b^{\rho _k}\tilde{x} = \gamma ^{\rho _k}, & \rho _k \in \A(x), \; \rho _k \neq
+\rho _j, \; \rho _k = \sigma _i \in \N(x) ,\\
+%
+b^{\sigma _k}\tilde{x} \leq \gamma ^{\sigma _k}, & \sigma _k \in \N(x), \;
+\sigma _k \neq \sigma _i, \\
+%
+b^{\rho _j}\tilde{x} = b^{\rho _j}x - \tau ^*b^{\rho _j}a_j &= \gamma ^{\rho
+_j} - \tau ^* \cdot 1 \leq \gamma ^{\rho _j}.
+ \ea{.} \eeqn
+Therefore there are at least $n$ side conditions active in $\wi{x}$ again and
+the new point $\wi{x}$ is a vertex with
+\[
+\A(\wi{x}) = (\A(x) \backslash \{\rho _j\}) \cup \{\sigma _i\}, \quad
+\N(\wi{x}) = (\N(x) \backslash \{\sigma _i\}) \cup \{\rho _j\},
+\]
+if the vectors $b^k, \; k \in \A (\wi{x})$, are also linear independent.
+\par
+For instance, let
+%
+\begin{equation} \label{e32}
+\A(x) = \{1, \ldots,n\}, \; \N(x) = \{n+1, \ldots, m\},
+\end{equation}
+and let $\rho _j = j$ then
+\[
+\A(\wi{x}) = \{1, \ldots, j-1,i,j+1, \ldots,n\}, \quad
+\N(\wi{x}) = \{n+1, \ldots, i-1, j, i+1, \ldots, m\}.
+\]
+%
+After exchange, the $j$-th row of $B^{\A}$ has changed and is now the $i$-th
+row of $B^{\N}$ whereas the former i-th row of $B^{\N}$ has become the $j$-th
+row of $B^{\A}$.
+\par
+In order to prove that $\wi{x}$ is a vertex again, it suffices to consider the
+model case (\ref{e32}).  Then we have to show that the gradients
+\beqn
+b^k, \; k = 1, \ldots ,n, \; k \neq j, \; k = i > n,
+\eeqn
+are linear independent.  The vectors $b^k, \; k = 1, \ldots ,n$ are independent
+because $x$ has been a vertex.  Moreover, we have $a_j \neq 0$, and $b^ka_j =
+0, \; k = 1, \ldots ,n, \; k \neq j$, as well as $b^ia_j \neq 0 $ by
+(\ref{e31}).  Without loss of generality, let $j = n, \; b^i = b, \; a_j = u$.
+%
+%
+\begin{lemma} \label{l7}
+Let $b^1,\ldots, b^{n-1}, b \in \Bbb{R}_n, \; 0 \neq u \in \Bbb{R}^n$,
+and $b^1, \ldots b^{n-1}$ linear independent then
+\beqn
+b^1, \ldots , b^{n-1}, b \; \mbox{linear independent} \;
+\Longleftrightarrow (b^ku = 0, \; k = 1, \ldots, n - 1, \Longrightarrow bu
+\neq 0).
+\eeqn
+\end{lemma}
+%
+%
+Proof.  The assertion is obviously true because $n$ independent vectors
+in $\Bbb{R}^n$ cannot be contained in a hyperplane $xu = 0$.
+\par
+\vspace{2mm}
+It is unnecessary to update the index vectors $\A(x)$ and $\N(x)$ in the
+projection method if only the solution shall be computed since a change of
+basis implies only a permutation of side conditions here. But in all other
+cases these index vectors must be actualized, in particular,
+%
+\begin{itemize}
+\item if the {\sc Lagrange} multiplier $y$ or a solution of the dual
+problem shall be computed with the same algorithm,
+%
+\item if {\sc Bland}'s rule comes to application to avoid cycling,
+%
+\item if one works with reduced  ``tableaus'' as e.g. in the simplex method.
+\end{itemize}
+%
+We always compute the {\sc Lagrange} multipliers in the procedures
+developed below hence also the index sets are always updated.
+\par
+%
+%-------------------------------------------------------------------------
+In the projection method for the general problem (\ref{e1}),
+\[
+\fbox{$
+\ba{.}{l}
+\max\{ax, \; B^{\P}x = c^{\P}, \; B^{\Q}x \leq c^{\Q}\},\\
+B \in \Bbb{R}^m{}_n, \; \rank (B^{\P}) = p, \;
+\rank (B) = n,
+\ea{.}
+$}
+\]
+we
+compute an initial vertex point $x$ which satisfies
+$B^{\P}x = c^{\P}$ and afterwards exclude the first $p$ equations from
+inactivation. The index vectors now are
+\[ \ba{.}{rcl}
+\A(x) &=& \{1, \ldots, p, \rho _{p+1}, \ldots, \rho _n\}, \;
+\A(x) \backslash \P = \{\rho _{p+1}, \ldots, \rho _n\},\\
+\N(x) &=& \{\sigma _1, \ldots , \sigma _{m-n}\}
+\ea{.}
+\]
+and the first $p$ rows of $B$ belong to the basis of every vertex $x$.  The
+optimality conditions modify slightly,
+\begin{equation} \label{e34}
+\fbox{$
+y_{\rho _k} \equiv w_k := aa_k \geq 0,\; k = p+1, \ldots, n.
+$}
+\end{equation}
+If a vertex is not optimum then we choose the row $j$ to be inactivated such
+that
+\[
+y_{\rho _j} = aa_j \leq aa_k, \; k = p+1, \ldots, n.
+\]
+The remaining part of the procedure is the same as above, in particular, the
+pivot rule for the row to be taken into the basis remains unaltered.
+\par
+In times of mechanic computing machines, it has been of advantage to write
+all data into a large matrix called {\bf tableau} during calculation.  We
+join this practice by optical reasons although it has losen somewhat of its
+significance today. Recalling that
+\[
+y_{\P} = [y_1, \ldots, y_p], \;
+y_{\A \backslash \P} = [y_{\rho _{p+1}}, \ldots, y_{\rho _n}],
+\]
+and writing
+\[
+A_{1:p} := [a_1, \ldots,a_p], \;
+A_{p+1:n} := [a_{p+1}, \ldots, a_n]
+\]
+in the edge matrix $A$, we use the following three forms of the {\bf full}
+tableau being simple and more explicit from left to right
+%
+%
+\begin{equation} \label{e36}
+\fbox{$
+\ba{.}{rcl}
+{\bf P(x,y)} &:=&
+\ba{[}{cc} A & x\\ D & r\\w & f
+\ea{]}
+:=
+\ba{[}{cc} A & Ac^{\A}\\B^{\N}A & B^{\N}Ac^{\A} - c^{\N}\\aA &
+aAc^{\A} \ea{]}\\[7mm]
+&=&
+\ba{[}{ccc} A_{1:p} &  A_{p+1:n}           & Ac^{\A}\\
+      B^{\N}A_{1:p} & B^{\N}A_{p+1:n}      & B^{\N}Ac^{\A} - c^{\N}\\
+       y_{\P}       & y_{\A \backslash \P} & aAc^{\A} \ea{]}.
+\ea{.}
+$}
+\end{equation}
+The vector $x = Ac^{\A}$ is the actual vertex point, $r := B^{\N}x - c^{\N}$
+contains the nontrivial i.e.  nonzero part of the residuum $Bx - c$, and $f =
+aAc^{\A}$ is the actual value of the objective function.
+Let $P := P(x)$ be the {\bf row permutation matrix} defined by
+\[
+P\ba{[}{c}1\\ \vdots\\m \ea{]} = \ba{[}{c}\A(x) \\ \N(x) \ea{]}
+\]
+and let $x^*$ be a solution of the primal problem (\ref{e24}) then the vector
+$y^* = [y^*_{\A}, y^*_{\N}]P$ with $y^*_{\N} = 0 \in \Bbb{R}_{m-n}$ is a {\sc
+Lagrange} multiplier and hence a solution of the dual problem (\ref{e8}) by
+Theorem \ref{f5}.  But observe that the first $p$ components of $y_{\A}$ belong
+to the equality restrictions and thus the optimality condition reads
+\[
+y_{\A \backslash \P} \geq 0.
+\]
+\par
+In the {\bf small} tableau, the first block row of (\ref{e36}) is omitted and
+the solution $x^*$ is computed afterwards using the index vector $\A(x)$,
+\[
+B^{\A}x^* = c^{\A}.
+\]
+This way of procedure has some advantages in large problems because here the
+vertex $x$ is computed only once at the end of calculation.
+\par
+With respect to the entries in the left form of the tableau (\ref{e36}), the
+pivot rules (\ref{e28}) and (\ref{e31}) have a somewhat simpler form,
+namely
+%
+\begin{equation} \label{e36a}
+\fbox{$
+\ba{.}{rcll}
+j &=& \min \arg_k \min \{w_k, & k \in \{p+1, \ldots, n\}\},\\
+i &=& \dis \min \arg_k \min \{\frac{r^k}
+{d^k{}_j}, \; d^k{}_j < 0, & k \in \{1, \ldots, m -n \}\},\\
+(n+i,j) &=& \; \mbox{pivot position in {\bf P}}.
+\ea{.}
+$}
+\end{equation}
+Naturally, in the {\bf small} tableau the element at position $(i,j)$ is the
+pivot element.
+
