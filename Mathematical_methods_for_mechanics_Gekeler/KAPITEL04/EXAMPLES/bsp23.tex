@@ -1,0 +1,1128 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 1--8 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Beispiel 1}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, \S \, 2.4.\\
+In einem $(x_1,x_2)$-Koordinatensystem wird ein Raumschiff von der Masse $m$
+und der Schubkraft $ma(t)$ in Richtung seiner K"orperachse beschleunigt.
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Raumschiffes}\\
+x_3(t)           & \mbox{Geschw. in $x_1$-Richtung}\\
+x_4(t)           & \mbox{Geschw. in $x_2$-Richtung}\\
+u(t)  & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+Das Raumschiff soll in einer vorgegebenen Zeit $T$ auf eine Flugbahn parallel
+zur $x_1$-Achse in H"ohe $h$ gebracht werden. Dabei soll die Geschwindigkeit
+$x_3(T)$ maximal sein. Es sei $x(0) = {0}$. Bei diesem Problem wird die
+Kontrolle mit Hilfe der Kozustandsgleichungen eliminiert.
+\par
+Hinweis: Der Gradient einer Abbildung $f:\mb{R}^m \to \mb{R}^n$ ist eine
+(n,m)-Matrix.
+\par
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$\,:
+\begin{equation} \label{e1.1}
+\fbox{$
+\dot{x}_1 = x_3(t), \quad
+\dot{x}_2 = x_4(t), \quad
+\dot{x}_3 = a(t) \cos(u(t)), \quad
+\dot{x}_4 = a(t) \sin(u(t))
+$}\; .
+\end{equation}
+%
+Zielfunktion und {\sc Hamilton}-Funktion:
+\begin{equation} \label{e1.2}
+\ba{.}{rcl}
+J(x) &:=& p(x(T)) + \int_0^TL(x(t),u(t),t)dt = x_3(T)  = \Max !,\\
+H(x,y,u,t) &=&  y^Tf = y_1x_3 + y_2x_4 + y_3a(t)\cos(u) + y_4a(t)\sin(u),\\
+\nabla_x H &=& (0,0,y_1,y_2)\quad \mbox{(Zeilenvektor)}.
+\ea{.}
+\end{equation}
+\par
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen) $\dot{y} = -
+[\nabla_x H]^T$:
+\begin{equation} \label{e1.3}
+\fbox{$
+\dot{y}_1 = 0,\quad
+\dot{y}_2 = 0,\quad
+\dot{y}_3 = - y_1,\quad
+\dot{y}_4 = - y_2
+$}\; .
+\end{equation}
+L"osung von (\ref{e1.3})
+\[
+y(t) = [c_1,c_2,-c_1t + c_3,-c_2t + c_4]^T.
+\]
+\par
+\vspace{1mm}
+Weil die Kontrolle $u(t)$ nicht beschr"ankt ist, gilt
+$H_u = 0$. Es folgt
+\par
+\begin{equation} \label{e1.4}
+H_u = -y_3a\sin(u) + y_4a\cos u = 0,
+ \quad \Longrightarrow \quad
+\tan (u) = \dis \frac{y_4}{y_3} = \frac{-c_2t+c_4}{-c_1t + c_3}.
+\end{equation}
+%
+F"ur den Zustand $x$ gelten die Randbedingungen
+\[
+x(0) = 0, \; x_2(T) = h, \; x_4(T) = 0, \;
+x_1(T) \; \mbox{frei}, \; x_3(T) \; \mbox{frei},
+\]
+also
+\[
+q_1(x(0)) = x(0) = 0, \qquad q_2(x(T)) = [x_2(T) - h, x_4(T)]^T = 0\,.
+\]
+F"ur den Kozustand $y$ gelten die Randbedingungen
+\[
+y(0)^T = - z_1^T\nabla q_1(x(0)) = - z_1^T, \quad
+y(T)^T = \nabla p(x(T)) + z_2^T\nabla q_2(x(T))
+\]
+mit Vektoren $z_1 \in \mb{R}^4$ und $z_2 \in \mb{R}^2$.
+Also ist $y(0)$ frei und
+\[
+y(T) =
+\ba{[}{c}y_1\\y_2\\y_3\\y_4\ea{]} =
+\ba{[}{c}0\\0\\1\\0\ea{]} + z_1
+\ba{[}{c}0\\1\\0\\0\ea{]} + z_2
+\ba{[}{c}0\\0\\0\\1\ea{]} =
+\ba{[}{c}0\\z_1\\1\\z_2\ea{]},
+\]
+d.\ h.
+\[
+y_1(T) = 0, \quad y_2(T) \; \mbox{frei}, \quad y_3(T) = 1, \quad
+y_4(T) \; \mbox{frei}.
+\]
+%
+$y_1(t) = c_1$ und $y_1(T) =  0$ ergibt $c_1 = 0$.\\
+$y_3(t) = -c_1t + c_3$ und $y_3(T) = 1$ ergibt mit $c_1 = 0$, daá
+$c_3 = 1$.\\
+Im Optimum muss also mit $c_2 = c$ nach (\ref{e1.4}) gelten
+\[
+\tan (u(t)) = c_4 - ct = \tan (u(0)) - ct = y_4.
+\]
+Erinnerung:
+\[
+\dis \cos (u) = \frac{\pm 1}  {(1 + \tan^2(u))^{1/2}}, \quad
+\sin (u) = \frac{\pm \tan (u)}{(1 + \tan^2(u))^{1/2}}
+\]
+%
+Einsetzen von $y_4 = \tan(u)$ ergibt
+\[
+\cos (u) = \frac{1}  {(1 + y_4^2)^{1/2}}, \quad
+\sin (u) = \frac{y_4}{(1 + y_4^2)^{1/2}}\, .
+\]
+Einsetzen dieser Werte in die Zustandsgleichungen ergibt mit $y_i = x_{4+i}$
+das Randwertproblem
+\[
+\ba{.}{rclrclrclrcl}
+\dot{x_1} &=& x_3, &
+\dot{x_2} &=& x_4, &
+\dot{x_3} &=& a(t)/(1 + x_8^2)^{1/2}, &
+\dot{x_4} &=& a(t)x_8/(1 + x_8^2)^{1/2},\\[2mm]
+\dot{x_5} &=& 0, &
+\dot{x_6} &=& 0, &
+\dot{x_7} &=& - x_5, &
+\dot{x_8} &=& - x_6,
+\ea{.}
+\]
+mit den Randbedingungen
+%
+\[
+D_1x(0) = A, \quad D_2x(T) = B,
+\]
+%
+und
+\[
+D_1 = \ba{[}{cccccccc}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0
+\ea{]}, \;
+A = \ba{[}{c} 0 \\ 0 \\ 0 \\ 0\ea{]},
+\]
+\par
+\[
+D_2 = \ba{[}{cccccccc}
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0
+\ea{]}, \;
+B = \ba{[}{c}  h\\ 0\\ 0 \\1 \ea{]}.
+\]
+%
+Das nichtlineare Randwertproblem wird mit dem Box-Schema und dem
+{\sc Newton}-Verfahren f"ur konstantes $a(t) = a$ gel"ost.
+Die erreichbare H"ohe $h$ h"angt von der Zeit $T$ ab.
+\par{\vspace{1ex}\hrule\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 2}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, \S \, 2.5.\\
+Ein Raumschiff soll in einer vorgegebenen Zeit $T$ von einem kreisf"ormigen
+Orbit mit Radius $r_0$ den h"ochstm"oglichen kreisf"ormigen Orbit erreichen.  Der
+Einfluss weiterer Himmelsk"orper wird vernachl"assigt.  Das Raumschiff fliegt im
+Gegenuhrzeigersinn.  In Polarkoordinaten $(r,\phi )$ mit dem (punktf"ormigen)
+Zentralk"orper als Zentrum sei
+\[
+\ba{.}{ll}
+r(t)               & \mbox{radiale Entfernung des Raumschiffes}\\
+u = \dot{r}        & \mbox{radiale Geschwindigkeit}\\
+v = r\dot{\phi }   & \mbox{Geschwindigkeit senkrecht zum Radius}\\
+m(t)               & \mbox{Masse des Raumschiffes}\\
+|\dot{m}(t)|       & \mbox{{\em konstante} Treibstoffverbrauchsrate}\\
+S = |\dot{m}(t)|a  & \mbox{Schubkraft}\\
+a                  & \mbox{Maschinenkonstante}\; [m/s] \\
+\alpha (t)         & \mbox{Schubwinkel}\\
+\gamma             & \mbox{Gravitationskonstante}\\
+M                  & \mbox{Masse des Zentralk"orpers}\\
+G                  & = \gamma\cdot M\\
+\rho               & = |\dot{m}(t)|/m(0) \; [1/s]\\
+S                  & = \rho \cdot a \cdot m(0)
+\ea{.}
+\]
+Die Kontrolle $\alpha (t)$  ist der Winkel zwischen der Tangente des
+kreisf"ormigen Orbits zum Zeitpunkt $t$ und der Schiffsachse in Flugrichtung
+gesehen (lokales Koordinatensystem). Bei diesem Problem wird die Kontrolle mit
+Hilfe der Kozustandsgleichungen eliminiert.
+\par
+Hinweis: der Gradient einer Abbildung $f:\mb{R}^m \to \mb{R}^n$ ist eine
+(n,m)-Matrix.
+\par
+Bewegungsgleichungen:
+\[
+\ba{.}{rclcl}
+\dot{r} &=& u(t),\\[5mm]
+\dot{u} &=& \dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{S(t)\sin (\alpha(t) )}{m(0)(1 - \rho \, t)}
+&=&
+\dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{\rho \cdot a \cdot \sin (\alpha(t) )}{1 - \rho \, t},\\[5mm]
+\dot{v} &=& \dis - \frac{u(t)\cdot v(t)}{{\bf 2}\cdot r(t)}
+ + \frac{S(t)\cos (\alpha(t) )}{m(0)(1 - \rho \, t)}.
+&=& \dis - \frac{u(t)\cdot v(t)}{{\bf 2}\cdot r(t)}
+ + \frac{\rho \cdot a \cdot \cos (\alpha(t) )}{1 - \rho \, t}.
+\ea{.}
+\]
+%
+Der Faktor $1/2$ fehlt bei {\sc Bryson-Ho} und {\sc Dyer-McReynolds}\;(?).\\
+Randbedingungen:
+\[
+r(0) = r_0, \; u(0) = 0, \; v(0) = \sqrt{G/r_0}, \;
+u(T) = 0, \; v(T) = \sqrt{G/r(T)}.
+\]
+%
+Reduktion auf dimensionsloses System:\\
+Der Radius $r$ und die Zeit $t$ m"ussen durch dimensionslose Gr"o\ss en ersetzt
+werden:
+\[
+s = \frac{G^{1/2}}{r_0^{3/2}}\, t, \quad R(s) = \frac{1}{r_0}\, r(t).
+\]
+Die zweite und dritte Bewegungsgleichung m"ussen dann mit $r^2_0/G$
+multipliziert werden. F"ur $U(s) = R'(s)$ und $V(s) = R(s)\phi '(s)$
+folgt dann mit der dimensionlosen Konstanten
+\[
+\kappa = \rho  \cdot a \cdot r^2_0 /G
+\]
+%
+\[
+R' = U, \quad
+U' =  \frac{V^2}{R} - \frac{1}{R^2} + \kappa\,\frac{\sin (\alpha )}{1 - \rho\,
+t}, \quad
+V' =  - \frac{UV}{2R} + \kappa\,\frac{\cos (\alpha )}{1 - \rho\,  t}.
+\]
+%
+Wir schreiben wieder $t$ statt $s$, $T$ statt $s_f = TG^{1/2}/r_0^{3/2}$, $u$
+statt $\alpha $ und
+\[
+x = [x_1,x_2,x_3]^T = [R,U,V]^T\,.
+\]
+%
+Dann lauten die Zustandsgleichungen (Bewegungsgleichungen):
+\[
+\fbox{$
+\ba{.}{rcl}
+\dot{x}_1 &=& x_2(t),\\[5mm]
+\dot{x}_2 &=& \dis \frac{x_3^2(t)}{x_1(t)} - \frac{1}{x_1^2(t)}
++ \kappa \,\frac{\sin (u(t))}{1 - \rho \, t},\\[5mm]
+\dot{x}_3 &=& \dis - \frac{x_2(t)x_3(t)}{2 \cdot x_1(t)}
+ + \kappa \,\frac{\cos (u(t))}{1 - \rho \,t}
+\ea{.}
+$}\; .
+\]
+Weil die Zielfunktion nur aus einer ``Terminal-Payoff''-Bedingung besteht,
+ist es ratsam, diese mit einem Gewicht $P >0$ zuversehen, z.B.\ $P = 20$.
+\par
+Zielfunktion und {\sc Hamilton}-Funktion:
+%
+\[
+\ba{.}{rcl}
+J(x) &=& p(x(T)) + \int_0^TL(x(t),u(t),t)dt = P\,x_1(T) = \Max !\\[3mm]
+%
+H(x,y,u,t) &=&  \dis y_1x_2
++ y_2\left[ \frac{x^2_3}{x_1} - \frac{1}{x_1^2} +
+\kappa\, \frac{\sin(u)}{1 - \rho \,t}\right]
++ y_3\left[\kappa\, \frac{\cos (u)}{1 - \rho \,t}
+- \frac{x_2x_3}{2x_1}\right]
+\\[5mm]
+%
+H_u &=& \dis \kappa\, [y_2 \cos (u) - y_3 \sin(u)]\frac{1}{1 - \rho \, t}\\
+\ea{.}
+\]
+
+\[
+\nabla_x H  = \left[\frac{2y_2}{x_1^3} - \frac{y_2x_3^2}{x_1^2} +
+         \frac{y_3x_2x_3}{2x_1^2}, \quad
+          y_1 - \frac{y_3x_3}{2x_1}, \quad
+         \frac{2y_2x_3}{x_1} - \frac{y_3x_2}{2x_1}\right].
+\]
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen)
+$\dot{y} = - [\nabla_x H]^T$:
+%
+\[
+\fbox{$
+\ba{.}{rcl}
+\dot{y}_1 &=& \dis \frac{y_2x_3^2}{x_1^2} - \frac{2y_2}{x_1^3}
+                   -\frac{y_3x_2x_3}{2x_1^2}\\[5mm]
+\dot{y}_2 &=& \dis \frac{y_3x_3}{2x_1} - y_1\\[5mm]
+\dot{y}_3 &=& \dis \frac{y_3x_2}{2x_1} - \frac{2y_2x_3}{x_1}
+\ea{.}
+$}\; .
+\]
+%
+Weil die Kontrolle $u(t)$ nicht beschr"ankt ist, gilt $H_u = 0$, daraus
+folgt $\tan(u) = y_2/y_3$, also mit
+
+\[
+\dis \cos (u) = \frac{1}  {\pm(1 + \tan^2(u))^{1/2}}, \quad
+\sin (u) = \frac{\tan (u)}{\pm(1 + \tan^2(u))^{1/2}},
+\]
+
+\[
+\cos (u) = \alpha \,\frac{y_3}{(y_2^2 + y_3^2)^{1/2}}, \quad
+\sin (u) = \alpha \,\frac{y_2}{(y_2^2 + y_3^2)^{1/2}}, \quad
+\alpha
+= \: \mbox{sign}(y_2\cdot y_3)\cdot\mbox{sign}(y_2)\cdot\mbox{sign}(y_3)\,.
+\]
+%
+Einsetzen in die
+Zustandsgleichungen ergibt mit $y_i = x_{3+i}$ das System
+%
+\begin{equation} \label{e2.1}
+\ba{.}{rcl}
+\dot{x}_1 &=& x_2\\[5mm]
+%
+\dot{x}_2 &=& \dis \frac{x_3^2}{x_1} - \frac{1}{x_1^2}
++ \kappa \,\frac{x_5}{(x_5^2 + x_6^2)^{1/2}(1 - \rho \, t)}\\[5mm]
+%
+\dot{x}_3 &=& \dis \kappa \,\frac{x_6}{(x_5^2 + x_6^2)^{1/2}(1 - \rho \,t)}
+- \frac{x_2x_3}{2 \cdot x_1}\\[5mm]
+%
+\dot{x}_4 &=& \dis \frac{x_3^2x_5}{x_1^2} - \frac{2x_5}{x_1^3}
+                   -\frac{x_2x_3x_6}{2x_1^2}\\[5mm]
+\dot{x}_5 &=& \dis \frac{x_3x_6}{2x_1} - x_4\\[5mm]
+\dot{x}_6 &=& \dis \frac{x_2x_6}{2x_1} - \frac{2x_3x_5}{x_1}
+\ea{.}
+\end{equation}
+
+Zur Bestimmung der Randbedingungen beachte man,
+dass f"ur die oben eingef"uhrte Gr"o\ss e $V$ gilt
+%
+\[
+V(0) = 1, \; V(T) = R(T)^{-1/2}
+\quad \Longrightarrow \quad
+x_3(0) = 1, \; x_3(T) - x_1(T)^{-1/2} = 0\, .
+\]
+Randbedingungen f"ur den Zustand $x$ insgesamt (nach Transformation):
+\begin{equation} \label{e2.2}
+\ba{.}{rcccl}
+\ba{[}{c}q_1\\q_2\\q_3\ea{]}(X(0)) &=&
+\ba{[}{c} x_1(0) - 1\\ x_2(0)\\ x_3(0) - 1\ea{]} &=& 0\\[6mm]
+%
+\ba{[}{c}q_4\\q_5\ea{]}(X(T)) &=&
+\ba{[}{c} x_2(T)\\x_3(T) - x_1(T)^{-1/2} \ea{]} &=& 0\, .
+\ea{.}
+\end{equation}
+
+Also ist $y(0)$ frei. Ferner gilt
+\[
+y(T)^T = \nabla p(x(T))
+       + z^T\ba{[}{c}\nabla q_4(x(T))\\ \nabla q_5(x(T))\ea{]}, \quad
+z \in \mb{R}^2
+\]
+mit $p(x(T))    = P\, x_1(T)$,
+\[
+\nabla p(x(T))  = [P, \, 0, \, 0],\quad
+\ba{[}{c}\nabla q_4(x(T))\\\nabla q_5(x(T))\ea{]}
+ = \ba{[}{ccc}                 0 & 1 & 0\\
+              0.5\,x_1(T)^{-3/2} & 0 & 1\ea{]},
+\]
+also
+\[
+y(T)  = \ba{[}{c}P\\0\\0\ea{]} +
+\ba{[}{c}0\\1\\0\ea{]}z_1 + \ba{[}{c}
+0.5\,x_1(T)^{-3/2}\\0\\1\ea{]}z_2
+\]
+%
+Daraus folgt, dass $y_2(T)$ und $y_3(T)$ frei sind. F"ur $y_1(T)$ gilt
+\[
+y_1(T) =  P + 0.5\, y_3(T)x_1(T)^{-3/2}\,.
+\]
+%
+Zus"atzlich zu den Bedingungen (e1.2}) erhalten wir somit als vierte
+Randbedingung
+%
+\begin{equation} \label{e2.3}
+q_6(x(T)) = x_4(T) - 0.5\, x_6(T)x_1(T)^{-3/2} - P = 0\, .
+\end{equation}
+%
+Physikalische Daten f"ur das Problem
+\[
+\ba{.}{lll}
+\mbox{Kraft in Newton} & N  & [kg \cdot m/s^2]\\
+\mbox{Grav.-konstante}  & \gamma  = 6.67\cdot 10^{-11} & [m^3/(kg\cdot s^2)]\\
+M_{erde}  & 5.977 \cdot 10^{24}  & [kg]\\
+M_{sonne} & 3.334 \cdot 10^5 \; M_e,\\
+\mbox{Erdradius ("Aq.) R} & 6378,160 & [km]\\
+\mbox{Erdradius (Pol)} & 6356,775   & [km]\\
+r_0 = \mbox{Abstand Sonne -- Erde} & 150\cdot 10^6 & [km]\\
+r_1 = \mbox{Abstand Sonne -- Mars} & 228\cdot 10^6 & [km]\\
+G_{erde}        & \gamma\cdot M_e \sim 4 \cdot 10^{14} & [N\cdot m^2/kg]\\
+G_{sonne}        & \gamma\cdot M_s \sim 1.3 \cdot 10^{21} & [N\cdot m^2/kg]\\
+\mbox{Fallbeschl.}  &  g = G/R^2  = 9.81 & [m/s^2]\\
+\mbox{Grav.-kraft}  &  F = \gamma  M m/r^2,\\
+\mbox{Zentrifug.-kraft}  &  Z = m v^2/r.
+\ea{.}
+\]
+Nach dem Prinzip Actio = Reactio gilt auf einem Orbit
+\[
+\dis \gamma \frac{M\cdot m}{r^2} = m\frac{v^2}{r}.
+\]
+Geschwindigkeit und Umlaufzeit auf einer stabilen Kreisbahn sind also
+\[
+v = \frac{2 \pi r }{T} = \sqrt{\gamma \frac{M}{r}}, \qquad
+T = 2\pi \sqrt{\frac{r^3}{\gamma  \cdot M}}.
+\]
+Spezielle Daten f"ur eine kleine Sonde mit Ionentriebwerk Problem ({\bf nach}
+Transformation)
+\[ \ba{.}{rcl}
+1 \; \mbox{Pfund (lb)}             &=& 0.45359 \; \mbox{kp},\\
+m_0 &=& 10 000 \; \mbox{lb}          = 45359 \; \mbox{kp},\\
+(\dot{m} &=&  12.9 \; \mbox{lb/Tag} =  5.8513 \; \mbox{kp/Tag}),\\
+\rho                               &=& 0;\\
+\mbox{Schub} \;  &=& 0.85 \; \mbox{lb} = 0.38555 \; \mbox{kp},\\
+R_0 = \mbox{Abstand Sonne -- Erde}    &=& 1.0,\\
+\mbox{Abstand Sonne -- Mars}      &=& 1.5\\
+\mbox{Flugdauer Erde -- Mars}     &=& 193 \; \mbox{Tage}\\
+\mbox{Flugdauer}                  &=& s_f = 3.32.
+\ea{.}
+\]
+%
+\[
+\kappa = \frac{S\cdot r_0^2}{m_0 \cdot G_s}
+=\frac{0.386 \cdot 225 \cdot 10^{20}}{45.4 \cdot 1.3 \cdot 10^{21}}
+= 0.1471\, .
+\]
+%
+Der Winkel wird in Polarkoordinaten gemessen.
+\par
+F"ur das {\sc Newton}-Verfahren mit Box-Schema ben"otigt man den
+Gradienten $\nabla F$ der rechten Seite $F$ von (\ref{e2.1})
+und den Gradienten der kompletten Randbedingungen
+aus (\ref{e2.2}) und (\ref{e2.3}):
+\[
+\ba{.}{rcl}
+\nabla \ba{[}{c}q_1\\q_2\\q_3\ea{]}
+&=& \ba{[}{cccccc}
+1 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0\ea{]}\\[6mm]
+%
+\nabla \ba{[}{c}q_4\\q_5\\q_6\ea{]}
+&=& \ba{[}{llllll}
+0        & 1 & 0    & 0    & 0 & 0   \\
+0.5\,x_1^{-3/2} & 0 & 1 & 0    & 0 & 0    \\
+0.75\,x_1^{-5/2}x_6 & 0 & 0 & 1 & 0 & -0.5x_1^{-3/2} \ea{]}
+\ea{.}
+\]
+%
+\newpage
+\[
+\ba{.}{l}
+\nabla F = \\
+\ba{[}{ccc}
+0                      & 1           & 0\\
+(2 -x_1x_3^2)/x_1^3 & 0           & 2x_3/x_1\\
+0.5x_2x_3/x_1^2        & -0.5x_3/x_1 & - 0.5x_2/x_1\\
+(6x_5-2x_1x_3^2x_5+x_1x_2x_3x_6)/x_1^4
+& -0.5x_3x_6/x_1^2
+& (2x_3x_5 - 0.5x_2x_6)/x_1^2\\
+-0.5x_3x_6/x_1^2 & 0 & 0.5x_6/x_1\\
+(2x_3x_5 - 0.5x_2x_6)/x_1^2 & 0.5x_6/x_1 & -2x_5/x_1\\
+\ea{.}  \\[8mm]
+  \ba{.}{ccc}
+0  & 0 & 0\\
+0  & \kappa x_6^2(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)
+   & -\kappa x_5x_6(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)\\
+0  & -\kappa x_5x_6(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)
+   &  \kappa x_5^2(x_5^2 + x_6^2)^{-3/2}/(1-\rho t)\\
+0  & (x_1x_3^2 - 2)/x_1^3 & - 0.5x_2x_3/x_1^2\\
+-1 & 0 & 0.5x_3/x_1\\
+ 0 & -2x_3/x_1 & 0.5x_2/x_1
+\ea{]}
+\ea{.}
+\]
+%
+Als Nominaltrajektorie wird die antrieblose Umlaufbahn mit Radius Eins
+gew"ahlt:
+%
+\[
+x_1(t) = 1, \quad x_2(t) = 0, \quad x_3(t) = 1,
+\]
+%
+Dann ergibt sich f"ur $y$ das Randwertproblem
+%
+\[
+\dot{y} = Ay\,, \qquad
+A = \ba{[}{ccc} 0 & -1 & 0\\ -1 & 0 & 1/2\\ 0 & -2 & 0\ea{]}
+\]
+mit der Randbedingung
+\[
+y_1(T) - \frac12 y_3(T) - P = 0\,.
+\]
+Wir w"ahlen
+\[
+y_1(T) = P + 1/2\,, \quad y_2(T) = 0\,, \quad y_3(T) = 1\,.
+\]
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+{\bf Beispiel 3}
+Vgl. {\sc Bryson-Ho}: Applied Optimal control, S. 67.\\
+({\sc Zermelo}sches Problem) In einem
+$(x_1,x_2)$-Koordinatensystem soll ein Schiff mit konstanter Geschwindigkeit
+$S$ relativ zum Wasser in m"oglichst kurzer Zeit $T$ von dem Punkt $A =
+(a_1,a_2)$ zu dem Punkt $B = (b_1,b_2)$ fahren ($x = (x_1,x_2)$).
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Schiffes}\\
+v_1(x) & \mbox{Str"omungsgeschwindigkeit in $x_1$-Richtung}\\
+v_2(x) & \mbox{Str"omungsgeschwindigkeit in $x_2$-Richtung}\\
+u & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+Bei diesem Problem werden die {\sc Lagrange}-Multiplikatoren eliminiert und
+$T$ als neue abh"angige Ver"anderliche eingef"uhrt.
+
+Hinweis: Der Gradient einer Abbildung $f:\mb{R}^m \to \mb{R}^n$ ist eine
+(n,m)-Matrix.
+
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$:
+\begin{equation} \label{1}
+\fbox{$
+\dot{x}_1 = S \cos(u(t)) + v_1(x(t)),\quad
+\dot{x}_2 = S \sin(u(t)) + v_2(x(t))
+$}\; .
+\end{equation}
+
+Zielfunktion und {\sc Hamilton}-Funktion:
+\begin{equation} \label{2}
+\ba{.}{rcl}
+J(T) &=& \int_0^T1\, dt = \Min!\\
+H(x,y,u) &=& y_1[S \cos(u) + v_1(x)] + y_2[S \sin(u) + v_2(x)] + 1.
+\ea{.}
+\end{equation}
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen)
+$\dot{y} =  - [\nabla_x H]^T$:
+\begin{equation} \label{3}
+\fbox{$
+\dot{y}_1 = -y_1(v_1)_{x_1} - y_2(v_2)_{x_1}, \quad
+\dot{y}_2 = -y_1(v_1)_{x_2} - y_2(v_2)_{x_2}
+$}\; .
+\end{equation}
+$H$ und die rechte Seite von (\ref{1}) h"angen  nicht explizit von der Zeit $t$
+ab. Daraus folgt die Bedingung $H(x(T),y(T),u(T)) = 0$. Es gilt also
+im Optimum
+\[
+H(x(t),y(t),u(t)) = \dot{H}(x(t),y(t),u(t)) = 0 \qquad \forall
+\; t.
+\]
+Weil die Kontrolle nicht beschr"ankt ist, gilt $H_u = 0$, und es folgt
+aus (\ref{2})
+\[
+\ba{.}{rcl}
+y_1(S \cos(u) + v_1) + y_2(S \sin(u) + v_2 &=& - 1,\\
+- y_1 \sin(u)  + y_2 \cos(u)              &=& 0.
+\ea{.}
+\]
+Also
+\begin{equation} \label{4}
+y_1 = \frac{- \cos(u)}{S + v_1 \cos(u) + v_2 \sin(u)}, \quad
+y_2 = \frac{- \sin(u)}{S + v_1 \cos(u) + v_2 \sin(u)}.
+\end{equation}
+Durch Einsetzen von (\ref{4}) in eine der Gleichungen von (\ref{3})
+erh"alt man eine Differentialgleichung f"ur die Kontrolle $u$
+\par
+\begin{equation} \label{5}
+\fbox{$
+\dot{u} = \sin^2(u)(v_2)_{x_1} + \sin(u) \cos(u)[(v_1)_{x_1} - (v_2)_{x_2}]
+- \cos^2(u)(v_1)_{x_2}.
+$}
+\end{equation}
+\par
+{\sc Goh-Teo}-Transformation, vgl.\ {\sc Craven}: Control and Optimization,
+\S 6.4.3: Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+gew"ahlt und die unbekannte Zeit $T$ als neue (abh"angige) Ver"anderliche
+eingef"uhrt:
+\[
+\ba{.}{rclrcl}
+X_3(s) &=& T, &
+X_1(s) &=& x_1(sT) = x_1(sX_3(s)), \\
+X_2(s) &=& x_2(sT) = x_2(sX_3(s)), &
+U(s) &=& u(sX_3(s))\,.
+\ea{.}
+\]
+Man erh"alt dann ein Differentialsystem der Ordnung 4:
+\[
+\ba{.}{rclrcl}
+X_3'(s) &=& 0, &
+X_1'(s) &=& \dot{x}_1(sX_3)\cdot X_3(s), \\
+X_2'(s) &=& \dot{x}_2(sX_3)\cdot X_3(s), &
+U'(s) &=& \dot{u}(sX_3)\cdot X_3(s).
+\ea{.}
+\]
+Der Einfachheit halber sei $y(s) = [X_1,X_2,X_3,U]$, dann ergibt sich das
+folgende Randwertproblem:
+\[
+\ba{.}{rcl}
+y'_1 &=& [S \cos(y_4) + v_1(y_1,y_2)]y_3,\\
+y'_2 &=& [S \sin(y_4) + v_2(y_1,y_2)]y_3,\\
+y'_3 &=& 0,\\
+y'_4 &=& [\sin^2(y_4)(v_2)_{y_1} + \sin(y_4)\cos(y_4)
+((v_1)_{y_1} - (v_2)_{y_2})
+- \cos^2(y_4)(v_1)_{y_2}]y_3.
+\ea{.}
+\]
+mit den Randbedingungen
+\[
+y(0) = (a_1,a_2,0,0), \quad y(1) = (b_1,b_2,0,0).
+\]
+Es sei $\dot{y} = f(y)$ und $\grad v = [v_{ik}]$. Dann gilt
+\[
+\grad f(y) = \ba{[}{cccc}
+v_{11}y_3 & v_{12}y_3 & S\cos(y_4) + v_1& - S \sin(y_4)y_3\\
+v_{21}y_3 & v_{22}y_3 & S\sin(y_4) + v_2&  S \cos(y_4)y_3\\
+0 & 0 & 0 & 0\\
+p_1 & p_2 & p_3 & p_4
+\ea{]}
+\]
+mit
+\[
+\ba{.}{rcl}
+p_1 &=& y_3\big(\sin^2(y_4)v_{211} + \sin(y_4)\cos(y_4)(v_{111} - v_{221})
+- \cos^2(y_4)v_{121}\big)\\[1mm]
+p_2 &=& y_3\big(\sin^2(y_4)v_{212} + \sin(y_4)\cos(y_4)(v_{112} - v_{222})
+- \cos^2(y_4)v_{122}\big)\\[1mm]
+p_3 &=& \sin^2(y_4)v_{21} + \sin(y_4)\cos(y_4)
+(v_{11} - v_{22}) - \cos^2(y_4)v_{12},\\[1mm]
+p_4 &=& y_3\big(2\sin(y_4)\cos(y_4)v_{21} + (\cos^2(y_4) - \sin^2(y_4))(v_{11}
+- v_{22}) + 2\cos(y_4)\sin(y_4)v_{12}\big)
+\ea{.}
+\]
+Man braucht also zus"atzlich die Matrix
+\[
+D = \ba{[}{cc} v_{111}  & v_{221}\\ v_{112} & v_{222}\ea{]}
+\]
+\par
+% ----------------------------------------------------------
+Das nichtlineare Randwertproblem wird mit dem Box-Schema und dem
+{\sc Newton}-Verfahren gel"ost. Als Startwert wird die direkte Fahrt von $A$
+nach $B$ gew"ahlt. Im folgenden einfachen Beispiel ist dies eine Strecke.
+
+{\bf Beispiel}: Fahrt  von $A = (a_1,a_2)$ nach $B = (0,0)$ mit $v = (- S/2,0)$.
+Winkel $\psi$ zwischen $\ol{AB}$ und $x_1$-Achse:
+\[
+\cos \psi = - \frac{a_1}{a^2_1 + a^2_2}, \;
+\sin \psi = - \frac{a_2}{a^2_1 + a^2_2}.
+\]
+Kosinussatz:
+\[
+S^2 =  d^2 + \frac{S^2}{4} - dS \cos(\psi), \qquad
+d = \dis \frac{S}{2}(\cos \psi + (3 + \cos^2  \psi)^{1/2})\,.
+\]
+Winkel $\phi $ zwischen Schiffsachse und Achse $\ol{AB}$:
+\[
+\frac{S^2}{4} = d^2 + S^2 - 2dS \cos \phi
+\quad \Longrightarrow \quad
+\cos \phi  = \dis \frac{d^2 + 3S^2/4}{2dS}.
+\]
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+
+%\newpage
+
+%\bc
+%\begin{minipage}{10.cm}
+%   \epsfxsize=9.9cm
+%   \epsffile{fig1.eps}
+%\end{minipage}
+%\ec
+%\centerline{\epsfig{file=stab.eps,height=6cm},bbllx=-6cm,bblly=5mm}
+
+
+
+
+
+
+
+Vgl. {\sc Hartl et al}.: SIAM REVIEW 37 (1995), pp. 181-218.\\
+{\bf Beispiel 1.} {\sc Hartl et al}, S. 204.
+\par
+\[
+\ba{.}{c}
+\dis J(x,u) = \int_0^3x\, dt = \Min !,\\[3mm]
+\dot{x} = u, \; x(0) = 1,\quad x(3) = 1, \quad
+-1 \leq u \leq 1, \; 0 \leq x.
+\ea{.}
+\]
+L"osung:
+\[
+x^* = \ba{\{}{c} 1 - t\\ 0\\ t - 2 \ea{.}, \quad
+%
+u^* =  \ba{\{}{c}   - 1\\ 0    \\ 1     \ea{.} \;  \mbox{f"ur} \;
+t  \in \ba{\{}{c} [0,1)\\[0mm] [1,2]\\ (2,3] \ea{.}\; .
+\]
+
+\[
+H := x + y \cdot u\,, \quad
+L := H + v_1(1 + u) + v_2(1 - u) + wx.
+\]
+
+Notwendige Bedingungen:
+
+\[
+\ba{.}{c}
+L_u = y + v_1 - v_2 = 0\\[2mm]
+\dot{y} = - L_x = - 1 - w\,, \quad y(3) = z, z \in \mb{R} \\[2mm]
+v_1 \geq 0, \; v_2 \geq 0, \; v_1(1 + u) = v_2(1 - u) = 0, \;
+w \geq 0, \; w\, x = 0\\[2mm]
+\ea{.}
+\]
+
+Beginnend mit dem Intervall $(1,2)$ erhalten wir
+die folgende Tafel der Multiplikatoren:
+\par
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+Intervall  & $y$     & $v_1$   & $v_2$   & $w$\\ \hline
+$[0,1)$   & $t - 1$ & $1 - t$ & 0       & 0\\
+$[1,2]$   & 0       & 0       & 0       & 1\\
+$(2,3]$   & $t - 2$ & 0       & $t - 2$ & 0\\        \hline
+\end{tabular}
+\end{center}
+\par \vspace{1mm}\hrule\par\vspace{2mm}
+% ------------------------------------------
+Gel"ost wird das Problem
+
+\[
+\ba{.}{c}
+\dis J(x,u)
+= \dis
+\int_0^3x\, dt = \Min !,\\[3mm]
+\dis x(t) -
+1 - \int_0^tu(\tau)\, d\tau = 0\,, \; 0 \leq t\leq 3\,,
+\quad x(3) - 1 = 0\,,\\[3mm]
+u + 1 \geq 0\,, \quad 1 - u \geq 0\,, \quad x \geq 0\, .
+\ea{.}
+\]
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% ---------------------------------------------
+{\bf Beispiel 2:} {\sc Hartl et al.}, S. 207.
+
+\[
+\ba{.}{c}
+\dis  J(x,u) = \int_0^3e^{-rt}u\,dt = \Min !, \; r \geq 0,\\[3mm]
+\dot{x} = u, \; x(0) = 0,\quad
+0 \leq u \leq 3, \; x -1 + (t - 2)^2 \geq 0.
+\ea{.}
+\]
+
+L"osung:
+\[
+x^* = \ba{\{}{c} 0\\ 1 - (t - 2)^2\\ 1 \ea{.}, \;
+%
+u^* =  \ba{\{}{c}   0\\ 2(2 - t)  \\ 0     \ea{.}, \;  \mbox{fr} \;
+t  \in \ba{\{}{l} [0,1)\\[0mm] [1,2]\\ (2,3] \ea{.}.
+\]
+
+\[ \ba{.}{rcl}
+H &=& - e^{-rt}u + yu,\\
+L &=& H + v_1u + v_2(3 - u) + w[x - 1 + (t - 2)^2].
+\ea{.}
+\]
+
+Notwendige Bedingungen:
+
+\[
+\ba{.}{c}
+L_u = - e^{-rt} + y + v_1 - v_2 = 0\\[2mm]
+\dot{y} = - L_x = - w,\\[2mm]
+v_1 \geq 0, \; v_2 \geq 0, \; v_1u = v_2(3 - u) = 0,\\[2mm]
+w \geq 0, \; w[x - 1 + (t - 2)^2] = 0,\\[2mm]
+y(3) = 0, \; y(2-) = y(2+) - c, \; c \geq 0.
+\ea{.}
+\]
+
+Beginnend mit dem Intervall $(2,3)$ erhalten wir
+\par
+%
+Tafel der Multiplikatoren:
+\par
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+Intervall  & $y$       & $v_1$              & $v_2$    & $w$\\ \hline
+$[0,1)$   & $e^{-r}$  & $e^{-rt} - e^{-r}$ & 0        & 0\\
+$[1,2]$   & $e^{-rt}$ & 0       & 0       & $re^{-rt}$\\
+$(2,3]$   & $0$       & $e^{^-rt}$    & 0 & 0\\        \hline
+\end{tabular}
+\end{center}
+
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+Gel"ost wird das Problem
+
+\[
+\ba{.}{c}
+\dis  (x,u)J = \int_0^3e^{-rt}u\,dt = \Min !, \; r \geq 0,\\[3mm]
+\dis x(t) - \int_0^tu(\tau )\, d\tau  = 0\\[3mm]
+u \geq 0\,, \quad 3 - u \geq 0\,, \quad x - 1 + (t - 2)^2 \geq 0\,.
+\ea{.}
+\]
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% ---------------------------------------------
+{\bf Beispiel 3:} {\sc Hartl et al.}, S. 208. $x = (x_1\,,\; x_2)$.
+
+\[
+\ba{.}{c}
+\dis  J(x,u) = \int_0^32x_1\,dt = \Min !,\\[3mm]
+\dot{x}  = \ba{(}{c} x_2\\u\ea{)}\,,\quad x(0) = \ba{(}{c}2\\0\ea{)}\\[3mm]
+-2 \leq u \leq 3, \quad x_1 \geq \alpha \,, \quad
+\alpha \in \mb{R}\,, \quad \alpha  \leq 0\, .
+\ea{.}
+\]
+
+{\bf 1. Fall:} $\alpha  \leq - 7$.
+
+L"osung:
+\[
+x^* = \ba{\{}{c} 2 - t^2\\ -2t\ea{.}, \;
+%
+u^* =  -2, \;  \mbox{f"ur} \; 0 \leq t \leq 3\,.
+\]
+
+{\bf 2.  Fall:} $- 7 < \alpha  \leq 2.5$.
+
+Hier gibt es einen Schaltzeitpunkt
+
+\[
+\sigma  = 3 - \frac14(56 + 8 \alpha )^{1/2}\, .
+\]
+
+L"osung:
+\[
+x_1^* = \ba{\{}{c} 2 - t^2\\2 + t^2 + 2\sigma ^2 - 4\sigma t  \ea{.}, \quad
+%
+x_2^* = \ba{\{}{c} - 2t\\ 2(t -2\sigma ) \ea{.}, \quad
+%
+u^* =  \ba{\{}{c}   - 2\\ 2\ea{.} \;  \mbox{fr} \;
+t  \in \ba{\{}{c} [0,\sigma )\\[0mm] [\sigma ,3] \ea{.}\; .
+\]
+%
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% -----------------------------------------------
+{\bf 3. Fall:} $-2.5 < \alpha  \leq 0$.
+
+Es gibt einen Schaltzeitpunkt (switching time) $\sigma$ und
+einen Kontaktzeitpunkt (junction time) $\rho $ mit $0 < \sigma  < \rho  < 3$.
+$\rho $ ist auch ein Eintrittspunt (entry point) in den Randbogen.
+Es gilt
+\[
+\rho  = 2\sigma  = (4 - 2\alpha )^{1/2}\, .
+\]
+
+L"osung:
+\[
+x_1^* = \ba{\{}{c} 2 - t^2\\2 + t^2 + 2\sigma ^2 - 4\sigma t  \ea{.}, \quad
+%
+x_2^* = \ba{\{}{c} - 2t\\ 2(t -2\sigma ) \ea{.}, \quad
+%
+u^* =  \ba{\{}{c}   - 2\\ 2\ea{.} \;  \mbox{fr} \;
+t  \in \ba{\{}{c} [0,\sigma )\\[0mm] [\sigma ,\rho ] \ea{.}\; .
+\]
+
+Im Intervall $(\rho \,,\; 3)$ gilt
+\[
+x_1 = \alpha \,, \quad x_2 = 0\,, u = 0\, .
+\]
+
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+Gel"ost wird f"ur verschiedene $\alpha $ das Problem
+
+\[
+\ba{.}{c}
+\dis  J(x,u) = \int_0^32x_1\,dt = \Min !,\\[3mm]
+\dis x_1(t) - 2 - \int_0^tx_2(\tau )\, d\tau  = 0\,,\\[3mm]
+\dis x_2(t) - \int_0^tu(\tau )\, d\tau  = 0\,,\\[3mm]
+u + 2 \geq 0\,, \quad 3 - u \geq 0\,, \quad x_1 \geq \alpha \,.
+\ea{.}
+\]
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% -------------------------------------------------
+{\bf Beispiel 4:} {sc Hartl et al.}, S. 210.
+\[
+\ba{.}{c}
+\dis \int_0^1\left[10x^2 - u^2\right]\, dt = \Max!\,,\\[3mm]
+\dot{x} = x^2 - u\,\quad x(0) = x(1) = 1\,,\\[3mm]
+x(t) \leq  1.5\,.
+\ea{.}
+\]
+
+Der Zustand $x$ w"achst monoton, trifft den Rand $x = 1.5$ zum
+Zeitpunkt $t_1 = 0.345037$ und verl"asst ihn wieder zum Zeitpunkt
+$t_2 = 1 - t_1$. Die Kontrolle $u$ ist stetig und an den Punkten $t_1$ und
+$t_2$ `tangential', weil das Problem regul"ar ist.
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% -----------------------------------------------------------
+{\bf Beispiel 5:}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, S. 59.\\
+In einem $(x_1,x_2)$-Koordinatensystem wird ein Raumschiff von der Masse $m$
+und der Schubkraft $ma(t)$ in Richtung seiner K"orperachse beschleunigt.
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Raumschiffes}\\
+x_3(t)           & \mbox{Geschw. in $x_1$-Richtung}\\
+x_4(t)           & \mbox{Geschw. in $x_2$-Richtung}\\
+u(t)  & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+Das Raumschiff soll in einer vorgegebenen Zeit $T$ auf eine Flugbahn parallel
+zur $x_1$-Achse in H"ohe $H$ gebracht werden. Dabei soll die Geschwindigkeit
+$x_3(T)$ maximal sein. Es sei $x(0) = {0}$.
+
+Problem:
+\[
+\ba{.}{c}
+J(x,u) = x_3(T)  = \Max !,\\[3mm]
+\dot{x}_1 = x_3(t), \quad
+\dot{x}_2 = x_4(t), \quad
+\dot{x}_3 = a(t) \cos(u(t)), \quad
+\dot{x}_4 = a(t) \sin(u(t))\\[3mm]
+x_2(T) = H\,, \quad x_4(T) = 0\,.
+\ea{.}
+\]
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% -----------------------------------------------
+{\bf Beispiel 6:}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, S. 66.\\
+Ein Raumschiff soll in einer vorgegebenen Zeit $T$ von einem kreisf"ormigen
+Orbit mit Radius $r_0$ den h"ochstm"oglichen kreisf"ormigen Orbit erreichen.  Der
+Einfluss weiterer Himmelsk"orper wird vernachl"assigt.  Das Raumschiff fliegt im
+Gegenuhrzeigersinn.  In Polarkoordinaten $(r,\phi )$ mit dem (punktf"ormigen)
+Zentralk"orper als Zentrum sei
+\[
+\ba{.}{ll}
+r(t)               & \mbox{radiale Entfernung des Raumschiffes}\\
+u = \dot{r}        & \mbox{radiale Geschwindigkeit}\\
+v = r\dot{\phi }   & \mbox{Geschwindigkeit senkrecht zum Radius}\\
+m(t)               & \mbox{Masse des Raumschiffes}\\
+|\dot{m}(t)|       & \mbox{{\em konstante} Treibstoffverbrauchsrate}\\
+S = |\dot{m}(t)|a  & \mbox{Schubkraft}\\
+a                  & \mbox{Maschinenkonstante}\; [m/s] \\
+\alpha (t)         & \mbox{Schubwinkel}\\
+\gamma             & \mbox{Gravitationskonstante}\\
+M                  & \mbox{Masse des Zentralk"orpers}\\
+G                  & = \gamma\cdot M\\
+\rho               & = |\dot{m}(t)|/m(0) \; [1/s]\\
+S                  & = \rho \cdot a \cdot m(0)
+\ea{.}
+\]
+Die Kontrolle $\alpha (t)$  ist der Winkel zwischen der Tangente des
+kreisf"ormigen Orbits zum Zeitpunkt $t$ und der Schiffsachse in Flugrichtung
+gesehen (lokales Koordinatensystem).
+
+Bewegungsgleichungen:
+\[
+\ba{.}{rclcl}
+\dot{r} &=& u(t),\\[5mm]
+\dot{u} &=& \dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{S(t)\sin (\alpha(t) )}{m(0)(1 - \rho \, t)}
+&=&
+\dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{\rho \cdot a \cdot \sin (\alpha(t) )}{1 - \rho \, t},\\[5mm]
+\dot{v} &=& \dis - \frac{u(t)\cdot v(t)}{{\bf 2}\cdot r(t)}
+ + \frac{S(t)\cos (\alpha(t) )}{m(0)(1 - \rho \, t)}.
+&=& \dis - \frac{u(t)\cdot v(t)}{{\bf 2}\cdot r(t)}
+ + \frac{\rho \cdot a \cdot \cos (\alpha(t) )}{1 - \rho \, t}.
+\ea{.}
+\]
+
+Der Faktor $1/2$ fehlt bei {\sc Bryson-Ho} und {\sc Dyer-McReynolds}\;(?).\\
+Randbedingungen:
+\[
+r(0) = r_0, \; u(0) = 0, \; v(0) = \sqrt{G/r_0}, \;
+u(T) = 0, \; v(T) = \sqrt{G/r(T)}.
+\]
+
+Reduktion auf dimensionsloses System:\\
+Der Radius $r$ und die Zeit $t$ m"ussen durch dimensionslose Gr"ossen ersetzt
+werden:
+\[
+s = \frac{G^{1/2}}{r_0^{3/2}}\, t, \quad R(s) = \frac{1}{r_0}\, r(t).
+\]
+Die zweite und dritte Bewegungsgleichung m"ussen dann mit $r^2_0/G$
+multipliziert werden. F"ur $U(s) = R'(s)$ und $V(s) = R(s)\phi '(s)$
+folgt dann mit der dimensionlosen Konstanten
+\[
+\kappa = \rho  \cdot a \cdot r^2_0 /G
+\]
+
+\[
+R' = U, \quad
+U' =  \frac{V^2}{R} - \frac{1}{R^2} + \kappa\,\frac{\sin (\alpha )}{1 - \rho\,
+t}, \quad
+V' =  - \frac{UV}{2R} + \kappa\,\frac{\cos (\alpha )}{1 - \rho\,  t}.
+\]
+
+Wir schreiben wieder $t$ statt $s$, $T$ statt $s_f = TG^{1/2}/r_0^{3/2}$, $u$
+statt $\alpha $ und
+\[
+x = [x_1,x_2,x_3]^T = [R,U,V]^T\,.
+\]
+
+Transformiertes Problem:
+\[
+\ba{.}{c}
+J(x,u) = x_1(T) = \Max !\\[5mm]
+\dot{x}_1 = x_2(t),\\[5mm]
+\dot{x}_2 = \dis \frac{x_3^2(t)}{x_1(t)} - \frac{1}{x_1^2(t)}
++ \kappa \,\frac{\sin (u(t))}{1 - \rho \, t},\\[5mm]
+\dot{x}_3 = \dis - \frac{x_2(t)x_3(t)}{2 \cdot x_1(t)}
+ + \kappa \,\frac{\cos (u(t))}{1 - \rho \,t}\\[5mm]
+x_1(0) = 1\,, \quad x_2(0) = 0\,,\quad x_3(0) = 1\\[5mm]
+x_2(T) = 0\,,\quad x_3(T)^2x_1(T) - 1 = 0\,.
+\ea{.}
+\]
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% -----------------------------------------------
+{\bf Beispiel 7:}
+Vgl. {\sc Bryson-Ho}: Applied Optimal control, S. 67.\\
+({\sc Zermelo}sches Problem) In einem
+$(x_1,x_2)$-Koordinatensystem soll ein Schiff mit konstanter Geschwindigkeit
+$S$ relativ zum Wasser in m"oglichst kurzer Zeit $T$ von dem Punkt $A =
+(a_1,a_2)$ zu dem Punkt $B = (b_1,b_2)$ fahren ($x = (x_1,x_2)$).
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Schiffes}\\
+v_1(x) & \mbox{Str"omungsgeschwindigkeit in $x_1$-Richtung}\\
+v_2(x) & \mbox{Str"omungsgeschwindigkeit in $x_2$-Richtung}\\
+u & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+
+Bewegungsgleichungen:
+%
+\[
+\dot{x}_1 = S \cos(u(t)) + v_1(x(t)),\quad
+\dot{x}_2 = S \sin(u(t)) + v_2(x(t))
+\]
+
+{\sc Goh-Teo}-Transformation:
+Vgl.\ {\sc Craven}: Control and Optimization, \S 6.4.3.\\
+Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+\par
+\vspace{1mm}
+
+gew"ahlt und die unbekannte Zeit $T$ als neue Ver"anderliche
+eingef"uhrt:
+\[
+X_1(s) = x_1(sT), \quad
+X_2(s) = x_2(sT), \quad
+U(s) = u(sT)\,.
+\]
+\par
+Transformiertes Problem:
+\[
+\ba{.}{c}
+J(T) = T = \Min!\\[3mm]
+X'_1(s) = [S \cos(U(s)) + v_1(X(s))]T,\\[3mm]
+X'_2(s) = [S \sin(U(s)) + v_2(X(s))]T, \\[3mm]
+X_1(0) = a_1\,, \quad X_2(0) = a_2\,,\\[3mm]
+X_1(1) = a_1\,, \quad X_2(1) = a_2\,.
+\ea{.}
+\]
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% --------------------------------------------
+{\bf Beispiel 8:}
+Servo-Problem. Vgl. {\sc Burges--Graham}, S. 281 ff.\\
+Man l"ose das folgende Problem ($a \geq 0$)
+\[
+ \ba{.}{l}
+\Min \{T, \; \ddot{x} + a\dot{x} + \omega ^2x = u, \; 0 < t < T, \;\\
+\qquad x(0) = a_1, \; x'(0) = a_2, \; x(T) = x'(T) = 0, \; |u(t)| \leq 1\}\,.
+\ea{.}
+\]
+Der Einfachheit halber betrachten wir den Fall $\omega ^2 = 1$ und $a = 0$
+(keine D"ampfung.)\\
+Zustandsgleichungen als System 1. Ordnung:
+\[
+\dot{x}_1 = x_2\,, \quad \dot{x}_2 = u - x_1\,.
+\]
+
+{\sc Goh-Teo}-Transformation:
+Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+\par
+\vspace{1mm}
+
+gew"ahlt und die unbekannte Zeit $T$ als Ver"anderliche eingef"uhrt:
+\[
+X_1(s) = x_1(sT), \quad
+X_2(s) = x_2(sT), \quad
+U(s) = u(sT)\,.
+\]
+\par
+Tranformiertes Problem
+\[
+\ba{.}{c}
+J(T) = T = \Min!\\[3mm]
+X'_1(s) = T\cdot X_2(s)\,, \quad
+X'_2(s) = T \cdot (U(s) - X_1(s))\,, \\[3mm]
+X_1(0) = a_1\,, \quad X_2(0) = a_2\,,\quad
+X_1(1) = 0\,, \quad X_2(1) = 0\,,\\[3mm]
+1 - U(s) \geq 0\,, \quad U(s) - 1 \geq 0\,.
+\ea{.}
+\]
+\end{document}
+

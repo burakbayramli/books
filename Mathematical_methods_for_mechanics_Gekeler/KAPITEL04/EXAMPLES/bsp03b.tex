@@ -1,0 +1,235 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 3a \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Zermelosches Problem}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, S. 67.\\
+Wie Beispiel 3, aber der Kozustand $y$ wird nicht eliminiert,
+sondern das Gradientenverfahren angewendet.
+
+({\sc Zermelo}sches Problem) In einem
+$(x_1,x_2)$-Koordinatensystem soll ein Schiff mit konstanter Geschwindigkeit
+$S$ relativ zum Wasser in m"oglichst kurzer Zeit $T$ von dem Punkt $A =
+(a_1,a_2)$ zu dem Punkt $B = (b_1,b_2)$ fahren ($x = (x_1,x_2)$).
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Schiffes}\\
+v_1(x) & \mbox{Str"omungsgeschwindigkeit in $x_1$-Richtung}\\
+v_2(x) & \mbox{Str"omungsgeschwindigkeit in $x_2$-Richtung}\\
+u & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$:
+%
+\[
+\dot{x}_1 = S \cos(u(t)) + v_1(x(t)),\quad
+\dot{x}_2 = S \sin(u(t)) + v_2(x(t))
+\]
+
+{\bf (a)} {\sc Goh-Teo}-Transformation\\
+Vgl.\ {\sc Craven}: Control and Optimization, \S 6.4.3.\\
+Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+\par
+\vspace{1mm}
+
+gew"ahlt und die unbekannte Zeit $T$ als neue (abh"angige) Ver"anderliche
+eingef"uhrt:
+\[
+\ba{.}{rclrcl}
+X_3(s) &=& T, &
+X_1(s) &=& x_1(sT) = x_1(sX_3(s)), \\
+X_2(s) &=& x_2(sT) = x_2(sX_3(s)), &
+U(s) &=& u(sX_3(s))\,.
+\ea{.}
+\]
+\par
+Neue Zustandsgleichungen
+\[
+\fbox{$
+X'_1(s) = [S \cos(U(s)) + v_1(X(s))]X_3(s),\;
+X'_2(s) = [S \sin(U(s)) + v_2(X(s))]X_3(s), \;
+X'_3(s) = 0
+$}\,.
+\]
+
+Zielfunktion und {\sc Hamilton}-Funktion
+\[
+\ba{.}{rcl}
+J(X_3(1)) &=& \dis X_3(1) + (X_1(1) - B_1)^2 + (X_2 - B_2)^2 = \Min!\\[3mm]
+H(X,Y,U) &=& \dis
+Y_1X_3[S\cos(U) + v_1(X)] + Y_2X_3[S\sin(U) + v_2(X)]\\[3mm]
+H(X,Y,U)_U &=& \dis
+X_3S[Y_2\cos(U) - Y_1\sin(U)]\, .
+\ea{.}
+\]
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen)
+$Y' =  - [\nabla_X H]^T$:
+\[
+\fbox{$
+\ba{.}{rcl}
+Y'_1(s) &=& \dis
+-X_3\left(Y_1\frac{\da v_1}{\da X_1} + Y_2\frac{\da v_2}{\da
+X_1}\right)\\[4mm]
+Y'_2(s) &=& \dis
+- X_3\left(Y_1\frac{\da v_1}{\da X_2} + Y_2\frac{\da v_2}{\da
+X_2}\right)\\[4mm] Y'_3(s) &=& \dis
+Y_1[S\cos(U) + v_1(X)] + Y_2[S\sin(U) + v_2(X)]
+\ea{.}
+$}\; .
+\]
+
+Anfangsbedingungen f"ur $X$:
+\[
+X_1(0) = A_1, \quad X_2(0) = A_2, \quad X_3(0) \; \mbox{frei}\, .
+\]
+Randbedingungen f"ur $Y$:
+\[
+Y_3(0) = 0, \quad Y(1) = [\nabla_X p]^T(X(1))
+= \ba{[}{c} 2(X_1(1) - B_1)\\ 2(X_2(1) - B_2)\\1\ea{]}\, .
+\]
+Es ergibt sich also ein Randwertproblem f"ur $X, \, Y$ bei festem $U$.
+
+% ----------------------------------------------------------
+Das nichtlineare Randwertproblem wird mit dem {\sc Matlab}-Programm
+\verb/bvp4c.m/ gel"ost.  Als Startwert wird die direkte Fahrt von $A$ nach $B$
+gew"ahlt.  Im folgenden einfachen Beispiel ist dies eine Strecke.
+
+{\bf Beispiel}: Fahrt  von $A = (a_1,a_2)$ nach $B = (0,0)$ mit $v = (- S/2,0)$.
+Winkel $\psi$ zwischen $\ol{AB}$ und $x_1$-Achse:
+\[
+\cos \psi = - \frac{a_1}{a^2_1 + a^2_2}, \;
+\sin \psi = - \frac{a_2}{a^2_1 + a^2_2}.
+\]
+Kosinussatz:
+\[
+S^2 =  d^2 + \frac{S^2}{4} - dS \cos(\psi), \qquad
+d = \dis \frac{S}{2}(\cos \psi + (3 + \cos^2  \psi)^{1/2})\,.
+\]
+Winkel $\phi $ zwischen Schiffsachse und Achse $\ol{AB}$:
+\[
+\frac{S^2}{4} = d^2 + S^2 - 2dS \cos \phi
+\quad \Longrightarrow \quad
+\cos \phi  = \dis \frac{d^2 + 3S^2/4}{2dS}.
+\]
+
+Die L"osung versagt wegen schlechter Kondition des Problems.
+\par
+\vspace{1mm}
+% --------------------------------------------------
+{\bf (b)} Gradientenverfahren mit `free terminal time'\\
+{\bf (b1)} Zun"achst feste Zeit T.
+
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$:
+%
+\[
+\dot{x}_1 = S \cos(u(t)) + v_1(x(t)),\quad
+\dot{x}_2 = S \sin(u(t)) + v_2(x(t))
+\]
+
+Zielfunktion und {\sc Hamilton}-Funktion
+\[
+\fbox{$
+\ba{.}{rcl}
+J(x(T)) &=& \dis (x_1(T) - B_1)^2 + (x_2(T) - B_2)^2 = \Min!\\[3mm]
+H(x,y,u) &=& \dis
+y_1[S\cos(u) + v_1(x)] + y_2[S\sin(u) + v_2(x)]\\[3mm]
+H(x,y,u)_u &=& \dis
+S[y_2\cos(u) - y_1\sin(u)]
+\ea{.}
+$}\; .
+\]
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen)
+$\dot{y} =  - [\nabla_x H]^T$:
+\[
+\fbox{$
+\ba{.}{rcl}
+\dot{y}_1 &=& \dis
+-\left(y_1\frac{\da v_1}{\da x_1} + y_2\frac{\da v_2}{\da x_1}\right)\\[4mm]
+\dot{y}_2 &=& \dis
+- \left(y_1\frac{\da v_1}{\da x_2} + y_2\frac{\da v_2}{\da x_2}\right)
+\ea{.}
+$}\; .
+\]
+
+Anfangsbedingungen f"ur $x$:
+\[
+x_1(0) = A_1, \quad x_2(0) = A_2\, .
+\]
+Randbedingungen f"ur $y$:
+\[
+y(T) = [\nabla_x p]^T(x(T))
+= \ba{[}{c} 2(x_1(T) - B_1)\\ 2(x_2(T) - B_2)\ea{]}\, .
+\]
+\par
+\vspace{1mm}
+% -------------------------------------------------------
+{\bf (b2)} Freie Zeit $T$.\\
+Vgl. {\sc Dyer-McReynolds}, S. 125.\\
+%
+Zielfunktion
+
+\[
+\ba{.}{rcl}
+J(x(T),T)
+&=& \dis p(X(T),T) = T + (x_1(T) - B_1)^2 + (x_2(T) - B_2)^2 = \Min!\\[3mm]
+\delta T &=& 1 + [2(x_1(T) - B_1)\,, \; 2(x_2(T) - B_2)]^T\cdot f(x(T),u(T),T)
+\,.
+\ea{.}
+\]
+
+Das Gradientenverfahren f"ur die Zeit $T$ wird "uber das Gradientenverfahren aus
+(a) gest"ulpt.
+
+\par
+\vspace{1mm}
+% --------------------------------------------------------
+{\bf (b3)} Freie Zeit $T$ mit ``stop condition''\\
+Zielfunktion mit geeignetem Gewicht $G$
+
+\[
+J(x(T),T) = \dis p(X(T),T) = T + G(x_2(T) - B_2)^2 = \Min!
+\]
+
+Stop-Bedingung
+\[
+r(x(T)) := x_1(T) - B_1 = 0\, .
+\]
+Dann ist
+\[
+\nabla_xr = \ba{[}{c}1\\0\ea{]}\,,\; \dot{r} =  f_1\,,\;
+\ell = 0\,,\; p_T = 1\,, \;
+\nabla_xp = \ba{[}{c}0\\ 2(x_2(T) - B_2)\ea{]}\,,
+\]
+also
+\[
+\fbox{$ \dis
+\nabla_x\wi{p} =
+\nabla_xp - \frac{1 + \nabla_xp\cdot f}{f_1}\ba{[}{c}1\\0\ea{]}
+= \ba{[}{c}-(1 + \nabla_xp\cdot f)/f_1\\2(x_2(T) - B_2)\ea{]}
+$}\; .
+\]
+
+Die Ergebnisse sind besser, wenn in $\nabla_xp$ das Gewicht $G$ gleich Eins
+gesetzt wird.
+%\newpage
+%\bc
+%\begin{minipage}{10.cm}
+%   \epsfxsize=9.9cm
+%   \epsffile{fig1.eps}
+%\end{minipage}
+%\ec
+%\centerline{\epsfig{file=stab.eps,height=6cm},bbllx=-6cm,bblly=5mm}
+\end{document}
+

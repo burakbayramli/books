@@ -1,0 +1,167 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+%\documentclass[12pt,a4paper]{article}
+\input aaformat
+\newcommand{\Release}{02/01/04} %%%%%%%%%%%%%%
+
+\begin{document}
+%
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1ex}
+%
+{\large\bf Mechanische Systeme, Beispiel 2 \hfill E.Gekeler}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}\\
+\par
+\vspace{-3mm}
+{\bf Sieben-K"orper-Problem} vgl. {\sc Hairer} II, , S. 531 ff.
+\par
+Fixpunkte:
+\[
+\ba{[}{c}xa\\ya\ea{]} = \ \ba{[}{c} - 0.06934\\-0.00227\ea{]}\,,\;
+%
+\ba{[}{c}xb\\yb\ea{]} = \ \ba{[}{c} - 0.03635\\0.032737\ea{]}\,,\;
+\ba{[}{c}xc\\yc\ea{]} = \ \ba{[}{c} 0.014\\0.072\ea{]}\,,\;
+\]
+Verallgemeinerte Ortskoordinaten:
+\[
+x_1 = \beta\,,\; x_2 = \Theta\,,\; x_3 = \gamma\,, x_4 = \Phi\,,
+x_5 = \delta\,,\; x_6 = \Omega\,,\; x_7 = \epsilon\,.
+\]
+Es seien $C_i = (x_i,y_i)\,, i = 1:7$ die Schwerpunkte der K"orper,
+dann ist die kinetische Energie
+\[
+T = \sum_{j=1}^7m_j\frac{\dot{x}^2_j + \dot{y}^2_j}{2}
++ \sum_{i=j}^7I_j\frac{\dot{\omega}^2_j}{2}
+\]
+Geometrische Daten:
+\bc
+\renewcommand{\arraystretch}{1.5}
+
+\begin{tabular}{|c|c|c|}\hline
+d = 0.028    & da = 0.0115  & e = 0.02\\
+ea = 0.01421 & zf =0.02     & fa = 0.01421\\
+rr = 0.007   & ra=0.00092   & ss = 0.035\\
+sa = 0.01874 & sb = 0.01043 & sc = 0.018\\
+sd= 0.02     & zt=0.04      & ta=0.02308\\
+tb=0.00916   & u = 0.04     & ua=0.01228\\
+ub=0.00449   & $c_0$=4530   & $\ell_0$=0.07785 \\ \hline
+\end{tabular}
+\ec
+%
+\bc
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|c|c|c|} \hline
+Nr. & Massen & Tr"agheitsmomente\\ \ hline
+1 & 0.04325 & $2.194\cdot 10^{-r}$\\
+2 & 0.00365 & $4.410\cdot 10^{-7}$\\
+3 & 0.02373 & $5.255\cdot 10^{-6}$\\
+4 & 0.00706 & $5.667\cdot 10^{-7}$\\
+5 & 0.07050 & $1.169\cdot 10^{-5}$\\
+6 & 0.00706 & $5.667\cdot 10^{-7}$\\
+7 & 0.05498 & $41.912\cdot 10^{-5}$\\ \hline
+\end{tabular}
+\ec
+
+Schwerpunktkoordinaten
+%
+\[
+\ba{.}{lllllll}
+C_1: & x_1 &=& ra\cdot \cos \beta & y_1 &=& ra \cdot \sin \beta\\
+  & \dot{x}^2_1 + \dot{y}^2_1 &=& ra^2\cdot \dot{\beta}^2&
+\dot{\omega}_1 &=& \dot{\beta}
+\ea{.} \hspace{4cm}
+\]
+%
+\[
+\ba{.}{llll}
+C_2 : & x_2 &=& rr\cdot \cos \beta - da \cdot \cos(\beta + \Theta)\\
+& y_2 &=& rr\cdot sin \beta - da \cdot \sin(\beta + \Theta)\\
+&\dot{x}^2_2 + \dot{y}^2_2 &=&
+(rr^2 - 2\cdot da\cdot rr\cdot \cos \Theta + da^2)\cdot\dot{\beta}^2\\
+&&+& 2(-r\cot da \cdot \cos \Theta + da^2)\cdot\dot{\beta}\cdot \dot{\Theta}
+ + da^2 \cdot \dot{\Theta}^2\\
+& \dot{\omega}_2 &=& \dot{\beta} + \dot{\Theta}
+\ea{.}\hspace{4cm}
+\]
+%
+\[
+\ba{.}{llll}
+C_3 : & x_3 &=& xb + sa\cdot\sin \gamma + sb \cdot \cos \gamma\\
+& y_3 &=& yb - sa \cdot\cos \gamma + sb \cdot \sin \gamma\\
+&\dot{x}^2_3 + \dot{y}^2_3 &=& (sa^2 + sb^2)\cdot\dot{\gamma}^2\\
+& \dot{\omega}_3 &=& \dot{\gamma}
+\ea{.}\hspace{8cm}
+\]
+%
+\[
+\ba{.}{llll}
+C_4: & x_4 &=& xa + zt\cdot \cos \delta + (e - ea)\cdot\sin(\Phi+ \delta)\\
+&y_4 &=& ya + zt\cdot\sin \delta - (e - ea)\cdot\cos(\Phi + \delta)\\
+&\dot{x}^2_4 + \dot{y}^2_4
+&=& (e - ea)^2\cdot\dot{\Phi}^2 + 2\cdot((e - ea)^2 +
+zt \cdot (e - ea)\cdot \sin \Phi)\cdot \dot{\Phi} \cdot \dot{\delta}\\
+&&+& (zt^2 + 2\cdot zt\cdot(e-ea)\sin \Phi + (e - ea)^2\cdot
+\dot{\delta}^2\\
+&\dot{\omega}_4 &=& \dot{\Phi} + \dot{\delta}
+\ea{.}\hspace{8cm}
+\]
+%
+\[
+\ba{.}{llll}
+C_5: &x_5 &=& xa + ta\cdot\cos \delta - tb \cdot \sin \delta\\
+&y_5 &=& ya + ta\cdot \sin \delta + tb \cdot\cos \delta\\
+&\dot{x}^2_5 + \dot{y}^2_5 &=& (ta^2 + tb^2)\cdot \dot{\delta}^2\\
+&\dot{\omega}_5 &=& \dot{\delta}
+\ea{.}\hspace{8cm}
+\]
+%
+\[
+\ba{.}{llll}
+C_6 :&
+x_6 &=& xa + u\cdot \sin \epsilon + (zf - fa)\cdot \cos(\Omega + \epsilon)\\
+& y_6 &=& ya - u\cdot \cos \epsilon + (zf - fa)\cdot\sin(\Omega + \epsilon)\\
+&\dot{x}^2_6 + \dot{y}^2_6 &=&
+(zf - fa)^2\cdot\dot{\Omega}^2 + 2\cdot((zf-fa)^2 - u\cdot(zf- fa)\cdot \sin \Omega)\cdot \dot{\omega}\cdot \dot{\epsilon}\\
+&&+&((zf-fa)^2-2\cdot u\cdot (zf-fa)\sin\Omega + u^2)\cdot \dot{\epsilon}^2\\
+&\dot{\omega}_6 &=& \dot{\Omega} + \dot{\epsilon}
+\ea{.}\hspace{8cm}
+\]
+%
+\[
+\ba{.}{llll}
+C_7: &
+x_7 &=& xa + ua\cdot \sin \epsilon - ub\cdot \cos \epsilon\\
+&y_7 &=& ya - ua\cdot\cos \epsilon - ub\cdot \sin \epsilon\\
+&\dot{x}^2_7 + \dot{y}^2_7 &=& (ua^2+ub^2)\cdot \dot{\epsilon}^2\\
+&\dot{\omega}_7 &=& \dot{\epsilon}
+\ea{.}\hspace{8cm}
+\]
+\newpage
+K"orper I-VII, Schwerpunkt im Zentrum des k"orpereigenen KOS.
+Angriffspunkte :
+\[
+\ba{.}{lllll}
+K_1 : & X_1 = (-ra,0)\,,        & S = (0,0)\,, &  X_2 = (rr-ra,0) &\\[0.5ex]
+K_2 : & X_1 = (-(d-da),0)\,,    & S = (0,0)\,, &  X_2 = (da,0) &\\[0.5ex]
+K_3 : & X_1 = (-sb,-(ss-sa))\,, & S =(0,0)\,,  & X_2 = (sd-sb,sa-sc)\,,
+      & X_3 = (-sb,sa)\\[0.5ex]
+K_4 : & X_1 = (0,-ea)\,     ,& S = (0,0)\,, & X_2 = (0,e-ea))\\[0.5ex]
+K_5 : & X_1 = (-ta,-tb)\,,   & S = (0,0)\,, & X_2 = (zt-ta,-tb)\\[0.5ex]
+K_6 : & X_1 = (-(zf-fa),0)\,,& S =(0,0)\,,  & X_2 =(fa,0)\\[0.5ex]
+K_7 : & X_1 =(ub,-(u-ua))\,, & S = (0,0)\,, & X_2 = (ub,ua)
+\ea{.}
+\]
+Fixpunkte:
+\[
+F0 = \ \ba{[}{c}0\\0\ea{]}\,,\;\;
+A = \ \ba{[}{c} -0.06934\\-0.00227\ea{]}\,,\;\;
+B = \ \ba{[}{c} -0.03635\\0.03273\ea{]}\,\;\;
+C = \ \ba{[}{c} 0.014\\0.072\ea{]}
+
+
+\end{document}
+

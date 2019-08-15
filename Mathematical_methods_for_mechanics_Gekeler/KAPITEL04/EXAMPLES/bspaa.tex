@@ -1,0 +1,453 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{25/07/02} %%%%%%%%%%%%%%
+
+\begin{document}
+\addtolength{\abovedisplayshortskip}{-0.5ex}
+\setlength{\fboxsep}{1ex}
+\parskip1ex
+
+{\large\bf Kontrolltheorie: Beispiele 1--8 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par
+%\vspace{-0.5ex}
+\hrule
+\par
+Vgl. {\sc Hartl et al}.: SIAM REVIEW 37 (1995), pp. 181-218.
+\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 1}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, S. 59.\\
+In einem $(x_1,x_2)$-Koordinatensystem wird ein Raumschiff von der Masse $m$
+und der Schubkraft $ma(t)$ in Richtung seiner K"orperachse beschleunigt.
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Raumschiffes}\\
+x_3(t)           & \mbox{Geschw. in $x_1$-Richtung}\\
+x_4(t)           & \mbox{Geschw. in $x_2$-Richtung}\\
+u(t)  & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+Das Raumschiff soll in einer vorgegebenen Zeit $T$ auf eine Flugbahn parallel
+zur $x_1$-Achse in H"ohe $H$ gebracht werden. Dabei soll die Geschwindigkeit
+$x_3(T)$ maximal sein. Es sei $x(0) = {0}$.
+
+Problem:
+\[
+\ba{.}{c}
+J(x,u) = x_3(T)  = \Max !,\\[3mm]
+\dot{x}_1 = x_3(t), \quad
+\dot{x}_2 = x_4(t), \quad
+\dot{x}_3 = a(t) \cos(u(t)), \quad
+\dot{x}_4 = a(t) \sin(u(t))\\[3mm]
+x_2(T) = H\,, \quad x_4(T) = 0\,.
+\ea{.}
+\]
+\par \vspace{1ex} \hrule \par \vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 2}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, S. 66.\\
+Ein Raumschiff soll in einer vorgegebenen Zeit $T$ von einem kreisf"ormigen
+Orbit mit Radius $r_0$ den h"ochstm"oglichen kreisf"ormigen Orbit erreichen.  Der
+Einfluss weiterer Himmelsk"orper wird vernachl"assigt.  Das Raumschiff fliegt im
+Gegenuhrzeigersinn.  In Polarkoordinaten $(r,\phi )$ mit dem (punktf"ormigen)
+Zentralk"orper als Zentrum sei
+\[
+\ba{.}{ll}
+r(t)               & \mbox{radiale Entfernung des Raumschiffes}\\
+u = \dot{r}        & \mbox{radiale Geschwindigkeit}\\
+v = r\dot{\phi }   & \mbox{Geschwindigkeit senkrecht zum Radius}\\
+m(t)               & \mbox{Masse des Raumschiffes}\\
+|\dot{m}(t)|       & \mbox{{\em konstante} Treibstoffverbrauchsrate}\\
+S = |\dot{m}(t)|a  & \mbox{Schubkraft}\\
+a                  & \mbox{Maschinenkonstante}\; [m/s] \\
+\alpha (t)         & \mbox{Schubwinkel}\\
+\gamma             & \mbox{Gravitationskonstante}\\
+M                  & \mbox{Masse des Zentralk"orpers}\\
+G                  & = \gamma\cdot M\\
+\rho               & = |\dot{m}(t)|/m(0) \; [1/s]\\
+S                  & = \rho \cdot a \cdot m(0)
+\ea{.}
+\]
+Die Kontrolle $\alpha (t)$  ist der Winkel zwischen der Tangente des
+kreisf"ormigen Orbits zum Zeitpunkt $t$ und der Schiffsachse in Flugrichtung
+gesehen (lokales Koordinatensystem).
+
+Bewegungsgleichungen:
+\[
+\ba{.}{rclcl}
+\dot{r} &=& u(t),\\[5mm]
+\dot{u} &=& \dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{S(t)\sin (\alpha(t) )}{m(0)(1 - \rho \, t)}
+&=&
+\dis \frac{v(t)^2}{r(t)} - \frac{G}{r(t)^2}
++ \frac{\rho \cdot a \cdot \sin (\alpha(t) )}{1 - \rho \, t},\\[5mm]
+\dot{v} &=& \dis - \frac{u(t)\cdot v(t)}{{\bf 2}\cdot r(t)}
+ + \frac{S(t)\cos (\alpha(t) )}{m(0)(1 - \rho \, t)}.
+&=& \dis - \frac{u(t)\cdot v(t)}{{\bf 2}\cdot r(t)}
+ + \frac{\rho \cdot a \cdot \cos (\alpha(t) )}{1 - \rho \, t}.
+\ea{.}
+\]
+
+Der Faktor $1/2$ fehlt bei {\sc Bryson-Ho} und {\sc Dyer-McReynolds}\;(?).\\
+Randbedingungen:
+\[
+r(0) = r_0, \; u(0) = 0, \; v(0) = \sqrt{G/r_0}, \;
+u(T) = 0, \; v(T) = \sqrt{G/r(T)}.
+\]
+
+Reduktion auf dimensionsloses System:\\
+Der Radius $r$ und die Zeit $t$ m"ussen durch dimensionslose Gr"ossen ersetzt
+werden:
+\[
+s = \frac{G^{1/2}}{r_0^{3/2}}\, t, \quad R(s) = \frac{1}{r_0}\, r(t).
+\]
+Die zweite und dritte Bewegungsgleichung m"ussen dann mit $r^2_0/G$
+multipliziert werden. F"ur $U(s) = R'(s)$ und $V(s) = R(s)\phi '(s)$
+folgt dann mit der dimensionlosen Konstanten
+\[
+\kappa = \rho  \cdot a \cdot r^2_0 /G
+\]
+
+\[
+R' = U, \quad
+U' =  \frac{V^2}{R} - \frac{1}{R^2} + \kappa\,\frac{\sin (\alpha )}{1 - \rho\,
+t}, \quad
+V' =  - \frac{UV}{2R} + \kappa\,\frac{\cos (\alpha )}{1 - \rho\,  t}.
+\]
+
+Wir schreiben wieder $t$ statt $s$, $T$ statt $s_f = TG^{1/2}/r_0^{3/2}$, $u$
+statt $\alpha $ und
+\[
+x = [x_1,x_2,x_3]^T = [R,U,V]^T\,.
+\]
+
+Transformiertes Problem:
+\[
+\ba{.}{c}
+J(x,u) = x_1(T) = \Max !\\[5mm]
+\dot{x}_1 = x_2(t),\\[5mm]
+\dot{x}_2 = \dis \frac{x_3^2(t)}{x_1(t)} - \frac{1}{x_1^2(t)}
++ \kappa \,\frac{\sin (u(t))}{1 - \rho \, t},\\[5mm]
+\dot{x}_3 = \dis - \frac{x_2(t)x_3(t)}{2 \cdot x_1(t)}
+ + \kappa \,\frac{\cos (u(t))}{1 - \rho \,t}\\[5mm]
+x_1(0) = 1\,, \quad x_2(0) = 0\,,\quad x_3(0) = 1\\[5mm]
+x_2(T) = 0\,,\quad x_3(T)^2x_1(T) - 1 = 0\,.
+\ea{.}
+\]
+\par \vspace{1ex} \hrule \par \vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 3}
+Vgl. {\sc Bryson-Ho}: Applied Optimal control, S. 67.\\
+({\sc Zermelo}sches Problem) In einem
+$(x_1,x_2)$-Koordinatensystem soll ein Schiff mit konstanter Geschwindigkeit
+$S$ relativ zum Wasser in m"oglichst kurzer Zeit $T$ von dem Punkt $A =
+(a_1,a_2)$ zu dem Punkt $B = (b_1,b_2)$ fahren ($x = (x_1,x_2)$).
+\[
+\ba{.}{ll}
+(x_1(t),x_2(t))  & \mbox{Position des Schiffes}\\
+v_1(x) & \mbox{Str"omungsgeschwindigkeit in $x_1$-Richtung}\\
+v_2(x) & \mbox{Str"omungsgeschwindigkeit in $x_2$-Richtung}\\
+u & \mbox{Winkel der Schiffsachse zur $x_1$-Richtung (Kontrolle)}.
+\ea{.}
+\]
+
+Bewegungsgleichungen:
+%
+\[
+\dot{x}_1 = S \cos(u(t)) + v_1(x(t)),\quad
+\dot{x}_2 = S \sin(u(t)) + v_2(x(t))
+\]
+
+{\sc Goh-Teo}-Transformation:
+Vgl.\ {\sc Craven}: Control and Optimization, \S 6.4.3.\\
+Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+\par
+\vspace{1mm}
+
+gew"ahlt und die unbekannte Zeit $T$ als neue Ver"anderliche
+eingef"uhrt:
+\[
+X_1(s) = x_1(sT), \quad
+X_2(s) = x_2(sT), \quad
+U(s) = u(sT)\,.
+\]
+\par
+Transformiertes Problem:
+\[
+\ba{.}{c}
+J(T) = T = \Min!\\[3mm]
+X'_1(s) = [S \cos(U(s)) + v_1(X(s))]T,\\[3mm]
+X'_2(s) = [S \sin(U(s)) + v_2(X(s))]T, \\[3mm]
+X_1(0) = a_1\,, \quad X_2(0) = a_2\,,\\[3mm]
+X_1(1) = a_1\,, \quad X_2(1) = a_2\,.
+\ea{.}
+\]
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+{\bf Beispiel 4}
+Servo-Problem. Vgl. {\sc Burges--Graham}, S. 281 ff.\\
+Man l"ose das folgende Problem ($a \geq 0$)
+\[
+ \ba{.}{l}
+\Min \{T, \; \ddot{x} + a\dot{x} + \omega ^2x = u, \; 0 < t < T, \;\\
+\qquad x(0) = a_1, \; x'(0) = a_2, \; x(T) = x'(T) = 0, \; |u(t)| \leq 1\}\,.
+\ea{.}
+\]
+Der Einfachheit halber betrachten wir den Fall $\omega ^2 = 1$ und $a = 0$
+(keine D"ampfung.)\\
+Zustandsgleichungen als System 1. Ordnung:
+\[
+\dot{x}_1 = x_2\,, \quad \dot{x}_2 = u - x_1\,.
+\]
+
+{\sc Goh-Teo}-Transformation:
+Es wird die Substitution
+\[
+t = sT, \quad 0 < s < 1
+\]
+\par
+\vspace{1mm}
+
+gew"ahlt und die unbekannte Zeit $T$ als Ver"anderliche eingef"uhrt:
+\[
+X_1(s) = x_1(sT), \quad
+X_2(s) = x_2(sT), \quad
+U(s) = u(sT)\,.
+\]
+\par
+Tranformiertes Problem
+\[
+\ba{.}{c}
+J(T) = T = \Min!\\[3mm]
+X'_1(s) = T\cdot X_2(s)\,, \quad
+X'_2(s) = T \cdot (U(s) - X_1(s))\,, \\[3mm]
+X_1(0) = a_1\,, \quad X_2(0) = a_2\,,\quad
+X_1(1) = 0\,, \quad X_2(1) = 0\,,\\[3mm]
+1 - U(s) \geq 0\,, \quad U(s) - 1 \geq 0\,.
+\ea{.}
+\]
+\par\vspace{1ex}\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+{\bf Beispiel 5} {\sc Hartl et al}, S. 204.
+\par
+\[
+\ba{.}{c}
+\dis J(x,u) = \int_0^3x\, dt = \Min !,\\[3mm]
+\dot{x} = u, \; x(0) = 1,\quad x(3) = 1, \quad
+-1 \leq u \leq 1, \; 0 \leq x.
+\ea{.}
+\]
+L"osung:
+\[
+x^* = \ba{\{}{c} 1 - t\\ 0\\ t - 2 \ea{.}, \quad
+%
+u^* =  \ba{\{}{c}   - 1\\ 0    \\ 1     \ea{.} \;  \mbox{f"ur} \;
+t  \in \ba{\{}{c} [0,1)\\[0mm] [1,2]\\ (2,3] \ea{.}\; .
+\]
+
+\[
+H := x + y \cdot u\,, \quad
+L := H + v_1(1 + u) + v_2(1 - u) + wx.
+\]
+
+Notwendige Bedingungen:
+
+\[
+\ba{.}{c}
+L_u = y + v_1 - v_2 = 0\\[2mm]
+\dot{y} = - L_x = - 1 - w\,, \quad y(3) = z, z \in \mb{R} \\[2mm]
+v_1 \geq 0, \; v_2 \geq 0, \; v_1(1 + u) = v_2(1 - u) = 0, \;
+w \geq 0, \; w\, x = 0\\[2mm]
+\ea{.}
+\]
+
+Beginnend mit dem Intervall $(1,2)$ erhalten wir
+die folgende Tafel der Multiplikatoren:
+\par
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+Intervall  & $y$     & $v_1$   & $v_2$   & $w$\\ \hline
+$[0,1)$   & $t - 1$ & $1 - t$ & 0       & 0\\
+$[1,2]$   & 0       & 0       & 0       & 1\\
+$(2,3]$   & $t - 2$ & 0       & $t - 2$ & 0\\        \hline
+\end{tabular}
+\end{center}
+\par \vspace{1mm}\hrule\par\vspace{2mm}
+% ------------------------------------------
+Gel"ost wird das Problem
+
+\[
+\ba{.}{c}
+\dis J(x,u)
+= \dis
+\int_0^3x\, dt = \Min !,\\[3mm]
+\dis x(t) -
+1 - \int_0^tu(\tau)\, d\tau = 0\,, \; 0 \leq t\leq 3\,,
+\quad x(3) - 1 = 0\,,\\[3mm]
+u + 1 \geq 0\,, \quad 1 - u \geq 0\,, \quad x \geq 0\, .
+\ea{.}
+\]
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 6} {\sc Hartl et al.}, S. 207.
+
+\[
+\ba{.}{c}
+\dis  J(x,u) = \int_0^3e^{-rt}u\,dt = \Min !, \; r \geq 0,\\[3mm]
+\dot{x} = u, \; x(0) = 0,\quad
+0 \leq u \leq 3, \; x -1 + (t - 2)^2 \geq 0.
+\ea{.}
+\]
+
+L"osung:
+\[
+x^* = \ba{\{}{c} 0\\ 1 - (t - 2)^2\\ 1 \ea{.}, \;
+%
+u^* =  \ba{\{}{c}   0\\ 2(2 - t)  \\ 0     \ea{.}, \;  \mbox{fr} \;
+t  \in \ba{\{}{l} [0,1)\\[0mm] [1,2]\\ (2,3] \ea{.}.
+\]
+
+\[ \ba{.}{rcl}
+H &=& - e^{-rt}u + yu,\\
+L &=& H + v_1u + v_2(3 - u) + w[x - 1 + (t - 2)^2].
+\ea{.}
+\]
+
+Notwendige Bedingungen:
+
+\[
+\ba{.}{c}
+L_u = - e^{-rt} + y + v_1 - v_2 = 0\\[2mm]
+\dot{y} = - L_x = - w,\\[2mm]
+v_1 \geq 0, \; v_2 \geq 0, \; v_1u = v_2(3 - u) = 0,\\[2mm]
+w \geq 0, \; w[x - 1 + (t - 2)^2] = 0,\\[2mm]
+y(3) = 0, \; y(2-) = y(2+) - c, \; c \geq 0.
+\ea{.}
+\]
+
+Beginnend mit dem Intervall $(2,3)$ erhalten wir
+\par
+%
+Tafel der Multiplikatoren:
+\par
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+Intervall  & $y$       & $v_1$              & $v_2$    & $w$\\ \hline
+$[0,1)$   & $e^{-r}$  & $e^{-rt} - e^{-r}$ & 0        & 0\\
+$[1,2]$   & $e^{-rt}$ & 0       & 0       & $re^{-rt}$\\
+$(2,3]$   & $0$       & $e^{^-rt}$    & 0 & 0\\        \hline
+\end{tabular}
+\end{center}
+
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+Gel"ost wird das Problem
+
+\[
+\ba{.}{c}
+\dis  (x,u)J = \int_0^3e^{-rt}u\,dt = \Min !, \; r \geq 0,\\[3mm]
+\dis x(t) - \int_0^tu(\tau )\, d\tau  = 0\\[3mm]
+u \geq 0\,, \quad 3 - u \geq 0\,, \quad x - 1 + (t - 2)^2 \geq 0\,.
+\ea{.}
+\]
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+% ---------------------------------------------
+{\bf Beispiel 7} {\sc Hartl et al.}, S. 208. $x = (x_1\,,\; x_2)$.
+
+\[
+\ba{.}{c}
+\dis  J(x,u) = \int_0^32x_1\,dt = \Min !,\\[3mm]
+\dot{x}  = \ba{(}{c} x_2\\u\ea{)}\,,\quad x(0) = \ba{(}{c}2\\0\ea{)}\\[3mm]
+-2 \leq u \leq 3, \quad x_1 \geq \alpha \,, \quad
+\alpha \in \mb{R}\,, \quad \alpha  \leq 0\, .
+\ea{.}
+\]
+
+{\bf 1. Fall:} $\alpha  \leq - 7$.
+
+L"osung:
+\[
+x^* = \ba{\{}{c} 2 - t^2\\ -2t\ea{.}, \;
+%
+u^* =  -2, \;  \mbox{f"ur} \; 0 \leq t \leq 3\,.
+\]
+
+{\bf 2.  Fall:} $- 7 < \alpha  \leq 2.5$.
+
+Hier gibt es einen Schaltzeitpunkt
+
+\[
+\sigma  = 3 - \frac14(56 + 8 \alpha )^{1/2}\, .
+\]
+
+L"osung:
+\[
+x_1^* = \ba{\{}{c} 2 - t^2\\2 + t^2 + 2\sigma ^2 - 4\sigma t  \ea{.}, \quad
+%
+x_2^* = \ba{\{}{c} - 2t\\ 2(t -2\sigma ) \ea{.}, \quad
+%
+u^* =  \ba{\{}{c}   - 2\\ 2\ea{.} \;  \mbox{fr} \;
+t  \in \ba{\{}{c} [0,\sigma )\\[0mm] [\sigma ,3] \ea{.}\; .
+\]
+%
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+% -----------------------------------------------
+{\bf 3. Fall:} $-2.5 < \alpha  \leq 0$.
+
+Es gibt einen Schaltzeitpunkt (switching time) $\sigma$ und
+einen Kontaktzeitpunkt (junction time) $\rho $ mit $0 < \sigma  < \rho  < 3$.
+$\rho $ ist auch ein Eintrittspunt (entry point) in den Randbogen.
+Es gilt
+\[
+\rho  = 2\sigma  = (4 - 2\alpha )^{1/2}\, .
+\]
+
+L"osung:
+\[
+x_1^* = \ba{\{}{c} 2 - t^2\\2 + t^2 + 2\sigma ^2 - 4\sigma t  \ea{.}, \quad
+%
+x_2^* = \ba{\{}{c} - 2t\\ 2(t -2\sigma ) \ea{.}, \quad
+%
+u^* =  \ba{\{}{c}   - 2\\ 2\ea{.} \;  \mbox{fr} \;
+t  \in \ba{\{}{c} [0,\sigma )\\[0mm] [\sigma ,\rho ] \ea{.}\; .
+\]
+
+Im Intervall $(\rho \,,\; 3)$ gilt
+\[
+x_1 = \alpha \,, \quad x_2 = 0\,, u = 0\, .
+\]
+
+\par \vspace{2mm} \hrule \par \vspace{4mm}
+Gel"ost wird f"ur verschiedene $\alpha $ das Problem
+
+\[
+\ba{.}{c}
+\dis  J(x,u) = \int_0^32x_1\,dt = \Min !,\\[3mm]
+\dis x_1(t) - 2 - \int_0^tx_2(\tau )\, d\tau  = 0\,,\\[3mm]
+\dis x_2(t) - \int_0^tu(\tau )\, d\tau  = 0\,,\\[3mm]
+u + 2 \geq 0\,, \quad 3 - u \geq 0\,, \quad x_1 \geq \alpha \,.
+\ea{.}
+\]
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Beispiel 8} {sc Hartl et al.}, S. 210.
+\[
+\ba{.}{c}
+\dis \int_0^1\left[10x^2 - u^2\right]\, dt = \Max!\,,\\[3mm]
+\dot{x} = x^2 - u\,\quad x(0) = x(1) = 1\,,\\[3mm]
+x(t) \leq  1.5\,.
+\ea{.}
+\]
+
+Der Zustand $x$ w"achst monoton, trifft den Rand $x = 1.5$ zum
+Zeitpunkt $t_1 = 0.345037$ und verl"asst ihn wieder zum Zeitpunkt
+$t_2 = 1 - t_1$. Die Kontrolle $u$ ist stetig und an den Punkten $t_1$ und
+$t_2$ `tangential', weil das Problem regul"ar ist.
+\par\vspace{1ex}\hrule\par\vspace{2ex}
+\end{document}
+

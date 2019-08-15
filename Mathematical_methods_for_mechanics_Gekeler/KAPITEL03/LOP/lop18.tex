@@ -1,0 +1,81 @@
+\section{Simplex Method I}
+For $\min \{yc, \; yB = a, \; y_{\Q} \geq 0\}$, $B \in
+\Bbb{R}^m{}_n$ with $\rank (B^{\P}) = p, \; \rank (B) = n$.\\
+%
+{\bf Given:} {\bf vertex} $y$ with\\
+$\A(y) = \{1,\ldots, p, \rho _{p+1}, \ldots , \rho _n\}$ index vector of
+a row basis of $\Bbb{R}_n$.\\
+$\N(y) = \{\sigma _1, \ldots , \sigma _{m-n}\}$ index vector of other rows of
+$B$, ($y_{\sigma _i} = 0$)
+\beqn
+B^{\A} := [b^j]_{j \in \A(y)}, \; B^{\N} := [b^j]_{j \in \N(y)}, \;
+c^{\A} := [\gamma ^j]_{j \in \A(y)}, \; c^{\N} := [\gamma ^j]_{j \in
+\N(y)}. \eeqn
+%
+Compute
+\[
+A = [B^{\A}]^{-1}, \; B^{\N}A, \; w := aA, \;
+x = Ac^{\A}, \; r = B^{\N}x - c^{\N}, \;  f := yc.
+\]
+{\bf Step 1.} (Which row is taken into basis?)\\
+If $r \leq 0$ then y is optimum else compute
+%
+\[ \ba{.}{ll}
+i := \max \arg_k \max  \{r^k \}& \mbox{(fast, $b^{\sigma _i}$ into basis)},\\
+i := \arg_k \max \{\sigma _k \in \N(y), \; r^k > 0\}, &
+\mbox{({\sc Bland}'s rule, in deg. vertex)}.
+\ea{.}
+\]
+{\bf Step 2.} (Which row is taken into non-basis?)\\
+$d^{i} := [B^{\N}A]^{i}$. If $d^i{}_k \leq 0, \; k = p+1, \ldots, n$ then a
+solution does not exist else compute
+\[
+j := \min \arg_k \min \{w_k/d^i{}_k, \; d^i{}_k > 0, \; k > p\},
+\; \mbox{($b^{\rho _j}$ into non-basis)}
+\]
+or ({\sc Bland}'s rule)
+\[
+\ba{.}{rcl}
+ \tau  &=& \min\{w_k/d^i{}_k, \; d^i{}_k > 0, \; k > p\},\\
+j &:=&  \arg_k \min  \{\rho _k \in \A(y), \; d^i{}_k > 0, \;
+w_k/d^i{}_k = \tau, \; k > p\}. \ea{.}
+\]
+{\bf Step 3.} (Change of basis.)
+\beqn
+{\bf P} = [p^k{}_l] := \ba{[}{cc}
+A       &    x\\
+B^{\N}A &    r\\
+w       &f \\
+\ea{]}.
+\eeqn
+Compute ${\bf Q} = [q^k{}_l]$ according to
+\[ \ba{.}{llll}
+q^{n+i}{}_j = 1/p^{n+i}{}_j            & \mbox{(pivot el.)}, &
+q^k{}_j = p^k{}_j/p^{n+i}{}_j, \; k \neq n+i &\mbox{(pivot c.)},\\
+%
+q^{n+i}{}_l = - p^{n+i}{}_l/p^{n+i}{}_j,\; l \neq j
+& \mbox{(pivot r.)}, &q^k{}_l = p^k{}_l - p^k{}_j
+p^{n+i}{}_l/p^{n+i}{}_j & \mbox{(else)}.
+\ea{.}
+\]
+Set
+\[
+\ba{.}{rclrcl}
+B^{\N}A &=& [q^k{}_l]_{k = n+1}^m{}_{l=1}^n,
+                          &   r &=&  [q^k{}_{n+1}]_{k=n+1}^m,\\
+w     &=& [q^{m+1}{}_l]_{l=1}^n, &f &=& q^{m+1}{}_{n+1},
+\ea{.}
+\]
+\[ \ba{.}{rcl}
+\A(y) & =& \{1,\ldots,p,\rho  _{p+1} , \ldots , \rho  _{j - 1},
+           \sigma  _i ,\rho _{j+1}, \ldots , \rho _n\},\\
+\N(y) & =& \{\sigma  _1 , \ldots , \sigma _{i - 1},
+           \rho _j,\sigma _{i+1}, \ldots , \sigma _{m-n}\}.
+\ea{.}
+\]
+Return to Step 1.
+\par
+$\A(y)$ and $\N(y)$ must be updated.  $y_{\A} = w$ contains the actual values
+of the basis variables, $y_{\N} = 0$.  For the {\sc Lagrange} multiplier $v$
+we obtain $v^{\N} = - r,\; v^{\A} = 0$.
+

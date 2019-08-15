@@ -1,0 +1,178 @@
+\documentclass[12pt,a4paper,USenglish,twoside]{book}
+\input aaformat_e
+%%%%%%%%%%%% Springer-Format %%%%%%%%%%
+%\documentclass[envcountchap,USenglish,natbib]{svmono}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{graphics}
+%\input aaformat_s
+\smartqed
+\begin{document}
+\setlength{\fboxsep}{1ex}
+\newcommand{\Release}{11/10/06}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1.5ex}
+\parskip0.5ex
+\parindent0ex
+\mainmatter
+%
+{\large\bf Supplements 4 to Chapter IX\hfill E.\ Gekeler
+}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}
+\par\vspace{2ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Case Study: Convection term for post processor}
+\par
+%
+{\bf (b) Trilinear Form} with shape functions.\\
+$
+P(q,\v,\w) = \grad q \cdot [\grad \v]\w
+$
+\[
+\u \simeq \ \ba{[}{r}\Phi(x,y)^TU_1\\ \Phi(x,y)^TU_2\ea{]}\,,\;
+\]
+\par\vspace{1ex}
+\[
+N(q,\v,\w) \simeq \
+Q^T [(\Phi_x^TV_1)\Phi_x\,\Phi^TW_1 + (\Phi_y^TV_1)\Phi_x\,\Phi^TW_2
+     +(\Phi_x^TV_2)\Phi_y\,\Phi^TW_1 + (\Phi_y^TV_2)\Phi_y\,\Phi^T W_2]
+\]
+\par
+\[
+\Phi_x = \Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x\,,\;\;
+\Phi_y = \Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y\,,
+\]
+\par\vspace{1ex}
+\[
+\int_TN(q,\v,\w) \simeq
+Q^T[A(V_1)W_1 + B(V_1)W_2 + C(V_2)W_1 +  D(V_2)W_2]
+\]
+where
+\begin{equation}\label{e2}
+\ba{.}{lll}
+A(V_1) &=& \dis J\int_S\big((\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)^TV_1\big)
+(\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)\,\Psi^T\, d\xi d\eta\,, \\[1ex]
+B(V_1) &=& \dis J\int_S\big((\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)^TV_1\big)
+(\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)\,\Psi^T\, d\xi d\eta\\[1ex]
+C(V_2) &=& \dis J\int_S\big((\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)^TV_2\big)
+(\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)\, \Psi^T\, d\xi d\eta \,,\\[1ex]
+D(V_2) &=& \dis J\int_S\big((\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)^TV_2\big)
+(\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)\,\Psi^T\, d\xi d\eta
+\ea{.}
+\end{equation}
+Now we have the representation
+\[
+\Psi_{\xi} = \ \ba{[}{rrr}
+ -3 & 4 & 4\\
+ -1 & 4 & 0\\
+ 0 & 0 & 0\\
+ 4 & -8 & -4\\
+ 0 & 0 & 4\\
+0 & 0 & -4\ea{]}
+\ba{[}{r}1\\ \xi \\ \eta\ea{]}
+ =: [A_1\,,\, A_2\,,\, A_3]\ \ba{[}{r}1\\ \xi \\ \eta\ea{]}
+\]
+\[
+\Psi_{\eta} = \ \ba{[}{rrr}
+ -3 & 4 & 4\\
+  0 & 0 & 0\\
+ -1 & 0 & 4\\
+ 0 & -4 & 0\\
+ 0 & 4 & 0\\
+ 4 & -4 & -8\ea{]}\
+\ba{[}{r}1\\ \xi \\ \eta\ea{]}
+ =: [B_1\,,\, B_2\,,\, B_3]\ \ba{[}{r}1\\ \xi \\ \eta\ea{]}
+\]
+Accordingly, only the both matrices $P\,,Q$ are to be calculated:
+\[
+M := S_4 = \int_S \Psi\,\Psi^T\, d\xi d\eta\,, \;\;
+P = \int_S\xi \Psi\,\Psi^T\, d\xi d\eta\,, \;\;
+Q = \int_S\eta \Psi\,\Psi^T\, d\xi d\eta\,,
+\]
+Then we obtain
+\[
+\ba{.}{lll}
+\dis \int_S(\Psi_{\xi}V)\Psi\Psi^T \,d\xi d\eta
+&=& (A_1^TV)M + (A_2^TV)P + (A_3^TV)Q\\[1ex]
+\dis \int_S(\Psi_{\eta}V)\Psi\Psi^T \,d\xi d\eta
+&=& (B_1^TV)M + (B_2^TV)P + (B_3^TV)Q\\[1ex]
+\ea{.}
+\]
+and the integrals (\ref{e2}) are linear combinations of these both integrals with the 
+corresponding arguments $V_1$ resp.\ $V_2$
+\[
+\ba{.}{lll}
+A(V_1) &=& [(A^T_1y_{31} + B^T_1y_{12})V_1]M + [(A^T_2y_{31} + B^T_2y_{12})V_1]P
++ [A^T_3y_{31} + B^T_3y_{12})V_1]Q\\[0.5ex]
+%
+B(V_1) &=& [(A^T_1x_{13} + B^T_1x_{21})V_1]M + [(A^T_2x_{13} + B^T_2x_{21})V_1]P
++ [(A^T_3x_{13} + B^T_3x_{21})V_1]Q\\[0.5ex]
+%
+C(V_2) &=& [(A^T_1y_{31} + B^T_1y_{12})V_2]M + [(A^T_2y_{31} + B^T_2y_{12})V_2]P
++ [A^T_3y_{31} + B^T_3y_{12})V_2]Q\\[0.5ex]
+%
+D(V_2) &=& [(A^T_1x_{13} + B^T_1x_{21})V_2]M + [(A^T_2x_{13} + B^T_2x_{21})V_2]P
++ [(A^T_3x_{13} + B^T_3x_{21})V_2]Q
+\ea{.}
+\]
+{\bf(c)}
+The nonlinear problem may be solved by a simple iteration method or by {\sc Newton}'s 
+method. The latter allows higher {\sc Reynolds} numbers $Re = 1/\nu$. Also, in {\sc 
+Newton}'s method the gradient of the nonlinear part must be calculated. From {\bf (b)}
+\[
+\ba{.}{l}
+\grad_{U_1,U_2}
+\, \ba{[}{rr} A(U_1) & B(U_1)\\ C(U_2) & D(U_2)\ea{]}
+\ba{[}{r}U_1\\ U_2\ea{]}
+= \ \ba{[}{rr} A(U_1) & B(U_1)\\ C(U_2) & D(U_2)\ea{]}
+\\[3ex]
+ + \ \ba{[}{cc} \grad_{U_1}A(U_1)U_1 + \grad_{U_1}B(U_1)U_2 & \text{Null} \\ 
+     \text{Null} & \grad_{U_2}C(U_2)U_1 + \grad_{U_2}D(U_2)U_2\ea{]}
+\ea{.}     
+\]
+\par
+{\bf (d) Postprozessor}
+Let $\u = (u,v)$ be the velocity field then the streamlines $z$ satisfy
+%
+\[
+\int _{\Omega}\nabla \delta z\, \nabla z
+= \int_{\Omega}\delta z\, w  + \int_{\Gamma}\delta z \, z_{\n}
+\]
+\[
+\int_T\phi_iw = \int_T\phi_i(v_x - u_y) + \int_{\Gamma}\delta z \, z_{\n}
+\]
+\[
+\ba{.}{l}
+\dis \int_T\delta z\, w \,dxdy\\[1ex]
+\simeq \dis
+JZ\int_S\Psi(\Psi_{\xi}\xi_x + \Psi_{\eta}\eta_x)^T\,d\xi d\eta V
+- JZ \int_S\Psi(\Psi_{\xi}\xi_y + \Psi_{\eta}\eta_y)^T\,d\xi d\eta U\\[1ex]
+= \dis
+JZ \left[\int_S\Psi\Psi_{\xi}^T\,d\xi d\eta\right](V\xi_x - U\xi_y)
++
+JZ\left[\int_S\Psi\Psi_{\eta}^T\,d\xi d\eta\right](V\eta_x - U\eta_y)
+\ea{.}
+\]
+Accorcingly, the matrices
+\[
+\int_S\Psi\Psi_{\xi}^T\,d\xi d\eta\,,\;\;
+\int_S\Psi\Psi_{\eta}^T\,d\xi d\eta
+\]
+are to be calculated.
+%
+\[
+z_x = - v\,,\;\; z_y = u\,,\;\; \grad z\cdot \n = -v\,n_1 + u\,n_2.
+\]
+%
+\[
+\xi _x = y_{31}/J, \;\; \xi _y = x_{13}/J, \;\;
+\eta _x = y_{12}/J, \;\; \eta _y = x_{21}/J\,.
+\]
+
+\end{document}

@@ -1,0 +1,178 @@
+\section{Pivot Rule in Degeneration}
+It is well known that a linear programming method built on vertex selection can
+fail to be finite because of the possibility of cycling.  There have been
+several propositions to overcome this drawback by choosing lexikographic order
+rules, cf.  e.g.  \cite{Dan} and \cite{AzDi} but the rule of {\sc Bland}
+\cite{Bla} has revealed to be the simplest device and the easiest to implement.
+For its development, it suffices to consider the standard primal problem
+%
+\[
+\max \{ax, \; Bx \leq c \}, \; B \in \Bbb{R}^m{}_n,
+\]
+where $\rank (B) = n$ and the rows of $B$ are denoted by $b^i$ again.  We
+suppose that the vertex $x$ is degenerate then the index vectors associated to
+$x$, namely
+\[
+\ba{.}{rcl}
+\A(x) &=& \{\rho _1, \ldots, \rho _n\}, \; b^{\rho _k}x =
+\gamma ^{\rho _k}, \; b^{\rho _k} \; \mbox{linear independent},\\
+\N(x) &=& \{\sigma _1,\ldots,\sigma _{m-n}\} = \{1, \ldots, m\} \backslash
+\A(x),
+\ea{.}
+\]
+are not determined uniquely and some side conditions $b^ix \leq \gamma ^i,
+\; i \in \N(x)$, are active also.  We choose an arbitrary pair of both index
+vectors for further consideration, recall the notations
+\[
+B^{\A} = [b^i]_{i\in \A}, \; B^{\N} = [b^k]_{k \in \N}, \;
+A =[a_1, \ldots, a_n] := [B^{\A}]^{-1},
+\]
+and introduce the following abbreviations:
+\[
+w = y_{\A}, \; r = B^{\N}x^{\N} - c^{\N}, \; d_j = [B^{\N}A]_j \equiv
+B^{\N}a_j. \]
+The otherwise fast pivot ruling pair (\ref{e36a}), namely
+\[
+\ba{.}{rcl}
+j &=& \min \arg_k \min \{w_k, \; k \in \{p+1, \ldots, n\}\},\\
+i &=& \dis \min \arg_k \min \{\frac{r^k}
+{b^{\sigma _k}a_j}, \; b^{\sigma _k}a_j < 0, \; k \in \{1, \ldots, m -n \}\}.
+\ea{.}
+\]
+is replaced in degeneration by the following rule of {\sc Bland}:\\
+(a) Choose the basis element $b^{\rho _j}$ to be removed from the row basis of
+$x$, i.e., the pivot column $j$ in the tableau {\bf P} such that
+%
+\[
+  \rho _j = \min\{\rho _k \in \A(x), \; y^{\rho _k} < 0\},
+\]
+i.e.,
+\begin{equation} \label{bl1}
+      j = \arg_k\min\{\rho _k \in \A(x), \; y^{\rho _k} < 0\}.
+\end{equation}
+(b) Choose the vector $b^{\sigma _i}$ to be taken into the basis, i.e., the
+pivot row $i$ in the small tableau {\bf P} such that
+%
+\[
+\sigma _i = \dis\min\{\sigma _k \in \N(x), \;
+d^k{}_j < 0 \; \mbox{and} \; \frac{r^k}{d^k{}_j} = \min\{\frac{r^l}{d^l{}_j},
+\; d^l{}_j < 0\}\},
+\]
+i.e.,
+\begin{equation} \label{bl2}
+i =  \arg_k\min\{\sigma _k \in \N(x), \;
+d^k{}_j < 0 \; \mbox{and} \; \frac{r^k}{d^k{}_j} = \min\{\frac{r^l}{d^l{}_j},
+\; d^l{}_j < 0\}\}.
+\end{equation}
+Note that all $r^l \leq 0$ and some $r^l = 0$ in a degenerate vertex.  If all
+$d^k{}_j > 0$ for the index $j$ given by (\ref{bl1}) then the problem has no
+solution.
+%
+\begin{theorem} \label{s9}
+The projection method with pivot rules (\ref{bl1}) and (\ref{bl2}) is finite.
+\end{theorem}
+%
+Proof. In changing a basis in the projection method, either optimality is
+stated or it is stated that the problem has no solution or the above
+pivot rule fixes a new basis in a unique way. We prove the assertion by
+contradiction and suppose that cycling occurs in a vertex $x$. Let
+\[
+\ba{.}{rcl}
+\R(x) &=& \{k \in \{1, \ldots, m\}, \; \forall \; \A(x): \; k \in \A(x)\},\\
+{\cal S}(x) &=& \{k \in \{1, \ldots, m\}, \; \forall \; \N(x): \; k \in
+\N(x)\},\\
+\T(x) &=& \{1, \ldots, m\} \backslash (\R(x) \cup {\cal S}(x))\},
+\ea{.}
+\]
+then the index set
+$\T(x)$ consists of all indices entering or leaving a basis during the cycle.
+\par
+Let
+\[
+q = \max\{k, \; k \in \T(x)\},
+\]
+and let
+\[
+{\bf P} = \ba{[}{ccc} &\A(x) & 0 \\\N(x) & B^{\N}A & r\\ 0 & w &
+f\ea{]}, \quad w = y_{\A},
+\]
+be a tableau in which the pivot column $j$ and the pivot row $i$ are chosen by
+(\ref{bl1}) and (\ref{bl2}) such that
+%
+\[
+\rho _j = q, \; i = s,
+\]
+then, by construction,
+\begin{equation} \label{vv}
+y_q < 0 \; \mbox{and} \; y_{\rho} \geq 0 \; \mbox{for} \;  \rho < q, \; \rho
+\in \A(x).
+\end{equation}
+Secondly, let
+\[
+\wi{{\bf P}}   = \ba{[}{ccc} & \wi{\A}(x) & 0  \\
+\wi{\N}(x) & B^{\wi{\N}}\wi{A} & \wi{r}\\
+0 & \wi{w} & \wi{f}\ea{]},
+\; \wi{A} = [\wi{a}_1, \ldots, \wi{a}_n] = [B^{\wi{\A}}]^{-1},
+\; \wi{w} = \wi{y}_{\wi{\A}},
+\]
+be a tableau in which the pivot column $j$ and the pivot row  $i$ are chosen by
+(\ref{bl1}) and (\ref{bl2}) such that
+%
+\begin{equation} \label{uu}
+j = t, \; \sigma _i = q,
+\end{equation}
+%
+then, by construction,
+%
+\[
+[B^{\wi{\N}}\wi{a}_t]^i < 0 \; \mbox{and} \;
+\forall \; \sigma_k \in \wi{\N}(x): \; \sigma _k < \sigma _i
+\Longrightarrow [B^{\wi{\N}}\wi{a}_t]^k \geq 0
+\]
+which is equivalent to
+\begin{equation} \label{ww}
+v^q := b^q\wi{a}_t < 0 \; \mbox{and} \; \forall \; \rho  \in \wi{\N}(x): \;
+\rho  < q  \Longrightarrow v^{\rho } := b^{\rho }\wi{a}_t \geq 0 .
+\end{equation}
+\par
+The indices $s$ and $t$ are determined by the pivot rule.  By this exchange,
+the row $b^q$ with the absolute index $q$ is removed from the basis in
+tableau {\bf P} and comes into basis again in tableau $\wi{{\bf P}}$.  By
+definition, we have $y_{\A} = aA$, and we write
+%
+\begin{equation} \label{zz}
+\wi{v} := B\wi{a}_t \in \Bbb{R}^m \; \mbox{then} \;
+\wi{v}^{\wi{\A}} = B^{\wi{\A}}\wi{a}_t = e_t \equiv [\delta ^k{}_t]_{k=1}^n,
+\; \wi{v}^{\wi{\N}} = B^{\wi{\N}}\wi{a}_t.
+\end{equation}
+If now $P$ denotes the permutation matrix with
+\[
+[1, \ldots ,m] = [\A(x), \; \N(x)]P,
+\]
+then
+\[
+P\wi{v} = \ba{[}{c} v_{\A}\\ v_{\N} \ea{]}
+\]
+and, by the pivot rule (\ref{uu}),
+\[
+y_{\A}v^{\A} = aAB_{\A}^{-1}\wi{a}_t = a \, \wi{a}_t = \wi{w}_t < 0.
+\]
+\par
+Thus there exists a $\rho \in \A(x)$ with $y_{\rho }v^{\rho } < 0$ hence
+$v^{\rho } \neq 0$ and, by (\ref{zz}), it follows that $\rho \in \wi{\N}(x)
+\cup \{\sigma _t\}$.  By this way, we obtain
+%
+\begin{equation} \label{bl9}
+\ba{.}{c} \rho  \in \A(x)\\ \rho  \in \wi{\N}(x) \cup \{\sigma_t\}
+\ea{\}} \Longrightarrow \rho  \in \T(x).
+\end{equation}
+%
+Because $y_q < 0$ by (\ref{bl1}) and $v^q < 0$ by (\ref{ww}) but $y_{\rho
+}v^{\rho } < 0$ we find that $\rho \neq q$.  As $q \in\T (x)$ was maximum, it
+follows by (\ref{bl9}) that $\rho < q$.  But then $y_{\rho} > 0$ by (\ref{vv})
+and thus $v^{\rho } < 0$.  This is a contraciction to the choice of $\sigma _i
+= q$ in (\ref{uu}) because of (\ref{ww}).
+\par
+The proof can be modified easily to the case where the first $p$ side
+conditions are equations and hence always active.
+

@@ -1,0 +1,280 @@
+\section{Convex Sets and Cones}
+\begin{definition} \label{d1}
+(a) Let $x, y \in \Bbb{R}^n$ then
+\beqn
+[x,y] := \{z = \lambda x + (1 - \lambda )y, \: 0 \leq \lambda  \leq 1\}
+\eeqn
+is the straight line connecting $x$ and $y$.\\
+(b) A set $\C \subset \Bbb{R}^n$ is {\bf convex} if
+\beqn
+\forall \; x, \, y \in \C: \; [x,y] \subset \C.
+\eeqn
+(c) A set $\K \subset \Bbb{R}^n$ is a {\bf cone} (``with top in
+the origin'') if
+\beqn
+\forall \; x \in \K, \; \forall \; \alpha  \geq 0: \; \alpha x \in \K.
+\eeqn
+(c) A cone $\K$ is {\bf pointed} if
+\beqn
+\K \cap - \K = \{0\} \quad (\Longleftrightarrow x \in \K \wedge -x \in \K
+\Longrightarrow x = 0).
+\eeqn
+(d) A {\bf convex} cone $\K$ defines a {\bf pre-order} by
+\beqn
+y \geq x \Longleftrightarrow x \leq y :\Longleftrightarrow y - x \in \K
+\eeqn
+with the properties
+%
+\beqn \ba{.}{lll}
+\forall \: x \in \Bbb{R}^n: & x \leq x &\mbox{(reflexivity)},\\
+x \leq y \wedge y \leq z &\Longrightarrow y \leq z &
+\mbox{(transitivity)}.\\ \ea{.} \eeqn
+%
+(e) A pointed convex cone $\K$ defines a {\bf partial order} with the
+additional property
+\beqn
+x \leq y \wedge y \leq x \Longrightarrow y = x \quad \mbox{(symmetry)}.
+\eeqn
+(f) If a pre-order is given by a convex cone then this cone is called
+{\bf positive cone} or order cone.\\
+(g) For a given positive cone $\K$ the set
+%
+\beqn
+\K' := \{y \in \Bbb{R}_n, \; \forall \; x \in \K: yx \geq 0 \}
+\quad \mbox{(row vectors)}
+\eeqn
+%
+is the {\bf dual (positive) cone} (in $\Bbb{R}_n$).
+\end{definition}
+%
+%
+A positive cone $\K$ is never open but often closed.  The dual cone $\K'$ is
+always closed.  In the space $\Bbb{R}^n$ of coordinates always $\K \subset
+(\K')'$ holds and if $\K$ is closed then $\K = (\K')'$.
+%
+\begin{example} \label{b3}
+If $\K \subset \Bbb{R}^n$ is a positive cone and $A \in
+\Bbb{R}^m{}_n$ then
+\beqn
+A\K := \{y \in \Bbb{R}^m, \; \exists \; x \in \K: \; y = Ax \}
+\eeqn
+is a convex cone.
+\end{example}
+%
+%
+\begin{lemma} \label{l1}
+Let $\emptyset \neq \C \subset \Bbb{R}^n$ be convex and let $0 \notin \C$.
+Then there exists an $y \in \Bbb{R}_n$ and an $\alpha > 0$ such that $y x >
+\alpha > 0$ holds for all $x \in \C$, i.e., the hyperplane $H = \{x \in
+\Bbb{R}^n, \; yx = \alpha \}$ separates $\C$ and $\{0\}$ strongly.
+\end{lemma}
+%
+%
+Proof. The set
+%
+\beqn
+\U := \{x \in \Bbb{R}^n, \; \|x\| \leq \beta \} \cap \C
+\eeqn
+%
+is not empty for sufficiently large $\beta $ hence the continuous
+function
+$f: x \mapsto \|x\|$ attains its minimum on $\U$ at a point
+$v \neq 0$. Because $\C$ is convex we have
+\beqn
+\|v + \lambda (x - v)\|^2 \geq \|v\|^2, \quad \lambda  \in [0,1],
+\eeqn
+for all $x \in \C$, or
+\beqn
+\lambda ^2(x - v)^T(x - v) + 2\lambda v^T(x - v) \geq 0, \quad \lambda  \in
+[0,1].
+\eeqn
+It follows for $\lambda \to 0$ that $v^T(x - v) \geq 0$ hence
+\beqn
+v^Tx \geq v^Tv > v^Tv/4 =: \alpha  > 0.
+\eeqn
+%
+This inequality yields the assertion for $y = v^T$.
+\par
+%
+\begin{lemma} \label{l2} (Separation Theorem)
+Let $\K \subset \Bbb{R}^n$ be a positive closed cone and let
+$b \notin \K$.  Then there exists an $y \in \K'$ with $y b <
+0$ (hence always $\K' \neq \emptyset$).
+\end{lemma}
+%
+%
+Proof.  We have $b \neq 0$ because of $0 \in \K$.  As $\K$ is
+convex and closed, there exists a $y \in \Bbb{R}_n$ with
+%
+\begin{equation} \label{e2}
+yb < \alpha  < \inf_{x \in \K}yx
+\end{equation}
+%
+by a slight modification of Lemma \ref{l1}, and $\alpha < 0$ because of $0 \in
+\K$.  Let $u \in \K$ with $yu < 0$. Because of $\lambda u \in \K, \:  \lambda
+\geq 0$, there exists a $w = \lambda u$ with $yw = \lambda yu < \alpha
+$.  This is a contradiction to (\ref{e2}).  Thus $yu \geq 0$ for all $u \in
+\K$ hence $y \in \K'$ by definition.
+\par
+%
+%
+As an inference we obtain the so-called cone corollary:
+%
+%
+\begin{lemma} \label{l3} Let $\K \subset \Bbb{R}^n$ be a
+closed positive cone then
+%
+\beqn
+x \in \K \Longleftrightarrow \forall \; y \in \K': \; yx \geq 0.
+\eeqn
+\end{lemma}
+%
+%
+Proof. The left side implies the right side by definition and the negation of
+the left side implies the negation of the right side by Lemma \ref{l2}.
+%
+%
+\begin{lemma} \label{l4}
+(Cone Inclusion Theorem) Let $\K, \: \L \subset
+\Bbb{R}^n$ be positive cones and let $\L$ be closed then
+\beqn
+\K \subset \L \Longleftrightarrow \L' \subset \K'.
+\eeqn
+\end{lemma}
+%
+%
+Proof.  Obviously the left side implies the right side.  The negation of the
+left side implies the existence of a $x \in \K$ with $x \notin \L$.  Then there
+exists an $y \in \L'$ with $y \, x < 0$ hence $y \notin \K'$ by the Cone
+Corollary. This yields the negation of the right side.
+\par
+%
+%
+The next result is a necessary and sufficient condition for the existence of
+positive solutions of linear systems of equations.
+%
+%
+\begin{lemma} \label{l5} ({\sc Farkas} 1902)
+Let $A \in \Bbb{R}^m{}_n, \; b \in \Bbb{R}^m$ and let $\K \subset \Bbb{R}^n$ be
+a positive closed cone. Then
+\beqn
+\fbox{$
+(b \in A \,\K) \Longleftrightarrow (y \, A \in \K' \Longrightarrow y \, b \geq
+0). $}
+\eeqn
+\end{lemma}
+%
+Proof. (a) If the left side is true then $b = Ax$ with
+$x \in \K$. If now $yA \in \K'$ then
+\beqn
+0 \leq yAx = yb.
+\eeqn
+(b) Let the right side be true. We have
+\beqn
+yA \in \K' \Longleftrightarrow \forall \: x \in \K: \; yAx \geq 0
+\Longleftrightarrow y \in (A\K )' =: \Q '.
+\eeqn
+In the same way, with $\P := \{\alpha \, b, \; \alpha  \geq
+0\}$,
+\beqn
+yb \geq 0 \Longleftrightarrow \forall \; \alpha  \geq 0: \; y(\alpha b)
+\geq 0 \Longleftrightarrow y \in \P'.
+\eeqn
+With these notations, the right side says that $\Q ' \subset
+\P '$ hence $\P \subset \Q $ by Lemma \ref{l4} thus $b \in A\K $.\\
+%$\Box$ \hfill\\
+%
+%
+By transposition of the result we obtain immediately
+%
+\begin{corollary} \label{f1}
+Let $A \in \Bbb{R}^m{}_n, \; b \in \Bbb{R}_n$ and let
+$\K \subset \Bbb{R}^m$ be a positive closed cone with dual cone
+$\K'$. Then
+\beqn
+\fbox{$
+(b \in \K'A) \Longleftrightarrow (Ax \in \K \Longrightarrow b \, x \geq
+0). $}
+\eeqn
+\end{corollary}
+%
+Further, we define the following sets for a matrix $A \in \Bbb{R}^m{}_n$:
+\beqn \ba{.}{lll}
+\Range (A) &= \{y \in \Bbb{R}^m, \; \exists  \; x \in \Bbb{R}^n: \; y =
+Ax\} & \mbox{{\bf range} of $A$}\\
+\Ker (A) &= \{x \in \Bbb{R}^n, \; Ax = 0\} &
+\mbox{{\bf kernel} or null space of $A$}.
+\ea{.} \eeqn
+%
+Finally, if ${\cal U} \subset \Bbb{R}^n$ is a subspace then
+\[
+{\cal U}^{\perp} := \{x \in \Bbb{R}^n, \; \forall \; y \in {\cal U}: \; x^Ty =
+0\}
+\]
+denotes the {\bf orthogonal complement} of ${\cal U}$ in $\Bbb{R}^n$.
+%
+\begin{theorem} \label{s1}
+\[
+\Range (A) = \Ker (A^T)^{\perp},
+\]
+\par
+i.e., the range of a matrix is the orthogonal complement of the null space
+of the transposed matrix.
+\end{theorem}
+%
+Proof.
+\beqn \ba{.}{l}
+0 \neq y \in \Range (A)^{\perp} \Longleftrightarrow
+\forall \; x \in \Bbb{R}^n: \; y^TAx = 0 \\
+\Longleftrightarrow y^TA = 0 \Longleftrightarrow A^Ty = 0 \Longleftrightarrow
+y \in \Ker (A^T).
+\ea{.} \eeqn
+%$\Box$ \hfill\\
+%
+As a special consequence we obtain
+%
+\begin{equation} \label{e3}
+\Range (A) = \Bbb{R}^m \Longleftrightarrow \Ker (A^T) = \{0\}.
+\end{equation}
+In particular, if $A$ is quadratic then $\Ker (A^T) =
+\{0\} \Longleftrightarrow \Ker (A) = \{0\}$ and (\ref{e3}) is\\[2mm]
+%
+{\bf Fredholm's Alternative}: {\it Either\\
+(a) the system $Ax = y$ has a unique solution $y$
+\\
+or\\
+(b) $Ax = 0$ has at least one nontrivial solution\\
+but (a) and (b) does never hold.}
+\par
+Henceforth we stipulate that
+\par
+\[
+\fbox{$
+\K = \Bbb{R}^n_+,  \; \mbox{i.e.,} \; x \geq 0 \Longleftrightarrow
+\; \forall \; i: \; x^i \geq 0,
+$}
+\]
+\par
+then $\K = \K'$ if $\Bbb{R}^n$ and $\Bbb{R}_n$ are identified canonically.
+\par
+For a matrix $A \in \Bbb{R}^m{}_n$, the set $\{y = Ax, \; x \geq 0\}$ is called
+the positive cone spanned by the columns of $A$ and, in the same way, $\{y =
+xA, \; x \geq 0\}$ is called the positive cone spanned by the rows of $A$.
+\par
+Theorem \ref{s1}, being fundamental for linear systems of equations, has an
+analogon for sign-bounded solutions in the Lemma of
+{\sc
+Farkas}.  In order to emphasize the similarity and difference between both
+results we present
+Theorem \ref{s1} once more in the subsequent form (a) and the result of {\sc
+Farkas} in the form (b)
+:
+%
+\begin{corollary} \label{f2}
+\beqn \ba{.}{llll}
+(a) &Ax = y &\Longleftrightarrow  (zA = 0 &\Longrightarrow z \, y = 0),\\
+(b) &Ax = y \wedge x \geq 0 &\Longleftrightarrow (zA \geq 0 &\Longrightarrow
+z \, y \geq 0).
+\ea{.} \eeqn
+\end{corollary}
+

@@ -1,0 +1,372 @@
+\section{Simplex Method}
+The projection method for the dual problem (\ref{e8}),
+\[
+\fbox{$
+\min \{yc, \; yB = a, \; y_{\Q} \geq 0\}, \;
+B \in \Bbb{R}^m{}_n, \; \rank (B^{\P}) = p, \;
+\rank (B) = n,
+$}
+\]
+is well-known under the name ``simplex method''.  We prefer the present row
+form in order to use the {\bf same entries} as in the projection method without
+transposition but note that the meaning of the vectors $a$ and $c$ has changed
+here:  The column vector $c$ is now the gradient of the objective function and
+the former gradient $a$ has become the right side of the side conditions.
+Hoping that the reader accepts this less customary representation, we show in
+this section that the simplex method leads to the same tableau (\ref{e36})
+as in the primal problem after some cosmetic corrections.  By this conformance
+we mean that the entries of the tableau do conform in dimensions and that the
+tableaus coincide identically in a unique not-degenerate optimum.
+\par
+The problem (\ref{e8}) has $m$ variables, $y \in \Bbb{R}_m$, and $n + m- p$
+side conditions of which the inequalities are simple sign conditions only.
+Such simple bounds are omitted as far as possible in vertex methods.  We also
+use the {\bf same} index vectors $\A (y)$ and $\N (y)$ as in the projection
+method but now they are associated to a vertex $y$ of the present problem,
+%
+\begin{equation} \label{e19}
+\ba{.}{rcl}
+\A(y)  &:=& \{1, \ldots, p,\rho  _{p+1}, \ldots, \rho _n\},\\
+\N(y)  &:=& \{\sigma  _1, \ldots, \sigma _{m - n}\}
+= \I_m \backslash \A(y),
+\ea{.}
+\end{equation}
+and we use also the same permutation matrix $P$ defined by
+\[
+[1, \ldots, m] = [\A (y), \N (y)]P.
+\]
+%
+But, recalling that
+\[
+y_{\A \backslash \P} \geq 0, \; y_{\N} = 0,
+\]
+has been the optimality condition in the primal method we have to emphasize
+that both index vectors now have a {\bf converse meaning} to that in the primal
+problem:  Whereas in the primal problem the index set $\N(x)$ contains at least
+all indices of inactive side conditions in a vertex $x$, i.e., $b^ix < \gamma
+^i \Longrightarrow i \in \N(x)$, now $\A(y)$ contains at least all indices of
+inactive side conditions in a vertex $y$, i.e., $y^i > 0 \Longrightarrow i \in
+\A(y)$.
+\par
+%
+The complete side conditions of the present row problem including equality
+restrictions  have the form
+\[
+y\ba{[}{ccc} B^{\P} &        0           \\
+                 B^{\Q} & -I_{m-p}       \\
+\ea{]}  \leq [a,0].
+\]
+The gradients of the active conditions --- being column vectors here --- must
+be independent in a vertex of the feasible domain hence the gradient
+matrix of the present problem,
+\[
+\wi{B}_{\wi{\A}} := \ba{[}{cc} B^{\A}        &    O        \\
+                          B^{\N}   &    - I_{m-n} \ea{]},
+\]
+must be regular in a vertex $y$.  This condition is fulfilled if and only if
+the matrix $B^{\A} \in \Bbb{R}^n{}_n$ is regular for a suitable index vector
+$\A(y)$.  Because of $\rank (B^{\P}) = p$ by assumption and (\ref{e19}), the
+latter condition is fulfilled if and only if the rows
+\[
+b^{\rho _k}, \; k = p+1, \ldots, n
+\]
+of $B$ are linear independent. This requirement imples the following result
+for the index set
+\[
+\fbox{$
+\A^*(y) := \{i \in \I_m, \; i > p, \; y^i >0\}.
+$}
+\]
+%
+\begin{theorem} \label{s7} (Characterization of a vertex of the dual
+problem) Let $\rank (B^{\P}) = p \; \mbox{and} \; \rank (B) = n$.
+Then $y \in \Omega' = \{ y \in \Bbb{R}_m, \; yB = a, \;
+y_{\Q} \geq 0\}$ is a vertex if and only if
+\[
+\forall \; i \in \A^*(y): \; b^i \; \mbox{linear independent}.
+\]
+\end{theorem}
+%
+Proof.  The first part of the assertion follows from the above stated fact that
+the matrix $B^{\A}$ must have maximum rank in a vertex $y$.  Conversely,
+if all $b^i, \; i \in \A^*(y)$, are linear independent then we can find an
+index set $\A(y)$ such that $\rank (B^{\A \backslash \P}) = n - p$ if $\rank
+(B) = n$.\\
+%$\Box$ \hfill\\
+%
+Mutatis mutandis a vertex $y$ of $\Omega '$ is {\bf degenerate} if more than
+$m$ side conditions are active in $y$, i.e., if the assertion of Theorem
+\ref{s7} holds and $|\A^*(y)| < n - p$.  In particular, we have $p = 0$ in the
+classical simplex problem
+\[
+\min \{yc, \; yB = a, \; y \geq 0\}.
+\]
+Then $y$ is a vertex of $\Omega '$ if and only if $|\A^*(y)| \leq n$ and all
+$b^i, \; i \in \A^*(y)$, are linear independent.
+\par
+%
+The gradient matrix $B^{\A}$ and the matrix $B^{\N}$ of the primal problem
+have here analogues in the following matrices:
+\begin{equation} \label{bab}
+\wi{B}_{\wi{\A}} = P^T\ba{[}{cc}  B^{\A} & O \\ B^{\N} & - I_{m-n}\ea{]},
+\; \wi{B}_{\wi{\N}} = P^T\ba{[}{c}O \\-I_{n-p} \\ O \ea{]},
+\end{equation}
+where $B^{\A}$ and $B^{\N}$ have the same meaning as in
+the previous section, namely,
+\[
+B^{\A} = \ba{[}{c} b^{\rho _{1}}\\ \vdots \\ b^{\rho
+_n}\ea{]},
+\; B^{\N} = \ba{[}{c}b^{\sigma _1} \\ \vdots \\ b^{\sigma _{m-n}} \ea{]},
+\; \rho _i = i, \; i = 1, \ldots, p.
+\]
+The row permutation with the matrix $P$ must be regarded here because the
+vertex $y$ is also a row vector. We write again briefly
+%
+\[
+A = [B^{\A}]^{-1} \in \Bbb{R}^n{}_n
+\]
+then the edge matrix $\wi{A}$ of the dual problem in a vertex $y$
+reads
+\begin{equation} \label{aaa1}
+\wi{A} \equiv \ba{[}{l}\wi{a}^1\\\vdots\\ \wi{a}^m\ea{]}
+:= [\wi{B}_{\wi{\A}}]^{-1} =
+\ba{[}{cc} A & O\\B^{\N}A & -I_{m-n}\ea{]}P.
+\end{equation}
+Now we recall the dual feasibility condition (b) and the complement condition
+(c) of Corollary \ref{f4} for the dual problem,
+\begin{equation} \label{abc}
+ B^{\P}u^* + c^{\P} = 0, \; B^{\Q}u^*  +c^{\Q} = v^* \geq 0,
+\end{equation}
+%
+and, furthermore, we recall the relation (\ref{e11}) between a solution $x^*$
+of the primal problem and the {\sc Lagrange} multiplier $z^* = (u^*,v^*)$ of
+the dual problem,
+\[
+x^* = - u^*, \; r^* := Bx^* - c = - v^*.
+\]
+Because $B^{\A}x^* = c^{\A}$ hence $x^* = Ac^{\A}$, a substitution into
+(\ref{abc}) yields the {\bf dual optimality  condition}
+%
+\[
+v^{\N} = c^{\N} - B^{\N}Ac^{\A} \geq 0,
+\]
+or
+%
+\begin{equation} \label{e40}
+\fbox{$
+r^{\N} = - v^{\N} = B^{\N}Ac^{\A} - c^{\N} \leq 0.
+$}
+\end{equation}
+\par
+If $y$ is not optimum then condition (\ref{e40}) is violated and, following
+the pattern of the primal method,  we have to remove a column of the
+gradient matrix $P\wi{B}_{\wi{\A}}$ from the basis of $y$, namely
+\[
+\mbox{a {\bf column} $e_i$ of}  \; \ba{[}{c}O\\ O\\- I_{m-n}\ea{]}.
+\]
+Furthermore, we have to take a column of $P\wi{B}_{\wi{\N}}$ into the basis,
+namely
+\[
+\mbox{a column $e_j$ of} \; \ba{[}{c} O\\ - I_{n-p}\\ O \ea{]}.
+\]
+But in the gradient matrix $P\wi{B}_{\wi{\A}}$, this exchange means that a row
+$b^{\sigma _i}$ of $B^{\N}$ is taken into the row basis, i.e., the rows of
+$B^{\A}$ and a row $b^{\rho _j}$ of $B^{\A}$ is removed form the basis into the
+non-basis, i.e., the rows of $B^{\N}$.  We choose for $i$ that index for which
+$-v^{\sigma _i}, \sigma _i \in \N (y)$ is maximum, i.e.,
+\begin{equation}
+\label{e42}
+\fbox{$
+i = \max \arg_k \max \{- v^{\sigma _k}, \; k \in \{ 1, \ldots, m - n\}\}.
+$}
+\end{equation}
+%
+Observe that $v^{\N} = \wi{A}^{(n+1):m}c$ hence $v^{\sigma _i} = \wi{a}^{n+i}c
+< 0$ is minimum and the selected search direction $\wi{a}^{n+i}P^T$ yields a
+proper descend for the new point $\wi{y} = y - \tau \wi{a}^{n+i}P^T$ in the
+case where $\tau > 0$:
+\[
+[y - \tau \wi{a}^{n+i}P^T]c < yc.
+\]
+\par
+The maximum feasible step width $\tau$ determines the vector $e_j$ which is
+taken into the column basis of $y$ which corresponds to the remove of a row of
+$B^{\A}$.  For this we subtitute again $\wi{y}$ into the inactive side
+conditions in the same way as in the primal method and then enlarge $\tau$
+until at least one of these conditions becomes ``active''.  However, the
+inactive side conditions are purely sign conditions here and read
+%
+\[
+\wi{y}_{\Q} = [y - \tau \wi{a}^{n+i}]_{\Q} \geq 0, \; \Q = \{p+1, \ldots, m\}.
+\]
+But, using the above introduced permutation matrix $P$,
+\[
+[y - \tau \wi{a}^{n+i}]P^T = [y_{\A}, y_{\N}] - \tau [b^{\sigma _i}A, -e_i]
+= [y_{\A} - \tau b^{\sigma _i}A, \; y_{\N} + \tau e_i]
+\]
+where $e_i \in \Bbb{R}_{m-n}$ is the $i$-th row identity vector and $y_{\N} =
+0$ by definition of the index set $\N (y)$. Therefore the conditions for
+feasibility are
+%
+\begin{equation} \label{e44}
+y_{\rho _k} - \tau b^{\sigma _i}a_k \geq 0, \; k = p+1, \ldots ,n.
+\end{equation}
+%
+\par
+{\bf Case 1.} $\forall \; k \in \{p+1, \ldots, n\}:  \; b^{\sigma _i}a_k \leq
+0$.
+Then (\ref{e44}) holds for all $\tau > 0$.  In this case the objective function
+$yc$ is unbounded from below in the feasible domain and the problem has no
+solution.
+\par
+{\bf Case 2.} $\exists \; k \in \{p+1, \ldots, n\}:  \; b^{\sigma _i}a_k >
+0$. Then we choose
+\begin{equation} \label{e45}
+\fbox{$
+\dis j = \min \arg_k \min \{\psi(k) := \frac{y_{\rho
+_k}}
+{b^{\sigma _i}a_k}, \;
+%
+b^{\sigma _i}a_k > 0, \;  k \in \{p+1, \ldots, n\}\}.
+$}
+\end{equation}
+%
+It follows that $\tau ^* := \psi(j) \geq 0$.  If the vertex is degenerate then
+$y_{\A}$ contains zero elements which implies $\tau ^* = 0$ and can lead to
+cycles. If however the vertex is not degenerate then $\tau ^* > 0$ and the old
+vertex point is leaved.  We obtain by construction
+\[
+\wi{y}P^T = [y_{\A},0] -
+\frac{y_{\rho_j}}{b^{\sigma _i}a_j}
+[b^{\sigma _i}A, \; - e_i], \; e_i \in \Bbb{R}_{m-n},
+\]
+or, pointwise written, with fixed $i$ and $j$,
+\beqn \ba{.}{llll}
+\wi{y}_{\rho _j} &= 0, & \rho _j \in \A(y),\\
+\wi{y}_{\sigma _i} &= \tau^* \geq 0, &   \sigma _i \in \N(y),\\
+\wi{y}_{\rho _k} &\geq 0, & \rho _k \in \A(y) \backslash \{\rho _j\},\\
+\wi{y}_{\sigma _k} &= 0, & \sigma _k \in \N(y) \backslash \{\sigma _i\}.\\
+\ea{.}
+\eeqn
+Hence the new point $\wi{y}$ is a vertex point again if the row
+vectors $b^1, \ldots, b^p$ and $b^l, \; l \in (\A(y) \backslash \{\rho _j\})
+\cup \{\sigma _i\}$, are linear independent in the case where $\tau ^* > 0$.
+Without loss of generality, let $p = 0$ and $j = n, \; b = b^{\sigma _i}, \;
+[b[B^{\A}]^{-1}]_n \neq 0$ by (\ref{e45}).  Then the desired result is a
+direct inference from the following Lemma
+%
+\begin{lemma} \label{s8}
+Let
+\[
+   B = \ba{[}{l}b^1\\ \vdots \\ b^n \ea{]},
+\; C = \ba{[}{l}b^1\\ \vdots \\ b^{n-1}\\b \ea{]}.
+\]
+If the matrix $B$ is regular and $[bB^{-1}]_n \neq 0$ then the matrix
+$C$ is regular.
+\end{lemma}
+%
+Proof. The matrix
+\[
+CB^{-1} = \ba{[}{ll} I_{n-1} & O\\x & [bB^{-1}]_n\ea{]}
+\]
+is regular by assumption hence both factors in the product on the left side
+must be regular.\\
+%$\Box$ \hfill \\
+%
+For the construction of the tableau, we write the present {\bf row problem} as
+maximum problem, $\max\{\wi{x}\wi{a}, \; \wi{x}\wi{B} \leq \wi{c}\}$, then we
+obtain in complete analogy to (\ref{e36})
+%
+\begin{equation} \label{e46}
+\wi{{\bf P}}^*(x,y) :=
+\ba{[}{ccc} \wi{A} & \wi{A}\wi{B}_{\wi{\N}} & \wi{w}\\
+\wi{x} & \wi{r} &  \wi{f} \ea{]}.
+\end{equation}
+%
+Here, $y = \wi{x}P$ is the actual vertex point and $\wi{w}$
+contains the nontrivial part of the multipliers $(u,v)$ of the dual problem,
+\[
+y = [y_{\A}, \; y_{\N}]P \in \Bbb{R}_m, \;
+\wi{w} = \ba{[}{l}u \\v^{\N}\ea{]} \in \Bbb{R}^m, \;
+\wi{\zeta} = - yc \in \Bbb{R}.
+\]
+The vector $\wi{r}$ consists of the nontrivial part of the residuum of the
+inequalities in $y$ again, cf.  (\ref{e36}) and (\ref{e8}), hence we have
+here $\wi{r} = - y_{\A \backslash \P}$. Recall that
+\[ \ba{.}{rclcrcl}
+y_{\P} &=& [y_1, \ldots, y_p], &
+y_{\A \backslash \P} &=& [y_{\rho _{p+1}}, \ldots , y_{\rho _n}],\\
+A_{1:p} &=& [a_1, \ldots, a_p], & A_{p+1:n} &=& [a_{p+1}, \ldots a_n]
+\ea{.}
+\]
+then
+\[
+\wi{A}\wi{B}_{\wi{\N}} =
+\ba{[}{ccc} A_{1:p} & A_{p+1:n} & O\\ B^{\N}A_{1:p} & B^{\N}A_{p+1:n} &
+- I_{m-n} \ea{]}\ba{[}{c} O \\ - I_{n-p} \\ O \ea{]}
+%
+= \ba{[}{c}- A_{p+1:n} \\ - B^{\N}A_{p+1:n} \ea{]}.
+\]
+Moreover, the last column of (\ref{e46}) can be multiplied with $-1$ because it
+becomes never the pivot column.  Recalling (\ref{aaa1}), the complete tableau
+of the simplex method reads in a vertex $y$
+%
+\begin{equation} \label{e47}
+{\bf P}^*(x,y)
+=
+\ba{[}{ccccc}
+A_{1:p}       & A_{p+1:n}       & O           & -A_{p+1:n}            &
+-u \\ B^{\N}A_{1:p} & B^{\N}A_{p+1:n} & - I_{m-n} & -B^{\N}A_{p+1:n}
+&    -v^{\N}\\
+y_{\P}  & y_{\A \backslash \P}    & y_{\N}      & -y_{\A \backslash \P}
+&    -\wi{f} \ea{]}.
+\end{equation}
+In this tableau, the second block column appears in the fourth column again
+with negativ sign hence the fourth block column can be omitted entirely.  Also
+the third block column can be deleted because the index vector $\A(y)$ must
+be updated and because $y_{\N} = 0$ holds by definition of the index vector
+$\N(y)$.  If we regard further once more the relation (\ref{e11}) between the
+solution
+of the primal problem and the {\sc Lagrange} multipliers $z = (u,v)$ of the
+dual problem , namely
+\[
+u^* = - x^*, \;  v^* = d - Cx^* = - r^*, \; v^{\N*} = - r^{\N*},
+\]
+then it turns out that the tableau of the primal problem and the reduced
+tableau of the dual problem coincide in the respective optimum,
+%
+\begin{equation} \label{e48}
+{\bf P}(x^*,y^*)
+=
+\ba{[}{ccc}
+A_{1:p}       & A_{p+1:n}                  &   x^* \\
+B^{\N}A_{1:p} & B^{\N}A_{p+1:n}            &   r^{*\N}\\
+y^*_{\P}      & y^*_{\A \backslash \P}     &   f^*
+\ea{]},
+\end{equation}
+%
+if the solution $x^*$ of the primal problem is not degenerate and unique.  (In
+this case also the solution $y^*$ of the dual problem is not degenerate and
+unique.) This fact allows the conclusion that the computational amount of work
+in both problems is at least not very different in the mean.
+\par
+With the pivot rules (\ref{e42}) and (\ref{e45}), the element at the position
+$(n+i,j)$ in the large tableau (\ref{e48}) is the pivot element,
+\[
+\fbox{$
+[{\bf P}(x,y)]^{n+i}{}_j \; \mbox{pivot element}.
+$}
+\]
+\par
+If however $x$ is a non-optimum vertex of the primal problem then the {\sc
+Lagrange} multipliers $y$ in the primal tableau is no feasible point of
+the dual problem because the sign condition fails.  Conversely, if
+$y$ is a non-optimum vertex of the dual problem then the point $x$ being
+associated to the {\sc Lagrange} multiplier by means of (\ref{e11}) is no
+feasible point of the primal problem.  In solving the primal problem in the
+dual form, the solution is thus approximated from the unfeasible domain and an
+approximation of the solution is necessarily an unfeasible point.  A
+corresponding result holds for the dual problem.  In conclusion we thus may say
+very coarsely that the dual method applies for problems containing sign
+restrictions of the form $y_{\Q} \geq 0$.
+

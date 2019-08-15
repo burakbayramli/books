@@ -1,0 +1,409 @@
+\section{Multiple Solutions and Degeneration}
+Let again $B \in \Bbb{R}^m{}_n$ with rows $b^i$ and $c \in \Bbb{R}^m$ with
+elements $\gamma ^i$. In this section we consider the general primal-dual pair
+of problems (\ref{e1}),
+%
+\begin{equation} \label{ss1}
+\ba{.}{llll}
+(P) &\max \{ax, & B^{\P}x = c^{\P}, & B^{\Q}x \leq c^{\Q}\},\\
+(D) &\min \{yc, & yB = a,           & y_{\Q} \geq 0\},
+\ea{.}
+\end{equation}
+%
+with respective solutions $x^*$ and $y^*$. The complement condition
+of Theorem (\ref{s2}) then reads
+%
+\begin{equation} \label{ss2}
+\sum_{i=p+1}^my^*_i(b^ix^* - \gamma ^i) = 0
+\end{equation}
+%
+and obviously, for $i = p+1, \ldots,m$,
+\[
+\ba{.}{rcl}
+y^*_i > 0 &\Longrightarrow& b^ix^* - \gamma ^i = 0,\\
+b^ix^* - \gamma ^i < 0 &\Longrightarrow& y^*_i = 0
+\ea{.}
+\]
+because of the side conditions. Recall that
+\begin{equation} \label{ss10}
+\ba{.}{rcll}
+\A(x^*) &=& \{1,\ldots, p,\rho _{p+1}, \ldots,\rho _n\} = \;
+\mbox{index vector of a row basis of $x^*$},\\
+\N(x^*) &=& \{\sigma _1,\ldots, \sigma _{m-n}\} = \;
+ \I_m \backslash \A(x^*) \supset \{i \in \I_m, \; b^ix^* - \gamma ^i
+< 0\},\\
+\A(y^*) &=& \; \mbox{index vector of a column basis of $y^*$}, \\
+ &&\A(y^*) \supset \{i \in \I_m, \; y_i > 0\},\\
+\N(y^*) &=& \I_m \backslash \A(y^*),
+\ea{.}
+\end{equation}
+and that
+\[
+B^{\A} = [b^{\rho _i}]_{\rho _i\in \A(x^*)}, \;
+[B^{\A}]^{-1} =: A = [A_{1:p}, A_{p+1:n}] = [[a_1\ldots,
+a_p][a_{p+1},\ldots,a_n]]
+\]
+are the basis matrix and the edge matrix of the primal problem.  If both $x^*$
+and $y^*$ are unique then the tableau of the primal problem and the reduced
+tableau of the dual problem coincide in allentries in the respective optimum.
+If $x^*$ or $y^*$ are not unique then a solution of the respective dual problem
+can still be read from data of the tableau:
+%
+\begin{equation} \label{ss1a}
+{\bf P} :=
+\ba{[}{cc} A & x\\B^{\N}A & r\\w & f \ea{]}
+%
+= \ba{[}{ccc} A_{1:p}        & A_{p+1:n}              & x\\
+              B^{\N}A_{1:p}  & B^{\N}A_{p+1:n}        & r\\
+                      y_{\P} & y_{\A \backslash \P}   & f
+           \ea{]},
+\end{equation}
+\[
+x = Ac^{\A}, \; r = B^{\N}x - c^{\N}, \;
+y_{\N} = 0, \; f = aAc^{\A}.
+\]
+Also, the tableau yields the relation
+\begin{equation} \label{ss1b}
+\A(x^*) = \A(y^*), \; \N(x^*) = \N(y^*)
+\end{equation}
+which however does not make sense in a non-optimum because then either $x$ or
+$y$ is not feasible.
+\par
+In the present section we deal with the case where $x^*$ or $y^*$ are not
+unique or may be degenerate. Then (\ref{ss1b}) does not fix the index
+vectors of the respective dual problem in a unique way.
+%
+ \begin{definition}
+\label{ss3} (a) The solution $x^*$ of (\ref{ss1})(P) satisfies the strong
+complement condition if
+\[
+\forall \; i > p:  b^ix^* =  \gamma ^i \Longleftrightarrow y^*_i > 0.
+\]
+(b) The solution $y^*$ of (\ref{ss1})(D) satisfies the strong complement
+condition if
+\[
+\forall \; i > p: y^*_i = 0 \Longleftrightarrow b^ix^* - \gamma ^i < 0.
+\]
+\end{definition}
+%
+\begin{theorem} \label{ss4}
+Let $x^*$ be a solution of (\ref{ss1})(P) and a not-degenerate vertex. Then
+$x^*$ is the unique solution if and only if it satisfies  the strong
+complement condition.
+\end{theorem}
+%
+Proof.
+Without loss of generality, let $\A(x^*) = \{1, \ldots, n\}$ then $B^{\A}x^* =
+c^{\A}$.\\
+(a) Substitution of $x^* - \tau a_k, \; k = p+1, \ldots ,n,$ into the
+side conditions yields for sufficiently small $\tau > 0$
+%
+\[ \ba{.}{lll}
+b^k(x^* - \tau a_k) &=  b^kx^* - \tau \cdot 1  < \gamma ^k,\\
+b^i(x^* - \tau a_k) &=  b^ix^*  = \gamma ^i, & i = 1, \ldots , n , \; i
+\neq k,\\
+b^i(x^* - \tau a_k) &< \gamma ^i, & i = n+1, \ldots ,m.
+\ea{.}
+\]
+Therefore $x^* - \tau a_k \in \Omega$ for sufficiently small
+$\tau > 0$ and $k = p + 1, \ldots, n$.  We then obtain from the uniqueness of
+$x^*$ and the dual feasibility of $y^*$ that
+%
+\[ \ba{.}{l}
+a(x^* - \tau a_k) = a \, x^* - \tau aAe_k
+= a \, x^* - \tau y^*_k < a^Tx^*,
+\ea{.}
+\]
+hence $y^*_k > 0, \; k = p + 1, \ldots , n$.\\
+(b) On the other side, if $x^*$ satisfies the strong complement condition
+and if $x \neq x^*$ is a feasible point then we can write
+\[
+x = x^* +  Au
+\]
+with a suitable vector $u \neq 0$ because $A$ is regular. Substitution
+into the active side conditions yields
+\[
+u^i = 0, \; i = 1, \ldots, p, \quad u^i \leq 0, \; i = p + 1, \ldots, n.
+\]
+The dual feasibility says that $a = y^*_{\A}B^{\A}$ and it follows that
+\[
+ax = ax^* + aAu = ax^* + y^*_{\A}B^{\A}Au
+= ax^* + y^*_{\A}u = ax^* + \sum_{i=p+1}^ny^*_iu^i.
+\]
+Because $y^*_i > 0, \; i = p+1, \ldots, n$, and $0 \neq u \leq 0$ we obtain $ax
+< ax^*$ hence $x^*$ is unique.\\
+%$\Box$ \hfill\\
+%
+%
+By application of this result to the dual problem (\ref{ss1})(D) in the form
+\begin{equation} \label{ss3c}
+\min \{yc, \; yB = a,  y\ba{[}{c}  O  \\-I_{m-p}\ea{]} \leq 0\}
+\end{equation}
+we obtain
+%
+\begin{theorem} \label{ss5}
+Let $y^*$ be a solution of (\ref{ss1})(D) and a not-degenerate vertex. Then
+$y^*$ is the unique solution if and only if it satisfies  the strong
+complement condition.
+\end{theorem}
+%
+For further investigation we now introduce the following index sets:
+\[
+\ba{.}{rclll}
+\R(x^*) &=& \{i \in \{n+1, \ldots, m \}, &\sigma _i  \in \N(x^*), &r^i =
+b^{\sigma _i}x - \gamma ^{\sigma _i} = 0\},\\
+{\cal S} (y^*) &=& \{j \in \{ p+1, \ldots, n \}, &\rho _j  \in \A(y^*),
+&y^{\rho _j} = aa_j = 0\},
+\ea{.}
+\]
+then we may redefine degeneracy:
+\par
+\[
+\fbox{$
+\ba{.}{l}
+\mbox{The solution $x^*$ of (\ref{ss1})(P) is degenerate if and only if
+$\R(x^*) \neq \emptyset$}.\\
+\mbox{The solution $y^*$ of (\ref{ss1})(D) is degenerate if and only if ${\cal
+S} (y^*) \neq \emptyset$}.
+\ea{.}
+$}
+\]
+\par
+%
+With these notations and the matrix
+\[
+A_{{\cal S} } = [a_i]_{i\in {\cal S} (y^*)}, \; A = [a_1, \ldots, a_n],
+\]
+the next result describes the set of solutions of the primal problem
+(\ref{ss1})(P).
+%
+\begin{theorem} \label{ss7} Let $x^*$ be a solution of (\ref{ss1})(P) with
+basis index vector $\A(x^*)$ and $\N(x^*) = \I_m \backslash
+\A(x^*)$. Let $\A(y^*) = \A(x^*), \; s := |{\cal S} (y^*)| > 0$ and let
+\[
+{\cal H} = \{h \in \Bbb{R}^s, \; h \geq 0, \; B^{\N}(x^* - A_{{\cal S} }h)
+\leq c^{\N}\}.
+\]
+Then $\{x^* - A_{{\cal S} }h, \; h \in {\cal H}\}$ is the set of solutions
+of (\ref{ss1})(P).
+\end{theorem}
+%
+If ${\cal H}$ is not empty we may introduce a new objective function $x
+\mapsto bx$ and solve the secondary linear programming problem
+\[
+\max\{b(x^*- A_{{\cal S} }h), \; h \in {\cal H}\}.
+\]
+%
+\ Proof. Let again
+\[
+\A(x^*) = \{1, \ldots , n\}, \; \N(x^*) = \{n+1, \ldots , m\}
+\]
+without loss of generality.
+\par
+(a) Let $x \neq x^*$ be optimum then we can write
+\[
+x = x^* - Ag,
+\]
+with a suitable vector $g \in \Bbb{R}^n$ and, by the feasibility of $x$, we
+have
+%
+\begin{equation} \label{ss8}
+\ba{.}{lll}
+b^i(x^* - Ag) &= \gamma ^i, &i = 1, \ldots , p,\\
+b^i(x^* - Ag) &\leq \gamma ^i, & i = p+1, \ldots, m.
+\ea{.}
+\end{equation}
+We write $\dis g = \ba{[}{c}g^{1:p}\\ g^{p+1:n} \ea{]}$
+because the first $p$ side conditions are always active. From
+%
+\[
+B^{\A} = \ba{[}{c}B^{1:p}\\B^{p+1:n}\ea{]}, \quad A = [A_{1:p}, A_{p+1:n}]
+\]
+we obtain
+\[ \ba{.}{ll}
+B^{1:p} \cdot A_{1:p} = I_p, & \; B^{1:p} \cdot A_{(p+1):n} = 0,\\
+B^{(p+1):n} \cdot A_{1:p} = 0,   & \; B^{(p+1):n} \cdot A_{(p+1):n} = I_{n-p}.
+\ea{.}
+\]
+Substution into (\ref{ss8}) yields
+\[ \ba{.}{ll}
+B^{1:p}A_{1:p}g^{1:p} = g^{1:p} &= 0,\\
+B^{(p+1):n}A_{(p+1):n}g^{(p+1):n} = g^{(p+1):n} &\geq 0,\\
+B^{\N}(x^* - Ag)&\leq c^{\N}.
+\ea{.}
+\]
+%
+Because $x$ and $x^*$ are optimum by assumption, we have $a(x^* - Ag) = ax^*$
+hence $a A_{(p+1):n}g_{(p+1):n} = 0$.  Because $ y^*_{\A} = aA = [aA_{1:p},
+aA_{(p+1):n}] \geq 0, $ and $g_{(p+1):n} \geq 0$, we find that
+%
+\[
+\forall \; i \in \{p+1, \ldots, n\} \backslash {\cal S} (y^*): \; y^*_{\rho i}
+> 0 \Longrightarrow g^i = 0.
+\]
+Hence, writing $g_{{\cal S} } = h$, the first part of the assertion is
+established, \[
+x = x^* - A_{{\cal S} }h, \; h \in {\cal H}.
+\]
+\par
+(b) By definition of the index set ${\cal S} $ we have $y^*_{{\cal S} } =
+aA_{{\cal S} } = 0$ hence it follows that every $x = x - A_{{\cal S} }h$ is
+optimum, \[
+ax = ax^* - a A_{{\cal S} }h = ax^* - y^*_{{\cal S} }h = ax^*.
+\]
+Moreover, $x$ is feasible for $h \geq 0$ because
+\[
+B^{1:p}(x^* - A_{{\cal S} }h) = B^{1:p}x^* + 0 = c^{1:p},
+\]
+and
+\[
+\ba{[}{c}B^{(p+1):n}\\B^{(n+1):m}\ea{]}(x^* - A_{{\cal S} }h)
+= \ba{[}{c}c^{(p+1):n}\\B^{(n+1):m}x^* \ea{]} - \ba{[}{c}I_{{\cal S}
+}\\B^{(n+1):m}A_{{\cal S} }\ea{]}h \leq
+\ba{[}{c}c^{(p+1):n}\\c^{(n+1):m}\ea{]}
+\]
+where the lower inequality follows by assumption.
+%
+\par
+%
+\begin{theorem} \label{sss10}
+Let $y^*$ be a solution of (\ref{ss1})(D) with basis index vector $\A(y^*)$ and
+$\N(y^*) = \I_m \backslash \A(y^*)$.  Let $\A(x^*) = \A(y^*), \; q := |\R(x^*)|
+> 0$ and let
+\[
+{\cal H} = \{h \in \Bbb{R}_q, \; h \geq 0, \; [y^* - h[B^{\N}A]^{\R}]_{\A
+\backslash \{1:p\}} \geq 0\}.
+\]
+Then $\{y \in \Bbb{R}_m, \; y_{\A} = [y^* - h[B^{\N}A]^{\R}]_{\A}, \; y_{\N}
+= h[I_{m-n}]^{\R}, \; h \in {\cal H}\}$ is the set of
+solutions of (\ref{ss1})(D).
+\end{theorem}
+%
+If ${\cal H}$ is not empty we may introduce a new objective function $y
+\mapsto yb$ again and solve the secondary programming problem
+\[
+\min \{([y^* - h[B^{\N}A]^{\R}]_{\A}, \; h[I_{m-n}]^{\R})Pb, \; h \in
+{\cal H}\}.
+\]
+Proof. Recall that $y = [y_{\A}, \; y_{\N}]P, \; y^*_{\A \backslash \P} \geq 0,
+\; y^*_{\N} = 0$. We consider the dual problem (\ref{ss3c}) for primal
+problem in row form as in Section 2.2 and obtain for basis matrix and non-basis
+matrix as in  (\ref{bab})
+\[
+\wi{A}^{-1} = \wi{B}_{\wi{\A}} = P^T\ba{[}{cc} B^{\A} & 0\\B^{\N} & -
+I_{m-n}\ea{]}, \;
+\wi{B}_{\wi{\N}} = P^T \ba{[}{c} O \\- I_{n-p}\\ O \ea{]}.
+\]
+(a) Let $y \neq y^*$ be optimum then we can write
+\begin{equation} \label{ss11}
+y = y^* - g\wi{A},
+\end{equation}
+and by the feasibility of $y$ we have
+\begin{equation} \label{hhh}
+(y^* - g\wi{A})B = a, \; - (y^* - g\wi{A})_{p+1:m} \leq 0.
+\end{equation}
+We split again $g = [g_{1:n}, \, g_{(n+1):m}]$ and
+in the same way
+\[
+\wi{B}_{\wi{\A}} = [\wi{B}_{1:n}, \; \wi{B}_{(n+1):m}], \; \wi{A} =
+\ba{[}{c}\wi{A}^{1:n}\\
+\wi{A}^{(n+1):m}\ea{]}
+\]
+then
+\[ \ba{.}{ll}
+\wi{A}^{1:n} \cdot \wi{B}_{1:n} = I_n, &
+\wi{A}^{1:n} \cdot \wi{B}_{(n+1):m} = 0,\\
+\wi{A}^{(n+1):m} \cdot \wi{B}_{1:n} = 0, &
+\wi{A}^{(n+1):m} \cdot \wi{B}_{(n+1):m} = I_{m-n}.
+\ea{.}
+\]
+Substitution of (\ref{ss11}) into the first equation of (\ref{hhh}) yields
+\[
+a = (y^* - g\wi{A})B = a - g\wi{A}\wi{B}_{1:n} = a - g_{1:n}
+\Longrightarrow g_{1:n} = 0.
+\]
+Substitution of (\ref{ss11}) into the second equation of (\ref{hhh}) yields
+because $\N \subset \{p+1, \ldots, m\}$
+\[
+- (y^* - g\wi{A})_{\N} = - y^*_{\N} + g\wi{A}P^T\ba{[}{c}O \\ -I_{m-n}\ea{]}
+= -g\wi{A}\wi{B}_{(n+1):m} = - g_{(n+1):m} \leq 0
+\]
+hence $g_{(n+1):m} \geq 0$.
+Because $y$ and $y^*$ are optimum by assumption, we have
+\[
+(y^* - g\wi{A})c = y^*c
+\]
+hence
+\begin{equation} \label{ss12}
+g_{(n+1):m}\wi{A}^{(n+1):m}c = 0.
+\end{equation}
+The nontrival part of the {\sc Lagrange} multiplier of the present problem has
+the form
+\[
+z^{*\wi{\A}} = \wi{A}c = \ba{[}{c}u\\ v^{\N}\ea{]}
+ = \ba{[}{c}\wi{A}^{1:n}c \\  \wi{A}^{(n+1):m}c\ea{]}
+= - \ba{[}{c} Ac^{\A}\\ B^{\N}Ac^{\A} - c^{\N}\ea{]},
+\; v^{\N} \geq 0.
+\]
+Hence we obtain from (\ref{ss12}) and
+$g_{(n+1):m} \geq 0$ that
+\[
+\forall \; i \in \{n+1,\ldots,m\} \backslash \R(y^*): \; v^{\sigma _i} > 0
+\Longrightarrow g_i = 0.
+\]
+Writing $g_{\R} = h$, the assertion now follows,
+\[
+y = y^* - h\wi{A}^{\R}
+ = [y^* - h[B^{\N}A]^{\R}]_{\A}, \; h[I_{m-n}]^{\R}]P, \; h \in {\cal H}.
+\]
+(b) By definition of the index set $\R$ we have $z^{*\R} = -
+[B^{\N}Ac^{\A} - c^{\N}]^{\R} = 0$ hence every $y = y^*
+- h\wi{A}^{\R}$ is optimum,
+\[
+yc = y^*c - h\wi{A}^{\R}c = y^*c - hz^{*\R} = y^*c.
+\]
+Also, $y$ is feasible for $h \geq 0$ because $\R \subset \{n+1,\ldots,m\}$
+and thus
+%
+\[ \ba{.}{rcl}
+(y^* - h\wi{A}^{\R})B &=&
+y^*B - h\wi{A}^{\R}\wi{B}_{1:n} = y^*B + 0 = a,\\
+(y^* - h\wi{A}^{\R})_{\N} &=&  0 - h\wi{A}^{\R}P^TI_{m-n}
+= h\wi{A}^{\R}\wi{B}_{(n+1):m} = hI^{\R}_{m-n} \geq 0, \\
+(y^* - h\wi{A}^{\R})_{\A \backslash \P} &\geq& 0
+\ea{.}
+\]
+where the last inequality follows by assumption.
+%$\Box$ \hfill
+\par
+The results being derived above can also be represented in a somewhat condensed
+form.  For this we say that a problem (P)/(D) is degenerate/unique if the
+respective solution has this property.
+%
+\begin{corollary} \label{cs1} (P) unique and not-degenerate if and only if (D)
+unique and not-degenerate.
+\end{corollary}
+%
+Proof. If (P) unique and not-degenerate then (D) unique by Theorem \ref{sss10}.
+But (P) satisfies the strong complement condition by Theorem \ref{ss4} hence
+$y^{*i} > 0$ for all $i \in \A(y^*)$ hence (D) is not degenerate. The other
+direction follows in the same way.
+\par
+\begin{corollary} \label{cs2} \hfill\\
+(a) (P) and (D) not degenerate then (P) and (D) unique.\\
+(b) (P) degenerate and (D) not then (P) unique and (D) not.\\
+(c) (D) degenerate and (P) not then (D) unique and (P) not.\\
+(d) (P) and (D) degenerate then both (P) and (D) unique or not.
+\end{corollary}
+%
+Proof. Cf. \cite{Bau}. (a) follows from Theorem \ref{ss7} and \ref{sss10}.\\
+(b) It follows from Theorem \ref{ss7} that (P) is unique.  But (D) cannot
+fulfill the strong complement condition because $r^i = 0$ for some $i \in
+\N(x^*)$ and $y^{*i} = 0$ for all $i \in \N(x^*)$.  Hence (D) is not unique by
+Theorem \ref{ss5}.\\
+(c) Same proof as in (b) with roles interchanged.\\
+(d) For every of the four cases an example can be found.\\
+%$\Box$ \hfill
+
+
+

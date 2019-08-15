@@ -1,0 +1,342 @@
+Let $B \in \Bbb{R}^m{}_n$ denote a matrix with $m$ rows and $n$ columns, let
+$\Bbb{R}^n := \Bbb{R}^n{}_1, \; \Bbb{R}_n := \Bbb{R}^1{}_n$, and let $a \in
+\Bbb{R}_n, \; c \in \Bbb{R}^m$.  Using the {\sc Matlab} notation we write
+$B^{\A} := B(\A,\, : \,)$ and $B_{\A} := B(\, : \, ,\A)$ with a suitable
+index set $\A$ and e.g. $1:p = \{1,\ldots,p\}$. We consider the pair of
+linear problems
+\[
+\ba{.}{lll}
+ (P) & \Max\{ax, \; B^{1:p}x = c^{1:p}, \; B^{p+1:m}x \leq c^{p+1:m}\}, & x
+\in \Bbb{R}^n,\\
+
+ (D) & \Min\{yc,   \; yB = a, \; y_{p+1:m} \geq 0\}, & y \in \Bbb{R}_m,
+\ea{.}
+\]
+and compare the tableaus of both problems without using slack variables.
+However, following \cite{BeRi}, the problem (P) is here considered for primal
+problem and the simplex problem (D) has a slightly modified form in comparison
+to standard textbooks; cf. e.g. \cite{BeRi}, \cite{Las}, \cite{Naz},
+\cite{Pad}, \cite{Schr}.
+\par
+An application of the Lemma of {\sc Farkas}, cf. \cite{Spe}, \cite{BeRi},
+yields the following characterization of a solution of (P) and (D):
+%
+\begin{theorem} \label{t1} (a)
+$x^{\ast} \in \Bbb{R}^n$ is a solution of (P) iff there exists a pair
+$(x^*,y^*) \in \Bbb{R}^n \times \Bbb{R}_m$ satisfying
+%
+\[
+\ba{.}{lll}
+(i) & B^{1:p}x^{\ast} = c^{1:p}, \; B^{p+1:m}x^* \leq c^{p+1:m}  &
+\mbox{primal feasibility},\\
+(ii) & y^*B = a, \; y^*_{p+1:m} \geq 0        & \mbox{dual feasibility},\\
+(iii) & y^*_{p+1:m}(B^{p+1:m}x^* - c^{p+1:m}) = 0 &
+\mbox{complementary slackness}.
+ \ea{.}
+\]
+(b) $y^* \in \Bbb{R}_m$ is a solution of (D) iff there
+exists a pair $(y^*,z^*) \in \Bbb{R}_m \times \Bbb{R}^{n+m-p}$
+with $z^* = (u^*,v^*), \; u^* \in \Bbb{R}^n, \;
+v^* \in \Bbb{R}^{m-p}$, and the following properties
+\[
+\ba{.}{lll}
+(i)   & y^*B = a, \; y^*_{p+1:m} \geq 0  & \mbox{primal feasibility},\\
+(ii)  & B^{1:p}u^* + c^{1:p} = 0, \; B^{p+1:m}u^* + c^{p+1:m} = v^* \geq 0
+& \mbox{dual feasibility},\\
+(iii) & y^*_{p+1:m}v^* = 0       &
+\mbox{complementary slackness}. \ea{.}
+\]
+\end{theorem}
+%
+$y^*$ is the {\sc Lagrange} multiplier of the solution $x^*$ of (P) and $z^*$
+is the {\sc Lagrange} multiplier of the solution $y^*$ of (D).  Writing
+%
+\begin{equation} \label{1}
+x^* = - u^*, \; B^{p+1:m}x^* - c^{p+1:m} = - v^*,
+\end{equation}
+we see that the conditions in (a) and in (b) are identical and
+%
+\begin{equation} \label{2}
+ax^* = y^*Bx^* = y^*_{1:p}B^{1:p}x^* + y^*_{p+1:m}B^{p+1:m}x^* =
+y^*_{1:p}c^{1:p} + y^*_{p+1:m}c^{p+1:m} = y^*c.
+\end{equation}
+Therefore we have the following corollary to Theorem \ref{t1}:
+%
+\begin{corollary} \label{c1}
+The problem (P) has a solution $x^*$ iff the problem (D) has a solution
+$y^*$ and then (\ref{2}) holds.
+\end{corollary}
+%
+%
+In the sequel we suppose that the following rank condition is fulfilled:
+%
+\begin{equation} \label{3}
+\mbox{rank} (B^{1:p}) = p  \;\: \mbox{and} \;\: \mbox{rank} (B) = n.
+\end{equation}
+%
+Let then $x$ be an extreme point of (P), let
+$\A(x)$ be (the index set of) a basis of $x$ and $\N(x)$ the corresponding
+non-basis,
+%
+\[ \ba{.}{rcl}
+\A(x) &=& \{\rho _1, \ldots, \rho _n\} = \{1, \ldots,p,\rho _{p+1}, \ldots,
+\rho _n\},
+\\
+\N(x) &=& \{\sigma _1, \ldots,\sigma _{m-n}\} = \{1, \ldots, m\} \backslash
+\A(x), \ea{.}
+\]
+and let
+\[
+B^{\A} = \ba{[}{l} b^{\rho _1} \\ \vdots \\ b^{\rho _n}\ea{]}, \;
+%
+A = [B^{\A}]^{-1} = [a_1, \ldots, a_n],
+\]
+where row vectors are denoted by upper indices and column vectors by
+lower
+indices.  The columns of $A$ are the edges of the feasible set in the extreme
+point $x$ with direction pointing to $x$.  Supposing that the problem (P) is
+solvable and omitting {\sc Bland}'s rule we choose with $c = [\gamma ^1,
+\ldots, \gamma ^m]^T$ for pivot position $(i,j)$
+\[ \ba{.}{rcl}
+j &=& \min \arg_k \min \{\phi (k) := aa_k, \; k \in \{ p+1, \ldots, n\}\},\\
+
+i &=& \dis  \min \arg_k \min \{\psi(k) := \frac{b^{\sigma _k}x - \gamma
+^{\sigma _k}}{b^{\sigma _k}a_j}, \; b^{\sigma _k}a_j < 0, \; k \in
+\{1, \ldots, m - n\}\}. \ea{.}
+\]
+Then a better --- at least not worse --- extreme point $\widehat{x}$ is found
+from $x$ by $ \widehat{x} = x - \psi(i)a_j $.  This means that the row vector
+$b^{\rho _j}$ is removed from and $b^{\sigma _i}$ is taken into the row basis
+of $x$ yielding the basis of $\widehat{x}$.  The tableau of the primal problem
+(P) has the following form in the extreme point $x$:
+%
+\begin{equation} \label{5}
+{\bf P}(x,y) = [p^k{}_l] :=
+\ba{[}{ll} A & x\\B^{\N}A & r^{\N}\\w & f \ea{]}
+= \ba{[}{lll} A_{1:p} & A_{p+1:n} & x\\
+                     B^{\N}A_{1:p} & B^{\N}A_{p+1:n} & r^{\N}\\
+                     y_{1:p} & y_{\A\backslash {1:p}} & f
+           \ea{]},
+\end{equation}
+where
+\[
+x = Ac^{\A}, \; r^{\N} = B^{\N}x - c^{\N}, \; y = aA, \; f = aAc^{\A}.
+\]
+The tableau ${\bf P}(\widehat{x},\widehat{y}) = [q^k{}_l]$ of the extreme point
+$\widehat{x}$ is obtained from ${\bf P}(x,y)$ by a global {\sc Gauss-Jordan}
+step %
+\beqn
+\ba{.}{lll}
+q^i{}_j = 1/p^i{}_j & \mbox{(pivot element)}\,,\; &
+q^k{}_j = p^k{}_j/p^i{}_j \,,\;k \neq i  \quad \mbox{(pivot column)}\,,\\
+q^i{}_l = - p^i{}_l/p^i{}_j\,,\: l \neq j
+& \mbox{(pivot row)}\,,\; & q^k{}_l =  p^k{}_l - p^k{}_jp^i{}_l/p^i{}_j
+\quad\mbox{(others)}.
+\ea{.}
+\eeqn
+%--------------------------------------------------------------------------
+\par
+Let us now turn to the dual problem (D) which is is written in row form here
+for convenience.  This problem has $m$ variables and $n + m - p$ side
+conditions being written in the form
+%
+\begin{equation} \label{6}
+y\ba{[}{rr}  B^{1:p} & 0 \\B^{p+1:m} & - I_{m-p} \ea{]} \leq [a, 0] \in
+\Bbb{R}_{n+m-p}
+\end{equation}
+%
+where the first $n$ conditions are always active, $yB = a$.  The matrix of the
+side conditions (\ref{6}) has the full rank $m$ by assumption (\ref{3}).  A row
+vector $y$ is an extreme point iff besides the $n$ active restrictions $yB = a
+\in \Bbb{R}_n$ at least further $m - n$ conditions $y^i \leq 0$ are active.
+Let $y$ be an extreme point of (D).  Let $\A(y)$ and
+$\N(y)$ be index vectors of the same form as above,
+\[
+\ba{.}{rcl}
+\A(y) &=& \{1, \ldots,p,\rho _{p+1},\ldots, \rho _n\},\\
+\N(y) &=& \{\sigma _1, \ldots, ,\sigma _{m-n}\} = \{1, \ldots, m\} \backslash
+\A(y),
+\ea{.}
+\]
+but with {\bf converse} meaning for the problem (D):
+\[ \ba{.}{lll}
+\mbox{primal problem} &\; b^ix < \gamma ^i &\Longrightarrow i \in \N(x),\\
+\mbox{dual  problem}  &\; y^i > 0          &\Longrightarrow i \in \A(y).
+\ea{.}
+\]
+The gradient matrix $B^{\A}$ and the matrix $B^{\N}$ of the primal problem
+have here analogues in the following matrices:
+%
+\[
+\wi{B}_{\wi{\A}} = P^T\ba{[}{cc}  B^{\A} & O \\ B^{\N} & - I_{m-n}\ea{]},
+\; \wi{B}_{\wi{\N}} = P^T\ba{[}{c}O \\-I_{n-p} \\ O \ea{]},
+\]
+%
+where $B^{\A}$ and $B^{\N}$ have the same meaning as above and again $A =
+[B^{\A}]^{-1} \in \Bbb{R}^n{}_n$.  The row permutation with the matrix $P$ must
+be regarded here because of the left-multiplication with the row vector $y,
+\; y = [y_{\A},y_{\N}]P$. The edge matrix $\wi{A}$ of the dual problem in
+a vertex $y$ is
+%
+\begin{equation} \label{8}
+\wi{A} \equiv \ba{[}{l}\wi{a}^1\\\vdots\\ \wi{a}^m\ea{]}
+:= [\wi{B}_{\wi{\A}}]^{-1} =
+\ba{[}{cc} A & O\\B^{\N}A & -I_{m-n}\ea{]}P.
+\end{equation}
+%
+Now we recall the dual feasibility condition (ii) of Theorem \ref{t1}(b) and
+the relation (\ref{1}) between a solution $x^*$ of the primal problem and the
+{\sc Lagrange} multiplier $z^* = (u^*,v^*)$ of the dual problem.  Because
+$B^{\A}x^* = c^{\A}$ hence $x^* = Ac^{\A}$, a substitution into (\ref{1})
+yields the {\bf dual optimality condition}
+%
+\[
+r^{\N} = - v^{\N} = B^{\N}Ac^{\A} - c^{\N} \leq 0.
+\]
+\par
+If $y$ is not optimum then this condition is violated and,
+following the pattern of the primal method,  we have to remove a column of the
+gradient matrix $\wi{B}_{\wi{\A}}$ from the basis of $y$, namely
+\[
+\mbox{a {\bf column} $e_i$ of}  \; P^T\ba{[}{c}O\\ O\\- I_{m-n}\ea{]}.
+\]
+Furthermore, we have to take a column of $\wi{B}_{\wi{\N}}$ into the basis,
+namely
+\[
+\mbox{a column $e_j$ of} \; P^T\ba{[}{c} O\\ - I_{n-p}\\ O \ea{]}.
+\]
+In the gradient matrix $\wi{B}_{\wi{\A}}$, this exchange means that a row
+$b^{\sigma _i}$ of $B^{\N}$ is taken into the row basis, i.e., into the rows of
+$B^{\A}$ and a row $b^{\rho _j}$ of $B^{\A}$ is removed from the basis into
+the non-basis, i.e., into the rows of $B^{\N}$.  We choose
+\[
+i = \max \arg_k \max \{\phi (k) := - v^{\sigma _k}, \; k \in \{ 1, \ldots, m -
+n\}\}.
+\]
+%
+Observe that $- v^{\N} = \wi{A}^{(n+1):m}c$ hence $- v^{\sigma _i} =
+\wi{a}^{n+i}c > 0$ is maximum.  The selected search direction $\wi{a}^{n+i}$
+yields a proper descend for the new point $\widehat{y} = y - \tau \wi{a}^{n+i}$
+in the case where $\tau > 0$:
+\[
+[y - \tau \wi{a}^{n+i}]c < yc.
+\]
+\par
+The maximum feasible step width $\tau$ determines the vector $e_j$ which is
+taken into the column basis of $y$ corresponding to the remove of a row of
+$B^{\A}$.  For the computation of $\tau $ we subtitute again $\widehat{y}$ into
+the inactive side conditions in the same way as in the primal method and then
+enlarge $\tau$ until at least one of these conditions becomes `active'.
+However, the inactive side conditions are purely sign conditions here and read
+%
+\[
+\widehat{y}_{p+1:m} = [y - \tau \wi{a}^{n+i}]_{p+1:m} \geq 0.
+\]
+With the above introduced permutation matrix $P$ we obtain
+\[
+[y - \tau \wi{a}^{n+i}]P^T = [y_{\A}, y_{\N}] - \tau [b^{\sigma _i}A, -e_i]
+= [y_{\A} - \tau b^{\sigma _i}A, \; y_{\N} + \tau e_i]
+\]
+where $e_i \in \Bbb{R}_{m-n}$ is the $i$-th row identity vector and $y_{\N} =
+0$ by definition of the index set $\N (y)$. Therefore the conditions for
+feasibility are
+%
+\[
+y_{\rho _k} - \tau b^{\sigma _i}a_k \geq 0, \; k = p+1, \ldots ,n.
+\]
+%
+Thus we choose in problem (D) for pivot position $(i,j)$
+\begin{equation} \label{6a}
+ \ba{.}{rcl}
+i &=& \max \arg_k \max \{\phi (k) := - v^{\sigma _k}, \; k \in \{ 1, \ldots, m
+- n\}\},\\
+j &=& \dis \min \arg_k \min \{\psi(k) := \frac{y_{\rho
+_k}}
+{b^{\sigma _i}a_k}, \;
+%
+b^{\sigma _i}a_k > 0, \;  k \in \{p+1, \ldots, n\}\}.
+\ea{.}
+\end{equation}
+%
+The new point $\widehat{y}$ is again a vertex point.
+\par
+For the construction of the tableau, we write the present {\bf row problem} as
+maximum problem, $\max\{\wi{x}\wi{a}, \; \wi{x}\wi{B} \leq \wi{c}\}$, then we
+obtain in complete analogy to (\ref{5})
+%
+\begin{equation} \label{14}
+\wi{{\bf P}}(x,y) :=
+\ba{[}{ccc} \wi{A} & \wi{A}\wi{B}_{\wi{\N}} & \wi{w}\\
+\wi{x} & \wi{r}_{\wi{\N}} &  \wi{f} \ea{]}.
+\end{equation}
+%
+Here, $y = \wi{x}P$ is the actual vertex point, $\wi{w}$
+contains the nontrivial part of the multipliers $(u,v)$ of the dual problem,
+and the vector $\wi{r}$ consists of the nontrivial part of the residuum
+again,
+\[
+y = [y_{\A}, \; y_{\N}]P, \;
+\wi{w} = \ba{[}{l}u \\v^{\N}\ea{]}, \;
+\wi{r}_{\wi{\N}} = - y_{\A \backslash \{1:p\}}, \;
+\wi{f} = - yc,
+\]
+and
+\[
+\wi{A}\wi{B}_{\wi{\N}} =
+\ba{[}{ccc} A_{1:p} & A_{p+1:n} & O\\ B^{\N}A_{1:p} & B^{\N}A_{p+1:n} &
+- I_{m-n} \ea{]}\ba{[}{c} O \\ - I_{n-p} \\ O \ea{]}
+%
+= \ba{[}{c}- A_{p+1:n} \\ - B^{\N}A_{p+1:n} \ea{]}.
+\]
+The last column of (\ref{14}) can be multiplied with $-1$ because it
+becomes never a pivot column.  Recalling (\ref{8}), the complete tableau
+of the simplex method reads in a vertex $y$
+%
+\[
+{\bf \wi {P}}(x,y)
+=
+\ba{[}{ccccc}
+A_{1:p}       & A_{p+1:n}       & O           & -A_{p+1:n}            &
+-u \\ B^{\N}A_{1:p} & B^{\N}A_{p+1:n} & - I_{m-n} & -B^{\N}A_{p+1:n}
+&    -v^{\N}\\
+y_{1:p}  & y_{\A \backslash \{1:p\}}    & y_{\N}      & -y_{\A \backslash
+\{1:p\}} &    -\wi{f} \ea{]}.
+\]
+In this tableau, the second block column appears in the fourth column again
+with negative sign hence the fourth block column can be omitted entirely.  Also
+the third block column can be deleted because the index vector $\A(y)$ must be
+updated and because $y_{\N} = 0$ holds by definition of the index vector
+$\N(y)$.  If we regard once more the relation (\ref{1}) between the
+solution of the primal problem and the {\sc Lagrange} multipliers $z = (u,v)$
+of the dual problem then it turns out that the tableau of the primal problem
+and the reduced tableau of the dual problem coincide in the respective optimum
+$(x^*,y^*)$,
+%
+\[
+{\bf \wi{P}}_{red}(x^*,y^*) \equiv
+{\bf P}(x^*,y^*)
+=
+\ba{[}{ccc}
+A_{1:p}       & A_{p+1:n}                        &   x^* \\
+B^{\N}A_{1:p} & B^{\N}A_{p+1:n}                  &   r^{*\N}\\
+y^*_{1:p}      & y^*_{\A \backslash \{1:p\}}     &   f^*
+\ea{]},
+\]
+%
+if the solution $x^*$ of the primal problem is not degenerate and unique.  (In
+this case also the solution $y^*$ of the dual problem is not degenerate and
+unique.) Therefore the computational amount of work is the same for
+both problems in the mean.
+\par
+With the pivot elements defined by (\ref{6a}), the global {\sc Gauss-Jordan}
+step in problem (D) is the same as in the problem (P).
+\par
+If $x$ is a non-optimum vertex of the primal problem then the {\sc
+Lagrange} multiplier $y$ in the primal tableau is an unfeasible point of
+the dual problem because the sign conditions fail.  Conversely, if
+$y$ is a non-optimum vertex of the dual problem then the point $x$ being
+associated to the {\sc Lagrange} multiplier by  (\ref{1}) is an
+unfeasible point of the primal problem.  In solving the primal problem in the
+dual form, the solution is thus approximated from the unfeasible domain and the
+same fact holds if the dual problem is solved in the primal form.
+

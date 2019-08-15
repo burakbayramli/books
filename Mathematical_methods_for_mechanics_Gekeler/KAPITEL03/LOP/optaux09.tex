@@ -1,0 +1,703 @@
+\documentclass[12pt,a4paper,leqno]{article}
+\input myvor_e
+\topmargin -1.5cm
+\newcommand{\kopf}
+{
+\begin{tabular}{@{}p{11cm}@{}p{4cm}@{}}
+MATHEMATISCHES INSTITUT A & {\large UNIVERSIT\"AT} \\
+Prof. Dr. E. Gekeler	  & {\large STUTTGART} \\[10mm]
+\end{tabular}
+%\newline
+}
+\begin{document}
+%
+%
+%-- PROJEKTIONSVERFAHREN I ------------------------------------------
+\thispagestyle{empty}
+\kopf
+\vspace{-8mm}
+\par
+\ul{\bf Projektionsverfahren I} f\"ur Max $\{c^Tx\,|\,Ax \leq
+b\}$,\\
+$A \; (m,n)$--Matrix vom Rang $n$ mit Zeilen $a^i$ und Spalten $a_k$, $m \geq
+n$.\\
+Der aktuelle Wert von $x$ wird laufend mitberechnet.
+\par
+\ul{\bf Gegeben:} Ausgangsecke $x$ mit
+$I_B(x)$ Indexmenge einer Basis von $x$, d.h. $|I_B(x)| = n$, und
+$I_N(x)$ Indexmenge der \"ubrigen Zeilenindices von $A$.
+(Reihenfolge beliebig, aber fest).
+\beqn
+B := [a^i]_{i \in I_B(x)}, \; N:=[a^i]_{i \in I_N(x)},
+\; b_N = [\beta ^i]_{i \in I_N(x)}.
+\eeqn
+%
+{\bf Vorbereitung.} Berechne
+\beqn
+\ba{.}{llll}
+C = [c_i]_{1 \leq i \leq n} & := B^{-1}, & D = [d_i]_{1 \leq i \leq n}
+:=NB^{-1}, &\\[1mm]
+r =  [r^i]_{1\leq i \leq m-n} & := Nx - b_N, & y^T =  c^TB^{-1}, & z = c^Tx.
+\ea{.} \eeqn
+%
+\ul{\bf 1. Schritt:} (Welche Suchrichtung $c_{\nu}$?)\\
+Wenn $y \geq 0$, dann STOP ($x$ optimal), andernfalls berechne
+\beqn \ba{.}{ll}
+\nu := \mbox{Min \, Arg \, Min} \{ y_k \} &\mbox{(schnell)}, \,
+c_{\nu} \, \mbox{neue Suchrichtung},\\
+\nu := \mbox{Min \, Arg} \{ y_k, \; y_k < 0\} & \mbox{(sicher,
+Bland--Regel, nur bei deg.  Ecke)}.
+\ea{.} \eeqn
+%
+\ul{\bf 2. Schritt:} (Welche neue Schrittweite $\tau$?)\\
+Wenn $d_{\nu} \equiv Nc_{\nu} \geq 0$, dann STOP (es
+existiert keine optimale L\"osung),\\
+andernfalls berechne
+\beqn
+\tau = :\mbox{Min }\{r^k/d^k_{\nu} \, | \, d^k_{\nu} < 0\}, \; \mu^{\ast} =
+\mbox{Min }\{ k\,|\,r^k/d^k_{\nu} = \tau \} \,, \; \mu = \mu ^{\ast} + n\,.
+\eeqn
+%
+\ul{\bf 3. Schritt:} (Austauschschritt.)
+\beqn
+P = [p_{kl}] :=
+\left[
+\begin{array}{ll}
+C & x\\
+D & r\\
+y^T & z\\
+\end{array}
+\right]\;,\quad
+(\left.
+\begin{array}{r}
+I_B(x)\\
+I_N(x)\\
+\end{array}
+\right| \; P) \quad\mbox{ist Tableau des Verfahrens}\,.
+\eeqn
+Berechne $Q = [q_{k \, l}]$ gem\"a\ss
+\beqn
+\ba{.}{ll}
+q_{\mu \nu} = 1/p_{\mu \nu} \quad\mbox{(Pivotelement)}\,,\; &
+q_{k\nu}    = p_{k\nu}/p_{\mu\nu} \,,\;k \neq \mu
+  \quad\mbox{(Pivotspalte)}\,,\\
+q_{\mu l} = - p_{\mu l}/p_{\mu \nu}\,,\: l \neq \nu
+\:\mbox{(Pivotzeile)}\,,\; & q_{k \, l} =  p_{k\,l} - p_{k\nu}p_{\mu
+  l}/p_{\mu \nu} \quad\mbox{(\"ubrige Elemente)}\,.
+\ea{.} \eeqn
+%
+Setze
+\beqn \ba{.}{lll}
+\ba{[}{l} C\\ D \ea{]}
+&=& [q_{kl}]_{1 \leq k \leq m\,,\,1 \leq l \leq n} \;,\; x =
+[q_{k,n+1}]_{1 \leq k \leq n}\:,\; r = [q_{k, n+1}]_{n+1 \leq k \leq
+  m}\,,\\[1mm]
+y^T &=& [q_{m+1, l}]_{1 \leq l \leq m}\:,\; z =
+q_{m+1\,,\,n+1}\:,\\
+I_B(x) &=& (\rho_1 , \ldots , \rho_{\nu -
+  1}\,,\,\sigma_{\mu ^{\ast}}\,,\,\rho_{\nu +1} , \ldots \rho_n)\:,\;\\
+I_N(x) & = & (\sigma_{n+1} , \ldots ,
+\sigma_{\mu ^{\ast}-1}\,,\,\rho_{\nu}\,,\,\sigma_{\mu ^{\ast}+1}, \ldots
+, \sigma_m)\\
+\ea{.}
+\eeqn
+und kehre zum ersten Schritt des Verfahrens zur\"uck.\\
+Die Aktualisierung der Indexmengen $I_B(x)$ und $I_N(x)$ im Austauschschritt
+ist f\"ur den Algorithmus nicht notwendig, $x$ steht in der richtigen
+Reihenfolge, weil nur Zeilen vertauscht werden.
+%
+%
+%
+%
+%-- PROJEKTIONSVERFAHREN II -----------------------------------------
+\newpage
+\thispagestyle{empty}
+\kopf
+\vspace{-8mm}
+\par
+\ul{\bf Projektionsverfahren II} f\"ur Max $\{c^Tx\,|\,Ax \leq
+b\}$,\\
+$A \; (m,n)$--Matrix vom Rang $n$ mit Zeilen $a^i$ und Spalten $a_k$, $m \geq
+n$.\\
+Der aktuelle Wert von $x$ wird erst am Ende mitberechnet, daf\"ur ist das
+Tableau kleiner.
+\par
+\ul{\bf Gegeben:} Ausgangsecke $x$ mit
+$I_B(x)$ Indexmenge einer Basis von $x$, d.h. $|I_B(x)| = n$, und
+$I_N(x)$ Indexmenge der der \"ubrigen Zeilenindices von $A$.
+(Reihenfolge beliebig, aber fest).
+\beqn
+B := [a^i]_{i \in I_B(x)}, \; N:=[a^i]_{i \in I_N(x)},
+\; b_N = [\beta ^i]_{i \in I_N(x)}.
+\eeqn
+%
+{\bf Vorbereitung.} Berechne
+\beqn
+\ba{.}{llll}
+C = [c_i]_{1 \leq i \leq n} & := B^{-1}, & D = [d_i]_{1 \leq i \leq n}
+:=NB^{-1}, &\\[1mm]
+r =  [r^i]_{1\leq i \leq m-n} & := Nx - b_N, & y^T =  c^TB^{-1}, & z = c^Tx.
+\ea{.} \eeqn
+%
+\ul{\bf 1. Schritt:} (Welche Suchrichtung $c_{\nu}$?)\\
+Wenn $y \geq 0$, dann STOP ($x$ optimal), andernfalls berechne
+\beqn \ba{.}{ll}
+\nu := \mbox{Min \, Arg \, Min} \{ y_k \} &\mbox{(schnell)}, \,
+c_{\nu} \, \mbox{neue Suchrichtung},\\
+\nu := \mbox{Min \, Arg} \{ y_k, \; y_k < 0\} & \mbox{(sicher,
+Bland--Regel, nur bei deg.  Ecke)}.
+\ea{.} \eeqn
+%
+\ul{\bf 2. Schritt:} (Welche neue Schrittweite $\tau$?)\\
+Wenn $d_{\nu} \equiv Nc_{\nu} \geq 0$, dann STOP (es
+existiert keine optimale L\"osung),\\
+andernfalls berechne
+\beqn
+\tau = :\mbox{Min }\{r^k/d^k_{\nu} \, | \, d^k_{\nu} < 0\}, \; \mu =
+\mbox{Min }\{ k\,|\,r^k/d^k_{\nu} = \tau \} \, .
+\eeqn
+%
+\ul{\bf 3. Schritt:} (Austauschschritt.)
+\beqn
+P = [p_{kl}] :=
+\left[
+\begin{array}{ll}
+D & r\\
+y^T & z\\
+\end{array}
+\right]\;,\quad
+(\left.
+\begin{array}{r}
+I_B(x)\\
+I_N(x)\\
+\end{array}
+\right| \; P) \quad\mbox{ist Tableau des Verfahrens}\,.
+\eeqn
+Berechne $Q = [q_{k \, l}]$ gem\"a\ss
+\beqn
+\ba{.}{ll}
+q_{\mu \nu} = 1/p_{\mu \nu} \quad\mbox{(Pivotelement)}\,,\; &
+q_{k\nu}    = p_{k\nu}/p_{\mu\nu} \,,\;k \neq \mu
+  \quad\mbox{(Pivotspalte)}\,,\\
+q_{\mu l} = - p_{\mu l}/p_{\mu \nu}\,,\: l \neq \nu
+\:\mbox{(Pivotzeile)}\,,\; & q_{k \, l} =  p_{k\,l} - p_{k\nu}p_{\mu
+  l}/p_{\mu \nu} \quad\mbox{(\"ubrige Elemente)}\,.
+\ea{.} \eeqn
+%
+Setze
+\beqn \ba{.}{lll}
+D &=& [q_{kl}]_{1 \leq k \leq m - n \,,\,1 \leq l \leq n} \;,\;
+r = [q_{k, n+1}]_{1 \leq k \leq m-n}\,,\\[1mm]
+y^T &=& [q_{m-n+1, l}]_{1 \leq l \leq m}\:,\; z =
+q_{m-n+1\,,\,n+1}\:,\\
+I_B(x) &=& (\rho_1 , \ldots , \rho_{\nu -
+  1}\,,\,\sigma_{\mu }\,,\,\rho_{\nu +1} , \ldots \rho_n)\:,\;\\
+I_N(x) & = & (\sigma_{n+1} , \ldots ,
+\sigma_{\mu -1}\,,\,\rho_{\nu}\,,\,\sigma_{\mu +1}, \ldots
+, \sigma_m)\\
+\ea{.}
+\eeqn
+und kehre zum ersten Schritt des Verfahrens zur\"uck. $z$ ist
+optimaler Wert der Zielfunktion. Berechnung von x:
+\beqn
+B := [a^i]_{i \in I_B(x)}, \; b_B = [\beta ^i]_{i \in I_B(x)}, \; x =
+B^{-1}b_B.
+\eeqn
+%
+%
+%
+%-- PROJEKTIONSVERFAHREN III (MIT ZULAESSIGEM PUNKT) ----------------
+\newpage
+%\setcounter{page}{1}
+\thispagestyle{empty}
+\kopf
+\vspace{-5mm}
+\par
+\ul{\bf Projektionsverfahren} f\"ur $\mbox{Max }\{c^T x \,|\,Ax \leq
+b\}$\,\\
+$A$ (m,n)--Matrix vom Rang n mit Zeilen $a^i$ und Spalten $a_k, \; m \geq n$.\\
+\ul{\bf Gegeben:} \ul{Zul\"assiger} Punkt $x \in \R^n$ mit $Ax \leq b$ und
+\beqn
+I_B(x) = [\rho _1,\ldots, \rho _n] =  [0,\ldots,0],\quad
+I_N(x) = [1,\ldots,m],
+\eeqn
+\beqn \ba{.}{lll}
+B := I = B^{-1} = C = [c_i]_{1\leq i\leq n}, &D:= NB^{-1} = N := A, &\\[0,7ex]
+r = Nx - b, & y^T = c^TB^{-1}, & z = c^Tx.\\
+\ea{.} \eeqn
+%
+\ul{\bf Schritt 1.1:} (Berechne Suchrichtung $s$.)\\
+Wenn $I_B(x) > 0$, dann gehe zu Schritt 1.2.\\
+Berechne
+\beqn
+\nu  := \mbox{Min Arg Max}\{|y_i|, \; I_B(x)_i = 0\}.
+\eeqn
+Wenn $y_{\nu} = 0$, dann gehe zu Schritt 1.2.\\
+Wenn $y_{\nu} > 0$, dann setze $s = - c_{\nu }$, \quad
+Wenn $y_{\nu} < 0$, dann setze $s = c_{\nu }$.\\
+Gehe zu Schritt 2.\\
+\ul{\bf Schritt 1.2:}\\
+Wenn $y \geq 0$ und $I_B(x) > 0$, dann STOP (x optimal), andernfalls berechne
+\beqn \ba{.}{ll}
+\nu := \mbox{Min \, Arg \, Min} \{ y_k, \; I_B(x)_k > 0 \}
+&\mbox{(schnell)},\\
+\nu := \mbox{Min \, Arg} \{ y_k, \; y_k < 0, \; I_B(x)_k > 0 \} &
+\mbox{(sicher, Bland--Regel, nur bei deg.  Ecke)}.\\
+\ea{.} \eeqn
+Setze $s = c_{\nu }$.\\
+%
+\ul{\bf Schritt 2:} (Welche neue Schrittweite $\tau$?)\\
+Wenn $d_{\nu} \equiv Ns \geq 0$, dann STOP (es
+existiert keine optimale L\"osung),\\
+andernfalls berechne
+\beqn
+\tau = :\mbox{Min }\{r^k/d^k_{\nu} \, | \, d^k_{\nu} < 0\}, \; \mu^{\ast} =
+\mbox{Min }\{ k\,|\,r^k/d^k_{\nu} = \tau \} \,, \; \mu = \mu ^{\ast} + n\,.
+\eeqn
+%
+\ul{\bf Schritt 3:} (Austauschschritt.)\\
+Wie beim Projektionsverfahren.
+Setze anschlie\ss end
+\beqn \ba{.}{l}
+I_B(x) = (\rho_1 , \ldots , \rho_{\nu -
+  1}\,,\,\sigma_{\mu ^{\ast}}\,,\,\rho_{\nu +1} , \ldots \rho_n)\:,\;\\
+I_N(x) = (\sigma_1 , \ldots ,
+\sigma_{\mu ^{\ast}-1}\,,\,\rho_{\nu}\,,\,\sigma_{\mu ^{\ast}+1}, \ldots
+, \sigma_m).
+\ea{.}
+\eeqn
+Wenn $\rho _{\nu } = 0$ dann setze
+\beqn
+I_N(x) = (\sigma_{n+1} , \ldots ,
+\sigma_{\mu ^{\ast}-1}\,,\,\sigma_{\mu ^{\ast}+1}, \ldots
+, \sigma_m)
+\eeqn
+und streiche die Zeile mit der Nummer $\sigma _{\mu ^{\ast}}$ in $r = Ax -
+b$ und in $D$.\\
+Kehre zum ersten Schritt des Verfahrens zur\"uck.\\
+Zur eventuellen Berechnung eines $x$ mit $Ax \leq b$ betrachte man
+das Problem
+\beqn
+(^{\ast}) \quad \mbox{Min } \{\lambda \,|\, Ax - \lambda e \leq
+b\,,\: \lambda \geq 0\}, \quad (x\,,\,\lambda) \in
+\R^{n+1}, \quad e = [1]_{1 \leq i \leq m}\,.
+\eeqn
+Sei $x_0$ beliebig, z.B. $x_0 = 0$, und $\lambda_0 = \mbox{Max } \{
+0\,,\:a_i^T x_0 - b_i\,,\;i = 1 , \ldots , m\}$, dann ist
+$(x_0\,,\,\lambda_0)$ zul\"assig f\"ur $(^{\ast})$. Daher kann
+$(^{\ast})$ mit dem obigen Algorithmus und anschlie\ss endem
+Projektionsverfahren gel\"ost werden. Die optimale L\"osung
+$(\widetilde{x}\,,\,\widetilde{\lambda})$ von $(^{\ast})$ existiert.
+$\Omega = \{x \in I\!\!R^n \,|\, Ax \leq b\}$ ist leer, wenn
+$\widetilde{\lambda} > 0$, andernfalls ist $\widetilde{x}$ zul\"assig.
+%
+%
+%-- Rev. SIMPLEX-ALGORITHMUS ----------------------------------------
+\newpage
+\thispagestyle{empty}
+\kopf
+\vspace{-5mm}
+\par
+\ul{\bf Revidierter Simplexalgorithmus} f\"ur $\mbox{Min
+  }\{c^T x, \; Ax = b, \; x \geq 0\}$, $ A\;(m,n)$--Matrix
+vom Rang $m$ mit Spalten $a_j \,,\: m \leq n$,
+$b = [\beta^1,\ldots , \beta^m]^T\,,\;c = [\gamma^1 , \ldots ,
+\gamma^n]^T$.
+\par
+\ul{\bf Gegeben:} Ausgangsecke $x$ (ev. Basis geeignet
+erg\"anzen,\\
+$I_B(x) = (\rho_1, \ldots , \rho_m)$ Indexvektor bzw. Indexmenge der
+Basisvariablen,\\
+$I_N(x) = (\sigma_1, \ldots , \sigma_{n-m})$ Indexvektor bzw.  Indexmenge der
+Nichtbasisvariablen\\
+(Reihenfolge beliebig, aber dann fest).
+\beqn
+B := [a_j]_{j \in I_B(x)}, \; N := [a_j]_{j \in I_N(x)}, \;
+c_B ;= [\gamma^j]_{j \in I_B(x)}, \; c_N := [\gamma^j]_{j \in
+I_N(x)}.
+\eeqn
+%
+{\bf Vorbereitung.} Berechne
+\beqn \ba{.}{ll}
+D = [d_j]_{1 \leq j \leq n-m} := B^{-1}N, & u := B^{-1}b, \\
+y^T =[y_1 , \ldots , y_{n - m}] = c_N^T - c_B^TD, & z := -c^Tx.
+\ea{.} \eeqn
+\ul{\bf 1. Schritt:} (Welche Variable kommt in die Basis?)\\
+Wenn $y \geq 0$, dann STOP ($x$ optimal), andernfalls berechne
+\beqn \ba{.}{lll}
+\nu := \mbox{ Min Arg Min } \{y_k \} & \mbox{(schnell)}, &
+(a_{\sigma_{\nu}} \;\mbox{in die Basis }),\\
+\nu := \mbox{Min Arg}\{ y_k , \; y_k < 0\}, &
+\mbox{(sicher, Blandsche Regel, nur bei deg. Ecke)}.\\
+\ea{.} \eeqn
+\ul{\bf 2. Schritt:} (Welche Variable wird aus der Basis
+entfernt?)\\
+Wenn $\, d_{\nu} \leq 0$, dann STOP ( es existiert keine optimale
+L\"osung), andernfalls berechne
+\beqn
+\mu := \mbox{ Min Arg Min } \{ u^k/d^k_{\nu}, \; d^k_{\nu} >
+0\}, \quad (a_{\sigma_{\mu}}\;\mbox{aus der Basis })\,.
+\eeqn
+\ul{\bf 3. Schritt:} (Austauschschritt.)
+\beqn
+\ba{.}{ll}
+\mbox{Setze} \; P = [p_{k \, l}] := \ba{[}{ll}
+D & u\\
+y^T &z\\
+\ea{]}, &
+\mbox{berechne } \, Q = [q_{k \, l}] \quad \mbox{gem\"a\ss}\\
+q_{\mu \nu} = 1/p_{\mu \, \nu} \; \mbox{(Pivotelement)}, &
+q_{k \, \nu} = - p_{k \nu }/p_{\mu \nu }, \; k \neq \mu
+\; \mbox{(Pivotspalte)},\\
+q_{\mu \, l} = p_{\mu \, l}/p_{\mu \nu}\:,\;l \neq \nu
+\; \mbox{(Pivotzeile)}, &q_{k \, l} = p_{k \, l} - p_{k \, \nu}
+p_{\mu \, l}/p_{\mu \nu} \; \mbox{(\"ubrige Elemente)}\,.
+\ea{.} \eeqn
+Setze
+\beqn \ba{.}{ll}
+D = [q_{k \, l}]_{1 \leq k \leq m\,,\,1 \leq l \leq n-m}, & u =  [q_{k,
+  n-m+1}]_{1\leq k \leq m}\,,\\
+y^T = [q_{m + 1,l}]_{1 \leq l \leq n-m}, &z =
+q_{m+1\,,\,n-m+1}\,;\\
+I_B(x) = (\rho_1 , \ldots , \rho_{\mu -
+  1}\,,\,\sigma_{\nu}\,,\,\rho_{\mu+1}, \ldots , \rho_m)\,,\,
+ &\\
+I_N(x) = (\sigma_1 , \ldots , \sigma_{\nu -
+  1}\,,\,\rho_{\mu}\,,\,\sigma_{\nu+1}, \ldots , \sigma_{n-m}) & \\
+\ea{.} \eeqn
+und kehre zum ersten Schritt des Verfahrens zur\"uck.
+\beqn \ba{.}{ll}
+\mbox
+{
+\begin{tabular}[l]{r|c}
+& $I_N(x)$ \\
+\hline
+$I_B(x)$ & $P$
+\end{tabular}
+}
+&
+\ba{.}{l} \mbox{hei\ss t Simplextableau, $u$ enth\"alt die aktuellen
+Werte der}\\
+\mbox{Basisvariablen, $z$ den negativen aktuellen Wert der Zielfunktion.}
+\ea{.}
+\ea{.} \eeqn
+$I_N(x)$ und $I_B(x)$ m\"ussen gespeichert werden, weil in $Ax = b$ Spalten
+vertauscht werden.
+%
+%-- PRODUKTIONSPLANUNG ----------------------------------------------
+\newpage
+\thispagestyle{empty}
+\kopf
+\par
+\ul{\bf Produktionsplanung mit Lagerhaltung.}
+Es seien\\
+$x(t)$ Produktion zur Zeit $t$ (st\"uckweise diff.-bar), $\dot{x} = u$;\\
+$a(u)$ Kosten f\"ur die Produktion pro Zeiteinheit (ZE) bei der
+Produktionsrate $u$\\
+\hspace*{0,87cm}($a$ monoton wachsend und konvex);\\
+$b(t)$ Nachfragerate zur Zeit $t$ $(b(t) \geq 0)$;\\
+$z(t)$ Lagerumfang zur Zeit $t$;\\
+$h \cdot z$ Lagerhaltungskosten/ZE bei einem Lager vom Umfang $z\: (h
+\geq 0)$;\\
+$c(u)$ Kosten/ZE bei Produktions\"anderung $u$.
+\par
+Bei der Produktionsplanung mit Lagerhaltung ergibt sich dann folgendes
+Problem:
+\beqn
+\int\limits_0^T [ a(u(t)) + hz(t) + c(u(t))]\,dt = \mbox{Min }!
+\eeqn
+\beqn
+\dot{z}(t) = u(t) - b(t)\,,\: z(0) = Z\,,\:z(t) \geq 0\,,\: u(t)
+\geq 0\,.
+\eeqn
+(Vgl. Luenberger [69], S. 4, 234 ff., 237; Arrow u.a.: Studies in the
+Math. Theory of Inventory and Production [1958].)
+\par
+Es sei nun $T < \infty$ und $c = 0$. Ferner sei
+\beqn
+s(t) = \int\limits_0^t b(\tau)\,d\tau - Z\,
+\eeqn
+dann gilt $z = x - s$, d.h.
+\beqn
+\mbox{Lagerumfang = Produktion - Nachfrage + anf„ngl. Lagerumfang,}
+\eeqn
+und man kann das Problem f\"ur die Produktion wie folgt formulieren:
+\beqn
+(^{\ast}) \quad J(u) = \int\limits_0^T [a(u(t)) + h\cdot(x(t) - s(t))]\,dt =
+\mbox{Min }!, \eeqn
+\beqn
+x(t) = \int\limits_0^t u(\tau)\,d\tau \geq s(t)\,,\:u(t) \geq 0\,,\:
+0 \leq t \leq T\,.
+\eeqn
+Es folgt nun $x(0) = 0$, $x$ monoton wachsend und o.B.d.A. $x(T) =
+s(T)$ im Optimum, d.h. keine Ware \"ubrig am Ende des Planungszeitraums.
+%
+%
+%
+%-- MAXIMUMPRINZIP ----------------------------------------------
+\newpage
+\thispagestyle{empty}
+\setcounter{equation}{0}
+\kopf
+\vspace{-8mm}
+\par
+\ul{\bf Euler--Lagrange--Gleichungen und Maximumprinzip von
+Pontrjagin}
+\par
+Es seien $X = C^1([0,T];\R^m), \; U = C([0,T];\R^n), \; \Omega \subset \R^n$
+fest gegeben, und es sei $(x^{\ast},u^{\ast})$ `regul\"are' L\"osung des
+Maximumproblems
+\beqn \ba{.}{l}
+J(T,x,u) = \varphi(T,x(0),x(T)) + \int_0^TL(t,x(t),u(t))dt = \mbox{Max!}, \; x
+\in X, \; u \in U,\\[2mm]
+\dot{x}(t) = f(t,x(t),u(t)), \; u(t) \in \Omega, \; t \in (0,T),\\[2mm]
+\psi (T,x(0),x(T)) = 0, \; \psi: \R^{2m+1} \supset D \to \R^p.
+\ea{.} \eeqn
+Dabei seien $L, \; f$ stetig differenzierbar in einer Umgebung des Graphen von
+$(x^{\ast},u^{\ast})$, und $\varphi, \; \psi$ seien stetig differenzierbar in
+einer
+Umgebung von $(T,x^{\ast}(0),x^{\ast}(T))$. Ferner sei die Hamilton--Funktion
+$H$ definiert durch
+\beqn
+H(t,x(t),u(t),y(t)) = L(t,x(t),u(t)) + y(t)^Tf(t,x(t),u(t)), \quad t \in (0,
+T).
+\eeqn
+Dann existiert ein $y^{\ast} \in X$ und ein $z^{\ast} \in \R^p$ so, dass das
+Quadrupel $(x^{\ast},u^{\ast},y^{\ast},z^{\ast})$ L\"osung des folgenden
+Randwertproblems ist $(D_2f(x,y,z) := \nabla _yf(x,y,z)$, usw.):
+\begin{equation}\label{11}
+ \dot{x} = H_y(t,x,u,y), \quad \psi(T,x(0),x(T)) = 0,
+\end{equation}
+\begin{equation}\label{12}
+\dot{y} = - H_x(t,x,u,y),
+\end{equation}
+\begin{equation}
+y(0) = - D_2(\varphi  + z^T\psi)(T,x(0),x(T)), \;
+y(T) = D_3(\varphi  + z^T\psi)(T,x(0),x(T)).
+\end{equation}
+Au\ss erdem gilt das Maximumprinzip von Pontrjagin (1959):
+\begin{equation}\label{13}
+u^{\ast}(t) = \mbox{Arg Max}_{u(t)\in\Omega}
+\{H(t,x^{\ast}(t),u(t),y^{\ast}(t))\}, \quad t \in (0,T).
+\end{equation}
+Falls $T$ freie Ver\"anderliche ist, kommt hierzu noch
+\begin{equation}\label{14}
+D_1(\varphi + z^T\psi)(T,x(0),x(T)) + H(T,x(T),u(T),y(T)) = 0
+\end{equation}
+als notwendige Bedingung f\"ur das optimale $T^{\ast}$.
+\par
+(\ref{11}) folgt trivialerweise aus dem Extremalproblem, (\ref{12}) und
+(\ref{14}) entsprechen den Euler--Gleichungen der Variationsrechnung, und
+aus (\ref{13}) folgt bei hinreichender Glattheit von $H$ die notwendige
+Bedingung
+\beqn
+D_3H(t,x^{\ast}(t),u^{\ast}(t),y^{\ast}(t)) = 0, \quad t \in (0,T),
+\eeqn
+falls $u^{\ast}(t)$ f\"ur alle $t \in (0,T)$ im Innern von $\Omega$ liegt.
+\par
+Falls $u^{\ast}$ nur st\"uckweise stetig ist, gilt (\ref{11}) und (\ref{12}) an
+den Stetigkeitstellen von $u$.
+%
+%-- AUSGANGSECKE ----------------------------------------------------
+\newpage
+\thispagestyle{empty}
+\kopf
+\vspace{-5mm}
+\par
+\ul{\bf Berechnung einer Ausgangsecke} beim Projektionsverfahren f\"ur\\
+$\mbox{Max }\{c^T x, \, Ax \leq b\}\,,\: A (m,n)$--Matrix,
+Rang $(A) = n \leq m$.\\
+\ul{\bf Gegeben:}
+\beqn \ba{.}{l}
+x \in \{x \in \R^n \,|\, Ax
+\leq b\}\,,\; I =: B^{-1} = C = [c_i]_{1\leq i\leq n}\,,\: D:=
+A = [d_i]_{1\leq i \leq n},\\[0,7ex]
+ y^T = c^T\,,\: r = Ax -b \,,\: I_B(x) := 0 \in \R^n,
+\: z = c^T x\,.\\
+\ea{.} \eeqn
+%
+\ul{\bf 1. Schritt:} (Suchrichtung.)\\
+Wenn $I_B(x) > 0$, dann STOP,andernfalls berechne
+\beqn
+\nu := \mbox{ Min Arg Max }\{ |y^k|, \: [I_B(x)]^k = 0\}.
+\eeqn
+Wenn $y^{\nu} > 0$, dann setze $\widetilde{d}_{\nu} = - d_{\nu}$.\\
+Wenn $y^{\nu} < 0$, dann setze $\widetilde{d}_{\nu} = d_{\nu}$.\\
+Wenn $y^{\nu} = 0$, dann setze
+\beqn
+\nu := Min \, Arg \, Min\{y_k, \; I_B(x)^k \neq o\},
+\eeqn
+%
+\ul{\bf 2. Schritt:} (Schrittweite wie beim Projektionsverfahren.)\\
+
+
+Wenn $\{i \in \{i, \ldots m\}\,|\, \widetilde{d}_{\nu}^i < 0 \} \neq
+\emptyset$, dann berechne
+\beqn
+\tau = \mbox{Min }\{f(k) = r^k/\widetilde{d}_{\nu}^k
+\;| \; \widetilde{d}^k_{\nu} < 0\}\,,\;\mu = \mbox{Min }\{k\,|\,f(k) =
+\tau\}\,.
+\eeqn
+Setze
+\beqn
+x := x - \tau \,s \quad\mbox{und gehe zu Schritt 3.}
+\eeqn
+Wenn $\{i \in \{1 , \ldots , m\}\; | \; \widetilde{d}^i_{\nu} > 0\} \neq
+\emptyset$, dann setze $\widetilde{d}^i_{\nu} := -
+\widetilde{d}^i_{\nu}$ und gehe zu Schritt 2, andernfalls setze
+$[I_B(x)]^{\nu} = 0$ und gehe zu Schritt 1.\\[1ex]
+%
+\underline{\bf 3. Schritt:} (Austauschschritt.)\\
+Setze
+\beqn
+P :=
+\left[
+\begin{array}{ll}
+D & r\\
+h^T & z\\
+\end{array}
+\right]\,,
+\eeqn
+berechne $Q$ wie beim Projektionsverfahren und setze $[I_B(x)]^{\nu}
+= \mu$ sowie
+\beqn
+D = [q_{k\, l}]_{1 \leq k\leq m\,,\,1 \leq l \leq n}\,,\; r =
+[q_{k, n+1}]_{1 \leq k \leq m}\,,\; h^T = [q_{m+1,l}]_{1 \leq
+   l \leq n}\,,\;z = q_{m+1\,,\,n+1}\,.
+\eeqn
+Gehe zu Schritt 1.\\[1ex]
+Zur eventuellen Berechnung eines $x$ mit $Ax \leq b$ betrachte man
+das Problem
+\beqn
+(^{\ast}) \quad \mbox{Min } \{\lambda \,|\, Ax - \lambda e \leq
+b\,,\: \lambda \geq 0\}, \quad (x\,,\,\lambda) \in
+\R^{n+1}, \quad e = [1]_{1 \leq i \leq m}\,.
+\eeqn
+Sei $x_0$ beliebig und $\lambda_0 = \mbox{Max } \{ 0\,,\:a_i^T
+x_0 - b_i\,,\;i = 1 , \ldots , m\}$, dann ist
+$(x_0\,,\,\lambda_0)$ zul\"assig f\"ur $(^{\ast})$. Daher kann
+$(^{\ast})$ mit dem obigen Algorithmus und anschlie\ss endem
+Projektionsverfahren gel\"ost werden. Die optimale L\"osung
+$(\widetilde{x}\,,\,\widetilde{\lambda})$ von $(^{\ast})$ exisitert.
+$\Omega = \{x \in I\!\!R^n \,|\, Ax \leq b\}$ ist leer, wenn
+$\widetilde{\lambda} > 0$, andernfalls ist $\widetilde{x}$ Ecke von $\Omega$.
+%
+%
+%
+%-- MAXIMUMPRINZIP --------------------------------------------------
+\newpage
+\thispagestyle{empty}
+\kopf
+\vspace{-5mm}
+\par
+\ul{\bf Das Maximumprinzip von Pontrjagin (1959).}\\
+ Es seien $ L: I\!\!R^{n+m+1} \to I\!\!R\,,\: f: I\!\!R^{n+m+1} \to
+ I\!\!R^n\,,\: \phi: I\!\!R^n \to I\!\!R\,,\: \psi: I\!\!R^n \to
+ I\!\!R^r$ stetig differenzierbar. Ferner sei $\Omega \in I\!\!R^m$
+ gegeben und
+$$
+\begin{array}{lcl}
+U = \{ u&:& [0\,,\,\top] \to \Omega\,,\: u \;\mbox{beschr\"ankt,
+   st\"uckweise stetig,}\\
+&\exists& x: [0\,,\,\top] \to I\!\!R^n\,,\; x(0) =
+a\,,\:\stackrel{\cdot}{x} = f(x\,,\,u)\,,\: \psi (x(\top)) = 0 \}\,.
+\end{array}
+$$
+ Es sei $(x^{\ast}\,,\,u^{\ast})$ `regul\"are' L\"osung des
+ Extremalproblems
+$$
+(1) \qquad\mbox{Max } \{ \pi(x(\top)) + \int \limits_0^{\top}
+L(x\,,\,u)\,dt | x(0) = a\,,\;\stackrel{\cdot}{x} =
+f(x\,,\,u)\,,\;\psi(x(\top)) = 0\,,\: u \in U\}
+$$
+mit den Abk\"urzungen $f(x\,,\,u) = f(x(t)\,,\,u(t)\,,\,t)$ usw., und
+es sei
+$$
+H(x\,,\,u\,,\,y) = L(x\,,\,y) + y^{\top}f(x\,,\,u)\,.
+$$
+Dann existiert ein $y^{\ast} : [0\,,\,\top] \to I\!\!R^n$ und ein
+$z^{\ast} \in I\!\!R^r$, so dass gilt
+$$
+(2) \qquad \;\stackrel{\cdot}{x}\rule{0pt}{1ex}^{\ast} =
+H_y(x^{\ast}\,,\,u^{\ast}\,,\,y^{\ast}) \,,\;x^{\ast}(0) = a\,,
+$$
+$$
+\begin{array}{rcl}
+(3) \qquad \;\stackrel{\cdot}{y}\rule{0pt}{1ex}^{\ast} =
+-H_x (x^{\ast}\,,\,u^{\ast}\,,\,y^{\ast})&=&
+-L_x(x^{\ast}\,,\,u^{\ast}) - (y^{\ast^{\top}} f)_x
+(x^{\ast}\,,\,u^{\ast})\,,\\
+y^{\ast}(\top) &=& \phi_x(x(\top)) + (z^{\ast^{\top}}
+\psi)_x(x(\top))\,,
+\end{array}
+$$
+%
+$$
+(4) \qquad \; H(x^{\ast}(t)\,,\,u^{\ast}(t)\,,\,y^{\ast}(t)\,,\,t) =
+\mbox{Max}_{u(t) \in \Omega \,,\, u \in U}
+H(x^{\ast}(t)\,,\,u(t)\,,\,y^{\ast}(t))\quad\mbox{f.\"u.
+  }\:[0\,,\,\top]\,.
+$$
+
+(2) folgt trivialerweise aus (1), (3) sind die kanonischen
+Euler--Gleichungen des Problems, und aus (4) folgt die notwendige
+Bedingung
+$$
+H_u(x^{\ast}\,,\,u^{\ast}\,,\,y^{\ast}) = 0
+\qquad\qquad\qquad\mbox{f.\"u.}\;[0\,,\,\top]\,,
+$$
+falls $\psi = 0$ und $u^{\ast}(t) \in \stackrel{\circ}{\Omega}
+\;\forall \; t \in [0\,,\,\top]$.\\
+Die Regularit\"atsbedingung von $(x^{\ast}\,,\,u^{\ast})$ entspricht
+der Slater--Bedingung im Satz von Kuhn--Tucker.
+%
+%
+%-- PRODUKTIONSPLANUNG ----------------------------------------------
+\newpage
+\thispagestyle{empty}
+\kopf
+\vspace{-8mm}
+\par
+\underline{\bf Produktionsplanung mit Lagerhaltung.} \\[0,7ex]
+Es seien\\
+$u(t)$ Produktionsrate zur Zeit $t$ (st\"uckweise stetig);\\
+$a(u)$ Kosten f\"ur die Produktion pro Zeiteinheit (ZE) bei der
+Produktionsrate $u$\\
+\hspace*{0,87cm}($a$ monoton wachsend und konvex);\\
+$b(t)$ Nachfragerate zur Zeit $t$ $(b(t) \geq 0)$;\\
+$z(t)$ Lagerumfang zur Zeit (t);\\
+$h \cdot z$ Lagerhaltungskosten/ZE bei einem Lager vom Umfang $z\: (h
+\geq 0)\;\\
+$c(u) Kosten/ZE bei Produktions\"anderung $u$.\\[1,3ex]
+Bei der Produktionsplanung mit Lagerhaltung ergibt sich dann folgendes
+Problem:
+$$
+\int\limits_0^{\top} [ a(u(t)) + hz(t) + c(u(t))]\,dt = \mbox{Min }!
+$$
+$$
+\stackrel{\cdot}{z} = u - b\,,\: z(0) = Z\,,\:z(t) \geq 0\,,\: u(t)
+\geq 0\,.
+$$
+(Vgl. Luenberger [69], S. 4, 234 ff., 237; Arrow u.a.: Studies in the
+Math. Theory of Inventory and Production [1958].)\\
+
+Es sei nun $\top = 1$ und $c = 0$. Ferner sei
+$$
+s(t) = \int\limits_0^t b(\tau)\,d\tau - Z\,.
+$$
+ Dann kann man das Problem wie folgt formulieren:
+$$
+J(u) = \int\limits_0^1 [a(u) + h(x - s)]\,dt = \mbox{Min }!
+\vspace*{-0,7cm}
+$$
+$(^{\ast})$
+\vspace*{-0,7cm}
+$$
+\hspace*{6,7cm} x(t) = \int\limits_0^t u(\tau)\,d\tau \geq
+s(t)\,,\:u(t) \geq 0\,,\: 0 \leq t \leq 1\,.
+$$
+Es folgt $x(0) = 0$, $x$ monoton wachsend und $x^{\ast}(\top) =
+s(\top)$ im Optimum.
+%
+\end{document}
+

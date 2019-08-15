@@ -1,0 +1,29 @@
+% Here is a version of Adrian's VERBATIM.STY, for inputting whole files
+% verbatim, which is "more LaTeX-like" in that it uses the actual LaTeX 
+% macros which set up the `verbatim' environment.
+%
+% Chris Rowley                                  
+% ca_rowley@uk.ac.open.acs.vax.
+%                                                                   
+% ---              V E R B A T I M F I L E S . S T Y
+%
+%
+% --- Note that the precise layout of line breaks in this file is important!
+%
+
+\def\verbatimfile#1{\begingroup
+                    \@verbatim \frenchspacing \@vobeyspaces
+                    \input#1 \endgroup
+}
+
+\newcounter{lineno}
+
+\def\verbatimlisting#1{\setcounter{lineno}{0}%
+    \begingroup \@verbatim \frenchspacing \@vobeyspaces \parindent=20pt
+    \everypar{\stepcounter{lineno}\llap{\thelineno\ \ }}\input#1
+    \endgroup
+}
+
+
+
+

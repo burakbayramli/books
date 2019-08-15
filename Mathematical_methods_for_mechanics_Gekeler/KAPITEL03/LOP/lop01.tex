@@ -1,0 +1,69 @@
+\section{Preface}
+\hfill
+\parbox{7cm}
+{
+Es ist nicht mehr einfach, wenn man's doppelt nimmt.\\
+\hspace*{\fill} {\footnotesize Schw„bisches Sprichwort}
+}
+\par
+\vspace{5mm}
+In this year 1997, there are fifty years since the Simplex Algorithm came into
+the world; cf.\  e.g.\	\cite{Dan}.  A very large amount of books and research
+papers have appeared in the meanwhile on this procedure and the reader may ask
+himself whether it is opportune to add here a further one.  But the authors
+believe that they can still supply some new and different aspects of this
+method which are also of interest for the very beginner.
+\par
+We build up directly on the famous result of {\sc Farkas} on sign bounded
+solutions of linear systems of equations. Having established the concept of
+duality by this way we focus on solving the primal-dual pair of problems
+%
+\[
+\ba{.}{lllll}
+(P) & \max\{a x, & B^{1:p}x = c^{1:p}, & B^{p+1:m}x \leq c^{p+1:m}\},\\
+(D) & \min\{yc,  & yB = a, & y_{p+1:m} \geq 0\}
+\ea{.} \; p \in \Bbb{N}_0.
+\]
+So the Problem (D) generalizes the classical simplex problem in a simple but
+substantial way.  The problem (P) is solved by the ``projection method''
+suggested in the well-known book \cite{BeRi} of {\sc M.Best} and {\sc K.Ritter}
+and the
+problem (D) is solved by the classical simplex method.	We show first that both
+problems have identical ``tableaus'' in a unique point of optimum solution.
+Thus they differ only in the choice of pivot rules and in the choice of the
+initial point being either feasible for (P) or feasible for (D).  If the pivot
+element is fixed in some way then also the exchange of a basis elements is the
+same operation
+in both methods.  In all algorithms developed here, the solution
+$x$ of the problem (P) and the solution $y$ of the problem (D) are computed
+together in every single algorithm but one of both is always approximated from
+the unfeasible domain.	Moreover, the treatment of multiple solutions and
+degenerations as well as sensitivity analysis
+gain from the strict primal-dual way of consideration.	No slack variables are
+used in this context but only in the construction of feasible points
+(phase 1) where one additional variable is necessary.
+\par
+The principle idea of this volume is to deal first with the primal problem (P)
+because of its generality and the possibility of easy geometric interpretation.
+This way is very helpful in the development of further methods for special side
+conditions.  So we construct for instance an algorithm in revised form for
+problems (P) with bounded variables which includes problems of the form (D).
+This algorithm shall also serve for a model in further special problems.  The
+proposition of treating the problem (P) for primal problem was made first by
+\cite{BeRi} but also many other ideas can be found in this volume which
+are used more or less explicitely in the sequel.
+\par
+Every numerical analyst knows that one can meet with many surprises in the
+implementation of a numerical device.  But since the {\sc Matlab} environment
+is available the era of books on Numerical Methods containing no program should
+draw to a close.  In an Appendix we present some {\sc Matlab} programs for the
+projection method and for the simplex method being generalized in the above
+indicated way and we also solve the associated phase-1 problems.  Here it is
+our intention to show the several steps of development and not only to give an
+unique algorithm for all seasons.  Naturally, all methods in tableau form can
+be written in revised form where only the edge matrix $A$ and the index
+vectors are updated.  The
+algorithm ``proj06.m'' for bounded variables however is already written in that
+form such that it can be be modified more easily to solve problems with sparse
+design matrix in the side conditions.
+

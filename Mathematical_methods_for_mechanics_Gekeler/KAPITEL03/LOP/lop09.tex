@@ -1,0 +1,311 @@
+\section{Phase 1 -- Phase 2 in Simplex Method}
+For the treatment of phase 1 we write the dual problem
+in the following form:
+%
+\begin{equation} \label{uuu}
+\min \{yc, \; yB = a, \; y\ba{[}{cc}0 \\ - I_{m-p}\ea{]} \leq 0\},
+\; B \in \Bbb{R}^m{}_n, \; a \geq 0,
+\end{equation}
+%
+with identity matrix $I_{m-p}$ and rank condition
+%
+\[
+\rank (B^{1:p}) = p, \; \rank (B) = n.
+\]
+%
+Naturally, this problem can be viewed for special problem with bounded
+variables, $l \leq y, \;  l^i = - \infty, \; i = 1, \ldots p, \; l^i
+= 0, \; i = p+1, \ldots m, \; y \leq u, \; u^i = \infty, \; i = 1, \ldots, m$.
+But here we prefer to deal with the above form because of the significance
+of the simplex method.
+\par
+Without loss of generality, we suppose that $a \geq 0$ but possible sign
+changes must be regarded if a solution $x^*$ of the primal problem is read from
+the final tableau.  The associated phase-1--problem (\ref{e20}) has also a row
+form here, namely
+%
+\begin{equation} \label{kvk}
+\max \{[\xi, \; y]\ba{[}{c}-1 \\b\ea{]}, \;
+[\xi , \; y]\ba{[}{ccc} -1 & 0 & - e\\ O & B^{1:p}  & O\\
+O & B^{(p+1):m} & -I_{m-p} \ea{]} \leq [0, \; a, \; d]
+\end{equation}
+where
+\[
+d = 0 \in \Bbb{R}_{m-p}, \; b = \sum_{i=1}^nb_i
+\]
+with columns $b_i$ of $B$. Here we have
+\[
+\delta  = \sum_{i=1}^n\alpha ^i, \;
+\xi ^0 = \max\{0, - d_1, \ldots, - d_{m-p}\} = 0
+\]
+with the components $d_k = 0$ of the vector $d$ and thus the point $(\xi ,y) =
+(0,0) \in \Bbb{R}_{m+1}$ is feasible for (\ref{kvk}).  If $(\xi
+^{\star},y^{\star})$ is a solution of (\ref{kvk}) then $y^{\star}$ is feasible
+for (\ref{uuu}) if $\xi ^{\star} = 0$ or if $y^{\star}b = \delta $ by Corollary
+(\ref{f6}) and Lemma (\ref{l6}).  Therefore we may cancel the additional
+variable $\xi $ entirely and ask whether a solution $y^{\star}$ satisfies
+$y^{\star}b = \delta$.  So we consider the following phase 1 problem
+%
+\begin{equation} \label{sv1}
+\max \{yb, \; y\wi{B} \leq \wi{a} \}
+\end{equation}
+with
+\begin{equation} \label{sv2}
+\wi{B} =  \ba{[}{cc} B^{1:p} & O\\ B^{p+1:m} & -I_{m-p}\ea{]}, \;
+\wi{a} =  [ a, \; 0] \in \Bbb{R}_{n+m-p},
+\end{equation}
+having the same dimension as (\ref{uuu}) with $n+m-p$ side conditions and $m$
+variables.  Regarding the particular form of the design matrix, we split up the
+column and the row index set in the following way into disjunct subsets:
+%
+\begin{equation} \label{ph3}
+\ba{.}{rcll}
+\{1, \ldots,m\} &\simeq& \{\W, \; p + \L, \; p + \U\},\\
+\W &=& \{1, \ldots, p\},\\
+\L &=& \{i \in \{1, \ldots, m - p\}, \; y_{p+i} \geq 0 \}, & |\L| =: n_l,\\
+\U &=& \{i \in \{1, \ldots, m - p\}, \; y_{p+i} = 0\}, & |\U| =: n_u,\\[2mm]
+\{1, \ldots,n+m-p\} &\simeq& \{\C, \; \D, \; n + \L, \; n + \U\},\\
+\C &=& \{i \in \{1, \ldots, n\}, \; yb_i = \alpha _i\}, &
+|\C| =: n_c\},\\
+ \D &=& \{i \in \{1, \ldots, n\}, \; i \notin \C \}, &
+|\D| = n_d = n - n_c. \ea{.}
+\end{equation}
+In particular, this splitting means that in a vertex $y$ the index
+vector $\L$ shall contain at least all $i$ with $y^{p+i} > 0$ and the index
+vector $\C$ contains only $i$ with $yb_i = \alpha _i$.
+Let $P$ be the permutation matrix defined
+by \[
+yP = [y_{\W}, \; y_{\L}, \; y_{\U}].
+\]
+As in the standard simplex method, the row permutation in $\wi{B}$ must be
+regarded here because the vertex $y$ is also written in row form.
+If $y$ is a vertex of the problem (\ref{sv1}) considered for {\bf
+primal problem} in row form then it must have  an basis index vector of the
+form
+\[\ba{.}{rcll}
+\A(y) &=& \C(y) \cup (n + \U(y)), & n_c + n_u = m,\\
+\N(y) &=& \D(y) \cup (n + \L(y)), & n_d + n_l = n-p.
+\ea{.}
+\]
+and a regular matrix of the (column) gradients,
+%
+\[
+P\wi{B}_{\A} = \ba{[}{cc}
+         B^{\W}{}_{\C} & O\\ B^{\L}{}_{\C} & O\\ B^{\U}{}_{\C} & -I_{n_u}
+                  \ea{]}.
+\]
+The regularity is fulfilled if and only if the matrix
+%
+\begin{equation} \label{hjh}
+A^{-1} := \ba{[}{c}B^{\W}{}_{\C} \\ B^{\L}{}_{\C} \ea{]}, \;
+n_c = p + n_l,
+\end{equation}
+is regular. Then the edge matrix of the present problem is
+%
+\[
+\wi{A} = [\wi{B}^{\A}]^{-1} = \ba{[}{cc} A & O\\ B^{\U}{}_{\C}A & -
+I_{n_u}\ea{]}P  \in \Bbb{R}^m{}_m,
+\]
+and the matrix of the gradients of the remaining side conditions is
+ %
+\[ P\wi{B}_{\N} = \ba{[}{ccc}
+B^{\W}{}_{\D} & O\\ B^{\L}{}_{\D} & - I_{n_l}\\ B^{\U}{}_{\D} & O
+\ea{]} \in \Bbb{R}^m{}_{n-p}.
+\]
+We obtain
+\[
+\wi{A}\wi{B}_{\N} =
+\ba{[}{cl} \hspace*{-5mm}\!
+ A\ba{[}{c}B^{\W}{}_{\D} \\ B^{\L}{}_{\D}\ea{]} & -A_{(p+1):n_c}\\[4mm]
+B^{\U}{}_{\C}A \ba{[}{c}
+
+B^{\W}{}_{\D} \\ B^{\L}{}_{\D}\ea{]}
+
+ - B^{\U}{}_{\D} &
+- B^{\U}{}_{\C}A_{(p+1):n_c}
+\ea{]}
+\]
+and the full tableau of the problem (\ref{sv1}),
+%
+\[
+\wi{{\bf P}} = \ba{[}{ccc} \wi{A} & \wi{A}\wi{B}_{\N} & \wi{w} \\
+                           \wi{y} & \wi{r}            &  \wi{f}
+               \ea{]},
+\]
+has the form
+\[
+\wi{{\bf P}} = \ba{[}{ccccc}
+ A  & O & \hspace{-5mm} \!A\ba{[}{c}B^{\W}{}_{\D} \\ B^{\L}{}_{\D}\ea{]} &
+ - A_{(p+1):n_c} & \wi{w}^{1:n_c}\\[4mm]
+%
+B^{\U}{}_{\C}A & -I_{n_u} &
+B^{\U}{}_{\C}A\ba{[}{c}B^{\W}{}_{\D} \\
+B^{\L}{}_{\D} \ea{]} - B^{\U}{}_{\D} &
+- B^{\U}{}_{\C}A_{(p+1):n_c}  &
+ \wi{w}^{(n_c+1):m}\\
+%
+\wi{y}_{1:n_c} &
+\wi{y}_{(n_c+1):m} &
+\wi{r}_{1:(n-n_c)} &
+\wi{r}_{(n-n_c+1):(n-p)} &
+\wi{f}
+\ea{]}
+\]
+where
+\[ \ba{.}{lll}
+\wi{y} = yP, & \wi{w} = \wi{A}b, & \wi{f} = yb,\\
+\wi{r}_{1:(n-n_c)} = yB_{\D} - a_{\D}, &
+\wi{r}_{(n-n_c+1):(n-p)} = - y_{p+\L}.
+\ea{.}
+\]
+No information is lost here if the columnms $p+1, \ldots, n$ are cancelled,
+and the reduced tableau has the form
+%
+\begin{equation} \label{svs7}
+{\bf P} = \ba{[}{cccc}
+ A_{1:p} & \hspace{-5mm} \! A\ba{[}{c}B^{\W}{}_{\D} \\ B^{\L}{}_{\D} \ea{]} &
+- A_{(p+1):n_c}  & \wi{w}^{1:n_c}\\[4mm]
+%
+B^{\U}{}_{\C}A_{1:p} &
+B^{\U}{}_{\C}A\ba{[}{c}B^{\W}{}_{\D} \\
+B^{\L}{}_{\D}\ea{]} - B^{\U}{}_{\D} &
+ - B^{\U}{}_{\C}A_{(p+1):n_c}
+ & \wi{w}^{(n_c+1):m}\\
+%
+y_{1:p} &  \wi{r}_{1:(n-n_c)} & -y_{p+\L}  & \wi{f}
+\ea{]}
+\end{equation}
+with $m+1$ rows and $n+1$ columns.
+\par
+In phase 1 we start with $n_c = p$ and $\L = \emptyset$ until $n_c = n$ and $\D
+= \emptyset$. If this is not possible then the feasible domain is empty. In a
+swapping step we have to interchange a column $j > n_c$ of $P\wi{B}_{\A}$ with
+absolute index $\rho _j$ for a column $i$ of $P\wi{B}_{\N}$ with absolute index
+$\sigma _i$. After swapping, the shape of both $P\wi{B}_{\A}$ and
+$P\wi{B}_{\N}$ must be regained if necessary. According to the form of
+$P\wi{B}_{\N}$ we have here two cases:
+\par
+{\bf Case 1.} $i \in \{1, \ldots, n - n_c\}$. Then
+swapping yields with $\rho _j \in \U$ and $\sigma _i \in \D$
+\[
+\ba{.}{rcl}
+\U &=& \{\rho _{n_c+1}, \ldots, \rho _{j-1}, \sigma _i,\rho _{j+1}, \ldots,
+\rho _{n_c+n_u} \},\\
+\D &=& \{\sigma _1, \ldots, \sigma _{i-1}, \rho _j, \sigma _{i+1}, \ldots,
+\sigma _{n-n_c}\},\\
+\ea{.}
+\]
+In order to regain the shape of the tableau, we have to make the following
+transformations:
+\[
+\ba{.}{rcll}
+\U &\longrightarrow& \{\rho _{n_c+1}, \ldots, \rho _{j-1},\rho _{j+1}, \ldots,
+\rho _{n_c+n_u} \}, &n_u := n_u - 1,\\
+\C &\longrightarrow& \{\rho _1, \ldots, \rho _{n_c},\sigma _i\}, &n_c := n_c +
+1,\\
+\D &\longrightarrow& \{\sigma _1, \ldots, \sigma _{i-1}, \sigma _{i+1},
+\ldots, \sigma _{n-n_c}\}, &n_d := n_d - 1,\\
+\L &\longrightarrow& \{\sigma _{n-n_c+1},\ldots ,\sigma _{n-p},\rho
+_j\}, &n_l := n_l + 1.\ea{.}
+\]
+An interchange of columns in the basis matrix implies an interchange of rows in
+the edge matrix.  Therefore, row $j$ is to be moved at positition $n_c
++ 1$ and column $p + i$ in reduced tableau is to be moved at position $n$.  The
+other rows and column are to be shifted in a corresponding way.
+\par
+{\bf Case 2.} $i \in \{n-n_c+1, \ldots, n - n_c + n_l\}$. Then
+swapping yields
+\[
+\ba{.}{rcl}
+\U &=& \{\rho _{n_c+1}, \ldots, \rho _{j-1},\sigma _i,\rho _{j+1},
+\ldots, \rho _{n_c+n_u}\},\\
+\L &=& \{\sigma _1, \ldots, \sigma _{i-1}, \rho _j, \sigma _{i+1}, \ldots,
+\sigma _{n-n_c}\}.
+\ea{.}
+\]
+Here the shape of the tableau is preserved.
+\par
+The problem (\ref{sv1}) has the feasible point $x = 0 \in \Bbb{R}^n$ with
+\[
+\ba{.}{rcl}
+\W(x) &=& \{1, \ldots, p\},\\
+\L(x) &=& \emptyset,\\
+\U(x) &=& \{p+1, \ldots, m\}
+\ea{.}
+\]
+So it remains to add some trivial side conditions such that $y = 0$ becomes a
+vertex of the second auxiliary problem.  We add the conditions
+\[
+y \ba{[}{c}-I_p \\ 0 \ea{]} \leq 0
+\]
+then $y = 0$ satisfies $-yI_m = 0$ and thus is a vertex of the augmented
+auxiliary problem
+%
+\begin{equation} \label{sv4}
+\max\{yb, \; y\ba{[}{ccc} -I_p & B^{1:p} & O \\O  & B^{(p+1):m} & -I_{m-p}
+\ea{]} \leq [0, \; a, \; 0] \}
+\end{equation}
+with $n+m$ side conditions. A basis index vector of the vertex $y = 0$ of
+(\ref{sv4}) is
+\[
+\A(y) = \{1, \ldots,p,n+p,\ldots,n+m\}.
+\]
+But in the algorithm we write
+%
+\[
+\A(y) = \{0, \ldots,0,n+p,\ldots,n+m\}
+\]
+where the first $p$ zeros indicate the spurious side conditions which have to
+be inactivated at first.  The reduced first tableau of the second auxiliary
+problem has the form
+\[
+{\bf P} = \ba{[}{ccc} -I_p & -B^{1:p}  & \wi{w}^{1:p}\\
+      O & -B^{p+1:m} & \wi{w}^{(p+1):m}\\
+       y_{1:p} & -a & \wi{f}
+       \ea{]}
+\]
+with $ y_{1:p} = 0, \; \wi{w} = -b$ and $\wi{f} = 0$.  The regular matrix
+$-I_p$ plays here the role of the key matrix $A^{-1}$.  The last column becomes
+never pivot column hence the entire tableau can be multplied by $-1$ with a
+suitable modification of the pivot rule as in the original simplex problem.  If
+$y^{\star}b - \delta = 0$ then the solution $y^{\star}$ of the auxiliary
+problem (\ref{sv1}) is a feasible point and also a vertex of the original
+problem (\ref{uuu}).  Then $y^{\star}B = a$ holds but it may happen that not
+all $b^i, \; i = 1,\ldots,n$ are in the basis of $y^{\star}$.  Then the above
+Case 1 must be repeated until $n_c = n$.  Afterwards the basis index vector of
+$y^{\star}$ has the desired form
+\[
+\A(y^{\star}) = \{\rho _1, \ldots, \rho _m\}
+\]
+where
+\[
+\rho _k \in \ba{\{}{cc} \{1, \ldots, n\}, & 1 \leq k \leq n,\\
+                        \U(y^{\star}), & n < k.
+            \ea{.}
+\]
+But note that not necessarily $\rho _k = k, \; k = 1, \ldots, n$.
+\par
+At the end of phase 1, we have $\D(y^{\star}) = \emptyset$ hence the reduced
+tableau (\ref{svs7}) has the form
+%
+\begin{equation} \label{svs8}
+{\bf P} = \ba{[}{ccc}
+ A_{1:p}                 & - A_{(p+1):n} & \wi{w}^{1:n}\\
+ B^{\U}{}A_{1:p}    & - B^{\U}A_{(p+1):n}
+ & \wi{w}^{(n+1):m}\\
+y_{1:p} & -y_{p+\L} & \wi{f}
+\ea{]}.
+\end{equation}
+Hence this tableau can be used for start tableau in phase 2 with $\N = \U$ if
+the sign is changed in the second block column and if the last column is
+replaced by
+\[
+\ba{[}{c}w \\ f \ea{]} = \ba{[}{c} \wi{A}P^Tc \\ yc \ea{]}.
+\]
+An basis index vector of $y^{\star}$, considered for vertex of the dual
+problem, is
+\[
+\A(y^{\star}) = \{1, \ldots, p, p+\L\}.
+\]
+because the matrix $A$ defined by (\ref{hjh}) is regular.
+

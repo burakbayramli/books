@@ -1,0 +1,70 @@
+%-- VEKTORANALYSIS -------------------------------------------------
+\documentclass[12pt,a4paper]{article}
+\input aaformat
+\begin{document}
+%
+\addtolength{\abovedisplayskip}{-1ex}
+\addtolength{\belowdisplayskip}{-1ex}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\addtolength{\belowdisplayshortskip}{-1ex}
+%
+%\thispagestyle{empty}
+%\kopfp
+%
+\bc
+{\bf Kirchhoff-Platte}
+\ec
+{\large
+\[
+\ba{.}{rclcl}
+u_1 &=& - z\theta_1 &=& z\beta _1,\\
+u_2 &=& - z\theta_2 &=& z\beta _2,\\
+u_3 &=& w,\\
+w_x &=& - \theta_2 &=& - \beta _1,\\
+w_y &=& \theta_1 &=& - \beta _2,
+\ea{.}
+\]
+\[
+\beta _1 = \theta_2, \; \beta _2 = - \theta_1.
+\]
+Potential der Platte
+\[
+\ba{.}{rcl}
+P &=& \dis \frac{1}{2}\frac{Eh^3}{12(1 - \eta ^2)}\int_{\Omega}
+[w_{xx}^2 + 2\nu w_{xx}w_{yy} + w_{yy}^2 + 2(1 - \nu )w_{xy}^2]dxdy\\
+&-& \int_{\Omega}pwdxdy - \sum_{i=1}^mF_iw_i,\\
+P &=& \dis \frac{1}{2}\frac{Eh^3}{12(1 - \eta ^2)}\int_{\Omega}
+[\theta_{2,x}^2 - 2\nu \theta _{2,x}\theta _{1,y} + \theta _{1,y}^2
++ \frac{1}{2}(1 - \nu )(\theta ^2_{1,x} - 2\theta _{1,x}\theta _{2,y} + \theta
+_{2,y}^2)]dxdy\\
+&-& \int_{\Omega}pwdxdy - \sum_{i=1}^mF_iw_i,\\
+\ea{.}
+\]
+\par
+\[
+\xi _x = y_{31}/J, \; \eta _x = - y_{21}/J, \; \xi_y = - x_{31}/J, \;
+\eta _y = x_{21}/J.
+\]
+\par
+\[
+\ba{.}{rclcl}
+\theta _{1,x} &=& \theta _{1,\xi }\xi _x + \theta _{1,\eta }\eta _x
+ &=& (\theta _{1,\xi }y_{31} - \theta _{1,\eta }y_{21})/J,\\
+\theta _{1,y} &=& \theta _{1,\xi }\xi _y + \theta _{1,\eta }\eta _y
+ &=& (\theta _{1,\eta }x_{21} - \theta _{1,\xi }x_{31})/J.
+\ea{.}
+\]
+\par
+\[
+\ba{.}{l}
+J[\frac{1}{2}(1 - \nu )\theta ^2_{1,x} + \theta ^2_{1,y}\\
+ - 2\nu \delta _{2,x}\theta _{1,y} - (1 - \nu )\theta _{1,x}\theta _{2,y}\\
++ \theta ^2_{2,x} + \frac{1}{2}(1 - \nu )\theta ^2_{2,y}]\\
+\ea{.}
+\]
+
+}
+
+\end{document}
+
+

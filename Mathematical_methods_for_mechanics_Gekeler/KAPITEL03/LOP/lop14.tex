@@ -1,0 +1,115 @@
+\section{Projection Method I}
+For $\max \{ax, \; Bx \leq c\}$,
+$B \in \Bbb{R}^m{}_n$ with $\rank (B) = n$ and rows $b^i$.
+\par
+{\bf Given:} {\bf vertex} $x$ with index vector $\A(x)$ of a row basis
+of $x$ and complement $\N(x)$ in $\{1,\ldots,m\}$.
+\beqn \ba{.}{lll}
+\A(x) = \{\rho _1,\ldots, \rho _n\}, &
+\N(x) =   \{\sigma _1, \ldots , \sigma _{m-n}\},\\
+B^{\A} := [b^i]_{i \in \A(x)}, & B^{\N} :=[b^i]_{i \in \N(x)}, &
+c^{\N} = [\gamma ^i]_{i \in \N(x)}.
+\ea{.} \eeqn
+%
+Compute
+\[
+[B^{\A}]^{-1} = A = [a_i]_{i = 1}^n, \; B^{\N}A, \;
+r =  B^{\N}x - c^{\N}, \;  w =  aA, \;  f = ax.
+\]
+%
+{\bf Step 1.} (Which search direction $a_j$?)\\
+If $w \geq 0$ then $x$ is optimum else compute
+\[
+\ba{.}{ll}
+j := \min \arg_k\min \{ w_k \} &\mbox{(fast)}, \,
+a_j \, \mbox{new direction},\\
+j :=  \arg_k\min \{\rho _k \in \A(x)_k, \; w_k < 0\} &
+\mbox{({\sc Bland}'s rule, only in degenerate vertex)}.
+\ea{.}
+\]
+%
+{\bf Step  2.} (Which step width $\tau$?)\\
+If $d_j := B^{\N}a_j \equiv [B^{\N}A]_j \geq 0$ then a solution does not exist
+else compute
+\[
+\tau := \min  \{r^k/d^k{}_j, \; d^k{}_j < 0\}, \;
+i = \min \{ k, \; d^k{}_j < 0, \; r^k/d^k{}_j = \tau \},
+\]
+or ({\sc Bland}'s rule)
+\[
+i = \arg_k\min \{\sigma _k \in \N(x), \; d^k{}_j < 0, \; r^k/d^k{}_j = \tau
+\}.
+\]
+%
+{\bf Step 3.} (Change of basis.)
+\beqn
+{\bf P} = [p^k{}_l] :=
+\left[
+\begin{array}{cc}
+A      & x\\
+B^{\N}A & r\\
+w & f \\
+\end{array}
+\right].
+\eeqn
+Compute ${\bf Q} = \mbox{swap}({\bf P},i+n,j)$ (see below).
+Set
+\beqn \ba{.}{rcl}
+\ba{[}{c} A\\ B^{\N}A \ea{]}
+&=& [q^k{}_l]_{k=1}^m{}_{l=1}^n, \; x =
+[q^k{}_{n+1}]_{k=1}^n, \; r = [q^k{}_{n+1}]_{k=n+1}^m,\\[1mm]
+w &=& [q^{m+1}{}_l]_{l=1}^n, \; z = q^{m+1}{}_{n+1}\:,\\
+\A(x) &=& (\rho_1 , \ldots , \rho_{j -
+  1}\,,\,\sigma_{i}\,,\,\rho_{j +1} , \ldots \rho_n)\:,\;\\
+\N(x) & = & (\sigma_1 , \ldots ,
+\sigma_{i -1}\,,\,\rho_j \,,\,\sigma_{i +1}, \ldots
+, \sigma_{m-n})\\
+\ea{.}
+\eeqn
+and return to Step 1.\\
+The components of $x$ are in correct order because side conditions are
+interchanged only. However, the updating of the index vectors
+$\A(x)$ and
+$\N(x)$ is necessary for {\sc Bland}'s rule and for the computation of $y$:
+\[
+y_{\rho _i} = w_i, \; i = 1, \ldots,n, \; y_{\sigma _j} = 0 \; j = 1,
+\ldots, m - n.
+\]
+If the first $n$ rows of the tableau are omitted, i.e., if the tableau ${\bf
+P}$ has the form
+\beqn
+{\bf P} = \left[
+\begin{array}{cc}
+B^{\N}A & r\\
+w & f \\
+\end{array}
+\right]
+\eeqn
+then the final vertex $x$ has to be computed separately which is more
+advantageous from the numerical point of view. For this we also need the
+index vector  $\A(x)$:
+\beqn
+B^{\A} := [b^i]_{i \in \A(x)}, \; c^{\A} = [\gamma ^i]_{i \in \A(x)}, \;
+B^{\A}x = c^{\A}.
+\eeqn
+\par
+{\bf Function SWAP}: $Q = \mbox{swap}(P,i,j)$.\\
+Compute $Q = [q^k{}_l]$ according to
+\[
+\ba{.}{lll}
+q^i{}_j = 1/p^i{}_j & \mbox{(pivot element)}\,,\; &
+q^k{}_j = p^k{}_j/p^i{}_j \,,\;k \neq i  \quad \mbox{(pivot column)}\,,\\
+q^i{}_l = - p^i{}_l/p^i{}_j\,,\: l \neq j
+& \mbox{(pivot row)}\,,\; & q^k{}_l =  p^k{}_l - p^k{}_jp^i{}_l/p^i{}_j
+\quad\mbox{(else)}
+\ea{.}
+\]
+or
+\[ \ba{.}{rclcrcl}
+Q &=& P - [P]_j \otimes [P]^i/[P]^i{}_j, &
+[Q]_j &=& [P]_j/[P]^i{}_j,\\[0mm]
+[Q]^i &=& - [P]^i/[P]^i{}_j, &
+[Q]^i{}_j &=& 1/[P]^i{}_j.
+\ea{.}
+\]
+

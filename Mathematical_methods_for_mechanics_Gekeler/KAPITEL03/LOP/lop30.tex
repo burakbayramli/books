@@ -1,0 +1,242 @@
+\section{Phase 1--2 in Simplex Method, Column Form}
+As preparation, we consider the particular primal problem
+\begin{equation} \label{uuu}
+\max \{-ax, \; Bx = c, \; [0, \; - I_{m-p}]x \leq 0\},
+\; B \in \Bbb{R}^n{}_m, \; c \geq 0,
+\end{equation}
+with the rank condition
+\[
+\rank (B_{1:p}) = p, \; \rank (B) = n.
+\]
+The phase-1--problem (\ref{e20}) then reads
+\begin{equation} \label{kvk}
+\max \{[-1, \; b]\ba{[}{c}\xi \\x\ea{]}, \;
+\ba{[}{cc} -1 & 0\\ 0 & B \\ -e & [0, \; - I_{m-p}]
+\ea{]}\ba{[}{c}\xi \\x\ea{]} \leq \ba{[}{c}0 \\ c \\ d\ea{]}
+\end{equation}
+where
+\[
+b = \sum_{i=1}^nb^i, \; \delta  = \sum_{i=1}^n\gamma ^i, \; d = 0 \in
+\Bbb{R}^{m-p}.
+\]
+Here we have
+\[
+\xi ^0 = \max\{0, - d^1, \ldots, - d^{m-p}\} = 0
+\]
+with the components $d^k = 0$ of the vektor $d$ and thus the point $(\xi ,x) =
+(0,0) \in \Bbb{R}^{m+1}$ is feasible for (\ref{kvk}). If $(\xi ^*,x^*)$ is a
+solution of (\ref{kvk}) then $x^*$ is feasible for (\ref{uuu}) if $\xi ^* = 0$
+or if $bx^* = \delta $ by Corollary (\ref{f6}) and Lemma (\ref{l6}).
+Therefore we may cancel the additional variable $\xi $ entirely and ask whether
+a solution $x^*$ satisfies $bx^* = \delta $.  So we consider the following
+problem
+%
+\begin{equation} \label{sv1}
+\max \{bx, \; \wi{B}x \leq \wi{c} \}
+\end{equation}
+with
+\begin{equation} \label{sv2}
+\wi{B} =  \ba{[}{cc} B_{1:p} & B_{p+1:m}\\ 0 & -I_{m-p}\ea{]}, \;
+\wi{c} =  \ba{[}{c} c \\ 0\ea{]} \}, \; c \geq 0.
+\end{equation}
+having $n+m-p$ side conditions and $m$ variables.  Regarding the particular
+form of the design matrix, we have to split up the column and row index set in
+the following way:
+\begin{equation} \label{ph3}
+\ba{.}{rcl}
+\{1, \ldots,m\} &\simeq& \{\W, \; p + \L, \; p + \U\},\\
+\W &=& \{1, \ldots, p\},\\
+\L &=& \{i \in \{1, \ldots, m - p\}, \; x^{p+i} > 0 \}, \; |\L| =: n_l,\\
+\U &=& \{i \in \{1, \ldots, m - p\}, \; x^{p+i} = 0\}, \; |\U| =: n_u,\\[2mm]
+\{1, \ldots,n+m-p\} &\simeq& \{\C, \; \D, \; n + \L, \; n + \U\},\\
+\C &=& \{i, \; 1 \leq i \leq n, \; b^ix = \gamma ^i, \;
+|\C| =: n_c\},\\
+ \D &=& \{i, \; 1 \leq i \leq n, \; i \notin \C \}, \; |\D| = n - n_c.
+\ea{.}
+\end{equation}
+Let $Q$ be the permutation matrix defined by
+\[
+Qx = \ba{[}{c}x^{\W}\\x^{\L}\\ x^{\U} \ea{]}.
+\]
+If $x$ is a vertex of the problem (\ref{sv1}) then it must
+have  an basis index vector of the form
+\[
+\A(x) = \C(x) \cup (n+\U(x)), \; n_c + n_u = m,
+\]
+and a regular gradient matrix,
+%
+\[ \wi{B}^{\A}Q^T = \ba{[}{ccc}
+         B^{\C}{}_{\W} & B^{\C}{}_{\L} & B^{\C}{}_{\U}\\
+         O             &          O    & - I_{n_u}
+                  \ea{]}.
+\]
+The regularity is fulfilled if and only if $n_c = p + n_l$ and if
+the matrix
+\[
+A^{-1} := [B^{\C}{}_{\W} \; B^{\C}{}_{\L}]
+\]
+is regular. Then the edge matrix of the present problem is
+%
+\[
+\wi{A} = [\wi{B}^{\A}]^{-1} = Q^T\ba{[}{cc} A & AB^{\C}{}_{\U}\\ O & -
+I_{n_u}\ea{]}
+\]
+and the matrix of the inactive side conditions is
+ %
+\[ \wi{B}^{\N} = \ba{[}{ccc}
+B^{\D}{}_{\W} & B^{\D}{}_{\L} & B^{\D}{}_{\U}\\
+O & - I_{n_l} & O
+\ea{]}Q.
+\]
+We obtain
+\[
+\wi{B}^{\N}\wi{A} =
+\ba{[}{cc}
+[B^{\D}{}_{\W} \; B^{\D}{}_{\L}]A & [B^{\D}{}_{\W} \;
+B^{\D}{}_{\L}]AB^{\C}{}_{\U} - B^{\D}{}_{\U}\\
+- A^{(p+1):n_c} & - A^{(p+1):n_c}B^{\C}{}_{\U}
+\ea{]}
+\]
+and the full tableau of the problem (\ref{sv1}),
+%
+\[
+\wi{{\bf P}} = \ba{[}{cc} \wi{A} & \wi{x} \\
+                          \wi{B}^{\N}\wi{A} & \wi{r}\\
+                          \wi{w} & \wi{f}
+               \ea{]},
+\]
+has the form
+\[
+\wi{{\bf P}} = \ba{[}{ccc}
+ A & AB^{\C}{}_{\U} & \wi{x}^{1:n_c}\\
+ O & -I_{n_u}       & \wi{x}^{(n_c+1):m}\\[0mm]
+[B^{\D}{}_{\W} \; B^{\D}{}_{\L}] A & [B^{\D}{}_{\W} \;
+B^{\D}{}_{\L}]AB^{\C}{}_{\U} - B^{\D}{}_{\U}  & \wi{r}^{1:(n-n_c)}\\
+- A^{(p+1):n_c} & - A^{(p+1):n_c}B^{\C}{}_{\U}    &
+\wi{r}^{(n-n_c+1):(n-p)}\\
+\wi{w}_{1:n_c} & \wi{w}_{(n_c+1):m} & \wi{f}
+\ea{]}
+\]
+where
+\[
+\wi{x} = Qx, \; \wi{r} = \wi{B}^{\N}\wi{x} - \wi{c}^{\N}, \; \wi{w} = b\wi{A},
+\; \wi{f} = bx.
+\]
+No information is lost here if the rows $p+1, \ldots, n$ are cancelled,
+and the reduced tableau has the form
+%
+\begin{equation} \label{svs7}
+\wi{{\bf P}}_{\mbox{red}} = \ba{[}{ccc}
+ A^{1:p} & A^{1:p}B^{\C}{}_{\U} & \wi{x}^{1:p}\\[0mm]
+[B^{\D}{}_{\W}, \, B^{\D}{}_{\L}] A & [B^{\D}{}_{\W}, \,
+B^{\D}{}_{\L}]AB^{\C}{}_{\U} - B^{\D}{}_{\U}  & \wi{r}^{1:(n-n_c)}\\
+- A^{(p+1):n_c} & - A^{(p+1):n_c}B^{\C}{}_{\U}    & -x^{\L}\\
+\wi{w}_{1:n_c} & \wi{w}_{(n_c+1):m} & \wi{f}
+\ea{]}
+\end{equation}
+with $n+1$ rows and $m+1$ columns.  In an exchange step we have to change the
+$j$-th row $\wi{B}^{\A}Q^T$ with the absolute index $\rho _j$ for the $i$-th
+row of $\wi{B}^{\N}Q^T$ with the absolute index $\sigma _i$.  Here we have to
+make a difference between the following two cases according to the shape of
+$\wi{B}^{\N}$:
+\par
+{\bf Case 1.} $i \in \{1, \ldots, n - n_c\}$. Then
+\[
+\ba{.}{rcl}
+\C &=& \{\rho _1, \ldots, \rho _{n_c},\sigma _i\},\\
+\U &=& \{\rho _{n_c+1}, \ldots, \rho _{j-1},\rho _{j+1}, \ldots, \rho
+_{n_c+n_u} \},\\
+\D &=& \{\sigma _1, \ldots, \sigma _{i-1}, \sigma _{i+1}, \ldots,
+\sigma _{n-n_c}\},\\
+\L &=& \{\sigma _{n-n_c+1},\ldots ,\sigma _{n-n_c+n_l},\rho _j\},
+\ea{.}
+\]
+Here rows must be changed as well in the gradient matrix $\wi{B}^{\A}$ as
+in the matrix $\wi{B}^{\N}$. But change of rows in the gradient matrix
+implies change of columns in the edge matrix. Therefore, after swapping, we
+have to move the j-th column at position $n_c + 1$ and the (i+p)-th row at
+position $n$.
+\par
+{\bf Case 2.} $i \in \{n-n_c+1, \ldots, n - n_c + n_l\}$. Then
+\[
+\ba{.}{rcl}
+\U &=& \{\rho _{n_c+1}, \ldots, \rho _{j-1},\sigma _i,\rho _{j+1},
+\ldots, \rho _{n_c+n_u}\},\\
+\L &=& \{\sigma _1, \ldots, \sigma _{i-1}, \rho _j, \sigma _{i+1}, \ldots,
+\sigma _{n-n_c}\}.
+\ea{.}
+\]
+Here the tableau does not change but only the meaning of some entries.
+\par
+The problem (\ref{sv1}) has the feasible point $x = 0 \in \Bbb{R}^n$ with
+\[
+\ba{.}{rcl}
+\W(x) &=& \{1, \ldots, p\},\\
+\L(x) &=& \emptyset,\\
+\U(x) &=& \{p+1, \ldots, m\}
+\ea{.}
+\]
+So it remains to add some trivial side conditions such that $x = 0$ becomes a
+vertex of the second auxiliary problem.  We add the conditions $[-I_p, 0]x \leq
+0$ then $x= 0$ satisfies $-I_mx = 0$ and thus is a vertex of the augmented
+auxiliary problem
+%
+\begin{equation} \label{sv4}
+\max\{bx, \; \ba{[}{cc} -I_p & O\\ B_{1:p} & B_{(p+1):m} \\ O & -I_{m-p}
+\ea{]}x \leq \ba{[}{c}0 \\c \\ 0\ea{]}\}
+\end{equation}
+with $n+m$ side conditions. The basis index vector of the vertex $x = 0$ of
+(\ref{sv4}) is
+\[
+\A(x) = \{1, \ldots,p,n+p,\ldots,n+m\}.
+\]
+But in the algorithm we write
+%
+\[
+\A(x) = \{0, \ldots,0,n+p,\ldots,n+m\}
+\]
+where the first $p$ zeros indicate the spurious side conditions which have to
+be inactivated at first.  The reduced first tableau of the second auxiliary
+problem has the form
+\[
+{\bf P} = \ba{[}{ccc} -I_p & 0 & x^{1:p}\\
+      -B_{1:p} & -B_{p+1:m} & -c\\
+       \wi{w}_{1:p} & \wi{w}_{p+1:m} & \wi{f}
+       \ea{]}
+\]
+with $ x^{1:p} = 0, \; \wi{w} = -b$ and $\wi{f} = 0$.  The regular matrix
+$-I_p$ plays here the role of the key matrix $A^{-1}$.  The last row becomes
+never pivot row hence the entire tableau can be multplied by $-1$ with a
+suitable modification of the pivot rule as in the original simplex problem.
+The solution $x^{\star}$ of this problem is a feasible point and also a vertex
+of the original problem (\ref{uuu}) if $bx^{\star} - \delta = 0$.  Then
+$Bx^{\star} = c$ holds but it may happen that not all $b^i, i = 1,\ldots,n$ are
+in the basis of $x^{\star}$.  Then the above Case 1 must be repeated until $n_c
+= n$.  Afterwards the basis index vector of $x^{\star}$ has the desired form
+\[
+\A(x^{\star}) = \{\rho _1, \ldots, \rho _m\}
+\]
+where
+\[
+\rho _k \in \ba{\{}{cc} \{1, \ldots, n\}, & 1 \leq k \leq n,\\
+                        \U(x^{\star}), & k > n.
+            \ea{.}
+\]
+But note that not necessarily $\rho _k = k, \; k = 1, \ldots, n$.
+\par
+At the end of phase 1, we have $\D(x^{\star}) = \emptyset$ hence the reduced
+tableau (\ref{svs7}) has the form
+%
+\begin{equation} \label{svs8}
+\wi{{\bf P}}_{\mbox{red}} = \ba{[}{ccc}
+ A^{1:p} & A^{1:p}B^{\C}{}_{\U} & \wi{x}^{1:p}\\[0mm]
+- A^{(p+1):m} & - A^{(p+1):m}B^{\C}{}_{\U}    & -x^{\L}\\
+\wi{w}_{1:n} & \wi{w}_{(n+1):m} & \wi{f}
+\ea{]}.
+\end{equation}
+Hence this tableau can be used for start tableau in phase 2 if the sign is
+changed in the second block row and if the last row is replaced by
+\[
+[w, \; f] = [aA, \; ax].
+\]
+

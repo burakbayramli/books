@@ -1,0 +1,101 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 1a \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+{\bf Thrust-Problem}
+Vgl. {\sc Bryson-Ho}: Applied Optimal Control, S. 59.\\
+Wie {\bf Beispiel 1}, aber die Kontrolle wird nicht eliminiert, sondern
+das Gradientenverfahren verwendet.
+
+Zustandsgleichungen (Bewegungsgleichungen) $\dot{x} = [\nabla_y H]^T$\,:
+\begin{equation} \label{1}
+\fbox{$
+\dot{x}_1 = x_3(t), \quad
+\dot{x}_2 = x_4(t), \quad
+\dot{x}_3 = a(t) \cos(u(t)), \quad
+\dot{x}_4 = a(t) \sin(u(t))
+$}\; .
+\end{equation}
+
+{\bf (a)} Zielfunktion und {\sc Hamilton}-Funktion:
+\begin{equation} \label{2}
+\ba{.}{rcl}
+J(x) &:=& p(x(T)) + \int_0^TL(x(t),u(t),t)dt = -x_3(T)  = \Min !,\\
+H(x,y,u,t) &=&  y^Tf = y_1x_3 + y_2x_4 + y_3a(t)\cos(u) + y_4a(t)\sin(u),\\
+\nabla_x H &=& (0,0,y_1,y_2)\quad \mbox{(Zeilenvektor)}.
+\ea{.}
+\end{equation}
+
+Kozustandsgleichungen ({\sc Euler-Lagrange}-Gleichungen) $\dot{y} = -
+[\nabla_x H]^T$:
+\begin{equation} \label{3}
+\fbox{$
+\dot{y}_1 = 0,\quad
+\dot{y}_2 = 0,\quad
+\dot{y}_3 = - y_1,\quad
+\dot{y}_4 = - y_2
+$}\; .
+\end{equation}
+L"osung von (\ref{3})
+\[
+y(t) = [c_1,c_2,-c_1t + c_3,-c_2t + c_4]^T.
+\]
+\par
+\vspace{1mm}
+Anfangsbedingungen f"ur den Zustand $x$:
+\[
+x(0) = a = 0\,.
+\]
+Endbedingungen f"ur den Kozustand $y$:
+\[
+y(T) = [\nabla_xp]^T(T) = \ba{[}{c}0\\0\\-1\\0\ea{]}\, .
+\]
+Zus"atzliche Endbedingungen
+\[
+\ba{.}{rcl}
+K = q(x(T)) &=& \ba{[}{c}x_2(T) - H\\x_4(T)\ea{]} = 0\\[6mm]
+[\nabla_x]^Tq(T) &=& \ba{[}{cc} 0 & 0\\1 & 0\\0 & 0\\0 & 1\ea{]}\, .
+\ea{.}
+\]
+F"ur dieses Problem versagt das Gradientenverfahren!
+\par
+\vspace{1mm}
+% ---------------------------------------------------------------------
+{\bf (b)} Einbindung der zus"atzlichen Endbedingungen in die Zielfunktion:
+\[
+J(x) := p(x(T))= -x_3(T) + (x_2(T) - H)^2 + x_4(T)^2 = \Min !
+\]
+Dann ist wieder die Endbedingung f"ur $y$ gegeben durch
+$y(T) = [\nabla_xp]^T(x(T))$.
+
+Bei diesem Problem ist das Optimum als station"arer Punkt vermutlich keine
+lokale Extremalstelle von $u$. Das Gradientenverfahren versagt hier ebenfalls.
+\par
+\vspace{1mm}
+{\bf (c)} Die Wahl der Zielfunktion
+\[
+J(x) := p(x(T))= (x_2(T) - H)^2 + x_4(T)^2 = \Min !
+\]
+liefert das gleiche Ergebnis wie CNTRL01, Beispiel 2. Daher hat es den
+Anschein, als sei die urspr"ungliche Bedingung $x_3(T) = \Max!$ unter Wahl der
+zus"atzlichen Endbedingungen $x_2(T) - H = 0$ und $x_4(T) = 0$
+automatisch erf"ullt.
+
+
+%\newpage
+
+%\bc
+%\begin{minipage}{10.cm}
+%   \epsfxsize=9.9cm
+%   \epsffile{fig1.eps}
+%\end{minipage}
+%\ec
+%\centerline{\epsfig{file=stab.eps,height=6cm},bbllx=-6cm,bblly=5mm}
+\end{document}
+

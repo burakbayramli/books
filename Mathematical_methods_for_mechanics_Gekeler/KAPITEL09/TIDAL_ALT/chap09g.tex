@@ -1,0 +1,421 @@
+\documentclass[12pt,a4paper,leqno,twoside]{book}
+\input aaformat
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\newcommand{\Release}{14/04/06}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1.5ex}
+\parindent0ex
+%
+{\large\bf Erg"anzungen 5 zu Kap. IX\hfill E.\ Gekeler
+}
+\par
+\vspace{-1mm}
+\hfill{\footnotesize\Release\ }
+\par
+\vspace{-2mm}
+\rule{\textwidth}{1pt}
+\par\vspace{2ex}
+{\bf Fallstudie: Shallow Water Problems}
+\par
+%
+Verwendete Gr"o\ss en im $(x,y,z)$--Koor\-dinaten\-system
+%
+\bc
+\begin{tabular}{|lll|}\hline
+$\ h$               && mittlere Wassertiefe\\
+$\ w = h + z$  && totale Wassertiefe\\
+$\ \wi{u}$               && Str"omung nach Osten\\
+$\ \wi{v}$               && Str"omung nach Norden\\
+$\ \dis u = \frac{1}{w}\int_{-h}^z \wi{u}\ d\zeta $ && mittlere Geschw. nach
+Osten\\
+$\ \dis v = \frac{1}{w}\int_{-h}^z \wi{v}\ d\zeta$ && mittlere Geschw. nach
+Norden\\
+$\ \theta$ & $m/s$ & Windgeschwindigkeit $10 \ m$ \\
+&&"uber Wasseroberfl"ache\\
+$\ \kappa$ && dim.-loser Koeff. der Oberfl"achenkraft\\
+&& durch Windeinfluss\\
+$\ \phi $ & $rad$ & Breitengrad\\
+$\ \psi$  && Winkel der Windrichtung gegen"uber Osten\\
+$\ \omega = 7.292\times 10^{-5}$ & $rad/s$
+&  Winkelgeschwindigkeit der Erdrotation\\
+$\ f = 2\omega  \sin \phi $ & $rad/s$ & {\sc Coriolis}--Faktor\\
+$\ g = 9.81$ & $m/s^2$ & Fallbeschleunigung \\
+$\ \mu _e$ & $kg/s$ & {\sc Eddy}-Viskosit"at\\
+$\ C$ &$m^{1/2}/s$ & Reibungskoeff. nach {\sc Chezy} gegen"uber\\
+&& Meeresgrund \\
+$\ n$ && {\sc Manning}-Koeffizient der Rauhigkeit\\
+&& des Meeresgrundes\\ \hline
+\end{tabular}
+\ec
+					
+In Rechenbeispielen wird etwa
+\[
+\gamma = \dis n^{-1}h^{1/6}\,, \; n = 0.025\,\;\; \text{oder}\;\;
+\gamma = \dis 1.486\,n^{-1}h^{1/6}\,,\; n = 0.0402 \; \; \text{[Peraire]}
+\]
+gesetzt. F"ur den Koeffizienten $\kappa$ wird in Abh"angigkeit von der 
+Windgeschwindigkeit
+\[
+\kappa = \ \ba{\{}{ll}
+1.0 \times 10^{-3} & (\theta \leq 5)\\
+1.5 \times 10^{-3} & (5 < \theta \leq 15)\\
+2.0 \times  10^{-3} & (15 < \theta \leq  20)
+\ea{.}
+\]
+%
+gew"ahlt.
+\par
+{\bf (a)} Nach \S\, 8.10 gilt f"ur den
+den {\sc Green-Lagrange}-Verzer\-rungs\-tensor und
+den Spannungstensor 
+%
+\begin{equation} \label{e1}
+\fbox{$\
+\ba{.}{rcl}
+\eps(\u) &=& \dis \frac{1}{2}\left[\grad \u + (\grad \u)^T\right]\\[1ex]
+\sig( \u) &=& 2 \mu_1 \eps (\u) + \mu_2 \spur \eps (\u)\del\\[1ex]
+%
+&=& \dis 2 \mu_1 \eps (\u ) - \frac{2}{3}\mu_1 (\div \u )\del
+ + \left(\frac{2}{3} \mu_1 + \mu_2 \right) \div \u \del\\[1ex]
+%
+&=& \dis 2 \mu_1\left[ \eps (\u ) - \frac{1}{3} (\div \u )\del\right]
+ + \mu_3 \, (\div \u)\del
+\ea{.}
+$}\; ,
+\end{equation}
+%
+dabei sind
+%
+\[
+\fbox{$\
+\ba{.}{rcll}
+\mu _1&=& 3(\mu_3 - \mu_2)/2   & \mbox{die Scherz"ahigkeit}\\
+\mu_2 &=& (3\mu_3 - 2\mu_1)/3  & \mbox{die Volumenz"ahigkeit}\\
+\mu_3&=& (2\mu _1 + 3\mu _2)/3 &\mbox{die Druckz"ahigkeit}\\
+\nu &=&\mu_1/\rho & \mbox{die kinematische Z"ahigkeit}
+\ea{.}
+$} \; .
+\]
+%
+[Becker], S. 114, 148.
+In $\sig$ ist die Spur von $[....]$ Null, daher gibt der erste Term die
+in\-fini\-tesi\-male Ge\-stalt\-"ande\-rung und der zweite die infinitesimale
+Volumen"anderung an.
+\par\vspace{0.5ex}
+Ferner gilt mit $\grad \phi$ als Zeilenvektor
+%
+\[
+\ba{.}{rcl}
+\div (\div (\u)\del) &=& [\grad \div \u]^T \quad \mbox{(Spaltenvektor)}
+\\[0.5ex]
+\div([\grad \u]^T) &=& [\grad \div \u]^T \quad \mbox{(Spaltenvektor)}\,,
+\ea{.}
+\]
+also
+%
+\begin{equation}\label{e2}
+\ba{.}{lll}
+\sig(\u)
+&=& \dis \mu_1\, \left[ \grad \u +  [\grad \u]^T\right]
++ \mu_2 \, (\div \u)\del\\[0.5ex]
+%
+\div \sig(\u)
+&=& \dis \mu_1 \, \left[\div \grad \u + [\grad \div \u]^T\right]
++ \mu_2 \, [\grad \div \u]^T\\[0.5ex]
+&=& \dis \mu_1 \,\Delta \u + (\mu_1 + \mu_2)[\grad \div \u]^T\,,
+\ea{.}\hspace{7ex}
+\end{equation}
+%
+also $\div \sig(\u) = \mu_1\, \Delta \u$ wenn $\div \u = 0$.
+Im Weiteren setzen wir voraus, dass die Materialgr"o\ss en $\mu _1$ und $\mu
+_2$ {\em konstant} in Raum und Zeit sind.  Ferner soll $\grad p$ ein
+Spaltenvektor sein, wie auch aus dem Zusammenhang zu erkennen ist.
+Dann folgt
+\[
+\div(\sig (\u) - p\del)
+=  \mu \,\Delta - \grad p\,,\;\; \mu = \mu_1.
+\]
+Einsetzen in den lokalen Impulserhaltungssatz ergibt die Erhaltungsgleichungen 
+f"ur z"ahe Fluide in der nichtkonservativen Form  
+%
+\begin{equation} \label{e3}
+\fbox{$\
+ \ba{.}{rclcl}
+\dis \: \div \u
+&=& 0\\[2ex]
+\dis \frac{D \u}{Dt} &-&\dis \frac{\mu}{\rho} \,\Delta \u
++ \frac{1}{\rho}\grad p - \f &=& 0\\[2ex]
+\dis \rho \frac{D\epsilon }{Dt} &-& \eps(\u):\sig(\u) + \div \q
+- \rho \,r &=& 0
+\ea{.}
+$}\; .
+\end{equation}
+\par
+oder in der konservativen Form ohne Energieerhaltungssatz
+({\sc Einstein}sche Summenkonvention)
+\begin{equation} \label{e4}
+\div \u = 0\,,\;\; \text{oder} \;\; \frac{\da u_i}{\da x_i} = 0
+\end{equation}
+%
+\begin{equation}\label{e5}
+\u_t + (\grad \u)\u - \frac{\mu}{\rho}\,\Delta \u 
++ \frac{1}{\rho}\, \grad p - \f = \ul{0} \in \mb{R}^3
+\end{equation}
+%
+Der Massenerhaltungssatz (Kontinuit"atsgleichung) hat hier die einfache Form
+$\div \u = 0$\,.
+\par\vspace{0.5ex}
+
+{\bf (b)} Bei Flachwassergleichungen ist die vertikale Geschwindigkeit $u_3$ 
+gering und ihre Beschleunigung ebenfalls, so dass die dritte Gleichung in 
+(\ref{e5}) durch
+%
+\begin{equation}\label{e6}
+\frac{1}{\rho}\,\frac{\da p}{\da x_3} + g = 0\,,\;\; f_3 = - g
+\end{equation}
+%
+ersetzt werden kann. Integration ergibt mit einer geeigneten Wahl der
+Integrationskonstanten und dem atmosph"arischen Luftdruck $p_a$
+\[
+p = \rho\, g(z - x_3) + p_a
+\]
+F"ur $x_3 = z$ also auf der Wasseroberfl"ache folgt $p = p_a$ und
+wird vielfach vernachl"assigt.
+\par
+Auf der Wasseroberfl"ache (surface) ist nat"urlich $u^s_3$ die Zeitableitung des
+Wasserstandes, daraus folgt
+%
+\begin{equation}\label{e7}
+u^s_3 = \frac{Dz}{D t} = \frac{\da z}{\da t}
++ u^s_1\frac{\da z}{\da x_1} + u^s_2\frac{\da z}{\da x_2}
+\end{equation}
+und am Meeresgrund (bottom) gilt
+%
+\begin{equation}\label{e8}
+u^b_3 = \frac{D h}{D t} = \frac{\da h}{\da t}
++ u^b_1\frac{\da h}{\da x_1} + u^b_2\frac{\da h}{\da x_2}
+\end{equation}
+%
+Es wird nun angenommen, dass f"ur eine halbwegs z"ahe Fl"ussigkeit
+am Boden kein Schlupf vorkommt und 
+%
+\begin{equation}\label{e9}
+u^b_1 = u^b_2 = 0
+\end{equation}
+%
+also auch $u^b_3 = 0$ gesetzt.
+\par \vspace{0.5ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf (c)} Als n"achstes wird von der Geschwindigkeit $\u = [u_1,u_2]$ zur {\em 
+mittleren Geschwindigkeit} "ubergegangen verm"oge einer fiktiven Integration 
+"uber $x_3$:
+%
+\begin{equation}\label{e10}
+U := \frac{1}{w}\int_{-h}^z \wi{u}\ d\zeta\,,\;\; 
+V = \frac{1}{w}\int_{-h}^z \wi{v}\ d\zeta\,.
+\end{equation}
+Aus der Kontinuit"atsgleichung (\ref{e4}) folgt dann durch Integrationh%
+%
+\begin{equation}\label{e11}
+\int_{-h}^z\frac{\da u_3}{\da x_3}\,dx_3 +
+\int_{-h}^z\frac{\da u_1}{\da x_1}\,dx_3 +
+\int_{-h}^z\frac{\da u_2}{\da x_2}\,dx_3 = 0
+\end{equation}
+%
+(wobei eigentlich die Wassertiefe negativ gemessen wird, so dass der gesamte 
+Wasserstand $w = z - h$ {\em w"are} mit dem mittlerem Wasserstand $|h|$,
+damit der mittlere Wasserstand die $(x_3 = 0)$-Ebene ist). 
+\par
+Unangefochten von dieser Bemerkung wird nun die mittlere Geschwindigkeit $U_i$ 
+definiert zu
+%
+\begin{equation}\label{e12}
+\int_{-h}^z u_i\,dx_3 = U_i(h + z) \equiv U_i w\,,\;\; i = 1:2\,.
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf (d)}
+Aus der {\sc Leibniz}-Regel f"ur parameterabh"angige Integrale
+%
+\begin{equation}\label{e13}
+\frac{d}{dx}\int_{a(x)}^{b(x)}f(x,y)\,dy
+= f(x,b(x))b'(x) - f(x,a(x))a'(x)
++ \int_{a(x)}^{b(x)}\frac{da}{\da x}f(x,y)\, dy
+\end{equation}
+%
+folgt nun
+(Summation "uber i = 1:2)
+%
+\begin{equation}\label{e14}
+\int_{-h}^z\frac{\da u_i}{\da x_i}\,dx_3
+= U_iw - u^s_i\frac{\da z}{\da x_i}\,,\;\; 
+\end{equation}
+und durch direkte Integration mit (\ref{e9}) und $u^b_3 = 0$
+%
+ \begin{equation}\label{e15}
+\int_{-h}^z\frac{\da u_3}{\da x_3}\,dx_3 
+= u^s_3 = \frac{\da z}{\da t} + u^s_1\frac{\da z}{\da x_1}
+ + u^s_2\frac{\da z}{\da x_2}
+\end{equation}
+
+Schlie\ss lich folgt (\ref{e11}) durch Addition von (\ref{e14}) und (\ref{e15}) zur Kontinuit"atsgleichung f"ur die gemittelten Geschwindigkeiten
+%
+\begin{equation}\label{e16}
+\fbox{$ \dis
+\frac{\da z}{\da t} + \frac{\da (wU_i)}{\da x_i}
+\equiv \frac{\da w}{\da t} + \frac{\da (wU_1)}{\da x_1}
++ \frac{\da (wU_2)}{\da x_2} = 0
+$}\;.
+\end{equation}
+\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf (e)} Ebenso werden die Impulserhaltungsgleichungen (momentum equations)
+integriert:
+%
+\begin{equation}\label{e17}
+\int_{-h}^z\Big[
+\frac{\da u_i}{\da t} + (\grad u_i)\u - \frac{\mu}{\rho}\,\Delta u_i 
++ \frac{1}{\rho}\,\frac{\da p}{\da x_i} - f_i
+\Big]\, dx_3 = 0\,,\;\; i = 1:2
+\end{equation}
+%
+Nach \glqq einigen algebraischen Manipulationen\grqq\ [Zienkiewicz] FEM II, S. 606,
+erh"alt man
+%
+\begin{equation}\label{e18}
+\ba{.}{l} \dis
+\frac{\da (wU_i)}{\da t} 
++ \frac{\da}{\da x_j}
+\left[
+wU_iU_j + \delta_{ij}\,\frac12\, g\,(w^2 - h^2)
+- \frac{1}{\rho}\int_{-h}^z\tau_{ij}\, dx_3\right]\\[1ex]
+\dis
+-\, \frac{1}{\rho}\,(\tau^s_{3i} - \tau^b_{ij}) - wf_i - g(w - h)\frac{\da h}{\da x_i}
++ \frac{w}{\rho}\frac{\da p_a}{\da x_i} = 0\,,\;\; i = 1:2\,,
+\ea{.}
+\end{equation}
+wobei der Verfasser die Berechnung des konvektiven Terms so nicht nachvollziehen kann.
+Im "Ubrigen sind dies {\em keine} Gleichungen in den abh"angigen Variablen
+$w,\, wU,\, wV$.
+\par
+Dabei ist
+$
+[f_1, f_2] = f[-V,\, u]
+$ die {\sc Coriolis}-Kraft und
+\[
+\tau^b_{3i} = \frac{\rho g |\ul{U}|U_i}{C^2}
+\]
+mit dem {\sc Chezy}-Koeffizienten $C$ am Meeresgrund, sowie
+nach [Zienkiewicz]
+\[
+\ba{.}{lll}
+\tau_{ij} &=& \dis \mu \left(\frac{\da u_i}{\da x_j} + \frac{\da  u_j}{\da x_i}
+- \frac23 \, \frac{\da u_i}{\da x_i}\right)\;\;
+\text{oder}\;\; 
+\tau = \mu \grad \u \;\; \text{f"ur}\;\; \div \u = 0\;\; \text{s.oben}\\[1ex]
+\dis \int_{-h}^z\tau_{ij}\,dx_3
+&\simeq& \dis \mu \, w
+\left(\frac{\da U_i}{\da x_j} + \frac{\da  U_j}{\da x_i}
+- \frac23 \, \frac{\da U_i}{\da x_i}\right)
+\;\; \text{oder}\;\;
+\tau = \mu\,w\, \grad \ul{U}
+\,.
+\ea{.}
+\]
+Au\ss erdem ist
+\[
+\frac12 g(w^2 - h^2)_x - g(w - h)h_x
+= (gww_x - ghh_x) - (gwh_x - ghh_x) = gw(w - h)_x = gwz_x
+\]
+
+Die folgenden Flachwassergleichungen nach [Pinder \& Gray]
+werden allgemein akzeptiert und in der numerischen Behandlung angewendet\,
+\fbox{$w = h + z$}:
+
+\begin{equation} \label{e19}
+w_t + (wU)_x + (wV)_y = 0\,, \;\; 
+\end{equation}
+%
+\begin{equation}\label{e20}
+\fbox{$
+\ba{.}{l}
+U_t + U\, U_x + V \, U_y - fV + g z_x\\
+\dis -  \frac{\mu_e}{\rho w}\big[(wU_x)_x  + (wU_y)_y\big]
+ - \frac{\kappa\, \theta^2}{w} \cos \psi
+ + \frac{gU(U^2 + V^2)^{1/2}}{w\, C^2} = 0\\[1ex]
+V_t + U\, V_x + V \, V_y + fU + g z_y\\
+\dis - \frac{\mu_e}{\rho w}\big[(w V_x)_x  + (w V_y)_y\big]
+- \frac{\kappa\, \theta^2}{w} \sin \psi
++ \frac{gV(U^2 + V^2)^{1/2}}{w\,C^2} = 0
+\ea{.}
+$}\;.
+\end{equation}
+%
+Hier ist $U_t + U\, U_x + V \, U_y$ die Materialableitung von $U$.
+\par
+Wenn (\ref{e20}) mit $w$ multipliziert wird
+und (\ref{e19}) mit $U$ bzw. mit $V$
+und beide addiert  werden, ergibt sich f"ur die erste Gleichung in (\ref{e20})
+%
+\[
+\ba{.}{l}
+U\big(z_t + (wU)_x + (wV)_y\big) +
+w\big(U_t + U\, U_x + V \, U_y - fV + g z_x\big)\\[1ex]
+\dis  - w\left(  \frac{\mu_e}{\rho w}\big[(wU_x)_x  + (wU_y)_y\big]
++ \frac{\kappa\, \theta^2}{w} \cos \psi
+- \frac{gU(U^2 + V^2)^{1/2}}{w\, C^2}\right) = 0
+\ea{.}
+\]
+
+oder insgesamt
+%
+\begin{equation}\label{21}
+\ba{.}{l}
+(wU)_t + (wUU)_x + (wUV)_y \\[1ex]
+\dis
++ gwz_x - fwV - \frac{\mu}{\rho}\big[(wU_x)_x + (wU_y)_y\big]
+- \kappa \theta^2\cos \psi + \frac{gU|\ul{U}|}{C^2} = 0\\[2ex]
+%%%
+(wV)_t + (wVU)_x + (wVV)_y \\[1ex]
+\dis
++ gwz_x + fwU - \frac{\mu}{\rho}\big[(wV_x)_x + (wV_y)_y\big]
+- \kappa \theta^2\sin \psi + \frac{gV|\ul{U}|}{C^2} 
+\ea{.}
+\end{equation}
+Diese Gleichungen stimmen mit (\ref{e18}) "uberein ($p_a = 0$).
+\par\vspace{0.5ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%555
+{\bf (f)}
+Wir vernachl"assigen nun die Windkraft und die {\sc Coriolis}-Kraft.
+Die Koeffizienten des Diffusionsterms und des {\sc Chezy}-Terms sind zwar klein, bei 
+einigen Problemen kann aber auf ihren d"ampfenden Einfluss nicht verzichtet werden. 
+Zur Integration des {\sc Chezy}-Terms "uber ein Dreieck $T$ wird die
+{\sc Gau\ss}-Integration verwendet. Der Diffusionsterm wird linearisiert, z.B. 1. 
+Gleichung
+%
+\[
+\frac{\mu_e}{\rho w}\big[(wU_x)_x  + (wU_y)_y\big]
+= \frac{\mu_e}{\rho w}\big[wU_{xx}  + wU_{yy} + w_xU_x + w_yU_y\big]
+\sim \nu \big[U_{xx}  + U_{yy}\big] = \nu \Delta U\,.
+\]
+%
+Dann ergibt sich aus (\ref{e19}) und (\ref{e20})
+%
+\begin{equation} \label{e22}
+\fbox{$
+\ba{.}{l}
+w_t = - (wU)_x - (wV)_y\\[1ex]
+%
+U_t = \dis - U\, U_x - V \, U_y - g z_x
++ \nu \Delta U  - \frac{gU|\ul{U}|}{w\, C^2}\\[2ex]
+ %
+V_t = \dis - U\, V_x - V \, V_y  - g z_y
++ \nu \Delta V - \frac{gV|\ul{U}|}{w\,C^2} = 0
+\ea{.}
+$}\;.
+\end{equation}
+%
+\end{document}
+
+
+

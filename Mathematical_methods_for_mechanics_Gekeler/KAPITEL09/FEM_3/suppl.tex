@@ -1,0 +1,52 @@
+\documentclass[12pt,a4paper,leqno]{book}
+\input aaformat
+\begin{document}
+\addtolength{\abovedisplayshortskip}{-1ex}
+\setlength{\fboxsep}{1ex}
+\parskip1ex
+%
+\pagenumbering{arabic}
+\setcounter{page}{1}
+{\large
+\[
+\ba{.}{lll}
+rr1  &=& 16xy(1-x)(1 - y)(1 - 2y)(1 - 2x)\\[2ex]
+     && \Big[96(y-y^2)^2(x-x^2) - 32(x-x^2)^2(6y^2 - 6y + 1)\Big];\\[4ex]
+   %     
+rr2  &=&  16xy(1 - x)(1 - y)(1 - 2y)(1 - 2x)\\[2ex]
+     &&   \Big[-96(y-y^2)(x-x^2)^2 + 32(y-y^2)^2(6x^2 - 6x + 1)\Big];\\[4ex]
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)\\[2ex]
+        &&   \Big[(96(y-y^2)(x-x^2)((y - y^2) - (x - x^2))\\[2ex]
+        &&      + 32((y-y^2)^2(6x^2 - 6x + 1)
+           - (x-x^2)^2(6y^2 - 6y + 1))\Big];\\[4ex]
+           
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)\\[2ex]
+        &&   \Big[(96xy(1-y)(1-x)((y - y^2) - (x - x^2))\\[2ex]
+        &&      + 32[6(y-y^2)^2(x^2 - x) + (y - y^2)^2
+           -  6(y^2 - y)(x-x^2)^2 - (x - x^2)^2]\Big];\\[4ex]
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)\\[2ex]
+        &&   \Big[(96xy(1-y)(1-x)((y - y^2) - (x - x^2))\\[2ex]
+        && - 192[(y-y^2)^2(x - x^2) 
+                - (y - y^2)(x-x^2)^2]  + 32[(y - y^2)^2 - (x - x^2)^2]]\Big];
+\ea{.}
+\]
+\[
+\ba{.}{lll}
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)\\[2ex]
+        && \Big[- 96(y-y^2)(x - x^2)((y - y^2) - (x - x^2)) 
+                + 32[(y - y^2)^2 - (x - x^2)^2]]\Big];\\[4ex]
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)\\[2ex]
+        && \Big[- 96(y-y^2)(x - x^2)((y - y^2) - (x - x^2)) \\[2ex]
+        &&    + 32[(y - y^2) + (x - x^2)][(y - y^2) - (x - x^2)]]\Big];\\[4ex]
+        
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)((y - y^2) - (x - x^2))\\[2ex]
+        && \Big[- 96(y-y^2)(x - x^2) + 32((y - y^2) + (x - x^2))]\Big];\\[4ex]
+        
+rr  &=&  16xy(1 - x)(1-2x)(1 - y)(1 - 2y)((y - y^2) - (x - x^2))\\[2ex]
+        && 32\Big[(y - y^2) + (x - x^2) - 3(y - y^2)(x - x^2)]\Big];\\[4ex]
+
+\ea{.}
+\]            
+}
+\end{document}
+

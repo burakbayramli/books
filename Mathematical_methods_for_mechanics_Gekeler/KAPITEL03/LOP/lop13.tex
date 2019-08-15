@@ -1,0 +1,202 @@
+\section{Sensitivity Analysis}
+In practical applications the entries of a linear programming problem are
+frequently not given exactly because they stem from physical measurements
+or economic estimates. Therefore it is of interest to know the change of
+the optimum value $f = ax^*$ of the objective function --- briefly called
+{\bf profit} here --- under small changes of the data.  This sensitivity
+analysis is also called a-posteriori analysis because the more important rates
+of changes are the {\sc Lagrange} multipliers which can be read from the
+tableau after numeric calculation.
+\par
+So let us study once more the primal-dual pair of problems (\ref{e1}),
+%
+\begin{equation} \label{sa1}
+\ba{.}{llll}
+(P) &\max \{ax, & B^{\P}x = c^{\P}, & B^{\Q}x \leq c^{\Q}\},\\
+(D) &\min \{yc, & yB = a,           & y_{\Q} \geq 0\},
+\ea{.}
+\end{equation}
+%
+with solutions $x^*$ and $y^*$, respectively.
+Mathematically, the rates of change of profit are the partial derivatives
+with respect to the data and, for its computation,  $x^*$ and $y^*$ have to be
+functions of these data,
+%
+\[
+x^*: (a,B,c) \mapsto x^*(a,B,c), \;
+y^*: (a,B,c) \mapsto y^*(a,B,c),
+\]
+%
+i.e., they should be determined uniquely in a suitable domain.  Therefore we
+suppose in this section that $x^*$ is unique and not-degenerate at some point
+$(a^*,B^*,c^*)$.  Then also $y^*$ is unique and not-degenerate in this point by
+Corollary \ref{cs1} and the index vectors $\A(x^*)$ and $\A(y^*)$ are unique
+as well and coincide.
+\par
+We first keep the design matrix $B = B^*$ fixed and omit the asterisk here then
+we obtain by the primal and dual feasibity
+%
+\begin{equation} \label{sa2}
+x^*(a^*,c^*) = Ac^{*\A}, \; y^*_{\A}(a^*,c^*) = a^*B^{\A}, \;
+y^*_{\N}(a^*,c^*)   = 0
+\end{equation}
+%
+where $A = [B^{\A}]^{-1}$ denotes the edge matrix again.  These relations
+remain true as long as $\A(x^*)$ does not change, i.e., as long as the primal
+and dual feasibility are satisfied for $x^*(a,c)$ and $y^*(a,c)$ defined
+by (\ref{sa2}).  But the relevant feasibility conditions are here strong
+inequalities by assumption of nondegeneracy,
+\[
+B^{\N}Ac^{\A} < c^{\N}, \;  aB^{\A} > 0,
+\]
+and thus define an non-empty open domain $\U$ for $(a,c)$ with $(a^*,c^*)$
+being contained in its interior.  Accordingly, the relations (\ref{sa2}) remain
+true for $(a,c) \in \U$ and moreover, in this domain, $x^*$ does not depend on
+$a$ and $y^*$ does not depend on $c$.  Finally, observing that
+\[
+f(a,c) = ax^*(a,c) = y^*(a,c)c
+\]
+holds for the profit by the Duality Theorem \ref{f5}, we may summarize our
+results in the following two theorems where either $a = a^*$ is fixed and
+omitted or $c = c^*$ is fixed and omitted.
+%
+\begin{theorem} \label{sa3}
+Let $x^*(c^*)$ and $y^*(c^*)$ be a unique not-degenerate solutions of
+(\ref{sa1}) for $c = c^*$.  Then there exists a non-empty open neighborhood
+$\cal U$ of $c^*$ such that $x^*:{\cal U} \ni c \mapsto x^*(c)$ is linear,
+$y^*:  {\cal U} \ni c \mapsto y^*(c)$ is constant, and
+\[
+\dis \frac{\da}{\da \gamma ^k}ax^*(c)|_{c^*}
+= \frac{\da}{\da \gamma ^k}y^*(c)c|_{c^*} = y^*_k(c^*),
+\; k = 1, \ldots , m.
+\]
+\end{theorem}
+%
+\begin{theorem} \label{sa4}
+Let $x^*(a^*)$ and $y^*(a^*)$ be unique not-degenerate solutions of (\ref{sa1})
+for $a = a^*$.  Then there exists a non-empty open neighborhood $\cal U$ of
+$a^*$ such that $y^*:{\cal U} \ni a \mapsto y^*(a)$ is linear, $x^*:  {\cal
+U} \ni a \mapsto x^*(a)$ is constant, and
+\[
+\dis \frac{\da}{\da \alpha ^k}y^*(a)c|_{a^*}
+= \frac{\da}{\da \alpha ^k}ax^*(a)|_{a^*} = x^{*k}(a^*),
+\; k = 1, \ldots , n.
+\]
+\end{theorem}
+%
+%
+The primal problem (P) is frequently a problem of profit maximization under\\
+bounded resources. Theorem \ref{sa3} says that the linear equation
+\[
+ax^*(c) = ax^*(c^*) + y^*(c^*)(c - c^*)
+\]
+holds exactly in some neighborhood of $c^*$ hence, with the unity vector
+$e_i$,
+\[
+ax^*(c^* + e_i) = ax^*(c^*) + y^*_i(c^*), \; i = 1, \ldots m.
+\]
+This means that the profit increases by $y^*_i(c^*)$ units if the i-th resource
+is increased by one unity.  Naturally, the profit does not increase at all if
+$y^*_i(c^*) = 0$ which says that the i-th resource is not fully exhausted.
+$b^ix^*(c^*) < \gamma ^i$ in case of uniqueness and nondegeneracy.  Let us now
+assume that purchasing $\Delta \gamma ^i$ additional units of resource $i$
+costs $p\cdot \Delta \gamma ^i$ units then the total profit is
+\[
+\wi{a}x^*(c) = ax^*(c^*) + (y^*_i(c^*) - p)\Delta \gamma ^i.
+\]
+Hence the (optimum) {\sc Lagrange} multipliers $y^*_i(c^*)$ are frequently
+called {\bf shadow prices} in economic sciences because they indicate that
+price of a resource beyond of which purchase is favorable.
+\par
+In a similar way, the dual problem (D) may be interpreted as cost minimzation
+problem. Then Theorem \ref{sa4} says that
+\[
+y^*(a)c = y^*(a^*)c + x^*(a^*)(a - a^*)
+\]
+holds exactly in some neighborhood of $a^*$. With the unity vector $e^i$ we
+obtain
+\[
+y^*(a^* + e^i)c = y^*(a^*)c + x^{*i}(a^*), \; i = 1, \ldots, n.
+\]
+So the loss is changed by $x^{*i}(a^*)$ if the i-th component of $a$ is changed
+by one unity. It may become greater or smaller.
+\par
+In the dual problem (D) we may also study the change of loss if a non-basis
+variable $y^{*\sigma _i} = 0$ is changed to $y^{*\sigma _i} = 1$.  Naturally
+this yields the change $\gamma^{\sigma _i}$ of the loss $f = y^*c$ above
+all.  But this change of $y^*$ must be compensated by an additional $\Delta
+y^*$ such that the resulting $\wi{y}$ satisfies at least the equality
+restrictions.  If we substitute
+\[
+\wi{y} := y^*_{\A} + \Delta y^*_{\A} + e^{\sigma _i}
+\]
+into $yB = a$,
+\[
+y^*_{\A}B^{\A} + \Delta y^*_{\A}B^{\A} + e^{\sigma _i}B = a,
+\]
+then we obtain the condition
+\[
+\Delta y^*_{\A}B^{\A} + e^{\sigma _i}B = 0 \Longrightarrow
+\Delta y^*_{\A} = - b^{\sigma _i}[B^{\A}]^{-1}.
+\]
+Hence the entire change of the loss is
+\[
+v^{\sigma _i} = c^{\sigma _i} - b^{\sigma _i}[B^{\A}]^{-1}c^{\A},
+\; i = 1, \ldots, m - n.
+\]
+These values are the components of the {\sc Lagrange} multiplier $v^{\N}$ of
+the dual problem (D), cf. (\ref{e40}), and, naturally, they must be nonnegative
+in the optimum because the above desribed change of a non-basis variable
+(with respect to the dual problem) leaves the optimum value of $y_{\A}$ and
+thus increase the former minimum value of the loss function $f = y^*c$.
+The components of the {\sc Lagrange} multiplier play here the role of {\bf
+shadow costs}.  It is worth while working in activity $\sigma _i$ if profit is
+higher than loss $v^{\sigma _i}$.
+\par
+We next keep $a$ and $c$ fixed and allow a row of the basis matrix $B^{\A}$ to
+vary. For brevity we write for this row
+\[
+d := b^{\rho _j}, \; \rho _j \in \A(x^*)
+\]
+and recall that $B^{\A}A = I$ hence $da_k = \delta^j{}_k$ ({\sc Kronecker}
+symbol).
+%
+\begin{theorem} \label{sa5}
+Let $x^*(d^*)$ be a unique not-degenerate solution of (\ref{sa1})(P) and
+$y^*(d^*)$ a solution of (\ref{sa1}(D).  Then there exists a non-empty open
+neighborhood $\cal U$ of $d^*$ such that $x^*:{\cal U} \ni d \mapsto x^*(d)$
+has the form
+\[
+x^*(d) = x^*(d^*) - \frac{(d - d^*)x^*(d^*)}{1 + (d - d^*)a^*_j} a^*_j.
+\]
+\end{theorem}
+Then
+\[
+ax^*(d) = ax^*(d^*) - y^*(d^*)_j\frac{(d - d^*)x^*(d^*)}{1 + (d - d^*)a^*_j}
+\]
+because $aa^*_j = y^*(d^*)_j$.
+\par
+%
+Proof. Cf. \cite{BeRi1}. $a^*_j$ is the j-th column of the edge matrix
+\[
+A^* = \ba{[}{c}b^{\rho _1}\\ \vdots \\ b^{\rho _{j-1}} \\ d^*
+\\ b^{\rho _{j+1}}\\ \vdots \\ b^{\rho _n}\ea{]}^{-1}
+\]
+and hence well-defined. Therefore $x^*(d)$ exists for all $d$ with $\|d -
+d^*\|\|a^*_j\| < 1$. Since
+\[
+b^{\rho _k}x^*(d) = b^{\rho _k}x^*(d^*) = \gamma ^k, \; k = 1, \ldots, n, \; k
+\neq j,
+\]
+and
+\[
+dx^*(d)
+= \dis  dx^*(d^*) -
+\frac{(d - d^*)x^*(d^*)}{1 + (d - d^*)a^*_j}da^*_j
+= dx^*(d^*) - (d - d^*)x^*(d^*)
+= d^*x^*(d^*) = \gamma ^j
+\]
+because $ 1 + (d - d^*)a^*_j = da^*_j$, it follows that $x^*(d)$ is feasible
+for sufficiently small $\|d - d^*\|$.  Because $y^*(d^*) = aB^{*\A} > 0$,
+$x^*(d)$ is also optimum for $\|d - d^*\|$ sufficiently small.
+

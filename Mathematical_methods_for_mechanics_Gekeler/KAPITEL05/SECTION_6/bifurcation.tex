@@ -1,0 +1,58 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\begin{document}
+{\large\bf Bifurcation}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+
+{\large
+\[
+- \Delta x - f(\mu,x) = 0\,, \; f(\mu,x) = \mu B x + g(\mu,x)\,,\; B = I
+\]
+Eigenvalue problem, $U$ matrix of independent eigenvectors for $\mu_0$ 
+\begin{equation}\label{e1}
+L U = [- \Delta - \mu_0 B] U = 0\,, 
+\end{equation}
+%
+$U$ is the eigenvector in case $\dim \Ker L = 1$\,.\\  
+Choose $u_0 = U\zeta$ by bifurcation equation, set 
+$x = u_0 + w\,, \; \mu = \mu_0 + \lambda$\,. 
+\[
+-\Delta (u_0 + w) - [(\mu_0 + \lambda)B(u_0 + w) + g(\mu,x)] = 0
+\]
+Because of (\ref{e1}) we have
+\[
+(-\Delta w - \mu_0B)w -[\lambda B(u_0 + w) + g(\mu,x)] = 0
+\]
+Operator equation:
+\[
+Lw -[\lambda B(u_0 + w) + g(\mu,x)] = 0\,, \; U^Tw = 0
+\]
+Bifurcation equation (solvability condition):
+\[
+U^T[\lambda B(u_0 + w) + g(\mu,x)] = 0\,.
+\]
+Algebraic bifurcation equation:
+\[
+U^T[\lambda B(u_0) + g(\mu_0,u_0)] = 0\,.
+\]
+
+
+Algorithm I:\\
+Choose $\|u_0\|$ sufficiently small.\\
+Solve algebraic bifurcation equation, set $w = 0$\\
+
+Repeat:
+
+\hspace*{3ex} solve bifurcation equation for $\lambda$\\
+\hspace*{3ex} solve operator equation for $w$\\
+\hspace*{3ex} $x = u_0 + w\,, \; \mu = \mu_0 + \lambda$\\[1ex] 
+%
+until convergence
+}
+
+\end{document}
+

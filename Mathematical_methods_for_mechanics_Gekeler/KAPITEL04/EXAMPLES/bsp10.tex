@@ -1,0 +1,207 @@
+\documentclass[12pt,a4paper,twoside,leqno]{article}
+\input aaformat
+\newcommand{\Release}{10/05/05} %%%%%%%%%%%%%%
+\setlength{\fboxsep}{1ex}
+\parskip1ex
+\parindent0ex
+
+\begin{document}
+{\large\bf Kontrolltheorie: Beispiel 10 \hfill E.Gekeler}
+\par
+\vspace{-0.5ex}
+\hfill{\footnotesize\Release\ }
+\par\hrule\par\vspace{2ex}
+% ---------------------------------------------------------
+Reentry Problem nach [Stoer].
+Ein Raumschiff soll beim Wiedereintritt in die Erdatmosph"are einer m"oglichst
+geringen W"armebelastung ausgesetzt sein.
+(1 [ft] = 0.3048 [m].)
+\par
+{\em Bezeichnungen:}
+$x_1(t)$ Geschwindigkeit des Raumschiffs,
+$x_2(t)$ Flugwinkel,
+$x_3(t)$ normalisierte H"ohe,
+$u(t)$ Kontrollfunktion (Angriffswinkel),
+$w(t)$ zur"uckgelegter Wege relativ zur Erdoberfl"ache,
+$g$ Gravitationsbeschleunigung.
+\par
+{\em Materialkonstanten} f"ur ein Raumschiff vom {\sc Apollo}-Typ;
+vgl. [Stoer]
+%
+\[
+\ba{.}{lllll}
+h & \text{H"ohe "uber Erdoberfl"ache},& \beta &=& 4.26\\[0.2ex]
+%
+m & \text{Masse des Raumschiffs},& \rho_0 &=& 2.70\cdot 10^{-3} \\[0.2ex]
+%
+R_E & \text{Erdradius}, &      R_E &=& 209 \ (\, = 209\cdot 10^5\  [ft])\\[0.2ex]
+S & \text{Frontfl"ache des Raumschiffs},&
+S/(2m)  &=& 26 600 \\[0.2ex]
+%
+T & \text{Zeitraum f"ur das Man"over}, &  g &=& 3.2172\cdot 10^{-4}\ [10^5\, ft/sec^2]
+\ea{.}
+\]
+\[
+\ba{.}{lcll}
+C_D(u) &=& 1.174 - 0.9\cos u &
+\text{aerodynamischer Widerstandskoeffizient}\\[0.2ex]
+C_L(u) &=& 0.6 \sin u &
+\text{aerodynamischer Auftriebskoeffizient}\\[0.2ex]
+\rho(x_3(t)) &=& \rho_0\exp (-\beta R_E x_3(t)) &
+ \text{atmosph"arische Dichte}\,.
+\ea{.}
+\]
+\par
+{\em Kontrollproblem}
+%
+\[
+J(x) = \dis 10\int_0^Tx^3_1 \rho(x_3)^{1/2}\, dt = \Min !
+\]
+\par\vspace{1ex}
+\[
+\fbox{$
+\ba{.}{llllll}
+\dot{x}_1(t) &=& f_1(x,u) &=&
+\dis  - \frac{S\rho\, x_1^2}{2 m}C_D(u)
+     - \frac{g \, \sin x_2}{(1 + x_3)^2}\\[2ex]
+%
+\dot{x}_2(t) &=& f_2(x,u) &=&
+\dis \frac{S \rho x_1}{2 m}C_L(u)
++ \frac{x_1 \cos x_2}{R_E(1 + x_3)}
+- \frac{g \, \cos x_2}{x_1(1 + x_3)^2}\\[2ex]
+%
+\dot{x}_3(t) &=& f_3(x) &=&
+\dis \frac{x_1 \sin x_2}{R_E}
+\ea{.}
+$}
+\]
+Randbedingungen:
+\[
+\fbox{$
+\ba{.}{llllll}
+x_1(0) &=& 0.36  \; ( = 0.36\cdot 10^5  \text{ft/sec}), \quad
+&
+x_1(T) &=& 0.27 \; ( = 0.27\cdot 10^5  \text{ft/sec})\\
+%
+x_2(0) &=& \dis - 8.1^{\circ}\frac{\pi}{180^{\circ}}, \quad
+&
+x_2(T) &=&  0\\
+%
+x_3(0) &=& \dis \frac{4}{R_E}\,, \; [h(0) = 4\cdot 10^5  \text{ft}], \quad
+&
+x_3(T) &=& \dis \frac{2.5}{R_E}\,, \; [h(T) = 2.5 \cdot 10^5  \text{ft}]
+\ea{.}
+$}\;.
+\]
+%
+Die abh"angige Variable $w(t)$ tritt im Problem nicht auf.
+Wenn der ``Planungszeitraum'' $T$ frei ist, muss das Problem in ein
+parameterabh"angiges Problem transformiert werden. Der Einfachheit halber
+wird $T = 230$\  [sec] fest gew"ahlt.
+\par
+{\em Besonderheit:}
+Durch Aufl"osen von $H_u = 0$ nach $u$ l"asst sich die Kontrolle eliminieren,
+dazu ben"otigt man aber die L"osungen der Kozustandsgleichungen:
+\par
+{\sc Hamilton}-Funktion:
+\[
+H(x,y,u) = 10x^3_1\rho(x_3)^{1/2} + y_1f_1(x,u) + y_2f_2(x,u) + y_3f_3(x)
+\]
+\[
+\dot{y}_1(t) = - \frac{\da H}{\da x_1}\,,\quad
+\dot{y}_2(t) = - \frac{\da H}{\da x_2}\,, \quad
+\dot{y}_3(t) = - \frac{\da H}{\da x_3}\,.
+\]
+Optimale Kontrolle implizit:
+\[
+\sin u = - 0.6 \,\frac{y_2}{v^{1/2}}\,,
+\quad
+\cos u = - 0.9\, \frac{x_1 y_1}{v^{1/2}}\,,
+\quad
+v(t) = 0.36 y_2^2 + 0.81x_1^2y_1^2\,.
+\]
+%
+Nach dem Einsetzen von $u$ ergeben die Zustands- und
+Kozustandsgleichungen zusammen ein System von sechs Differentialgleichungen
+mit sechs Randbedingungen. Wir setzen $y_1 = x_4, \; y_2 = x_5, \; y_3 = x_6$
+sowie $D_i = \da/\da x_i$ und erhalten
+\[
+\ba{.}{rcl}
+\dot{x}_1 = f_1(x) &=&
+\dis  - \frac{S\rho}{2 m}
+        \left[1.174x_1^2 + 0.81 \frac{x_1^3x_4}{v^{1/2}}\right]
+     - \frac{g \, \sin x_2}{(1 + x_3)^2}\\[2ex]
+%
+\dot{x}_2 = f_2(x) &=&
+\dis - 0.36 \frac{S \rho x_1x_5}{2 m v^{1/2}}
++ \frac{x_1 \cos x_2}{R_E(1 + x_3)}
+- \frac{g \, \cos x_2}{x_1(1 + x_3)^2}\\[2ex]
+%
+\dot{x}_3 = f_3(x)&=&
+\dis \frac{x_1 \sin x_2}{R_E}\\[2ex]
+%
+\dot{x}_4 = - D_1H &=& \dis
+- \left[30\, x^2_1\rho^{1/2} + x_4D_1f_1 + x_5 D_1f_2 + x_6D_1f_3\right]
+\\[2ex]
+%
+\dot{x}_5 = - D_2H &=& \dis
+- \left[x_4D_2f_1 + x_5D_2f_2 + x_6D_2f_3\right]
+\\[2ex]
+%
+\dot{x}_6 = - D_3H &=& \dis
+- \left[-5\, x^3_1 \beta R \rho^{1/2}
++ x_4 D_3f_1 + x_5D_3f_2 + x_6D_3f_3\right]
+\ea{.}
+\]
+mit sechs Randbedingungen.
+\par
+Gel"ost wird das Problem direkt ohne Verwendung der Kozustandsgleichungen.
+Starttrajektorie ist die gerade Verbindung zwischen den Randbedingungen,
+und Nominalkontrolle ist wie bei \cite{Stoer}
+\[
+u(t) = p_1 \text{erf}(p_2(p_3 + t))\,, \;
+\text{erf}(u) = \frac{2}{\sqrt{\pi}}\int_0^u e^{-s^2}\, ds\,, \;
+p_1 =  1.6\,\; p_2 = 4\,, \; p_3 = 0.5\,.
+\]
+Die Berechnung von Starttrajektorien f"ur die drei Kozustandsver"anderlichen
+entf"allt aber; im "Ubrigen tritt dabei eine Singularit"at auf. Man beachte auch,
+dass das feste Zeitintervall $[0,\,T]$ bei der Rechnung auf das
+Einheitsintervall transformiert wird. Das unten angegebene Resultat stimmt
+bis auf die Kontrolle mit den Ergebnissen von \cite{Stoer},  S.\ 496/497 "uberein,
+was physikalisch erkl"art werden kann.
+\par\vspace{0.5ex}
+\bc
+\begin{minipage}[t]{5.5cm}
+% Breite = 470, Hoehe = 371, H/B = 0.8
+%\epsfig{file=bld040409e.eps,height=4.4cm,width=5.5cm}\\
+Abb. 76 -- Beispiel 10, Skizze
+\end{minipage}
+\ec
+\bc
+\begin{minipage}[t]{5.5cm}
+% Breite = 482, Hoehe = 377, H/B = 0.8
+%\epsfig{file=bld040409a.eps,height=4.4cm,width=5.5cm}\\
+Abb. 77 -- Beispiel 10, Geschwindigkeit
+\end{minipage}
+\;\;
+\begin{minipage}[t]{5.5cm}
+% Breite = 479, Hoehe = 377, H/B = 0.8
+%\epsfig{file=bld040409b.eps,height=4.4cm,width=5.5cm}\\
+Abb. 78 -- Beispiel 10, Flugwinkel
+\end{minipage}
+\ec
+\bc
+\begin{minipage}[t]{5.5cm}
+% Breite = 476, Hoehe = 377, H/B = 0.8
+%\epsfig{file=bld040409c.eps,height=4.4cm,width=5.5cm}\\
+Abb. 79 -- Beispiel 10, Hoehe ($\times 10^5$ ft)
+\end{minipage}
+\;\;
+\begin{minipage}[t]{5.5cm}
+% Breite = 482, Hoehe = 377, H/B = 0.8
+%\epsfig{file=bld040409d.eps,height=4.4cm,width=5.5cm}\\
+Abb. 80 -- Beispiel 10, Kontrolle ($\times \pi$)
+\end{minipage}
+\ec
+\end{document}
+
