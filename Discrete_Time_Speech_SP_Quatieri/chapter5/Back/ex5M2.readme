@@ -1,0 +1,83 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% useful matlab files for solution: 
+
+	filter.m
+	conv.m
+	cceps.m (or use your own from the homework)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Here's how the synthetic speech waveform was created
+
+				% vocal tract response: v[n]
+
+				% poles
+p1 = m1*exp(j*p1);
+p2 = m1*exp(-j*p1);
+
+p3 = m2*exp(j*p2);
+p4 = m2*exp(-j*p2);
+
+				% zeros
+z1 = m3*exp(j*p3);
+z2 = m3*exp(-j*p3);
+
+K = 1;
+
+P = [p1, p2, p3, p4]';
+Z = [z1, z2]';
+
+[B,A] = zp2tf(Z,P,K);
+
+
+impulse = zeros(1, 100);
+impulse(1) = 1.0;
+v = filter(B,A,impulse);
+t = [v(3:length(v)), 0, 0];
+v = t;
+
+				% glottal pulse: g[n] 
+				% two poles outside unit circle
+eq = alpha.^(0:99);
+g = conv(eq, eq);
+g = g(length(g):-1:1);
+g = g(180:199);
+
+
+				% h[n] = g[n]*v[n]
+h = conv(g, v);
+
+clf;
+subplot(311)
+plot([g, zeros(1,100)])
+title('GLOTTAL PULSE: g[n]')
+subplot(312)
+plot([v, zeros(1,100)])
+title('VOCAL TRACT RESPONSE: v[n]')
+subplot(313)
+plot([h, zeros(1,100)])
+title('h[n] = g[n]*v[n]')
+pause;
+
+
+
+				% speech waveform 
+
+
+				% impulse train: p[n]
+p = zeros(1, 1000);
+beta = 0.70;
+p(1) = 1.0;
+p(201) = beta^1;
+p(401) = beta^2;
+p(601) = beta^3;
+p(801) = beta^4;
+
+				% glottal pulse train: x[n]
+x = conv(p, g);
+
+				% speech: y[n] = x[n]*v[n]
+y = filter(B,A,x);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
