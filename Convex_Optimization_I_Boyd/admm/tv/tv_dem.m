@@ -11,6 +11,8 @@ for j = 1:3
 end
 b = x0 + randn(n,1);
 
+disp(x0);
+
 lambda = 5;
 
 e = ones(n,1);
@@ -18,4 +20,4 @@ D = spdiags([e -e], 0:1, n,n);
 
 [x history] = total_variation(b, lambda, 1.0, 1.0);
 
-
+disp(x);

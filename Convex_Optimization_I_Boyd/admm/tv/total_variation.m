@@ -23,7 +23,7 @@ function [x, history] = total_variation(b, lambda, rho, alpha)
 %
 %
 % More information can be found in the paper linked at:
-% http://www.stanford.edu/~boyd/papers/distr_opt_stat_learning_admm.html
+% https://web.stanford.edu/~boyd/papers/admm_distr_stats.html
 %
 
 t_start = tic;
@@ -43,10 +43,8 @@ x = zeros(n,1);
 z = zeros(n,1);
 u = zeros(n,1);
 
-if ~QUIET
-    fprintf('%3s\t%10s\t%10s\t%10s\t%10s\t%10s\n', 'iter', ...
+fprintf('%3s\t%10s\t%10s\t%10s\t%10s\t%10s\n', 'iter', ...
       'r norm', 'eps pri', 's norm', 'eps dual', 'objective');
-end
 
 I = speye(n);
 DtD = D'*D;
@@ -74,11 +72,9 @@ for k = 1:MAX_ITER
     history.eps_pri(k) = sqrt(n)*ABSTOL + RELTOL*max(norm(D*x), norm(-z));
     history.eps_dual(k)= sqrt(n)*ABSTOL + RELTOL*norm(rho*D'*u);
 
-    if ~QUIET
-        fprintf('%3d\t%10.4f\t%10.4f\t%10.4f\t%10.4f\t%10.2f\n', k, ...
-            history.r_norm(k), history.eps_pri(k), ...
-            history.s_norm(k), history.eps_dual(k), history.objval(k));
-    end
+    fprintf('%3d\t%10.4f\t%10.4f\t%10.4f\t%10.4f\t%10.2f\n', k, ...
+        history.r_norm(k), history.eps_pri(k), ...
+        history.s_norm(k), history.eps_dual(k), history.objval(k));
 
     if (history.r_norm(k) < history.eps_pri(k) && ...
        history.s_norm(k) < history.eps_dual(k))
@@ -86,9 +82,7 @@ for k = 1:MAX_ITER
     end
 end
 
-if ~QUIET
-    toc(t_start);
-end
+toc(t_start);
 
 end
 
