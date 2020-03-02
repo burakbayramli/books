@@ -11,8 +11,8 @@ yfeas = (rand(m,1)-0.5)*4;
 b = A*xfeas; p=A'*yfeas+sfeas;
 
 % call the solver
-[x,y,s,f] = pathfollow(A,b,p);
-%[x,y,s,f] = pdip(A,b,p);
+%[x,y,s,f] = pathfollow(A,b,p);
+[x,y,s,f] = pdip(A,b,p);
 
 fprintf(1,' final primal value: %12.6e \n', p'*x);
 fprintf(1,' final dual   value: %12.6e \n', b'*y);
