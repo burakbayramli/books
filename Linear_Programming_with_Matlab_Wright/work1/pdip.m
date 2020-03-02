@@ -30,16 +30,6 @@ end
 
 t0=cputime;
 [m,n] = size(A);
-if m <= 0 or n <= 0
-  error('input matrix A must be nontrivial');
-end
-
-if n ~= length(p)
-  error('size of vector p must match number of columns in A');
-end
-if m ~= length(b)
-  error('size of vector b must match number of rows in A');
-end
 
 % set initial point, based on largest element in (A,b,p)
 bigM = max(max(abs(A)));
@@ -72,7 +62,8 @@ for iter=1:100
   B = A*sparse(1:n,1:n,d)*A';
   % use the form of the Cholesky routine "cholinc" that's best
   % suited to interior-point methods
-  R = cholinc(B(ordering,ordering),'inf');
+  %R = cholinc(B(ordering,ordering),'inf');
+  R = chol(B(ordering,ordering));
   
   % set up the right-hand side
   t1 = x.*Rd-Rc;
