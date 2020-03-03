@@ -55,22 +55,22 @@ bc = 1+max([norm(b), norm(p)]);
 
 for iter=1:itmax
   
-% compute residuals
+  % compute residuals
   Rd = A'*y+s-p;
   Rp = A*x-b;
   Rc = x.*s;
   mu = mean(Rc);
 
-% check relative decrease in residual, for purposes of convergence test
+  % check relative decrease in residual, for purposes of convergence test
   relResidual = norm([Rd;Rp;Rc])/bc;
   fprintf(1,'iter %2i: mu = %9.2e, resid = %9.2e\n', iter, full(mu), ...
 	  full(relResidual));
 
-% test for convergence
+  % test for convergence
   if(relResidual <= tol && mu <= tol) break; end;
 
-% make a heuristic choice of the centering parameter, and adjust the 
-% right-hand side
+  % make a heuristic choice of the centering parameter, and adjust the 
+  % right-hand side
   sigma = min(0.1,100*mu);
   Rc = Rc - sigma*mu;
   
