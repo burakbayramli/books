@@ -53,7 +53,7 @@ for iter=1:100
 %  fprintf('iter %2i: mu = %9.2e, resid = %9.2e\n', iter, mu, relResidual);
   fprintf('iter %2i: mu = %9.2e, resid = %9.2e\n', iter, full(mu), ...
 	  full(relResidual));
-  if(relResidual <= 1.e-7 & mu <= 1.e-7) break; end;
+  if(relResidual <= 1.e-7 && mu <= 1.e-7) break; end;
   Rc = Rc - min(0.1,100*mu)*mu;
   
   % set up the scaling matrix, and form the coefficient matrix for
