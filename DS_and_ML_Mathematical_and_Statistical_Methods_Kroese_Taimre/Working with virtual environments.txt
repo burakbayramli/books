@@ -1,0 +1,20 @@
+When one starts to work on a project, it is generally a good idea to keep track of dependencies required by different projects.
+The Python solution, is to create the so-called virtual environment. A virtual environment basically creates an isolated python 
+package and dependencies list. For example, if we are working on two projects, where each project requires two different version
+of the numpy package. Then, a separate virtual environment will resolve the issue. The usage of virtual environment is as follows.
+
+1. To create a virtual environment, open anaconda-navigator, choose the environments tab and create a new environment. 
+For this environment, one can specify the language such as Python or R. In addition, for Python, we can also choose the
+Python version, such as 3.7.
+
+2. While working on your project, install or update packages to the corresponding virtual environment only.
+
+3. In case of the (likely) scenario of transferring your work to another machine or system reinstall, one can export
+the environment via the following command.
+
+(a) conda activate yourenvironmentname
+(b) conda env export > environment.yml
+
+4. In order to re-create the environment (say on another machine), just transfer the *.yml file from (3) to the target machine. 
+If the anaconda navigator is present, there is a possibility to recreate (import) the environment by choosing the environments
+tab and pressing import.
