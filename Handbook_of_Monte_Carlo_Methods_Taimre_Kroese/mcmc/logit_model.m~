@@ -1,0 +1,37 @@
+%logit_model.m
+clear all,clc
+n=5000; % number of data points (y_1,...,y_n)
+k=3;   % number of explanatory variables
+% generate artificial dataset
+randn('seed', 12345);  rand('seed', 67890);
+truebeta = [1 -5.5 1]';
+X = [ ones(n,1) randn(n,k-1)*0.1 ];  % design matrix
+Y = binornd(1,1./(1+exp(-X*truebeta)));
+bo=zeros(k,1); % we set Vo=100*eye(k);
+% determine the mode using Newton Raphson
+err=inf; b=bo; % initial guess
+while norm(err)>10^(-3)
+    p=1./(1+exp(-X*b));
+    g=X'*(Y-p)-(b-bo)/100;
+    H=-X'*diag(p.^2.*(1./p-1))*X-eye(k)/100;
+    err=H\g; % compute Newton-Raphson correction
+    b=b-err; % update Newton guess
+end
+% scale parameter for proposal
+Sigma=-H\eye(k); B=chol(Sigma);
+% logarithm of joint density (up to a constant)
+logf=@(b)(-.5*(b-bo)'*(b-bo)/100-Y'*log(1+exp(-X*b))...
+    -(1-Y)'*(X*b+log(1+exp(-X*b))));
+alpha=@(x,y)min(1,exp(logf(y)-logf(x)));
+df=10; T=10^4; data=nan(T,k); %allocate memory
+for t=1:T
+    % make proposal from multivariate t
+    b_star= b + B*(sqrt(df/gamrnd(df/2,2))*randn(k,1));
+    if rand<alpha(b,b_star)
+        b=b_star;
+    end
+    data(t,:)=b';
+end
+b_hat=mean(data)
+Cov_hat=cov(data)
+
