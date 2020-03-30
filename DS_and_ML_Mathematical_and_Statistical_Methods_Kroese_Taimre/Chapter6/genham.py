@@ -48,4 +48,5 @@ def hammersley(b,N):
 
 b = [2,3,5]
 N = 20
-print(hammersley(b,N))
+#print(hammersley(b,N))
+print (hammersley([2,3],20))
