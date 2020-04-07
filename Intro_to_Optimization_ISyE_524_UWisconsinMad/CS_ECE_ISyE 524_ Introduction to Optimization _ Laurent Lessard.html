@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)https://laurentlessard.com/teaching/524-intro-to-optimization/ -->
+<html lang="en-US"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width">
+<title>CS/ECE/ISyE 524: Introduction to Optimization | Laurent Lessard</title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="stylesheet" type="text/css" media="all" href="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/style.css">
+<link rel="pingback" href="https://laurentlessard.com/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://laurentlessard.com/wp-content/themes/twentyeleven/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<link rel="dns-prefetch" href="https://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Laurent Lessard » Feed" href="https://laurentlessard.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Laurent Lessard » Comments Feed" href="https://laurentlessard.com/comments/feed/">
+		<script type="text/javascript" async="" src="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/ga.js"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/laurentlessard.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.3.2"}};
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/wp-emoji-release.min.js" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/style.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="wp-block-library-theme-css" href="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/theme.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="ce_responsive-css" href="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/video-container.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="twentyeleven-block-style-css" href="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/blocks.css" type="text/css" media="all">
+<script type="text/javascript" src="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/processing.min.js"></script>
+<link rel="https://api.w.org/" href="https://laurentlessard.com/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://laurentlessard.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://laurentlessard.com/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.3.2">
+<link rel="canonical" href="https://laurentlessard.com/teaching/524-intro-to-optimization/">
+<link rel="shortlink" href="https://laurentlessard.com/?p=1498">
+<link rel="alternate" type="application/json+oembed" href="https://laurentlessard.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Flaurentlessard.com%2Fteaching%2F524-intro-to-optimization%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://laurentlessard.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Flaurentlessard.com%2Fteaching%2F524-intro-to-optimization%2F&amp;format=xml">
+	<style>
+		/* Link color */
+		a,
+		#site-title a:focus,
+		#site-title a:hover,
+		#site-title a:active,
+		.entry-title a:hover,
+		.entry-title a:focus,
+		.entry-title a:active,
+		.widget_twentyeleven_ephemera .comments-link a:hover,
+		section.recent-posts .other-recent-posts a[rel="bookmark"]:hover,
+		section.recent-posts .other-recent-posts .comments-link a:hover,
+		.format-image footer.entry-meta a:hover,
+		#site-generator a:hover {
+			color: #04599a;
+		}
+		section.recent-posts .other-recent-posts .comments-link a:hover {
+			border-color: #04599a;
+		}
+		article.feature-image.small .entry-summary p a:hover,
+		.entry-header .comments-link a:hover,
+		.entry-header .comments-link a:focus,
+		.entry-header .comments-link a:active,
+		.feature-slider a.active {
+			background-color: #04599a;
+		}
+	</style>
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style><style type="text/css">.broken_link, a.broken_link {
+	text-decoration: line-through;
+}</style><style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #f1f1f1; }
+</style>
+	
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-35728365-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  
+<script type="text/javascript">
+function getBib() {
+    $.get("get_bib.php");
+    return false;
+}
+</script>
+  
+<script type="text/javascript" language="JavaScript">
+    function makeBold(d) {
+	  document.getElementById(d).style.fontWeight = 'bold';
+	}
+    function makePlain(d) {
+	  document.getElementById(d).style.fontWeight = 'normal';
+	}
+	function HideContent(d) {
+	  document.getElementById(d).style.display = "none";
+	}
+	function ShowContent(d) {
+	  document.getElementById(d).style.display = "block";
+	}
+	function ReverseDisplay(d,b) {
+	  if(document.getElementById(d).style.display == "none") {
+		document.getElementById(d).style.display = "block";
+		document.getElementById(b).textContent = "[less]";
+	  }
+	  else {
+		document.getElementById(d).style.display = "none";
+		document.getElementById(b).textContent = "[more]";
+	  }
+	}
+    function sortByYear(){
+	  makeBold('link_year');makePlain('link_topic');makePlain('link_type');
+	  HideContent('pub_type');HideContent('pub_topic');ShowContent('pub_year');
+	}
+    function sortByTopic(){
+	  makeBold('link_topic');makePlain('link_type');makePlain('link_year');
+	  HideContent('pub_type');HideContent('pub_year');ShowContent('pub_topic');
+	}
+    function sortByType(){
+	  makeBold('link_type');makePlain('link_topic');makePlain('link_year');
+	  HideContent('pub_topic');HideContent('pub_year');ShowContent('pub_type');
+	}
+</script>
+  
+<script type="text/javascript" language="JavaScript">
+    function makeBold2(d) {
+	  uu = document.getElementById(d).style;
+	  uu.borderBottom = '3px solid';
+	}
+    function makePlain2(d) {
+	  uu = document.getElementById(d).style;
+	  uu.borderBottom = 'none';
+	}
+    function show0(){
+	  makeBold2('link0');
+	  makePlain2('link1');makePlain2('link2');makePlain2('link3');makePlain2('link4');
+	  ShowContent('blk0');
+	  HideContent('blk1');HideContent('blk2');HideContent('blk3');HideContent('blk4');
+	}
+    function show1(){
+	  makeBold2('link1');
+	  makePlain2('link0');makePlain2('link2');makePlain2('link3');makePlain2('link4');
+	  ShowContent('blk1');
+	  HideContent('blk0');HideContent('blk2');HideContent('blk3');HideContent('blk4');
+	}
+    function show2(){
+	  makeBold2('link2');
+	  makePlain2('link0');makePlain2('link1');makePlain2('link3');makePlain2('link4');
+	  ShowContent('blk2');
+	  HideContent('blk0');HideContent('blk1');HideContent('blk3');HideContent('blk4');
+	}
+    function show3(){
+	  makeBold2('link3');
+	  makePlain2('link0');makePlain2('link1');makePlain2('link2');makePlain2('link4');
+	  ShowContent('blk3');
+	  HideContent('blk0');HideContent('blk1');HideContent('blk2');HideContent('blk4');
+	}
+    function show4(){
+	  makeBold2('link4');
+	  makePlain2('link0');makePlain2('link1');makePlain2('link2');makePlain2('link3');
+	  ShowContent('blk4');
+	  HideContent('blk0');HideContent('blk1');HideContent('blk2');HideContent('blk3');
+	}
+</script>
+
+ 
+</head>
+
+<body class="page-template page-template-template_course page-template-template_course-php page page-id-1498 page-child parent-pageid-1491 custom-background wp-embed-responsive single-author singular one-column content">
+
+  
+ 
+<div id="page" class="hfeed">
+	<header id="branding" role="banner">
+			<hgroup>
+				<h1 id="site-title"><span><a href="https://laurentlessard.com/" title="Laurent Lessard" rel="home">Laurent Lessard</a></span></h1>
+				<h2 id="site-description"></h2>
+			</hgroup>
+
+			
+							<form method="get" id="searchform" action="https://laurentlessard.com/">
+		<label for="s" class="assistive-text">Search</label>
+		<input type="text" class="field" name="s" id="s" placeholder="Search">
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search">
+	</form>
+		
+			<nav id="access" role="navigation">
+				<h3 class="assistive-text">Main menu</h3>
+								<div class="skip-link"><a class="assistive-text" href="https://laurentlessard.com/teaching/524-intro-to-optimization/#content" title="Skip to primary content">Skip to primary content</a></div>
+				<div class="skip-link"><a class="assistive-text" href="https://laurentlessard.com/teaching/524-intro-to-optimization/#secondary" title="Skip to secondary content">Skip to secondary content</a></div>
+								<div class="menu-cookie-free-container"><ul id="menu-cookie-free" class="menu"><li id="menu-item-1048" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-has-children menu-item-1048"><a href="https://laurentlessard.com/">Home</a>
+<ul class="sub-menu">
+	<li id="menu-item-1052" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1052"><a href="https://laurentlessard.com/cv/">CV</a></li>
+</ul>
+</li>
+<li id="menu-item-1051" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1051"><a href="https://laurentlessard.com/blog/">Blogs</a>
+<ul class="sub-menu">
+	<li id="menu-item-2834" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2834"><a href="https://laurentlessard.com/blog/">Research News</a></li>
+	<li id="menu-item-1942" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1942"><a href="https://laurentlessard.com/bookproofs/">Problem-Solving</a></li>
+</ul>
+</li>
+<li id="menu-item-2848" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-ancestor current-menu-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-2848"><a href="https://laurentlessard.com/teaching-overview/">Teaching</a>
+<ul class="sub-menu">
+	<li id="menu-item-2889" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2889"><a href="https://laurentlessard.com/teaching/ece-379-data-science-engineering/">ECE 379: Data Science &amp; Engineering</a></li>
+	<li id="menu-item-3033" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3033"><a href="https://laurentlessard.com/teaching/717-linear-systems/">ECE 717: Linear Systems</a></li>
+	<li id="menu-item-1756" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1498 current_page_item menu-item-1756"><a href="https://laurentlessard.com/teaching/524-intro-to-optimization/" aria-current="page">CS/ECE/ISyE 524: Introduction to Optimization</a></li>
+	<li id="menu-item-2042" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2042"><a href="https://laurentlessard.com/teaching/532-matrix-methods/">ECE/CS/ME 532: Matrix Methods in Machine Learning</a></li>
+</ul>
+</li>
+<li id="menu-item-2423" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2423"><a href="https://laurentlessard.com/group/">Group</a></li>
+<li id="menu-item-1053" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1053"><a href="https://laurentlessard.com/research/">Research</a></li>
+<li id="menu-item-1054" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1054"><a href="https://laurentlessard.com/publications/">Publications</a></li>
+<li id="menu-item-1230" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1230"><a href="https://laurentlessard.com/code/">Code</a></li>
+</ul></div>			</nav><!-- #access -->
+	</header><!-- #branding -->
+
+
+	<div id="main">
+
+<div id="primary">
+<div id="content" role="main">
+
+	<div class="entry-content">
+	  <div class="course-content">
+		<h1 style="font-size:250%;">Introduction to Optimization</h1>
+<bb>CS/ECE/ISyE 524<br>
+University of Wisconsin–Madison</bb>
+<p></p>
+<img src="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/duality-e1484552724280.png" alt="" width="280" height="184" class="alignright size-full wp-image-2208">
+
+<p>This course is an introduction to optimization from a modeling perspective. The aim is to teach students to recognize and solve optimization problems that arise in industry and research applications. Examples will be drawn from a variety of disciplines, including computer science, operations research, control and mechanical engineering, machine learning, and business/finance. <!--Official syllabus available <a href="https://laurentlessard.com/teaching/cs524/syllabus%20524.pdf">here</a>.--></p>
+
+<p>
+<strong>Instructor:</strong> <a href="https://laurentlessard.com/">Laurent Lessard</a>.<br>
+</p>
+<p>
+<!--<strong>TA and Instructor office hours:</strong><br/>
+Mondays, 9:45--10:45am (Jui-Yang Chang) in Discovery Bldg<br/>
+Tuesdays, 3:00--4:00pm (Laurent Lessard) in CS 3310<br/>
+Wednesdays, 4:00--5:00pm (Emad Sadeghi) in Discovery Bldg<br/>
+Thursdays, 9:45--10:45am (Jui-Yang Chang) in Discovery Bldg<br/>
+Thursdays, 4:00--5:00pm (Emad Sadeghi) in CS 3310 (except in Discovery Bldg on Feb 22)-->
+<strong>IMPORTANT:</strong> The notes and videos below are from Spring 2017-18, which was the last time Prof. Lessard taught this course. More recent offerings of the course might use different notes/materials. In particular, all code examples below were written for an older version of Julia and may no longer compile on the latest release!
+</p>
+<!--<p>
+<strong>Discussion forum:</strong> <a href="https://piazza.com/wisc/spring2018/cseceisye524/home">Piazza</a>.<br/>
+<strong>Submitting assignments:</strong> <a href="https://www.gradescope.com/courses/13622">Gradescope</a>.<br/>
+</p>-->
+<hr>
+<table>
+<tbody><tr>
+<td><bb><a id="link0" href="javascript:show0()" style="border-bottom: 3px solid;">Course material</a></bb>
+</td><td><bb><a id="link4" href="javascript:show4()" style="border-bottom: none;">Class Projects</a></bb>
+</td><td><bb><a id="link2" href="javascript:show2()" style="border-bottom: none;"></a><a id="link3" href="javascript:show3()" style="border-bottom: none;"></a></bb>
+</td><td><bb><a id="link1" href="javascript:show1()" style="border-bottom: none;">Resources</a></bb></td></tr></tbody></table>
+<hr><div style="min-height:1000px">
+
+<!-- COURSE CONTENT ------------------------------------------------------------------------------------------------------>
+<div id="blk0" style="display: block;">
+
+<!--<p><strong>Note:</strong> Only the rows containing a date are guaranteed to be current. All other rows contain notes and code from last year's class (for your reference). Topics covered this year may change at my discretion. Also, code from last year may not compile properly as Julia and JuMP have undergone significant changes in the past year.</p>-->
+
+<h2>Part I: Linear programming</h2>
+
+<table class="material">
+<tbody><tr><td width="30"></td><td width="265"><b>Lecture topic</b></td><td width="60"><b>Video</b></td><td width="120"><b>Dates</b></td><td width="270"><b>Julia notebooks used in class</b>
+</td></tr>
+<tr><td>1.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/1%20-%20introduction.pdf">Introduction Part I</a></td><td></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Top%20Brass.ipynb">Top Brass</a>
+</td></tr>
+<tr><td>2.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/2%20-%20intro%20part%20two.pdf">Introduction Part II</a></td><td></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Top%20Brass%202.ipynb">Top Brass 2</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Top%20Brass%203.ipynb">Top Brass 3</a>
+</td></tr>
+<tr><td></td><td><a href="https://laurentlessard.com/teaching/cs524/slides/julia%20tutorial.pdf">Julia tutorial</a></td><td></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/julia_commands.ipynb">Julia commands</a>
+</td></tr>
+<tr><td>3.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/3%20-%20linear%20programs.pdf">Linear programs</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+3+-+Linear+programs/1_y1vm8cer">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Standard%20Form.ipynb">Standard Form</a>
+</td></tr>
+<tr><td>4.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/4%20-%20minimax%20and%20planning.pdf">Minimax and planning</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+4+-+Minimax+and+planning+problems/0_md7atwd3">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Chebyshev.ipynb">Chebyshev</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/House.ipynb">House</a>
+</td></tr>
+<tr><td>5.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/5%20-%20network%20flow%20problems.pdf">Network flow problems</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+5+-+Network+flow+problems/0_bpxlyejl">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Sailco.ipynb">Sailco</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Millco.ipynb">Millco</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Swim%20Relay.ipynb">Swim Relay</a>
+</td></tr>
+<tr><td>6.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/6%20-%20LP%20duality.pdf">LP duality</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+6+-+Duality/0_lx5zqayt">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Top%20Brass%20dual.ipynb">Top Brass dual</a>
+</td></tr>
+<tr><td>7.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/7%20-%20dual%20flows%20and%20algorithms.pdf">Dual flows and algorithms</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+7+-+Dual+flows+and+algorithms/1_oxlvc0c7">video</a></td><td></td><td>none
+</td></tr>
+</tbody></table>
+
+<h2>Part II: Convex programming</h2>
+
+<table class="material">
+<tbody><tr><td width="30"></td><td width="265"><b>Lecture topic</b></td><td width="60"><b>Video</b></td><td width="120"><b>Dates</b></td><td width="270"><b>Julia notebooks used in class</b>
+</td></tr>
+<tr><td>8.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/8%20-%20least%20squares.pdf">Least squares</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+8+-+Least+squares/0_p3e506zd">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Regression.ipynb">Regression</a>
+</td></tr>
+<tr><td>9.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/9%20-%20equality%20constraints%20and%20tradeoffs.pdf">Equality constraints and tradeoffs</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+9+-+Equality+constraints+and+tradeoffs/0_yhyib99v">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Moving%20Average.ipynb">Moving Average</a>, <a href="https://laurentlessard.com/teaching/cs524/examples/uy_data.csv">uy_data</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Hovercraft.ipynb">Hovercraft</a>
+</td></tr>
+<tr><td>10.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/10%20-%20regularization.pdf">Regularization</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+10+-+Regularization/0_j53f5q0x">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Data%20Norm.ipynb">Data Norm</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Hover%201D.ipynb">Hover 1D</a>
+</td></tr>
+<tr><td>11.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/11%20-%20quadratic%20forms%20and%20ellipsoids.pdf">Quadratic forms and ellipsoids</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+11+-+Quadratic+forms+and+ellipsoids/1_7p3txqwp">video</a></td><td></td><td>none
+</td></tr>
+<tr><td>12.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/12%20-%20QPs%20and%20QCQPs.pdf">QPs and QCQPs</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+12+-+QPs+and+QCQPs/0_cstwo5mp">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Portfolio.ipynb">Portfolio</a>, <a href="https://laurentlessard.com/teaching/cs524/examples/folio_mean.csv">folio_mean</a>, <a href="https://laurentlessard.com/teaching/cs524/examples/folio_cov.csv">folio_cov</a>
+</td></tr>
+<tr><td>13.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/13%20-%20cones%20and%20semidefinite%20constraints.pdf">Cones and semidefinite constraints</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+13+-+Cones+and+semidefinite+constraints/1_cp4v2e0h">video</a></td><td></td><td>none
+</td></tr>
+<tr><td>14.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/14%20-%20convex%20programming.pdf">Convex programming</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+14+-+Convex+programming/1_j9p2g2fp">video</a></td><td></td><td>none
+</td></tr>
+<tr><td>15.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/15%20-%20duality.pdf">Duality</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+15+-+Duality+%28part+1%29/1_o7w11i0e">video</a></td><td></td><td>none
+</td></tr>
+<tr><td>16.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/16%20-%20review%20of%20convex%20optimization.pdf">Review of convex optimization</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+16+-+Review+of+convex+optimization/1_ydbyzhca">video</a></td><td></td><td>none
+</td></tr>
+<tr><td></td><td><a href="https://laurentlessard.com/teaching/cs524/slides/class%20project.pdf">Class project and Q&amp;A</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Class+project+and+Q%26A/1_i884jbgc">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Structural%20optimization.ipynb">Structural optimization</a>
+</td></tr>
+</tbody></table>
+
+<h2>Part III: Nonconvex and combinatorial models</h2>
+
+<table class="material">
+<tbody><tr><td width="30"></td><td width="265"><b>Lecture topic</b></td><td width="60"><b>Video</b></td><td width="120"><b>Dates</b></td><td width="270"><b>Julia notebooks used in class</b>
+</td></tr>
+<tr><td>17.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/17%20-%20intro%20to%20nonconvex%20models.pdf">Introduction to nonconvex models</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+17+-+Intro+to+nonconvex+models/1_dpgzrhhd">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Knapsack.ipynb">Knapsack</a>
+</td></tr>
+<tr><td>18.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/18%20-%20rounding%20and%20relaxation.pdf">Rounding and relaxation</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+18+-+Rounding+and+relaxation/1_ljk0lmmc">video</a></td><td></td><td>none
+</td></tr>
+<tr><td>19.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/19%20-%20fixed%20costs%20and%20variable%20bounds.pdf">Fixed costs and variable bounds</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+19+-+Fixed+costs+and+variable+bounds/1_tmjlti0c">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/ClothCo.ipynb">ClothCo</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/UFL.ipynb">UFL</a>
+</td></tr>
+<tr><td>20.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/20%20-%20logic%20constraints%20and%20integer%20variables.pdf">Logic constraints and integer variables</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+20+-+Logic+constraints%2C+integer+variables/1_o2ahv60t">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Sudoku.ipynb">Sudoku</a>
+</td></tr>
+<tr><td>21.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/21%20-%20set%20cover%20and%20TSP.pdf">Set cover and TSP</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+21+-+Set+cover+and+TSP/0_z32xc8te">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/CuttingPipe.ipynb">CuttingPipe</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/TSP.ipynb">TSP</a>
+</td></tr>
+<tr><td>22.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/22%20-%20more%20models,%20QAP%20and%20SOS.pdf">Quadratic assignment and SOS</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+22+-+More+models%2C+QAP+and+SOS/0_jhmg575f">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/QAP.ipynb">QAP</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/SOS.ipynb">SOS</a>
+</td></tr>
+<tr><td>23.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/23%20-%20cutting%20planes,%20branch%20and%20bound.pdf">Cutting planes and branch &amp; bound</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+23+-+Cutting+planes+and+branch+%26+bound/1_6rvp84it">video</a></td><td></td><td>none
+</td></tr>
+<tr><td>24.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/24%20-%20nonlinear%20programming.pdf">Nonlinear programming</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+24+-+Nonlinear+programming/0_sb4um51e">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Tires.ipynb">Tires</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Polygon.ipynb">Polygon</a>, <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/Navigation.ipynb">Navigation</a>
+</td></tr>
+<tr><td>25.</td><td><a href="https://laurentlessard.com/teaching/cs524/slides/25%20-%20NLP%20algorithms.pdf">NLP algorithms</a></td><td><a href="https://mediaspace.wisc.edu/media/CS+524+-+Lecture+25+-+NLP+algorithms/1_0mzs7fts">video</a></td><td></td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/examples/IterativeMethods.ipynb">Iterative Methods</a>
+</td></tr>
+</tbody></table>
+
+<!--
+<h2>Homework assignments</h2>
+
+<table class="homework">
+<tr><td><td><b>Assignment</b><td><b>Due date</b><td><b>Supplemental files</b><td><b>Solutions</b>
+</tr>
+<tr><td>1.<td><a href="/teaching/cs524/homework/hw1.pdf" class="broken_link">Homework 1</a><td>Feb 2<td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw1_solutions.ipynb" class="broken_link">Homework 1 solutions</a>
+</tr>
+<tr><td>2.<td><a href="/teaching/cs524/homework/hw2.pdf" class="broken_link">Homework 2</a><td>Feb 9<td><a href="/teaching/cs524/homework/stigler.csv" class="broken_link">stigler.csv</a>,  <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/stigler.ipynb" class="broken_link">stigler.ipynb</a><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw2_solutions.ipynb" class="broken_link">Homework 2 solutions</a>
+</tr>
+<tr><td>3.<td><a href="/teaching/cs524/homework/hw3.pdf" class="broken_link">Homework 3</a><td>Feb 16<td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw3data.ipynb" class="broken_link">hw3data.ipynb</a><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw3_solutions.ipynb" class="broken_link">Homework 3 solutions</a>
+</tr>
+<tr><td>4.<td><a href="/teaching/cs524/homework/hw4.pdf" class="broken_link">Homework 4</a><td>Feb 25<td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw4_solutions.ipynb" class="broken_link">Homework 4 solutions</a>
+</tr>
+<tr><td>5.<td><a href="/teaching/cs524/homework/hw5.pdf" class="broken_link">Homework 5</a><td>Mar 4<td><a href="/teaching/cs524/homework/uy_data.csv" class="broken_link">uy_data.csv</a>, <a href="/teaching/cs524/homework/xy_data.csv" class="broken_link">xy_data.csv</a><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw5_solutions.ipynb" class="broken_link">Homework 5 solutions</a>
+</tr>
+<tr><td>6.<td><a href="/teaching/cs524/homework/hw6.pdf" class="broken_link">Homework 6</a><td>Mar 11<td><a href="/teaching/cs524/homework/voltages.csv" class="broken_link">voltages.csv</a>, <a href="/teaching/cs524/homework/lasso_data.csv" class="broken_link">lasso_data.csv</a><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw6_solutions.ipynb" class="broken_link">Homework 6 solutions</a>
+</tr>
+<tr><td>7.<td><a href="/teaching/cs524/homework/hw7.pdf" class="broken_link">Homework 7</a><td>Mar 18<td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw7_solutions.ipynb" class="broken_link">Homework 7 solutions</a>
+</tr>
+<tr><td>8.<td><a href="/teaching/cs524/homework/hw8.pdf" class="broken_link">Homework 8</a><td>Apr 15<td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw8_solutions.ipynb" class="broken_link">Homework 8 solutions</a>
+</tr>
+<tr><td>9.<td><a href="/teaching/cs524/homework/hw9.pdf" class="broken_link">Homework 9</a><td>Apr 22<td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw9_solutions.ipynb" class="broken_link">Homework 9 solutions</a>
+</tr>
+<tr><td>10.<td><a href="/teaching/cs524/homework/hw10.pdf" class="broken_link">Homework 10</a><td>May 1<td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/homework/hw10_solutions.ipynb" class="broken_link">Homework 10 solutions</a>
+</tr>
+</table>
+
+<h2>Midterm exams</h2>
+<ul>
+<li>Midterm exam from Spring 2016: (<a href="/teaching/cs524/homework/exam1_2016.pdf" class="broken_link">Blank exam</a>) (<a href="/teaching/cs524/homework/exam1_2016_solutions.pdf" class="broken_link">Exam with solutions</a>)</h2>
+<li>Midterm exam from Spring 2017: (<a href="/teaching/cs524/homework/exam1_2017.pdf" class="broken_link">Blank exam</a>) (<a href="/teaching/cs524/homework/exam1_2017_solutions.pdf" class="broken_link">Exam with solutions</a>)</h2>
+<li>Midterm exam from Spring 2018: (<a href="/teaching/cs524/homework/exam1_2018.pdf" class="broken_link">Blank exam</a>) (<a href="/teaching/cs524/homework/exam1_2018_solutions.pdf" class="broken_link">Exam with solutions</a>)</h2>
+</ul>
+<b>Note:</b> All exams were 2 hours long. The 2016 exam was closed-notes while the 2017 and 2018 exams allowed a single double-sided handwritten aid sheet.
+-->
+</div>
+
+<!-- RESOURCES ------------------------------------------------------------------------------------------------------>
+<div id="blk1" style="display: none">
+
+<!--<h2>Discussion forum:</h2>
+We will use Piazza (<a href="https://piazza.com/wisc/spring2018/cseceisye524/home">https://piazza.com/wisc/spring2018/cseceisye524/home</a>) for class-related discussions. Do not email the course staff directly with questions. Use Piazza or attend office hours!
+<ul>
+<li>On Piazza, anybody can ask questions, answer questions, or edit/improve existing responses. If you're struggling with a concept, chances are you're not alone---by posting your question on Piazza, it helps everybody!
+<li>Do not use Piazza to ask for solutions, do not post solutions, and be nice to each other!
+</ul>
+We will also use Piazza for surveys, polls, or other information-gathering tasks.-->
+
+<h2>Textbook:</h2>
+There is no required textbook for the class. All course material will be presented in class and/or provided online as notes. That being said, there are several textbooks that cover parts of what we will see in class, and you may find it helpful to use them as references. Here are a few:
+<ul>
+<li>S. Boyd and L. Vandenberghe. <em>Convex Optimization</em>. Cambridge University Press, 2004.<br>The book is available for free here: <a href="http://stanford.edu/~boyd/cvxbook/">http://stanford.edu/~boyd/cvxbook/</a>.
+</li><li>H.P. Williams. <em>Model Building in Mathematical Programming, 5th Edition</em>. Wiley, 2013.
+</li><li>R.L. Rardin. <em>Optimization in Operations Research</em>. Prentice Hall, 1998.
+</li></ul>
+
+<h2>Coding:</h2>
+You will be required to write code in Julia (<a href="http://julialang.org/">http://julialang.org/</a>), a programming language similar to Matlab and Python. We will also use the JuMP modeling language, which is a Julia module (<a href="http://www.juliaopt.org/JuMP.jl/0.18/">Official JuMP documentation</a>).
+<ul>
+<li> Download <a href="https://juliacomputing.com/products/juliapro.html">JuliaPro</a>. It comes bundled with the IJulia notebook and several popular packages, including JuMP.
+<!-- <a href="https://docs.google.com/document/d/1nv6bvzbcBDRnVjxPusiTMXdwo7Ywooggp_o2W0IZuTg/edit?usp=sharing">installation guide</a> -->
+
+</li><li>Alternatively, you may run Julia in your browser using <a href="https://www.juliabox.com/">JuliaBox</a>. Simply log in with any Google account and create a new file using “Julia 0.6.2”. This method will get you started instantly but is perhaps less reliable in the long run.
+</li></ul>
+Here are some additional useful references:
+<ul>
+<li><a href="https://docs.julialang.org/en/v1/manual/noteworthy-differences/index.html">Noteworthy differences from other languages</a>.
+</li><li><a href="https://cheatsheets.quantecon.org/">Another cheatsheet comparing Julia syntax to other languages</a>.
+</li><li><a href="https://learnxinyminutes.com/docs/julia/">Learn X in Y minutes Julia tutorial</a>.
+</li><li><a href="http://docs.julialang.org/en/latest/">Official Julia documentation</a>.
+</li><li><a href="http://math.mit.edu/~stevenj/Julia-cheatsheet.pdf">A handy cheat-sheet</a>.
+</li></ul>
+You will also be using the IJulia notebook:
+<ul>
+<li><a href="https://github.com/JuliaLang/IJulia.jl">IJulia documentation</a>
+</li><li><a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown cheatsheet</a>
+</li><li>Equations formatted using $…$ in <a href="http://users.dickinson.edu/~richesod/latex/latexcheatsheet.pdf">LaTeX</a>.
+</li><li>Another reference sheet for LaTeX can be found <a href="http://joshua.smcvt.edu/undergradmath/undergradmath.pdf">here</a>.
+</li></ul>
+We also had an hour-long Julia + IJulia + JuMP tutorial in class.
+<ul>
+<li> <a href="https://laurentlessard.com/teaching/cs524/slides/julia%20tutorial.pdf">Here are the slides</a>.
+</li></ul>
+
+
+</div>
+
+<!-- ADMINISTRATIVE ------------------------------------------------------------------------------------------------------>
+<div id="blk2" style="display: none">
+<h2>Official syllabus:</h2>
+The official syllabus for the class is available <a href="https://laurentlessard.com/teaching/cs524/syllabus%20524.pdf">here</a>.
+
+<h2>Important dates:</h2>
+<ul>
+<li>Tue Jan 23: first lecture
+</li><li>Thu Mar 22: midterm exam (7:15–9:15pm, Ingraham Hall B10)
+</li><li>Tue Mar 27 and Thu Mar 29: spring break (no classes)
+</li><li>Fri Apr 6: project proposal is due
+</li><li>Thu May 3: last lecture
+</li><li>Mon May 7: final project report is due
+
+</li><li>Other important dates: <a href="https://registrar.wisc.edu/spring_deadlines_at_a_glance.htm">https://registrar.wisc.edu/spring_deadlines_at_a_glance.htm</a>
+</li></ul>
+
+<!--
+<h2>Course syllabus:</h2>
+<table id="syllabus">
+<tr><td>Week 1  <td>Jan 17 and 19 <td>Introduction, optimization models, solvers, examples</tr>
+<tr><td>Week 2  <td>Jan 24 and 26 <td>Julia tutorial, geometry of linear programs (LP), standard form</tr>
+<tr><td>Week 3  <td>Jan 31 and Feb 2   <td>LP: minimax, planning, transportation, assignment, and network flow problems</tr>
+<tr><td>Week 4  <td>Feb 7 and 9  <td>LP: duality, sensitivity, complementary slackness, algorithms</tr>
+<tr><td>Week 5  <td>Feb 14 and 16 <td>Least squares, equality constraints, regression, trade offs</tr>
+<tr><td>Week 6  <td>Feb 21 and 23 <td>Regularization, norm choice, quadratic forms, QPs</tr>
+<tr><td>Week 7  <td>Feb 28 and Mar 2   <td>Cone constraints, SOCPs, SDPs, Robust LPs</tr>
+<tr><td>Week 8  <td>Mar 7 and 9  <td>Convex programming, general duality</tr>
+<tr><td>Week 9  <td>Mar 14 and 16 <td>Loose ends and review for the exam</tr>
+<tr><td>Week 10 <td>Mar 21 and 23 <td>Spring break (no class)</tr>
+<tr><td>Week 11 <td>Mar 28 and 30 <td>Nonconvex models, hardness, relaxations</tr>
+<tr><td>Week 12 <td>Apr 4 and 6   <td>Mixed-integer programs (MIP), generalized assignment</tr>
+<tr><td>Week 13 <td>Apr 11 and 13 <td>Logic constraints, traveling salesman</tr>
+<tr><td>Week 14 <td>Apr 18 and 20 <td>QAP, SOS constraints, algorithms</tr>
+<tr><td>Week 15 <td>Apr 25 and 27 <td>Nonlinear programming (NLP): models, examples, algorithms</tr>
+<tr><td>Week 16 <td>May 2 and 4   <td>Reserved for working on the class project</tr>
+</table>
+-->
+
+<!-- EVALUATION ------------------------------------------------------------------------------------------------------>
+<div id="blk3" style="display: none"></div>
+<h2>Grading:</h2>
+There will be three main components to your grade:
+<ul>
+<li><em>Homework: 45%</em>. There are weekly (roughly) homework assignments (8-10 total). These will be graded on a coarse 4-point scale. You get 4 points if you attempted all problems and got everything mostly right.
+</li><li><em>Midterm exam: 25%</em>. There will be an exam before spring break where you will be tested on all the material covered up to that point. The exam will be taken outside of regular class hours (see date and time above) so be sure that you have no scheduling conflicts. It is your responsibility to ensure that you are available and present for the midterm exam.
+</li><li><em>Project: 30%</em>. There will be a group project due at the end of the semester. More information <a id="link4" href="javascript:show4()">here</a>.
+</li></ul>
+There is no final exam for this class.
+<p></p>
+Letter grades will be assigned according to the following hard cut-offs:
+A: 93% or higher,
+AB: 87%,
+B: 80%,
+BC: 70%,
+C: 60%,
+D: 50%,
+F: less than 50%.
+I reserve the right to lower any of these cut-offs at my discretion. In other words, any changes I make can only cause your letter grade to stay the same or improve.
+
+<h2>More information about homework assignments</h2>
+<ul>
+<li>Homework assignments are due Sunday by 11pm. They can be turned in up to two days late at a penalty of -25% per day. Solutions will be posted to the class website on Wednesday.
+</li><li>Exceptions will be made to the rules above in order to accommodate special circumstances. This includes family or medical emergencies, religious observances, and documented disabilities. If you have a special circumstance and foresee a conflict, please email the instructor as soon as possible to make alternative arrangements.
+</li><li> Assignments must be turned in electronically (as PDF or images) via <a href="https://gradescope.com/">gradescope</a>. For a tutorial on how to do this, please watch <a href="https://www.youtube.com/watch?v=-wemznvGPfg">this video</a>. If you’ll be scanning documents in using a camera phone, read <a href="http://gradescope-static-assets.s3-us-west-2.amazonaws.com/help/submitting_hw_guide.pdf">this guide</a>.
+</li><li> Problems requiring code must be solved using an IJulia notebook. <b>You must turn in a PDF version of your notebook</b>. Do not turn in raw code such as an <code>.ipynb</code> or <code>.jl</code> file. The easiest way to turn a notebook into PDF is to use your browser’s “print to PDF” function. Be sure to compile your file (so we can see the outputs) before you turn it in.
+</li><li> For problems not requiring code, you may write up solutions by hand or electronically (e.g. using Word, LaTeX, or an IJulia notebook). Either way, you must turn it in electronically.
+</li><li> Start each problem on a new page if possible. At the very least, be sure that each new problem is clearly indicated (use a large heading in Markdown to indicate each new problem, for example). If a problem has multiple parts, it’s OK to answer them on a single page.
+</li><li> <u>Start early</u>. You have two weeks (three weekends) to complete assignments, so you can expect them to take longer than standard one-week problem sets. They are also worth a significant portion of your final grade. You have plenty of opportunities to get help during office hours or via Piazza, so the earlier you get started, the better!
+</li><li> <u>Explain your work</u>. This means write in words how you solved the problem, use intuitive variable names, and comment any code you turn in. It is unacceptable to simply turn in undocumented code. Even if your code produces the correct result, you will likely lose points. 
+</li><li> You are encouraged to discuss homework problems with classmates and even work in groups. However, the work you turn in <u>must be your own</u>. If you use any external sources (e.g. the internet) be sure to <u>cite your sources</u>!
+</li></ul>
+</div>
+
+<!-- PROJECT ------------------------------------------------------------------------------------------------------>
+<div id="blk4" style="display: none">
+
+<!--
+<h2>Project submission instructions</h2>
+
+Project is due <b>Monday May 7</b> (we will start grading Tuesday morning)
+<p></p>
+
+<ol>
+<li> put all your project files into a single zipfile. This includes your .ipynb notebook file, plus any other auxiliary files, such as csv files of required data, image files if you embedded any images in your notebook, and so on.
+<li> name your file by concatenating the LAST NAMES of your group members. e.g. if Emad Sadeghi and Jui-Yang Chang work on a project together, they should name the file SadeghiChang.zip
+<li> send an email, with the zipfile as an attachment, to the following email address:
+<a href="mailto:submiss.cq4sya6e46na4xmq@u.box.com">submiss.cq4sya6e46na4xmq@u.box.com</a>
+</ol>
+Please:
+<ul>
+<li> only upload one project per group
+<li> only upload a single zipfile
+<li> even if you don't have any auxiliary files and your project is just an .ipynb file, please put it in a zipfile anyway
+<li> if you upload multiple times, I will only open the most recent one and ignore all older files
+<li> if you DO need to upload an updated version of a project you already uploaded, please use the same filename as in your first upload so it's easier for me to keep track.
+</ul>
+-->
+
+<!--<h2>Basic information</h2>-->
+
+<p>The goal of the class project is to explain, model, and solve an optimization problem using techniques we learned in class. It’s an opportunity to pursue that idea you’ve been thinking about for some time but didn’t know how to best approach it! Some students also bring in problems related their own graduate or undergraduate research.</p>
+
+<p><!--You will work in small groups for the project and produce a final report in the form of an IJulia notebook. -->
+Here are some of the top projects from the Spring 2018 semester (alphabetical by first author) — check them out!</p>
+
+<table class="project">
+<tbody><tr><td width="280"><b>Authors</b></td><td width="350"><b>Project title</b></td><td width="110"><b>Files</b>
+</td></tr>
+<tr><td>Om Bathija</td><td>Pay Me Maybe: Settle Group Bills</td><td><a href="https://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2018/Bathija.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2018/Bathija.zip">Data</a>
+</td></tr>
+<tr><td>Katie Biegel and Alex Tanke</td><td>Going for Baroque: Scheduling an Artistically Meritorious and Financially Feasible Symphony Orchestra Season</td><td><a href="https://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2018/BiegelTanke.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2018/BiegelTanke.zip">Data</a>
+</td></tr>
+<tr><td>Alex Dawson-Elli, Patrick Dills, and Kieran Nichols</td><td>Trajectory Optimization using Direct Collocation</td><td><a href="https://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2018/DawsonDillsNichols.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2018/DawsonDillsNichols.zip">Data</a>
+</td></tr>
+<tr><td>Jacob Johnson</td><td>Strategic Amortization of Multiple Student Loans</td><td><a href="https://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2018/Johnson.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2018/Johnson.zip">Data</a>
+</td></tr>
+<tr><td>John Sandgren, Benjamin Morris,&nbsp;&nbsp; Abigail Purfuerst, and Casey Kong</td><td>National Park Optimization</td><td><a href="https://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2018/SandgrenMorrisPurfuerstKong.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2018/SandgrenMorrisPurfuerstKong.zip">Data</a>
+</td></tr>
+<tr><td>Jay Wang</td><td>CS 506 Group Assignment Optimization</td><td><a href="https://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2018/Wang.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2018/Wang.zip">Data</a>
+</td></tr>
+</tbody></table>
+<p></p>
+
+<p>Here are some of the top projects from the Spring 2017 semester:</p>
+<p></p>
+
+<table class="project">
+<tbody><tr><td width="280"><b>Authors</b></td><td width="350"><b>Project title</b></td><td width="110"><b>Files</b>
+</td></tr>
+<tr><td>Ian Atkins</td><td>Indoor Farm HVAC Optimization</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2017/Atkins.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2017/Atkins.zip">Data</a>
+</td></tr>
+<tr><td>Tuan Dinh and Varun Sah</td><td>Determining Winning Strategies Using Game Theoretic Optimization
+</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2017/DinhSah.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2017/DinhSah.zip">Data</a>
+</td></tr>
+<tr><td>Bailey Flanigan and Andrew Duplissis</td><td>Optimizing the WIMR Elevators
+</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2017/FlaniganDuplissis.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2017/FlaniganDuplissis.zip">Data</a>
+</td></tr>
+<tr><td>Yash Govind and Hakan Memisoglu</td><td>Optimizing Scheduling for Dataflow program</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2017/GovindMemisoglu.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2017/GovindMemisoglu.zip">Data</a>
+</td></tr>
+<tr><td>Alex Haufler and Patrick Forbes</td><td>Optimally Uniform Magnetic Fields Using Discrete Circular Electromagnetic Coils</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2017/HauflerForbes.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2017/HauflerForbes.zip">Data</a>
+</td></tr>
+<tr><td>Yiqiu Zhang and Jia Zhuang</td><td>Forest Harvest Company Distribution Optimization</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2017/ZhangZhuang.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2017/ZhangZhuang.zip">Data</a>
+</td></tr>
+</tbody></table>
+
+<p></p>
+
+<p>Here are some of the top projects from the Spring 2016 semester:</p>
+<p></p>
+
+<table class="project">
+<tbody><tr><td width="280"><b>Authors</b></td><td width="350"><b>Project title</b></td><td width="110"><b>Files</b>
+</td></tr>
+<tr><td>Aritra Biswas and Prathusha K. Sarma</td><td>Wanderlust: Optimizing Group Travel Plans</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/BiswasKameswaraSarma.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/BiswasKameswaraSarma.zip">Data</a>
+</td></tr>
+<tr><td>Wayne Chew and Sahit Mandala</td><td>Fiber Optic Network Topology Optimization</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/ChewMandala.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/ChewMandala.zip">Data</a>
+</td></tr>
+<tr><td>Christopher E. Lawson, Lise O. Aagesen, and Eric C. McCurry</td><td>Dynamic Metabolic Modelling of Nitrifying Consortia</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/LawsonAagesenMccurry.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/LawsonAagesenMccurry.zip">Data</a>
+</td></tr>
+<tr><td>AJ Nosek and Newton Wolfe</td><td>Minimizing Economic and Public Health Impacts of Radioactive Contamination</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/NosekWolfe.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/NosekWolfe.zip">Data</a>
+</td></tr>
+<tr><td>Nate Pritzl and Logan Colla</td><td>Fantasy Football Roster Optimization</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/PritzlColla.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/PritzlColla.zip">Data</a>
+</td></tr>
+<tr><td>Peter Schlafly and Sam Olson</td><td>Selecting the Best Possible NHL Expansion Team</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/SchlaflyOlson.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/SchlaflyOlson.zip">Data</a>
+</td></tr>
+<tr><td>Michael Scott and Drew Patenaude</td><td>Optimization of Trajectories through Dynamical Gravitational Systems</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/ScottPatenaude.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/ScottPatenaude.zip">Data</a>
+</td></tr>
+<tr><td>Ananth Sridhar, Rangapriya Parthasarathy, and Song Mei</td><td>Image Mosaicking</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/MeiParthasarathySridhar.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/MeiParthasarathySridhar.zip">Data</a>
+</td></tr>
+<tr><td>Jennifer Witt</td><td>Optimizing Telescope Time</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/Witt.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/Witt.zip">Data</a>
+</td></tr>
+<tr><td>Haojun Zhang and Keyi Cui</td><td>Using Optimization for Task Scheduling</td><td><a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/Spring2016/ZhangCui.ipynb">Notebook</a>, <a href="https://laurentlessard.com/teaching/cs524/project/Spring2016/ZhangCui.zip">Data</a>
+</td></tr>
+</tbody></table>
+
+<!--
+<h2>Project proposal (due Tuesday April 10)</h2>
+<ul>
+<li> Fill in the following form: <a href="/teaching/cs524/project/project_proposal.pdf">Project proposal</a> (also in <a href="/teaching/cs524/project/project_proposal.docx">MS Word format</a>)
+<li> Upload the completed form to Gradescope. Be sure to upload only one form per group. You'll have the option to select your group members within Gradescope once you upload.
+<li> There is no restriction on topic choice. A list of suggested topics is provided below but you are encouraged to come up with your own topics.
+<li> Your proposal will be checked to make sure your project idea sounds reasonable. You'll receive feedback about your proposal within a week. There will be no grade associated with the proposal.
+</ul>
+
+
+<h2>Final report (due Monday May 7)</h2>
+
+The report, which you will submit as a group, will be an IJulia notebook. <a href="http://nbviewer.jupyter.org/urls/laurentlessard.com/teaching/cs524/project/project_report_template.ipynb">Use the following file as a template</a>. You will not be submitting a PDF this time; you will be submitting the .ipynb file for your notebook. More details to come later! The report should contain the following sections:
+<ul>
+<li> Introduction (15%): The first few sentences should give a quick overview of the entire project. Then, elaborate with a description of the problem that will be solved, a brief history (with citations) of how the problem came about, why it's important/interesting, and any other interesting facts you'd like to talk about. You should address and explain where the problem data is coming from (research? the internet? synthetically generated?) Also give an outline of the rest of the report. This section should be 300-600 words long and <em>accessible to a student that <strong>has not</strong> taken the course</em>.
+<li> Mathematical model (20%): A discussion of the modeling assumptions made in the problem (e.g. is it from physics? economics? something else?). Explain the decision variables, the constraints, and the objective function. Finally, show the optimization problem written in standard form. Discuss the model type (LP, QP, MIP, etc.). Equations should be formatted in LaTeX within the IJulia notebook. This section should be <em>accessible to a student that <strong>has taken</strong> the course</em>
+<li> Solution (25%): Here, you should code up your model in Julia + JuMP and solve it. Your code should be clean, easy to read, well annotated and commented, and it should compile! You are not allowed to use other programming languages or DCP packages such as convex.jl. I will be running your code. I suggest having multiple code blocks separated by text blocks that explain the various parts of your solution. You may also solve several versions of your problem with different models/assumptions.
+<li> Results and discussion (25%): Here, you display and discuss the results. Show figures, plots, images, trade-off curves, or whatever else you can think of to best illustrate your results. The discussion should explain what the results mean, and how to interpret them. You should also explain the limitations of your approach/model and how sensitive your results are to the assumptions you made.
+<li> Conclusion (5%): Summarize your findings and your results, and talk about at least one possible future direction; something that might be interesting to pursue as a follow-up to your project. Be specific enough with your follow-up idea to show that you have given it some thought and that you think it's actually doable!
+</ul>
+The remaining 10% of the grade will be awarded at my discretion for originality, creativity, and final report quality. Bonus if you can make your report interactive! Note: you don't need to come up with your own idea to be creative/original. It's about where you take it. Make your report pretty by brushing up on your <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown</a> and your <a href="http://users.dickinson.edu/~richesod/latex/latexcheatsheet.pdf">LaTeX</a>.
+
+<h2>Suggested topics</h2>
+
+Keep in mind these are only suggestions! You are encouraged to come up with your own ideas and to draw inspiration from your work, your research, your other classes, your everyday life, or your imagination!
+<ul>
+<li> Examples from class or homework may be used as starting points provided you expand the topic significantly. Ideas:
+
+<ul>
+  <li> Planning problems (cf. house building example). What if we have a limited number of workers? What if certain equipment is required for certain tasks and that equipment has limited availability? What if certain tasks cannot be worked on simultaneously?
+  <li> Scheduling meetings (cf. doodle problem). What if we had to schedule multiple people on the same day? What if only certain subsets of people needed to meet with certain visitors? What if different people had different meeting duration requirements?
+  <li> Vehicle control (cf. hovercraft problems). Investigate vehicles with more complicated dynamics such as a car or bicycle. These vehicles have non-holonomic constraints (direction they can move in depends on which way they're pointing), and they also have turning radius constraints. Optimal way to parallel-park a car?
+  <li> Portfolio optimization (cf. portfolio problem from class). The example seen in class is a very basic version using a simple mean-variance tradeoff. What about more complicated models of risk?
+</ul>
+
+<li> Examples covered in classes at other schools may also be used as starting points. Always cite your sources! Ideas:
+
+<ul>
+  <li> Examples from EE364a at Stanford: <a href="http://stanford.edu/class/ee364a/lectures/examples.pdf">examples</a>
+  <li> Examples from EE236a at UCLA: <a href="http://www.seas.ucla.edu/~vandenbe/ee236a/lectures/struct.pdf">structural optimization</a> or <a href="http://www.seas.ucla.edu/~vandenbe/ee236a/lectures/control.pdf">control applications</a>.
+  <li> Examples from <a href="https://web.stanford.edu/~boyd/papers/cvx_short_course.html">convexity short course</a>. These examples already contain code (Python + cvxpy). If you choose one of these ideas, you must write your own Julia + JuMP code and you cannot simply duplicate the provided examples!
+  <li> Examples from EE127a at Berkeley: <a href="https://inst.eecs.berkeley.edu/~ee127a/book/login/index.html" class="broken_link">website</a>. Take a look at the case studies.
+</ul>
+
+<li> Problems with integer variables. We will start looking at this topic after spring break and we will cover many examples that might serve as starting points for class projects.
+-->
+
+</div>
+
+</div> <!-- MINIMUM HEIGHT DIV -->			  </div><!-- .course-content -->
+	</div><!-- .entry-content -->
+	<footer class="entry-meta">
+			</footer><!-- .entry-meta -->
+
+
+ 
+<script type="text/javascript">
+  show0();
+</script>
+  
+</div><!-- #content -->
+</div><!-- #primary -->
+
+
+	</div><!-- #main -->
+
+	<footer id="colophon" role="contentinfo">
+
+			
+
+			<div id="site-generator">			
+				© 2020  Laurent Lessard
+			  
+			</div>
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<script type="text/javascript" src="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/comment-reply.min.js"></script>
+<script type="text/javascript" src="./CS_ECE_ISyE 524_ Introduction to Optimization _ Laurent Lessard_files/wp-embed.min.js"></script>
+
+
+</body></html>
