@@ -1,4 +1,5 @@
 % Equality constrained entropy maximization
+% standard newton
 p = 4
 n = 7
 A = randn(p,n)
@@ -23,6 +24,7 @@ for iter=1:MAXITERS
   t=1;
   while (min(x+t*v) <= 0), t = BETA*t; end;
   while ((x+t*v)'*log(x+t*v) >= val + t*ALPHA*fprime), t=BETA*t; end;
+  t
   x = x + t*v;
 end;
 
