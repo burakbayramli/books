@@ -1,0 +1,65 @@
+MODEL Manplan
+
+SET
+Periods={1,2,3},
+Skills={1,2,3};
+
+DATA
+Omcost[Skills]=[1.5,2,3],
+Rtcost[Skills]=[0.4,0.5,0],
+Rdcost[Skills]=[0.2,0.5,0.5],
+Stcost[Skills]=[0.5,0.4,0.4],
+Survive[2,Skills]=[0.75,0.8,0.9,
+                   0.90,0.95,0.95],
+Number[Skills]=[2,1.5,1],                   
+Requ[Skills,Periods]=[1,0.5,0,
+                      1.4,2,2.5,
+                      1,1.5,2],
+Maxrecruit[Skills]=[0.5,0.8,0.5];
+
+VARIABLES
+Men[Skills,Periods],
+Recr[Skills,Periods],
+Rt[Skills,Skills,Periods],
+Dn[Skills,Skills,Periods],
+Red[Skills,Periods],
+Stime[Skills,Periods],
+Oman[Skills,Periods];
+
+OBJECTIVE
+
+MINIMIZE cost=sum{t in Periods}(sum{ i in {1..Skills-1}} Rtcost[i]*Rt[i,i+1,t]
+ +sum{i in Skills} (Rdcost[i]*Red[i,t] + Stcost[i]*Stime[i,t] +Omcost[i]*Oman[i,t]));                                   
+
+! MINIMIZE red=sum{t in Periods,i in Skills} Red[i,t];
+
+CONSTRAINTS
+
+Cont{i in Skills,t in {1}}:Men[i,t]-Survive[1,i]*Recr[i,t]
+                  -sum{j in Skills,j<i} Survive[2,i]*Rt[j,i,t]
+                  +sum{j in Skills,j<i} Dn[i,j,t]
+                  +sum{j in Skills,j>i} Rt[i,j,t]
+                  -sum{j in Skills,j>i} 0.5*Dn[j,i,t]
+                                       +Red[i,t]=(Survive[2,i]*Number[i]),
+
+Cont{i in Skills,t in Periods,t>1}:Men[i,t]- Survive[2,i]*Men[i,t-1]
+                                     -Survive[1,i]*Recr[i,t]
+                  -sum{j in Skills,j<i} Survive[2,i]*Rt[j,i,t]
+                  +sum{j in Skills,j<i} Dn[i,j,t]
+                  +sum{j in Skills,j>i} Rt[i,j,t]
+                  -sum{j in Skills,j>i} 0.5*Dn[j,i,t]
+                                       +Red[i,t]=0,
+
+
+Rtss{t in Periods}:Rt[2,3,t]-0.25*Men[3,t]<=0,
+Overman{t in Periods}:sum{i in Skills} Oman[i,t]<=0.15,
+Reqnum{i in Skills,t in Periods}:Men[i,t]-Oman[i,t]-0.5*Stime[i,t]=Requ[i,t],
+
+Bounds{i in Skills,t in Periods}:Recr[i,t]<=Maxrecruit[i],
+Bounds {i in Skills,t in Periods}:Stime[i,t]<=0.05,
+Bounds{i in {1},j in {2},t in Periods}:Rt[i,j,t]<=0.2,
+Bounds{i in {1},j in {3},t in Periods}:Rt[i,j,t]<=0;
+END MODEL
+solve Manplan;
+print solution for Manplan >> "Manplan.sol";
+quit;

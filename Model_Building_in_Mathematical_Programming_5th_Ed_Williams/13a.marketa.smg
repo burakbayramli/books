@@ -1,0 +1,38 @@
+
+MODEL market
+SET
+   nrega = {1 .. 8},
+   nregab = {1 .. 18},
+   totnumb = {1 .. 23},
+   ncats = {1 .. 7},
+   ncatsm1 = {1 .. 6},
+   ncatsm3 = {1 .. 4};
+DATA
+   mark[ncatsm3, totnumb] << "markdata.dat",
+   total[ncats] = [730,2395,134,215,100,8,8];
+VARIABLES
+   m[totnumb] integer,
+   slack[ncatsm1],
+   surp[ncatsm1],
+   maxdev;
+OBJECTIVE
+!   MINIMIZE sumdev = sum{i in ncatsm1} (total[i]*slack[i]+total[i]*surp[i])
+!                                       +total[7]*surp[6]+total[7]*slack[6];
+  MINIMIZE minmax = maxdev;
+CONSTRAINTS
+   delivery : sum{j in totnumb} mark[1,j]*m[j]+slack[1]-surp[1] = (0.4*total[1]),
+   spirits : sum{j in totnumb} mark[2,j]*m[j]+slack[2]-surp[2] = (0.4*total[2]),
+   oila : sum{j in nrega} mark[3,j]*m[j]+slack[3]-surp[3] = (0.4*total[3]),
+   oilb : sum{j in {9 .. 18}} mark[3,j]*m[j]+slack[4]-surp[4] = (0.4*total[4]),
+   oilc : sum{j in {19 .. 23}} mark[3,j]*m[j]+slack[5]-surp[5] = (0.4*total[5]),
+   groWth : sum{j in totnumb} mark[4,j]*m[j]+slack[6]-surp[6] = (0.4*total[6]),
+   deva{i in ncatsm1} : maxdev-slack[i] >= 0,
+   devb{i in ncatsm1} : maxdev-surp[i] >= 0,
+   bounds{j in totnumb} : m[j] <= 1,
+   bounds{i in ncatsm1} : slack[i] <= (0.05*total[i]),
+   bounds{i in ncatsm1} : surp[i] <= (0.05*total[i]),
+   bounds : maxdev <= 120;
+END MODEL
+solve market;
+print solution for market >> "marketa.sol";
+quit;

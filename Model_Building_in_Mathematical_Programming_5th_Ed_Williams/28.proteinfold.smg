@@ -1,0 +1,44 @@
+
+
+
+
+
+MODEL Proteinfold
+
+DATA
+!n=27,
+n=50; ! Number of acids in Protein
+!size=8; ! Maximum linear dimension of protein
+
+SET
+
+   A={1..n}, ! Acids
+   H={2,4,5,6,11,12,17,20,21,25,27,28,30,31,33,37,44,46}; !Hydrophobic acids
+
+VARIABLES
+
+
+   m[H,H] BINARY, ! = 1 iff acids i and j are matched
+   f[A]  BINARY; ! =1 iff fold immediately after acid i
+  
+   
+OBJECTIVE
+
+   MAXIMIZE Number = sum{i in H, j in H, i<j} m[i,j]; ! Maximise number of matched hyprophobic acids, not counting
+                                       ! those already matched by virtue of being contiguous in chain
+
+CONSTRAINTS
+
+   mt{i in H, j in H, k in A, i+2<j, j<=n, MOD((j-i),2)=1, i<=k, k<=j, k<>(i+j-1)/2}: f[k]+m[i,j]<=1, ! Non contiguous matching
+                                                                                    ! requires only one fold between
+                                                                                    ! and even number of acids between     
+   mta{i in H, j in H, i+2<j, j<=n, MOD((j-i),2)=1}: f[(i+j-1)/2]>=m[i,j], ! Matching requires mid point fold 
+   bd{i in H, j in H, i+1=j}: m[i,j]=0,  ! Contiguous matches not counted again
+   bda{i in H, j in H, MOD((j-i),2)=0}: m[i,j]=0; ! Cannot match acids with an odd number between
+
+ 
+
+END MODEL
+solve Proteinfold;
+print solution for Proteinfold >> "Proteinfold.sol";
+quit;

@@ -1,0 +1,56 @@
+MODEL Farm
+SET
+   mi = {1 .. 4},
+   mi2 = {1 .. 2},
+   mt = {1 .. 5},
+   mt1 = {1 .. 6},
+   mj = {1 .. 11},
+   mj1 = {1 .. 12},
+   mj2 = {2 .. 11},
+   mj3 = {3 .. 12};
+DATA
+   ft[mt] = [1,2,3,4,5],
+   grainarea[mi] = [20,30,20,10],
+   grainyld[mi] = [1.1,0.9,0.8,0.65];
+VARIABLES
+   gr[mi,mt],
+   sb[mt],
+   grbuy[mt],
+   grsell[mt],
+   sbbuy[mt],
+   sbsell[mt],
+   exlab[mt],
+   excap[mt],
+   hfsell[mt1],
+   cows[mj1,mt],
+   newcow[mt],
+   prof[mt];
+OBJECTIVE
+   MAXIMIZE totprof = sum {t in mt} (prof[t] - 158.85*excap[t] - (39.85 * ft[t])*excap[t]);
+CONSTRAINTS
+   accomm{t in mt} : newcow[t] + sum{j in mj} cows[j,t] - sum{k in {1 .. t}} excap[k] <= 130,
+   grcons{t in mt} : sum{j in mj2} (0.6*cows[j,t]) - sum{i in mi} gr[i,t]
+                     - grbuy[t] + grsell[t] <= 0,
+   sbcons{t in mt} : sum{j in mj2} (0.7*cows[j,t]) - sb[t] - sbbuy[t] + sbsell[t] <= 0,
+   bounds{i in mi,t in mt} : gr[i,t] <= (grainyld[i]*grainarea[i]),
+   acreas{t in mt} : sum{i in mi} ((1/grainyld[i])*gr[i,t]) + (2/3)*sb[t]
+                     + (2/3)*newcow[t] + (2/3)*cows[1,t] + sum{j in mj2} cows[j,t] <= 200,
+   labour{t in mt} : 0.1*newcow[t] + 0.1*cows[1,t] + sum{j in mj2} 0.42*cows[j,t] + sum{i in mi} 
+                     (0.04/grainyld[i])*gr[i,t] + (0.14/1.5)*sb[t] - exlab[t] <= 55,
+   cta{t in mi} : cows[1,t+1] - 0.95*newcow[t] = 0,
+   ctb{t in mi} : cows[2,t+1] - 0.95*cows[1,t] = 0,
+   ct{j in mj2,t in mi} : cows[j+1,t+1] - 0.98*cows[j,t] = 0,
+   ctc{t in mt} : newcow[t] - sum{j in mj2} 0.55*cows[j,t] + hfsell[t] = 0,
+   enda : sum{j in mj2} cows[j,5] <= 175,       ! 125,
+   prf{t in mt} : sum{j in mj2} 16.5*cows[j,t] + 40*hfsell[t] + 120*cows[12,t]
+                  + sum{j in mj2} 370*cows[j,t] + 75*grsell[t] + 58*sbsell[t]
+                  - 90*grbuy[t] - 70*sbbuy[t] -120*exlab[t] - 50*newcow[t]
+                  - 50*cows[1,t] - sum{j in mj2} 100*cows[j,t] - sum{i in mi} 
+                  (15/grainyld[i])*gr[i,t] - (20/3)*sb[t] - sum{k in {1 .. t}}
+                  39.85*excap[k] - prof[t] = 4000,
+   bounds{j in mi2} : cows[j,1] = 9.5,
+   bounds{j in mj3} : cows[j,1] = 9.8;
+END MODEL
+solve Farm;
+print solution for Farm >> "Farm.sol";
+quit;

@@ -1,0 +1,23 @@
+
+MODEL Constraint
+SET
+  terms={1..8},
+  ceils={1..6},
+  roofs={1..6};
+DATA
+  ceiling[ceils,terms] << "ceiling.dat",
+  roofing[roofs,terms] << "roofing.dat";
+VARIABLES
+  a[terms],
+  b;
+OBJECTIVE
+  MINIMIZE rhs=b-a[3]-a[5];
+! MINIMIZE s=sum{j in terms} a[j];
+CONSTRAINTS
+  cei{i in ceils} : sum{j in terms,ceiling[i,j]>0} a[ceiling[i,j]] <= b,
+  roo{k in roofs} : sum{j in terms,roofing[k,j]>0} a[roofing[k,j]] >= b+1,
+  ord{j in terms,j<terms} : a[j]-a[j+1] >= 0;
+END MODEL
+solve Constraint;
+print solution for Constraint >> "Constraint.sol";
+quit;

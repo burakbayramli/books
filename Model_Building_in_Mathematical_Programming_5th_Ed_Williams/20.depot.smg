@@ -1,0 +1,64 @@
+MODEL Depot
+SET
+   set1 = {1 .. 1},
+   set2 = {4 .. 6},
+   nfact = {1 .. 2},
+   ndeps = {1 .. 6},
+   ncust = {1 .. 6};
+DATA
+   costftod[nfact,ndeps] = [0.5,0.5,1,0.2,0.6,0.4,
+                            0,0.3,0.5,0.2,0.4,0.3],
+   costftoc[nfact,ncust] = [1,0,1.5,2,0,1,
+                            2,0,0,0,0,0],
+   costdtoc[ndeps,ncust] << "dtocfile.dat",
+   factcap[nfact] = [150,200],
+   depcap[ndeps] = [70,20,100,40,30,25],
+   fixcost[ndeps] = [10,3,0,5,12,4],
+   custreq[ncust] = [50,10,40,35,60,20];
+VARIABLES
+   ftod[nfact,ndeps],
+   ftoc[nfact,ncust],
+   dtoc[ndeps,ncust],
+   delta[ndeps] ;
+OBJECTIVE
+   MINIMIZE cost = sum{i in nfact, j in ndeps} (costftod[i,j]*ftod[i,j])
+                 + sum{i in nfact, k in ncust} (costftoc[i,k]*ftoc[i,k])
+                 + sum{j in ndeps, k in ncust} (costdtoc[j,k]*dtoc[j,k])
+                 + sum{j in ndeps} (fixcost[j]*delta[j]);
+CONSTRAINTS
+   fcap{i in nfact} : sum{j in ndeps} (ftod[i,j])
+                    + sum{k in ncust} ftoc[i,k] <= factcap[i],
+   dcap1{j in set1} : sum{i in nfact} (ftod[i,j])-depcap[j]*delta[j] <= 0,
+   dcap2{j in set2} : sum{i in nfact} (ftod[i,j])-depcap[j]*delta[j] <= 0,
+   dcap3 : sum{i in nfact} (ftod[i,2]) - depcap[2]*delta[2] <= 50,
+   dcap4 : sum{i in nfact} (ftod[i,3]) <= depcap[3],
+   dcont{j in ndeps} : sum{k in ncust} (dtoc[j,k])
+                     - sum{i in nfact} (ftod[i,j]) = 0,
+   creq{k in ncust} : sum{i in nfact} (ftoc[i,k])
+                    + sum{j in ndeps} dtoc[j,k] = custreq[k],
+   numb1 : sum{j in set1} delta[j] <= 2,
+   numb2 : sum{j in set2} delta[j] <= 2,
+   bounds : ftod[2,1] = 0,
+   bounds : ftoc[1,2] = 0,
+   bounds : ftoc[1,5] = 0,
+   bounds : ftoc[2,2] = 0,
+   bounds : ftoc[2,3] = 0,
+   bounds : ftoc[2,4] = 0,
+   bounds : ftoc[2,5] = 0,
+   bounds : ftoc[2,6] = 0,
+   bounds : dtoc[1,1] = 0,
+   bounds : dtoc[1,5] = 0,
+   bounds : dtoc[2,6] = 0,
+   bounds : dtoc[3,1] = 0,
+   bounds : dtoc[3,4] = 0,
+   bounds : dtoc[4,1] = 0,
+   bounds : dtoc[4,2] = 0,
+   bounds : dtoc[5,4] = 0,
+   bounds : dtoc[6,1] = 0,
+   bounds : dtoc[6,3] = 0,
+   bounds{j in nfact} : delta[j] <= 1,
+   bounds{j in set2} : delta[j] <= 1;
+END MODEL
+solve Depot;
+print solution for Depot >> "Depot.sol";
+quit;

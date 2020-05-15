@@ -1,0 +1,22 @@
+MODEL Efficient
+SET
+   garages={1..28},
+   inputs={1..6},
+   outputs={1..3};
+DATA
+   Icoeffs[garages,inputs] << "idata.dat",
+   Ocoeffs[garages,outputs]  << "odata.dat";
+VARIABLES
+   x[garages],
+   w;
+OBJECTIVE
+   MAXIMIZE weight=w;
+CONSTRAINTS
+   ilevel{i in inputs} :
+            sum{j in garages} Icoeffs[j,i]*x[j] <= Icoeffs[1,i],
+   olevel{k in outputs} :
+            sum{j in garages} Ocoeffs[j,k]*x[j] >= Ocoeffs[1,k]*w;
+END MODEL
+solve Efficient;
+print solution for Efficient >> "Efficient.sol";
+quit;

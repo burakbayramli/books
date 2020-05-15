@@ -1,0 +1,33 @@
+MODEL Factory
+DATA
+   n_per = 6;
+SET
+   Prod = {1 .. 7}, MACH = {1 .. 5}, PER = {1 .. n_per};
+DATA
+   hours_avail = 384,
+   time[MACH,Prod]  << "time.dat",
+   market[n_per,Prod] << "sale.dat",
+   totmach[MACH,n_per]  << "mach.dat",
+   prof[Prod] = [10,6,8,4,11,9,3];
+VARIABLES
+   mprod[Prod,n_per], sprod[Prod,n_per], hprod[Prod,n_per];
+OBJECTIVE
+   MAXIMIZE PROFIT = sum {t in PER, i in Prod}
+            (prof[i]*sprod[i,t] - 0.5*hprod[i,t]);
+CONSTRAINTS
+   bal{i in Prod, t in PER, t=1}: mprod[i,t] - sprod[i,t] - hprod[i,t] = 0,
+   bal{i in Prod, t in PER, t>1}: hprod[i,t-1] + mprod[i,t] 
+                         - sprod[i,t] - hprod[i,t] = 0,
+   cap{m in MACH, t in PER}:
+      sum {i in Prod} time[m,i]*mprod[i,t] <= hours_avail*totmach[m,t],
+   for {i in Prod, t in PER}
+      {sprod[i,t] <= market[t,i],
+       if (t<n_per)
+          hprod[i,t] <= 100
+       else
+          hprod[i,t] = 50
+      };
+END MODEL
+solve Factory;
+print solution for Factory >> "Factory.sol";
+quit;
