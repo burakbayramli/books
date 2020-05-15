@@ -1,0 +1,59 @@
+MODEL AGPRICE
+DATA
+      n_point = 35;
+SET
+      point = {1..n_point};
+DATA
+      grid[point]
+        = 
+          [0.06,0.1,0.15,0.2,0.25,0.3,0.3125,0.325,0.35,0.4,0.45,0.5,
+           0.55,0.6,0.65,0.6625,0.66875,0.7,0.75,0.8,0.85,0.9,0.95,1.0,1.025,
+           1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.45,1.5];
+VARIABLES
+      milk, milksq,
+      butt, buttsq,
+      cha, chasq,
+      chb, chbsq,
+      xm,xb,xca,xcb,
+      q FREE, qsq,
+      lmilk[point], lbutt[point], lcha[point], lchb[point], lq[point], mq[point];
+OBJECTIVE
+   MAXIMIZE revenue
+      = -6492*milksq-1200*buttsq-194*chasq-8*chbsq-qsq
+             +6748*milk+1185*butt+420*cha+70*chb;
+CONSTRAINTS
+mrel:   (1/4.82)*xm+(0.4/0.297)*milk = 1.4,
+brel:   (1/0.32)*xb+(2.7/0.720)*butt = 3.7,
+carel:  (1/0.21)*xca+(1.1/1.05)*cha -(0.1/0.815)*chb = 2,
+cbrel:  (1/0.07)*xcb+(0.4/0.815)*chb -(0.4/1.05)*cha = 1,
+fquota:  0.04*xm+0.8*xb+0.35*xca+0.25*xcb<=0.600,
+dquota:  0.09*xm+0.02*xb+0.3*xca+0.4*xcb<=0.750,
+!   quala: 259.66*milk+960*butt+70.33*cha-0.43*chb >= 781.62,
+!   qualb: 584.24*milk+24*butt+55.33*cha+6.01*chb >= 35,
+   index: 4.82*milk+0.32*butt+0.21*cha+0.07*chb <= 1.939,
+!   nonnega: 220*cha-25.77*chb <= 420,
+!   nonnegb: -26.67*cha+34.35*chb <= 70,
+   diff: cha-chb-0.195*q = 0,
+   refmilk: milk - sum{i in point} grid[i]*lmilk[i]=0,
+   refbutt: butt - sum{i in point} grid[i]*lbutt[i]=0,
+   refcha: cha - sum{i in point} grid[i]*lcha[i]=0,
+   refchb: chb - sum{i in point} grid[i]*lchb[i]=0,
+   refq: q + sum{i in point} grid[i]*mq[i]- sum{i in point} grid[i]*lq[i]=0,
+   funmilk :milksq-sum {i in point} grid[i]^2 * lmilk[i]=0,
+   funbutt:buttsq-sum {i in point} grid[i]^2 * lbutt[i]=0,
+   funcha:chasq-sum {i in point} grid[i]^2 * lcha[i]=0,
+   funchb:chbsq-sum {i in point} grid[i]^2 * lchb[i]=0,
+   funq:qsq-sum{i in point} grid[i]^2 * mq[i]-sum {i in point} grid[i]^2 * lq[i]=0,
+   convmilk:sum {i in point} lmilk[i]<=1,
+   convbutt:sum {i in point} lbutt[i]<=1,
+   convcha:sum {i in point} lcha[i]<=1,
+   convchb:sum {i in point} lchb[i]<=1,
+   convq:sum {i in point} (mq[i]+lq[i])<=1;
+!   milk<=1.039,
+!   butt<=0.987;
+END MODEL
+solve AGPRICE;
+print solution for AGPRICE >> "agprice.sol";
+quit;
+
+

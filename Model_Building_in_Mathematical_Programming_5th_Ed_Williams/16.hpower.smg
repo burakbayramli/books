@@ -1,0 +1,69 @@
+MODEL Hpower
+SET
+   maxi={1 .. 3},
+   maxh={1 .. 2},
+   maxt={1 .. 5};
+DATA
+   minlevel[maxi]=[0.85,1.25,1.5],
+   maxlevel[maxi]=[2,1.75,4],
+   costph[maxi]=[1,2.6,3],
+   excostph[maxi]=[2,1.3,3],
+   exctminl[maxi]=[1.7,1.625,4.5],
+   startcost[maxi]=[2,1,0.5],
+   demand[maxt]=[15,30,25,40,27],
+   nhours[maxt]=[6,3,6,3,6],
+   number[maxi]=[12,10,5],
+   hydrolevel[maxh]=[0.9,1.4],
+   startcosth[maxh]=[1.5,1.2],
+   costphh[maxh]=[0.09,0.15],
+   numhyd[maxh]=[1,1],
+   redheight[maxh]=[0.31,0.47];
+VARIABLES
+   out[maxi,maxt],
+   num[maxi,maxt] integer,
+   nst[maxi,maxt] integer,
+   numh[maxh,maxt] integer,
+   nsth[maxh,maxt] integer,
+   heit[maxt],
+   pump[maxt];
+OBJECTIVE
+   MINIMIZE cost = sum{i in maxi, t in maxt}
+      (excostph[i]*nhours[t]*out[i,t] - exctminl[i]*nhours[t]*num[i,t] +
+       costph[i]*nhours[t]*num[i,t] + startcost[i]*nst[i,t])
+       +sum{h in maxh,t in maxt} costphh[h]*nhours[t]*numh[h,t]
+       +sum{h in maxh,t in maxt} startcosth[h]*nsth[h,t];
+CONSTRAINTS
+   for {t in maxt}
+      { dem{t} : sum {i in maxi} out[i,t]
+                +sum {h in maxh} hydrolevel[h]*numh[h,t]
+                -pump[t] >= demand[t],
+        guar{t}: sum {i in maxi} maxlevel[i]*num[i,t]
+                 >= 1.15*demand[t]-sum{h in maxh} hydrolevel[h],
+        for {i in maxi}
+           { min{i,t} : out[i,t] - minlevel[i]*num[i,t] >= 0,
+             max{i,t} : out[i,t] - maxlevel[i]*num[i,t] <= 0,
+             st{i,t,t>1} : nst[i,t] - num[i,t] + num[i,t-1] >= 0,
+             st{i,t,t=1} : nst[i,t] - num[i,t] + num[i,maxt] >= 0,
+             bounds{i,t} : num[i,t] <= number[i],
+             bounds{i,t} : nst[i,t] <= number[i]
+            },
+         for {h in maxh}
+            { sth{h,t,t>1} : nsth[h,t] - numh[h,t] + numh[h,t-1] >= 0,
+              sth{h,t,t=1} : nsth[h,t] - numh[h,t] + numh[h,maxt] >= 0,
+              bounds{h,t} : nsth[h,t] <= numhyd[h],
+              bounds{h,t} : numh[h,t] <= numhyd[h]
+            },
+              high{t,t<maxt} : heit[t+1] - heit[t] - (nhours[t]/3)*pump[t]
+             +sum {h in maxh} nhours[t]*redheight[h]*numh[h,t] = 0,
+              high{t,t=maxt} : heit[1] - heit[t] - (nhours[t]/3)*pump[t]
+             +sum {h in maxh} nhours[t]*redheight[h]*numh[h,t] = 0,
+              bounds{t,t=1} : heit[t] = 16,
+              bounds{t,t>2} : heit[t] <= 20,
+              bounds{t,t>2} : heit[t] >= 15
+             
+          };
+END MODEL
+solve Hpower;
+print solution for Hpower >> "Hpower.sol";
+quit;
+

@@ -1,0 +1,41 @@
+MODEL Tariff
+SET
+   maxi={1 .. 3},
+   maxt={1 .. 5};
+DATA
+   minlevel[maxi]=[0.85,1.25,1.5],
+   maxlevel[maxi]=[2,1.75,4],
+   costph[maxi]=[1,2.6,3],
+   excostph[maxi]=[2,1.3,3],
+   exctminl[maxi]=[1.7,1.625,4.5],
+   startcost[maxi]=[2,1,0.5],
+   demand[maxt]=[15,30,25,40,27],
+   nhours[maxt]=[6,3,6,3,6],
+   number[maxi]=[12,10,5];
+VARIABLES
+   out[maxi,maxt] ,
+   num[maxi,maxt] integer,
+   nst[maxi,maxt] integer;
+OBJECTIVE
+   MINIMIZE cost = sum{i in maxi, t in maxt}
+      (excostph[i]*nhours[t]*out[i,t] - exctminl[i]*nhours[t]*num[i,t] +
+       costph[i]*nhours[t]*num[i,t] + startcost[i]*nst[i,t]);
+CONSTRAINTS
+   for {t in maxt}
+      { dem{t} : sum {i in maxi} out[i,t] >= demand[t],
+        guar{t}: sum {i in maxi} maxlevel[i]*num[i,t]
+                                 >= 1.15*demand[t],
+        for {i in maxi}
+           { min{i,t} : out[i,t] - minlevel[i]*num[i,t] >= 0,
+             max{i,t} : out[i,t] - maxlevel[i]*num[i,t] <= 0,
+             st{i,t,t>1} : nst[i,t] - num[i,t] + num[i,t-1] >= 0,
+             st{i,t,t=1} : nst[i,t] - num[i,t] + num[i,maxt] >= 0,
+             bounds{i,t} : num[i,t] <= number[i],
+             bounds{i,t} : nst[i,t] <= number[i]
+            }
+       };
+END MODEL
+solve Tariff;
+print solution for Tariff >> "Tariff.sol";
+quit;
+

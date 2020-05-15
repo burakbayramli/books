@@ -1,0 +1,62 @@
+
+MODEL FoodB
+DATA 
+	maxt = 6, maxi = 5; 
+SET
+	A = {1 .. 2}, B = {3 .. 5},
+	T = {1 .. maxt}, I = {1 .. maxi};
+DATA
+	cost[T,I] << "cost.dat", 
+	hard[I] << "hard.dat"; 
+VARIABLES
+	b[I,T], u[I,T], s[I,T], 
+	Prod[T];
+OBJECTIVE 
+  MAXIMIZE prof = sum{t in T} (150*Prod[t] - sum{i in I} (    
+                               cost[t,i]*b[i,t] + 5*s[i,t])); 
+CONSTRAINTS
+  loil{i in I, 1}: b[i,1] - u[i,1] - s[i,1] = -500, 
+  loil{i in I, t in T, t > 1}: 
+		s[i,t-1] + b[i,t] - u[i,t] - s[i, t] = 0,
+  vveg{t in T}: sum{i in A} u[i,t] <= 200, 
+  voil{t in T}: sum{i in B} u[i,t] <= 250, 
+  uhrd{t in T}: sum{i in I} hard[i]*u[i,t] - 6*Prod[t] <= 0, 
+  lhrd{t in T}: sum{i in I} hard[i]*u[i,t] - 3*Prod[t] >= 0, 
+  cont{t in T}: sum{i in I} u[i,t] - Prod[t] = 0,
+
+/* Specify bounds for the variables */
+
+  for {i in I, t in T, t<maxt}
+	  s[i,t] <= 1000, 
+  for {i in I}
+	  s[i,maxt] = 500;
+
+VARIABLES
+  d[I, T] BINARY;
+CONSTRAINTS
+  for {t in T}
+  {
+    ! Formulate second condition
+    for { i in A }
+    { ! UB on amount of veg. oil refined/month = 200
+      u[i,t] <= 200*d[i,t],
+      u[i,t] >=  20*d[i,t]
+    },
+    for { i in B }
+    { ! UB on amount of non-veg. oil refined/month = 250
+      u[i,t] <= 250*d[i,t],
+      u[i,t] >=  20*d[i,t]
+    },
+    ! Formulate first condition 
+    sum{i in I} d[i,t] <= 3,
+    ! Formulate third condition
+    d[1,t] <= d[5,t],
+    d[2,t] <= d[5,t]   
+
+  
+  };
+
+END MODEL
+solve FoodB;
+print solution for FoodB >> "FoodB.sol";
+quit;

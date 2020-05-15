@@ -1,0 +1,73 @@
+MODEL Opencast
+SET
+   maxi = {1 .. 30};
+DATA
+   rev[maxi] << "revdata.dat",
+   cost[maxi] << "costdata.dat";
+VARIABLES
+   block[maxi];
+OBJECTIVE
+   MAXIMIZE PROFIT = sum{i in maxi} (rev[i]-cost[i])*block[i];
+CONSTRAINTS
+   con1  : block[1]  - block[2]  <= 0,
+   con2  : block[1]  - block[3]  <= 0,
+   con3  : block[1]  - block[4]  <= 0,
+   con4  : block[1]  - block[5]  <= 0,
+   con5  : block[2]  - block[6]  <= 0,
+   con6  : block[2]  - block[7]  <= 0,
+   con7  : block[2]  - block[9]  <= 0,
+   con8  : block[2]  - block[10] <= 0,
+   con9  : block[3]  - block[7]  <= 0,
+   con10 : block[3]  - block[8]  <= 0,
+   con11 : block[3]  - block[10] <= 0,
+   con12 : block[3]  - block[11] <= 0,
+   con13 : block[4]  - block[9]  <= 0,
+   con14 : block[4]  - block[10] <= 0,
+   con15 : block[4]  - block[12] <= 0,
+   con16 : block[4]  - block[13] <= 0,
+   con17 : block[5]  - block[10] <= 0,
+   con18 : block[5]  - block[11] <= 0,
+   con19 : block[5]  - block[13] <= 0,
+   con20 : block[5]  - block[14] <= 0,
+   con21 : block[6]  - block[15] <= 0,
+   con22 : block[6]  - block[16] <= 0,
+   con23 : block[6]  - block[19] <= 0,
+   con24 : block[6]  - block[20] <= 0,
+   con25 : block[7]  - block[16] <= 0,
+   con26 : block[7]  - block[17] <= 0,
+   con27 : block[7]  - block[20] <= 0,
+   con28 : block[7]  - block[21] <= 0,
+   con29 : block[8]  - block[17] <= 0,
+   con30 : block[8]  - block[18] <= 0,
+   con31 : block[8]  - block[20] <= 0,
+   con32 : block[8]  - block[21] <= 0,
+   con33 : block[9]  - block[19] <= 0,  
+   con34 : block[9]  - block[20] <= 0,
+   con35 : block[9]  - block[23] <= 0,
+   con36 : block[9]  - block[24] <= 0,
+   con37 : block[10] - block[20] <= 0,
+   con38 : block[10] - block[21] <= 0,
+   con39 : block[10] - block[24] <= 0,
+   con40 : block[10] - block[25] <= 0,
+   con41 : block[11] - block[21] <= 0,
+   con42 : block[11] - block[22] <= 0,
+   con43 : block[11] - block[25] <= 0,
+   con44 : block[11] - block[26] <= 0,
+   con45 : block[12] - block[23] <= 0,
+   con46 : block[12] - block[24] <= 0,
+   con47 : block[12] - block[27] <= 0,
+   con48 : block[12] - block[28] <= 0,
+   con49 : block[13] - block[24] <= 0,
+   con50 : block[13] - block[25] <= 0,
+   con51 : block[13] - block[28] <= 0,
+   con52 : block[13] - block[29] <= 0,
+   con53 : block[14] - block[25] <= 0,
+   con54 : block[14] - block[26] <= 0,
+   con55 : block[14] - block[29] <= 0,
+   con56 : block[14] - block[30] <= 0,
+   bounds{i in maxi} : block[i]  <=  1;
+END MODEL
+solve Opencast;
+print solution for Opencast >> "Opencast.sol";
+quit;
+

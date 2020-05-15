@@ -1,0 +1,68 @@
+MODEL Milk
+SET
+   farm={1..21},        ! Including Depot as Farm 1
+   alld={1..10},        ! 1 to 10 visited every day
+   oned={11..21},       ! 11 to 21 visited every other day
+   days={1..2},
+! sets to eliminate subtours at 2nd stage
+   sa={6,7,20},
+   sb={2,5,18},
+   sc={3,4,13,16,19},
+! sets to eliminate subtours at 3rd stage
+   sd={8,9,21},
+   se={1,2,6,7,10,17};
+DATA
+   Dist[farm,farm] << "farm21.dat",   ! Distance matrix
+   Cap[farm] << "cap21.dat",          ! Collection requirements
+   Tcap = 80;                         ! Tanker capacity (1000 litres)
+VARIABLES
+   x[farm,farm,days] integer,      ! 1 if go beween farms on a day
+   y[oned,days] integer;           ! 1 if farm visited on day
+OBJECTIVE
+   MINIMIZE cost=sum{i in farm, j in farm, k in days,i < j}
+                      Dist[i,j]*x[i,j,k];
+CONSTRAINTS
+!  Tanker capacity limit
+   limit{k in days} : sum{i in oned} Cap[i]*y[i,k] <=
+                      Tcap - sum{i in alld} Cap[i],
+!  Which day to visit every-other day farms
+   dayvis{i in oned} : sum{k in days} y[i,k] = 1,
+!  Two-matching constraints for every-day farms 
+   mat{i in alld, k in days} : sum{j in farm, j > i} x[i,j,k]
+                              +sum{j in farm, j < i} x[j,i,k] = 2,
+!  Two-matching constraints for every-other day farms 
+   mat{i in oned, k in days} : sum{j in farm, j > i} x[i,j,k]
+                              +sum{j in farm, j < i} x[j,i,k] = 2*y[i,k],
+!  Cuts to tighten constraint above.These can be added all at once or on
+!  'as needed' basis, manually or automatically
+   va{i in oned, j in farm,k in days, j > i} : x[i,j,k] <= y[i,k],
+   vb{i in oned, j in farm,k in days, j < i} : x[j,i,k] <= y[i,k],
+!  End of first stage
+!  Subtour elimination constraints
+   suba{k in {1..2}} : sum{i in sa,j in sa,i < j} x[i,j,k] <= 2,
+   subb{k in {1..2}} : sum{i in sb,j in sb,i < j} x[i,j,k] <= 2,
+   subc{k in {1..2}} : sum{i in sc,j in sc,i < j} x[i,j,k] <= 4,
+!  End of second stage
+!  Subtour elimination constraints
+   subd{k in {1..2}} : sum{i in sd,j in sd,i < j} x[i,j,k] <= 2,
+   sube{k in {1..2}} : sum{i in se,j in se,i < j} x[i,j,k] <= 5,
+!  End of third stage
+   bounds{i in farm, j in farm, k in days,i < j} : x[i,j,k] <= 1,
+   bounds{i in {12..21},k in days} : y[i,k] <= 1,
+!  Farm 11 visited on day 1 to avoid symmetric solutions
+   bounds{i in {11..11}, k in {1..1}} : y[i,k] = 1,
+   bounds{i in {11..11}, k in {2..2}} : y[i,k] = 0;
+END MODEL
+solve Milk;
+print solution for Milk >> "Milk.sol";
+quit;
+
+
+
+
+
+
+
+
+
+

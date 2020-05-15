@@ -1,0 +1,26 @@
+MODEL curveb
+SET
+   nopts = {1 .. 19};
+DATA
+   xvalue[nopts] << "xfile.dat",
+   yvalue[nopts] << "yfile.dat";
+VARIABLES
+   a free,
+   b free,
+   c free,
+   maxdev,
+   slack[nopts],
+   surp[nopts];
+OBJECTIVE
+!   MINIMIZE sumdev = sum{i in nopts} (slack[i] + surp[i]);
+   MINIMIZE minmax = maxdev;
+CONSTRAINTS
+   dev{i in nopts} : (xvalue[i]*xvalue[i])*c + xvalue[i]*b + a +
+                     slack[i] - surp[i] = yvalue[i],
+   ula{i in nopts} : maxdev-slack[i] >= 0,
+   ulb{i in nopts} : maxdev-surp[i] >= 0;
+END MODEL
+solve curveb;
+print solution for curveb >> "curveb.sol";
+quit;
+

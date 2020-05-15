@@ -1,0 +1,127 @@
+MODEL Car2
+! Integer extension of Car to decide repair expansion options
+SET
+   depots = {1 ..4}, !Depots, Glasgow,Manchester,Birmingham,Plymouth
+   days = {1 .. 6},  !Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
+   hire = {1 .. 3};  !1,2 or 3 day hire possible
+DATA
+   demand[depots,days] = [100,150,135,83,120,230,
+                          250,143,80,225,210,98,
+                          95,195,242,111,70,124,
+                          160,99,55,96,115,80], !Demand at each depot by day 
+   perret[depots,depots] = [0.6,0.2,0.1,0.1,
+                            0.15,0.55,0.25,0.05,
+                            0.15,0.2,0.54,0.11,
+                            0.08,0.12,0.27,0.53], !Proportion sent from each depot to other depots
+   hireper[hire] = [0.55,0.20,0.25], !Proportion cars hired for k days
+   costtran[depots,depots] = [0,20,30,50,
+                              20,0,15,35,
+                              30,15,0,25,
+                              50,35,25,0], !Cost of transfer from depot to depot
+   repcap[depots] = [0,12,20,0], !Daily repair capacity at each depot
+   rcosta[hire] = [50,70,120],  !Rental price for hire by no. of days and return to same depot
+   rcostb[hire] = [70,100,150], !As above but return to another depot
+   rcostcomp[hire] = [20,25,30]; !Marginal cost to company of rental by no. of days of hire
+VARIABLES
+   n,  ! Total number of cars
+   nu[depots,days],  ! Number of undamaged cars at depot i at beginning of day t
+   nd[depots,days],  ! Number of damaged cars at depot i at beginning of day t
+   tr[depots,days],  ! Number of cars rented out at depot i on day t
+   eu[depots,days],  ! Excess of undamaged cars at depot i at beginning of day t
+                    ! Not rented out that day
+   ed[depots,days],  ! Excess of damaged cars at depot i at beginning of day t
+                    ! Not to be transferred or repaired that day
+   tu[depots,depots,days], ! Number of undamaged cars at depot i at beginning of day t
+                         ! to be transferred to depot j
+   td[depots,depots,days], ! Number of damaged cars at depot i at beginning of day t
+                         ! to be tranferred to depot j
+   rp[depots,days], ! Number repaired at depot i during day t
+   db1 binary, ! First Birmingham expansion
+   db2 binary, ! Second Birmingham expansion
+   dm1 binary, ! First Manchester expansion
+   dm2 binary, ! Second Manchester expansion
+   dp binary;  ! Plymouth expansion
+OBJECTIVE
+   MAXIMIZE Profit = sum{i in depots,t in days,k in hire,t <> 6}
+        ! Hired out,not Saturday, and returned to same depot
+        (perret[i,i]*hireper[k]*(rcosta[k]-rcostcomp[k]+10)*(tr[i,t]))
+        ! Hired out,not Saturday, and returned to another depot
+                    +sum{i in depots,j in depots,t in days,k in hire,i<>j,t<> 6}
+        (perret[i,j]*hireper[k]*(rcostb[k]-rcostcomp[k]+10)*(tr[i,t]))
+                    +sum{i in depots,t in days,k in hire,t= 6,k=1}
+        ! Hired out on Saturday for 1 day with return to same depot      
+        (perret[i,i]*hireper[k]*(rcosta[k]-20-rcostcomp[k]+10)*(tr[i,t])) 
+                    +sum{i in depots,j in depots,t in days,k in hire,i<>j,t=6,k=1}
+        ! Hired out on Saturday for 1 day with reurn to another depot
+        (perret[i,j]*hireper[k]*(rcostb[k]-20-rcostcomp[k]+10)*(tr[i,t]))
+                    +sum{i in depots,t in days,k in hire,t=6,k<>1}
+        ! Hired out on Saturday for more than 1 day with return to same depot
+        (perret[i,i]*hireper[k]*(rcosta[k]-rcostcomp[k]+10)*(tr[i,t]))
+                    +sum{i in depots,j in depots,k in hire,t in days,i<>j,t=6,k<>1}
+        ! Hired out on Saturday for more than 1 day with return to another depot
+        (perret[i,j]*hireper[k]*(rcostb[k]-rcostcomp[k]+10)*(tr[i,t]))
+                    -sum{i in depots,j in depots,t in days}
+                   ! Cost of transfer to another depot
+                   (costtran[i,j]*(tu[i,j,t]+td[i,j,t]))
+                   -15*n  !Marginal cost to company of cars owned
+                   -18000*db1-8000*db2-20000*dm1-5000*dm2-19000*dp;
+                   ! Expansion costs
+
+CONSTRAINTS                         
+   inudam{i in depots,t in days,t>1}: sum{j in depots,k in hire,k<t}
+                                           (0.9*perret[j,i]*hireper[k]*(tr[j,t-k]))
+                                       +sum{j in depots,k in hire,k>=t}
+                                           (0.9*perret[j,i]*hireper[k]*(tr[j,t-k+6]))
+                                       +sum{j in depots} (tu[j,i,t-1])
+                                           +rp[i,t-1]+eu[i,t-1]
+                                       = nu[i,t], ! Net flow of undamaged cars into each depot on each day>Monday
+
+   inudama{i in depots}: sum{j in depots,k in hire}
+                              (0.9*perret[j,i]*hireper[k]*(tr[j,7-k]))
+                          +sum{j in depots} (tu[j,i,6])
+                              +rp[i,6]+eu[i,6]
+                          = nu[i,1], ! Net flow of undamaged cars into each depot on Monday
+
+  
+   indam{i in depots,t in days,t>1}: sum{j in depots,k in hire,k<t}
+                                          (0.1*perret[j,i]*hireper[k]*(tr[j,t-k]))
+                                      +sum{j in depots,k in hire,k>=t}
+                                          (0.1*perret[j,i]*hireper[k]*(tr[j,t-k+6]))
+                                      +sum{j in depots} (td[j,i,t-1])
+                                          +ed[i,t-1]
+                                      = nd[i,t], ! Net flow of damaged cars into each depot on each day>Monday
+
+   indama{i in depots}: sum{j in depots,k in hire}
+                             (0.1*perret[j,i]*hireper[k]*(tr[j,7-k]))
+                         +sum{j in depots} (td[j,i,6])
+                             +ed[i,6]
+                         = nd[i,1], ! Net flow of damaged cars into each depot on Monday
+
+   outudam{i in depots,t in days}: sum{j in depots} (tu[i,j,t]) +tr[i,t]+eu[i,t] = nu[i,t], 
+                                                 ! Net flow of undamaged cars out of depot i on day t
+
+
+   outdam{i in depots,t in days,t>1}: sum{j in depots} (td[i,j,t]) +rp[i,t-1]+ed[i,t] = nd[i,t],
+                                                 ! Net flow of damaged cars out of depot i on day t>Monday
+
+   outdama{i in depots}: sum{j in depots} (td[i,j,1]) +rp[i,6]+ed[i,1] = nd[i,1],
+                                                 ! Net flow of damaged cars out of depot i on Monday
+
+   repc{i in depots,t in days,i=1}: rp[i,t] <= repcap[i],             ! Repair capacity at Glasgow
+   repc{i in depots,t in days,i=2}: rp[i,t] <= repcap[i]+5*db1+5*db2, ! Repair capacity at Birmingham
+   repc{i in depots,t in days,i=3}: rp[i,t] <= repcap[i]+5*dm1+5*dm2, ! Repair capacity at Manchester
+   repc{i in depots,t in days,i=4}: rp[i,t] <= repcap[i]+5*dp,        ! Repair capacity at Plymouth
+
+   db1>=db2, dm1>=dm2, db1+db2+dm1+dm2+dp <= 3, ! Limits on expansion
+
+   demd{i in depots,t in days}: tr[i,t] <= demand[i,t], ! Renting out within demand
+ 
+   tot: sum{i in depots} (0.25*tr[i,1]+0.45*tr[i,2]+nu[i,3]+nd[i,3])
+                  = n;  ! Total number of cars owned equals those rented out on Monday for 3 days
+                        ! plus those rented out Tuesday more than 1 day
+                        ! plus those in depots at beginning of Wednesday
+END MODEL
+solve Car2;
+GENERATE MPS FOR Car2 >> "Car2.mps";
+print solution for Car2 >> "Car2.sol";
+quit;

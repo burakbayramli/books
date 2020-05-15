@@ -1,0 +1,21 @@
+MODEL OandX
+DATA
+   lines[49,27] << "linefile.dat";
+SET
+   set1 = {1 .. 49},
+   set2 = {1 .. 27};
+VARIABLES
+   d[set2] ,
+   g[set1] ;
+OBJECTIVE
+   MINIMIZE obj = sum{i in set1} g[i];
+CONSTRAINTS
+   linea{i in set1} : sum{j in set2} lines[i,j]*d[j] - g[i] <= 2,
+   lineb{i in set1} : sum{j in set2} lines[i,j]*d[j] + g[i] >= 1,
+   numb1 : sum{j in set2} d[j] = 14,
+   bounds{j in set2} : d[j] <= 1,
+   bounds{i in set1} : g[i] <= 1;
+END MODEL
+solve OandX;
+print solution for OandX >> "OandX.sol";
+quit;

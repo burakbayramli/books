@@ -1,0 +1,49 @@
+MODEL Market
+SET
+   nrega = {1 .. 8},
+   nregab = {1 .. 18},
+   totnumb = {1 .. 23},
+   ncats = {1 .. 7},
+   ncatsm1 = {1 .. 6},
+   ncatsm3 = {1 .. 4};
+DATA
+   mark[ncatsm3,totnumb] << "markdata.dat",
+   total[ncats] = [730,2395,134,215,100,8,8],
+   nuoa[totnumb] = [5,7,8,9,10,10,13,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+   nloa[totnumb] = [2,3,3,4,4,4,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+   nuob[totnumb] = [0,0,0,0,0,0,0,0,8,8,13,14,14,13,17,19,28,34,0,0,0,0,0],
+   nlob[totnumb] = [0,0,0,0,0,0,0,0,8,9,14,15,15,14,18,20,30,36,0,0,0,0,0],
+   nuoc[totnumb] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,3,4],
+   nloc[totnumb] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,3,5];
+VARIABLES
+   m[totnumb] integer,
+   slack[ncatsm1],
+   surp[ncatsm1],
+   maxdev;
+OBJECTIVE
+!   MINIMIZE sumdev = sum{i in ncatsm1} (total[i]*slack[i]+total[i]*surp[i])
+!                                      + total[7]*surp[6]+total[7]*slack[6];
+   MINIMIZE minmax = maxdev;
+CONSTRAINTS
+   delivery : sum{j in totnumb} mark[1,j]*m[j]+slack[1]-surp[1] = (0.4*total[1]),
+   spirits : sum{j in totnumb} mark[2,j]*m[j]+slack[2]-surp[2] = (0.4*total[2]),
+   oila : sum{j in nrega} mark[3,j]*m[j]+slack[3]-surp[3] = (0.4*total[3]),
+   oilb : sum{j in {9 .. 18}} mark[3,j]*m[j]+slack[4]-surp[4] = (0.4*total[4]),
+   oilc : sum{j in {19 .. 23}} mark[3,j]*m[j]+slack[5]-surp[5] = (0.4*total[5]),
+   growth : sum{j in totnumb} mark[4,j]*m[j]+slack[6]-surp[6] = (0.4*total[6]),
+   nuoila : sum{j in nrega} nuoa[j]*m[j] <= 33,
+   nloila : sum{j in nrega} nloa[j]*m[j] >= 11,
+   nuoilb : sum{j in {9 .. 18}} nuob[j]*m[j] <= 75,
+   nloilb : sum{j in {9 .. 18}} nlob[j]*m[j] >= 63,
+   nuoilc : sum{j in {19 .. 23}} nuoc[j]*m[j] <= 5,
+   nloilc : sum{j in {19 .. 23}} nloc[j]*m[j] >= 5,
+   deva{i in ncatsm1} : maxdev-slack[i] >= 0,
+   devb{i in ncatsm1} : maxdev-surp[i] >= 0,
+   bounds{j in totnumb} : m[j] <= 1,
+   bounds{i in ncatsm1} : slack[i] <= (0.05*total[i]),
+   bounds{i in ncatsm1} : surp[i] <= (0.05*total[i]),
+   bounds : maxdev <= 120;
+END MODEL
+solve Market;
+print solution for Market >> "Marketb.sol";
+quit;

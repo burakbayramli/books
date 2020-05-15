@@ -1,0 +1,55 @@
+
+MODEL Contact
+SET
+   Nodea = {1 .. 9},
+   Nodeb = {1 .. 11};
+DATA
+
+   Edgea[Nodea,Nodea] = [0,1,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,1,
+                         0,0,0,1,1,0,0,0,0,
+                         0,0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,1,0,0,0,
+                         0,0,0,0,0,0,1,0,0,
+                         0,0,0,0,0,0,0,0,1,
+                         0,0,0,0,0,0,0,0,1,
+                         0,0,0,0,0,0,0,0,0],
+                        
+                         
+                        
+                        
+   Edgeb[Nodeb,Nodeb] = [0,0,0,1,0,0,0,0,0,0,0,
+                         0,0,1,0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,1,1,0,0,0,0,
+                         0,0,0,0,0,1,0,0,0,0,0,
+                         0,0,0,0,0,0,0,1,0,0,0,
+                         0,0,0,0,0,0,0,1,0,1,0,
+                         0,0,0,0,0,0,0,0,0,0,0,
+                         0,0,0,0,0,0,0,0,0,1,0,
+                         0,0,0,0,0,0,0,0,0,0,1,
+                         0,0,0,0,0,0,0,0,0,0,0];
+                       
+                       
+                       
+VARIABLES
+   x[Nodea,Nodeb] BINARY, ! =1 iff i corresponds to j
+   w[Nodea,Nodeb,Nodea,Nodeb] FREE; ! =1 iff x[i,k]=x[j,l]=1
+OBJECTIVE
+   MAXIMIZE size = sum{i in Nodea,j in Nodeb,k in Nodea,l in Nodeb,Edgea[i,k]=1,Edgeb[j,l]=1,i<k,j<l} w[i,j,k,l]; 
+                                                                      ! Maximise number of corresponding edges                            
+CONSTRAINTS
+Assa{i in Nodea}: sum{j in Nodeb} x[i,j] <=1, ! At most 1 node from G2 
+                                                ! assigned to each in G1
+Assb{j in Nodeb}: sum{i in Nodea} x[i,j] <=1, ! At most 1 node from G1 
+                                                ! assigned to each in G2
+Linka{i in Nodea,j in Nodeb,k in Nodea,l in Nodeb,Edgea[i,k]=1,Edgeb[j,l]=1,i<k,j<l}: w[i,j,k,l]<=x[i,j], 
+Linkb{i in Nodea,j in Nodeb,k in Nodea,l in Nodeb,Edgea[i,k]=1,Edgeb[j,l]=1,i<k,j<l}: w[i,j,k,l]<=x[k,l], 
+!Linkc{i in Nodea,j in Nodeb,k in Nodea,l in Nodeb,Edgea[i,k]=1,Edgeb[j,l]=1,i<k,j<l}: w[i,j,k,l]>=x[i,j]+x[k,l]-1,
+Ncrs{i in Nodea, j in Nodeb, k in Nodea, l in  Nodeb,i<k, l<j}: x[i,j]+x[k,l]<=1; ! No cross overs
+                       
+END MODEL
+solve Contact >> "Contact.report";
+!GENERATE MPS FOR Contact >> "Contact.mps";
+print solution for Contact >> "Contact.sol";
+quit;
