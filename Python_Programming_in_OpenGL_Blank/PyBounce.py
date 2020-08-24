@@ -17,7 +17,7 @@ dx = dy = 1
 radius = 0.5
 width = height = 500
 axrng = 10.0
-anim = 0
+anim = 1
 xborder = yborder = axrng
 
 def init():

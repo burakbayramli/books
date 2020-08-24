@@ -59,7 +59,7 @@ def plottrajectory():
         # Set the height of the cannon barrel
         # Initalize variables for later use
         height = 2.0
-        dtime = 0.0001
+        dtime = 0.01
         dist = 0.0
         maxheight = 0.0
         totaltime = 0.0

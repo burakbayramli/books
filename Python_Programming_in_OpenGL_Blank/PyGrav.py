@@ -29,7 +29,7 @@ width = height = 600
 xborder = yborder = axrng = 1.0
 
 # No animation to start
-anim = 0
+anim = 1
 
 def init():
 	glClearColor(0.0, 0.0, 0.0, 1.0)

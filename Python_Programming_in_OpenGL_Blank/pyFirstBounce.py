@@ -16,8 +16,8 @@ import sys
 global anim, x, y ,dx, dy
 
 # initial position of the ball
-x = -0.67
-y = 0.34
+x = 0.5
+y = 0.5
 
 # Direction "sign" of the ball's motion
 dx = dy = 1
@@ -27,7 +27,7 @@ width = height = 300
 axrng = 1.0
 
 # No animation to start
-anim = 0
+anim = 1
 
 def init():
 	glClearColor(0.0, 0.0, 0.0, 1.0)
@@ -48,8 +48,8 @@ def plotfunc():
 	glClear(GL_COLOR_BUFFER_BIT)
 
 	# changes x and y
-	x += 0.001*dx
-	y += 0.001*dy
+	x += 0.0001*dx
+	y += 0.0001*dy
 	
 	# Keep the motion mathematics
 	# Safe from harm
