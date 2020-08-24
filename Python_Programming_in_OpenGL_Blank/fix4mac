@@ -1,0 +1,27 @@
+#from numpy import *    if at all possible
+global xx, yy, zz    etc these are changed in calcFoo() and used in viewFoo()
+aa= 1; bb=2; cc=3    global parameters used but not changed by functions
+
+in the init() function add
+   glClear(GL_COLOR_BUFFER_BIT) to erase the underlying stuff in the buffer
+   glClearColor(1.0,1.0,1.0,0.0) if you don't the window to be black
+
+Stan Blank tends to set up the projection matrices here too. It is 
+called just before the eternal loop. 
+
+In calcFoo() do all the updates (replacing those long loops)
+but declare as global only those that actually get changed here
+
+Since calcFoo() will be in the idle() callback this is as good as any
+End calcFoo with    
+glutPostRedisplay()   which forces the display callback to be done more
+                      than once
+
+In viewFoo() do all the drawing stuff, but no loops, unless you want
+    what's in the loop to be finished before drawing. Put the 
+    glClear(GL_COLOR_BUFFER_BIT) here ONLY if you want each drawing to
+    be on a blank screen. 
+End viewFoo() with
+glutSwapBuffers()
+
+Don't forget to change SINGLE to DOUBLE in the main()

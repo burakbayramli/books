@@ -1,0 +1,36 @@
+4oct11
+We're in the process of classifying these examples. It's difficult 
+to cross check with the .pdf where each eample fits into the pedagogy.
+
+The list "has_psyco" shows which still need their psyco lines removed.
+The list "has_chaptrack" rotate, but don't fly.
+The list "ls1" shows all current files in this directory in single file.
+The "readme-foo" files have commentary. 
+
+In general, those examples with a keyboard() call-back also quit on 
+(ESC). Those that don't, may have to be killed "ctl-Z; kill %".
+Those which have  chaptrack() only rotate, and are not flyable. 
+Many still have aff=[flat array] which bothers the "calculite()".
+The cure is to unlatten aff=[[ ],[ ], etc].
+
+
+19sep10
+
+These examples belong to Stan Blank's text. But this directory also 
+contains other experiments, which you may have to modify to see what
+they do.
+
+In particular, all of the require the PyOpenGL Python modules to be 
+installed in the particular Python you're using. In Aszgard2010, the
+movpy installed there works with these rticas (but only on Windows).
+
+In MacOS and Linux, use a Python version at least 2.5 and intall the 
+PyOpenGL bindings of OpenGL. If it still doesn't work, it may be 
+by reason of an absence of the Psyco accelation package. This is 
+generally no necessary, and you should just comment out the 
+relevant lines referring to Psyco.
+
+Compare the sphere called noPscyoGeorge.py with withPsycoGeorge.py. 
+(The name is someone else's joke.)
+
+
