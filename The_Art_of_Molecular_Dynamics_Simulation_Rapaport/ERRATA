@@ -1,0 +1,63 @@
+
+Errata
+======
+
+As errors and other issues come to light, they will be listed here and the
+software updated.
+
+
+---
+
+
+(January 22, 2006)
+
+
+p.193 - function ApplyBoundaryCond [pr_07_3.c]:
+    replace both lines 10 and 15 by -
+        VWrap (mol[n].r, x);
+
+p.346 - eq (13.2.2): lower bound of first sum is '1', not 'i'
+
+p.410 - function DeleteEvent [pr_14_1.c, pr_14_2.c, pr_15_1.c]:
+    replace line 18 by -
+        if (evTree[idq].right >= 0) evTree[evTree[idq].right].up = idr;
+    replace line 27 by -
+        if (idq >= 0) evTree[idq].up = idp;
+
+
+---
+
+
+(January 01, 2007)
+
+p.410 - function InitEventList [pr_14_1.c, pr_14_2.c, pr_15_1.c]:
+    replace line 9 by -
+        evTree[poolSize - 1].circAR = -1;
+
+
+---
+
+
+(May 14, 2009)
+
+p.233 - eq (8.5.5): replace R_i^T by R_i
+
+p.234 - eq (8.5.10): swap R_i^T and R_i
+
+
+Note: compilation has been tested with the Fedora 10 (32-bit) version of Linux.
+
+---
+
+(May 1, 2011)
+
+Released under GNU General Public License, Version 3.
+
+[pr_17_1.c]:
+    comment about compilation and MPI include file have been changed
+    to reflect default installation on 64-bit Fedora 14
+
+[pr_17_2.c]:
+    type of 'ip' changed from int to long (several places)
+
+Note: compilation has been tested with the Fedora 14 (64-bit) version of Linux.
