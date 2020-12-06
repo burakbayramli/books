@@ -17,18 +17,14 @@ pycuda::complex<float> c = lattice[i];
 pycuda::complex<float> z(0,0);
 
 for (int j = 0; j < max_iters; j++)
-    {
-    
-     z = z*z + c;
+{    
+   z = z*z + c;
      
-     if(abs(z) > upper_bound)
-         {
-          mandelbrot_graph[i] = 0;
-          break;
-         }
-
+   if(abs(z) > upper_bound) {
+       mandelbrot_graph[i] = 0;
+       break;
     }
-         
+}         
 """,
 "mandel_ker")
 
