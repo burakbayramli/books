@@ -2,7 +2,7 @@
 
 Additional data at
 
-https://dl.dropboxusercontent.com/u/1570604/data/ufo.csv.zip
+https://drive.google.com/file/d/1NzFT38E3kqJWKs7OjSQ7X1r6iy9Eutp1/view?usp=sharing
 
 This repository contains all of the code examples for [Machine Learning for Hackers](http://shop.oreilly.com/product/0636920018483.do) (2012).  The code may not appear exactly as it does in the text, as additional comments and modifications may have been added since publication.
 
