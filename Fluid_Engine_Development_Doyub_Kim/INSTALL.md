@@ -11,7 +11,8 @@ git submodule init
 git submodule update
 ```
 
-To build the code, a compiler that supports C++11 is required. Platform-specific build instructions are described below.
+To build the code, a compiler that supports C++11 is
+required. Platform-specific build instructions are described below.
 
 ### Building from macOS
 
@@ -43,13 +44,16 @@ This will install the header files and the static library `libjet.a` under `INST
 
 ### Building from Ubuntu
 
-Jet supports Ubuntu 14.04 or higher. Using `apt-get`, install required tools and libraries by running,
+Jet supports Ubuntu 14.04 or higher. Using `apt-get`, install required
+tools and libraries by running,
 
 ```
 sudo apt-get install build-essential python scons zlib1g-dev
 ```
 
-This will install GNU compilers, pytho, [Scons](http://scons.org/) (the build tool), and [zlib](www.zlib.net). Once installed, build the code by running
+This will install GNU compilers, pytho, [Scons](http://scons.org/)
+(the build tool), and [zlib](www.zlib.net). Once installed, build the
+code by running
 
 ```
 scons
