@@ -1,5 +1,12 @@
 # Fluid Engine Dev - Jet
 
+burakbayramli/books note - the code is based on
+
+https://github.com/doyubkim/fluid-engine-dev
+
+repo, and specifically the `book-1st-edition` branch of this repo which is 
+the code that is closest to the code seen in Kim's book.
+
 [![License](http://img.shields.io/:license-mit-blue.svg)](LICENSE.md) [![Build Status](https://travis-ci.org/doyubkim/fluid-engine-dev.svg?branch=book-1st-edition)](https://travis-ci.org/doyubkim/fluid-engine-dev) [![Build status](https://ci.appveyor.com/api/projects/status/kulihlhy43vbwou6/branch/book-1st-edition?svg=true)](https://ci.appveyor.com/project/doyubkim/fluid-engine-dev/branch/book-1st-edition)
 
 Jet framework is a fluid simulation engine SDK for computer graphics applications that was created by Doyub Kim as part of the book, ["Fluid Engine Development"](https://www.crcpress.com/Fluid-Engine-Development/Kim/p/book/9781498719926). The code is built on C++11 and can be compiled with commonly available compilers such as g++, clang, and Visual Studio. Currently tested platforms are macOS (10.10 or later), Ubuntu (14.04 or later), and Windows (Visual Studio 2015).
