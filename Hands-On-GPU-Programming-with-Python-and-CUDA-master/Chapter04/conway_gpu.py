@@ -1,6 +1,7 @@
 # Conway's game of life in Python / CUDA C
 # written by Brian Tuomanen for "Hands on GPU Programming with Python and CUDA"
 
+
 import pycuda.autoinit
 import pycuda.driver as drv
 from pycuda import gpuarray
@@ -66,7 +67,7 @@ conway_ker = ker.get_function("conway_ker")
 
 def update_gpu(frameNum, img, newLattice_gpu, lattice_gpu, N):
     
-    conway_ker(  newLattice_gpu, lattice_gpu, grid=(N/32,N/32,1), block=(32,32,1)   )
+    conway_ker(  newLattice_gpu, lattice_gpu, grid=(int(float(N)/32),int(float(N)/32),1), block=(32,32,1)   )
     
     img.set_data(newLattice_gpu.get() )
     
@@ -87,6 +88,7 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
     img = ax.imshow(lattice_gpu.get(), interpolation='nearest')
-    ani = animation.FuncAnimation(fig, update_gpu, fargs=(img, newLattice_gpu, lattice_gpu, N, ) , interval=0, frames=1000, save_count=1000)    
-     
+    #ani = animation.FuncAnimation(fig, update_gpu, fargs=(img, newLattice_gpu, lattice_gpu, N, ) , interval=0, frames=1000, save_count=1000)
+    im = update_gpu(0, img, newLattice_gpu, lattice_gpu, N)
+    plt.imshow()
     plt.show()
