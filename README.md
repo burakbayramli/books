@@ -188,3 +188,4 @@ Source codes for various books I collected over the years.
 - [stark html5](/stark_html5)
 - [toront math pde lecture notes](/toront-math-pde-lecture-notes)
 - [CUDA by Example Sanders](/CUDA-by-Example-Sanders)
+- [GPU Gems Book Source Code](/GPU-Gems-Book-Source-Code)

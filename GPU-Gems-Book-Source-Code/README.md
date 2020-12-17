@@ -2,6 +2,9 @@
 
 # GPU Gems CD Content
 
+This is the GPU Gems source code from https://github.com/QianMo/GPU-Gems-Book-Source-Code
+with all its binary files removed. If you need those files, go to the original repo.
+
 CD Content ( Source Code ) of Book < GPU Gems > 1~3
 
 <br>
