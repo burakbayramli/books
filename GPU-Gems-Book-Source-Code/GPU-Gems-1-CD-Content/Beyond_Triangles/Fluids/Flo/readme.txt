@@ -8,6 +8,8 @@
 
 - DESCRIPTION -
 
+https://github.com/QianMo/GPU-Gems-Book-Source-Code/tree/master/GPU-Gems-1-CD-Content/Beyond_Triangles/Fluids
+
 This program implements a stable, two-dimensional simulation of viscous, 
 incompressible fluid flow.  It performs all computation on the GPU.  It includes
 support for vorticity confinement and arbitrary interior boundaries (obstacles).  
