@@ -189,3 +189,15 @@ Source codes for various books I collected over the years.
 - [toront math pde lecture notes](/toront-math-pde-lecture-notes)
 - [CUDA by Example Sanders](/CUDA-by-Example-Sanders)
 - [GPU Gems Book Source Code](/GPU-Gems-Book-Source-Code)
+
+
+See my other blogs, repos
+
+Science, technology content in Turkish (Bilim, teknoloji, matematik)
+
+[Dersblog](https://burakbayramli.github.io/dersblog/sk/)
+
+[Matematik](https://burakbayramli.github.io/dersblog/)
+
+[Classnotes](https://github.com/burakbayramli/classnotes)
+
