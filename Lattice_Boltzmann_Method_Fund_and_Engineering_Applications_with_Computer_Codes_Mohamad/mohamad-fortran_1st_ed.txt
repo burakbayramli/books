@@ -1,0 +1,2376 @@
+A.1.1 The LBM Computer Code D1Q2
+
+This Fortran code was extracted from the book itself, if something
+doesnt look right, pls refer to the book.
+
+parameter (m=100) !m is the number of lattice nodes
+real fo(0:m),f1(0:m),f2(0:m),rho(0:m),feq(0:m),x(0:m)
+integer i
+open(2,ﬁle=’result’)
+dt=1.0
+dx=1.0
+x(0)=0.0
+do i=1,m
+x(i)=x(i-1)+dx
+end do
+csq=dx*dx/(dt*dt)
+alpha=0.25
+omega=1.0/(alpha/(dt*csq)+0.5)
+mstep=200 ! The total number of time steps
+twall=1.0 ! Left hand wall temperature
+! Initial condition
+do i=0,m
+rho(i)=0.0 ! Initial value of the domain temperature
+f1(i)=0.5*rho(i)
+f2(i)=0.5*rho(i)
+end do
+do kk=1,mstep
+
+! main loop
+! collision process:
+do i=0,m
+rho(i)=f1(i)+f2(i)
+feq(i)=0.5*rho(i)
+! since k1=k2=0.5, then feq1=feq2=feq
+f1(i)=(1.-omega)*f1(i)+omega*feq(i)
+f2(i)=(1.-omega)*f2(i)+omega*feq(i)
+end do
+!Streaming process:
+do i=1,m-1
+f1(m-i)=f1(m-i-1) ! f1 streaming
+f2(i-1)=f2(i) ! f2 streaming
+end do
+! Boundary condition
+f1(0)=twall-f2(0)! constant temperature boundary condition, x=0
+f1(m)=f1(m-1) ! adiabatic boundary condition, x=L
+f2(m)=f2(m-1)! adiabatic boundary condition, x=L
+end do
+! end of the main loop
+do i=0,m
+
+write(2,*)x(i), rho(i)
+
+end do
+stop
+end
+
+The Finite Difference Code:
+parameter (m=100)
+real dens,fo(0:m),f(0:m)
+integer i
+open(2,ﬁle=’ﬁnitrs’)
+
+dx=1.0
+dt=0.500
+alpha=0.25
+mstep=400
+do i=0,m
+fo(i)=0.0
+end do
+fo(0)=1.0 !initial condition for old value of f at x=0.
+f(0)=1.0 ! initial condition for updated value of f at x=0.
+fo(m)=fo(m-1) ! initial condition for old value of f at x=L
+f(m)=f(m-1) ! initial condition for updated value of f at x=L
+
+do kk=1,mstep
+! main loop
+do i=1,m-1
+f(i)=fo(i)+dt*alpha*(fo(i+1)-2.*fo(i)+fo(i-1))/(dx*dx)
+end do
+do i=1,m-1
+fo(i)=f(i) ! updating
+end do
+fo(m)=f(m-1) ! updating the boundary condition at x=L
+end do
+! end of the main loop
+x=0.0
+do i=0,m
+write(2,*)x,f(i)
+x=x+dx
+end do
+stop
+end
+
+A.1.2 The LBM Code (2DQ4)
+
+The LBM computer code for the above problem is as follows:
+
+======================================================
+! LBM Code for 2-D, diffusion problems, D2Q5
+parameter (n=100,m=100)
+
+real f1(0:n,0:m),f2(0:n,0:m),f3(0:n,0:m),f4(0:n,0:m)
+
+real rho(0:n,0:m),feq,x(0:n),y(0:m)
+
+integer i
+
+open(2,ﬁle=’results’)
+open(3,ﬁle=’midplbm’)
+!
+dx=1.0
+dy=dx
+dt=1.0
+x(0)=0.
+y(0)=0.0
+do i=1,n
+
+x(i)=x(i-1)+dx
+
+end do
+
+do j=1,m
+
+y(j)=y(j-1)+dy
+
+end do
+
+csq=dx*dx/(dt*dt)
+
+alpha=0.25
+omega=1.0/(2.*alpha/(dt*csq)+0.5)
+mstep=400
+do j=0,m
+
+! initial values of the dependent variable
+
+do i=0,n
+
+rho(i,j)=0.0
+end do
+
+end do
+
+do j=0,m
+
+do i=0,n
+
+f1(i,j)=0.25*rho(i,j)
+
+f2(i,j)=0.25*rho(i,j)
+f3(i,j)=0.25*rho(i,j)
+f4(i,j)=0.25*rho(i,j)
+end do
+
+end do
+
+do kk=1,mstep
+
+do j=0,m
+
+do i=0,n
+
+feq=0.25*rho(i,j)
+
+f1(i,j)=omega*feq+(1.-omega)*f1(i,j)
+f2(i,j)=omega*feq+(1.-omega)*f2(i,j)
+f3(i,j)=omega*feq+(1.-omega)*f3(i,j)
+f4(i,j)=omega*feq+(1.-omega)*f4(i,j)
+end do
+
+end do
+
+! Streaming
+
+do j=0,m
+
+do i=1,n
+
+f1(n-i,j)=f1(n-i-1,j)
+
+f2(i-1,j)=f2(i,j)
+end do
+
+end do
+
+do i=0,n
+
+do j=1,m
+
+f3(i,m-j)=f3(i,m-j-1)
+
+f4(i,j-1)=f4(i,j)
+end do
+
+end do
+
+! Boundary conditions
+
+do j=1,m
+
+f1(0,j)=0.5-f2(0,j)
+
+f3(0,j)=0.5-f4(0,j)
+f1(n,j)=0.0
+f2(n,j)=0.0
+f3(n,j)=0.0
+f4(n,j)=0.0
+end do
+
+do i=1,n
+
+f1(i,m)=0.0
+
+f2(i,m)=0.0
+f3(i,m)=0.0
+f4(i,m)=0.0
+f1(i,0)=f1(i,1)
+f2(i,0)=f2(i,1)
+f3(i,0)=f3(i,1)
+f4(i,0)=f4(i,1)
+end do
+
+do j=0,m
+
+do i=0,n
+
+rho(i,j)=f1(i,j)+f2(i,j)+f3(i,j)+f4(i,j)
+
+end do
+
+end do
+
+end do
+
+! end of the main loop
+
+write(2,*)’’VARIABLES =X, Y, T’’
+
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+
+do j=0,m
+
+write(2,*)(x(i),i=0,n)
+
+end do
+
+do j=0,m
+
+write(2,*)(y(j),i=0,n)
+
+end do
+
+do j=0,m
+
+write(2,*)(rho(i,j),i=0,n)
+
+end do
+
+do i=0,n
+
+write(3,*)x(i),rho(i,m/2)
+
+end do
+
+stop
+
+end
+======================================================
+
+A.1.3 The Finite Difference Code (2-D)
+
+======================================================
+
+! Finite Difference Code for 2-D
+parameter (n=100,m=100)
+
+real dens,fo(0:n,0:m),f(0:n,0:m),x(0:n),y(0:m)
+
+integer i,j
+
+open(2,ﬁle=’ﬁn2drs’)
+
+open(3,ﬁle=’midtfdtc’)
+open(4,ﬁle=’qﬁn’)
+open(5,ﬁle=’ttﬁnd’)
+!
+dx=1.0
+
+time=0.0
+dy=1.0
+dt=0.20
+alpha=0.25
+mstep=2000
+do j=0,m
+
+do i=0,n
+
+fo(i,j)=0.0
+
+end do
+
+end do
+
+do j=0,n
+
+fo(0,j)=1.0
+
+f(0,j)=1.0
+fo(n,j)=0.0
+f(n,j)=0.0
+end do
+
+do i=0,n
+
+fo(i,0)=0.0
+
+f(i,0)=0.0
+! adiabatic bottom boundary
+
+fo(i,0)=fo(i,1)
+
+f(i,0)=f(i,1)
+! zero temp bottom boundary
+
+fo(i,m)=0.0
+
+f(i,m)=0.0
+end do
+
+do kk=1,mstep
+
+do j=1,m-1
+
+do i=1,n-1
+
+termx=(fo(i+1,j)+fo(i-1,j))/(dx*dx)
+
+termy=(fo(i,j+1)+fo(i,j-1))/(dy*dy)
+dd=1./(dx*dx)+1./(dy*dy)
+f(i,j)=fo(i,j)+dt*alpha*(termx+termy-2.0*fo(i,j)*dd)
+end do
+
+end do
+
+!
+
+do j=1,m-1
+
+do i=1,n-1
+
+fo(i,j)=f(i,j)
+
+end do
+
+end do
+
+do i=0,n
+
+! adiabatic bottom boundary
+
+f(i,0)=f(i,1)
+
+fo(i,0)=f(i,1)
+! zero temp. bottom boundary
+
+! f(i,0)=0.0
+
+! fo(i,0)=0.0
+
+end do
+
+time=time+dt
+
+write(5,*)time,f(5,m/2)
+end do
+
+x(0)=0.0
+
+do i=1,n
+
+x(i)=x(i-1)+dx
+
+end do
+
+y(0)=0.0
+
+do j=1,m
+
+y(j)=y(j-1)+dy
+
+end do
+
+write(2,*)’’VARIABLES =X, Y, T’’
+
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+
+do j=0,m
+
+write(2,*)(x(i),i=0,n)
+
+end do
+
+do j=0,m
+
+write(2,*)(y(j),i=0,n)
+
+end do
+
+do j=0,m
+
+write(2,*)(f(i,j),i=0,n)
+
+end do
+
+do j=0,m
+
+q=f(0,j)-f(1,j)
+
+write(4,*)y(j),q
+end do
+
+do i=0,n
+
+write(3,*)i,f(i,m/2)
+
+end do
+
+stop
+
+end
+======================================================
+
+The LBM Code for D2Q9 for diffusion problem
+
+======================================================
+
+! The LBM code
+parameter (n=100,m=100)
+
+real f(0:8,0:n,0:m),feq
+
+real rho(0:n,0:m),x(0:n),y(0:m)
+
+real w(0:8)
+
+integer i
+
+open(2,ﬁle=’Qresu’)
+open(3,ﬁle=’midtlbmtc’)
+!
+dx=1.0
+dy=dy
+x(0)=0.0
+y(0)=0.0
+do i=1,n
+
+x(i)=x(i-1)+dx
+
+end do
+
+do j=1,m
+
+y(j)=y(j-1)+dy
+
+end do
+
+dt=1.0
+
+tw=1.0
+alpha=0.25
+csq=(dx*dx)/(dt*dt)
+omega=1.0/(3.*alpha/(csq*dt)+0.5)
+mstep=400
+w(0)=4./9.
+do i=1,4
+
+w(i)=1./9.
+
+end do
+
+do i=5,8
+
+w(i)=1./36.
+
+end do
+
+do j=0,m
+
+do i=0,n
+
+rho(i,j)=0.0 ! initial ﬁeld
+
+end do
+
+end do
+
+do j=0,m
+
+do i=0,n
+
+do k=0,8
+
+f(k,i,j)=w(k)*rho(i,j)
+
+if(i.eq.0) f(k,i,j)=w(k)*tw
+
+end do
+end do
+
+end do
+
+do kk=1,mstep
+
+do j=0,m
+
+do i=0,n
+
+sum=0.0
+
+do k=0,8
+
+sum=sum+f(k,i,j)
+
+end do
+
+rho(i,j)=sum
+
+end do
+
+end do
+
+print *,rho(0,m/2)
+
+do j=0,m
+
+do i=0,n
+
+do k=0,8
+
+feq=w(k)*rho(i,j)
+
+f(k,i,j)=omega*feq+(1.-omega)*f(k,i,j)
+end do
+
+end do
+
+end do
+
+! streaming
+
+do j=m,0,-1
+
+do i=0,n
+
+f(2,i,j)=f(2,i,j-1)
+f(6,i,j)=f(6,i+1,j-1)
+end do
+
+end do
+
+do j=m,0,-1
+
+do i=n,0,-1
+
+f(1,i,j)=f(1,i-1,j)
+f(5,i,j)=f(5,i-1,j-1)
+end do
+
+end do
+
+do j=0,m
+
+do i=n,0,-1
+
+f(4,i,j)=f(4,i,j+1)
+
+f(8,i,j)=f(8,i-1,j+1)
+end do
+
+end do
+
+do j=0,m
+
+do i=0,n
+
+f(3,i,j)=f(3,i+1,j)
+f(7,i,j)=f(7,i+1,j+1)
+end do
+
+end do
+
+! Boundary conditions
+
+do j=0,m
+
+f(1,0,j)=w(1)*tw+w(3)*tw-f(3,0,j)
+
+f(5,0,j)=w(5)*tw+w(7)*tw-f(7,0,j)
+f(8,0,j)=w(8)*tw+w(6)*tw-f(6,0,j)
+f(3,n,j)=-f(1,n,j)
+f(6,n,j)=-f(8,n,j)
+f(7,n,j)=-f(5,n,j)
+end do
+
+do i=0,n
+
+f(4,i,m)=-f(2,i,m)
+
+f(7,i,m)=-f(5,i,m)
+f(8,i,m)=-f(6,i,m)
+f(1,i,0)=f(1,i,1)
+f(2,i,0)=f(2,i,1)
+f(3,i,0)=f(3,i,1)
+f(4,i,0)=f(4,i,1)
+f(5,i,0)=f(5,i,1)
+f(6,i,0)=f(6,i,1)
+f(7,i,0)=f(7,i,1)
+f(8,i,0)=f(8,i,1)
+end do
+
+end do
+
+do j=0,m
+
+do i=0,n
+
+121
+
+Appendix A
+
+sum=0.0
+
+do k=0,8
+
+sum=sum+f(k,i,j)
+
+end do
+
+rho(i,j)=sum
+
+end do
+
+end do
+
+print *, rho(0,m/2)
+
+write(2,*)’’VARIABLES =X, Y, T’’
+
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+
+do j=0,m
+
+write(2,*)(x(i),i=0,n)
+
+end do
+
+do j=0,m
+
+write(2,*)(y(j),i=0,n)
+
+end do
+
+do j=0,m
+
+write(2,*)(rho(i,j),i=0,n)
+
+end do
+
+do i=0,n
+
+write(3,*)x(i),rho(i,m/2)
+
+end do
+
+stop
+
+end
+======================================================
+
+A.1.4 Chapter 4, Advection-Diffusion
+
+The Finite Difference Code
+
+======================================================
+
+! Finite Difference code for 1-D advection-diffusion problem.
+parameter (n=200)
+real dens,fo(0:n),f(0:n)
+
+integer i
+open(2,ﬁle=’ﬁnitrs’)
+!
+dx=0.500
+dt=0.2500
+u=0.10
+alpha=0.25
+mstep=1600
+do i=0,n
+fo(i)=0.0
+end do
+fo(0)=1.0
+f(0)=1.0
+fo(n)=0.0
+f(n)=0.0
+do kk=1,mstep
+do i=1,n-1
+adv=dt*u*(fo(i)-fo(i-1))/dx
+f(i)=fo(i)+dt*alpha*(fo(i+1)-2.*fo(i)+fo(i-1))/(dx*dx)-adv
+end do
+!
+do i=1,n-1
+fo(i)=f(i)
+end do
+end do
+x=0.0
+do i=0,n
+write(2,*)x,f(i)
+x=x+dx
+end do
+stop
+end
+======================================================
+
+Note that the value of dt should be less than or equal to 1:=½ð2alphaÞ=ðdx 
+
+dxÞ þ u=dx to satisfy stability criterion.
+
+LBM Code for 1-D, Advection-Diffusion problem, Chapter 4
+
+======================================================
+
+! LBM for 1-D advection-diffusion
+
+parameter (m=100) !m is the number of lattice nodes
+
+
+real dens,fo(0:m),f1(0:m),f2(0:m),rho(0:m),feq1,x(0:m),feq2
+integer i
+open(2,ﬁle=’result’)
+u=0.1
+dt=1.0
+dx=1.0
+x(0)=0.0
+do i=1,m
+x(i)=x(i-1)+dx
+end do
+ck=dx/dt
+csq=ck*ck
+alpha=0.25
+omega=1.0/(alpha/(dt*csq)+0.5)
+mstep=400 ! The total number of time steps
+twall=1.0 ! Left hand wall temperature
+! Initial condition
+do i=0,m
+rho(i)=0.0 ! Initial value of the domain temperature
+f1(i)=0.5*rho(i)
+f2(i)=0.5*rho(i)
+end do
+do kk=1,mstep ! main loop
+! collision process:
+do i=0,m
+rho(i)=f1(i)+f2(i)
+feq1=0.5*rho(i)*(1.0+u/ck)
+advection
+feq2=0.5*rho(i)*(1.0-u/ck)
+f1(i)=(1.-omega)*f1(i)+omega*feq1
+f2(i)=(1.-omega)*f2(i)+omega*feq2
+end do
+! Streaming process:
+do i=1,m-1
+f1(m-i)=f1(m-i-1)
+f2(i-1)=f2(i)
+end do
+! Boundary condition
+f1(0)=twall-f2(0)
+condition, x=0
+f1(m)=f1(m-1)
+
+! f1 streaming
+! f2 streaming
+
+! w1=w2=0.5
+
+! extra term added to simulate
+
+! constant temperature boundary
+
+! adiabatic boundary condition, x=L
+
+f2(m)=f2(m-1)
+end do
+do i=0,m
+
+write(2,*)x(i), rho(i)
+
+! adiabatic boundary condition, x=L
+! end of the main loop
+
+end do
+stop
+end
+======================================================
+
+Advection-Diffusion D2Q4 Code
+
+======================================================
+
+! LBM Code for 2-D, Advection-diffusion problems, D2Q4
+parameter (n=100,m=100)
+
+real f1(0:n,0:m),f2(0:n,0:m),f3(0:n,0:m),f4(0:n,0:m)
+real feq1,feq2,feq3,feq4
+real rho(0:n,0:m),x(0:n),y(0:m)
+integer i
+open(2,ﬁle=’results’)
+open(3,ﬁle=’midplbm’)
+!
+u=0.1
+v=0.2
+dx=1.0
+dy=dx
+dt=1.0
+x(0)=0
+y(0)=0.0
+do i=1,n
+x(i)=x(i-1)+dx
+end do
+do j=1,m
+y(j)=y(j-1)+dy
+end do
+ck=dx/dt
+csq=ck*ck
+alpha=1.0
+omega=1.0/(2.*alpha/(dt*csq)+0.5)
+mstep=200
+do j=0,m
+do i=0,n
+rho(i,j)=0.0 ! initial values of the dependent variable
+
+
+end do
+end do
+do j=0,m
+do i=0,n
+f1(i,j)=0.25*rho(i,j)
+f2(i,j)=0.25*rho(i,j)
+f3(i,j)=0.25*rho(i,j)
+f4(i,j)=0.25*rho(i,j)
+end do
+end do
+do kk=1,mstep
+do j=0,m
+do i=0,n
+feq1=0.25*rho(i,j)*(1.0+2.0*u/ck)
+feq2=0.25*rho(i,j)*(1.0-2.0*u/ck)
+feq3=0.25*rho(i,j)*(1.0+2.0*v/ck)
+feq4=0.25*rho(i,j)*(1.0-2.0*v/ck)
+f1(i,j)=omega*feq1+(1.-omega)*f1(i,j)
+f2(i,j)=omega*feq2+(1.-omega)*f2(i,j)
+f3(i,j)=omega*feq3+(1.-omega)*f3(i,j)
+f4(i,j)=omega*feq4+(1.-omega)*f4(i,j)
+end do
+end do
+! Streaming
+do j=0,m
+do i=1,n
+f1(n-i,j)=f1(n-i-1,j)
+f2(i-1,j)=f2(i,j)
+end do
+end do
+do i=0,n
+do j=1,m
+f3(i,m-j)=f3(i,m-j-1)
+f4(i,j-1)=f4(i,j)
+end do
+end do
+! Boundary conditions
+do j=1,m
+f1(0,j)=0.5-f2(0,j)
+f3(0,j)=0.5-f4(0,j)
+f1(n,j)=0.0
+
+
+f2(n,j)=0.0
+f3(n,j)=0.0
+f4(n,j)=0.0
+end do
+do i=1,n
+f1(i,m)=0.0
+f2(i,m)=0.0
+f3(i,m)=0.0
+f4(i,m)=0.0
+f1(i,0)=f1(i,1)
+f2(i,0)=f2(i,1)
+f3(i,0)=f3(i,1)
+f4(i,0)=f4(i,1)
+end do
+do j=0,m
+do i=0,n
+rho(i,j)=f1(i,j)+f2(i,j)+f3(i,j)+f4(i,j)
+end do
+end do
+end do ! end of the main loop
+
+write(2,*)’’VARIABLES =X, Y, T’’
+
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(2,*)(x(i),i=0,n)
+end do
+do j=0,m
+write(2,*)(y(j),i=0,n)
+end do
+do j=0,m
+write(2,*)(rho(i,j),i=0,n)
+end do
+do i=0,n
+write(3,*)x(i),rho(i,m/2)
+end do
+stop
+end
+======================================================
+
+Appendix A
+
+D2Q9 Code
+
+======================================================
+
+! LBM -Advection-Diffusion D2Q9
+parameter (n=100,m=100)
+
+real f(0:8,0:n,0:m),feq(0:8)
+real rho(0:n,0:m),x(0:n),y(0:m)
+real w(0:8)
+integer i
+open(2,ﬁle=’Qresu’)
+open(3,ﬁle=’midtlbmtc’)
+!
+u=0.1
+v=0.4
+dt=1.0
+dx=1.0
+dy=dx
+x(0)=0.0
+y(0)=0.0
+do i=1,n
+x(i)=x(i-1)+dx
+end do
+do j=1,m
+y(j)=y(j-1)+dy
+end do
+tw=1.0
+alpha=1.0
+ck=dx/dt
+csq=ck*ck
+omega=1.0/(3.*alpha/(csq*dt)+0.5)
+mstep=400
+w(0)=4./9.
+do i=1,4
+w(i)=1./9.
+end do
+do i=5,8
+w(i)=1./36.
+end do
+density=0.0
+do j=0,m
+do i=0,n
+
+
+do k=0,8
+f(k,i,j)=w(k)*density
+if(i.eq.0) f(k,i,j)=w(k)*tw
+end do
+
+end do
+
+end do
+do kk=1,mstep
+do j=0,m
+do i=0,n
+sum=0.0
+do k=0,8
+sum=sum+f(k,i,j)
+end do
+rho(i,j)=sum
+end do
+end do
+print *,rho(0,m/2)
+do j=0,m
+do i=0,n
+
+feq(0)=w(0)*rho(i,j)
+
+feq(1)=w(1)*rho(i,j)*(1.0+3.0*u/ck)
+feq(2)=w(2)*rho(i,j)*(1.0+3.0*v/ck)
+feq(3)=w(3)*rho(i,j)*(1.0-3.0*u/ck)
+feq(4)=w(4)*rho(i,j)*(1.0-3.0*v/ck)
+feq(5)=w(5)*rho(i,j)*(1.0+3.0*(u+v)/ck)
+feq(6)=w(6)*rho(i,j)*(1.0+3.0*(-u+v)/ck)
+feq(7)=w(7)*rho(i,j)*(1.0-3.0*(u+v)/ck)
+feq(8)=w(8)*rho(i,j)*(1.0+3.0*(u-v)/ck)
+
+do k=0,8
+
+f(k,i,j)=omega*feq(k)+(1.-omega)*f(k,i,j)
+end do
+end do
+end do
+! streaming
+do j=m,0,-1
+do i=0,n
+f(2,i,j)=f(2,i,j-1)
+f(6,i,j)=f(6,i+1,j-1)
+end do
+end do
+
+do j=m,0,-1
+do i=n,0,-1
+f(1,i,j)=f(1,i-1,j)
+f(5,i,j)=f(5,i-1,j-1)
+end do
+end do
+do j=0,m
+do i=n,0,-1
+f(4,i,j)=f(4,i,j+1)
+f(8,i,j)=f(8,i-1,j+1)
+end do
+end do
+do j=0,m
+do i=0,n
+f(3,i,j)=f(3,i+1,j)
+f(7,i,j)=f(7,i+1,j+1)
+end do
+end do
+! Boundary conditions
+! Left boundary condition, the temperature is given, tw
+do j=0,m
+f(1,0,j)=w(1)*tw+w(3)*tw-f(3,0,j)
+f(5,0,j)=w(5)*tw+w(7)*tw-f(7,0,j)
+f(8,0,j)=w(8)*tw+w(6)*tw-f(6,0,j)
+end do
+! Right hand boundary condition, T=0.
+do j=0,m
+f(6,n,j)=-f(8,n,j)
+f(3,n,j)=-f(1,n,j)
+f(7,n,j)=-f(5,n,j)
+f(2,n,j)=-f(4,n,j)
+f(0,n,j)=0.0
+end do
+! Top boundary conditions, T=0.0
+do i=0,n
+f(8,i,m)=-f(6,i,m)
+f(7,i,m)=-f(5,i,m)
+f(4,i,m)=-f(2,i,m)
+f(1,i,m)=-f(3,i,m)
+f(0,i,m)=0.0
+end do
+
+
+!Bottom boundary conditions, Adiabatic
+! f(1,i,0)=f(1,i,1)
+! f(2,i,0)=f(2,i,1)
+! f(3,i,0)=f(3,i,1)
+! f(4,i,0)=f(4,i,1)
+! f(5,i,0)=f(5,i,1)
+! f(6,i,0)=f(6,i,1)
+! f(7,i,0)=f(7,i,1)
+! f(8,i,0)=f(8,i,1)
+! T=0.0
+do i=0,n
+f(2,i,0)=-f(4,i,0)
+f(6,i,0)=-f(8,i,0)
+f(5,i,0)=-f(7,i,0)
+f(1,i,0)=-f(3,i,0)
+f(0,i,0)=0.0
+end do
+end do
+do j=0,m
+do i=0,n
+sum=0.0
+do k=0,8
+sum=sum+f(k,i,j)
+end do
+rho(i,j)=sum
+end do
+end do
+print *, rho(0,m/2)
+write(2,*)’’VARIABLES =X, Y, T’’
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(2,*)(x(i),i=0,n)
+end do
+do j=0,m
+write(2,*)(y(j),i=0,n)
+end do
+do j=0,m
+write(2,*)(rho(i,j),i=0,n)
+end do
+do i=0,n
+write(3,*)x(i),rho(i,m/2)
+
+
+end do
+stop
+end
+======================================================
+
+Two-Dimensional, Advection Diffusion, FDM Code
+
+======================================================
+
+parameter (n=100,m=100)
+
+real dens,fo(0:n,0:m),f(0:n,0:m),x(0:n),y(0:m)
+integer i,j
+open(2,ﬁle=’ﬁn2drs’)
+open(3,ﬁle=’ﬁnitial’)
+open(4,ﬁle=’qﬁn’)
+open(5,ﬁle=’ttﬁnd’)
+!
+dx=1.0
+time=0.0
+dy=1.0
+dt=0.20
+u=0.1
+v=0.2
+alpha=1.0
+mstep=1000
+do j=0,m
+do i=0,n
+fo(i,j)=0.0
+end do
+end do
+do j=0,n
+fo(0,j)=1.0
+f(0,j)=1.0
+fo(n,j)=0.0
+f(n,j)=0.0
+end do
+do i=0,n
+fo(i,0)=0.0
+f(i,0)=0.0
+! adiabatic bottom boundary
+fo(i,0)=fo(i,1)
+
+
+f(i,0)=f(i,1)
+! zero temp top boundary
+fo(i,m)=0.0
+f(i,m)=0.0
+end do
+do kk=1,mstep
+do j=1,m-1
+do i=1,n-1
+termx=(fo(i+1,j)+fo(i-1,j))/(dx*dx)
+termy=(fo(i,j+1)+fo(i,j-1))/(dy*dy)
+dd=1./(dx*dx)+1./(dy*dy)
+advx=u*(fo(i,j)-fo(i-1,j))/dx
+advy=v*(fo(i,j)-fo(i,j-1))/dy
+advt=dt*(advx+advy)
+f(i,j)=fo(i,j)+dt*alpha*(termx+termy-2.0*fo(i,j)*dd)-advt
+end do
+end do
+!
+do j=1,m-1
+do i=1,n-1
+fo(i,j)=f(i,j)
+end do
+end do
+do i=0,n
+! adiabatic bottom boundary
+! f(i,0)=f(i,1)
+! fo(i,0)=f(i,1)
+! zero temp. bottom boundary
+f(i,0)=0.0
+fo(i,0)=0.0
+end do
+! adiabatic right hand boundary
+do j=0,m
+f(n,j)=f(n-1,j)
+fo(n,j)=fo(n-1,j)
+end do
+time=time+dt
+write(5,*)time,f(5,m/2)
+end do
+x(0)=0.0
+do i=1,n
+
+
+x(i)=x(i-1)+dx
+end do
+y(0)=0.0
+do j=1,m
+y(j)=y(j-1)+dy
+end do
+write(2,*)’’VARIABLES =X, Y, T’’
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(2,*)(x(i),i=0,n)
+end do
+do j=0,m
+write(2,*)(y(j),i=0,n)
+end do
+do j=0,m
+write(2,*)(f(i,j),i=0,n)
+end do
+do j=0,m
+q=f(0,j)-f(1,j)
+write(4,*)y(j),q
+end do
+stop
+end
+======================================================
+
+The Computer Code For a Lid-Driven Cavity (Chapter 5)
+
+======================================================
+! computer code for lid-driven cavity
+
+parameter (n=100,m=100)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+integer i
+open(2,ﬁle=’uvﬁeld’)
+open(3,ﬁle=’uvely’)
+open(4,ﬁle=’vvelx’)
+open(8,ﬁle=’timeu’)
+
+!
+uo=0.10
+sumvelo=0.0
+rhoo=5.00
+dx=1.0
+dy=dx
+dt=1.0
+alpha=0.01
+Re=uo*m/alpha
+print *, ’’Re=’’, Re
+omega=1.0/(3.*alpha+0.5)
+mstep=40000
+w(0)=4./9.
+do i=1,4
+w(i)=1./9.
+end do
+do i=5,8
+w(i)=1./36.
+end do
+cx(0)=0
+cx(1)=1
+cx(2)=0
+cx(3)=-1
+cx(4)=0
+cx(5)=1
+cx(6)=-1
+cx(7)=-1
+cx(8)=1
+cy(0)=0
+cy(1)=0
+cy(2)=1
+cy(3)=0
+cy(4)=-1
+cy(5)=1
+cy(6)=1
+cy(7)=-1
+cy(8)=-1
+do j=0,m
+do i=0,n
+rho(i,j)=rhoo
+u(i,j)=0.0
+
+v(i,j)=0.0
+end do
+end do
+do i=1,n-1
+u(i,m)=uo
+v(i,m)=0.0
+end do
+! main loop
+1 do kk=1,mstep
+call collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m)
+call streaming(f,n,m)
+! ——————————–
+call sfbound(f,n,m,uo)
+call rhouv(f,rho,u,v,cx,cy,n,m)
+print *, u(0,m/2),v(0,m/2),rho(0,m/2),u(n,m/2),v(n,m/2),rho(n,m/2)
+write(8,*) kk,u(n/2,m/2),v(n/2,m/2)
+END DO
+! end of the main loop
+call result(u,v,rho,uo,n,m)
+stop
+end
+! end of the main program
+subroutine collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+DO i=0,n
+DO j=0,m
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j)
+DO k=0,8
+t2=u(i,j)*cx(k)+v(i,j)*cy(k)
+feq(k,i,j)=rho(i,j)*w(k)*(1.0+3.0*t2+4.50*t2*t2-1.50*t1)
+f(k,i,j)=omega*feq(k,i,j)+(1.-omega)*f(k,i,j)
+END DO
+END DO
+END DO
+return
+end
+subroutine streaming(f,n,m)
+real f(0:8,0:n,0:m)
+
+! streaming
+DO j=0,m
+DO i=n,1,-1 !RIGHT TO LEFT
+f(1,i,j)=f(1,i-1,j)
+END DO
+DO i=0,n-1 !LEFT TO RIGHT
+f(3,i,j)=f(3,i+1,j)
+END DO
+END DO
+DO j=m,1,-1 !TOP TO BOTTOM
+DO i=0,n
+f(2,i,j)=f(2,i,j-1)
+END DO
+DO i=n,1,-1
+f(5,i,j)=f(5,i-1,j-1)
+END DO
+DO i=0,n-1
+f(6,i,j)=f(6,i+1,j-1)
+END DO
+END DO
+DO j=0,m-1 !BOTTOM TO TOP
+DO i=0,n
+f(4,i,j)=f(4,i,j+1)
+END DO
+DO i=0,n-1
+f(7,i,j)=f(7,i+1,j+1)
+END DO
+DO i=n,1,-1
+f(8,i,j)=f(8,i-1,j+1)
+END DO
+END DO
+return
+end
+subroutine sfbound(f,n,m,uo)
+real f(0:8,0:n,0:m)
+do j=0,m
+! bounce back on west boundary
+f(1,0,j)=f(3,0,j)
+f(5,0,j)=f(7,0,j)
+f(8,0,j)=f(6,0,j)
+! bounce back on east boundary
+
+f(3,n,j)=f(1,n,j)
+f(7,n,j)=f(5,n,j)
+f(6,n,j)=f(8,n,j)
+end do
+! bounce back on south boundary
+do i=0,n
+f(2,i,0)=f(4,i,0)
+f(5,i,0)=f(7,i,0)
+f(6,i,0)=f(8,i,0)
+end do
+! moving lid, north boundary
+do i=1,n-1
+rhon=f(0,i,m)+f(1,i,m)+f(3,i,m)+2.*(f(2,i,m)+f(6,i,m)+f(5,i,m))
+f(4,i,m)=f(2,i,m)
+f(8,i,m)=f(6,i,m)+rhon*uo/6.0
+f(7,i,m)=f(5,i,m)-rhon*uo/6.0
+end do
+return
+end
+subroutine rhouv(f,rho,u,v,cx,cy,n,m)
+real f(0:8,0:n,0:m),rho(0:n,0:m),u(0:n,0:m),v(0:n,0:m),cx(0:8),cy(0:8)
+do j=0,m
+do i=0,n
+ssum=0.0
+do k=0,8
+ssum=ssum+f(k,i,j)
+end do
+rho(i,j)=ssum
+end do
+end do
+do i=1,n
+rho(i,m)=f(0,i,m)+f(1,i,m)+f(3,i,m)+2.*(f(2,i,m)+f(6,i,m)+f(5,i,m))
+end do
+DO i=1,n
+DO j=1,m-1
+usum=0.0
+vsum=0.0
+DO k=0,8
+usum=usum+f(k,i,j)*cx(k)
+vsum=vsum+f(k,i,j)*cy(k)
+END DO
+
+u(i,j)=usum/rho(i,j)
+v(i,j)=vsum/rho(i,j)
+END DO
+END DO
+return
+end
+subroutine result(u,v,rho,uo,n,m)
+real u(0:n,0:m),v(0:n,0:m)
+real rho(0:n,0:m),strf(0:n,0:m)
+open(5, ﬁle=’streamf’)
+! streamfunction calculations
+strf(0,0)=0.
+do i=0,n
+rhoav=0.5*(rho(i-1,0)+rho(i,0))
+if(i.ne.0) strf(i,0)=strf(i-1,0)-rhoav*0.5*(v(i-1,0)+v(i,0))
+do j=1,m
+rhom=0.5*(rho(i,j)+rho(i,j-1))
+strf(i,j)=strf(i,j-1)+rhom*0.5*(u(i,j-1)+u(i,j))
+end do
+end do
+! ———————————–
+write(2,*)’’VARIABLES =X, Y, U, V, S’’
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(2,*)(i,i=0,n)
+end do
+do j=0,m
+write(2,*)(j,i=0,n)
+end do
+do j=0,m
+write(2,*)(u(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(v(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(strf(i,j),i=0,n)
+end do
+do j=0,m
+write(3,*)j/ﬂoat(m),u(n/2,j)/uo,u(n/4,j)/uo,u(3*n/4,j)/uo
+end do
+
+do i=0,n
+write(4,*) i/ﬂoat(n),v(i,m/2)/uo
+end do
+return
+end
+!============end of the program
+
+A.1.5. Chapter Six
+
+A.1.6 Computer Code:
+
+Complete computer code is given below for a heated moving lid cavity
+
+======================================================
+parameter (n=100,m=100)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+real g(0:8,0:n,0:m), geq(0:8,0:n,0:m),th(0:n,0:m)
+integer i
+open(2,ﬁle=’uvﬁeld’)
+open(3,ﬁle=’uvely’)
+open(4,ﬁle=’vvelx’)
+!
+cx(:)=(/0.0,1.0,0.0,-1.0,0.0,1.0,-1.0,-1.0,1.0/)
+cy(:)=(/0.0,0.0,1.0,0.0,-1.0,1.0,1.0,-1.0,-1.0/)
+w(:)=(/4./9.,1./9.,1./9.,1./9.,1./9.,1./36.,1./36.,1./36.,1./36./)
+uo=0.2
+sumvelo=0.0
+rhoo=5.00
+dx=1.0
+dy=dx
+dt=1.0
+tw=1.0
+th=0.0
+g=0.0
+visco=0.02
+
+pr=0.71
+alpha=visco/pr
+Re=uo*m/alpha
+print *, ’’Re=’’, Re
+omega=1.0/(3.*visco+0.5)
+omegat=1.0/(3.*alpha+0.5)
+mstep=20000
+do j=0,m
+do i=0,n
+rho(i,j)=rhoo
+u(i,j)=0.0
+v(i,j)=0.0
+end do
+end do
+do i=1,n-1
+u(i,m)=uo
+v(i,m)=0.0
+end do
+! main loop
+1 do kk=1,mstep
+call collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m)
+call streaming(f,n,m)
+call sfbound(f,n,m,uo)
+call rhouv(f,rho,u,v,cx,cy,n,m)
+do j=0,m
+do i=0,n
+sum=0.0
+do k=0,8
+sum=sum+g(k,i,j)
+th(i,j)=sum
+end do
+end do
+end do
+! collestion for scalar
+call collt(u,v,g,geq,th,omegat,w,cx,cy,n,m)
+! streaming for scalar
+call streaming(g,n,m)
+call gbound(g,tw,w,n,m)
+print *, th(n/2,m/2),v(0,m/2),rho(0,m/2),u(n,m/2),v(n,m/2),rho(n,m/2)
+END DO
+! end of the main loop
+
+call result(u,v,rho,th,uo,n,m)
+stop
+end
+! end of the main program
+subroutine collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+DO i=0,n
+DO j=0,m
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j)
+DO k=0,8
+t2=u(i,j)*cx(k)+v(i,j)*cy(k)
+feq(k,i,j)=rho(i,j)*w(k)*(1.0+3.0*t2+4.50*t2*t2-1.50*t1)
+f(k,i,j)=omega*feq(k,i,j)+(1.-omega)*f(k,i,j)
+END DO
+END DO
+END DO
+return
+end
+subroutine collt(u,v,g,geq,th,omegat,w,cx,cy,n,m)
+real g(0:8,0:n,0:m),geq(0:8,0:n,0:m),th(0:n,0:m)
+real w(0:8),cx(0:8),cy(0:8)
+real u(0:n,0:m),v(0:n,0:m)
+do i=0,n
+do j=0,m
+do k=0,8
+geq(k,i,j)=th(i,j)*w(k)*(1.0+3.0*(u(i,j)*cx(k)+v(i,j)*cy(k)))
+g(k,i,j)=omegat*geq(k,i,j)+(1.0-omegat)*g(k,i,j)
+end do
+end do
+end do
+return
+end
+subroutine streaming(f,n,m)
+real f(0:8,0:n,0:m)
+! streaming
+DO j=0,m
+DO i=n,1,-1 !RIGHT TO LEFT
+f(1,i,j)=f(1,i-1,j)
+
+
+END DO
+DO i=0,n-1 !LEFT TO RIGHT
+f(3,i,j)=f(3,i+1,j)
+END DO
+END DO
+DO j=m,1,-1 !TOP TO BOTTOM
+DO i=0,n
+f(2,i,j)=f(2,i,j-1)
+END DO
+DO i=n,1,-1
+f(5,i,j)=f(5,i-1,j-1)
+END DO
+DO i=0,n-1
+f(6,i,j)=f(6,i+1,j-1)
+END DO
+END DO
+DO j=0,m-1 !BOTTOM TO TOP
+DO i=0,n
+f(4,i,j)=f(4,i,j+1)
+END DO
+DO i=0,n-1
+f(7,i,j)=f(7,i+1,j+1)
+END DO
+DO i=n,1,-1
+f(8,i,j)=f(8,i-1,j+1)
+END DO
+END DO
+return
+end
+subroutine sfbound(f,n,m,uo)
+real f(0:8,0:n,0:m)
+do j=0,m
+! bounce back on west boundary
+f(1,0,j)=f(3,0,j)
+f(5,0,j)=f(7,0,j)
+f(8,0,j)=f(6,0,j)
+! bounce back on east boundary
+f(3,n,j)=f(1,n,j)
+f(7,n,j)=f(5,n,j)
+f(6,n,j)=f(8,n,j)
+end do
+
+! bounce back on south boundary
+do i=0,n
+f(2,i,0)=f(4,i,0)
+f(5,i,0)=f(7,i,0)
+f(6,i,0)=f(8,i,0)
+end do
+! moving lid, north boundary
+do i=1,n-1
+rhon=f(0,i,m)+f(1,i,m)+f(3,i,m)+2.*(f(2,i,m)+f(6,i,m)+f(5,i,m))
+f(4,i,m)=f(2,i,m)
+f(8,i,m)=f(6,i,m)+rhon*uo/6.0
+f(7,i,m)=f(5,i,m)-rhon*uo/6.0
+end do
+return
+end
+subroutine gbound(g,tw,w,n,m)
+real g(0:8,0:n,0:m)
+real w(0:8)
+! Boundary conditions
+! West boundary condition, T=0.
+do j=0,m
+g(1,0,j)=-g(3,0,j)
+g(5,0,j)=-g(7,0,j)
+g(8,0,j)=-g(6,0,j)
+end do
+! East boundary condition, T=0.
+do j=0,m
+g(6,n,j)=-g(8,n,j)
+g(3,n,j)=-g(1,n,j)
+g(7,n,j)=-g(5,n,j)
+g(2,n,j)=-g(4,n,j)
+g(0,n,j)=0.0
+end do
+! Top boundary conditions, T=tw=1.0
+do i=0,n
+g(8,i,m)=tw*(w(8)+w(6))-g(6,i,m)
+g(7,i,m)=tw*(w(7)+w(5))-g(5,i,m)
+g(4,i,m)=tw*(w(4)+w(2))-g(2,i,m)
+g(1,i,m)=tw*(w(1)+w(3))-g(3,i,m)
+end do
+!Bottom boundary conditions, Adiabatic
+
+do i=0,n
+g(1,i,0)=g(1,i,1)
+g(2,i,0)=g(2,i,1)
+g(3,i,0)=g(3,i,1)
+g(4,i,0)=g(4,i,1)
+g(5,i,0)=g(5,i,1)
+g(6,i,0)=g(6,i,1)
+g(7,i,0)=g(7,i,1)
+g(8,i,0)=g(8,i,1)
+end do
+return
+end
+subroutine tcalcu(g,th,n,m)
+real g(0:8,0:n,0:m),th(0:n,0:m)
+do j=1,m-1
+do i=1,n-1
+ssumt=0.0
+do k=0,8
+ssumt=ssumt+g(k,i,j)
+end do
+th(i,j)=ssumt
+end do
+end do
+return
+end
+subroutine rhouv(f,rho,u,v,cx,cy,n,m)
+real f(0:8,0:n,0:m),rho(0:n,0:m),u(0:n,0:m),v(0:n,0:m),cx(0:8),cy(0:8)
+do j=0,m
+do i=0,n
+ssum=0.0
+do k=0,8
+ssum=ssum+f(k,i,j)
+end do
+rho(i,j)=ssum
+end do
+end do
+DO i=1,n
+DO j=1,m-1
+usum=0.0
+vsum=0.0
+DO k=0,8
+
+usum=usum+f(k,i,j)*cx(k)
+vsum=vsum+f(k,i,j)*cy(k)
+END DO
+u(i,j)=usum/rho(i,j)
+v(i,j)=vsum/rho(i,j)
+END DO
+END DO
+return
+end
+subroutine result(u,v,rho,th,uo,n,m)
+real u(0:n,0:m),v(0:n,0:m),th(0:n,0:m)
+real rho(0:n,0:m),strf(0:n,0:m)
+open(5, ﬁle=’streamf’)
+open(7,ﬁle=’tprof’)
+! streamfunction calculations
+strf(0,0)=0.
+do i=0,n
+rhoav=0.5*(rho(i-1,0)+rho(i,0))
+if(i.ne.0) strf(i,0)=strf(i-1,0)-rhoav*0.5*(v(i-1,0)+v(i,0))
+do j=1,m
+rhom=0.5*(rho(i,j)+rho(i,j-1))
+strf(i,j)=strf(i,j-1)+rhom*0.5*(u(i,j-1)+u(i,j))
+end do
+end do
+! ———————————–
+write(2,*)’’VARIABLES =X, Y, U, V, T’’
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(2,*)(i,i=0,n)
+end do
+do j=0,m
+write(2,*)(j,i=0,n)
+end do
+do j=0,m
+write(2,*)(u(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(v(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(th(i,j),i=0,n)
+
+end do
+write(5,*)’’VARIABLES =X, Y, ST’’
+write(5,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(5,*)(i,i=0,n)
+end do
+do j=0,m
+write(5,*)(j,i=0,n)
+end do
+do j=0,m
+write(5,*)(strf(i,j),i=0,n)
+end do
+do j=0,m
+write(3,*)j/ﬂoat(m),u(5,j)/uo,u(n/2,j)/uo,u(n-10,j)/uo
+write(7,*)j/ﬂoat(m),th(n/4,j),th(n/2,j),th(3*n/4,j)
+end do
+do i=0,n
+write(4,*) i/ﬂoat(n),v(i,m/2)/uo
+end do
+return
+end
+======================================================
+
+A.1.7 Computer Code
+
+The full computer code is:
+
+======================================================
+parameter (n=1000,m=50)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+real g(0:8,0:n,0:m), geq(0:8,0:n,0:m),th(0:n,0:m)
+integer i
+open(2,ﬁle=’uvﬁeld’)
+open(3,ﬁle=’uvely’)
+open(4,ﬁle=’vvelx’)
+
+!
+cx(:)=(/0.0,1.0,0.0,-1.0,0.0,1.0,-1.0,-1.0,1.0/)
+cy(:)=(/0.0,0.0,1.0,0.0,-1.0,1.0,1.0,-1.0,-1.0/)
+w(:)=(/4./9.,1./9.,1./9.,1./9.,1./9.,1./36.,1./36.,1./36.,1./36./)
+uo=0.1
+sumvelo=0.0
+rhoo=5.00
+dx=1.0
+dy=dx
+dt=1.0
+tw=1.0
+th=0.0
+g=0.0
+visco=0.05
+pr=3.8
+alpha=visco/pr
+Re=uo*m/alpha
+print *, ’’Re=’’, Re
+omega=1.0/(3.*visco+0.5)
+omegat=1.0/(3.*alpha+0.5)
+mstep=10000
+do j=0,m
+do i=0,n
+rho(i,j)=rhoo
+u(i,j)=0.0
+v(i,j)=0.0
+end do
+end do
+do j=1,m-1
+u(0,j)=uo
+v(0,j)=0.0
+end do
+! main loop
+1 do kk=1,mstep
+call collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m)
+call streaming(f,n,m)
+call sfbound(f,n,m,uo)
+call rhouv(f,rho,u,v,cx,cy,n,m)
+! ——————————–
+do j=0,m
+do i=0,n
+
+sum=0.0
+do k=0,8
+sum=sum+g(k,i,j)
+th(i,j)=sum
+end do
+end do
+end do
+! collestion for scalar
+call collt(u,v,g,geq,th,omegat,w,cx,cy,n,m)
+! streaming for scalar
+call streaming(g,n,m)
+call gbound(g,tw,w,n,m)
+print *, th(n/2,m/2),v(0,m/2),rho(0,m/2),u(n,m/2),v(n,m/2),rho(n,m/2)
+END DO
+! end of the main loop
+call result(u,v,th,uo,n,m)
+stop
+end
+! end of the main program
+subroutine collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+DO i=0,n
+DO j=0,m
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j)
+DO k=0,8
+t2=u(i,j)*cx(k)+v(i,j)*cy(k)
+feq(k,i,j)=rho(i,j)*w(k)*(1.0+3.0*t2+4.50*t2*t2-1.50*t1)
+f(k,i,j)=omega*feq(k,i,j)+(1.-omega)*f(k,i,j)
+END DO
+END DO
+END DO
+return
+end
+subroutine collt(u,v,g,geq,th,omegat,w,cx,cy,n,m)
+real g(0:8,0:n,0:m),geq(0:8,0:n,0:m),th(0:n,0:m)
+real w(0:8),cx(0:8),cy(0:8)
+real u(0:n,0:m),v(0:n,0:m)
+do i=0,n
+
+
+do j=0,m
+do k=0,8
+geq(k,i,j)=th(i,j)*w(k)*(1.0+3.0*(u(i,j)*cx(k)+v(i,j)*cy(k)))
+g(k,i,j)=omegat*geq(k,i,j)+(1.0-omegat)*g(k,i,j)
+end do
+end do
+end do
+return
+end
+subroutine streaming(f,n,m)
+real f(0:8,0:n,0:m)
+! streaming
+DO j=0,m
+DO i=n,1,-1 !RIGHT TO LEFT
+f(1,i,j)=f(1,i-1,j)
+END DO
+DO i=0,n-1 !LEFT TO RIGHT
+f(3,i,j)=f(3,i+1,j)
+END DO
+END DO
+DO j=m,1,-1 !TOP TO BOTTOM
+DO i=0,n
+f(2,i,j)=f(2,i,j-1)
+END DO
+DO i=n,1,-1
+f(5,i,j)=f(5,i-1,j-1)
+END DO
+DO i=0,n-1
+f(6,i,j)=f(6,i+1,j-1)
+END DO
+END DO
+DO j=0,m-1 !BOTTOM TO TOP
+DO i=0,n
+f(4,i,j)=f(4,i,j+1)
+END DO
+DO i=0,n-1
+f(7,i,j)=f(7,i+1,j+1)
+END DO
+DO i=n,1,-1
+f(8,i,j)=f(8,i-1,j+1)
+END DO
+
+END DO
+return
+end
+subroutine sfbound(f,n,m,uo)
+real f(0:8,0:n,0:m)
+do j=0,m
+! ﬂow in on west boundary
+rhow=(f(0,0,j)+f(2,0,j)+f(4,0,j)+2.*(f(3,0,j)+f(6,0,j)+f(7,0,j)))/(1.-uo)
+f(1,0,j)=f(3,0,j)+2.*rhow*uo/3.
+f(5,0,j)=f(7,0,j)+rhow*uo/6.
+f(8,0,j)=f(6,0,j)+rhow*uo/6.
+end do
+! bounce back on south boundary
+do i=0,n
+f(2,i,0)=f(4,i,0)
+f(5,i,0)=f(7,i,0)
+f(6,i,0)=f(8,i,0)
+end do
+! bounce back, north boundary
+do i=0,n
+f(4,i,m)=f(2,i,m)
+f(8,i,m)=f(6,i,m)
+f(7,i,m)=f(5,i,m)
+end do
+! accont for open boundary condition at the outlet
+do j=1,m
+f(1,n,j)=2.*f(1,n-1,j)-f(1,n-2,j)
+f(5,n,j)=2.*f(5,n-1,j)-f(5,n-2,j)
+f(8,n,j)=2.*f(8,n-1,j)-f(8,n-2,j)
+end do
+return
+end
+subroutine gbound(g,tw,w,n,m)
+real g(0:8,0:n,0:m)
+real w(0:8)
+! Boundary conditions
+! Left boundary condition, the temperature is given, tw
+do j=0,m
+g(1,0,j)=-g(3,0,j)
+g(5,0,j)=-g(7,0,j)
+g(8,0,j)=-g(6,0,j)
+
+end do
+! Right hand boundary condition, open
+do j=0,m
+g(6,n,j)=2.*g(6,n-1,j)-g(6,n-2,j)
+g(3,n,j)=2.*g(3,n-1,j)-g(3,n-2,j)
+g(7,n,j)=2.*g(7,n-1,j)-g(7,n-2,j)
+g(2,n,j)=2.*g(2,n-1,j)-g(2,n-2,j)
+g(0,n,j)=2.*g(0,n-1,j)-g(0,n-2,j)
+g(1,n,j)=2.*g(1,n-1,j)-g(1,n-2,j)
+g(4,n,j)=2.*g(4,n-1,j)-g(4,n-2,j)
+g(5,n,j)=2.*g(5,n-1,j)-g(5,n-2,j)
+g(8,n,j)=2.*g(8,n-1,j)-g(8,n-2,j)
+end do
+! Top boundary conditions, T=0.0
+do i=0,n
+g(8,i,m)=tw*(w(8)+w(6))-g(6,i,m)
+g(7,i,m)=tw*(w(7)+w(5))-g(5,i,m)
+g(4,i,m)=tw*(w(4)+w(2))-g(2,i,m)
+g(1,i,m)=tw*(w(1)+w(3))-g(3,i,m)
+end do
+!Bottom boundary conditions, Adiabatic
+! g(1,i,0)=g(1,i,1)
+! g(2,i,0)=g(2,i,1)
+! g(3,i,0)=g(3,i,1)
+! g(4,i,0)=g(4,i,1)
+! g(5,i,0)=g(5,i,1)
+! g(6,i,0)=g(6,i,1)
+! g(7,i,0)=g(7,i,1)
+! g(8,i,0)=g(8,i,1)
+! T=0.0
+do i=0,n
+g(2,i,0)=tw*(w(2)+w(4))-g(4,i,0)
+g(6,i,0)=tw*(w(6)+w(8))-g(8,i,0)
+g(5,i,0)=tw*(w(5)+w(7))-g(7,i,0)
+end do
+return
+end
+subroutine tcalcu(g,th,n,m)
+real g(0:8,0:n,0:m),th(0:n,0:m)
+do j=1,m-1
+do i=1,n-1
+
+
+ssumt=0.0
+do k=0,8
+ssumt=ssumt+g(k,i,j)
+end do
+th(i,j)=ssumt
+end do
+end do
+return
+end
+subroutine rhouv(f,rho,u,v,cx,cy,n,m)
+real f(0:8,0:n,0:m),rho(0:n,0:m),u(0:n,0:m),v(0:n,0:m),cx(0:8),cy(0:8)
+do j=0,m
+do i=0,n
+ssum=0.0
+do k=0,8
+ssum=ssum+f(k,i,j)
+end do
+rho(i,j)=ssum
+end do
+end do
+DO i=1,n
+DO j=1,m-1
+usum=0.0
+vsum=0.0
+DO k=0,8
+usum=usum+f(k,i,j)*cx(k)
+vsum=vsum+f(k,i,j)*cy(k)
+END DO
+u(i,j)=usum/rho(i,j)
+v(i,j)=vsum/rho(i,j)
+END DO
+END DO
+do j=0,m
+v(n,j)=0.0
+end do
+return
+end
+subroutine result(u,v,th,uo,n,m)
+real u(0:n,0:m),v(0:n,0:m),th(0:n,0:m)
+2 write(2,*)’’VARIABLES =X, Y, U, V, T’’
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+
+do j=0,m
+write(2,*)(i,i=0,n)
+end do
+do j=0,m
+write(2,*)(j,i=0,n)
+end do
+do j=0,m
+write(2,*)(u(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(v(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(th(i,j),i=0,n)
+end do
+do j=0,m
+write(3,*)j/ﬂoat(m),u(5,j)/uo,u(n/2,j)/uo,u(n-10,j)/uo
+end do
+do i=0,n
+write(4,*) i/ﬂoat(n),v(i,m/2)/uo
+end do
+return
+end
+======================================================
+
+Computer code for Natural convection in a differentially heated cavity
+
+======================================================
+parameter (n=100,m=100)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+real g(0:8,0:n,0:m), geq(0:8,0:n,0:m),th(0:n,0:m)
+integer i
+open(2,ﬁle=’uvﬁeld’)
+open(3,ﬁle=’uvely’)
+open(4,ﬁle=’tmx’)
+!
+cx(:)=(/0.0,1.0,0.0,-1.0,0.0,1.0,-1.0,-1.0,1.0/)
+cy(:)=(/0.0,0.0,1.0,0.0,-1.0,1.0,1.0,-1.0,-1.0/)
+w(:)=(/4./9.,1./9.,1./9.,1./9.,1./9.,1./36.,1./36.,1./36.,1./36./)
+
+uo=0.0
+sumvelo=0.0
+rhoo=6.00
+dx=1.0
+dy=dx
+dt=1.0
+tw=1.0
+th=0.0
+ra=1.0e5
+pr=0.71
+visco=0.02
+alpha=visco/pr
+pr=visco/alpha
+gbeta=ra*visco*alpha/(ﬂoat(m*m*m))
+Re=uo*m/alpha
+print *, ’’Re=’’, Re
+omega=1.0/(3.*visco+0.5)
+omegat=1.0/(3.*alpha+0.5)
+mstep=150000
+do j=0,m
+do i=0,n
+rho(i,j)=rhoo
+u(i,j)=0.0
+v(i,j)=0.0
+end do
+end do
+do i=0,n
+u(i,m)=uo
+v(i,m)=0.0
+end do
+! main loop
+1 do kk=1,mstep
+call collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m,th,gbeta)
+call streaming(f,n,m)
+call bounceb(f,n,m)
+call rhouv(f,rho,u,v,cx,cy,n,m)
+! ——————————–
+! collestion for scalar
+call collt(u,v,g,geq,th,omegat,w,cx,cy,n,m)
+! streaming for scalar
+call streaming(g,n,m)
+
+call gbound(g,tw,w,n,m)
+do j=0,m
+do i=0,n
+sumt=0.0
+do k=0,8
+sumt=sumt+g(k,i,j)
+end do
+th(i,j)=sumt
+end do
+end do
+print *, th(n/2,m/2),v(5,m/2),rho(0,m/2),u(n/2,m/2),v(n/2,m/2),rho(n,m/2)
+END DO
+! end of the main loop
+call result(u,v,rho,th,uo,n,m,ra)
+stop
+end
+! end of the main program
+subroutine collesion(u,v,f,feq,rho,omega,w,cx,cy,n,m,th,gbeta)
+real f(0:8,0:n,0:m)
+real feq(0:8,0:n,0:m),rho(0:n,0:m)
+real w(0:8), cx(0:8),cy(0:8)
+real u(0:n,0:m), v(0:n,0:m)
+real th(0:n,0:m)
+tref=0.50
+DO i=0,n
+DO j=0,m
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j)
+DO k=0,8
+t2=u(i,j)*cx(k)+v(i,j)*cy(k)
+force=3.*w(k)*gbeta*(th(i,j)-tref)*cy(k)*rho(i,j)
+if(i.eq.0.or.i.eq.n) force =0.0
+if(j.eq.0.or.j.eq.m) force =0.0
+feq(k,i,j)=rho(i,j)*w(k)*(1.0+3.0*t2+4.50*t2*t2-1.50*t1)
+f(k,i,j)=omega*feq(k,i,j)+(1.-omega)*f(k,i,j)+force
+END DO
+END DO
+END DO
+return
+end
+subroutine collt(u,v,g,geq,th,omegat,w,cx,cy,n,m)
+real g(0:8,0:n,0:m),geq(0:8,0:n,0:m),th(0:n,0:m)
+
+real w(0:8),cx(0:8),cy(0:8)
+real u(0:n,0:m),v(0:n,0:m)
+do i=0,n
+do j=0,m
+do k=0,8
+geq(k,i,j)=th(i,j)*w(k)*(1.0+3.0*(u(i,j)*cx(k)+v(i,j)*cy(k)))
+g(k,i,j)=omegat*geq(k,i,j)+(1.0-omegat)*g(k,i,j)
+end do
+end do
+end do
+return
+end
+subroutine streaming(f,n,m)
+real f(0:8,0:n,0:m)
+! streaming
+DO j=0,m
+DO i=n,1,-1 !RIGHT TO LEFT
+f(1,i,j)=f(1,i-1,j)
+END DO
+DO i=0,n-1 !LEFT TO RIGHT
+f(3,i,j)=f(3,i+1,j)
+END DO
+END DO
+DO j=m,1,-1 !TOP TO BOTTOM
+DO i=0,n
+f(2,i,j)=f(2,i,j-1)
+END DO
+DO i=n,1,-1
+f(5,i,j)=f(5,i-1,j-1)
+END DO
+DO i=0,n-1
+f(6,i,j)=f(6,i+1,j-1)
+END DO
+END DO
+DO j=0,m-1 !BOTTOM TO TOP
+DO i=0,n
+f(4,i,j)=f(4,i,j+1)
+END DO
+DO i=0,n-1
+f(7,i,j)=f(7,i+1,j+1)
+END DO
+
+DO i=n,1,-1
+f(8,i,j)=f(8,i-1,j+1)
+END DO
+END DO
+return
+end
+subroutine bounceb(f,n,m)
+real f(0:8,0:n,0:m)
+do j=0,m
+!west boundary
+f(1,0,j)=f(3,0,j)
+f(5,0,j)=f(7,0,j)
+f(8,0,j)=f(6,0,j)
+!east boundary
+f(3,n,j)=f(1,n,j)
+f(7,n,j)=f(5,n,j)
+f(6,n,j)=f(8,n,j)
+end do
+do i=0,n
+!south boundary
+f(2,i,0)=f(4,i,0)
+f(5,i,0)=f(7,i,0)
+f(6,i,0)=f(8,i,0)
+!north boundary
+f(4,i,m)=f(2,i,m)
+f(8,i,m)=f(6,i,m)
+f(7,i,m)=f(5,i,m)
+end do
+return
+end
+subroutine gbound(g,tw,w,n,m)
+real g(0:8,0:n,0:m)
+real w(0:8),tw
+! Boundary conditions
+! West boundary condition, T=1.
+do j=0,m
+g(1,0,j)=tw*(w(1)+w(3))-g(3,0,j)
+g(5,0,j)=tw*(w(5)+w(7))-g(7,0,j)
+g(8,0,j)=tw*(w(8)+w(6))-g(6,0,j)
+end do
+! East boundary condition, T=0.
+
+do j=0,m
+g(6,n,j)=-g(8,n,j)
+g(3,n,j)=-g(1,n,j)
+g(7,n,j)=-g(5,n,j)
+end do
+! Top boundary conditions, Adiabatic
+do i=0,n
+g(8,i,m)=g(8,i,m-1)
+g(7,i,m)=g(7,i,m-1)
+g(6,i,m)=g(6,i,m-1)
+g(5,i,m)=g(5,i,m-1)
+g(4,i,m)=g(4,i,m-1)
+g(3,i,m)=g(3,i,m-1)
+g(2,i,m)=g(2,i,m-1)
+g(1,i,m)=g(1,i,m-1)
+g(0,i,m)=g(0,i,m-1)
+end do
+!Bottom boundary conditions, Adiabatic
+do i=0,n
+g(1,i,0)=g(1,i,1)
+g(2,i,0)=g(2,i,1)
+g(3,i,0)=g(3,i,1)
+g(4,i,0)=g(4,i,1)
+g(5,i,0)=g(5,i,1)
+g(6,i,0)=g(6,i,1)
+g(7,i,0)=g(7,i,1)
+g(8,i,0)=g(8,i,1)
+g(0,i,0)=g(0,i,1)
+end do
+return
+end
+subroutine tcalcu(g,th,n,m)
+real g(0:8,0:n,0:m),th(0:n,0:m)
+do j=0,m
+do i=0,n
+ssumt=0.0
+do k=0,8
+ssumt=ssumt+g(k,i,j)
+end do
+th(i,j)=ssumt
+end do
+
+end do
+return
+end
+subroutine rhouv(f,rho,u,v,cx,cy,n,m)
+real f(0:8,0:n,0:m),rho(0:n,0:m),u(0:n,0:m),v(0:n,0:m),cx(0:8),cy(0:8)
+do j=0,m
+do i=0,n
+ssum=0.0
+do k=0,8
+ssum=ssum+f(k,i,j)
+end do
+rho(i,j)=ssum
+end do
+end do
+DO i=0,n
+DO j=0,m
+usum=0.0
+vsum=0.0
+DO k=0,8
+usum=usum+f(k,i,j)*cx(k)
+vsum=vsum+f(k,i,j)*cy(k)
+END DO
+u(i,j)=usum/rho(i,j)
+v(i,j)=vsum/rho(i,j)
+END DO
+END DO
+return
+end
+subroutine result(u,v,rho,th,uo,n,m,ra)
+real u(0:n,0:m),v(0:n,0:m),th(0:n,0:m)
+real strf(0:n,0:m),rho(0:n,0:m)
+open(5,ﬁle=’streamt’)
+open(6,ﬁle=’nuav’)
+! streamfunction calculations
+strf(0,0)=0.
+do i=0,n
+rhoav=0.5*(rho(i-1,0)+rho(i,0))
+if(i.ne.0) strf(i,0)=strf(i-1,0)-rhoav*0.5*(v(i-1,0)+v(i,0))
+do j=1,m
+rhom=0.5*(rho(i,j)+rho(i,j-1))
+strf(i,j)=strf(i,j-1)+rhom*0.5*(u(i,j-1)+u(i,j))
+
+end do
+end do
+! ———————————–
+write(2,*)’’VARIABLES =X, Y, U, V’’
+write(2,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(2,*)(i/ﬂoat(m),i=0,n)
+end do
+do j=0,m
+write(2,*)(j/ﬂoat(m),i=0,n)
+end do
+do j=0,m
+write(2,*)(u(i,j),i=0,n)
+end do
+do j=0,m
+write(2,*)(v(i,j),i=0,n)
+end do
+do j=0,m
+write(3,*)j/ﬂoat(m),u(5,j)/uo,u(n/2,j)/uo,u(n-10,j)/uo
+end do
+do i=0,n
+write(4,*) i/ﬂoat(n),th(i,m/2)
+end do
+write(5,*)’’VARIABLES =X, Y, S, T’’
+write(5,*)’’ZONE ’’,’’I=’’,n+1,’’J=’’,m+1,’’,’’,’’F=BLOCK’’
+do j=0,m
+write(5,*)(i/ﬂoat(m),i=0,n)
+end do
+do j=0,m
+write(5,*)(j/ﬂoat(m),i=0,n)
+end do
+do j=0,m
+write(5,*)(strf(i,j),i=0,n)
+end do
+do j=0,m
+write(5,*)(th(i,j),i=0,n)
+end do
+! Nusselt number Calculation
+snul=0.0
+snur=0.0
+do j=0,m
+
+rnul=(th(0,j)-th(1,j))*ﬂoat(n)
+rnur=(th(n-1,j)-th(n,j))*ﬂoat(n)
+snul=snul+rnul
+snur=snur+rnur
+write(5,*)j/ﬂoat(m),rnul,rnur
+end do
+avnl=snul/ﬂoat(m)
+avnr=snur/ﬂoat(m)
+write(6,*)ra,avnl,avnr
+return
+end
+======================================================
+

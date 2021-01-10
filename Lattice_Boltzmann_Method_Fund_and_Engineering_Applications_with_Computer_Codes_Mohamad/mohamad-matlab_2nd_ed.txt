@@ -1,0 +1,4988 @@
+
+% Chapter 5
+% LBM- 1-D, diffusion equation D1Q2
+clear
+m=101;
+dx=1.0;
+rho=zeros(m);f1=zeros(m);f2=zeros(m); flux=zeros(m);
+x=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+alpha=0.25;
+omega=1/(alpha+0.5);
+twall=1.0;
+nstep=200;
+for i=1:m
+
+f1(i)=0.5*rho(i);
+f2(i)=0.5*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+feq=0.5*rho(i);
+f1(i)=(1-omega)*f1(i)+omega*feq;
+f2(i)=(1-omega)*f2(i)+omega*feq;
+
+end
+
+% Streaming:
+for i=1:m-1
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+end
+%Boundary condition:
+
+f1(1)=twall-f2(1);
+f1(m)=f1(m-1);
+f2(m)=f2(m-1);
+for j=1:m
+rho(j)=f1(j)+f2(j);
+
+end
+
+end
+
+%Flux:
+
+for k=1:m
+flux(k)=omega*(f1(k)-f2(k));
+end
+
+figure(1)
+plot(x,rho)
+
+title(’Temperature’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,flux,’o’)
+
+title(’Flux, time step=200’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+% Chapter 5, diffusion
+% LBM- 1-D1Q3, diffusion equation
+clear
+m=101;
+w0=4./6.;
+w1=1./6.;
+c2=1./3.;
+w2=w1;
+dx=1.0;
+rho=zeros(m);f0=zeros(m);f1=zeros(m);f2=zeros(m);
+x=zeros(m);fluxq=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+alpha=0.25;
+omega=1/(3.*alpha+0.5);
+twall=1.0;
+nstep=200;
+for i=1:m
+
+f0(i)=w0*rho(i);
+f1(i)=w1*rho(i);
+f2(i)=w1*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+feq0=w0*rho(i);
+feq=w1*rho(i);
+f0(i)=(1-omega)*f0(i)+omega*feq0;
+f1(i)=(1-omega)*f1(i)+omega*feq;
+f2(i)=(1-omega)*f2(i)+omega*feq;
+
+end
+% Streaming:
+for i=1:m-1
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+end
+
+%Boundary condition:
+
+f1(1)=twall-f2(1)-f0(1);
+f1(m)=f1(m-1);
+f2(m)=f2(m-1);
+f0(m)=f0(m-1);
+for j=1:m
+
+rho(j)=f1(j)+f2(j)+f0(j);
+
+end
+
+end
+
+%Flux:
+
+for k=1:m
+flux(k)=omega*(f1(k)-f2(k))/c2;
+end
+for k=1:m-1
+
+fluxq(k)=rho(k)-rho(k+1);
+
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,rho)
+
+title(’Temperature, nstep=200’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,flux,’o’,x,fluxq,’x’)
+
+title(’Flux, time step=200’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+% Chapter 5, D1Q3 with flux boundary condition
+% LBM- 1-D1Q3, diffusion equation
+clear
+m=101;
+w0=4./6.;
+w1=1./6.;
+c2=1./3.;
+w2=w1;
+dx=1.0;
+qf=100.; tk=20.;
+rho=zeros(m);f0=zeros(m);f1=zeros(m);f2=zeros(m);
+x=zeros(m);fluxq=zeros(m);flux=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+alpha=0.25;
+omega=1/(3.*alpha+0.5);
+
+nstep=600;
+for i=1:m
+
+f0(i)=w0*rho(i);
+f1(i)=w1*rho(i);
+f2(i)=w1*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+feq0=w0*rho(i);
+feq=w1*rho(i);
+
+f0(i)=(1-omega)*f0(i)+omega*feq0;
+f1(i)=(1-omega)*f1(i)+omega*feq;
+f2(i)=(1-omega)*f2(i)+omega*feq;
+
+end
+
+% Streaming:
+for i=1:m-1
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+end
+%Boundary condition:
+
+f1(1)=f2(1)+c2*qf/(tk*omega);
+f1(m)=f1(m-1);
+f2(m)=f2(m-1);
+f0(m)=f0(m-1);
+for j=1:m
+
+rho(j)=f1(j)+f2(j)+f0(j);
+
+end
+
+end
+
+%Flux:
+
+for k=1:m
+flux(k)=omega*(f1(k)-f2(k))/c2;
+end
+for k=1:m-1
+
+fluxq(k)=rho(k)-rho(k+1);
+
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,rho)
+
+title(’Temperature, nstep=200’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,flux,’o’,x,fluxq,’x’)
+
+title(’Flux, time step=200’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+
+% Chapter 5, source term
+% LBM- 1-D1Q3, diffusion equation
+clear
+m=101;
+w0=4./6.;
+w1=1./6.;
+c2=1./3.;
+w2=w1;
+dx=1.0;
+rho=zeros(m);f0=zeros(m);f1=zeros(m);f2=zeros(m);
+x=zeros(m);fluxq=zeros(m);flux=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+rcp=200.0;
+qs=1.0;
+qsr=qs/rcp;
+alpha=0.25;
+
+omega=1/(3.*alpha+0.5);
+twall=1.0;
+tk=alpha*rcp;
+nstep=200;
+for i=1:m
+
+f0(i)=w0*rho(i);
+f1(i)=w1*rho(i);
+f2(i)=w1*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+feq0=w0*rho(i);
+feq=w1*rho(i);
+f0(i)=(1-omega)*f0(i)+omega*feq0+qsr*w0;
+f1(i)=(1-omega)*f1(i)+omega*feq+qsr*w1;
+f2(i)=(1-omega)*f2(i)+omega*feq+qsr*w1;
+
+end
+
+% Streaming:
+for i=1:m-1
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+end
+%Boundary condition:
+
+f1(1)=twall-f2(1)-f0(1);
+f1(m)=f1(m-1);
+f2(m)=f2(m-1);
+f0(m)=f0(m-1);
+for j=1:m
+
+rho(j)=f1(j)+f2(j)+f0(j);
+
+end
+
+end
+
+%Flux:
+
+for k=1:m
+flux(k)=omega*(f1(k)-f2(k))/c2;
+end
+for k=1:m-1
+
+fluxq(k)=rho(k)-rho(k+1);
+
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,rho)
+
+title(’Temperature’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,flux,’o’,x,fluxq,’x’)
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+% LBM- 1-D1Q3, diffusion equation D1Q3, with variable alpha
+clear
+m=101;
+w0=4./6.;
+w1=1./6.;
+c2=1./3.;
+
+w2=w1;
+dx=1.0;
+rho=zeros(m);f0=zeros(m);f1=zeros(m);f2=zeros(m);
+x=zeros(m);fluxq=zeros(m);flux=zeros(m);
+tk=zeros(m);dtkdx=zeros(m);cpr=zeros(m);alpha=zeros(m);
+omega=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for i=1:m
+
+tk(i)=20.+30./(2.*x(i)+1.);
+alpha(i)=tk(i)/100.;
+omega(i)=1/(3.*alpha(i)+0.5);
+
+end
+twall=1.0;
+nstep=1500;
+for i=1:m
+
+f0(i)=w0*rho(i);
+f1(i)=w1*rho(i);
+f2(i)=w1*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+feq0=w0*rho(i);
+feq=w1*rho(i);
+f0(i)=(1-omega(i))*f0(i)+omega(i)*feq0;
+f1(i)=(1-omega(i))*f1(i)+omega(i)*feq;
+f2(i)=(1-omega(i))*f2(i)+omega(i)*feq;
+
+end
+
+% Streaming:
+for i=1:m-1
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+end
+%Boundary condition:
+
+f1(1)=twall-f2(1)-f0(1);
+f1(m)=f1(m-1);
+f2(m)=f2(m-1);
+f0(m)=f0(m-1);
+for j=1:m
+
+rho(j)=f1(j)+f2(j)+f0(j);
+
+end
+
+end
+
+%Flux:
+
+for k=1:m
+flux(k)=tk(k)*omega(k)*(f1(k)-f2(k))/c2;
+end
+for k=1:m-1
+
+fluxq(k)=tk(k)*(rho(k)-rho(k+1));
+
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,rho)
+
+title(’Temperature, nstep=200’)
+xlabel(’X’)
+
+
+ylabel(’T’)
+
+figure(2)
+plot(x,flux,’o’,x,fluxq,’x’)
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+
+% LBM- 2-D2Q5a, diffusion equation, note that c2=1/3, w0=2/6, others 1/6
+clear
+m=51;n=51;
+xl=1.0;yl=1.0;
+dx=xl/(m-1.0); dy=yl/(n-1.0);
+w0=2./6.;
+w=1./6.;
+c2=1./3.;
+dx=1.0;
+f0=zeros(m,n);f1=zeros(m,n);f2=zeros(m,n);f3=zeros(m,n);f4=zeros(m,n);
+rho=zeros(m,n);x=zeros(m);y=zeros(n);fluxq=zeros(m);flux=zeros(m);
+Tm=zeros(m);Z=zeros(n,m);
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+alpha=0.25;
+omega=1/(3.*alpha+0.5);
+twall=1.0;
+nstep=400;
+for i=1:m
+
+f0(i,j)=w0*rho(i,j);
+f1(i,j)=w*rho(i,j);
+f2(i,j)=w*rho(i,j);
+f3(i,j)=w*rho(i,j);
+f4(i,j)=w*rho(i,j);
+
+end
+%Collision:
+for k1=1:nstep
+
+for j=1:n
+for i=1:m
+
+feq0=w0*rho(i,j);
+feq=w*rho(i,j);
+f0(i,j)=(1.-omega)*f0(i,j)+omega*feq0;
+f1(i,j)=(1.-omega)*f1(i,j)+omega*feq;
+f2(i,j)=(1.-omega)*f2(i,j)+omega*feq;
+f3(i,j)=(1.-omega)*f3(i,j)+omega*feq;
+f4(i,j)=(1.-omega)*f4(i,j)+omega*feq;
+
+end
+end
+
+% Streaming:
+for j=1:n
+for i=1:m-1
+
+f1(m-i+1,j)=f1(m-i,j);
+f2(i,j)=f2(i+1,j);
+
+end
+
+end
+for i=1:m
+
+for j=1:n-1
+
+f3(i,n-j+1)=f3(i,n-j);
+f4(i,j)=f4(i,j+1);
+
+end
+
+end
+%Boundary condition:
+
+for j=1:n
+
+f1(1,j)=twall-f2(1,j)-f0(1,j)-f3(1,j)-f4(1,j);
+
+f3(m,j)=-f1(m,j)-f0(m,j)-f2(m,j)-f4(m,j);
+end
+for i=1:m
+
+f3(i,1)=f3(i,2);
+f4(i,n)=-f0(i,n)-f3(i,n)-f2(i,n)-f1(i,n);
+
+end
+
+for j=1:n
+i=1:m
+
+for
+
+rho(i,j)=f1(i,j)+f2(i,j)+f0(i,j)+f3(i,j)+f4(i,j);
+
+end
+
+end
+
+end
+%rotating matrix for contour plotting
+for j=1:n
+
+for i=1:m
+
+Z(j,i)=rho(i,j);
+
+end
+
+end
+
+for i=1:n
+
+Tm(i)=rho(i,(n-1)/2);
+
+end
+
+figure(1)
+plot(x,Tm)
+
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+contour(Z)
+%
+%
+%
+============================================================================
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+%LBM- 2-D2Q9, diffusion equation, note that c2=1/3, w0=4/9, w1-w4, 1/9
+% and w5-w8, 1/36
+clear
+m=51;n=51;
+xl=1.0;yl=1.0;
+dx=xl/(m-1.0); dy=yl/(n-1.0);
+w0=4./9.;
+c2=1./3.;
+dx=1.0;
+f0=zeros(m,n);f=zeros(m,n,8);feq=zeros(m,n,8);f0eq=zeros(m,n);
+rho=zeros(m,n);x=zeros(m);y=zeros(n);fluxq=zeros(m);flux=zeros(m);
+Tm=zeros(m);Z=zeros(n,m);w(8)=zeros;
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+for k=1:4
+
+w(k)=1./9.;
+
+end
+for k=5:8
+
+w(k)=1./36.;
+
+end
+alpha=0.25;
+omega=1./(3.*alpha+0.5);
+twall=1.0;
+nstep=400;
+
+%Collision:
+for kk=1:nstep
+
+for j=1:n
+for i=1:m
+
+f0eq(i,j)=w0*rho(i,j);
+f0(i,j)=(1.-omega)*f0(i,j)+omega*f0eq(i,j);
+
+for k=1:8
+
+feq(i,j,k)=w(k)*rho(i,j);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+end
+end
+
+% Streaming:
+
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+
+% End of streaming
+%Boundary condition:
+%left boundary, twall=1.0
+
+for j=1:n
+
+f(1,j,1)=w(1)*twall+w(3)*twall-f(1,j,3);
+f(1,j,5)=w(5)*twall+w(7)*twall-f(1,j,7);
+f(1,j,8)=w(8)*twall+w(6)*twall-f(1,j,6);
+
+end
+%bottom boundary, adiabatic, bounce back
+for i=1:m
+
+f(i,1,2)=f(i,2,2);
+f(i,1,5)=f(i,2,5);
+f(i,1,6)=f(i,2,6);
+
+end
+%Top boundary, T=0.0
+
+for i=1:n
+f(i,m,7)=-f(i,m,5);
+f(i,m,4)=-f(i,m,2);
+f(i,m,8)=-f(i,m,6);
+end
+
+
+%right hand boundary
+for j=1:m
+
+f(n,j,3)=-f(n,j,1);
+f(n,j,7)=-f(n,j,5);
+f(n,j,6)=-f(n,j,8);
+
+end
+
+% End of boundary conditions
+
+for j=1:n
+i=1:m
+
+for
+
+sumk=0.0;
+for k=1:8
+
+sumk=sumk+f(i,j,k);
+
+end
+
+rho(i,j)=f0(i,j)+sumk;
+
+end
+
+end
+
+end
+%rotating matrix for contour plotting
+for j=1:n
+
+for i=1:m
+
+Z(j,i)=rho(i,j);
+
+end
+
+end
+
+for i=1:n
+
+Tm(i)=rho(i,(n-1)/2);
+
+end
+
+figure(1)
+plot(x,Tm)
+
+xlabel(’X’)
+ylabel(’T’)
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+figure(2)
+contour(Z)
+%
+%
+%
+============================================================================
+%Chapter 5,
+% Finit-Difference 1D, diffusion equation
+clear
+m=101;
+dx=1.;
+dx2=dx*dx;
+dt=0.5;
+alpha=0.50;
+Twall=1.0;
+T=zeros(m);To=zeros(m);
+x=zeros(m);fluxq=zeros(m);
+x(1)=0.0;
+T(1)=Twall; To(1)=Twall;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+nstep=400;
+for kk=1:nstep
+for i=2:m-1
+
+T(i)=To(i)+dt*alpha*(To(i+1)-2.*To(i)+To(i-1))/dx2;
+
+end
+
+
+%update
+for k=2:m-1
+
+To(k)=T(k);
+
+end
+To(m)=T(m-1);
+end
+
+%Flux:
+
+for k=1:m-1
+fluxq(k)=(To(k)-To(k+1)/dx);
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,To)
+
+title(’Temperature’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,fluxq,’x’)
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+
+% Chapter 5
+% LBM- 1-Finite Difference, flux boundary condition
+clear
+m=101;
+dx=1.0;
+dx2=dx*dx;
+dt=0.5;
+qf=100.; tk=20.;
+T=zeros(m);To=zeros(m);
+x=zeros(m);fluxq=zeros(m);
+x(1)=0.0;
+T(1)=T(2)+qf*dx/tk; To(1)=T(1);
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+alpha=0.25;
+nstep=800;
+for kk=1:nstep
+for i=2:m-1
+
+T(i)=To(i)+dt*alpha*(To(i+1)-2.*To(i)+To(i-1))/dx2;
+
+end
+%boundary condition
+T(1)=T(2)+qf*dx/tk;
+%update
+for k=1:m-1
+
+To(k)=T(k);
+
+end
+To(m)=T(m-1);
+end
+
+%Flux:
+
+for k=1:m-1
+fluxq(k)=(To(k)-To(k+1)/dx);
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+
+
+plot(x,To)
+
+title(’Temperature, nstep=400’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,fluxq,’x’)
+
+title(’Flux, time step=400’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+
+%Chapter 5
+% Finit-Difference 1D, diffusion equation with source term
+clear
+m=101;
+dx=1.0;
+dx2=dx*dx;
+dt=0.5;
+qs=1.0;
+rcp=200.;
+qsr=qs/rcp;
+alpha=0.25;
+tk=alpha/rcp;
+Twall=1.0;
+T=zeros(m);To=zeros(m);
+x=zeros(m);fluxq=zeros(m);
+x(1)=0.0;
+T(1)=Twall; To(1)=Twall;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+nstep=400;
+for kk=1:nstep
+for i=2:m-1
+
+T(i)=To(i)+dt*alpha*(To(i+1)-2.*To(i)+To(i-1))/dx2+dt*qsr;
+
+end
+%update
+for k=2:m-1
+
+To(k)=T(k);
+
+end
+To(m)=T(m-1);
+end
+
+%Flux:
+
+for k=1:m-1
+fluxq(k)=(To(k)-To(k+1)/dx);
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,To)
+
+title(’Temperature’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,fluxq,’x’)
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+
+
+% Finite Difference, 1-D diffusion equation with variable alpha
+clear
+m=101;
+dx=1.0;
+dx2=dx*dx;
+dt=0.125;
+Twall=1.0;
+T=zeros(m);To=zeros(m);
+x=zeros(m);fluxq=zeros(m);
+tk=zeros(m);cpr=zeros(m);
+alpha=zeros(m);
+x(1)=0.0;
+T(1)=Twall; To(1)=Twall;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for i=1:m
+
+tk(i)=20.+30.0/(2.*x(i)+1.);
+alpha(i)=tk(i)/100.;
+
+end
+nstep=4000;
+for kk=1:nstep
+for i=2:m-1
+
+tke=0.5*(alpha(i+1)+alpha(i));
+tkw=0.5*(alpha(i)+alpha(i-1));
+T(i)=To(i)+dt*(tke*(To(i+1)-To(i))-tkw*(To(i)-To(i-1)))/dx2;
+
+end
+
+%update
+
+for k=2:m-1
+
+To(k)=T(k);
+
+end
+
+To(m)=T(m-1);
+end
+
+%Flux:
+
+for k=1:m-1
+fluxq(k)=tk(k)*(To(k)-To(k+1))/dx;
+end
+fluxq(m)=fluxq(m-1);
+
+figure(1)
+plot(x,To)
+
+title(’Temperature, nstep=400’)
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+plot(x,fluxq,’x’)
+
+title(’Flux, time step=400’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+% Finit-Difference 2D, diffusion equation
+clear
+m=51;n=51;
+xl=1.0;yl=1.0;
+dx=xl/(m-1.0); dy=yl/(n-1.0);
+dx2=dx*dx;
+dy2=dy*dy;
+dt=0.0001;
+alpha=0.25;
+
+
+Twall=1.0;
+T=zeros(m,n);To=zeros(m,n);Tm=zeros(m);z=zeros(n,m);
+x=zeros(m);y=zeros(n);
+x(1)=0.0; y(1)=0.0;
+%boundary conditions
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+%boundry condition, left vertical boundary
+for j=1:m
+
+T(1,j)=Twall;
+To(1,j)=Twall;
+
+end
+nstep=1600;
+for kk=1:nstep
+
+for j=2:n-1
+
+for i=2:m-1
+
+xterm=(To(i+1,j)+To(i-1,j))/dx2;
+yterm=(To(i,j+1)+To(i,j-1))/dy2;
+dd=1./dx2+1./dy2;
+
+T(i,j)=To(i,j)+dt*alpha*(xterm+yterm-2.*To(i,j)*dd);
+end
+
+end
+
+%update
+
+for j=2:n-1
+
+for i=2:m-1
+
+To(i,j)=T(i,j);
+
+end
+
+end
+
+%boundary conditions
+
+%bottom, adiabatic
+for i=2:m-1
+
+To(i,1)=To(i,2);
+
+end
+%right boundary condition T=0
+for j=1:n
+
+To(m,j)=0.0;
+
+end
+
+end
+for i=1:n
+
+Tm(i)=To(i,(n-1)/2);
+
+end
+%matrix rotation for contour plotting
+for j=1:n
+for i=1:m
+z(j,i)=To(i,j);
+end
+end
+
+figure(1)
+plot(x,Tm,’x’);
+figure (2)
+
+contour(z)
+
+title(’Temperature’)
+xlabel(’X’)
+
+
+ylabel(’Y’)
+
+% title(’Flux’)
+% xlabel(’X’)
+% ylabel(’Flux’)
+
+A.2 Chapter Six
+
+% Chapter 6
+% LBM- D1Q3, BiHarmonic equation, note that c2=1/3, w0=4/6, others 1/6
+clear
+m=101;
+ms=real((m-1)*(m-1))
+ms2=ms*ms;
+xl=1.0;
+dx=xl/(m-1.0);
+w0=4./6.;
+w=1./6.;
+c2=1./3.;
+dx=1.0;
+f0=zeros(m);f1=zeros(m);f2=zeros(m);
+rho=zeros(m);x=zeros(m);gho=zeros(m);an=zeros(m);
+Z=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+ss=-1.0/ms;
+nstep=100000;
+for i=1:m
+
+f0(i)=w0*rho(i);
+f1(i)=w*rho(i);
+f2(i)=w*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+% For variable source term, activate the line below
+%
+
+ss=(sin(pi*i/m))/ms;
+
+feq0=w0*rho(i);
+feq=w*rho(i);
+f0(i)=feq0+w0*c2*ss/2.0;
+f1(i)=feq+w*c2*ss/2.0;
+f2(i)=feq+w*c2*ss/2.0;
+
+end
+
+% Streaming:
+f1(:)=circshift(squeeze(f1(:)),[+1,0]);
+f2(:)=circshift(squeeze(f2(:)),[-1,0]);
+%
+
+OR use the following steps:
+
+%
+
+for i=1:m-1
+
+%
+%
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+%
+
+end
+
+
+%Boundary condition:
+f1(1)=1./12.-f2(1)-f0(1);
+f2(m)=1./12.-f1(m)-f0(m);
+
+for
+
+i=1:m
+
+rho(i)=f1(i)+f2(i)+f0(i);
+
+end
+
+end
+
+%D2w=q
+for k1=1:nstep
+
+for i=1:m
+
+% For variable source term, activate the line below
+
+ss2=-rho(i)/ms;
+geq0=w0*gho(i);
+geq=w*gho(i);
+g0(i)=geq0+w0*c2*ss2/2.0;
+g1(i)=geq+w*c2*ss2/2.0;
+g2(i)=geq+w*c2*ss2/2.0;
+
+end
+
+% Streaming:
+g1(:)=circshift(squeeze(g1(:)),[+1,0]);
+g2(:)=circshift(squeeze(g2(:)),[-1,0]);
+
+%Boundary condition:
+
+g1(1)=-g2(1)-g0(1);
+
+g2(m)=-g1(m)-g0(m);
+
+for
+
+i=1:m
+
+gho(i)=g1(i)+g2(i)+g0(i);
+
+end
+
+end
+
+figure(1)
+
+plot(x/(m-1),gho)
+
+xlabel(’X’)
+ylabel(’T’)
+
+hold
+%analytical solution
+for i=1:m
+
+sx=x(i)/(m-1);
+x4=sx*sx*sx*sx;
+x3=sx*sx*sx;
+x2=sx*sx;
+
+an(i)=x4/24.-x3/12.+x2/24;
+end
+
+plot(x/(m-1),an,’ks’)
+============================================================================
+% Chapter 6
+% LBM- 2-D2Q5, BiHarmonic equation, note that c2=1/3, w0=2/6, others 1/6
+clear
+m=81;n=81;
+ms=real(m-1)*(m-1);
+xl=1.0;yl=1.0;
+
+
+dx=xl/(m-1.0); dy=yl/(n-1.0);
+w0=2./6.;
+w=1./6.;
+c2=1./3.;
+dx=1.0;
+pi2=2.*pi;
+f0=zeros(m,n);f1=zeros(m,n);f2=zeros(m,n);f3=zeros(m,n);f4=zeros(m,n);
+rho=zeros(m,n);x=zeros(m);y=zeros(n);gho=zeros(m,n);
+Z=zeros(n,m);
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+ss=1.0/ms;
+nstep=10000;
+for i=1:m
+
+f0(i,j)=w0*rho(i,j);
+f1(i,j)=w*rho(i,j);
+f2(i,j)=w*rho(i,j);
+f3(i,j)=w*rho(i,j);
+f4(i,j)=w*rho(i,j);
+
+end
+%Collision:
+for k1=1:nstep
+
+for j=1:n
+for i=1:m
+
+% For variable source term, activate the line below
+
+ss=-(sin(pi*i/m)*sin(pi*j/n))/ms;
+
+feq0=w0*rho(i,j);
+feq=w*rho(i,j);
+f0(i,j)=feq0+w0*ss/6.0;
+f1(i,j)=feq+w*ss/6.0;
+f2(i,j)=feq+w*ss/6.;
+f3(i,j)=feq+w*ss/6.0;
+f4(i,j)=feq+w*ss/6.0;
+
+end
+end
+
+% Streaming:
+f1(:,:)=circshift(squeeze(f1(:,:)),[+1,0]);
+f2(:,:)=circshift(squeeze(f2(:,:)),[-1,0]);
+f3(:,:)=circshift(squeeze(f3(:,:)),[0,-1]);
+f4(:,:)=circshift(squeeze(f4(:,:)),[0,+1]);
+
+% OR use the following steps:
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+for j=1:n
+for i=1:m-1
+
+f1(m-i+1,j)=f1(m-i,j);
+f2(i,j)=f2(i+1,j);
+
+end
+end
+for i=1:m
+
+for j=1:n-1
+
+f3(i,n-j+1)=f3(i,n-j);
+f4(i,j)=f4(i,j+1);
+
+end
+
+
+end
+
+
+%Boundary condition:
+
+for j=1:n
+
+f1(1,j)=-f2(1,j)-f0(1,j)-f3(1,j)-f4(1,j);
+
+f1(m,j)=-f2(m,j)-f0(m,j)-f3(m,j)-f4(m,j);
+end
+for i=1:m
+
+f4(i,1)=-f0(i,1)-f1(i,1)-f2(i,1)-f3(i,1);
+f3(i,n)=-f0(i,n)-f4(i,n)-f2(i,n)-f1(i,n);
+
+end
+
+for j=1:n
+i=1:m
+
+for
+
+rho(i,j)=f1(i,j)+f2(i,j)+f0(i,j)+f3(i,j)+f4(i,j);
+
+end
+
+end
+
+end
+%scaling rho
+
+%D2w=q
+for k1=1:nstep
+
+for j=1:n
+for i=1:m
+
+% For variable source term, activate the line below
+
+ss=-rho(i,j)/(ms);
+geq0=w0*gho(i,j);
+geq=w*gho(i,j);
+g0(i,j)=geq0+w0*ss/6.0;
+g1(i,j)=geq+w*ss/6.0;
+g2(i,j)=geq+w*ss/6.;
+g3(i,j)=geq+w*ss/6.0;
+g4(i,j)=geq+w*ss/6.0;
+
+end
+end
+
+% Streaming:
+g1(:,:)=circshift(squeeze(g1(:,:)),[+1,0]);
+g2(:,:)=circshift(squeeze(g2(:,:)),[-1,0]);
+g3(:,:)=circshift(squeeze(g3(:,:)),[0,-1]);
+g4(:,:)=circshift(squeeze(g4(:,:)),[0,+1]);
+
+%Boundary condition:
+for j=1:n
+
+g1(1,j)=-g2(1,j)-g0(1,j)-g3(1,j)-g4(1,j);
+
+g1(m,j)=-g2(m,j)-g0(m,j)-g3(m,j)-g4(m,j);
+end
+for i=1:m
+
+g4(i,1)=-g0(i,1)-g1(i,1)-g2(i,1)-g3(i,1);
+g3(i,n)=-g0(i,n)-g4(i,n)-g2(i,n)-g1(i,n);
+
+end
+
+for j=1:n
+i=1:m
+
+for
+
+gho(i,j)=g1(i,j)+g2(i,j)+g0(i,j)+g3(i,j)+g4(i,j);
+
+end
+
+end
+
+end
+
+for j=1:n
+
+
+for i=1:m
+
+Z(j,i)=gho(i,j);
+
+end
+
+end
+figure(1)
+plot(x/(m-1),gho(:,(n-1)/2))
+
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+contour(Z,20)
+
+============================================================================
+
+% Chapter 6
+% Finit-Difference 1D, Bi-harmonic
+clear
+m=101;
+dx=0.010;
+dx4=dx*dx*dx*dx;
+ss=5.0;
+Twall=0.0;
+T=zeros(m);x=zeros(m);Txx=zeros(m);
+x(1)=0.0;
+T(1)=Twall; To(1)=Twall;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+nstep=10000000;
+for kk=1:nstep
+
+T(1)=0.0; T(2)=0.0;
+T(m)=0.0; T(m-1)=0.0;
+
+for i=3:m-2
+
+T(i)=(dx4*ss-(T(i+2)-4.*T(i+1)-4.0*T(i-1)+T(i-2)))/6.0;
+
+end
+
+end
+Txx(1)=2.*(T(2)-T(1))/(dx*dx);
+Txx(m)=2.*(T(m-1)-T(m))/(dx*dx);
+for i=2:m-1
+Txx(i)=(T(i+1)-2.*T(i)+T(i-1))/(dx*dx);
+end
+figure(1)
+plot(x,T)
+
+title(’Temperature’)
+xlabel(’X’)
+ylabel(’T’)
+
+============================================================================
+
+% Chapter 6
+% Finit-Difference 2D, Biharmonic
+clear
+m=101;n=101;
+dx=0.010;
+dy=0.010;
+dx2=dx*dx;
+dy2=dy*dy;
+dxdy2=2./dx2+2./dy2;
+ss=0.0;
+omega=1.80;
+
+error=5.0;tolr=0.00001;
+count=0;
+T=zeros(m,n);x=zeros(m);y=zeros(n);Txx=zeros(m,n);To=zeros(m,n);
+x(1)=0.0;
+y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+%boundary conditions
+for j=1:n
+
+T(1,j)=0.0;
+T(m,j)=0.0;
+
+end
+for i=1:m
+
+T(i,1)=0.0;
+T(i,n)=sin(pi*(i-1)/(m-1));
+
+end
+
+nstep=10000;
+while error>tolr
+
+for i=2:m-1
+
+for j=2:n-1
+
+txx=(T(i+1,j)-2.*T(i,j)+T(i-1,j))/dx2;
+tyy=(T(i,j+1)-2.*T(i,j)+T(i,j-1))/dy2;
+T(i,j)=T(i,j)+omega*(txx+tyy-ss)/dxdy2;
+
+end
+
+end
+
+count=count+1;
+error=0.;
+for i=1:m
+
+for j=1:n
+
+error=error+abs(T(i,j)-To(i,j));
+
+end
+
+end
+
+To=T;
+count;
+
+end
+
+figure(1)
+plot(x,T(:,(n-1)/2))
+
+title(’Temperature’)
+xlabel(’X’)
+ylabel(’T’)
+for j=1:n
+for i=1:m
+
+Z(j,i)=T(i,j);
+
+end
+
+end
+figure(2)
+contour(Z,20)
+============================================================================
+
+% LBM- 2-D2Q5, Laplace equation, note that c2=1/3, w0=2/6, others 1/6
+clear
+m=101;n=101;
+ms=real(m-1)*(m-1);
+
+
+xl=1.0;yl=1.0;
+dx=xl/(m-1.0); dy=yl/(n-1.0);
+w0=2./6.;
+w=1./6.;
+c2=1./3.;
+dx=1.0;
+pi2=2.*pi;
+f0=zeros(m,n);f1=zeros(m,n);f2=zeros(m,n);f3=zeros(m,n);f4=zeros(m,n);
+rho=zeros(m,n);x=zeros(m);y=zeros(n);
+Z=zeros(n,m);
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+ss=0.0/ms;
+nstep=80000;
+for i=1:m
+
+f0(i,j)=w0*rho(i,j);
+f1(i,j)=w*rho(i,j);
+f2(i,j)=w*rho(i,j);
+f3(i,j)=w*rho(i,j);
+f4(i,j)=w*rho(i,j);
+
+end
+%Collision:
+for k1=1:nstep
+
+for j=1:n
+for i=1:m
+
+% For variable source term, activate the line below
+%
+
+ss=(rho(i,j)*rho(i,j)+sin(pi2*i/m)*cos(pi*j/n)+0.1)/ms;
+
+feq0=w0*rho(i,j);
+feq=w*rho(i,j);
+f0(i,j)=feq0+w0*ss/6.0;
+f1(i,j)=feq+w*ss/6.0;
+f2(i,j)=feq+w*ss/6.;
+f3(i,j)=feq+w*ss/6.0;
+f4(i,j)=feq+w*ss/6.0;
+
+end
+end
+
+% Streaming:
+f1(:,:)=circshift(squeeze(f1(:,:)),[+1,0]);
+f2(:,:)=circshift(squeeze(f2(:,:)),[-1,0]);
+f3(:,:)=circshift(squeeze(f3(:,:)),[0,-1]);
+f4(:,:)=circshift(squeeze(f4(:,:)),[0,+1]);
+
+% OR use the following steps:
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+for j=1:n
+for i=1:m-1
+
+f1(m-i+1,j)=f1(m-i,j);
+f2(i,j)=f2(i+1,j);
+
+end
+end
+for i=1:m
+
+for j=1:n-1
+
+f3(i,n-j+1)=f3(i,n-j);
+f4(i,j)=f4(i,j+1);
+
+
+end
+
+end
+
+%Boundary condition:
+
+for j=1:n
+
+f1(1,j)=-f2(1,j)-f0(1,j)-f3(1,j)-f4(1,j);
+
+f1(m,j)=-f2(m,j)-f0(m,j)-f3(m,j)-f4(m,j);
+end
+for i=1:m
+
+f4(i,1)=-f0(i,1)-f1(i,1)-f2(i,1)-f3(i,1);
+f3(i,n)=sin(pi*i/m)-f0(i,n)-f4(i,n)-f2(i,n)-f1(i,n);
+
+end
+
+for j=1:n
+i=1:m
+
+for
+
+rho(i,j)=f1(i,j)+f2(i,j)+f0(i,j)+f3(i,j)+f4(i,j);
+
+end
+
+end
+
+end
+%rotating matrix for contour plotting
+for j=1:n
+
+for i=1:m
+
+Z(j,i)=rho(i,j);
+
+end
+
+end
+
+figure(1)
+
+plot(x,rho(:,(n-1)/2))
+
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+contour(Z,20)
+
+============================================================================
+
+LBM- FD, Poission equation with source =0.05, finite-differenc
+clear
+m=81;n=81;
+xl=1.0;yl=1.0;
+dx=xl/(m-1); dy=yl/(n-1);
+dx2=dx*dx; dy2=dy*dy;
+pi2=2.0*pi;
+phio=zeros(m,n);x=zeros(m);y=zeros(n);phi=zeros(m,n);
+phim=zeros(m);Z=zeros(n,m);
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+cof=2.*(1./dx2+1./dy2);
+ss=0.05;
+nstep=10000;
+for kk=1:nstep
+
+phio=phi;
+
+for j=2:n-1
+
+for i=2:m-1
+
+ss=phi(i,j)*phi(i,j)+sin(pi2*x(i))*cos(pi*y(j))+0.1;
+
+phix=(phi(i+1,j)+phi(i-1,j))/dx2;
+phiy=(phi(i,j+1)+phi(i,j-1))/dy2;
+
+phi(i,j)=(phix+phiy+ss)/cof;
+end
+
+end
+end
+
+%Boundary condition:
+
+phi(1,:)=0.0;
+phi(m,:)=0.0;
+
+phi(:,1)=0.0;
+phi(:,n)=0.0;
+
+error=norm(phi-phio);
+error
+
+%rotating matrix for contour plotting
+
+for j=1:n
+
+for i=1:m
+
+Z(j,i)=phi(i,j);
+
+end
+
+end
+
+for i=1:m
+
+phim(i)=phi(i,(n-1)/2);
+
+end
+
+figure(1)
+plot(x,phim)
+
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+contour(Z,20)
+============================================================================
+
+A.3 Chapter Seven
+
+% FD D1, advection-diffusion equation, Finite Difference
+clear
+m=201;
+tp=zeros(m);tpo=zeros(m);x=zeros(m);
+u=0.10;
+dx=0.50;
+dt=0.25;
+alpha=0.25;
+mstep=1600;
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+twall=1.0;
+tp(1)=twall; tpo(1)=twall;
+for k1=1:mstep
+
+for i=2:m-1
+
+adv=dt*u*(tpo(i)-tpo(i-1))/dx;
+
+
+def=dt*alpha*(tpo(i+1)-2.*tpo(i)+tpo(i-1))/(dx*dx);
+tp(i)=tpo(i)+def-adv;
+
+end
+
+tp(1)=twall;
+tp(m)=tp(m-1);
+for i=1:m
+
+tpo(i)=tp(i);
+
+end
+
+end
+
+figure(1)
+plot(x,tpo)
+
+title(’Temperature, nstep=400’)
+xlabel(’X’)
+ylabel(’T’)
+
+==========================================================================
+
+% LBM- 1-D1Q3, advection-diffusion equation D1Q3
+clear
+u=0.10;
+m=101;
+w0=4./6.;
+w1=1./6.;
+c2=1./3.;
+w2=w1;
+dx=1.0;
+rho=zeros(m);f0=zeros(m);f1=zeros(m);f2=zeros(m);
+x=zeros(m);
+x(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+alpha=0.25;
+omega=1/(alpha+0.5);
+twall=1.0;
+nstep=400;
+for i=1:m
+
+f0(i)=w0*rho(i);
+f1(i)=w1*rho(i);
+f2(i)=w2*rho(i);
+
+end
+%Collision:
+for k1=1:nstep
+
+for i=1:m
+
+feq0=w0*rho(i);
+feq1=w1*rho(i)*(1.+3.*u);
+feq2=w2*rho(i)*(1.-3.*u);
+f0(i)=(1-omega)*f0(i)+omega*feq0;
+f1(i)=(1-omega)*f1(i)+omega*feq1;
+f2(i)=(1-omega)*f2(i)+omega*feq2;
+
+end
+
+% Streaming:
+for i=1:m-1
+
+f1(m-i+1)=f1(m-i);
+f2(i)=f2(i+1);
+
+end
+%Boundary condition:
+
+
+f1(1)=twall-f2(1)-f0(1);
+f1(m)=f1(m-1);
+f2(m)=f2(m-1);
+f0(m)=f0(m-1);
+for j=1:m
+
+rho(j)=f1(j)+f2(j)+f0(j);
+
+end
+
+end
+figure(1)
+plot(x,rho)
+
+title(’Temperature, nstep=400’)
+xlabel(’X’)
+ylabel(’T’)
+
+============================================================================
+% LBM- 2-D2Q5a, diffusion equation, note that c2=1/3, w0=2/6, others 1/6
+clear
+m=101;n=101;
+w0=2./6.;
+w=1./6.;
+c2=1./3.;
+dx=1.0;
+dy=1.0;
+u=0.1; v=0.4;
+f0=zeros(m,n);f1=zeros(m,n);f2=zeros(m,n);f3=zeros(m,n);f4=zeros(m,n);
+rho=zeros(m,n);x=zeros(m);y=zeros(n);fluxq=zeros(m);flux=zeros(m);
+Tm=zeros(m);Z=zeros(n,m);
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+alpha=1.0;
+omega=1/(3.*alpha+0.5);
+twall=1.0;
+nstep=400;
+for i=1:m
+
+f0(i,j)=w0*rho(i,j);
+f1(i,j)=w*rho(i,j);
+f2(i,j)=w*rho(i,j);
+f3(i,j)=w*rho(i,j);
+f4(i,j)=w*rho(i,j);
+
+end
+%Collision:
+for k1=1:nstep
+
+for j=1:n
+for i=1:m
+
+feq0=w0*rho(i,j);
+feq1=w*rho(i,j)*(1.+3.*u);
+feq2=w*rho(i,j)*(1.-3.*u);
+feq3=w*rho(i,j)*(1.+3.*v);
+feq4=w*rho(i,j)*(1.-3.*v);
+f0(i,j)=(1.-omega)*f0(i,j)+omega*feq0;
+f1(i,j)=(1.-omega)*f1(i,j)+omega*feq1;
+f2(i,j)=(1.-omega)*f2(i,j)+omega*feq2;
+f3(i,j)=(1.-omega)*f3(i,j)+omega*feq3;
+
+
+f4(i,j)=(1.-omega)*f4(i,j)+omega*feq4;
+
+end
+end
+
+% Streaming:
+for j=1:n
+for i=1:m-1
+
+f1(m-i+1,j)=f1(m-i,j);
+f2(i,j)=f2(i+1,j);
+
+end
+end
+for i=1:m
+
+for j=1:n-1
+
+f3(i,n-j+1)=f3(i,n-j);
+f4(i,j)=f4(i,j+1);
+
+end
+
+end
+%Boundary condition:
+
+for j=1:n
+
+f1(1,j)=twall-f2(1,j)-f0(1,j)-f3(1,j)-f4(1,j);
+f2(m,j)=f1(m,j);
+
+end
+for i=1:m
+
+f3(i,1)=f4(i,1);
+f4(i,n)=-f0(i,n)-f3(i,n)-f2(i,n)-f1(i,n);
+
+end
+
+for j=1:n
+i=1:m
+
+for
+
+rho(i,j)=f1(i,j)+f2(i,j)+f0(i,j)+f3(i,j)+f4(i,j);
+
+end
+
+end
+
+end
+%rotating matrix for contour plotting
+for j=1:n
+
+for i=1:m
+
+Z(j,i)=rho(i,j);
+
+end
+
+end
+
+for i=1:n
+
+Tm(i)=rho(i,(n-1)/2);
+
+end
+
+figure(1)
+plot(x,Tm,’LineWidth’,2)
+
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+contour(Z,’showText’,’on’,’LineWidth’,2)
+%
+%
+%
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+
+%LBM- 2-D2Q9, diffusion equation, note that c2=1/3, w0=4/9, w1-w4, 1/9
+% and w5-w8, 1/36
+clear
+
+
+m=101;n=101;
+xl=1.0;yl=1.0;
+w0=4./9.;
+c2=1./3.;
+dx=1.0;dy=1.0;
+f0=zeros(m,n);f=zeros(m,n,8);feq=zeros(m,n,8);f0eq=zeros(m,n);
+rho=zeros(m,n);x=zeros(m);y=zeros(n);fluxq=zeros(m);flux=zeros(m);
+Tm=zeros(m);Z=zeros(n,m);w(8)=zeros;
+x(1)=0.0; y(1)=0.0;
+for i=1:m-1
+
+x(i+1)=x(i)+dx;
+
+end
+for j=1:n-1
+
+y(j+1)=y(j)+dy;
+
+end
+for k=1:4
+
+w(k)=1./9.;
+
+end
+for k=5:8
+
+w(k)=1./36.;
+
+end
+alpha=1.00;
+u=0.1;v=0.4;
+omega=1./(3.*alpha+0.5);
+twall=1.0;
+nstep=400;
+
+%Collision:
+for kk=1:nstep
+
+for j=1:n
+for i=1:m
+
+f0eq(i,j)=w0*rho(i,j);
+f0(i,j)=(1.-omega)*f0(i,j)+omega*f0eq(i,j);
+feq(i,j,1)=w(1)*rho(i,j)*(1.+3.*u);
+feq(i,j,2)=w(2)*rho(i,j)*(1.+3.*v);
+feq(i,j,3)=w(3)*rho(i,j)*(1.-3.*u);
+feq(i,j,4)=w(4)*rho(i,j)*(1.-3.*v);
+feq(i,j,5)=w(5)*rho(i,j)*(1.+3.*(u+v));
+feq(i,j,6)=w(6)*rho(i,j)*(1.+3.*(v-u));
+feq(i,j,7)=w(7)*rho(i,j)*(1.-3.*(u+v));
+feq(i,j,8)=w(8)*rho(i,j)*(1.+3.*(u-v));
+
+for k=1:8
+
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+end
+end
+
+% Streaming:
+
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+
+% End of streaming
+
+
+%Boundary condition:
+%left boundary, twall=1.0
+
+for j=1:n
+
+f(1,j,1)=w(1)*twall+w(3)*twall-f(1,j,3);
+f(1,j,5)=w(5)*twall+w(7)*twall-f(1,j,7);
+f(1,j,8)=w(8)*twall+w(6)*twall-f(1,j,6);
+
+end
+%bottom boundary, T=0.0
+for i=1:m
+
+f(i,1,2)=-f(i,1,4);
+f(i,1,5)=-f(i,1,7);
+f(i,1,6)=-f(i,1,8);
+
+end
+%Top boundary, T=0.0
+
+for i=1:n
+f(i,m,7)=-f(i,m,5);
+f(i,m,4)=-f(i,m,2);
+f(i,m,8)=-f(i,m,6);
+end
+%right hand boundary
+for j=1:m
+
+f(n,j,3)=-f(n,j,1);
+f(n,j,7)=-f(n,j,5);
+f(n,j,6)=-f(n,j,8);
+
+end
+
+% End of boundary conditions
+
+for j=1:n
+i=1:m
+
+for
+
+sumk=0.0;
+for k=1:8
+
+sumk=sumk+f(i,j,k);
+
+end
+
+rho(i,j)=f0(i,j)+sumk;
+
+end
+
+end
+
+end
+%rotating matrix for contour plotting
+for j=1:n
+
+for i=1:m
+
+Z(j,i)=rho(i,j);
+
+end
+
+end
+
+for i=1:n
+
+Tm(i)=rho(i,(n-1)/2);
+
+end
+
+figure(1)
+plot(x,Tm, ’LineWidth’,2)
+
+xlabel(’X’)
+ylabel(’T’)
+
+figure(2)
+contour(Z,’showText’,’on’,’LineWidth’,2)
+%
+%
+%
+
+title(’Flux’)
+xlabel(’X’)
+ylabel(’Flux’)
+
+============================================================================
+
+
+A.4 Chapter Eight
+
+Back Flow-Step
+
+0 1 -1 -1 1 0];
+1 -1 -1 0];
+
+% Main.m
+%LBM- 2-D2Q9, Flow in a channel with step, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=501;ny=81;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+Tm=zeros(nx);w(9)=zeros; Tvm=zeros(nx);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=(nx-1)/(ny-1); yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+uo=0.1;
+alpha=0.01;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+count=0; tol=1.0e-4; error=10.;erso=0.0;
+%setting velocity
+
+for j=2:ny-1
+
+u(1,j)=uo;
+
+end
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w);
+
+% Streaming:
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo,rho);
+%Obsticale
+[f]=obstc(nx,ny,f,uo,rho);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho);
+
+%Boudary conditions for Channel flow
+function [f]=boundary(nx,ny,f,uo,rho)
+
+%right hand boundary
+
+for j=1:ny
+
+f(nx,j,3)=f(nx-1,j,3);
+f(nx,j,7)=f(nx-1,j,7);
+f(nx,j,6)=f(nx-1,j,6);
+
+end
+
+%bottom, and top boundary, bounce back
+for i=1:nx
+
+f(i,1,2)=f(i,1,4);
+f(i,1,5)=f(i,1,7);
+f(i,1,6)=f(i,1,8);
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,7)=f(i,ny,5);
+f(i,ny,8)=f(i,ny,6);
+u(i,1)=0.0; v(i,1)=0.0;
+u(i,ny)=0.0; v(i,ny)=0.0;
+
+end
+%Left boundary, velocity is given= uo
+
+for j=2:ny-1
+f(1,j,1)=f(1,j,3)+2.*rho(1,j)*uo/3.;
+f(1,j,5)=f(1,j,7)-0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+f(1,j,8)=f(1,j,6)+0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+u(1,j)=uo; v(1,j)=0.0;
+end
+
+% End of boundary conditions.
+
+end
++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++
+%Obsticale replace at the entrance, Back Fase Flow
+function [f]=obstc(nx,ny,f,uo,rho)
+
+%length of obsticale= nx/4, heigh ny/2
+nxo=(nx-1)/4;
+nyl=(ny-1)/2;
+for i=1:nxo
+
+f(i,nyl,2)=f(i,nyl,4);
+f(i,nyl,5)=f(i,nyl,7);
+f(i,nyl,6)=f(i,nyl,8);
+
+end
+
+%bottom, and top boundary, bounce back
+for j=1:nyl
+
+f(nxo,j,1)=f(nxo,j,3);
+
+
+f(nxo,j,5)=f(nxo,j,7);
+f(nxo,j,8)=f(nxo,j,8);
+
+end
+for i=1:nxo
+
+for j=1:nyl
+
+u(i,j)=0.0;
+v(i,j)=0.0;
+
+end
+
+end
+
+% End
+
+end
+++++++++++++++++++++++++++++++++++++++++++
+% Plots for channel flow
+function result(nx,ny,x,y,u,v,uo,rho)
+nxo=(nx-1)/4;
+nyl=(ny-1)/2;
+for i=1:nxo
+
+for j=1:nyl
+
+u(i,j)=0.0;
+v(i,j)=0.0;
+
+end
+
+end
+for j=1:ny
+
+Tm1(j)=u(51,j)/uo;
+Tm2(j)=u(101,j)/uo;
+Tm3(j)=u(261,j)/uo;
+Tm4(j)=u(301,j)/uo;
+Tm5(j)=u(501,j)/uo;
+
+end
+
+figure
+
+plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,Tm5,y,’LineWidth’,1.5)
+
+xlabel(’U’)
+ylabel(’Y’)
+%Stream function calculation
+for j=1:ny
+
+sx(:,j)=x(:);
+
+end
+for i=1:nx
+
+sy(i,:)=y(:);
+
+end
+
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.5*(u(i,j)+u(i,j-1));
+
+end
+end
+figure
+contour(sx,sy,str)
+
+end
+
+++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+
+
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+Channel Flow
+
+0 1 -1 -1 1 0];
+1 -1 -1 0];
+
+%Main.m
+%LBM- 2-D2Q9, channel, Re=400, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=1001;ny=41;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+Tm=zeros(nx);w(9)=zeros; Tvm=zeros(nx);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=(nx-1)/(ny-1); yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+uo=0.2;
+alpha=0.02;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+count=0; tol=1.0e-4; error=10.;erso=0.0;
+%setting velocity
+
+for j=2:ny-1
+
+u(1,j)=uo;
+
+end
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w);
+
+% Streaming:
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+
+
+[f]=boundary(nx,ny,f,uo,rho);
+
+% Calculate rho, u, v
+[rho,u,v]=ruv(nx,ny,f);
+
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho);
++++++++++++++++++++++++++
+
+%Boudary conditions for Channel flow
+function [f]=boundary(nx,ny,f,uo,rho)
+
+%right hand boundary
+
+for j=1:ny
+
+f(nx,j,3)=f(nx-1,j,3);
+f(nx,j,7)=f(nx-1,j,7);
+f(nx,j,6)=f(nx-1,j,6);
+
+end
+
+%bottom, and top boundary, bounce back
+for i=1:nx
+
+f(i,1,2)=f(i,1,4);
+f(i,1,5)=f(i,1,7);
+f(i,1,6)=f(i,1,8);
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,7)=f(i,ny,5);
+f(i,ny,8)=f(i,ny,6);
+u(i,1)=0.0; v(i,1)=0.0;
+u(i,ny)=0.0; v(i,ny)=0.0;
+
+end
+%Left boundary, velocity is given= uo
+
+for j=2:ny-1
+f(1,j,1)=f(1,j,3)+2.*rho(1,j)*uo/3.;
+f(1,j,5)=f(1,j,7)-0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+f(1,j,8)=f(1,j,6)+0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+u(1,j)=uo; v(1,j)=0.0;
+end
+
+% End of boundary conditions.
+
+end
++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+
+
+end
+++++++++++++++++++++++++++++++++
+% Plots for channel flow
+function result(nx,ny,x,y,u,v,uo,rho)
+for j=1:ny
+
+Tm1(j)=u(101,j)/uo;
+Tm2(j)=u(201,j)/uo;
+Tm3(j)=u(301,j)/uo;
+Tm4(j)=u(401,j)/uo;
+Tm5(j)=u(601,j)/uo;
+
+end
+
+figure
+
+plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,Tm5,y,’LineWidth’,1.5)
+
+xlabel(’U’)
+ylabel(’Y’)
+%Stream function calculation
+for j=1:ny
+
+sx(:,j)=x(:);
+
+end
+for i=1:nx
+
+sy(i,:)=y(:);
+
+end
+
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.5*(u(i,j)+u(i,j-1));
+
+end
+end
+figure
+contour(sx,sy,str)
+
+end
+
+++++++++++++++++++++++++++++++ function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end +++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+%main.m
+%LBM- 2-D2Q9, Lid-driven Cavity, Re=1000, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=101;ny=101;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+uo=0.10;
+alpha=0.01;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+count=0; tol=1.0e-4; error=10.;erso=0.0;
+%setting lid velocity
+
+u(:,ny)=uo;
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collision(nx,ny,u,v,cx,cy,omega,f,rho,w);
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho);
+
++++++++++++++++++++++++++++++++++++++++++++
+
+function [f]=boundary(nx,ny,f,uo)
+%Boundary condition:
+
+%left boundary, bounc back
+
+f(1,:,1)=f(1,:,3);
+f(1,:,5)=f(1,:,7);
+
+
+f(1,:,8)=f(1,:,6);
+
+%right hand boundary
+
+f(nx,:,3)=f(nx,:,1);
+f(nx,:,7)=f(nx,:,5);
+f(nx,:,6)=f(nx,:,8);
+
+%bottom boundary, bounce back
+
+f(:,1,2)=f(:,1,4);
+f(:,1,5)=f(:,1,7);
+f(:,1,6)=f(:,1,8);
+
+%Top boundary,moving lid with uo
+
+for i=2:nx-1
+rhon=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,8)=f(i,ny,6)+rhon*uo/6.0;
+f(i,ny,7)=f(i,ny,5)-rhon*uo/6.0;
+end
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+% Collition
+function [f]=collision(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function result(nx,ny,x,y,u,v,uo,rho)
+for j=1:ny
+
+um(j)=u((nx-1)/2,j)/uo;
+
+end
+
+for i=1:nx
+vm(i)=v(i,(ny-1)/2)/uo;
+end
+
+figure
+
+line(um,y,’LineWidth’,1.5)
+
+xlabel(’U’)
+ylabel(’Y’)
+
+figure
+
+line(x,vm,’LineWidth’,1.5)
+xlabel(’X’)
+ylabel(’V’)
+
+figure
+quiver(x,y,v/uo,u/uo, 10)
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+
+
+figure
+contour(x,y,str,20)
+%or use the following build-in function
+figure
+startx=0.0:0.1:1;
+starty=0.0:0.1:1;
+streamline(x,y,v,u,startx,starty)
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+Flow over an obstacle
+
+%main.m
+
+%LBM- 2-D2Q9, flow over an obstacle, Re=400, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=501;ny=81;
+uo=0.1;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);utim=zeros(1001);count=zeros(1001);
+u=uo*ones(nx,ny);v=zeros(nx,ny);
+rho=2.*ones(nx,ny);x=zeros(nx);y=zeros(ny);
+Tm=zeros(nx);w(9)=zeros; Tvm=zeros(nx);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=(nx-1)/(ny-1); yl=1.0;
+x=(0:1:nx-1);
+y=(0:1:ny-1);
+alpha=0.01;
+ReH=uo*(ny-1)/alpha
+ReD=uo*10./alpha
+omega=1./(3.*alpha+0.5);
+count(1)=0;
+
+%setting velocity
+
+for j=2:ny-1
+
+u(1,j)=uo;
+
+end
+
+%Main Loop
+
+for kk=1:8000
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w);
+
+% Streaming:
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo,rho);
+%Obsticale
+[f]=obstc(nx,ny,f,uo,rho);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+
+count(kk)=kk;
+utim(kk)=rho((nx-1)/2,(ny-1)/2);
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho,count,utim);
+
++++++++++++++++++++++++++++++++++++++++++++++++
+
+%Boudary conditions for Channel flow
+function [f]=boundary(nx,ny,f,uo,rho)
+
+%right hand boundary
+
+for j=1:ny
+
+f(nx,j,3)=f(nx-1,j,3);
+f(nx,j,7)=f(nx-1,j,7);
+f(nx,j,6)=f(nx-1,j,6);
+
+end
+
+%bottom, and top boundary, bounce back
+for i=1:nx
+
+f(i,1,2)=f(i,1,4);
+f(i,1,5)=f(i,1,7);
+f(i,1,6)=f(i,1,8);
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,7)=f(i,ny,5);
+f(i,ny,8)=f(i,ny,6);
+u(i,1)=0.0; v(i,1)=0.0;
+u(i,ny)=0.0; v(i,ny)=0.0;
+
+end
+%Left boundary, velocity is given= uo
+
+for j=2:ny-1
+f(1,j,1)=f(1,j,3)+2.*rho(1,j)*uo/3.;
+f(1,j,5)=f(1,j,7)-0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+f(1,j,8)=f(1,j,6)+0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+u(1,j)=uo; v(1,j)=0.0;
+end
+
+% End of boundary conditions.
+
+end
++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++++++++++++++
+%Obsticale replace at the entrance, Back Fase Flow
+function [f]=obstc(nx,ny,f,uo,rho)
+
+%length of obsticale= nx/5, and has sides of 10 units
+nxb=(nx-1)/5;
+nxe=nxb+10;
+nyb=((ny-1)-10)/2;
+nyb=35;
+nye=nyb+10;
+for i=nxb:nxe
+
+f(i,nyb,4)=f(i,nyb,2);
+f(i,nyb,7)=f(i,nyb,5);
+f(i,nyb,8)=f(i,nyb,6);
+f(i,nye,2)=f(i,nye,4);
+f(i,nye,5)=f(i,nye,7);
+f(i,nye,6)=f(i,nye,8);
+
+end
+
+%bottom, and top boundary, bounce back
+for j=nyb:nye
+
+f(nxb,j,3)=f(nxb,j,1);
+f(nxb,j,7)=f(nxb,j,5);
+f(nxb,j,6)=f(nxb,j,8);
+f(nxe,j,1)=f(nxe,j,3);
+f(nxe,j,5)=f(nxe,j,7);
+f(nxe,j,8)=f(nxe,j,8);
+
+end
+for i=nxb:nxe
+
+for j=nyb:nye
+
+u(i,j)=0.0;
+v(i,j)=0.0;
+
+end
+
+end
+
+% End
+
+end
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Plots for channel flow
+function result(nx,ny,x,y,u,v,uo,rho,count,utim)
+for j=1:ny
+
+Tm1(j)=u(51,j)/uo;
+Tm2(j)=u(101,j)/uo;
+Tm3(j)=u(261,j)/uo;
+Tm4(j)=u(301,j)/uo;
+
+end
+
+for i=1:nx
+
+umx(i)=u(i,(ny-1)/2)/uo;
+vmx(i)=v(i,(ny-1)/2)/uo;
+
+end
+
+
+figure
+plot(x/(nx-1),umx,x/(nx-1),vmx,’LineWidth’,1.5)
+figure
+
+plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,’LineWidth’,1.5)
+
+xlabel(’U’)
+ylabel(’Y’)
+figure
+plot(count,utim)
+
+%Stream function calculation
+for j=1:ny
+
+sx(:,j)=x(:);
+
+end
+for i=1:nx
+
+sy(i,:)=y(:);
+
+end
+
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.5*(u(i,j)+u(i,j-1));
+
+end
+end
+figure
+contour(sx,sy,str)
+figure
+contour(sx,sy,u,’LineWidth’,1.0)
+
+end
+
+++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+
+%LBM- 2-D2Q9, Heated Lid-driven Cavity, Re=1000, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=101;ny=101;
+f=zeros(nx,ny,9);g=zeros(nx,ny,9);rhog=zeros(nx,ny);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+uo=0.10;
+alpha=0.01;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+pr=0.71;
+alphag=alpha/pr;
+omegag=1.0/(3.*alphag+0.5);
+count=0; tol=1.0e-5; error=10.;erso=0.0;
+%setting lid velocity to uo
+
+u(:,ny)=uo;
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w);
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+%Temperature
+
+[g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w);
+[g]=stream(g);
+[g]=gbound(nx,ny,w,g);
+
+%streaming
+
+% boundary conditions
+
+%collision
+
+rhog=sum(g,3);
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho,rhog);
+
+++++++++++++++++++++++++++++++++++++++++++
+function [f]=boundary(nx,ny,f,uo)
+%Boundary condition:
+
+%left boundary, bounc back
+
+f(1,:,1)=f(1,:,3);
+f(1,:,5)=f(1,:,7);
+f(1,:,8)=f(1,:,6);
+
+%right hand boundary
+
+f(nx,:,3)=f(nx,:,1);
+f(nx,:,7)=f(nx,:,5);
+f(nx,:,6)=f(nx,:,8);
+
+%bottom boundary, bounce back
+
+f(:,1,2)=f(:,1,4);
+f(:,1,5)=f(:,1,7);
+f(:,1,6)=f(:,1,8);
+
+%Top boundary,moving lid with uo
+
+for i=2:nx-1
+rhon=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,8)=f(i,ny,6)+rhon*uo/6.0;
+f(i,ny,7)=f(i,ny,5)-rhon*uo/6.0;
+end
+
+end
++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
+
++++++++++++++++++++++++++++++++++++++++++
+
+function [g]=gbound(nx,ny,w,g)
+%Boundary condition:
+
+twall=1.0;
+
+%left hand all temperature
+
+%left boundary, bounc back
+
+g(1,:,1)=-g(1,:,3);
+g(1,:,5)=-g(1,:,7);
+g(1,:,8)=-g(1,:,6);
+
+%right hand boundary
+
+g(nx,:,3)=-g(nx,:,1);
+g(nx,:,7)=-g(nx,:,5);
+g(nx,:,6)=-g(nx,:,8);
+
+%bottom boundary, bounce back
+
+g(:,1,2)=g(:,1,4);
+g(:,1,5)=g(:,1,7);
+
+
+g(:,1,6)=g(:,1,8);
+
+g(:,1,1)=g(:,2,1);
+g(:,1,3)=g(:,2,3);
+g(:,1,4)=g(:,2,4);
+
+g(:,1,8)=g(:,2,8);
+
+%Top boundary,moving lid with uo
+
+g(:,ny,4)=(w(4)+w(2))*twall-g(:,ny,2);
+g(:,ny,8)=(w(8)+w(6))*twall-g(:,ny,6);
+g(:,ny,7)=(w(7)+w(5))*twall-g(:,ny,5);
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition temperature
+function [g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+geq(i,j,k)=rhog(i,j)*w(k)*(1.0+3.0*t2);
+g(i,j,k)=(1.-omegag)*g(i,j,k)+omegag*geq(i,j,k);
+
+end
+
+end
+
+end
+end
+++++++++++++++++++++++++++++++++
+function result(nx,ny,x,y,u,v,uo,rho,rhog)
+for j=1:ny
+
+for i=1:nx
+
+xp(i,j)=x(i);
+yp(i,j)=y(j);
+
+end
+
+end
+for j=1:ny
+
+uvm(j)=u((nx-1)/2,j)/uo;
+tmj(j)=rhog((nx-1)/2,j);
+
+end
+
+for i=1:nx
+vvm(i)=v(i,(ny-1)/2)/uo;
+end
+figure
+plot(tmj,y,’LineWidth’,2)
+
+figure
+
+plot(uvm,y,’LineWidth’,2)
+
+xlabel(’U’)
+ylabel(’Y’)
+
+figure
+
+plot(x,vvm,’LineWidth’,1.5)
+xlabel(’X’)
+ylabel(’V’)
+
+figure
+quiver(x,y,v,u, 10)
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+
+figure
+contour(x,y,str,20)
+%or use the following build-in function
+figure
+startx=0.0:0.1:1;
+starty=0.0:0.1:1;
+streamline(x,y,v,u,startx,starty)
+figure
+contour(xp,yp,rhog,20)
+end
+++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+Heated Channel
+
+%LBM- 2-D2Q9, Heated channel, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=801;ny=41;
+f=zeros(nx,ny,9);g=zeros(nx,ny,9);rhog=zeros(nx,ny);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:1:nx-1);
+
+y=(0:1:ny-1);
+uo=0.10;
+alpha=0.04;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+pr=3.8;
+alphag=alpha/pr;
+omegag=1.0/(3.*alphag+0.5);
+count=0; tol=1.0e-5; error=10.;erso=0.0;
+%setting lid velocity to uo
+
+u(:,ny)=uo;
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w);
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo,rho);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+%Temperature
+
+[g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w);
+[g]=stream(g);
+[g]=gbound(nx,ny,w,g);
+
+%streaming
+
+% boundary conditions
+
+%collision
+
+rhog=sum(g,3);
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho,rhog);
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%Boudary conditions for Channel flow
+function [f]=boundary(nx,ny,f,uo,rho)
+
+%right hand boundary
+
+for j=1:ny
+
+f(nx,j,3)=f(nx-1,j,3);
+f(nx,j,7)=f(nx-1,j,7);
+f(nx,j,6)=f(nx-1,j,6);
+
+end
+
+%bottom, and top boundary, bounce back
+for i=1:nx
+
+f(i,1,2)=f(i,1,4);
+f(i,1,5)=f(i,1,7);
+f(i,1,6)=f(i,1,8);
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,7)=f(i,ny,5);
+f(i,ny,8)=f(i,ny,6);
+
+
+u(i,1)=0.0; v(i,1)=0.0;
+u(i,ny)=0.0; v(i,ny)=0.0;
+
+end
+%Left boundary, velocity is given= uo
+
+for j=2:ny-1
+f(1,j,1)=f(1,j,3)+2.*rho(1,j)*uo/3.;
+f(1,j,5)=f(1,j,7)-0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+f(1,j,8)=f(1,j,6)+0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+u(1,j)=uo; v(1,j)=0.0;
+end
+
+% End of boundary conditions.
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++++++++++++++++++
+function [g]=gbound(nx,ny,w,g)
+%Boundary condition:
+
+twall=1.0;
+
+%left hand all temperature
+
+%left boundary, inlet temp. zero
+
+g(1,:,1)=-g(1,:,3);
+g(1,:,5)=-g(1,:,7);
+g(1,:,8)=-g(1,:,6);
+
+%right hand boundary, adiabatic
+
+g(nx,:,3)=g(nx,:,1);
+g(nx,:,7)=g(nx,:,5);
+g(nx,:,6)=g(nx,:,8);
+
+%bottom boundary, temp. is twall
+
+g(:,1,2)=(w(2)+w(4))*twall-g(:,1,4);
+g(:,1,5)=(w(5)+w(7))*twall-g(:,1,7);
+g(:,1,6)=(w(6)+w(8))*twall-g(:,1,8);
+
+%Top boundary, temp. is twall
+
+g(:,ny,4)=(w(4)+w(2))*twall-g(:,ny,2);
+g(:,ny,8)=(w(8)+w(6))*twall-g(:,ny,6);
+g(:,ny,7)=(w(7)+w(5))*twall-g(:,ny,5);
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+
+geq(i,j,k)=rhog(i,j)*w(k)*(1.0+3.0*t2);
+g(i,j,k)=(1.-omegag)*g(i,j,k)+omegag*geq(i,j,k);
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++++++++++++++++
+function result(nx,ny,x,y,u,v,uo,rho,rhog)
+for j=1:ny
+
+for i=1:nx
+
+xp(i,j)=x(i);
+yp(i,j)=y(j);
+
+end
+
+end
+for j=1:ny
+
+uvm(j)=u((nx-1)/2,j)/uo;
+tmj(j)=rhog((nx-1)/2,j);
+
+end
+
+figure
+
+plot(tmj,y,’LineWidth’,2)
+
+figure
+
+plot(uvm,y,’LineWidth’,2)
+
+xlabel(’U’)
+ylabel(’Y’)
+
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+figure
+contour(xp,yp,str,20)
+
+%or use the following build-in function
+figure
+contour(xp,yp,rhog,20)
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+Conjugate Problem
+
+0 1 -1 -1 1 0];
+1 -1 -1 0];
+
+%LBM- 2-D2Q9, Heated Lid-driven Cavity, Re=1000, note that
+c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=801;ny=41;
+f=zeros(nx,ny,9);g=zeros(nx,ny,9);rhog=zeros(nx,ny);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:1:nx-1);
+y=(0:1:ny-1);
+uo=0.10;
+alpha=0.04;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+pr=3.8;
+alphag=alpha/pr;
+omegag=1.0/(3.*alphag+0.5);
+count=0; tol=1.0e-5; error=10.;erso=0.0;
+%setting lid velocity to uo
+
+u(:,ny)=uo;
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w);
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo,rho);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+%Temperature
+
+[g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w);
+[g]=stream(g);
+[g]=gbound(nx,ny,w,g);
+
+%streaming
+
+% boundary conditions
+
+%collision
+
+rhog=sum(g,3);
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho,rhog);
+
+++++++++++++++++++++++++++++++++++++++++++++++
+%Boudary conditions for Channel flow
+function [f]=boundary(nx,ny,f,uo,rho)
+
+%right hand boundary
+
+for j=1:ny
+
+f(nx,j,3)=f(nx-1,j,3);
+f(nx,j,7)=f(nx-1,j,7);
+f(nx,j,6)=f(nx-1,j,6);
+
+end
+
+%bottom, and top boundary, bounce back
+for i=1:nx
+
+f(i,1,2)=f(i,1,4);
+f(i,1,5)=f(i,1,7);
+f(i,1,6)=f(i,1,8);
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,7)=f(i,ny,5);
+f(i,ny,8)=f(i,ny,6);
+u(i,1)=0.0; v(i,1)=0.0;
+u(i,ny)=0.0; v(i,ny)=0.0;
+
+end
+%Left boundary, velocity is given= uo
+
+for j=2:ny-1
+f(1,j,1)=f(1,j,3)+2.*rho(1,j)*uo/3.;
+f(1,j,5)=f(1,j,7)-0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+f(1,j,8)=f(1,j,6)+0.5*(f(1,j,2)-f(1,j,4))+rho(1,j)*uo/6.;
+u(1,j)=uo; v(1,j)=0.0;
+end
+%solid region
+for j=1:11
+
+for i=1:nx
+
+u(i,j)=0.0;
+v(i,j)=0.0;
+u(i,ny-j)=0.0;
+v(i,ny-j)=0.0;
+
+end
+
+end
+f(:,11,5)=f(:,11,7);
+f(:,11,2)=f(:,11,4);
+f(:,11,6)=f(:,11,8);
+f(:,ny-11,7)=f(:,ny-11,5);
+f(:,ny-11,4)=f(:,ny-11,2);
+f(:,ny-11,8)=f(:,ny-11,6);
+
+% End of boundary conditions.
+
+end
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w)
+
+208
+
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+function [g]=gbound(nx,ny,w,g)
+%Boundary condition:
+
+twall=1.0;
+
+%left hand all temperature
+
+%left boundary, inlet temp. zero
+
+g(1,:,1)=-g(1,:,3);
+g(1,:,5)=-g(1,:,7);
+g(1,:,8)=-g(1,:,6);
+
+%right hand boundary, adiabatic
+
+g(nx,:,3)=g(nx,:,1);
+g(nx,:,7)=g(nx,:,5);
+g(nx,:,6)=g(nx,:,8);
+
+%bottom boundary, temp. is twall
+
+g(:,1,2)=(w(2)+w(4))*twall-g(:,1,4);
+g(:,1,5)=(w(5)+w(7))*twall-g(:,1,7);
+g(:,1,6)=(w(6)+w(8))*twall-g(:,1,8);
+
+%Top boundary, temp. is twall
+
+g(:,ny,4)=(w(4)+w(2))*twall-g(:,ny,2);
+g(:,ny,8)=(w(8)+w(6))*twall-g(:,ny,6);
+g(:,ny,7)=(w(7)+w(5))*twall-g(:,ny,5);
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+mg=omegag;
+if (j<11) mg=mg*0.1;
+end
+
+if(j>(ny-11)) mg=mg*0.1;
+end
+
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+geq(i,j,k)=rhog(i,j)*w(k)*(1.0+3.0*t2);
+g(i,j,k)=(1.-mg)*g(i,j,k)+mg*geq(i,j,k);
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function result(nx,ny,x,y,u,v,uo,rho,rhog)
+%solid region velocity decoration
+
+for j=1:11
+
+
+for i=1:nx
+
+u(i,j)=0.0;
+v(i,j)=0.0;
+u(i,ny-j)=0.0;
+v(i,ny-j)=0.0;
+
+end
+
+end
+
+for j=1:ny
+
+for i=1:nx
+
+xp(i,j)=x(i);
+yp(i,j)=y(j);
+
+end
+
+end for j=1:ny
+
+uvm(j)=u((nx-1)/2,j)/uo;
+tmj(j)=rhog((nx-1)/2,j);
+ttj(j)=rhog(nx-40,j);
+
+end
+
+figure
+
+plot(tmj,y,ttj,y,’LineWidth’,2)
+
+figure
+
+plot(uvm,y,’LineWidth’,2)
+
+xlabel(’U’)
+ylabel(’Y’)
+
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+figure
+contour(xp,yp,u,20)
+
+%or use the following build-in function
+figure
+contour(xp,yp,rhog,20)
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+
+
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+Differentially Heated Cavity
+
+0 1 -1 -1 1 0];
+1 -1 -1 0];
+
+%LBM- 2-D2Q9, Differentially Heated, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=81;ny=81;
+f=zeros(nx,ny,9);g=zeros(nx,ny,9);rhog=ones(nx,ny);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+alpha=0.05;
+omega=1./(3.*alpha+0.5);
+pr=0.71;
+Ra=1.0e5;
+alphag=alpha/pr;
+ym1=real(ny-1);
+gbeta=Ra*alpha*alphag/(ym1*ym1*ym1);
+omegag=1.0/(3.*alphag+0.5);
+count=0;
+%Main Loop
+
+while count< 70000
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w,rhog,gbeta);
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+%Temperature
+
+[g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w);
+[g]=stream(g);
+[g]=gbound(nx,ny,w,g);
+
+%streaming
+
+% boundary conditions
+
+%collision
+
+rhog=sum(g,3);
+count=count+1;
+
+end
+%Plotting data
+result(nx,ny,x,y,u,v,rho,rhog);
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+function [f]=boundary(nx,ny,f)
+%Boundary condition:
+
+%left boundary, bounc back
+
+f(1,:,1)=f(1,:,3);
+f(1,:,5)=f(1,:,7);
+f(1,:,8)=f(1,:,6);
+
+%right hand boundary
+
+f(nx,:,3)=f(nx,:,1);
+f(nx,:,7)=f(nx,:,5);
+f(nx,:,6)=f(nx,:,8);
+
+%bottom boundary, bounce back
+
+f(:,1,2)=f(:,1,4);
+f(:,1,5)=f(:,1,7);
+f(:,1,6)=f(:,1,8);
+
+%Top boundary,
+
+f(:,ny,4)=f(:,ny,2);
+f(:,ny,8)=f(:,ny,6);
+f(:,ny,7)=f(:,ny,5);
+
+end
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w,rhog,gbeta)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+force=3.*w(k)*gbeta*rhog(i,j)*rho(i,j)*cy(k);
+if(i==1 || i==nx) force=0.0;
+end
+if(j==1 || j==ny) force =0.0;
+end
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq+force;
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++++++++++++++
+function [g]=gbound(nx,ny,w,g)
+%Boundary condition:
+
+twall=1.0;
+
+%left hand all temperature
+
+%left boundary, T=1.0
+
+g(1,:,1)=twall*(w(1)+w(3))-g(1,:,3);
+g(1,:,5)=twall*(w(5)+w(7))-g(1,:,7);
+g(1,:,8)=twall*(w(8)+w(6))-g(1,:,6);
+
+%right hand boundary T=0.0
+
+g(nx,:,3)=-g(nx,:,1);
+g(nx,:,7)=-g(nx,:,5);
+g(nx,:,6)=-g(nx,:,8);
+
+%bottom boundary,Insulated
+
+g(:,1,2)=g(:,2,4);
+g(:,1,5)=g(:,2,7);
+g(:,1,6)=g(:,2,8);
+
+g(:,1,4)=g(:,2,4);
+g(:,1,7)=g(:,2,7);
+g(:,1,8)=g(:,2,8);
+
+
+g(:,1,9)=g(:,2,9);
+%Top boundary,Insulated
+
+g(:,ny,4)=g(:,ny-1,2);
+g(:,ny,8)=g(:,ny-1,6);
+g(:,ny,7)=g(:,ny-1,5);
+
+g(:,ny,1)=g(:,ny-1,1);
+g(:,ny,2)=g(:,ny-1,2);
+g(:,ny,3)=g(:,ny-1,3);
+g(:,ny,5)=g(:,ny-1,5);
+g(:,ny,9)=g(:,ny-1,9);
+
+
+end
+
+++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [g]=gcol(nx,ny,u,v,cx,cy,omegag,g,rhog,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+geq(i,j,k)=rhog(i,j)*w(k)*(1.0+3.0*t2);
+g(i,j,k)=(1.-omegag)*g(i,j,k)+omegag*geq(i,j,k);
+
+end
+
+end
+
+end
+end
++++++++++++++++++++++++++++++++++++++++++++++++++
+function result(nx,ny,x,y,u,v,rho,rhog)
+for j=1:ny
+
+uvm(j)=u((nx-1)/2,j);
+tmj(j)=rhog((nx-1)/2,j);
+
+end
+
+for i=1:nx
+vvm(i)=v(i,(ny-1)/2);
+end
+figure
+plot(tmj,y,’LineWidth’,2)
+
+figure
+
+plot(uvm,y,’LineWidth’,2)
+
+xlabel(’U’)
+ylabel(’Y’)
+
+figure
+
+plot(x,vvm,’LineWidth’,1.5)
+xlabel(’X’)
+ylabel(’V’)
+
+figure
+quiver(x,y,v,u, 10)
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+figure contour(x,y,str)
+%or use the following build-in function
+
+figure
+startx=0.0:0.1:1;
+starty=0.0:0.1:1;
+streamline(x,y,v,u,startx,starty)
+figure
+contour(x,y,rhog,15)
+end
+++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+A.6 Chapter Ten
+
+MRT-Code for Lid-Driven Cavity
+
+%LBM-MRT 2-D2Q9, Lid-driven Cavity, Re=1000, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+clear
+nx=101;ny=101;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+uo=0.10;
+alpha=0.01;
+Re=uo*(ny-1)/alpha
+
+0 1 -1 -1 1 0];
+1 -1 -1 0];
+
+omega=1./(3.*alpha+0.5);
+count=0; tol=1.0e-4; error=10.;erso=0.0;
+sm=[ 1.4 1.4 1.0 1.2 1.0 1.2 omega omega 1.0];
+m1=[ 1 1 1 1 1 1 1 1 1 ];
+2 -4 ];
+m2=[ -1 -1 -1 -1 2
+2 2
+m3=[ -2 -2 -2 -2 1
+1 4 ];
+1 1
+1 0 ];
+m4=[ 1 0 -1 0 1 -1 -1
+m5=[ -2 0
+2 0 1 -1 -1
+1 0 ];
+1 -1 -1 0 ];
+m6=[ 0 1 0 -1 1
+1 -1 -1 0 ];
+m7=[ 0 -2 0 2 1
+m8=[ 1 -1 1 -1 0
+0 0
+0 0 ];
+m9=[ 0 0 0 0 1 -1 1 -1 0 ];
+mm=[m2;m3;m4;m5;m6;m7;m8;m9;m1]; %saleh
+mminv=inv(mm);
+msm=mminv*diag(-sm); %saleh
+%setting lid velocity
+
+u(:,ny)=uo;
+
+%Main Loop
+
+while error>tol
+
+% Collitions
+[f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w,mm,mminv,msm);
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f,uo);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+
+count=count+1;
+
+ers=0.;
+for i =1:nx
+for j=1:ny
+
+ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+end
+end
+
+error=abs(ers-erso);
+erso=ers;
+
+end
+
+%Plotting data
+result(nx,ny,x,y,u,v,uo,rho);
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+function [f]=boundary(nx,ny,f,uo)
+%Boundary condition:
+
+%left boundary, bounc back
+
+f(1,:,1)=f(1,:,3);
+f(1,:,5)=f(1,:,7);
+f(1,:,8)=f(1,:,6);
+
+%right hand boundary
+
+f(nx,:,3)=f(nx,:,1);
+f(nx,:,7)=f(nx,:,5);
+f(nx,:,6)=f(nx,:,8);
+
+%bottom boundary, bounce back
+
+f(:,1,2)=f(:,1,4);
+f(:,1,5)=f(:,1,7);
+f(:,1,6)=f(:,1,8);
+
+%Top boundary,moving lid with uo
+
+for i=2:nx-1
+rhon=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+f(i,ny,4)=f(i,ny,2);
+f(i,ny,8)=f(i,ny,6)+rhon*uo/6.0;
+f(i,ny,7)=f(i,ny,5)-rhon*uo/6.0;
+end
+
+end
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collition(nx,ny,u,v,cx,cy,omega,f,rho,w,mm,mminv,msm)
+% Calculate the fmeq
+fmeq(:,:,1)= rho.*(-2.+3.*rho.*(u.*u+v.*v));
+fmeq(:,:,2)= rho.*( 1.-3.*rho.*(u.*u+v.*v));
+fmeq(:,:,3)= rho.* u;
+fmeq(:,:,4)=-rho.* u;
+fmeq(:,:,5)= rho.* v;
+fmeq(:,:,6)=-rho.* v;
+fmeq(:,:,7)= rho.*(u.*u-v.*v);
+fmeq(:,:,8)= rho.* u.*v;
+fmeq(:,:,9)= rho;
+
+for i=1:nx
+
+for j=1:ny
+
+for k=1:9
+smf=0.0;
+for N=1:9
+
+smf=smf+mm(k,N)*f(i,j,N);
+
+end
+fmom(i,j,k)=smf;
+end
+
+end
+
+end
+
+for j=1:ny
+
+for i=1:nx
+
+for k=1:9
+
+ssmb=0.0;
+for N=1:9
+
+ssmb=ssmb+msm(k,N)*(fmom(i,j,N)-fmeq(i,j,N)); %saleh
+
+end
+
+f(i,j,k)=f(i,j,k)+ssmb;
+
+end
+
+end
+
+end
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function result(nx,ny,x,y,u,v,uo,rho)
+for j=1:ny
+
+um(j)=u((nx-1)/2,j)/uo;
+
+end
+
+for i=1:nx
+vm(i)=v(i,(ny-1)/2)/uo;
+end
+
+figure
+
+line(um,y,’LineWidth’,1.5)
+
+xlabel(’U’)
+
+
+ylabel(’Y’)
+
+figure
+
+line(x,vm,’LineWidth’,1.5)
+xlabel(’X’)
+ylabel(’V’)
+
+figure
+quiver(x,y,v/uo,u/uo, 10)
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+figure
+contour(x,y,str,20)
+%or use the following build-in function
+figure
+startx=0.0:0.1:1;
+starty=0.0:0.1:1;
+streamline(x,y,v,u,startx,starty)
+end
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+A.7 Chapter Eleven
+
+SC-Model
+
+%LBM-Sc-model 2-D2Q9, note that c2=1/3, w9=4/9,
+% w1-4=1/9, and w5-w8, 1/36
+%
+%
+
+%
+%
+%
+clear all;
+clc;
+G=-5.0;
+rho_cr=log(2);
+rho_liq=1.95;
+rho_gas=0.15;
+Nsteps=2000;
+nx=128;ny=128;
+noput=10;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
+u=zeros(nx,ny);v=zeros(nx,ny);
+uf=zeros(nx,ny);vf=zeros(nx,ny);
+forcx=zeros(nx,ny);forcy=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1
+cy = [0 1 0 -1 1
+c2=1./3.;
+omega=1.;
+%setting
+for i=1:nx
+
+0 1 -1 -1 1 0];
+1 -1 -1 0];
+
+for j=1:ny
+
+rho(i,j)=rho_cr+0.1*rand();
+
+end
+
+end
+counter_frame=1;
+%Main Loop
+
+for counter=1:Nsteps
+% force terms
+
+[forcx,forcy]=force(nx,ny,u,v,cx,cy,rho,w,G);
+
+% Collitions
+[f]=collision(nx,ny,uf,vf,cx,cy,omega,f,rho,w,forcx,forcy);
+
+% Streaming:
+
+[f]=stream(f);
+
+% End of streaming
+%Boundary condition:
+[f]=boundary(nx,ny,f);
+
+% Calculate rho, u, v
+
+[rho,u,v]=ruv(nx,ny,f);
+for j=1:ny
+
+for i=1:nx
+
+uf(i,j)=u(i,j)+0.5*forcx(i,j)/rho(i,j);
+vf(i,j)=v(i,j)+0.5*forcy(i,j)/rho(i,j);
+end
+
+end
+
+counter;
+
+if mod(counter,noput)==0
+
+imagesc(rho);
+F(counter_frame)=getframe;
+counter_frame=counter_frame+1;
+
+end
+
+imagesc(rho)
+
+%
+F = getframe(gcf);
+
+%
+
+
+end
+
+%Plotting data
+
+movie(F,10)
+
+% imagesc(rho);
+disp(’Rho_liq=’)
+disp(mean(mean(rho(nx/2-5:nx/2+5,ny/2-5:ny/2+5))))
+disp(’Rho_gas=’)
+disp(mean(mean(rho(1:10,1:10))))
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+function [f]=boundary(nx,ny,f)
+%Boundary condition:
+
+%left boundary, bounc back
+
+f(1,:,1)=f(nx,:,1);
+f(1,:,5)=f(nx,:,5);
+f(1,:,8)=f(nx,:,8);
+
+%right hand boundary
+
+f(nx,:,3)=f(1,:,3);
+f(nx,:,7)=f(1,:,7);
+f(nx,:,6)=f(1,:,6);
+
+%bottom boundary, bounce back
+
+f(:,1,2)=f(:,ny,2);
+f(:,1,5)=f(:,ny,5);
+f(:,1,6)=f(:,ny,6);
+
+%Top boundary
+
+for i=2:nx-1
+f(i,ny,4)=f(i,1,4);
+f(i,ny,8)=f(i,1,8);
+f(i,ny,7)=f(i,1,7);
+end
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++
+% Collition
+function [f]=collision(nx,ny,uf,vf,cx,cy,omega,f,rho,w,forcx,forcy)
+for j=1:ny
+
+for i=1:nx
+
+t1=uf(i,j)*uf(i,j)+vf(i,j)*vf(i,j);
+for k=1:9
+
+t2=uf(i,j)*cx(k)+vf(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+ffx=(3.*(cx(k)-uf(i,j))+9.*cx(k)*t2)*forcx(i,j);
+ffy=(3.*(cy(k)-vf(i,j))+9.*cy(k)*t2)*forcy(i,j);
+fftot=w(k)*(1.-0.5*omega)*(ffx+ffy);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k)+fftot;
+
+end
+
+end
+
+end
+end
+++++++++++++++++++++++++++++++++++++++++++++++++
+% Force term
+function [forcx,forcy]=force(nx,ny,u,v,cx,cy,rho,w,G)
+for j=1:ny
+
+for i=1:nx
+
+forcxs=0.0;
+forcys=0.0;
+for k=1:8
+
+newx=1+mod(i-1+cx(k)+nx,nx);
+
+
+newy=1+mod(j-1+cy(k)+ny,ny);
+psi=1-exp(-rho(newx,newy));
+forcxs=forcxs-G*w(k)*psi*cx(k);
+forcys=forcys-G*w(k)*psi*cy(k);
+
+end
+forcx(i,j)=(1-exp(-rho(i,j)))*forcxs;
+forcy(i,j)=(1-exp(-rho(i,j)))*forcys;
+
+end
+
+end
+
+end
++++++++++++++++++++++++++++++++++++++++++++++++
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+++++++++++++++++++++++++++++++++++++++++++++++++
+% Streaming:
+
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
+
+% End of streaming
+
+============================================================================
+
+Index
+
+A
+Adiabatic, 66
+Advection, 87, 88
+Advection–diffusion, 37, 88, 101
+Avogadro’s number, 7, 17
+Axisymmetric, 69
+
+B
+BGKW, 29
+Bhatnagar, Gross, and Krook (BGK), 28, 57,
+
+Diffusion coefﬁcient, 62, 97
+Dirichlet, 66, 77
+Distribution function, 3, 14–16, 18, 26, 57,
+
+58, 111, 117
+
+DnQm, 30
+
+E
+Equilibrium distribution function, 29, 37, 58,
+
+91
+
+98, 106
+Boltzmann, 27
+Boltzmann constant, 7, 17
+Boltzmann, Ludwig, 19, 21, 25
+Bounce-back, 112
+Boundary condition, 66
+Boussinesq, 134, 139
+Buoyancy, 139
+
+C
+Chapman–Enskog, 59, 92
+Collision, 5, 57
+Combustion, 102
+Conjugate, 138
+
+D
+D2Q4, 31, 98
+D2Q5, 31
+D2Q9, 31, 75
+D3Q15, 32
+D3Q19, 32
+Darcy, 142
+Differentially heated cavity, 141
+Diffusion, 37, 53, 54, 57
+
+F
+False diffusion, 89
+Finite difference, 55, 63, 89
+Force term, 140
+Forchheimer, 142
+
+G
+Grashof, 134
+
+H
+Hexagonal lattice, 130
+
+K
+Kinetic energy, 5, 7, 20
+Kinetic theory, 4, 28
+Knudson number, 60
+
+L
+Laplace, 106
+Lattice speed, 30
+Lid-driven, 135
+
+© Springer-Verlag London Ltd., part of Springer Nature 2019
+A. A. Mohamad, Lattice Boltzmann Method,
+https://doi.org/10.1007/978-1-4471-7423-3
+
+221
+
+222
+
+Index
+
+M
+Mach number, 107
+Macroscale, 63
+Macroscopic, 2, 7, 14, 25, 27
+Maxwell, 20, 37
+Maxwell, James Clerk, 14
+Maxwell–Boltzmann, 29
+Maxwell–Boltzmann distribution, 17
+Maxwellian distribution function, 18
+Mesoscale, 3, 63
+Microscale, 1
+Microscopic, 25
+Multiscale, 59
+Multiscale expansion, 59
+
+N
+Natural convection, 133, 139
+Navier–Stokes, 105
+Newton’s second law, 1, 4, 6, 26
+Numerical diffusion, 106
+Nusselt number, 141
+
+O
+Obstacles, 127
+
+P
+Peclet, 89
+Periodic boundary condition, 119
+Porous, 102, 141
+Prandtl, 134
+Pressure, 5, 6, 111
+Probability distribution, 15
+
+Q
+Q, 30
+
+R
+Rayleigh, 134
+Relaxation parameter, 62
+Relaxation time, 29, 57, 58
+Reynolds, 134
+Reynolds number, 107, 108, 111
+Root-mean-average speed, 18
+
+S
+Soret, 103
+Source, 68
+Stability condition, 56
+Statistical mechanics, 2
+Symmetry, 120
+
+T
+Temperature, 5, 17, 57, 60
+
+U
+Upwind scheme, 89, 97, 106
+
+V
+Velocity space, 15
+Viscosity, 55
+Vorticity, 130
+Vorticity–stream, 106, 129
+
+W
+Weight factors, 60
+Weighting factor, 30, 31, 58
+Welander, 28
+
+
