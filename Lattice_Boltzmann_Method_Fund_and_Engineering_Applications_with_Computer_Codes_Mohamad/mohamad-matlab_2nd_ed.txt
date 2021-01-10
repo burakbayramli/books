@@ -1091,7 +1091,6 @@ ylabel(’Y’)
 % xlabel(’X’)
 % ylabel(’Flux’)
 
-A.2 Chapter Six
 
 % Chapter 6
 % LBM- D1Q3, BiHarmonic equation, note that c2=1/3, w0=4/6, others 1/6
@@ -1299,40 +1298,6 @@ f1(:,:)=circshift(squeeze(f1(:,:)),[+1,0]);
 f2(:,:)=circshift(squeeze(f2(:,:)),[-1,0]);
 f3(:,:)=circshift(squeeze(f3(:,:)),[0,-1]);
 f4(:,:)=circshift(squeeze(f4(:,:)),[0,+1]);
-
-% OR use the following steps:
-
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-
-for j=1:n
-for i=1:m-1
-
-f1(m-i+1,j)=f1(m-i,j);
-f2(i,j)=f2(i+1,j);
-
-end
-end
-for i=1:m
-
-for j=1:n-1
-
-f3(i,n-j+1)=f3(i,n-j);
-f4(i,j)=f4(i,j+1);
-
-end
-
-
-end
 
 
 %Boundary condition:
