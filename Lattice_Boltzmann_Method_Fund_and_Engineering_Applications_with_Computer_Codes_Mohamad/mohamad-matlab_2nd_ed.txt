@@ -2675,6 +2675,8 @@ end
 
 % End of streaming
 
+Lid-Driven Cavity
+
 %main.m
 %LBM- 2-D2Q9, Lid-driven Cavity, Re=1000, note that c2=1/3, w9=4/9,
 % w1-4=1/9, and w5-w8, 1/36
@@ -3713,9 +3715,6 @@ end
 
 Conjugate Problem
 
-0 1 -1 -1 1 0];
-1 -1 -1 0];
-
 %LBM- 2-D2Q9, Heated Lid-driven Cavity, Re=1000, note that
 c2=1/3, w9=4/9,
 % w1-4=1/9, and w5-w8, 1/36
@@ -3725,8 +3724,8 @@ f=zeros(nx,ny,9);g=zeros(nx,ny,9);rhog=zeros(nx,ny);
 u=zeros(nx,ny);v=zeros(nx,ny);
 rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
 w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
-cx = [1 0 -1
-cy = [0 1 0 -1 1
+cx = [1 0 -1 0 1 -1 -1 1 0];
+cy = [0 1 0 -1 1 1 -1 -1 0];
 c2=1./3.;
 dx=1.0;dy=1.0;
 xl=1.0; yl=1.0;
@@ -4041,9 +4040,6 @@ end
 
 Differentially Heated Cavity
 
-0 1 -1 -1 1 0];
-1 -1 -1 0];
-
 %LBM- 2-D2Q9, Differentially Heated, note that c2=1/3, w9=4/9,
 % w1-4=1/9, and w5-w8, 1/36
 clear
@@ -4052,8 +4048,8 @@ f=zeros(nx,ny,9);g=zeros(nx,ny,9);rhog=ones(nx,ny);
 u=zeros(nx,ny);v=zeros(nx,ny);
 rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
 w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
-cx = [1 0 -1
-cy = [0 1 0 -1 1
+cx = [1 0 -1 0 1 -1 -1 1 0];
+cy = [0 1 0 -1 1 1 -1 -1 0];
 c2=1./3.;
 dx=1.0;dy=1.0;
 xl=1.0; yl=1.0;
@@ -4327,8 +4323,8 @@ f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
 u=zeros(nx,ny);v=zeros(nx,ny);
 rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
 w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
-cx = [1 0 -1
-cy = [0 1 0 -1 1
+cx = [1 0 -1 0 1 -1 -1 1 0];
+cy = [0 1 0 -1 1 1 -1 -1 0];
 c2=1./3.;
 dx=1.0;dy=1.0;
 xl=1.0; yl=1.0;
@@ -4340,31 +4336,18 @@ uo=0.10;
 alpha=0.01;
 Re=uo*(ny-1)/alpha
 
-0 1 -1 -1 1 0];
-1 -1 -1 0];
 
 omega=1./(3.*alpha+0.5);
 count=0; tol=1.0e-4; error=10.;erso=0.0;
 sm=[ 1.4 1.4 1.0 1.2 1.0 1.2 omega omega 1.0];
 m1=[ 1 1 1 1 1 1 1 1 1 ];
-2 -4 ];
-m2=[ -1 -1 -1 -1 2
-2 2
-m3=[ -2 -2 -2 -2 1
-1 4 ];
-1 1
-1 0 ];
-m4=[ 1 0 -1 0 1 -1 -1
-m5=[ -2 0
-2 0 1 -1 -1
-1 0 ];
-1 -1 -1 0 ];
-m6=[ 0 1 0 -1 1
-1 -1 -1 0 ];
-m7=[ 0 -2 0 2 1
-m8=[ 1 -1 1 -1 0
-0 0
-0 0 ];
+m2=[ -1 -1 -1 -1 2 2 2 2 -4 ];
+m3=[ -2 -2 -2 -2 1 1 1 1 4 ];
+m4=[ 1 0 -1 0 1 -1 -1 1 0 ];
+m5=[ -2 0 2 0 1 -1 -1 1 0 ];
+m6=[ 0 1 0 -1 1 1 -1 -1 0 ];
+m7=[ 0 -2 0 2 1 1 -1 -1 0 ];
+m8=[ 1 -1 1 -1 0 0 0 0 0 ];
 m9=[ 0 0 0 0 1 -1 1 -1 0 ];
 mm=[m2;m3;m4;m5;m6;m7;m8;m9;m1]; %saleh
 mminv=inv(mm);
@@ -4604,20 +4587,15 @@ uf=zeros(nx,ny);vf=zeros(nx,ny);
 forcx=zeros(nx,ny);forcy=zeros(nx,ny);
 rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
 w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
-cx = [1 0 -1
-cy = [0 1 0 -1 1
+cx = [1 0 -1 0 1 -1 -1 1 0];
+cy = [0 1 0 -1 1 1 -1 -1 0];
 c2=1./3.;
 omega=1.;
 %setting
 for i=1:nx
 
-0 1 -1 -1 1 0];
-1 -1 -1 0];
-
 for j=1:ny
-
-rho(i,j)=rho_cr+0.1*rand();
-
+    rho(i,j)=rho_cr+0.1*rand();
 end
 
 end
@@ -4794,156 +4772,3 @@ end
 % End of streaming
 
 ============================================================================
-
-Index
-
-A
-Adiabatic, 66
-Advection, 87, 88
-Advection–diffusion, 37, 88, 101
-Avogadro’s number, 7, 17
-Axisymmetric, 69
-
-B
-BGKW, 29
-Bhatnagar, Gross, and Krook (BGK), 28, 57,
-
-Diffusion coefﬁcient, 62, 97
-Dirichlet, 66, 77
-Distribution function, 3, 14–16, 18, 26, 57,
-
-58, 111, 117
-
-DnQm, 30
-
-E
-Equilibrium distribution function, 29, 37, 58,
-
-91
-
-98, 106
-Boltzmann, 27
-Boltzmann constant, 7, 17
-Boltzmann, Ludwig, 19, 21, 25
-Bounce-back, 112
-Boundary condition, 66
-Boussinesq, 134, 139
-Buoyancy, 139
-
-C
-Chapman–Enskog, 59, 92
-Collision, 5, 57
-Combustion, 102
-Conjugate, 138
-
-D
-D2Q4, 31, 98
-D2Q5, 31
-D2Q9, 31, 75
-D3Q15, 32
-D3Q19, 32
-Darcy, 142
-Differentially heated cavity, 141
-Diffusion, 37, 53, 54, 57
-
-F
-False diffusion, 89
-Finite difference, 55, 63, 89
-Force term, 140
-Forchheimer, 142
-
-G
-Grashof, 134
-
-H
-Hexagonal lattice, 130
-
-K
-Kinetic energy, 5, 7, 20
-Kinetic theory, 4, 28
-Knudson number, 60
-
-L
-Laplace, 106
-Lattice speed, 30
-Lid-driven, 135
-
-© Springer-Verlag London Ltd., part of Springer Nature 2019
-A. A. Mohamad, Lattice Boltzmann Method,
-https://doi.org/10.1007/978-1-4471-7423-3
-
-221
-
-222
-
-Index
-
-M
-Mach number, 107
-Macroscale, 63
-Macroscopic, 2, 7, 14, 25, 27
-Maxwell, 20, 37
-Maxwell, James Clerk, 14
-Maxwell–Boltzmann, 29
-Maxwell–Boltzmann distribution, 17
-Maxwellian distribution function, 18
-Mesoscale, 3, 63
-Microscale, 1
-Microscopic, 25
-Multiscale, 59
-Multiscale expansion, 59
-
-N
-Natural convection, 133, 139
-Navier–Stokes, 105
-Newton’s second law, 1, 4, 6, 26
-Numerical diffusion, 106
-Nusselt number, 141
-
-O
-Obstacles, 127
-
-P
-Peclet, 89
-Periodic boundary condition, 119
-Porous, 102, 141
-Prandtl, 134
-Pressure, 5, 6, 111
-Probability distribution, 15
-
-Q
-Q, 30
-
-R
-Rayleigh, 134
-Relaxation parameter, 62
-Relaxation time, 29, 57, 58
-Reynolds, 134
-Reynolds number, 107, 108, 111
-Root-mean-average speed, 18
-
-S
-Soret, 103
-Source, 68
-Stability condition, 56
-Statistical mechanics, 2
-Symmetry, 120
-
-T
-Temperature, 5, 17, 57, 60
-
-U
-Upwind scheme, 89, 97, 106
-
-V
-Velocity space, 15
-Viscosity, 55
-Vorticity, 130
-Vorticity–stream, 106, 129
-
-W
-Weight factors, 60
-Weighting factor, 30, 31, 58
-Welander, 28
-
-
