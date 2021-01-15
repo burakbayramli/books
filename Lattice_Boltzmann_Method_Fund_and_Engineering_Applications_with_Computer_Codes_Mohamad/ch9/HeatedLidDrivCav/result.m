@@ -20,20 +20,20 @@ for i=1:nx
 vvm(i)=v(i,(ny-1)/2)/uo;
 end
 figure
-plot(tmj,y,’LineWidth’,2)
+plot(tmj,y,'LineWidth',2)
 
 figure
 
-plot(uvm,y,’LineWidth’,2)
+plot(uvm,y,'LineWidth',2)
 
-xlabel(’U’)
-ylabel(’Y’)
+xlabel('U')
+ylabel('Y')
 
 figure
 
-plot(x,vvm,’LineWidth’,1.5)
-xlabel(’X’)
-ylabel(’V’)
+plot(x,vvm,'LineWidth',1.5)
+xlabel('X')
+ylabel('V')
 
 figure
 quiver(x,y,v,u, 10)

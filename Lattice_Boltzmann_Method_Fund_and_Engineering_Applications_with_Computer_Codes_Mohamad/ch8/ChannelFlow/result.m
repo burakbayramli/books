@@ -11,10 +11,10 @@ end
 
 figure
 
-plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,Tm5,y,’LineWidth’,1.5)
+plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,Tm5,y,'LineWidth',1.5)
 
-xlabel(’U’)
-ylabel(’Y’)
+xlabel('U')
+ylabel('Y')
 %Stream function calculation
 for j=1:ny
 
