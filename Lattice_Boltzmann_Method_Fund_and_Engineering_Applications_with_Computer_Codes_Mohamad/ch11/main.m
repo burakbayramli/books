@@ -91,7 +91,7 @@ end
 movie(F,10)
 
 % imagesc(rho);
-disp(’Rho_liq=’)
+disp('Rho_liq=')
 disp(mean(mean(rho(nx/2-5:nx/2+5,ny/2-5:ny/2+5))))
-disp(’Rho_gas=’)
+disp('Rho_gas=')
 disp(mean(mean(rho(1:10,1:10))))

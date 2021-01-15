@@ -17,13 +17,13 @@ end
 
 
 figure
-plot(x/(nx-1),umx,x/(nx-1),vmx,’LineWidth’,1.5)
+plot(x/(nx-1),umx,x/(nx-1),vmx,'LineWidth',1.5)
 figure
 
-plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,’LineWidth’,1.5)
+plot(Tm1,y,Tm2,y,Tm3,y,Tm4,y,'LineWidth',1.5)
 
-xlabel(’U’)
-ylabel(’Y’)
+xlabel('U')
+ylabel('Y')
 figure
 plot(count,utim)
 
@@ -50,7 +50,7 @@ end
 figure
 contour(sx,sy,str)
 figure
-contour(sx,sy,u,’LineWidth’,1.0)
+contour(sx,sy,u,'LineWidth',1.0)
 
 end
 

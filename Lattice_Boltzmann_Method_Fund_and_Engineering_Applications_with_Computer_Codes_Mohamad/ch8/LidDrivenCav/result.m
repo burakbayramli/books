@@ -11,16 +11,16 @@ end
 
 figure
 
-line(um,y,’LineWidth’,1.5)
+line(um,y,'LineWidth',1.5)
 
-xlabel(’U’)
-ylabel(’Y’)
+xlabel('U')
+ylabel('Y')
 
 figure
 
-line(x,vm,’LineWidth’,1.5)
-xlabel(’X’)
-ylabel(’V’)
+line(x,vm,'LineWidth',1.5)
+xlabel('X')
+ylabel('V')
 
 figure
 quiver(x,y,v/uo,u/uo, 10)

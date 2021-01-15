@@ -34,14 +34,14 @@ end
 
 figure
 
-plot(tmj,y,ttj,y,’LineWidth’,2)
+plot(tmj,y,ttj,y,'LineWidth',2)
 
 figure
 
-plot(uvm,y,’LineWidth’,2)
+plot(uvm,y,'LineWidth',2)
 
-xlabel(’U’)
-ylabel(’Y’)
+xlabel('U')
+ylabel('Y')
 
 %Stream function calculation
 str=zeros(nx,ny);
