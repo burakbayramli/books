@@ -189,7 +189,10 @@ Source codes for various books I collected over the years.
 - [toront math pde lecture notes](/toront-math-pde-lecture-notes)
 - [CUDA by Example Sanders](/CUDA-by-Example-Sanders)
 - [GPU Gems Book Source Code](/GPU-Gems-Book-Source-Code)
-
+- [Lattice_Boltzmann_Equation_Succi](Lattice Boltzmann Equation Succi)
+- [Lattice_Boltzmann_Modeling_Thorne](Lattice Boltzmann Modeling Thorne)
+- [Lattice_Boltzmann_Method_Fund_and_Engineering_Applications_with_Computer_Codes_Mohamad](Lattice Boltzmann Method Fund and Engineering Applications with Computer Codes Mohamad)
+- [Comparison_of_python_3_single_gpu_parallelization_technologies_on_the_example_of_a_charged_particles_dynamics_simulation_problem_Boytsov](Comparison of python 3 single gpu parallelization technologies on the example of a charged particles dynamics simulation problem Boytsov)
 
 See my other blogs, repos
 
