@@ -193,6 +193,7 @@ Source codes for various books I collected over the years.
 - [Lattice Boltzmann Modeling Thorne](/Lattice_Boltzmann_Modeling_Thorne)
 - [Lattice Boltzmann Method Fund and Engineering Applications with Computer Codes Mohamad](/Lattice_Boltzmann_Method_Fund_and_Engineering_Applications_with_Computer_Codes_Mohamad)
 - [Comparison of python 3 single gpu parallelization technologies on the example of a charged particles dynamics simulation problem Boytsov](/Comparison_of_python_3_single_gpu_parallelization_technologies_on_the_example_of_a_charged_particles_dynamics_simulation_problem_Boytsov)
+- [Introduction to Lattice Boltzmann Methods Sukop](/Introduction_to_Lattice_Boltzmann_Methods_Sukop)
 
 See my other blogs, repos
 
