@@ -8,135 +8,223 @@
 </head>
 <body>
 
-<h1>Chapter 10</h1>
-<p>Example 1</p>
-<p>A line integral is an integral of a function along a curve in
-space. We usually represent the curve by a parametric equation,
-e.g. $\mathbf{r}(t) = [x(t), y(t), z(t)] = x(t)\mathbf{i} +
-y(t)\mathbf{j} + z(t)\mathbf{k}$.  So, in general the curve will be a
-vector function, and the function we want to integrate will also be a
-vector function.</p>
-<p>Then, we can write the line integral definition as:</p>
-<p>$$
-\int_C \mathbf{F(r)}\cdot d\mathbf{r} =
-\int_a^b \mathbf{F}(\mathbf{r}(t)) \cdot \mathbf{r'}(t) dt
-$$</p>
-<p>where $\mathbf{r'}(t) = \frac{d\mathbf{r}}{dt}$. This integrand is a
-scalar function, because of the dot product.</p>
-<p>The following examples are adapted from Chapter 10 in Advanced
-Engineering Mathematics by Kreysig.</p>
-<p>The first example is the evaluation of a line integral in the
-plane. We want to evaluate the integral of $\mathbf{F(r)}=[-y, -xy]$
-on the curve $\mathbf{r(t)}=[-sin(t), cos(t)]$ from t=0 to t =
-π/2. The answer in the book is given as 0.4521. Here we evaluate this
-numerically, using autograd for the relevant derivative. Since the
-curve has multiple outputs, we have to use the jacobian function to
-get the derivatives. After that, it is a simple bit of matrix
-multiplication, and a call to the quad function.</p>
-<pre><code class="python">import autograd.numpy as np
-from autograd import jacobian
-from scipy.integrate import quad
+<pre><code class="python">from sympy import *
+from sympy.plotting import plot
+import matplotlib.pyplot as plt
+init_printing(use_unicode= True)
+from sympy.vector import *
 
-def F(X):
-    x, y = X
-    return -y, -x * y
-
-def r(t):
-    return np.array([-np.sin(t), np.cos(t)])
-
-drdt = jacobian(r)
-
-def integrand(t):
-    return F(r(t)) @ drdt(t)
-
-I, e = quad(integrand, 0.0, np.pi / 2)
-print(f'The integral is {I:1.4f}.')
+v,p,q = symbols(&quot;v p q&quot;)
 </code></pre>
 
-<pre><code class="text">The integral is 0.4521.
+<pre><code class="python">#1
+N = CoordSys3D('N')
+p = N.i + N.j
+q = 6*N.i + 2*N.j
+v = q-p
+v
 </code></pre>
 
-<p>We get the same result as the analytical solution.</p>
-<p>The next example is in three dimensions. Find the line integral along
-$\mathbf{r}(t)=[cos(t), sin(t), 3t]$ of the function
-$\mathbf{F(r)}=[z, x, y]$ from t=0 to t=2 π. The solution is given as
-21.99.</p>
-<pre><code class="python">import autograd.numpy as np
-from autograd import elementwise_grad, grad, jacobian
-
-def F(X):
-    x, y, z = X
-    return [z, x, y]
-
-def C(t):
-    return np.array([np.cos(t), np.sin(t), 3 * t])
-
-dCdt = jacobian(C, 0)
-
-def integrand(t):
-    return F(C(t)) @ dCdt(t)
-
-I, e = quad(integrand, 0, 2 * np.pi)
-print(f'The integral is {I:1.2f}.')
+<p>$$(5)\mathbf{\hat{i}<em>{N}} + \mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">v.magnitude()
 </code></pre>
 
-<pre><code class="text">The integral is 21.99.
+<p>$$\sqrt{26}$$</p>
+<pre><code class="python">v.normalize()
 </code></pre>
 
-<p>That is also the same as the analytical solution. Note the real
-analytical solution was 7 π, which is nearly equivalent to our answer.</p>
-<pre><code class="python">print (7 * np.pi - I)
+<p>$$(\frac{5 \sqrt{26}}{26})\mathbf{\hat{i}<em>{N}} + (\frac{\sqrt{26}}{26})\mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">#2
+p = N.i + N.j +N.k
+q = 2*N.i + 2*N.j
+v = q-p
+v
 </code></pre>
 
-<pre><code class="text">3.552713678800501e-15
+<p>$$\mathbf{\hat{i}<em>{N}} + \mathbf{\hat{j}</em>{N}} - \mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">v.magnitude()
 </code></pre>
 
-<p>As a final example, we consider an alternate form of the line
-integral. In this form we do not use a dot product, so the integral
-results in a vector. This doesn't require anything from autograd, but
-does require us to be somewhat clever in how to do the integrals since
-quad can only integrate scalar functions. We need to integrate each
-component of the integrand independently. Here is one approach where
-we use lambda functions for each component. You could also manually
-separate the components.</p>
-<pre><code class="python">def F(r):
-    x, y, z = r
-    return x * y, y * z, z
-
-def r(t):
-    return np.array([np.cos(t), np.sin(t), 3 * t])
-
-def integrand(t):
-    return F(r(t))
-
-[quad(lambda t: integrand(t)[i], 0, 2 * np.pi)[0] for i in [0, 1, 2]]
+<p>$$\sqrt{3}$$</p>
+<pre><code class="python">v.normalize()
 </code></pre>
 
-<pre><code class="text">Out[1]: [-6.845005548807377e-17, -18.849555921538755, 59.21762640653615]
+<p>$$(\frac{\sqrt{3}}{3})\mathbf{\hat{i}<em>{N}} + (\frac{\sqrt{3}}{3})\mathbf{\hat{j}</em>{N}} + (- \frac{\sqrt{3}}{3})\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">#3
+p = -3*N.i + 4*N.j -.5*N.k
+q = 5.5*N.i + 1.2*N.k
+v = q-p
+v
 </code></pre>
 
-<pre><code class="python">[0, -6 * np.pi, 6 * np.pi**2]
+<p>$$(8.5)\mathbf{\hat{i}<em>{N}} + (-4)\mathbf{\hat{j}</em>{N}} + (1.7)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">v.magnitude()
 </code></pre>
 
-<pre><code class="text">Out[1]: [0, -18.84955592153876, 59.21762640653615]
+<p>$$9.5467271878901$$</p>
+<pre><code class="python">v.normalize()
 </code></pre>
 
-<p>which is evidently the same as our numerical solution.</p>
-<p>Maybe an alternative, but more verbose is this vectorized integrate
-function. We still make temporary functions for integrating, and the
-vectorization is essentially like the list comprehension above, but we
-avoid the lambda functions.</p>
-<pre><code class="python">@np.vectorize
-def integrate(i):
-    def integrand(t):
-        return F(r(t))[i]
-    I, e = quad(integrand, 0, 2 * np.pi)
-    return I
-
-integrate([0, 1, 2])
+<p>$$(0.890357484058216)\mathbf{\hat{i}<em>{N}} + (-0.418991757203867)\mathbf{\hat{j}</em>{N}} + (0.178071496811643)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">#4
+p = 1*N.i + 4*N.j +2*N.k
+q = -1*N.i -4*N.j -2*N.k
+v = q-p
+v
 </code></pre>
 
-<pre><code class="text">Out[1]: array([-6.84500555e-17, -1.88495559e+01,  5.92176264e+01])
+<p>$$(-2)\mathbf{\hat{i}<em>{N}} + (-8)\mathbf{\hat{j}</em>{N}} + (-4)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">v.magnitude()
+</code></pre>
+
+<p>$$2 \sqrt{21}$$</p>
+<pre><code class="python">v.normalize()
+</code></pre>
+
+<p>$$(- \frac{\sqrt{21}}{21})\mathbf{\hat{i}<em>{N}} + (- \frac{4 \sqrt{21}}{21})\mathbf{\hat{j}</em>{N}} + (- \frac{2 \sqrt{21}}{21})\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">#5
+p = 0*N.i
+q = 2*N.i +1*N.j -2*N.k
+v = q-p
+v
+</code></pre>
+
+<p>$$(2)\mathbf{\hat{i}<em>{N}} + \mathbf{\hat{j}</em>{N}} + (-2)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">v.magnitude()
+</code></pre>
+
+<p>$$3$$</p>
+<pre><code class="python">v.normalize()
+</code></pre>
+
+<p>$$(\frac{2}{3})\mathbf{\hat{i}<em>{N}} + (\frac{1}{3})\mathbf{\hat{j}</em>{N}} + (- \frac{2}{3})\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">#6
+v = 4*N.i
+p = 2*N.j+ 13*N.k
+q = p+v
+q
+</code></pre>
+
+<p>$$(4)\mathbf{\hat{i}<em>{N}} + (2)\mathbf{\hat{j}</em>{N}} + (13)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">q.magnitude()
+</code></pre>
+
+<p>$$4.03112887414927$$</p>
+<pre><code class="python">#7
+v = (1/2)*N.i + 3*N.j -(1/4)*N.k
+p = (7/2)*N.i+(-3)*N.j+ (3/4)*N.k
+q = p+v
+q
+</code></pre>
+
+<p>$$(4.0)\mathbf{\hat{i}<em>{N}} + (0.5)\mathbf{\hat{k}</em>{N}}$$</p>
+<pre><code class="python">q.magnitude()
+</code></pre>
+
+<p>$$4.03112887414927$$</p>
+<pre><code class="python">#8
+v = 13.1*N.i + .8*N.j -2*N.k
+p = 0*N.i
+q = p+v
+q
+</code></pre>
+
+<p>$$(13.1)\mathbf{\hat{i}<em>{N}} + (0.8)\mathbf{\hat{j}</em>{N}} + (-2)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">q.magnitude()
+</code></pre>
+
+<p>$$13.2759180473518$$</p>
+<pre><code class="python">#9
+v = 6*N.i + 1*N.j -4*N.k
+p = -6*N.i-1*N.j-4*N.k
+q = p+v
+q
+</code></pre>
+
+<p>$$(-8)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">q.magnitude()
+</code></pre>
+
+<p>$$8$$</p>
+<pre><code class="python">#10
+v = - 3*N.j +3*N.k
+p = 3*N.j- 3*N.k
+q = p+v
+q
+</code></pre>
+
+<p>$$\mathbf{\hat{0}}$$</p>
+<pre><code class="python">q.magnitude()
+</code></pre>
+
+<p>$$0$$</p>
+<pre><code class="python">a = 3*N.i + 2*N.j
+b = -4*N.i+6*N.j
+c = 5*N.i-N.j +8*N.k
+d = 4*N.k
+</code></pre>
+
+<pre><code class="python">#11
+2*a
+</code></pre>
+
+<p>$$(6)\mathbf{\hat{i}<em>{N}} + (4)\mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">a/2
+</code></pre>
+
+<p>$$(\frac{3}{2})\mathbf{\hat{i}<em>{N}} + \mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">-a
+</code></pre>
+
+<p>$$(-3)\mathbf{\hat{i}<em>{N}} + (-2)\mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">#12
+(a+b)+c
+</code></pre>
+
+<p>$$(4)\mathbf{\hat{i}<em>{N}} + (7)\mathbf{\hat{j}</em>{N}} + (8)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">a+(b+c)
+</code></pre>
+
+<p>$$(4)\mathbf{\hat{i}<em>{N}} + (7)\mathbf{\hat{j}</em>{N}} + (8)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">#13
+b+c
+</code></pre>
+
+<p>$$\mathbf{\hat{i}<em>{N}} + (5)\mathbf{\hat{j}</em>{N}} + (8)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">c+b
+</code></pre>
+
+<p>$$\mathbf{\hat{i}<em>{N}} + (5)\mathbf{\hat{j}</em>{N}} + (8)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">#14
+3*c - 6*d
+</code></pre>
+
+<p>$$(15)\mathbf{\hat{i}<em>{N}} + (-3)\mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">3*(c- 2*d)
+</code></pre>
+
+<p>$$(15)\mathbf{\hat{i}<em>{N}} + (-3)\mathbf{\hat{j}</em>{N}}$$</p>
+<pre><code class="python">7*(c-b)
+</code></pre>
+
+<p>$$(63)\mathbf{\hat{i}<em>{N}} + (-49)\mathbf{\hat{j}</em>{N}} + (56)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">7*c -7*b
+</code></pre>
+
+<p>$$(63)\mathbf{\hat{i}<em>{N}} + (-49)\mathbf{\hat{j}</em>{N}} + (56)\mathbf{\hat{k}_{N}}$$</p>
+<pre><code class="python">4*a +3*b
+</code></pre>
+
+<p>$$(26)\mathbf{\hat{j}_{N}}$$</p>
+<pre><code class="python">-4*a -3*b
+</code></pre>
+
+<p>$$(-26)\mathbf{\hat{j}_{N}}$$</p>
+<pre><code class="python">(a+b).magnitude()
+</code></pre>
+
+<p>$$\sqrt{65}$$</p>
+<pre><code class="python">
 </code></pre>
 
 </body>
