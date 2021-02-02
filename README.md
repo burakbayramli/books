@@ -195,7 +195,7 @@ Source codes for various books I collected over the years.
 - [Comparison of python 3 single gpu parallelization technologies on the example of a charged particles dynamics simulation problem Boytsov](/Comparison_of_python_3_single_gpu_parallelization_technologies_on_the_example_of_a_charged_particles_dynamics_simulation_problem_Boytsov)
 - [Introduction to Lattice Boltzmann Methods Sukop](/Introduction_to_Lattice_Boltzmann_Methods_Sukop)
 - [The Lattice Boltzmann Method Principles and Practice, Viggen](/Lattice Boltzmann Method_ Principles and Practice Viggen The)
-
+- [Advanced Engineering Mathematics Kreyszig](/Advanced_Engineering_Mathematics_Kreyszig)
 
 See my other blogs, repos
 
