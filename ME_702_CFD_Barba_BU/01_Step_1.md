@@ -52,15 +52,18 @@ import numpy                       #here we load numpy
 from matplotlib import pyplot      #here we load matplotlib
 import time, sys                   #and load some utilities
 
-```
-
+``
 
 ```python
 #this makes matplotlib plots appear in the notebook (instead of a separate window)
 %matplotlib inline                  
 ```
 
-Now let's define a few variables; we want to define an evenly spaced grid of points within a spatial domain that is 2 units of length wide, i.e., $x_i\in(0,2)$.  We'll define a variable `nx`, which will be the number of grid points we want and `dx` will be the distance between any pair of adjacent grid points.  
+Now let's define a few variables; we want to define an evenly spaced
+grid of points within a spatial domain that is 2 units of length wide,
+i.e., $x_i\in(0,2)$.  We'll define a variable `nx`, which will be the
+number of grid points we want and `dx` will be the distance between
+any pair of adjacent grid points.
 
 
 ```python
@@ -71,10 +74,12 @@ dt = .025  #dt is the amount of time each timestep covers (delta t)
 c = 1      #assume wavespeed of c = 1
 ```
 
-We also need to set up our initial conditions. The initial velocity $u_0$ is given as 
-$u = 2$ in the interval $0.5 \leq x \leq 1$  and $u = 1$ everywhere else in $(0,2)$ (i.e., a hat function).
+We also need to set up our initial conditions. The initial velocity
+$u_0$ is given as $u = 2$ in the interval $0.5 \leq x \leq 1$ and $u = 1$ everywhere
+else in $(0,2)$ (i.e., a hat function).
 
-Here, we use the function `ones()` defining a `numpy` array which is `nx` elements long with every value equal to 1.
+Here, we use the function `ones()` defining a `numpy` array which is
+`nx` elements long with every value equal to 1.
 
 
 ```python
@@ -105,15 +110,27 @@ pyplot.plot(numpy.linspace(0, 2, nx), u);
 
 Why doesn't the hat function have perfectly straight sides? Think for a bit.
 
-Now it's time to implement the discretization of the convection equation using a finite-difference scheme.  
+Now it's time to implement the discretization of the convection
+equation using a finite-difference scheme.
 
-For every element of our array `u`, we need to perform the operation $u_i^{n+1} = u_i^n - c \frac{\Delta t}{\Delta x}(u_i^n-u_{i-1}^n)$
+For every element of our array `u`, we need to perform the operation
+$u_i^{n+1} = u_i^n - c \frac{\Delta t}{\Delta x}(u_i^n-u_{i-1}^n)$
 
-We'll store the result in a new (temporary) array `un`, which will be the solution $u$ for the next time-step.  We will repeat this operation for as many time-steps as we specify and then we can see how far the wave has convected.  
+We'll store the result in a new (temporary) array `un`, which will be
+the solution $u$ for the next time-step.  We will repeat this
+operation for as many time-steps as we specify and then we can see how
+far the wave has convected.
 
-We first initialize our placeholder array `un` to hold the values we calculate for the $n+1$ timestep, using once again the NumPy function `ones()`.
+We first initialize our placeholder array `un` to hold the values we
+calculate for the $n+1$ timestep, using once again the NumPy function
+`ones()`.
 
-Then, we may think we have two iterative operations: one in space and one in time (we'll learn differently later), so we'll start by nesting one loop inside the other. Note the use of the nifty `range()` function. When we write: `for i in range(1,nx)` we will iterate through the `u` array, but we'll be skipping the first element (the zero-th element).  *Why?*
+Then, we may think we have two iterative operations: one in space and
+one in time (we'll learn differently later), so we'll start by nesting
+one loop inside the other. Note the use of the nifty `range()`
+function. When we write: `for i in range(1,nx)` we will iterate
+through the `u` array, but we'll be skipping the first element (the
+zero-th element).  *Why?*
 
 
 ```python
