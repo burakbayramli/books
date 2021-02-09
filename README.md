@@ -181,7 +181,6 @@ Source codes for various books I collected over the years.
 - [r pscl](/r_pscl)
 - [rcrandall segment](/rcrandall-segment)
 - [reinforcement learning an introduction sutton](/reinforcement-learning-an-introduction-sutton)
-- [scan](/scan)
 - [seg ijcv](/seg-ijcv)
 - [skillicorn data mining](/skillicorn_data_mining)
 - [stanford lall ee365 stochastic control](/stanford-lall-ee365-stochastic-control)
