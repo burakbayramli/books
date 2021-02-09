@@ -153,7 +153,7 @@ Source codes for various books I collected over the years.
 - [aima python norvig](/aima-python-norvig)
 - [alg graph models](/alg_graph_models)
 - [all of statistics](/all-of-statistics)
-- [capitalIn21stCenturyinR](/capitalIn21stCenturyinR)
+- [Capital in 21st Century in R](/Capital_in_21st_Century)
 - [collab](/collab)
 - [compcodes](/compcodes)
 - [creating apps in kivy](/creating_apps_in_kivy)
