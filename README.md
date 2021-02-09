@@ -166,7 +166,7 @@ Source codes for various books I collected over the years.
 - [kurumsaljava](/kurumsaljava)
 - [linear programming using MATLAB samaras](/linear-programming-using-MATLAB-samaras)
 - [mathematical notebooks for the physical sciences](/mathematical-notebooks-for-the-physical-sciences)
-- [ml inaction](/ml_inaction)
+- [Machine Learning In Action](/ml_inaction)
 - [murphy probrob](/murphy_probrob)
 - [murphy ubc ca machine learning lecture](/murphy_ubc_ca_machine_learning_lecture)
 - [neural networks and deep learning](/neural-networks-and-deep-learning)
