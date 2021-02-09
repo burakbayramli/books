@@ -196,6 +196,10 @@ Source codes for various books I collected over the years.
 - [Introduction to Lattice Boltzmann Methods Sukop](/Introduction_to_Lattice_Boltzmann_Methods_Sukop)
 - [The Lattice Boltzmann Method Principles and Practice, Viggen](/Lattice Boltzmann Method_ Principles and Practice Viggen The)
 - [Advanced Engineering Mathematics Kreyszig](/Advanced_Engineering_Mathematics_Kreyszig)
+- [Computational_Fluid_Dynamics_An_Open-Source_Approach_Vermeire](/Computational_Fluid_Dynamics_An_Open-Source_Approach_Vermeire)
+- [ME 702 CFD Barba BU](/ME_702_CFD_Barba_BU)
+- [CH EN 6355 Utah CFD](/CH_EN_6355_Utah_CFD)
+- [Computational Physics Problem Solving with Python Landau](/Computational_Physics_Problem_Solving_with_Python_Landau)
 
 See my other blogs, repos
 
