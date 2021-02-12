@@ -45,7 +45,11 @@ As before, we notice that once we have an initial condition, the only unknown is
 
 $$u_{i}^{n+1}=u_{i}^{n}+\frac{\nu\Delta t}{\Delta x^2}(u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n})$$
 
-The above discrete equation allows us to write a program to advance a solution in time. But we need an initial condition. Let's continue using our favorite: the hat function. So, at $t=0$, $u=2$ in the interval $0.5\le x\le 1$ and $u=1$ everywhere else. We are ready to number-crunch!
+The above discrete equation allows us to write a program to advance a
+solution in time. But we need an initial condition. Let's continue
+using our favorite: the hat function. So, at $t=0$, $u=2$ in the
+interval $0.5\le x\le 1$ and $u=1$ everywhere else. We are ready to
+number-crunch!
 
 
 ```python
