@@ -11,7 +11,8 @@ Step 4: Burgers' Equation
 ----
 ***
 
-You can read about Burgers' Equation on its [wikipedia page](http://en.wikipedia.org/wiki/Burgers'_equation).
+You can read about Burgers' Equation on its [wikipedia
+page](http://en.wikipedia.org/wiki/Burgers'_equation).
 
 Burgers' equation in one spatial dimension looks like this:
 
@@ -54,7 +55,11 @@ This is called a *periodic* boundary condition. Pay attention! This will cause y
 ### Saving Time with SymPy
 
 
-The initial condition we're using for Burgers' Equation can be a bit of a pain to evaluate by hand.  The derivative $\frac{\partial \phi}{\partial x}$ isn't too terribly difficult, but it would be easy to drop a sign or forget a factor of $x$ somewhere, so we're going to use SymPy to help us out.  
+The initial condition we're using for Burgers' Equation can be a bit
+of a pain to evaluate by hand.  The derivative $\frac{\partial
+\phi}{\partial x}$ isn't too terribly difficult, but it would be easy
+to drop a sign or forget a factor of $x$ somewhere, so we're going to
+use SymPy to help us out.
 
 [SymPy](http://sympy.org/en/) is the symbolic math library for Python.  It has a lot of the same symbolic math functionality as Mathematica with the added benefit that we can easily translate its results back into our Python calculations (it is also free and open source). 
 

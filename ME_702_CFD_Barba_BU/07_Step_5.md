@@ -35,7 +35,10 @@ This is the exact same form as with 1-D Linear Convection, except that we now ha
 
 Again, the timestep will be discretized as a forward difference and both spatial steps will be discretized as backward differences.  
 
-With 1-D implementations, we used $i$ subscripts to denote movement in space (e.g. $u_{i}^n-u_{i-1}^n$).  Now that we have two dimensions to account for, we need to add a second subscript, $j$, to account for all the information in the regime.  
+With 1-D implementations, we used $i$ subscripts to denote movement in
+space (e.g. $u_{i}^n-u_{i-1}^n$).  Now that we have two dimensions to
+account for, we need to add a second subscript, $j$, to account for
+all the information in the regime.
 
 Here, we'll again use $i$ as the index for our $x$ values, and we'll add the $j$ subscript to track our $y$ values.  
 
