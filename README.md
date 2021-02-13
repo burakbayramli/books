@@ -199,6 +199,7 @@ Source codes for various books I collected over the years.
 - [ME 702 CFD Barba BU](/ME_702_CFD_Barba_BU)
 - [CH EN 6355 Utah CFD](/CH_EN_6355_Utah_CFD)
 - [Computational Physics Problem Solving with Python Landau](/Computational_Physics_Problem_Solving_with_Python_Landau)
+- [CUDA C++ Programming Guide](/CUDA_CPP_Programming_Guide)
 
 See my other blogs, repos
 
