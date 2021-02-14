@@ -202,6 +202,7 @@ Source codes for various books I collected over the years.
 - [CUDA C++ Programming Guide](/CUDA_CPP_Programming_Guide)
 - [Numerical Solution of Boundary Value Problems for Ordinary Differential Equations Ascher](/Numerical Solution of Boundary Value Problems for Ordinary Differential Equations Ascher)
 - [Pythonic Geodynamics Morra](/PythonicGeodynamicsMorra)
+- [Computational Problems for Physics With Guided Solutions Landau](/Computational_Problems_for_Physics_With_Guided_Solutions_Landau)
 
 See my other blogs, repos
 
