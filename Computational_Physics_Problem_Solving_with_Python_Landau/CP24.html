@@ -1,0 +1,1005 @@
+
+<html>
+<head>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({  tex2jax: {inlineMath: [["$","$"]  ]}});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+<meta charset='utf-8'>
+</head>
+<body>
+
+<h1><em>Chapter 24</em><br> Shocks Waves and Solitons</h1>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><img alt="image" src="Figs/Cover.png" /></td>
+<td align="center"><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/index.html">From <strong>COMPUTATIONAL PHYSICS</strong>, 3rd Ed, 2015</a> <br>RH Landau, MJ Paez, and CC Bordeianu (deceased) <br>Copyrights: <br> <a href="http://www.wiley-vch.de/publish/en/books/ISBN3-527-41315-4/">Wiley-VCH, Berlin;</a> and <a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-3527413154.html">Wiley &amp; Sons, New York</a><br>  R Landau, Oregon State Unv, <br>MJ Paez, Univ Antioquia,<br> C Bordeianu, Univ Bucharest, 2015.<br> Support by National Science Foundation.</td>
+<td align="center"><img alt="image" src="Figs/BackCover.png" /></td>
+</tr>
+</tbody>
+</table>
+<p><strong>24 Shock Waves and Solitons</strong><br>
+<a href="#24.1">24.1 Shocks &amp; Solitons in Shallow Water</a><br>
+<a href="#24.2">24.2 Theory: Continuity and Advection Equations</a><br>
+<a href="#24.3">24.3 Theory: Shock Waves via Burgers’ Equation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.3.1">24.3.1 Lax-Wendroff Algorithm for Burgers’Equation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.3.2">24.3.2 Implementation and Assessment</a><br>
+<a href="#24.4">24.4 Including Dispersion</a><br>
+<a href="#24.5">24.5 Shallow-Water Solitons; the KdeV Equation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.5.1">24.5.1 Analytic Soliton Solution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.5.2">24.5.2 Algorithm for KdeV Solitons</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.5.3">24.5.3 Implementation: KdeV Solitons</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.5.4">24.5.4 Exploration: Solitons in Phase Space, Crossing</a><br>
+<a href="#24.6">24.6 Solitons on Pendulum Chain</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.6.1">24.6.1 Including Dispersion</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.6.2">24.6.2 Continuum Limit, the SGE</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.6.3">24.6.3 Analytic SGE Solution</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.6.4">24.6.4 Numeric Solution: 2-D SGE Solitons</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.6.5">24.6.5 2-D Soliton Implementation</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#24.6.6">24.6.6 Visualization</a><br></p>
+<p><em>In the first half of this chapter we extends the discussion of waves in Chapters </em><a href="CP21.ipynb">21, <em>Strings &amp; Membrane Waves</em></a><em> and </em><a href="CP22.ipynb">22, <em>Quantum Packets &amp; E-M</em></a><em>, by progressively including nonlinearities,
+dispersion and hydrodynamic effects. We end up with the Korteweg-de
+Vries equation and shallow-water solitons. In the second half of the
+chapter we explore the inclusion of related nonlinear physics for the
+pendulum chain, and end up with the Sine-Gordon equation and solitons in
+solids.</em></p>
+<p><strong> This Chapter’s Lecture, Slide Web Links, Applets &amp; Animations</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/eBook/Lectures/index.html">All Lectures</a></td>
+<td><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/eBook/Lectures/index.html"><img alt="anything" src="Figs/RHLlectureMod4.png" /></a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><em>Lecture (Flash)</em></th>
+<th align="center"><em>Slides</em></th>
+<th align="center"><em>Sections</em></th>
+<th><em>Lecture (Flash)</em></th>
+<th align="center"><em>Slides</em></th>
+<th align="center"><em>Sections</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/eBook/Lectures/Modules/SolitonShock/SolitonShock.html">Shocks &amp; Solitons</a></td>
+<td align="center"><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/eBook/Lectures/Slides/Slides_NoAnimate_pdf/ShockSoliton.pdf">pdf</a></td>
+<td align="center">19.3</td>
+<td><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/eBook/Lectures/Modules/FluidDynamics/Hydro.html">Computational Fluid Dynamics</a></td>
+<td align="center"><a href="http://physics.oregonstate.edu/~rubin/Books/CPbook/eBook/Lectures/Slides/Slides_NoAnimate_pdf/CFD_24Jun10.pdf">pdf</a></td>
+<td align="center">19.6</td>
+</tr>
+<tr>
+<td><a href="http://science.oregonstate.edu/~rubin/Books/CPbook/eBook/Applets/index.html">Soliton Applet</a></td>
+<td align="center">-</td>
+<td align="center">19.5</td>
+<td><a href="http://science.oregonstate.edu/~rubin/Books/CPbook/eBook/Movies/2dsol.mp4">2-D Soliton Applet</a></td>
+<td align="center">-</td>
+<td align="center">19.5</td>
+</tr>
+<tr>
+<td><a href="http://science.oregonstate.edu/~rubin/Books/CPbook/eBook/Applets/index.html">Smoothed Particle Hydrodynamics</a></td>
+<td align="center">-</td>
+<td align="center">19.6-19.9</td>
+<td><a href="http://science.oregonstate.edu/~rubin/Books/CPbook/eBook/Applets/index.html">Shock Waves</a></td>
+<td align="center">-</td>
+<td align="center">19.3</td>
+</tr>
+</tbody>
+</table>
+<h1>24.1  Shocks &amp; Solitons in Shallow Water <a id="24.1"></a></h1>
+<p>In 1834, J. Scott Russell observed on the Edinburgh-Glasgow canal
+[<a href="BiblioLinked.html#russ">Russell(44)</a>] (Figure 24.1 A):</p>
+<p>Russell also noticed that an initial, arbitrary waveform set in motion
+in the channel evolves into two or more waves that move at different
+velocities and progressively move apart until they form individual
+solitary waves. In Figure 24.3 right we see a single step-like wave
+breaking up into approximately eight of these solitary waves (now called
+<em>solitons</em>). These eight solitons occur so frequently that some consider
+them the equivalent of normal modes for nonlinear systems. Russell went
+on to produce these solitary waves in a laboratory and to empirically
+deduced that their speed $c$ is related to the depth $h$ of the water in
+the canal and to the amplitude $A$ of the wave by</p>
+<p>$$\tag*{24.1}    c^2=g (h+A),$$</p>
+<p>where $g$ is the acceleration as a result of gravity. Equation (24.1)
+implies an effect not found in linear systems, namely, that waves with
+greater amplitudes $A$ travel faster than those with smaller
+amplitudes.Observe that this is similar to the formation of shock waves,
+but different from <em>dispersion</em> in which waves of different wavelengths
+have different velocities. The dependence of $c$ on the amplitude $A$ is
+illustrated in Figure  24.1, where we see a taller soliton catching up
+with and passing through a shorter one.</p>
+<table>
+<thead>
+<tr>
+<th align="center">A</th>
+<th align="center">B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><img alt="image" src="Figs/Fig24_1a.png" /></td>
+<td align="center"><img alt="image" src="Figs/Fig24_1b.png" /></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Figure 24.1</strong> <em>A:</em> <a href="http://www.ma.hw.ac.uk/solitons/press.html">A re-creation on the Union Canal near Edinburgh</a> of
+Russel’s soliton. <em>B:</em> Two shallow-water solitary waves crossing each
+other computed with the code <code>Soliton.py</code>. The taller soliton on the
+left catches up with and overtakes the shorter one at $\textit{t}\simeq
+\text{5}$. The waves resume their original shapes after the collision.</p>
+<p><strong>Problem:</strong> Explain Russell’s observations and see if they relate to
+the formation of <em>tsunamis</em>. The latter are ocean waves that form from
+sudden changes in the level of the ocean floor, and then travel over
+long distances without dispersion or attenuation, possibly reeking havoc
+on distant shores.</p>
+<h2>24.2 : Continuity and Advection Equations<a id="24.2"></a></h2>
+<p>The motion of a fluid is described by the continuity equation and the
+Navier-Stokes equation [<a href="BiblioLinked.html#LL">Landau &amp; Lifshitz(76)</a>]. We will discuss the
+former here and the latter in §25.2. The continuity equation describes
+conservation of mass:</p>
+<p>$$\tag*{24.2}
+\frac{\partial\rho(\mathbf{x},t)}{
+        \partial t} + \vec{\nabla}\cdot \mathbf{j} = 0,
+\quad \mathbf{j}  =  \rho \mathbf{v}(\mathbf{x}, t).$$</p>
+<p>Here $\rho(\mathbf{x},t)$ is the mass density,
+$\mathbf{v}(\mathbf{x},t)$ is the velocity of the fluid, and the product
+$\mathbf{j}=\rho\mathbf{v}$ is the mass current. As its name implies,
+the divergence $\vec{\nabla}\cdot\mathbf{j}$ describes the spreading of
+the current in a region of space, as might occur if there were a current
+source there. Physically, the continuity equation (24.2) states that
+changes in the density of the fluid within some region of space arise
+from the flow of current in and out of that region.</p>
+<p>For 1-D flow in the $x$ direction, and for a fluid that is moving with a
+constant velocity $v=c$, the continuity equation (24.2) takes the simple
+form</p>
+<p>$$\tag*{24.3}
+  \frac{\partial \rho} { \partial t} + c
+\frac{\partial \rho} {\partial x}  = 0.$$</p>
+<p>This equation is known as the <em>advection equation</em>, where the term
+“advection” is used to describe the horizontal transport of a quantity
+from one region of space to another as a result of a flow’s velocity
+field. For instance, advection describes dissolved salt transported in
+water.</p>
+<p>The advection equation looks like a first-derivative form of the wave
+equation, and indeed, the two are related. A simple substitution proves
+that any function with the form of a traveling wave,</p>
+<p>$$\tag*{24.4} u(x,t) = f(x-ct),$$</p>
+<p>will be a solution of the advection equation. If we consider a surfer
+riding along the crest of a traveling wave, that is, remaining at the
+same position relative to the wave’s shape as time changes, then the
+surfer does not see the shape of the wave change in time, which implies
+that</p>
+<p>$$\tag*{24.5} x-ct = \mbox{constant}\quad \Rightarrow\quad x=ct+
+\mbox{constant}.$$</p>
+<p>The speed of the surfer is therefore $dx/dt = c$, which is a constant.
+Any function $f(x-ct)$ is clearly a traveling wave solution in which an
+arbitrary pulse is carried along by the fluid at velocity $c$ without
+changing shape.</p>
+<h3>24.2.1  Advection Implementation<a id="24.2.1"></a></h3>
+<p>Although the advection equation is simple, trying to solve it by a
+simple differencing scheme (the leapfrog method) may lead to unstable
+numerical solutions. As we shall see when we look at the nonlinear
+version of this equation, there are better ways to solve it.
+Listing 24.1 presents our code <code>AdvecLax.py</code> for solving the advection
+equation using the Lax-Wendroff method (a better method).</p>
+<h2>24.3  Theory: Shock Waves via Burgers’ Equation <a id="24.3"></a></h2>
+<p>In a later section we will examine the Korteweg-de Vries equation’s
+description of solitary waves. In order to understand the physics
+contained in that equation, we study, one at a time, some of the terms
+in it. To start, consider Burgers’ equation [<a href="BiblioLinked.html#burgers">Burgers(74)</a>]:</p>
+<p>$$
+\frac{\partial u}{\partial t} + \epsilon u  \frac{\partial u}{\partial x} = 0
+$$</p>
+<p>$$
+\frac{\partial u}{\partial t}+ \epsilon  \frac{\partial (u^2/2)}{\partial x} = 0
+$$</p>
+<p>where the second equation is the <em>conservative form</em>. This equation can
+be viewed as a variation on the advection equation (24.3) in which the
+wave speed $c =\epsilon u$ is proportional to the amplitude of the wave,
+as Russell found for his waves. The second, nonlinear, term in Burgers’
+equation leads to some unusual behaviors. Indeed, von Neumann studied
+this equation as a simple model for turbulence [<a href="BiblioLinked.html#FS">Falkovich &amp;
+Sreenivasan(06)</a>].</p>
+<p><a href="http://www.science.oregonstate.edu/~rubin/Books/CPbook/Codes/PythonCodes/AdvecLax.py"><strong>Listing 24.1  AdvecLax.py</strong></a> solves the advection equation via the
+Lax-Wendroff scheme.</p>
+<p>In the advection equation (24.3), all points on the wave move at the
+same speed $c$, and so the shape of the wave remains unchanged in time.
+In Burgers’ equation (24.6), the points on the wave move (“advect”)
+themselves such that the local speed depends on the local wave’s
+amplitude, with the high parts of the wave moving progressively faster
+than the low parts. This changes the shape of the wave in time; if we
+start with a wave packet that has a smooth variation in height, the high
+parts will speed up and push their way to the front of the packet,
+thereby forming a sharp leading edge known as a <em>shock wave</em>
+[Tabor(89)]. A shock wave solution to Burgers’ equation with
+$\epsilon = 1$ is shown in Figure 24.2.</p>
+<p><img alt="image" src="Figs/Fig24_2.png" /></p>
+<p><strong>Figure 24.2</strong> A visualization showing the wave height <em>versus</em> position for
+increasing times showing the formation of a shock wave (sharp edge) from an
+initial sine wave.</p>
+<h3>24.3.1  Lax-Wendroff Algorithm for Burgers’ Equation<a id="24.3.1"></a></h3>
+<p>We first solve Burgers’ equation (24.3) via the usual approach in which
+we express the derivatives as central differences. This leads to a
+leapfrog scheme for the future solution in terms of present and past
+ones:</p>
+<p>$$
+u(x,t+\Delta t) = u(x,t-\Delta t)-\beta\left[\frac{u^2(x+\Delta x,t)-u^2(x-\Delta
+x,t)}{2}\right]
+$$</p>
+<p>$$
+u_{i,j+1} =
+u_{i,j-1}-\beta\left[\frac{u^2_{i+1,j}-u^2_{i-1,j}}{2}\right], \qquad
+\beta= \frac{\epsilon}{\Delta x/\Delta t}.\tag*{24.8}
+$$</p>
+<p>Here $u^2$ is the square of $u$ and is not its second derivative, and
+$\beta$ is a ratio of constants known as the <em>Courant-Friedrichs-Lewy</em>
+<span>(CFL)</span> <em>number</em>. should prove for yourself, $\beta &lt;1$ is
+required for stability.</p>
+<p>While we have used a leapfrog method with success in the past, its low-order
+approximation for the derivative becomes inaccurate when the gradients can
+get large, as happens with shock waves, and so the leapfrog algorithm may
+become unstable [<a href="BiblioLinked.html#press">Press et al.(94)</a>]. The <em>Lax-Wendroff method</em> attains better
+stability and accuracy by retaining second-order differences for the time
+derivative:</p>
+<p>$$
+u(x,t+\Delta t) \simeq u(x,t)+ \frac{\partial u}{\partial t}
+\Delta t+ \frac{1}{2}  \frac{\partial^2 u}{\partial t^2} \Delta
+t^2
+$$</p>
+<p>To covert (24.9) to an algorithm, we use Burgers’ equation $ {\partial
+u}/{\partial t} = -\epsilon {\partial({u^2}/{2} )}/{\partial x} $ for the first-order
+time derivative. Likewise, we use Burger’s equation to express the second-order
+time derivative in terms of space derivatives:</p>
+<p>$$
+\tag*{24.10}
+\frac{\partial^2 u}{\partial t^2} =  \frac{\partial}{\partial
+t}\left[-\epsilon \frac{\partial}{\partial x}\left(
+\frac{u^2}{2}\right)\right]= -\epsilon  \frac{\partial}{\partial x} \frac{\partial}{\partial
+t}\left(\frac{u^2}{2}\right)
+$$</p>
+<p>$$
+ = {-\epsilon \frac{\partial}{\partial x}\left(u
+\frac{\partial u}{\partial t}\right)}={\epsilon^2
+\frac{\partial}{\partial x}\left[u \frac{\partial}{\partial
+x}\left(\frac{u^2}{2}\right)\right]}.\tag*{24.11}
+$$</p>
+<p>We next substitute
+these derivatives into the Taylor expansion (24.9) to obtain</p>
+<p>$$\tag*{24.12} u(x,t+\Delta t) = u(x,t)-\Delta t\epsilon
+ \frac{\partial}{\partial x}\left(\frac{u^2}{2}\right)
++\frac{(\Delta t)^2}{2}\epsilon^2  \frac{\partial}{\partial x}
+\left[u \frac{\partial}{\partial
+x}\left(\frac{u^2}{2}\right)\right].$$</p>
+<p>We now replace the outer $x$ derivatives by central differences of
+spacing $\Delta x/2$:</p>
+<p>$$
+u(x,t+\Delta t )=  u(x,t) -\frac{\Delta t
+\epsilon}{2}\frac{u^2(x+\Delta x,t)-u^2(x-\Delta x,t)}{2\Delta x}
++ {\frac{\left(\Delta t\right)^2\epsilon^2}{2}}
+$$</p>
+<p>$$
+  \quad \times \frac{1}{2\Delta
+x}\left[ u\left(x+ \frac{\Delta x}{2},t\right) \frac{\partial}{\partial x} u^2\left(x+
+\frac{\Delta x} { 2},t\right)-u\left(x- \frac{\Delta x} {
+2},t\right)\right. \nonumber
+$$</p>
+<p>$$
+  \qquad \quad \ \ \times
+\left.\frac{\partial}{\partial x} {u^2\left(x- \frac{\Delta x} { 2},t\right)}
+\right].
+$$</p>
+<p>Next we approximate $u(x\pm\Delta x/2,t)$ by the average of adjacent
+grid points,</p>
+<p>$$\tag*{24.14} u(x\pm \frac{\Delta x} { 2},t) \simeq \frac{u(x,t)+u(x\pm\Delta
+x,t)}{2} ,$$</p>
+<p>and apply a central-difference approximation to the second derivatives:</p>
+<p>$$\tag*{24.15}
+\frac{\partial u^2(x\pm {\Delta x}/{ 2},t)}{\partial x}  =
+\frac{u^2(x\pm \Delta x,t) - u^2(x,t)}{\pm \Delta x}.$$</p>
+<p>Finally, putting all these derivatives together yields the discrete form</p>
+<p>$$
+u_{i,j+1} = u_{i,j} - \frac{\beta}{4}\left(u^2_{i+1,j} - u^2_{i-1,j}\right) 
+$$</p>
+<p>$$
++\frac{\beta^2}{8} \left[ (u_{i+1,j}+u_{i,j})
+\left(u^2_{i+1,j}-u^2_{i,j}\right)\right.
+\quad \left. - (u_{i,j}+u_{i-1,j} )
+\left(u^2_{i,j}-u^2_{i-1,j}\right) \right],
+$$</p>
+<p>where we have substituted the CFL number $\beta$. This Lax-Wendroff
+scheme is explicit, centered upon the grid points, and stable for
+$\beta &lt;1$ (small nonlinearities).</p>
+<h3>24.3.2  Implementation and Assessment of Burgers’ Shock Equation<a id="24.3.2"></a></h3>
+<ol>
+<li>
+<p>Write a program to solve Burgers’ equation via the leapfrog method.</p>
+</li>
+<li>
+<p>Define arrays <code>u0[100]</code> and <code>u[100]</code> for the initial data and
+    the solution.</p>
+</li>
+<li>
+<p>Take the initial wave to be sinusoidal, <code>u0[i]</code>$ = 3 \sin(3.2x)$,
+    with speed $c=1$.</p>
+</li>
+<li>
+<p>Incorporate the boundary conditions <code>u[0]=0</code> and <code>u[100]=0</code>.</p>
+</li>
+<li>
+<p>Keep the CFL number $\beta&lt; 1$ for stability.</p>
+</li>
+<li>
+<p>Now modify your program to solve Burgers’ shock equation (24.7)
+    using the Lax-Wendroff method (24.16).</p>
+</li>
+<li>
+<p>Save the initial data and the solutions for a number of times in
+    separate files for plotting.</p>
+</li>
+<li>
+<p>Plot the initial wave and the solution for several time values on
+    the same graph in order to see the formation of a shock wave (like
+    Figure  24.2).</p>
+</li>
+<li>
+<p>Run the code for several increasingly large CFL numbers. Is the
+    stability condition $\beta&lt;1 $ correct for this nonlinear problem?</p>
+</li>
+<li>
+<p>Compare the leapfrog and Lax-Wendroff methods. With the leapfrog
+    method you should see shock waves forming but breaking up into
+    ripples as the square edge develops. The ripples are
+    numerical artifacts. The Lax-Wendroff method should give a better
+    shock wave (square edge), although some ripples may still occur.</p>
+</li>
+</ol>
+<p>Listing 24.1 presents our implementation of the Lax-Wendroff method.</p>
+<h2>24.4  Including Dispersion <a id="24.4"></a></h2>
+<p>We have just seen that Burgers’ equation can turn an initially smooth
+wave into a square-edged shock wave. An inverse wave phenomenon is
+<em>dispersion</em>, in which a waveform disperses or broadens as it travel
+through a medium. Dispersion does not cause waves to lose energy and
+attenuate, but rather to lose information with time. Physically,
+dispersion may arise when the propagating medium has structures with a
+spatial regularity equal to some fraction of a wavelength.
+Mathematically, dispersion may arise from terms in the wave equation
+that contain higher-order space derivatives. For example, consider the
+waveform</p>
+<p>$$\tag*{24.17} u(x,t) = e^{\pm i(kx-\omega t)}$$</p>
+<p>corresponding to a plane wave traveling to the right (“traveling”
+because the phase $kx-\omega t$ remains unchanged if you increase $x$
+with time). When this $u(x,t)$ is substituted into the advection
+equation (24.3), we obtain</p>
+<p>$$\tag*{24.18}
+\omega =     ck.$$</p>
+<p>This equation is an example of a <em>dispersion relation</em>, that is, a
+relation between frequency $\omega$ and wave vector $k$. Because the
+<em>group velocity</em> of a wave</p>
+<p>$$\tag*{24.19} v_g = \frac{\partial \omega} {\partial k},$$</p>
+<p>the linear dispersion relation (24.18) leads to all frequencies having
+the same group velocity $c$ and thus <em>dispersionless</em> propagation.</p>
+<p>Let us now imagine that a wave is propagating with a small amount of
+<em>dispersion</em>, that is, with a frequency that has somewhat less than a
+linear increase with the wave number $k$:</p>
+<p>$$\tag*{24.20}
+ \omega  \simeq ck-\beta k^3.$$</p>
+<p>Note that we skip the even powers in (24.20), so that the group
+velocity,</p>
+<p>$$\tag*{24.21} v_g = \frac{d\omega}{dk} \simeq c - 3\beta k^2,$$</p>
+<p>is the same for waves traveling to the left the or the right. Now we
+work backwards. If plane-wave solutions like (24.17) were to arise from
+a wave equation, then (as verified by substitution) the $\omega$ term of
+the dispersion relation (24.20) would arise from a first-order time
+derivative, the $ck$ term from a first-order space derivative, and the
+$k^3$ term from a third-order space derivative:</p>
+<p>$$\tag*{24.22}
+\frac{\partial u(x,t)}{\partial t} + c   \frac{\partial
+u(x,t)}{\partial x} + \beta   \frac{\partial^3 u(x,t)}{\partial
+x^3} =0.$$</p>
+<p>We leave it as an exercise to show that solutions to this equation do
+indeed have waveforms that disperse in time.</p>
+<h2>24.5  Shallow-Water Solitons; the KdeV Equation <a id="24.5"></a></h2>
+<p><em>In this section we put all of the pieces together that are needed to
+generate shallow-water solitary waves. This is a subject for which the
+computer has been absolutely essential for discovery and understanding.
+In addition, we recommend that you look at some of the soliton
+animations we provide online.</em></p>
+<p>\
+<img alt="image" src="Figs/Fig24_3.png" /></p>
+<p><strong>Figure 24.3</strong> The formation of a tsunami. A
+single two-level waveform at time zero progressively breaks up into
+eight solitons (numbered) as time increases. The tallest soliton (1) is
+narrower and faster in its motion to the right. You can generate an
+animation of this with the program <strong>SolitonAnimate.py</strong>.</p>
+<p>We want to understand the unusual water waves that occur in shallow,
+narrow channels such as canals [<a href="BiblioLinked.html#abarb">Abarbanel et al.(93)</a>, <a href="BiblioLinked.html#tabot">Tabor(89)</a>]. The
+analytic description of this “heap of water” was given by [<a href="BiblioLinked.html#kdv">Korteweg &amp;
+deVries(95)</a>] (KdeV) with the partial differential equation</p>
+<p>$$\tag*{24.23}
+\frac{\partial u(x,t)}{\partial t} + \varepsilon u(x,t)
+\frac{\partial u(x,t)}{\partial x} + \mu    \frac{\partial ^3
+u(x,t)}{\partial x^3} = 0.$$</p>
+<p>As we discussed in § 24.1 in our study of Burgers’ equation, the
+nonlinear term $\varepsilon u    \partial
+u/\partial t$ leads to a sharpening of the wave and ultimately a <em>shock</em>
+wave. In contrast, as we discussed in our study of dispersion, the
+$\partial^3 u/\partial x^3$ term produces broadening, while the
+$\partial u/\partial t$ term produces traveling waves. For the proper
+parameters and initial conditions, the dispersive broadening exactly
+balances the nonlinear narrowing, and a stable traveling wave is formed.</p>
+<p>Korteweg and de Vries solved (24.23) analytically and proved that the
+speed (24.1) given by Russell is in fact correct. Seventy years after
+its discovery, the KdeV equation was rediscovered by [<a href="BiblioLinked.html#zab">Zabusky &amp;
+Kruskal(65)</a>], who solved it numerically and found that a $\cos(x/L)$
+initial condition broke up into eight solitary waves (Figure  24.3).
+They also found that the parts of the wave with larger amplitudes moved
+faster than those with smaller amplitudes, which is why the higher peaks
+tend to be on the right in Figure  24.3. As if wonders never cease,
+Zabusky and Kruskal, who coined the name <em>soliton</em> for these solitary
+waves, also observed that a faster peak passed through a slower one
+unscathed (Figure 24.1).</p>
+<h3>24.5.1  Analytic Soliton Solution<a id="24.5.1"></a></h3>
+<p>The trick in analytic approaches to these types of nonlinear equations
+is to substitute a guessed solution that has the form of a traveling
+wave,</p>
+<p>$$\tag*{24.24}
+ u(x,t) = u(\xi=x-ct).$$</p>
+<p>This form means that if we move with a constant speed $c$, we will see a
+constant wave form (but now the speed will depend on the magnitude of
+$u$). There is no guarantee that this form of a solution exists, but it
+is a lucky guess because substituting it into the KdeV equation produces
+a solvable ODE:</p>
+<p>$$
+\displaystyle -c    \frac{\partial u} {\partial\xi}+ \epsilon u
+  \frac{\partial u} {\partial \xi}+\mu   \frac{d^3 u} { d\xi^3}
+= 0
+$$</p>
+<p>$$
+\displaystyle u(x,t) = \frac{-c} { 2}
+\mbox{sech}^{2}\left[ \frac{1}{2}\sqrt{c}(x-ct-\xi_0)\right]
+$$</p>
+<p>where $\xi_0$ is the initial phase. We see in (24.25) an amplitude that
+is proportional to the wave speed $c$, and a $\mbox{sech}^{2}$ function
+that gives a single lump-like wave. This is an analytic form for a
+soliton.</p>
+<h3>24.5.2  Algorithm for KdeV Solitons<a id="24.5.2"></a></h3>
+<p>The KdeV equation is solved numerically using a finite-difference scheme
+with the time and space derivatives given by central-difference
+approximations:</p>
+<p>$$\tag*{24.27}
+\frac{\partial u}{\partial t} \simeq \frac{u_{i,j+1}-u_{i,j-1} }
+{2\Delta t},\quad \frac{\partial u} {\partial
+x}\simeq\frac{u_{i+1,j}-u_{i-1,j}}{2 \Delta x}.$$</p>
+<p>To approximate $\partial^3 u(x,t)/\partial x^3$, we expand $u(x,t)$ to
+${\cal O }(\Delta t)^3$ about the four points $u(x\pm
+2\Delta x,t)$ and $u(x \pm \Delta x, t)$,</p>
+<p>$$\tag*{24.28} u(x \pm \Delta x,t) \simeq u(x,t) \pm (\Delta x) \frac{\partial u }
+{ \partial x}+ \frac{(\Delta x)^2 } { 2 !} \frac{\partial^2 u } { \partial^2 x} \pm
+\frac{(\Delta x)^3 } { 3!}
+\frac{\partial^3 u}{\partial x^3} ,$$</p>
+<p>which we solve for $\partial^3 u(x,t)/\partial x^3$. Finally, the factor
+$u(x,t)$ in the second term of (24.23) is taken as the average of three
+$x$ values all with the same $t$:</p>
+<p>$$\tag*{24.29} u(x,t) \simeq \frac{u_{i+1,j} + u_{i,j} + u_{i-1,j}} {3}.$$</p>
+<p>We substitute these approximations to obtain the algorithm for the KdeV
+equation:</p>
+<p>$$
+u_{i,j+1} \simeq   u_{i,j-1} - \frac{\epsilon } { 3}
+\frac{\Delta t} { \Delta x}\left[u_{i+1,j}+u_{i,j}+u_{i-1,j}\right] \left[u_{i+1,j} -u_{i-1,j} \right]
+$$</p>
+<p>$$
+ \qquad -\mu \frac{\Delta t }{(\Delta x)^3}\left[u_{i+2,j}+2 u_{i-1,j}-2
+u_{i+1,j}-u_{i-2,j}\right].\tag*{24.30}
+$$</p>
+<p>To apply this algorithm to predict future times, we need to know $u(x,t)$ at
+present and past times. The initial-time solution $u_{i,1}$ is known for all
+positions $i$ via the initial condition. To find $u_{i,2}$, we use a
+forward-difference scheme in which we expand $u(x,t)$, keeping only two terms
+for the time derivative:</p>
+<p>$$
+u_{i,2} &amp;\simeq u_{i,1} - \frac{\epsilon \Delta t}{6
+ \Delta x}\left[u_{i+1,1}+u_{i,1}+u_{i-1,1}\right] \left[u_{i+1,1} - u_{i-1,1}\right]
+$$</p>
+<p>$$
+  \quad- \frac{\mu}{2} \frac{\Delta t} { (\Delta x)^3} \left[u_{i +2,1} + 2 u_{i-1,1}-2
+u_{i+1,1}-u_{i-2,1}\right].\tag*{24.31}
+$$</p>
+<p>The keen observer will note
+that there are still some undefined columns of points, namely, $u_{1,j}$,
+$u_{2,j}$, $ u_{N_{\textrm max}-1,j}$, and $u_{N_{\textrm max},j}$, where
+$N_{\textrm max}$ is the total number of grid points. A simple technique for
+determining their values is to assume that $u_{1,2}=1$ and $u_{N_{\textrm
+max},2}=0$. To obtain $u_{2,2}$ and $u_{N_{\textrm max}-1,2}$, assume that $
+u_{i+2,2}=u_{i+1,2}$ and $u_{i-2,2}=u_{i-1,2}$ (avoid $ u_{i+2,2}$ for
+$i=N_{\textrm max}-1$, and $u_{i-2,2}$ for $i=2$). To carry out these steps,
+approximate (24.31) so that </p>
+<p>$$\tag*{24.32}
+ u_{i+2,2}+2u_{i-1,2}-2u_{i+1,2}-u_{i-2,2} \rightarrow u_{i-1,2}-u_{i+1,2}.$$</p>
+<p>The truncation error and stability condition for our algorithm are
+related:</p>
+<p>$$
+{\cal E}(u)  =  {\cal O}[(\Delta t)^3]  + {\cal O} [\Delta t
+(\Delta x)^2],\tag*{24.33}
+$$</p>
+<p>$$
+ \quad \frac{1}{(\Delta x/ \Delta t)} \left [ \epsilon |u| + 4
+\frac{\mu}{(\Delta x)^2} \right ] \leq 1
+ .\tag*{24.34}
+$$</p>
+<p>The first equation shows that smaller time and space steps lead to a
+smaller approximation error, yet because round-off error increases with
+the number of steps, the total error does not necessarily decrease
+(<a href="CP03.ipynb">Chapter  3, <em>Errors &amp; Uncertainties in Computations</em></a>).
+Yet we are also limited in how small the steps can be made by the
+stability condition (24.34), which indicates that making $\Delta x$ too
+small always leads to instability. Care and experimentation are
+required.</p>
+<h3>24.5.3  Implementation: KdeV Solitons<a id="24.5.3"></a></h3>
+<p>Modify or run the program <code>Soliton.py</code> in Listing 24.2 that solves the
+KdeV equation (24.23) for the initial condition</p>
+<p>$$\tag*{24.35} u(x,t=0)= \frac{1}{2} \left [ 1- \tanh \left ( \frac{x -25}{5}
+\right)\right ] ,$$</p>
+<p>with parameters $\epsilon=0.2$ and $\mu=0.1$. Start with $\Delta x
+= 0.4$ and $\Delta t=0.1$. These constants are chosen to satisfy (24.33)
+with $\vert u \vert =1 $.</p>
+<ol>
+<li>
+<p>Define a 2-D array <code>u[131,3]</code> with the first index corresponding to
+    the position $x$ and the second to the time $t$. With our choice of
+    parameters, the maximum value for $x$ is $130
+    \times 0.4=52$.</p>
+</li>
+<li>
+<p>Initialize the time to $t=0$ and assign values to <code>u[i,1]</code>.</p>
+</li>
+<li>
+<p>Assign values to <code>u[i,2]</code>, $i  =  3, 4, \ldots, 129$,
+    corresponding to the next time interval. Use (24.31) to advance the
+    time but note that you cannot start at $i=1$ or end at $i=131$
+    because (24.31) would include <code>u[132,2]</code> and <code>u[-1,1]</code>, which are
+    beyond the limits of the array.</p>
+</li>
+<li>
+<p>Increment the time and assume that <code>u[1,2]</code> $=1$ and <code>u[131,2]</code>
+    $=0$. To obtain <code>u[2,2]</code> and <code>u[130,2]</code>, assume that <code>u[i+2,2]</code> $=$
+    <code>u[i+1,2]</code> and <code>u[i-2,2]</code> $ =$ <code>u[i-1,2]</code>. Avoid <code>u[i+2,2]</code> for <code>i</code>
+    $=$ <code>130</code>, and <code>u[i-2,2]</code> for <code>i</code> $=$ <code>2</code>. To do this,
+    approximate (24.31) so that (24.33) is satisfied.</p>
+</li>
+<li>
+<p>Increment time and compute <code>u[i, j]</code> for <code>j</code> $=$ <code>3</code> and for <code>i</code> $=$
+    <code>3, 4,..., 129</code>, using equation (24.30). Again follow the same
+    procedures to obtain the missing array elements <code>u[2, j]</code> and
+    <code>u[130, j]</code> (set <code>u[1, j]</code> $=$ <code>1.</code> and <code>u[131, j]</code> $=$ <code>0</code>). As you
+    print out the numbers during the iterations, you will be convinced
+    that it was a good choice.</p>
+</li>
+<li>
+<p>Set <code>u[i,1]</code> $=$ <code>u[i,2]</code> and <code>u[i,2]</code> $=$ <code>u[i,3]</code> for all <code>i</code>. In
+    this way you are ready to find the next <code>u[i,j]</code> in terms of the
+    previous two rows.</p>
+</li>
+<li>
+<p>Repeat the previous two steps about 2000 times. Write your solution
+    to a file after approximately every 250 iterations.</p>
+</li>
+<li>
+<p>Use your favorite graphics tool to plot your results as a 3-D graph
+    of disturbance $u$ <em>versus</em> position <em>and versus</em> time.</p>
+</li>
+<li>
+<p>Observe the wave profile as a function of time and try to confirm
+    Russell’s observation that a taller soliton travels faster than a
+    smaller one.</p>
+</li>
+</ol>
+<p><a href="http://www.science.oregonstate.edu/~rubin/Books/CPbook/Codes/PythonCodes/Soliton.py"><strong>Listing 24.2  Soliton.py</strong></a>
+solves the KdeV equation for 1-D solitons corresponding to a “bore”
+initial conditions. 
+The code <a href="http://www.science.oregonstate.edu/~rubin/Books/CPbook/Codes/PythonCodes/SolitonAnimate.py"><strong>SolitonAnimate.py</strong></a> produces an animation.</p>
+<h3>24.5.4  Exploration: Solitons in Phase Space, Crossing<a id="24.5.4"></a></h3>
+<ol>
+<li>
+<p>Explore what happens when a tall soliton collides with a short one.</p>
+<ul>
+<li>Start by placing a tall soliton of height $0.8$ at $x=12$ and a
+    smaller soliton in front of it at $x=26$:</li>
+</ul>
+</li>
+</ol>
+<p>$$
+u(x, t=0)= 0.8 \left[1- \tanh^2 \left( \frac{3x}{12}
+-3\right)\right]
+$$</p>
+<p>$$
+ +  0.3 \left[1-\tanh^2\left( \frac{4.5x }{ 26}
+ -4.5\right)\right].
+$$</p>
+<ul>
+<li>
+<p>Do they reflect from each other? Do they go through each other? Do they interfere? Does the tall soliton still move faster than   the short one after the collision (Figure  24.1)?</p>
+</li>
+<li>
+<p>Construct phase-space plots [$\dot{u}(t)$ <em>versus</em> $u(t)$] of the
+    KdeV equation for various parameter values. Note that only very
+    specific sets of parameters produce solitons. In particular, by
+    correlating the behavior of the solutions with your phase-space
+    plots, show that the soliton solutions correspond to the
+    <em>separatrix</em> solutions to the KdeV equation. In other words, the
+    stability in time for solitons is analogous to the infinite period
+    for a pendulum balanced straight upward.</p>
+</li>
+</ul>
+<h2>24.6  Solitons on Pendulum Chain <a id="24.6"></a></h2>
+<p>In 1955, Fermi, Ulam, and Pastu were investigating how a 1-D chain of
+coupled oscillators disperses waves. Because waves of differing
+frequencies traveled through the chain with differing speeds, a pulse,
+which inherently includes a range of frequencies, broadens as time
+progresses. Surprisingly, when the oscillators were made more realistic
+by introducing a nonlinear term into Hooke’s law</p>
+<p>$$\tag*{24.37}
+    F(x) \simeq -k(x+ \alpha x^2),$$</p>
+<p>Fermi, Ulam, and Pastu found that even in the presence of dispersion, a
+sharp pulse in the chain would survive indefinitely. Your <strong>problem</strong> is
+to explain how this combination of dispersion and nonlinearity can
+combine to produce a stable pulse.</p>
+<p><img alt="image" src="Figs/Fig24_4.png" /></p>
+<p><strong>Figure 24.4</strong> A 1-D chain of pendulums
+coupled with a torsion bar on top. The pendulums swing in planes
+perpendicular to the length of the bar.</p>
+<p>In <a href="CP14.ipynb">Chapter 14</a> we studied nonlinear effects in a single
+pendulum arising from large oscillations. Now we go further and couple a
+number of those pendula together. As shown in Figure  24.4, we take as
+our model a 1-D chain of identical, equally-spaced pendula connected by
+a torsion bar that twists as the pendula swing. The angle $\theta_i$
+measures the displacement of pendulum $i$ from its equilibrium position,
+and $a$ the distance between pivot points. If all the pendulums are set
+off swinging together, $\theta_i \equiv \theta_j$, the coupling torques
+would vanish and we would have our old friend, the equation for a
+realistic pendulum. We assume that three torques act on each pendulum, a
+gravitational torque trying to return the pendulum to its equilibrium
+position, and the two torques from the twisting of the bar to the right
+and to the left of the pendulum. The equation of motion for pendulum $j$
+follows from Newton’s law for rotational motion:</p>
+<p>$$
+    \sum_{j\neq i} \tau_{ji} = I \frac{d^2\theta_j(t)}{dt^2}
+$$</p>
+<p>$$
+    -\kappa (\theta_j-\theta_{j-1})
+    - \kappa (\theta_j -\theta_{j+1}) - mgL\sin\theta_j
+    = I  \frac{d^2\theta_j(t) } {dt^2},\tag*{24.39}
+$$</p>
+<p>$$\Rightarrow \quad \boxed{\kappa(\theta_{j+1}-2\theta_j+\theta_{j-1}) - mgL\sin\theta_j
+    =  I  \frac{d^2\theta_j(t)} {dt^2},} \tag*{24.40}$$</p>
+<p>where $I$ is the moment of inertia of each pendulum, $L$ is the length
+of the pendulum, and $\kappa$ is the torque constant of the bar. The
+nonlinearity in (24.40) arises from the
+$\sin\theta\simeq \theta-\theta^3/6 + \ldots$ dependence of the
+gravitational torque. As it stands, (24.40) is a set of coupled
+nonlinear equations, with the number of equations equal to the number of
+oscillators, which would be large for a realistic solid.</p>
+<h3>24.6.1  Including Dispersion<a id="24.6.1"></a></h3>
+<p>Consider a surfer remaining on the crest of a wave. Since she does not
+see the wave form change with time, her position is given by a function
+of the form $f(k x -\omega t)$. Consequently, to her the wave has a
+constant phase</p>
+<p>$$\tag*{24.41}
+    k x -\omega t = \mbox{constant} \quad \Rightarrow \quad x = \omega t/k = \mbox{constant} .$$</p>
+<p>The surfer’s (phase) velocity is the rate of change of $x$ with respect
+to time,</p>
+<p>$$\tag*{24.42}
+    v_p \ =\  \frac{dx} {dt} \ =\  \frac{\omega} {k},$$</p>
+<p>which is constant. In general, the frequency $\omega$ may be a nonlinear
+function of $k$, in which case the phase velocity varies with frequency
+and we have <em>dispersion</em>. If the wave contained just one frequency, then
+you would not observe any dispersion, but if the wave was a pulse
+composed of a range of Fourier components, then it would broaden and
+change shape in time as each frequency moved with a differing phase
+velocity. So although dispersion does not lead to an energy loss, it may
+well lead to a loss of information content as pulses broaden and
+overlap.</p>
+<p><img alt="image" src="Figs/Fig24_5.png" /></p>
+<p><strong>Figure 24.5</strong> The dispersion relation for a
+linearized chain of pendulums.</p>
+<p>The functional relation between frequency $\omega$ and the wave vector
+$k$ is called a <em>dispersion relation</em>. If the Fourier components in a
+wave packet are centered around a mean frequency $\omega_0$, then the
+pulse’s information travels, not with the phase velocity, but with the
+<em>group velocity</em></p>
+<p>$$\tag*{24.43}
+    v_g  = \left.  \frac{\partial \omega} {\partial
+    k}\right|_{\omega_0}.$$</p>
+<p>A comparison of (24.42) and (24.43) makes it clear that when there is
+dispersion the group and phase velocities may well differ.</p>
+<p>To isolate the dispersive aspect of (24.40) we examine its linear
+version</p>
+<p>$$\tag*{24.44}
+     \frac{d^2\theta_j(t) } {dt^2} + \omega_0^2 \theta_j(t)   =
+     \frac{\kappa} {I} (\theta_{j+1}-2\theta_j+\theta_{j-1}),$$</p>
+<p>where $\omega_0=\sqrt{mgL/I}$ is the natural frequency for any one
+pendulum. Because we want to determine if a wave with a single frequency
+propagates on this chain, we start with a traveling-wave with frequency
+$\omega$ and wavelength $\lambda$,</p>
+<p>$$\tag*{24.45}
+    \theta_j(t) \ =\  A e^{i(\omega t-kx_j)},
+    \qquad k= \frac{2\pi} {\lambda},$$</p>
+<p>and then test if it is a solution. Substitution of (24.45) into the wave
+equation (24.44) produces the <em>dispersion relation</em> (Figure  24.5):</p>
+<p>$$\tag*{24.46}
+    \omega^2 = \omega_0^2 -  \frac{2\kappa} {I} (1-\cos ka),
+    \qquad \ \mbox{(dispersion relation)}.$$</p>
+<p>To have dispersionless propagation (all frequencies propagate with the
+same velocity), we need a linear relation between $\omega$ and $k$:</p>
+<p>$$\tag*{24.47}
+    \lambda= c \frac{2\pi } {\omega} \hspace{6ex}\Rightarrow \ \ \
+    \omega=ck,
+    \hspace{8ex}\ \mbox{(dispersionless propagation)}.$$</p>
+<p>This will be true for the chain only if $ka$ is small, because then
+$\cos ka\simeq 1$ and $\omega \simeq \omega_0$.</p>
+<p>Not only does the dispersion relation (24.46) change the speed of waves,
+but it actually limits which frequencies can propagate on the chain. In
+order to have real $k$ solutions, $\omega$ must lie in the range</p>
+<p>$$\tag<em>{24.48}
+    \omega_0 \leq \omega \leq \omega^</em> \hspace{12ex}\   \mbox{(waves propagation).}$$</p>
+<p>The minimum frequency $\omega_0$ and the maximum frequency $\omega^*$
+are related through the limits of $\cos ka$ in (24.46),</p>
+<p>$$\tag<em>{24.49}
+    (\omega^</em>)^2 \ =\ \omega_0^2 +  \frac{4\kappa} {I} .$$</p>
+<p>Waves with $\omega &lt; \omega_0$ do not propagate, while those with
+$\omega&gt;\omega^*$ are nonphysical because they correspond to wavelengths
+$\lambda &lt;
+2a$, that is, oscillations where there are no particles. These high and
+low $\omega$ cutoffs change the shape of a propagating pulse, that is,
+cause dispersion.</p>
+<h3>24.6.2  Continuum Limit, the Sine-Gordon Equation<a id="24.6.2"></a></h3>
+<p>If the wavelengths in a pulse are much longer than the pendulum-pendulum
+repeat distance $a$, that is, if $ka \ll 1$, the chain can be
+approximated as a continuous medium. In this limit, $a$ becomes the
+continuous variable $x$, and the system of coupled ordinary differential
+equations becomes a single, partial differential equation:</p>
+<p>$$
+\theta_{j+1}   \simeq \theta_j +  \frac{\partial \theta} {\partial x}
+\Delta x
+$$</p>
+<p>$$
+\Rightarrow \qquad (\theta_{j+1}-2\theta_j+\theta_{j-1})
+\simeq    \frac{\partial^2\theta} {\partial x^2}
+\Delta x^2 \rightarrow  \frac{\partial^2\theta} {\partial x^2} a^2
+$$</p>
+<p>$$
+\Rightarrow \qquad \frac{\partial^2\theta} {\partial t^2} -
+{\kappa a^2\over I}{\partial ^2\theta\over \partial x^2}  =
+\frac{mgL} {I}\sin\theta
+$$</p>
+<p>If we measure time in units of $\sqrt{I/mgL}$ and distances in units of
+$\sqrt{\kappa a/(mgLb)}$, we obtain the standard form of the sine-Gordon
+equation (SGE)[<em>Note:</em> The name “sine-Gordon” is either a reminder that
+the SGE is like the Klein-Gordon equation of relativistic quantum
+mechanics with a $\sin u$ added to the RHS, or a reminder of how clever
+one can be in thinking up names.]:</p>
+<p>$$\tag*{24.53}
+    \boxed{ \frac{1}{c^2}\frac{\partial^2\theta } {\partial t^2}
+    -  \frac{\partial^2\theta } {\partial x^2} =
+    \sin\theta} \hspace{12ex}\mbox{(SGE)},$$</p>
+<p>where the $\sin\theta$ on the RHS introduces the nonlinear effects.</p>
+<h3>24.6.3  Analytic SGE Solution<a id="24.6.3"></a></h3>
+<p>The nonlinearity of the sine-Gordon equation (24.53) makes it hard to
+solve analytically. There is, however, a trick. Guess a functional form
+of a traveling wave, substitute it into (24.53) and thereby convert the
+PDE into a solvable ODE:</p>
+<p>$$\tag*{24.54}
+    \theta(x,t)  \ \stackrel{?}{=}\   \theta(\xi=t\pm x/v),\hspace{6ex}
+    \Rightarrow \hspace{6ex}   \frac{d^2\theta} {d\xi^2}    =
+     \frac{v^2} {v^2-1}\sin\theta.$$</p>
+<p>You should recognize (24.54) as our old friend, the equation of motion
+for the realistic pendulum with no driving force and no friction. The
+constant $v$ is a velocity in natural units, and separates different
+regimes of the motion:</p>
+<p>$$\tag*{24.55}
+\begin{array}{llcc}
+     v&lt; 1: &amp; \mbox{pendula initially down}&amp;
+      \downarrow\downarrow\downarrow\downarrow\downarrow
+    &amp; \mbox{(stable),}\
+    v&gt;1:  &amp; \mbox{pendula initially  up}
+     &amp; \uparrow\uparrow\uparrow\uparrow\uparrow
+        &amp;\mbox{(unstable).}\
+    \end{array}$$</p>
+<p>Although the equation is familiar, that does not mean that an analytic
+solution exists. However, for an energy $E=\pm1$, we have motion along
+the separatrix, and have a solution with characteristic <em>soliton</em> form,</p>
+<p>$$\tag*{24.56}
+    \theta(x-vt) \ = \begin{cases}
+    4\mbox{tan}^{-1}\left(\exp\left[+  \frac{x-vt} {
+    \sqrt{1-v^2}}\right]\right), &amp;
+    \mbox{for}\ E=1,\
+    4\mbox{tan}^{-1}\left(\exp\left[- \frac{x-vt} {
+    \sqrt{1-v^2}}\right]\right)
+    + \pi,&amp; \mbox{for}\ E=-1.
+    \end{cases}$$</p>
+<p>This soliton corresponds to a solitary <em>kink</em> traveling with velocity
+$v=-1$ that flips the pendulums around by $2\pi$ as it moves down the
+chain. There is also an <em>antikink</em> in which the initial $\theta=\pi$
+values are flipped to final $\theta=-\pi$.</p>
+<p><img alt="image" src="Figs/Fig24_6.png" /></p>
+<p><strong>Figure 24.6</strong> A circular ring soliton at times 8, 20, 40, 60, 80, and 120. This
+has been proposed as a model for an elementary particle.</p>
+<h3>24.6.4  Numeric Solution: 2-D SGE Solitons<a id="24.6.4"></a></h3>
+<p>We have already solved for 1-D solitions arising from the KdeV equation.
+The elastic-wave solitons that arise from the SGE can be easily
+generalized to two dimensions, as we do here with the 2-D generalization
+of the SGE equation (24.53):</p>
+<p>$$\tag*{24.57}
+     \frac{1}{c^2}\frac{\partial^2 u} {\partial t^2}
+    -  \frac{\partial^2u} {\partial x^2}
+    -  \frac{\partial^2u} {\partial y^2} =
+    \sin u \hspace{5ex}\mbox{(2-D SGE)}.$$</p>
+<p>Whereas the 1-D SGE describes wave propagation along a chain of
+connected pendulums, the 2-D form might describe wave propagation in
+nonlinear elastic media. Interestingly enough, the same 2-D SGE also
+occurs in quantum field theory, where the soliton solutions have been
+suggested as models for elementary particles [<a href="BiblioLinked.html#christ">Christiansen &amp;
+Lomdahl(81)</a>, <a href="BiblioLinked.html#christ2">Christiansen &amp; Olsen(78)</a>, <a href="BiblioLinked.html#argyris">Argyris(91)</a>]. The idea is that,
+like elementary particles, the solutions are confined to a region of
+space for a long period of time by nonlinear forces, and do not radiate
+away their energy. We solve (24.57) in a finite region of 2-D space and
+for positive times:</p>
+<p>$$-x_0 &lt; x &lt; x_0, \hspace{6ex} \ -y_0 &lt; y &lt; y_0,   \quad   t \geq 0.$$</p>
+<p>We take $x_0=y_0=7$ and impose the <em>boundary conditions</em> that the
+derivative of the displacement vanishes at the ends of the region:</p>
+<p>$$\tag*{24.58}
+     \frac{\partial u } {\partial x}(-x_0,y,t) =   \frac{\partial u } {
+    \partial x} (x_0,y,t) =  \frac{\partial u } {\partial y}
+    (x,-y_0,t) =  \frac{\partial u} {\partial y}(x,y_0,t) =0.$$</p>
+<p>We also impose the <em>initial condition</em> that at time $t=0$ the waveform
+is that of a pulse (Figure  24.6) with its surface at rest:</p>
+<p>$$\tag*{24.60} u(x,y,t=0) = 4
+    \tan^{-1}(e^{3-\sqrt{x^2+y^2}}), \hspace{6ex}
+    \frac {\partial u} {\partial t}(x,y,t=0) = 0.$$</p>
+<p>We discretize the equation first by looking for solutions on a
+space-time lattice:</p>
+<p>$$
+x \ = m\Delta x, \hspace{6ex}\ y = l \Delta x, \hspace{6ex}\ t = n \Delta t
+$$</p>
+<p>$$
+u_{m,l}^n   \  = \  u(m\Delta x,\ l \Delta x, \ n\Delta t).
+$$</p>
+<p>Next we replace the derivatives in (24.57) by their finite-difference
+approximations:</p>
+<p>$$
+u_{m,l}^{n+1}   \simeq \   -u_{m,l}^{n-1} + 2\left[1-2\left( \frac{\Delta t} {\Delta x} \right)^2\right] u_{m,l}^n \
++\left ( \frac{\Delta t} {\Delta x}\right)^2 \left(
+u_{m+1,l}^n + u_{m-1, l}^n+ u_{m, l +1}^n+u_{m, l-1}^n\right) \nonumber
+$$</p>
+<p>$$
+ -\Delta t^2 \sin \left[ \frac{1}{4} \left(u_{m+1,l}^n + u_{m-1,l}^n+ u_{m,l+1}^n + u_{m,l-1}^n\right)\right].\nonumber
+$$</p>
+<p>To make the algorithm simpler and establish stability, if we make the
+time and space steps proportional, $\Delta t  =  \Delta x /\sqrt{2}$.
+This leads to all of the $u^n_{m,l}$ terms dropping out:</p>
+<p>$$
+u_{m, l }^{2}    \simeq
+\frac{1}{2} \left (u_{m+1, l }^1+u_{m-1,l}^1+ u_{m, l +1}^1+u_{m,l-1}^1\right)
+$$</p>
+<p>$$
+- \frac{\Delta t^2} {2} \sin \left [ \frac{1}{4}
+\left(u_{m+1,l}^1+ u_{m-1, l }^1+ u_{m, l +1}^1+u_{m, l -1}^1\right)\right]
+$$</p>
+<p>Likewise, the discrete form of vanishing initial velocity (24.60)
+becomes</p>
+<p>$$\tag*{24.65}
+    \partial u(x,y,0)/\partial t \ =\ 0
+    \hspace{6ex}\Rightarrow \hspace{6ex}  u^2_{m,l}\ =\ u^0_{m,l} .$$</p>
+<p>This will be useful in setting the initial conditions. The lattice
+points on the edges and corners cannot be obtained from these relations,
+but must be obtained by applying the boundary conditions (24.58):</p>
+<p>$$
+\tag*{24.66}
+     \frac{\partial u } {\partial z}(x_0,y,t) &amp;  =  \frac{u(x+\Delta
+    x,y,t)-u(x,y,t) } {\Delta x}=0
+$$</p>
+<p>$$
+     \Rightarrow
+    \hspace{6ex}u_{1, l }^n &amp;\ =\  u_{2, l }^n .\tag*{24.67}
+$$</p>
+<p>Similarly, the other derivatives in (24.58) give</p>
+<p>$$\tag*{24.68}
+    u_{N_{\textrm max}, l }^n  =  u^n_{N_{\textrm max}-1, l },  \quad
+    u^n_{m,2}  =  u^n_{m,1}, \quad u^n_{m,N_{\textrm max}}  =
+    u^n_{m,N_{\textrm max}-1},$$</p>
+<p>where $N_{\textrm max}$ is the number of grid points used for one space
+dimension.</p>
+<h3>24.6.5  2-D Soliton Implementation<a id="24.6.5"></a></h3>
+<ol>
+<li>
+<p>Define an array $u[N_{\textrm max},N_{\textrm max}, 3]$ with
+    $N_{\textrm max}=201$ for the space slots and the 3 for the
+    time slots.</p>
+</li>
+<li>
+<p>The solution (24.60) for the initial time $t=0$ is placed in
+    $u[m,l,1]$.</p>
+</li>
+<li>
+<p>The solution for the second time $\Delta t$ is placed in $u(m,l,2)$,
+    and the solution for the next time, $2\Delta t$, is placed in
+    $u[m,l,3]$.</p>
+</li>
+<li>
+<p>Assign the constants, $\Delta x= \Delta y
+        =\frac{7}{100},$ $\Delta t = \Delta x/ \sqrt{2}$, $y_0=x_0=7.$</p>
+</li>
+<li>
+<p>Start off at $t=0$ with the initial conditions and impose the
+    boundary conditions to this initial solution. This is the solution
+    for the first time step, defined over the entire
+    $201\times 201$ grid.</p>
+</li>
+<li>
+<p>For the second time step, increase time by $\Delta t$ and
+    use (24.64) for all points in the plane. Do not include the
+    edge points.</p>
+</li>
+<li>
+<p>At the edges, for $i=1, 2, \ldots,  200$, set</p>
+</li>
+</ol>
+<p>$$
+        u[i,1,2] = u[i,2,2],\hspace{6ex}
+        u[i,N_{\textrm max},2] = u[i,N_{\textrm max-1},2]
+$$</p>
+<p>$$
+        u[1,i,2] = u[2,i,2] ,\hspace{6ex}
+        u[N_{\textrm max},i,2]  =  u[N_{\textrm max-1},i,2].
+$$</p>
+<ol>
+<li>To find values for the four points in the corners for the second
+    time step, again use initial condition (24.64):</li>
+</ol>
+<p>$$
+        u[1,1,2] = u[2,1,2], \hspace{4ex}   u[N_{\textrm max},N_{\textrm max},2]  =  u[N_{\textrm max-1},N_{\textrm max-1},2],    <br />
+$$</p>
+<p>$$
+u[1,1,N_{\textrm max}]  = u[2,N_{\textrm max},2],\hspace{4ex}
+        u[N_{\textrm max},1,2] = u[N_{\textrm max-1},1,2]  .
+$$</p>
+<ol>
+<li>
+<p>For the third time step (the future), use (24.64).</p>
+</li>
+<li>
+<p>Continue the propagation forward in time, reassigning the future to
+    the present, and so forth. In this way we need store the solutions
+    for only three time steps.</p>
+</li>
+</ol>
+<h3>24.6.6  SGE Soliton Visualization<a id="24.6.6"></a></h3>
+<p>We see in Figure 24.6 the time evolution of a circular ring soliton
+that result for the stated initial conditions. We note that the ring at
+first shrinks in size, then expands, and then shrinks back into another
+(but not identical) ring soliton. A small amount of the particle does
+radiate away, and in the last frame we can notice some interference
+between the radiation and the boundary conditions. An animation of this
+sequence can be found online.</p>
+<pre><code class="python">
+</code></pre>
+
+</body>
+</html>
+
