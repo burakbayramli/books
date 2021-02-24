@@ -4,6 +4,8 @@
     C Bordeianu, Univ Bucharest, 2017. 
     Please respect copyright & acknowledge our work."""
 
+# convert -delay 30 /tmp/out/*.png ~/Downloads/anim.gif
+
 # SolitonAnimate.py: Solves KdeV equation for a soliton  
 
 #from visual import *
@@ -68,6 +70,7 @@ for j in range (1, max + 1):
             x[i] = 2*i - 130
             y[i] = 50.*u[i, 2] - 30
         #sol.pos
+        plt.ylim(-20,60)
         plt.plot(x, y)
         #plt.show()
         plt.savefig('/tmp/out/out-%04d.png' % j)
