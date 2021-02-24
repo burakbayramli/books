@@ -1,26 +1,16 @@
-""" From "COMPUTATIONAL PHYSICS" & "COMPUTER PROBLEMS in PHYSICS"
-    by RH Landau, MJ Paez, and CC Bordeianu (deceased)
-    Copyright R Landau, Oregon State Unv, MJ Paez, Univ Antioquia, 
-    C Bordeianu, Univ Bucharest, 2017. 
-    Please respect copyright & acknowledge our work."""
 
+# Took out vpython dependency
+#
+# to generate animation out of png files we can use ImageMagick
 # convert -delay 30 /tmp/out/*.png ~/Downloads/anim.gif
 
-# SolitonAnimate.py: Solves KdeV equation for a soliton  
-
-#from visual import *
 import numpy as np, math
 import matplotlib.pyplot as plt
-
-# Set up plot
-#g   = display(width = 600, height = 300, title = 'Soliton')
-#sol = curve(x = list(range(0, 131)), color = color.yellow)
 
 x = np.arange(0, 131)
 y = np.zeros(len(x))
 
 # Parameters
-#sol.radius = 1.0                      # thickness of line
 ds = 0.4                              # Delta x
 dt = 0.1                              # Delta t
 max = 2000                            # Numb t steps
@@ -65,18 +55,15 @@ for j in range (1, max + 1):
         else: a2 = u[i-1, 1] - u[i+1, 1]  
         a3 = u[i + 1, 1] - u[i - 1, 1] 
         u[i, 2] = u[i, 0] - a1*a3 - 2.*fac*a2/3.
-    if j%5 == 0:                    # Plot every 100 time steps
+    if j%10 == 0:                    # Plot every 100 time steps
         for i in range (0, mx-2):
             x[i] = 2*i - 130
             y[i] = 50.*u[i, 2] - 30
-        #sol.pos
         plt.ylim(-20,60)
         plt.plot(x, y)
-        #plt.show()
         plt.savefig('/tmp/out/out-%04d.png' % j)
         plt.clf()
     for k in range(0, mx):                      # Recycle array
         u[k, 0] = u[k, 1]             
         u[k, 1] = u[k, 2] 
                                                     # Finish plot
-print("finished") 
