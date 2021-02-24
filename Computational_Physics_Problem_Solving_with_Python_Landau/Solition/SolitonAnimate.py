@@ -6,14 +6,19 @@
 
 # SolitonAnimate.py: Solves KdeV equation for a soliton  
 
-from visual import *
+#from visual import *
+import numpy as np, math
+import matplotlib.pyplot as plt
 
 # Set up plot
-g   = display(width = 600, height = 300, title = 'Soliton')
-sol = curve(x = list(range(0, 131)), color = color.yellow)
+#g   = display(width = 600, height = 300, title = 'Soliton')
+#sol = curve(x = list(range(0, 131)), color = color.yellow)
+
+x = np.arange(0, 131)
+y = np.zeros(len(x))
 
 # Parameters
-sol.radius = 1.0                      # thickness of line
+#sol.radius = 1.0                      # thickness of line
 ds = 0.4                              # Delta x
 dt = 0.1                              # Delta t
 max = 2000                            # Numb t steps
@@ -23,7 +28,7 @@ mx = 131                              # grid in x max
 fac = mu*dt/(ds**3)                   # combor
 
 # Initialization
-u = zeros( (mx, 3), float)           # Soliton amplitude
+u = np.zeros( (mx, 3), float)           # Soliton amplitude
 
 for  i in range(0, 131):                  # Initial wave
     u[i, 0] = 0.5*(1.-((math.exp(2*(0.2*ds*i-5.))-1)
@@ -34,8 +39,8 @@ u[130, 1] = 0.
 u[130, 2] = 0.                             # End points
 
 for  i in range(0, 131):
-   sol.x[i] = 2*i - 130.0
-   sol.y[i] = 50.0*u[i, 0] - 30
+   x[i] = 2*i - 130.0
+   y[i] = 50.0*u[i, 0] - 30
 
 for  i in range (1, mx - 1 ):               # First time step
     a1 = eps*dt*(u[i + 1, 0] + u[i, 0] + u[i - 1, 0])/(ds*6.)     
@@ -46,11 +51,11 @@ for  i in range (1, mx - 1 ):               # First time step
     u[i, 1] = u[i, 0] - a1*a3 - fac*a2/3.
 
 for  i in range(0, 131):
-   sol.x[i] = 2*i - 130.0
-   sol.y[i] = 50.0*u[i, 1] - 30
-
+   x[i] = 2*i - 130.0
+   y[i] = 50.0*u[i, 1] - 30
+   
 for j in range (1, max + 1):
-    rate(150)                       # Following next time steps
+    #rate(150)                       # Following next time steps
     for i in range(1, mx - 2):
         a1 = eps*dt*(u[i + 1, 1] + u[i, 1] + u[i - 1, 1])/(3.*ds)
         if i>1 and i < mx-2: 
@@ -60,9 +65,13 @@ for j in range (1, max + 1):
         u[i, 2] = u[i, 0] - a1*a3 - 2.*fac*a2/3.
     if j%5 == 0:                    # Plot every 100 time steps
         for i in range (0, mx-2):
-            sol.x[i] = 2*i - 130
-            sol.y[i] = 50.*u[i, 2] - 30
-        sol.pos 
+            x[i] = 2*i - 130
+            y[i] = 50.*u[i, 2] - 30
+        #sol.pos
+        plt.plot(x, y)
+        #plt.show()
+        plt.savefig('/tmp/out/out-%04d.png' % j)
+        plt.clf()
     for k in range(0, mx):                      # Recycle array
         u[k, 0] = u[k, 1]             
         u[k, 1] = u[k, 2] 
