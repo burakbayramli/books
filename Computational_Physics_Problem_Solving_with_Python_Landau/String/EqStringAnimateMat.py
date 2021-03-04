@@ -18,14 +18,14 @@ def Initialize():                                       # Initial conditions
    for i in range(0, 81):    xi[i, 0] = 0.00125*i         
    for i in range (81, 101): xi[i, 0] = 0.1 - 0.005*(i - 80)                  # second part of string
  
-def animate(num):                                
-    for i in range(1, 100):              
-       xi[i,2] = 2.*xi[i,1]-xi[i,0]+ratio*(xi[i+1,1]+xi[i-1,1]-2*xi[i,1])
-    line.set_data(k,xi[k,2])                                # Data to plot ,x,y           
-    for m in range (0,101):                                
-       xi[m, 0] = xi[m, 1]                                    # Recycle array 
-       xi[m, 1] = xi[m, 2]
-    return line        
+def animate(num):
+   for i in range(1, 100):              
+      xi[i,2] = 2.*xi[i,1]-xi[i,0]+ratio*(xi[i+1,1]+xi[i-1,1]-2*xi[i,1])
+   line.set_data(k,xi[k,2])                                # Data to plot ,x,y           
+   for m in range (0,101):                                
+      xi[m, 0] = xi[m, 1]                                    # Recycle array 
+      xi[m, 1] = xi[m, 2]
+   return line        
          
 Initialize()                                             # Plot initial string   
 fig = plt.figure()                            
