@@ -208,6 +208,7 @@ Source codes for various books I collected over the years.
 - [Low Speed Aerodynamics Katz](/Low_Speed_Aerodynamics_Katz)
 - [Flight Vehicle Aerodynamics Drela](/Flight Vehicle Aerodynamics Drela)
 - [Foundations of Aerodynamics Kuethe](/Foundations of Aerodynamics Kuethe)
+- [Introduction to CFD with Python kardontchik](/Introduction to CFD with Python kardontchik)
 
 See my other blogs, repos
 
