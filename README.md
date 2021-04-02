@@ -203,6 +203,11 @@ Source codes for various books I collected over the years.
 - [Numerical Solution of Boundary Value Problems for Ordinary Differential Equations Ascher](/Numerical_Solution_of_Boundary_Value_Problems_for_Ordinary_Differential_Equations_Ascher)
 - [Pythonic Geodynamics Morra](/PythonicGeodynamicsMorra)
 - [Computational Problems for Physics With Guided Solutions Landau](/Computational_Problems_for_Physics_With_Guided_Solutions_Landau)
+- [Unrivaled Beckley](/Unrivaled_Beckley)
+- [Coursera Waves Simulation Igel Lecture](/Coursera_Waves_Simulation_Igel_Lecture)
+- [Low Speed Aerodynamics Katz](/Low_Speed_Aerodynamics_Katz)
+- [Flight Vehicle Aerodynamics Drela](/Flight Vehicle Aerodynamics Drela)
+- [Foundations of Aerodynamics Kuethe](/Foundations of Aerodynamics Kuethe)
 
 See my other blogs, repos
 
