@@ -294,12 +294,12 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
     while (1):
         Num_of_Node_movements += 1
         if Iflag == 1 or Iflag == 3:  # Newton flag
-            print 'Num_of_Node_movements = %3d' % (Num_of_Node_movements)
+            print ('Num_of_Node_movements = %3d' % (Num_of_Node_movements))
         if np.max(np.sqrt(np.sum((p - pold)**2,axis = 1))) > ttol:
             Num_of_Delaunay_triangulations += 1
             if Iflag == 1 or Iflag == 3:   # Delaunay flag
-                print 'Num_of_Delaunay_triangulations = %3d' % \
-                      (Num_of_Delaunay_triangulations)
+                print ('Num_of_Delaunay_triangulations = %3d' % \
+                      (Num_of_Delaunay_triangulations))
             pold = p
             tri = Delaunay(p)  # instantiate a class
             t = tri.vertices
@@ -309,10 +309,11 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
             bars = np.concatenate((t[:,[0,1]],t[:,[0,2]], t[:,[1,2]]))
             # delete repeated bars
             bars = unique_rows(np.sort(bars))
+            print (bars.shape)
             if Iflag == 4:
                 min_q, min_angle_deg = triqual_flag(p,t)
-                print 'Del iter: %3d, min q = %5.2f, min angle = %3.0f deg' \
-                      % (Num_of_Delaunay_triangulations, min_q, min_angle_deg)
+                print ('Del iter: %3d, min q = %5.2f, min angle = %3.0f deg' \
+                      % (Num_of_Delaunay_triangulations, min_q, min_angle_deg))
                 if min_q > qmin:
                     break
             if Iflag == 2 or Iflag == 3:
@@ -321,6 +322,8 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
 
         # move mesh points based on bar lengths L and forces F
 
+        print (p.shape)
+        print (bars.shape)
         barvec = p[bars[:,0],:] - p[bars[:,1],:]
         L = np.sqrt(np.sum(barvec**2,axis=1))
         hbars = 0.5*(fh(p[bars[:,0],:]) + fh(p[bars[:,1],:]))
