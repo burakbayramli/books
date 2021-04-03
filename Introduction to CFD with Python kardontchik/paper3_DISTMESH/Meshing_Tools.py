@@ -120,13 +120,13 @@ def triqual(p,t,fh,qlim=0.2):
     # to get the number of elements in the tuple do: len(indq[0])
     # to get the element i in this tuple do: indq[0][i]
     if list(indq[0]) != []:
-        print 'List of triangles with q < %5.3f and the (x,y) location of their nodes' % qlim
-        print ''
-        print 'q     t[i]      t[nodes]         [x,y][0]       [x,y][1]       [x,y][2]'
+        print ('List of triangles with q < %5.3f and the (x,y) location of their nodes' % qlim)
+        print ('')
+        print ('q     t[i]      t[nodes]         [x,y][0]       [x,y][1]       [x,y][2]')
         for i in indq[0]:
-            print '%.2f  %4d  [%4d,%4d,%4d]     [%+.2f,%+.2f]  [%+.2f,%+.2f]  [%+.2f,%+.2f]' % \
-              (q[i],i,t[i,0],t[i,1],t[i,2],p[t[i,0],0],p[t[i,0],1],p[t[i,1],0],p[t[i,1],1],p[t[i,2],0],p[t[i,2],1])
-        print ''
+            print ('%.2f  %4d  [%4d,%4d,%4d]     [%+.2f,%+.2f]  [%+.2f,%+.2f]  [%+.2f,%+.2f]' % \
+              (q[i],i,t[i,0],t[i,1],t[i,2],p[t[i,0],0],p[t[i,0],1],p[t[i,1],0],p[t[i,1],1],p[t[i,2],0],p[t[i,2],1]))
+        print ('')
         # end of detailed data on worst offenders    
     return q,min_angle_deg,Anorm
 
@@ -239,8 +239,8 @@ def boundary_info(p,bars):
                     break
             bars.remove(to_remove)
     if len(bars) > 0:
-        print 'Error: there are more than 2 boundaries'
-        print '       number of bars left out = %4d' % len(bars)
+        print ('Error: there are more than 2 boundaries')
+        print ('       number of bars left out = %4d' % len(bars))
 
     # ---------------------------------------------------------------------
     # If there is more than one boundary find out which one is external and
