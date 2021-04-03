@@ -1,0 +1,27 @@
+function entries = getAllEntries(fileID)
+%--------------------------------------------------------------------------
+%
+%  Written by the CFD Group @ AUB, Fall 2018
+%  Contact us at: cfd@aub.edu.lb
+%==========================================================================
+% Routine Description:
+%   This function reads they value of any entry (key) in a FOAM file
+%--------------------------------------------------------------------------
+
+frewind(fileID);
+
+while ~feof(fileID)
+    tline = fgetl(fileID);
+    tline = skipEmptyLines(fileID, tline);
+    
+    C = strsplit(tline, ';');
+    
+    for iInlineEntry=1:length(C)
+        if isempty(C{iInlineEntry})
+            continue;
+        end
+        entry = textscan(tline, '%s', 1);
+        key
+    end
+    
+end
