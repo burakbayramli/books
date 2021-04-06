@@ -1,0 +1,42 @@
+class DiffusionModel:
+    """Class defining a diffusion model"""
+
+    def __init__(self, grid, phi, gamma, west_bc, east_bc):
+        """Constructor"""
+        self._grid = grid
+        self._phi = phi
+        self._gamma = gamma
+        self._west_bc = west_bc
+        self._east_bc = east_bc
+
+    def add(self, coeffs):
+        """Function to add diffusion terms to coefficient arrays"""
+
+        # Calculate the west and east face diffusion flux terms for each face
+        flux_w = - self._gamma*self._grid.Aw*(self._phi[1:-1]-self._phi[0:-2])/self._grid.dx_WP
+        flux_e = - self._gamma*self._grid.Ae*(self._phi[2:]-self._phi[1:-1])/self._grid.dx_PE
+
+        # Calculate the linearization coefficients
+        coeffW = - self._gamma*self._grid.Aw/self._grid.dx_WP
+        coeffE = - self._gamma*self._grid.Ae/self._grid.dx_PE
+        coeffP = - coeffW - coeffE
+
+        # Modify the linearization coefficients on the boundaries
+        coeffP[0] += coeffW[0]*self._west_bc.coeff()
+        coeffP[-1] += coeffE[-1]*self._east_bc.coeff()
+
+        # Zero the boundary coefficients that are not used
+        coeffW[0] = 0.0
+        coeffE[-1] = 0.0
+
+        # Calculate the net flux from each cell
+        flux = flux_e - flux_w
+
+        # Add to coefficient arrays
+        coeffs.accumulate_aP(coeffP)
+        coeffs.accumulate_aW(coeffW)
+        coeffs.accumulate_aE(coeffE)
+        coeffs.accumulate_rP(flux)
+
+        # Return the modified coefficient array
+        return coeffs
