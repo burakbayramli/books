@@ -136,3 +136,4 @@ figure(2);
 plot(xe,Terr);
 xlabel('x');
 ylabel('Error');
+
