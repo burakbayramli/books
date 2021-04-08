@@ -24,8 +24,8 @@ for k=Nx+1:Nx*Ny
 end
 elem8=zeros(Nx*Ny,8);
 for k=1:Nx
-    elem8(k,1)=2*k-1
-    elem8(k,2)=2*k
+    elem8(k,1)=2*k-1;
+    elem8(k,2)=2*k;
     elem8(k,3)=2*k+1;
     elem8(k,8)=elem8(k,1)+2*(Nx+1)-k;
     elem8(k,5)=elem8(k,3)+3*Nx+2;
