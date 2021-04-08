@@ -73,9 +73,9 @@ for j=1:length(Re)
 
     fprintf('u-velocity    v-velocity\n')
     velocity=[u v];
-    disp(velocity);
+    %disp(velocity);
     fprintf('pressure\n')
-    disp(p)
+    %disp(p)
     figure
     % subplot(1,2,1)
     node=node48(Nx,Ny,x0,xf,y0,yf);
@@ -84,9 +84,9 @@ for j=1:length(Re)
     x=node(:,1);
     y=node(:,2);
     L = sqrt(u.^2+v.^2);
-    disp(size(x))
-    disp(size(y))
-    disp(size(u./L))
+    %disp(size(x))
+    %disp(size(y))
+    %disp(size(u./L))
     quiver(x,y,u./L,v./L,0.4);
     axis([0 1.1 0 1.1]);
     xlabel('x');
