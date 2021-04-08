@@ -1,0 +1,187 @@
+!$Id:$
+      subroutine nsurfpres2d(knots,nsides,lknot,lside,nblk,npre,
+     &                       nblksd, blk,neps)
+
+!      * * F E A P * * A Finite Element Analysis Program
+
+!      Copyright (c) 1984-2018: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!      Purpose:  2-d  Surface pressure computation for 3D NURBS Block
+
+!      Inputs:
+!        fac    - Face number: '1:6' for Pressure  Surface
+
+!      Outputs:
+!        neps   - Number of 2D Pressure Surface Facets
+!-----[--.----+----.----+----.-----------------------------------------]
+      implicit   none
+
+      include   'cnurb.h'
+      include   'igdata.h'
+      include   'sdata.h'
+
+      include   'pointer.h'
+      include   'comblk.h'
+
+      integer    blk, fac, neps
+
+      integer    kno1,lek1,ord1,len1
+      integer    kno2,lek2,ord2,len2
+      integer    kno3,lek3,ord3,len3,sid3
+
+      logical    setvar, palloc
+      integer    i, j, ii, jj, i1, j1, l1, l2, k, ic
+      integer    nsides(dsideig,*), lknot(0:4,*),  lside(2,*)
+      integer    nblk(14,*), nblksd(dblokig,*)
+      integer    ktlen(2),ktdiv1(4,kdiv),ktdiv2(4,kdiv), pko(2)
+      integer    pp,qq
+      integer,   allocatable :: psides(:,:)
+      real*8     knots(dknotig,*), npre(4,*)
+      real*8     pres
+      integer    pfac, ptyp, propno
+
+      save
+
+!     Extract pressure values
+
+      pfac   = nint(npre(1,blk))
+      pres   = npre(2,blk)
+      propno = nint(npre(3,blk))
+      ptyp   = nint(npre(4,blk))
+
+      write(*,*) 'PFAC:',pfac,pres,propno,ptyp
+
+      fac    = pfac
+
+!     Extract data for knot vectors on  block
+
+      kno1 = nblk(6,blk)     ! Knot 1 on block
+      lek1 = lknot(1,kno1)
+      ord1 = lknot(2,kno1)
+      len1 = lknot(3,kno1)
+
+      kno2 = nblk(7,blk)     ! Knot 2 on block
+      lek2 = lknot(1,kno2)
+      ord2 = lknot(2,kno2)
+      len2 = lknot(3,kno2)
+
+      sid3 = nblksd(1,blk)
+      kno3 = lside(2,sid3)   ! Knot 3 on block
+      lek3 = lknot(1,kno3)
+      ord3 = lknot(2,kno3)
+      len3 = lside(1,sid3)
+
+!     Faces 1 or 4
+
+      if(fac.eq.1 .or. fac.eq.4) then
+
+        pko(1) = kno2
+        pko(2) = kno3
+
+        l1 = len2
+        l2 = len3
+
+        allocate(psides(l1,l2))
+
+        do j = 1,len3
+          if(fac.eq.1) then
+            jj = len1
+          else
+            jj = 1
+          endif
+          do i = 1,len2
+            psides(i,j) = nsides(j,nblksd(jj,blk))
+            jj = jj + len1
+          end do ! i
+        end do ! j
+
+!     Faces 2 or 5
+
+      elseif(fac.eq.2 .or. fac.eq.5) then
+
+        pko(1) = kno3
+        pko(2) = kno1
+
+        l1 = len3
+        l2 = len1
+
+        allocate(psides(l1,l2))
+
+        if(fac.eq.2) then
+          jj = len1*len2 - len2 + 1
+        else
+          jj = 1
+        endif
+        do j = 1,len1
+          do i = 1,len3
+            psides(i,j) = nsides(i,nblksd(jj,blk))
+          end do ! i
+          jj = jj + 1
+        end do ! j
+
+!     Faces 3 or 6
+
+      elseif(fac.eq.3 .or. fac.eq.6) then
+        pko(1) = kno1
+        pko(2) = kno2
+        if(fac.eq.3) then
+          ii = len3
+        else
+          ii = 1
+        endif
+        l1 = len1
+        l2 = len2
+        allocate(psides(l1,l2))
+        jj = 1
+        do j = 1,len2
+          do i = 1,len1
+            psides(i,j) = nsides(ii,nblksd(jj,blk))
+            jj = jj + 1
+          end do ! i
+        end do ! j
+      else
+        write(*,*) 'WARNING!!!'
+        write(*,*) 'Wrong Face number:',fac
+        write(*,*) 'Surface input nfac = 1 to 6'
+        write(*,*) 'Correct your input Contact data & retray'
+        call plstop(.true.)
+      endif
+
+!     Set order of knots
+
+      pp    = lknot(2,pko(1))+1
+      qq    = lknot(2,pko(2))+1
+
+!     Set element properties in each direction
+
+      call pknotel(knots,lknot,pko(1),ktlen(1),ktdiv1,1)
+      call pknotel(knots,lknot,pko(2),ktlen(2),ktdiv2,1)
+
+!     Allocate storage for surface data
+
+      setvar = palloc(317,'UNUR4',2*ktlen(1)*ktlen(2),1)
+      setvar = palloc(318,'NPREL',pp*qq*ktlen(1)*ktlen(2),1)
+
+      neps = 0
+      k    = 0
+      do j1 = 1,ktlen(2)
+        do i1 = 1,ktlen(1)
+          neps = neps + 1
+          mr(np(317)+2*neps-2) = ktdiv1(1,i1)
+          mr(np(317)+2*neps-1) = ktdiv2(1,j1)
+          ic   = 0
+          do j = ktdiv2(3,j1),ktdiv2(4,j1)
+            do i = ktdiv1(3,i1),ktdiv1(4,i1)
+              mr(np(318)+k) = psides(i,j)    ! Save facet data
+              k             = k + 1
+              ic            = ic + 1
+            end do ! i
+          end do ! j
+        end do ! i1
+      end do ! j1
+
+      deallocate(psides)
+
+      end

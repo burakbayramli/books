@@ -1,0 +1,76 @@
+!$Id:$
+      subroutine pc_extrin(c_e,nnex,ndex,nn)
+!      * * F E A P * * A Finite Element Analysis Program
+
+!....  Copyright (c) 1984-2018: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!      Purpose: Input extraction operator
+
+!      Inputs:
+!        pflag           : True for printed outputs
+
+!      Outputs:
+!-----[--+---------+---------+---------+---------+---------+---------+-]
+      implicit   none
+
+      include   'iofile.h'
+
+      integer    nnex,ndex,nn
+      real*8     c_e(ndex,ndex,nnex)
+
+      logical    doread, errck,pinput
+      integer    i,j
+      real*8     td(16)
+
+!     Zero extraction array
+
+      c_e = 0.0d0
+
+!     Input first extraction array
+
+      write(iow,2000) (i,i=1,ndex)
+
+      do j = 1,ndex
+        errck = pinput(td,ndex)
+        do i = 1,ndex
+          c_e(j,i,nn) = td(i)
+        end do ! i
+        if(j.eq.1) then
+          write(iow,2001) nn,(c_e(j,i,nn),i=1,ndex)
+        else
+          write(iow,2002) (c_e(j,i,nn),i=1,ndex)
+        endif
+      end do ! j
+
+      doread = .true.
+      do while(doread)
+        errck = pinput(td,2)
+        nn = nint(td(1))
+        if(nn.gt.0) then
+          do j = 1,ndex
+            errck = pinput(td,ndex)
+            do i = 1,ndex
+              c_e(j,i,nn) = td(i)
+            end do ! i
+            if(j.eq.1) then
+              write(iow,2001) nn,(c_e(j,i,nn),i=1,ndex)
+            else
+              write(iow,2002) (c_e(j,i,nn),i=1,ndex)
+            endif
+          end do ! j
+        else
+          doread = .false.
+        endif
+      end do ! while
+
+!     Formats
+
+2000  format(/5x,'E x t r a c t i o n   O p e r a t o r s'//
+     &        4x,'Elmt',15(i8,'-Value  ':))
+
+2001  format(/i8,1p,15e16.8)
+2002  format( 8x,1p,15e16.8)
+
+      end

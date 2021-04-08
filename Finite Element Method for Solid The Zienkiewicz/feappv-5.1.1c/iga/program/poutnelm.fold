@@ -1,0 +1,52 @@
+!$Id:$
+      subroutine poutnelm(ix,nen1,nen,numel,numnp)
+
+!      * * F E A P * * A Finite Element Analysis Program
+
+!....  Copyright (c) 1984-2018: Regents of the University of California
+!                               All rights reserved
+
+!-----[--.----+----.----+----.-----------------------------------------]
+!      Purpose:  Output NURB element connections
+
+!      Inputs:
+!         ix(nen1,*)  - Element connection list
+!         nen1        - Dimension for array
+!         nen         - Maximum number of nodes on an element
+!         numel       - Number of elements
+!         numnp       - Number of nodes on submesh
+
+!      Outputs:
+!         To file
+!-----[--.----+----.----+----.-----------------------------------------]
+      implicit   none
+
+      include   'iodata.h'
+
+      integer    nen1,nen,numel,numnp, nel,n,i
+      integer    ix(nen1,numel)
+
+!     Output element connections to file
+
+      write(ios,'(/a,3i8)') 'NELEments',nen,numel,numnp
+      do n = 1,numel
+
+        nel = nen
+        do i = nen,1,-1
+          if(ix(i,n).ne.0) then
+            nel = i
+            exit
+          endif
+        end do ! i
+
+        write(ios,2001) n,0,ix(nen1,n),(ix(i,n),i=1,nel)
+
+      end do ! n
+
+      write(ios,'(a)') ' '
+
+!     Formats
+
+2001  format(16i8)
+
+      end
