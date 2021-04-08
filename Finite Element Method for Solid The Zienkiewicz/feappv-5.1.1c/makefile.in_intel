@@ -1,0 +1,102 @@
+#------------------------------------------------------------------------
+# To use this makefile the path for "$(FEAPPVHOME5_1)" must be set using
+#   setenv FEAPPVHOME5_1=/....            (in .chrc or .tchrc)  or
+#   export FEAPPVHOME5_1=/....            (in .bashrc or .bash_rc used)
+# N.B. Information after the slash defines to FEAPPV directories.
+#------------------------------------------------------------------------
+#
+# N.B. If a compiler option is used that sets ALL integers to be
+#      integer*8, it is necessary to reset the parameter 'ipr = 1'
+#      in file 'feappv.f' located in the 'main' directory.
+#------------------------------------------------------------------------
+# Location of feappv include files (integer4 is no longer in the distribution
+# as of version 5.1)
+
+  FINCLUDE = $(FEAPPVHOME5_1)/include
+
+# Location of C-compiler include files (depends where compiler installed)
+
+# CINCLUDE = /usr/X11R6/include -I$(FEAPPVHOME5_1)/include
+  CINCLUDE = /opt/local/include -I$(FEAPPVHOME5_1)/include
+
+# IgA (Isogeometric)
+  NINCLUDE = $(FEAPPVHOME5_1)/iga/include
+
+#------------------------------------------------------------------------
+# Which compilers to use (Set compiler names available on your computer)
+
+# Parallel FE2 Build
+
+# FFE2 = /opt/local/bin/mpif90
+# CCE2 = /opt/local/bin/mpicc
+
+  FFE2 = $(PETSC_DIR)/$(PETSC_ARCH)/bin/mpif90
+  CCE2 = $(PETSC_DIR)/$(PETSC_ARCH)/bin/mpicc
+
+# Serial Build
+
+  FF = ifort                         # Intel compiler
+  CC = icc                           # Intel compiler
+
+#------------------------------------------------------------------------
+# What optimization level to use
+
+# Intel: ifort/icc compilers
+
+  FFOPTFLAG = -O2 -Warn all -g
+  CCOPTFLAG = -O2 -Wall -g
+
+#------------------------------------------------------------------------
+# Source Types (generally this is blank)
+
+  FSOURCE =
+  CSOURCE =
+  F90SOURCE =
+
+#------------------------------------------------------------------------
+# Source Extender
+  FEXT = f
+  CEXT = c
+
+  F90EXT = f90
+
+#------------------------------------------------------------------------
+# Other options to be used by the compiler (generally this is blank)
+
+  FOPTIONS =
+  COPTIONS =
+
+#------------------------------------------------------------------------
+# What options to be used by the loader
+
+# Intel
+
+# LDOPTIONS = -L/opt/local/lib -mkl  -lX11 -lm
+  LDOPTIONS = -L/opt/local/lib -lX11 -lm
+
+# Loader options for FE2 build
+
+# LDOPTIONSFE2 = -L/opt/local/lib/openmpi $(LDOPTIONS)
+  LDOPTIONSFE2 = -L$(PETSC_DIR)/$(PETSC_ARCH)/lib/openmpi $(LDOPTIONS)
+
+#------------------------------------------------------------------------
+# What archiving to use
+  AR = ar rv
+
+#------------------------------------------------------------------------
+# Archive name
+
+  ARFEAPPV = $(FEAPPVHOME5_1)/Feappv_i.a
+#------------------------------------------------------------------------
+# Archive name FE2
+
+  ARFE2FEAPPV = $(FEAPPVHOME5_1)/libfeappvfe2_i.a
+#------------------------------------------------------------------------
+# Archive name IgA
+
+  ARIFEAPPV = $(FEAPPVHOME5_1)/iga/libfeappviga_i.a
+#------------------------------------------------------------------------
+# Archive name VEM
+
+  ARVFEAPPV = $(FEAPPVHOME5_1)/vem/libfeappvvem_i.a
+#------------------------------------------------------------------------
