@@ -1,0 +1,92 @@
+/PREP7  
+!*  
+ET,1,SOLID45
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,200000 
+MPDATA,PRXY,1,,0.25 
+CYL4,0,0,50, ,100   
+ADELE,       1  
+LSTR,       4,       5  
+LSTR,       1,       6  
+LSTR,       8,       2  
+LSTR,       7,       3  
+FLST,2,4,4  
+FITEM,2,4   
+FITEM,2,10  
+FITEM,2,5   
+FITEM,2,9   
+AL,P51X 
+FLST,2,4,4  
+FITEM,2,1   
+FITEM,2,11  
+FITEM,2,8   
+FITEM,2,10  
+AL,P51X 
+VOFFST,1,1000, ,
+!*  
+VOFFST,2,1000, ,
+FLST,3,1,6,ORDE,1   
+FITEM,3,1   
+VSYMM,X,P51X, , , ,0,0  
+VPLOT   
+FLST,3,1,6,ORDE,1   
+FITEM,3,2   
+VSYMM,X,P51X, , , ,0,0  
+VPLOT   
+FLST,2,4,6,ORDE,2   
+FITEM,2,1   
+FITEM,2,-4  
+VGLUE,P51X  
+DA,1,All
+DA,2,All
+DA,28,All
+DA,32,All
+SFA,4,1,PRES,5
+!*
+MSHKEY,0
+MSHAPE,1,3d 
+FLST,5,4,6,ORDE,3   
+FITEM,5,1   
+FITEM,5,5   
+FITEM,5,-7  
+CM,_Y,VOLU  
+VSEL, , , ,P51X 
+CM,_Y1,VOLU 
+CHKMSH,'VOLU'   
+CMSEL,S,_Y  
+!*  
+VMESH,_Y1   
+!*  
+CMDELE,_Y   
+CMDELE,_Y1  
+CMDELE,_Y2  
+FINISH  
+/SOL
+/STATUS,SOLU
+SOLVE   
+FINISH  
+/POST1  
+PLDISP,2
+/VIEW, 1 ,,-1   
+/ANG, 1 
+/REP,FAST   
+!*  
+!*  
+/EFACET,1   
+PLNSOL, S,EQV, 0,1.0
+/VIEW, 1 ,,1
+/ANG, 1 
+/REP,FAST   
+/VIEW, 1 ,,,1   
+/ANG, 1 
+/REP,FAST   
+/VIEW, 1 ,,,-1  
+/ANG, 1 
+/REP,FAST   
+!*  
+/EFACET,1   
+PLNSOL, S,X, 0,1.0  
+

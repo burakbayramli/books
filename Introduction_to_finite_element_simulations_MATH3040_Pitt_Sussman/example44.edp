@@ -1,0 +1,51 @@
+// example44.edp from adaptindicatorP2.edp, but different region
+border ba(t=0,1.0   ){x=t;      y=0;      label=1;}
+border bb(t=0,1.0   ){x=0;      y=-1+t;   label=2;}
+border bc(t=0,3*pi/2){x=cos(t); y=sin(t); label=3;}
+int n=2;
+mesh Th = buildmesh (ba(4*n) + bb(4*n) + bc(30*n));
+
+fespace Vh(Th,P2);
+fespace Nh(Th,P0);
+Vh u,v;
+Nh eta, logeta;
+real error=0.01;
+
+func f=0;
+func exactf=(y<-1.e-10? (x^2+y^2)^(1./3.)*sin( 2.*(2*pi+atan2(y,x))/3. ):
+                        (x^2+y^2)^(1./3.)*sin( 2.*(     atan2(y,x))/3. ));
+
+Vh truerror, exactu=exactf;
+plot(exactu,wait=true);
+
+problem Problem1(u,v,solver=UMFPACK) =
+    int2d(Th, qforder=5)( dx(u)*dx(v) + dy(u)*dy(v)) + on(1,2,3, u=exactf);
+
+varf indicator2(unused,chiK) = 
+     intalledges(Th)(chiK*lenEdge*square( jump( N.x*dx(u) + N.y*dy(u) )))
+    +int2d(Th)( chiK*square( hTriangle*(f + dxx(u) + dyy(u))) );
+
+for (int i=0;i< 4;i++){   
+   Problem1; 
+   cout << u[].min << " " << u[].max << endl; 
+   plot(u, cmm="solution", wait=true);
+   truerror = u - exactu;
+   real normerror = int2d(Th)( truerror^2 );
+   real normsoln = int2d(Th)( u^2 );
+   plot(truerror, cmm="true error", wait=true, value=true, fill=true, nbiso=20);
+   cout << " true rel error=" << normerror/normsoln << endl;
+
+   cout << " indicator2 " << endl;
+   eta[] = indicator2(0,Nh);
+   eta=sqrt(eta);
+   logeta=log10(eta);
+   cout << "eta =   min " << eta[].min << " max=" << eta[].max << endl;
+   plot(eta,fill=1,wait=1,cmm="indicator density ",value=1);
+   plot(logeta,fill=1,wait=1,cmm="log 10 indicator density ",value=1,nbiso=20);
+   plot(Th,wait=1,cmm="Mesh ");
+   Th=adaptmesh(Th,[dx(u),dy(u)],err=error,anisomax=1);
+   plot(Th,wait=1);
+   u = u;
+   eta = eta;
+   error = error/2;
+}

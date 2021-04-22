@@ -1,0 +1,63 @@
+// example23.edp from examples/chapt3/sound.edp
+// sound propagation and eigenvalues
+
+verbosity = 10;  // increase informational printing
+real konc2;   // (k/c)^2
+if (true) {
+  konc2 = 1.0;  // good solution
+} else {
+  konc2 = 14.6993;  // eigenvalue! => bad solution
+}
+
+func g = y*(1-y);
+
+border a0(t=0,1) { x= 5; y= 1+2*t; }
+border a1(t=0,1) { x=5-2*t; y= 3; }
+border a2(t=0,1) { x= 3-2*t; y=3-2*t; }
+border a3(t=0,1) { x= 1-t; y= 1; }
+border a4(t=0,1) { x= 0; y= 1-t; }
+border a5(t=0,1) { x= t; y= 0; }
+border a6(t=0,1) { x= 1+4*t; y= t; }
+
+mesh Th=buildmesh( a0(20) + a1(20) + a2(20)
+        + a3(20) + a4(20) + a5(20) + a6(20));
+fespace Vh(Th,P1);  
+Vh u,v;
+
+solve sound(u,v)=int2d(Th)(u*v * konc2 - dx(u)*dx(v) - dy(u)*dy(v))
+                 - int1d(Th,a4)(g*v);
+
+plot(u, wait=1);
+
+Vh u1,u2;
+
+
+real sigma = 1;  // value of the shift
+
+// OP = A - sigma B ;  //  the shifted matrix
+varf  op(u1,u2)= int2d(Th)(  dx(u1)*dx(u2) + dy(u1)*dy(u2) - sigma* u1*u2 );
+
+varf b([u1],[u2]) = int2d(Th)(  u1*u2 );
+
+matrix OP = op(Vh, Vh, solver=UMFPACK);
+matrix B = b(Vh, Vh, solver=UMFPACK);
+
+
+int nev=20;  // number of computed eigen value close to sigma
+
+real[int] ev(nev); // to store the  nev eigenvalue
+Vh[int] eV(nev);   // to store the nev eigenVector
+
+
+int k=EigenValue(OP, B, sym=true, sigma=sigma, value=ev, vector=eV,
+                   tol=1e-10, maxit=0, ncv=0);
+
+assert(k == nev);  // k is number of eigenvalues found
+
+for (int n=0; n<nev; n++){
+  cout << "Eigenvalue " << n << " = " << ev[n] << endl;
+}
+
+for (int n=0; n<nev; n++){
+  plot(eV[n],wait=1);
+}

@@ -1,0 +1,54 @@
+!* Rotating disk Example 3.1 p. 129
+!* Using default Ansys Mesh
+ /PREP7  
+!*  
+ET,1,PLANE42
+KEYOPT,1,1,0
+KEYOPT,1,2,1
+KEYOPT,1,3,1
+KEYOPT,1,5,0
+KEYOPT,1,6,0!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,30000 
+MPDATA,PRXY,1,,0.3 
+MPDATA,DENS,1,,0.283/386.4/1000  
+*set,pi,3.14159
+*set,ri,3
+*set,ro,9
+*set,h,1/2
+*set,omega,5000*2*pi/60
+*set,rm,(ri+ro)/2
+k,1,ri,0
+k,2,ri,h
+k,3,ro,0
+k,4,ro,h
+a,1,3,4,2
+MSHKEY,0
+CM,_Y,AREA  
+ASEL, , , ,       1 
+CM,_Y1,AREA 
+CHKMSH,'AREA'   
+CMSEL,S,_Y  
+!*  
+AMESH,_Y1   
+!*  
+CMDELE,_Y   
+CMDELE,_Y1  
+CMDELE,_Y2  
+!*  
+FINISH  
+/SOL
+OMEGA,0,0,omega,0   
+ERESX,NO
+DL,1, ,UY,FINISH  
+/SOL
+/STATUS,SOLU
+SOLVE   
+FINISH  
+/POST1  
+!*  
+PRNSOL,DOF
+!*
+PRESOL,S,PRIN   
+!*

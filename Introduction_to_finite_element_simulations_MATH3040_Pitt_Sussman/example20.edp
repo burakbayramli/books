@@ -1,0 +1,35 @@
+// example20.edp
+// original file: membrane.edp
+
+real theta = 4.*pi/3.;
+real a = 2.,b = 1.; // semimajor and semiminor axes
+
+func z=x;  // elevation of Gamma1 boundary
+
+border Gamma1(t=0, theta)    { x = a * cos(t); y = b*sin(t); }
+border Gamma2(t=theta, 2*pi) { x = a * cos(t); y = b*sin(t); }
+mesh Th = buildmesh( Gamma1(100) + Gamma2(50) );   // construct mesh
+
+fespace Vh(Th,P2); // P2 conforming triangular FEM
+Vh phi,w, f=1;     // phi is shape function, w is test function, f is load
+
+// problem definition
+solve Laplace(phi, w) = int2d(Th)( dx(phi)*dx(w) + dy(phi)*dy(w) )
+                    - int2d(Th)( f*w ) + on(Gamma1, phi=z);
+
+plot(phi, wait=true, fill=true, ps="solution20.eps"); //Plot solution
+
+plot(Th, wait=true, ps="mesh20.eps"); //Plot mesh
+
+// to build a gnuplot data file
+{ ofstream ff("graph20.txt");
+   for (int i=0;i<Th.nt;i++){
+     for (int j=0; j <3; j++){
+       ff<<Th[i][j].x  << "    "<< Th[i][j].y<< "  "<<phi[][Vh(i,j)]<<endl;
+     }
+     ff<<Th[i][0].x  << "    "<< Th[i][0].y<< "  "<<phi[][Vh(i,0)]<<endl
+       <<endl<<endl;
+   }
+}
+
+// savemesh(Th,"Th.msh");

@@ -1,0 +1,44 @@
+// example22.edp, from examples++-chapt3/heatex.edp
+
+// Either build mesh or retrieve mesh
+mesh Th;
+int C0, C1, C2;
+if (false) {
+  C0= 99; C1= 98; C2= 97; // could be anything
+  border C00( t=0,2*pi ){ x=5*cos(t); y=5*sin(t); label=C0;}
+
+  border C11(t=0,1){ x=1+t;  y=3;      label=C1;}
+  border C12(t=0,1){ x=2;    y=3-6*t;  label=C1;}
+  border C13(t=0,1){ x=2-t;  y=-3;     label=C1;}
+  border C14(t=0,1){ x=1;    y=-3+6*t; label=C1;}
+
+  border C21(t=0,1){ x=-2+t; y=3;      label=C2;}
+  border C22(t=0,1){ x=-1;   y=3-6*t;  label=C2;}
+  border C23(t=0,1){ x=-1-t; y=-3;     label=C2;}
+  border C24(t=0,1){ x=-2;   y=-3+6*t; label=C2;}
+
+            plot(    C00(50)
+                    + C11( 5) + C12( 20) + C13( 5) + C14( 20)
+                    + C21(-5) + C22(-20) + C23(-5) + C24(-20), wait=true);
+
+  Th = buildmesh(    C00(50)
+                    + C11( 5) + C12( 20) + C13( 5) + C14( 20)
+                    + C21(-5) + C22(-20) + C23(-5) + C24(-20));
+
+  plot(Th,wait=true);
+
+  savemesh(Th, "example22.msh");
+} else {
+  Th = readmesh("example22.msh");
+  C0= 99; C1= 98; C2= 97; // Numbers are in file, not labels
+}
+
+fespace Vh(Th,P1); 
+Vh u,v;
+
+Vh kappa = 1 + 4*(x<-1) * (x>-2) * (y<3) * (y>-3);
+
+solve a(u,v)= int2d(Th)( kappa*( dx(u)*dx(v) + dy(u)*dy(v) ) )
+                + on(C0, u=20) + on(C1, u=100);
+
+plot(u,value=true,wait=true,fill=false);

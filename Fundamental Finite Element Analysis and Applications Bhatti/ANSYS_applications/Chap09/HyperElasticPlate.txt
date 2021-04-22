@@ -1,0 +1,58 @@
+!* Large displacement analysis
+!* Hyper elastic material
+/PREP7  
+!* Element type 
+!*  
+ET,1,PLANE182
+KEYOPT,1,1,0
+KEYOPT,1,3,3
+KEYOPT,1,6,0
+KEYOPT,1,10,0   
+!*  
+R,1,0.1
+!* Material property
+*set, e, 1000
+*set, nu, 0.25
+*set, mu, e/(2*(1+nu)) 
+*set, k, e/(3*(1-2*nu)) 
+*set, d, 2/k
+!* Ansys neo-Hookean model
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+TB,HYPE,1,1,2,NEO   
+TBTEMP,0
+TBDATA,,mu,d,,,,   
+!*
+K,1,0,0  
+K,2,4,1
+K,3,4,2
+K,4,0,2
+A,1,2,3,4
+ESIZE,10
+AMESH,1
+DL,4, ,ALL
+/SOLU   
+ANTYPE,0
+NLGEOM,1
+ARCLEN,1,1,0.0001   
+NCNV,2,0,0,0,0  
+RESCONTRL,DEFINE,ALL,1,1
+ERESX,NO
+OUTRES,ERASE
+OUTRES,ALL,1   
+AUTOTS,-1.0 
+!* First load step 
+!* No applied load
+!* Used for initialization of 
+!* the arc-length controls  
+LSWRITE,1,  
+!* Specify applied forces
+FK,2,FX,50
+FK,3,FX,25
+LSWRITE,2,  
+LSSOLVE,1,2,1   
+FINISH  
+!* Postprocessing
+/POST1  
+SET,LAST
+PRNSOL,UX

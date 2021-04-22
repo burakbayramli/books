@@ -1,0 +1,49 @@
+// example21.edp
+// from membranerror.edp
+// modified: plot error as field
+//           all Dirichlet b.c.
+verbosity=0;
+
+real theta = 4.*pi/3.;
+real a=1., b=1.; // ellipse is a circle here
+border Gamma1(t=0.0,theta)    { x = a * cos(t); y = b*sin(t); }
+border Gamma2(t=theta,2.0*pi) { x = a * cos(t); y = b*sin(t); }
+
+
+func f = -4.0*( cos(x^2 + y^2 - 1.0) - (x^2 + y^2)*sin(x^2 + y^2 - 1.0));
+func phiexact = sin(x^2+y^2-1.0);
+
+load "Element_P3"
+
+// compute error on a sequence of meshes
+int meshes=4, mshdensity=1;
+real[int] L2error(meshes);
+for ( int n=0; n<meshes; n++){
+  mesh Th = buildmesh( Gamma1(40*mshdensity) + Gamma2(20*mshdensity) );
+  mshdensity *= 2;
+  fespace Vh(Th, P3); 
+  Vh phi,w;
+  
+  solve laplace(phi, w, solver=UMFPACK) = 
+    int2d(Th)( dx(phi) * dx(w) + dy(phi) * dy(w))
+    //- int2d(Th)( f*w ) + on(Gamma2,phi=phiexact)+ on(Gamma1, phi=phiexact);
+    - int2d(Th)( f*w ) + on(Gamma2, phi=0)+ on(Gamma1, phi=0);
+
+  phi=(phi-phiexact);
+
+  plot(Th, phi, wait=true, fill=true); //Plot Th and phi
+  
+  // compute error
+  L2error[n]= sqrt( int2d(Th)( (phi)^2 ) );
+}
+
+// print errors
+for (int n=0; n<meshes; n++){
+  cout << " L2error " << n << " = "<<  L2error[n] <<endl;
+}
+
+// print convergence rates
+for (int n=1; n<meshes; n++){
+  cout <<" convergence rate = "<< log( L2error[n-1] / L2error[n] )/log(2.)
+       <<endl;
+}

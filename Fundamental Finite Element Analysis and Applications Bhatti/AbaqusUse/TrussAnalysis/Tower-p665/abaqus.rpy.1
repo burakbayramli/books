@@ -1,0 +1,36 @@
+#
+# ABAQUS/Viewer Version 6.3-1 replay file
+# Internal Version: 2002_09_03-10.38.43 36270
+# Run by mabhatti on Sat Jul 19 06:40:02 2003
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+#: Warning: This hardware does not support the OpenGL driver with double buffering.
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(1.32468557357788, 
+    1.32261407375336), width=194.993713378906, height=130.409744262695)
+session.viewports['Viewport: 1'].makeCurrent()
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+import visualization
+import xyPlot
+import displayGroupOdbToolset as dgo
+o0 = session.openOdb('tower.odb')
+#: Model: /tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/tower/tower.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       3
+#: Number of Node Sets:          4
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o0)
+session.viewports['Viewport: 1'].odbDisplay.setPlotMode(DEFORMED_SHAPE)
+session.viewports['Viewport: 1'].odbDisplay.setPlotMode(CONTOUR)
+odb = session.odbs['/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/tower/tower.odb']
+session.writeFieldReport(fileName='abaqus.rpt', append=ON, 
+    sortItem='Element Label', odb=odb, step=0, frame=1, 
+    outputPosition=INTEGRATION_POINT, variable=(('S', INTEGRATION_POINT), ))

@@ -1,0 +1,499 @@
+/PREP7  
+!*  
+ET,1,PLANE42
+!*  
+KEYOPT,1,1,0
+KEYOPT,1,2,0
+KEYOPT,1,3,2
+KEYOPT,1,5,0
+KEYOPT,1,6,0
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,2000   
+MPDATA,PRXY,1,,.2   
+
+!* Define key points, lines and areas
+K,1,,,, 
+K,2,120,20,,
+CIRCLE,1, 35, , ,360, ,
+CIRCLE,1, 50, , ,360, ,
+CIRCLE,2,50, , ,360, ,
+CIRCLE,2,70, , ,360, ,
+LSTR,      10,       6  
+LSTR,       3,       7  
+LSTR,       4,       8  
+LSTR,       5,       9  
+LSTR,      18,      14  
+LSTR,      11,      15  
+LSTR,      12,      16  
+LSTR,      13,      17  
+AL,17,8,18,4 
+AL,18,5,19,1
+AL,19,6,20,2
+AL,20,7,17,3
+AL,21,16,22,12
+AL,22,13,23,9
+AL,23,14,24,10
+AL,24,15,21,11 
+
+!* Create mesh
+ESIZE,5
+MSHKEY,1
+AMESH,ALL   
+
+!* Create key points and lines for defining
+!* rigid walls and base
+K,19,-50,-50,,
+K,20,-50,100,,
+K,21,190,-50,,
+K,22,190,100,,
+LSTR,19,20
+LSTR,21,22
+LSTR,19,10
+LSTR,10,18
+LSTR,18,21   
+
+!* Fix initial contact points between
+!* rigid walls and cylinders
+DK,10, , , ,0,UX, , , , , ,   
+DK,10, , , ,0,UY, , , , , ,   
+DK,18, , , ,0,UX, , , , , ,   
+DK,18, , , ,0,UY, , , , , ,   
+DK,9, , , ,0,UX, , , , , ,   
+DK,9, , , ,0,UY, , , , , ,   
+DK,15, , , ,0,UX, , , , , ,   
+DK,15, , , ,0,UY, , , , , ,   
+
+!* Apply pressure
+SFL,1,PRES,100,
+SFL,2,PRES,100,
+SFL,3,PRES,100,  
+SFL,4,PRES,100,  
+SFL,9,PRES,100,  
+SFL,10,PRES,100,  
+SFL,11,PRES,100,  
+SFL,12,PRES,100, 
+
+/COM, CONTACT PAIR CREATION - START 
+!* Contact between two cylinders
+MP,MU,1,0.2   
+MAT,1   
+R,3 
+REAL,3  
+ET,2,169
+ET,3,175
+R,3,,,1.0,0.1,0,
+RMORE,,,1.0E20,0.0,1.0, 
+RMORE,0.0,0,1.0,,1.0,0.5
+RMORE,0,1.0,1.0,0.0,,1.0
+RMORE,10.0  
+KEYOPT,3,3,0
+KEYOPT,3,4,0
+KEYOPT,3,5,0
+KEYOPT,3,7,0
+KEYOPT,3,8,0
+KEYOPT,3,9,1
+KEYOPT,3,10,1   
+KEYOPT,3,11,0   
+KEYOPT,3,12,0   
+KEYOPT,3,2,0
+! Generate the target surface   
+LSEL,S,,,14 
+LSEL,A,,,15 
+CM,_TARGET,LINE 
+TYPE,2  
+NSLL,S,1
+ESLN,S,0
+ESURF   
+! Generate the contact surface  
+LSEL,S,,,5  
+LSEL,A,,,8  
+CM,_CONTACT,LINE
+TYPE,3  
+NSLL,S,1
+ESLN,S,0
+ESURF   
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,2  
+ESEL,A,TYPE,,3  
+ESEL,R,REAL,,3  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+
+/COM, CONTACT PAIR CREATION - START 
+!* Contact between large cylinder and right wall
+CM,_NODECM,NODE 
+CM,_ELEMCM,ELEM 
+CM,_KPCM,KP 
+CM,_LINECM,LINE 
+CM,_AREACM,AREA 
+CM,_VOLUCM,VOLU 
+/GSAV,cwz,gsav,,temp
+MP,MU,1,0.2 
+MAT,1   
+R,4 
+REAL,4  
+ET,4,169
+ET,5,175
+KEYOPT,5,9,0
+KEYOPT,5,10,1   
+R,4,
+RMORE,  
+RMORE,,0
+RMORE,0 
+! Generate the target surface   
+LSEL,S,,,26 
+CM,_TARGET,LINE 
+TYPE,4  
+LATT,-1,4,4,-1  
+TYPE,4  
+LMESH,ALL   
+! Generate the contact surface  
+LSEL,S,,,13 
+LSEL,A,,,16 
+CM,_CONTACT,LINE
+TYPE,5  
+NSLL,S,1
+ESLN,S,0
+ESURF   
+*SET,_REALID,4  
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,4  
+ESEL,A,TYPE,,5  
+ESEL,R,REAL,,4  
+LSEL,S,REAL,,4  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+! Reverse target normals
+CM,_Y,LINE  
+LSEL, , , ,      26 
+CM,_YEL,ELEM
+CM,_YND,NODE
+NSLL,S,1
+ESLN,S,1
+ESEL,R,REAL,,_REALID
+ESURF,,REVERSE  
+CMSEL,S,_Y  
+CMSEL,S,_YEL
+CMSEL,S,_YND
+CMDELE,_Y   
+CMDELE,_YEL 
+CMDELE,_YND 
+/REPLOT 
+!*  
+ESEL,ALL
+ESEL,S,TYPE,,4  
+ESEL,A,TYPE,,5  
+ESEL,R,REAL,,4  
+LSEL,S,REAL,,4  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+ESEL,S,TYPE,,4  
+ESEL,A,TYPE,,5  
+ESEL,R,REAL,,4  
+LSEL,S,REAL,,4  
+CMSEL,A,_NODECM 
+CMDEL,_NODECM   
+CMSEL,A,_ELEMCM 
+CMDEL,_ELEMCM   
+CMSEL,S,_KPCM   
+CMDEL,_KPCM 
+CMSEL,S,_LINECM 
+CMDEL,_LINECM   
+CMSEL,S,_AREACM 
+CMDEL,_AREACM   
+CMSEL,S,_VOLUCM 
+CMDEL,_VOLUCM   
+/GRES,cwz,gsav  
+CMDEL,_TARGET   
+CMDEL,_CONTACT  
+/COM, CONTACT PAIR CREATION - END   
+!*  
+!*  
+/COM, CONTACT PAIR CREATION - START 
+!* Contact between large cylinder and base
+CM,_NODECM,NODE 
+CM,_ELEMCM,ELEM 
+CM,_KPCM,KP 
+CM,_LINECM,LINE 
+CM,_AREACM,AREA 
+CM,_VOLUCM,VOLU 
+/GSAV,cwz,gsav,,temp
+MP,MU,1,0.2 
+MAT,1   
+R,5 
+REAL,5  
+ET,6,169
+ET,7,175
+KEYOPT,7,9,0
+KEYOPT,7,10,1   
+R,5,
+RMORE,  
+RMORE,,0
+RMORE,0 
+! Generate the target surface   
+LSEL,S,,,28 
+LSEL,A,,,29 
+CM,_TARGET,LINE 
+TYPE,6  
+LATT,-1,5,6,-1  
+TYPE,6  
+LMESH,ALL   
+! Generate the contact surface  
+LSEL,S,,,15 
+LSEL,A,,,16 
+CM,_CONTACT,LINE
+TYPE,7  
+NSLL,S,1
+ESLN,S,0
+ESURF   
+*SET,_REALID,5  
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,6  
+ESEL,A,TYPE,,7  
+ESEL,R,REAL,,5  
+LSEL,S,REAL,,5  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+! Reverse target normals
+FLST,5,2,4,ORDE,2   
+FITEM,5,28  
+FITEM,5,-29 
+CM,_Y,LINE  
+LSEL, , , ,P51X 
+CM,_YEL,ELEM
+CM,_YND,NODE
+NSLL,S,1
+ESLN,S,1
+ESEL,R,REAL,,_REALID
+ESURF,,REVERSE  
+CMSEL,S,_Y  
+CMSEL,S,_YEL
+CMSEL,S,_YND
+CMDELE,_Y   
+CMDELE,_YEL 
+CMDELE,_YND 
+/REPLOT 
+!*  
+ESEL,ALL
+ESEL,S,TYPE,,6  
+ESEL,A,TYPE,,7  
+ESEL,R,REAL,,5  
+LSEL,S,REAL,,5  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+ESEL,S,TYPE,,6  
+ESEL,A,TYPE,,7  
+ESEL,R,REAL,,5  
+LSEL,S,REAL,,5  
+CMSEL,A,_NODECM 
+CMDEL,_NODECM   
+CMSEL,A,_ELEMCM 
+CMDEL,_ELEMCM   
+CMSEL,S,_KPCM   
+CMDEL,_KPCM 
+CMSEL,S,_LINECM 
+CMDEL,_LINECM   
+CMSEL,S,_AREACM 
+CMDEL,_AREACM   
+CMSEL,S,_VOLUCM 
+CMDEL,_VOLUCM   
+/GRES,cwz,gsav  
+CMDEL,_TARGET   
+CMDEL,_CONTACT  
+/COM, CONTACT PAIR CREATION - END   
+!*  
+!*  
+/COM, CONTACT PAIR CREATION - START 
+!* Contact between small cylinder and left wall
+CM,_NODECM,NODE 
+CM,_ELEMCM,ELEM 
+CM,_KPCM,KP 
+CM,_LINECM,LINE 
+CM,_AREACM,AREA 
+CM,_VOLUCM,VOLU 
+/GSAV,cwz,gsav,,temp
+MP,MU,1,0.2 
+MAT,1   
+R,6 
+REAL,6  
+ET,8,169
+ET,9,175
+KEYOPT,9,9,0
+KEYOPT,9,10,1   
+R,6,
+RMORE,  
+RMORE,,0
+RMORE,0 
+! Generate the target surface   
+LSEL,S,,,25 
+CM,_TARGET,LINE 
+TYPE,8  
+LATT,-1,6,8,-1  
+TYPE,8  
+LMESH,ALL   
+! Generate the contact surface  
+LSEL,S,,,6  
+LSEL,A,,,7  
+CM,_CONTACT,LINE
+TYPE,9  
+NSLL,S,1
+ESLN,S,0
+ESURF   
+*SET,_REALID,6  
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,8  
+ESEL,A,TYPE,,9  
+ESEL,R,REAL,,6  
+LSEL,S,REAL,,6  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+ESEL,S,TYPE,,8  
+ESEL,A,TYPE,,9  
+ESEL,R,REAL,,6  
+LSEL,S,REAL,,6  
+CMSEL,A,_NODECM 
+CMDEL,_NODECM   
+CMSEL,A,_ELEMCM 
+CMDEL,_ELEMCM   
+CMSEL,S,_KPCM   
+CMDEL,_KPCM 
+CMSEL,S,_LINECM 
+CMDEL,_LINECM   
+CMSEL,S,_AREACM 
+CMDEL,_AREACM   
+CMSEL,S,_VOLUCM 
+CMDEL,_VOLUCM   
+/GRES,cwz,gsav  
+CMDEL,_TARGET   
+CMDEL,_CONTACT  
+/COM, CONTACT PAIR CREATION - END   
+!*  
+!*  
+/COM, CONTACT PAIR CREATION - START 
+!* Contact between small cylinder and base
+CM,_NODECM,NODE 
+CM,_ELEMCM,ELEM 
+CM,_KPCM,KP 
+CM,_LINECM,LINE 
+CM,_AREACM,AREA 
+CM,_VOLUCM,VOLU 
+/GSAV,cwz,gsav,,temp
+MP,MU,1,0.2 
+MAT,1   
+R,7 
+REAL,7  
+ET,10,169   
+ET,11,175   
+KEYOPT,11,9,0   
+KEYOPT,11,10,1  
+R,7,
+RMORE,  
+RMORE,,0
+RMORE,0 
+! Generate the target surface   
+LSEL,S,,,27 
+CM,_TARGET,LINE 
+TYPE,10 
+LATT,-1,7,10,-1 
+TYPE,10 
+LMESH,ALL   
+! Generate the contact surface  
+LSEL,S,,,7  
+LSEL,A,,,8  
+CM,_CONTACT,LINE
+TYPE,11 
+NSLL,S,1
+ESLN,S,0
+ESURF   
+*SET,_REALID,7  
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,10 
+ESEL,A,TYPE,,11 
+ESEL,R,REAL,,7  
+LSEL,S,REAL,,7  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+! Reverse target normals
+CM,_Y,LINE  
+LSEL, , , ,      27 
+CM,_YEL,ELEM
+CM,_YND,NODE
+NSLL,S,1
+ESLN,S,1
+ESEL,R,REAL,,_REALID
+ESURF,,REVERSE  
+CMSEL,S,_Y  
+CMSEL,S,_YEL
+CMSEL,S,_YND
+CMDELE,_Y   
+CMDELE,_YEL 
+CMDELE,_YND 
+/REPLOT 
+!*  
+ESEL,ALL
+ESEL,S,TYPE,,10 
+ESEL,A,TYPE,,11 
+ESEL,R,REAL,,7  
+LSEL,S,REAL,,7  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+ESEL,S,TYPE,,10 
+ESEL,A,TYPE,,11 
+ESEL,R,REAL,,7  
+LSEL,S,REAL,,7  
+CMSEL,A,_NODECM 
+CMDEL,_NODECM   
+CMSEL,A,_ELEMCM 
+CMDEL,_ELEMCM   
+CMSEL,S,_KPCM   
+CMDEL,_KPCM 
+CMSEL,S,_LINECM 
+CMDEL,_LINECM   
+CMSEL,S,_AREACM 
+CMDEL,_AREACM   
+CMSEL,S,_VOLUCM 
+CMDEL,_VOLUCM   
+/GRES,cwz,gsav  
+CMDEL,_TARGET   
+CMDEL,_CONTACT  
+/COM, CONTACT PAIR CREATION - END   
+FINISH  
+
+!* Solution and post processing
+/SOL
+/STATUS,SOLU
+NSUBST,100,0,0
+SOLVE   
+FINISH  
+/POST1  
+/DSCALE,1,1.0   
+PLDISP,1
