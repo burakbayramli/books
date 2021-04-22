@@ -1,0 +1,103 @@
+/PREP7  
+!*  
+*set,pi,3.14159
+ET,1,PLANE25
+KEYOPT,1,1,0
+KEYOPT,1,2,1
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,200000 
+MPDATA,PRXY,1,,0.25 
+*set,ri,50
+*set,ro,100
+*set,rm,75
+*set,h,1000
+*set,p,5
+k,1,ri,0
+k,2,ro,0
+k,3,ri,h
+k,4,ro,h
+a,1,2,4,3
+ESIZE,10,0, 
+CM,_Y,AREA  
+ASEL, , , ,       1 
+CM,_Y1,AREA 
+CHKMSH,'AREA'   
+CMSEL,S,_Y  
+!*  
+MSHKEY,1
+AMESH,_Y1   
+MSHKEY,0
+!*  
+CMDELE,_Y   
+CMDELE,_Y1  
+CMDELE,_Y2  
+!*  
+DL,1, ,ALL,
+FINISH  
+/SOL
+ERESX,NO
+SFL,2,PRES,p/4,
+MODE,0,
+LSWRITE,1,  
+!*
+SFLDELE,       2,PRES   
+SFL,2,PRES,p/pi, 
+MODE,1,1
+ERESX,NO
+LSWRITE,2,  
+!*
+SFLDELE,       2,PRES   
+SFL,2,PRES,p/pi, 
+MODE,1,-1
+ERESX,NO
+LSWRITE,3,  
+!*
+!*
+SFLDELE,       2,PRES   
+SFL,2,PRES,p/pi, 
+MODE,2,-1
+ERESX,NO
+LSWRITE,4,  
+!*
+SFLDELE,       2,PRES   
+SFL,2,PRES,-p/(3*pi), 
+MODE,3,1
+ERESX,NO
+LSWRITE,5,  
+!*
+!*
+SFLDELE,       2,PRES   
+SFL,2,PRES,p/(3*pi), 
+MODE,3,-1
+ERESX,NO
+LSWRITE,6,  
+!*
+/STATUS,SOLU
+/SOL
+LSSOLVE,1,6,1,  
+FINISH  
+/POST1  
+LCDEF,1,1,, 
+LCDEF,2,2,, 
+LCDEF,3,3,, 
+LCDEF,4,4,, 
+LCDEF,5,5,, 
+LCDEF,6,6,, 
+LCFILE,7,'ld7',' ',' '  
+LCASE,1,
+LCASE,2,
+LCASE,3,
+LCASE,4,
+LCASE,5,
+LCASE,6,
+LCOPER,ADD,1, , ,   
+LCOPER,ADD,2, , ,   
+LCOPER,ADD,3, , ,   
+LCOPER,ADD,4, , ,   
+LCOPER,ADD,5, , ,   
+LCOPER,ADD,6, , ,   
+!*  
+PRNSOL,U,X  

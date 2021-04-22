@@ -1,0 +1,82 @@
+// example18.py: Vortex shedding past a square
+// outer rectangle [L,R] X [B,T]
+// obstacle  [L1,R1] X [B1,T1]
+
+real L= 0.0, R= 2.0, B= 0.0, T= 1.0;
+real L1= 0.2, R1= 0.4, B1= 0.4, T1= 0.6;
+int  nx=20, ny=10;
+int  nx1=5, ny1=5;
+
+// outer square
+border Bottom(t= 0,1){x= L + (R-L)*t; y= B; label= 1;};
+border Top(t= 0,1){x= L + (R-L)*t; y= T; label= 3;};
+border Left(t= 0,1){x= L; y= B + (T-B)*t; label= 4;};
+border Right(t= 0,1){x= R; y= B + (T-B)*t; label= 2;};
+
+// obstacle
+border ObsBottom(t= 0,1){x= L1 + (R1-L1)*t; y= B1; label= 5;};
+border ObsTop(t= 0,1){x= L1 + (R1-L1)*t; y= T1; label= 7;};
+border ObsLeft(t= 0,1){x= L1; y= B1 + (T1-B1)*t; label= 8;};
+border ObsRight(t= 0,1){x= R1; y= B1 + (T1-B1)*t; label= 6;};
+
+plot( Bottom(nx) + Right(ny) + Top(-nx) + Left(-ny)
+     + ObsBottom(-nx1) + ObsRight(-ny1) + ObsTop(+nx1) + ObsLeft(+ny1), wait=1, ps="geomoutline.eps" );
+
+mesh Th= buildmesh( Bottom(nx) + Right(ny) + Top(-nx) + Left(-ny)
+          + ObsBottom(-nx1) + ObsRight(-ny1) + ObsTop(+nx1) + ObsLeft(+ny1) );
+
+// plot the mesh
+plot(Th, wait=1, ps="VortexStreetMesh.eps");
+
+fespace Xh( Th, P2);
+fespace Mh( Th, P1);
+Xh u2, v2, u1, v1, up1, up2; 
+Mh p, q;
+
+
+int numTSteps=600;
+bool reuseMatrix=false;
+real  nu=1./1000., dt=0.05, bndryVelocity;
+
+problem  NS ([u1, u2, p] , [v1, v2, q] , solver=UMFPACK , init=reuseMatrix) =
+    int2d(Th)( 1./dt*( u1*v1 + u2*v2 ) 
+             + nu * ( dx(u1)*dx(v1) + dy(u1)*dy(v1)
+             +        dx(u2)*dx(v2) + dy(u2)*dy(v2) )
+             + p*q*(0.000001) 
+             + p*dx(v1) + p*dy(v2)
+             + dx(u1)*q + dy(u2)*q )
+  + int2d(Th) ( -1./dt*convect( [up1, up2] , -dt , up1) * v1 
+                -1./dt*convect( [up1, up2] , -dt , up2) * v2 )
+
+    // b.c.: uniform velocity top, bottom, inlet (left)
+    // "do nothing" on exit (right)
+  + on(1, u1=bndryVelocity, u2=0)
+  + on(3, u1=bndryVelocity, u2=0) 
+  + on(4, u1=bndryVelocity, u2=0)
+  + on(5, 6, 7, 8, u1=0, u2=0)
+;
+
+real[int] times(numTSteps), var(numTSteps);
+
+
+for (int i=0 ; i < numTSteps ; i++) {
+   times[i] = i*dt;
+
+   // ramp up velocity from 0.0
+   bndryVelocity = i*dt;
+   if (bndryVelocity >= 1.0) bndryVelocity = 1.0;
+
+   up1 = u1;
+   up2 = u2;
+
+   // Solve the problem
+   NS;
+
+   // reuse the matrix in the rest of the iterations
+   reuseMatrix = true;
+
+   // plot the current solution
+   plot(coef=0.2, cmm= " [u1,u2] and p  ", p, [u1,u2], 
+      ArrowShape= 1, ArrowSize= -0.8 );  
+}
+

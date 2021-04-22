@@ -1,0 +1,68 @@
+// example34.edp
+// from book, Section 10.6
+
+if ( mpisize != 2 ) {
+  cout << " Sorry, Example 34 requires exactly 2 processors. " << endl;
+  exit(1);
+}
+
+verbosity = 3;
+
+int inside = 2;
+int outside = 1;
+border a( t=1, 2){ x=t; y=0; label=outside;}
+border b( t=0, 1){ x=2; y=t; label=outside;}
+border c( t=2, 0){ x=t; y=1; label=outside;}
+border d( t=1, 0){ x=1-t; y=t; label=inside;}
+border e( t=0, pi/2){ x= cos(t); y = sin(t);label=inside;}
+border e1( t=pi/2, 2*pi){ x= cos(t); y = sin(t); label=outside;} 
+int n=4;
+mesh th,TH;
+
+if (mpirank == 0) {
+  th = buildmesh( a(5*n) + b(5*n) + c(10*n) + d(5*n));
+} else {
+  TH = buildmesh ( e(5*n) + e1(25*n) );
+}
+
+// communicate whole mesh instead of only part
+broadcast(processor(0), th);
+broadcast(processor(1), TH);
+
+fespace vh(th, P1);
+fespace VH(TH, P1);
+vh u=0, v; 
+VH U=0, V;
+real f=1.;
+int reuseMatrix=false;
+
+problem PB(U, V, init=reuseMatrix, solver=Cholesky) = 
+    int2d(TH)( dx(U)*dx(V) + dy(U)*dy(V) )
+  + int2d(TH)( -f*V) + on(inside, U = u) + on(outside, U = 0 ) ;
+problem pb(u, v, init=reuseMatrix, solver=Cholesky) = 
+    int2d(th)( dx(u)*dx(v) + dy(u)*dy(v) )
+  + int2d(th)( -f*v) + on(inside ,u = U) + on(outside, u = 0 ) ;
+
+for (int i=0; i< 10; i++) { 
+  cout << mpirank << " looP " << i << endl;
+  if (mpirank == 0) {   
+   PB;
+   processor(1) << U[];
+   processor(1) >> u[];
+  } else {
+   pb;
+   processor(0) >> U[];
+   processor(0) << u[];
+  }
+  if (false && mpirank==0){
+    plot(U,u,wait=true,ps="Uu34-"+i+".eps");
+  }
+}
+if (mpirank==0){
+  plot(U,u,ps="Uu34.eps",wait=true);
+  plot(U,ps="U34.eps",wait=true);
+  plot(u,ps="u34.eps",wait=true);
+}
+
+// Want both processors to terminate together.
+mpiBarrier(mpiCommWorld);

@@ -1,0 +1,49 @@
+!* Example 6.4 Square plate subjected to a distributed load
+!* One plate element model
+/PREP7  
+!*  
+ET,1,SHELL43
+!*  
+KEYOPT,1,1,0
+KEYOPT,1,2,0
+KEYOPT,1,3,1
+KEYOPT,1,5,0
+KEYOPT,1,6,0
+KEYOPT,1,7,0
+KEYOPT,1,8,0
+KEYOPT,1,9,0
+KEYOPT,1,11,0   
+!*  
+R,1,0.1, , , , , ,  
+RMORE, , , ,
+RMORE   
+RMORE, ,
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,10920  
+MPDATA,PRXY,1,,0.3  
+k,1,,,,,,,  
+k,2,.5,,,,,,
+k,3,0.5,.5,,,,, 
+k,4,0,0.5,,,,,  
+a,1,2,3,4
+esize,.5
+amesh,1
+DL,1, ,UZ,   
+DL,1, ,ROTY, 
+DL,2, ,ROTY, 
+DL,3, ,ROTX, 
+DL,4, ,UZ,   
+DL,4, ,ROTY, 
+DL,4, ,ROTX, 
+SFA,1,1,PRES,1
+FINISH  
+/SOL
+/STATUS,SOLU
+SOLVE   
+FINISH  
+/POST1  
+!*  
+PRNSOL,U,Z  

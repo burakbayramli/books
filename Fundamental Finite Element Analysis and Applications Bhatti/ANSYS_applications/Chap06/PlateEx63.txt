@@ -1,0 +1,51 @@
+!* Example 6.3 Square plate subjected to a distributed load
+!* 4 triangular plate element model
+/PREP7  
+!*  
+ET,1,SHELL63
+!*  
+KEYOPT,1,1,0
+KEYOPT,1,2,0
+KEYOPT,1,3,1
+KEYOPT,1,5,0
+KEYOPT,1,6,0
+KEYOPT,1,7,0
+KEYOPT,1,8,0
+KEYOPT,1,9,0
+KEYOPT,1,11,0   
+!*  
+R,1,0.1, , , , , ,  
+RMORE, , , ,
+RMORE   
+RMORE, ,
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,10920  
+MPDATA,PRXY,1,,0.3  
+N,1,,,,,,,  
+N,2,.5,,,,,,
+N,3,0.5,.5,,,,, 
+N,4,0,0.5,,,,,  
+N,5,0.25,0.25,,,,,  
+e,4,1,5,5
+e,1,2,5,5
+e,2,3,5,5
+e,3,4,5,5
+D,1, , , , , ,UZ,ROTX,ROTY, , ,  
+D,2, , , , , ,UZ,ROTY, , , , 
+D,3, , , , , ,ROTX,ROTY, , , ,   
+D,4, , , , , ,UZ,ROTX,ROTY, , ,  
+SFE,1,1,PRES, ,1, , , 
+SFE,2,1,PRES, ,1, , , 
+SFE,3,1,PRES, ,1, , , 
+SFE,4,1,PRES, ,1, , , 
+FINISH  
+/SOL
+/STATUS,SOLU
+SOLVE   
+FINISH  
+/POST1  
+!*  
+PRNSOL,U,Z  

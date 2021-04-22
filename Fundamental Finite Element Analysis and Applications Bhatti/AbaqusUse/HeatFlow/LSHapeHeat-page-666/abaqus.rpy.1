@@ -1,0 +1,296 @@
+#
+# ABAQUS/CAE Version 6.3-1 replay file
+# Internal Version: 2002_09_03-10.38.43 36270
+# Run by mabhatti on Tue Jul 22 10:01:51 2003
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+#: Warning: This hardware does not support the OpenGL driver with double buffering.
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(1.32468557357788, 
+    1.32261407375336), width=194.993713378906, height=130.409744262695)
+session.viewports['Viewport: 1'].makeCurrent()
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+Mdb()
+#: A new model database has been created.
+#: The model "Model-1" has been created.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+mdb.saveAs(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/thermal/LShape')
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/thermal/LShape.cae".
+import part
+import regionToolset
+import displayGroupMdbToolset as dgm
+s = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=0.1)
+g, v, d = s.geometry, s.vertices, s.dimensions
+s.sketchOptions.setValues(sheetSize=0.1, gridSpacing=0.002, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=0.002, 
+    decimalPlaces=3)
+s.setPrimaryObject(option=STANDALONE)
+s.Line(point1=(0.0, 0.0), point2=(0.06, 0.0))
+s.Line(point1=(0.06, 0.0), point2=(0.06, 0.015))
+s.Line(point1=(0.06, 0.015), point2=(0.03, 0.015))
+s.Line(point1=(0.03, 0.015), point2=(0.03, 0.03))
+s.Line(point1=(0.03, 0.03), point2=(0.0, 0.03))
+s.Line(point1=(0.0, 0.03), point2=(0.0, 0.0))
+p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=TWO_D_PLANAR, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Part-1']
+p.BaseShell(sketch=s)
+s.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+p0 = mdb.models['Model-1'].parts['Part-1']
+e, v0, d0 = p0.edges, p0.vertices, p0.datums
+p0.PartitionEdgeByPoint(edge=e[0], point=p0.InterestingPoint(edge=e[0], 
+    rule=MIDDLE))
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, e, d0 = p0.faces, p0.edges, p0.datums
+t = p0.MakeSketchTransform(sketchPlane=f[0], sketchPlaneSide=SIDE1, origin=(
+    0.025, 0.0125, 0.0))
+s0 = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=0.1, 
+    gridSpacing=0.002, transform=t)
+g, v, d = s0.geometry, s0.vertices, s0.dimensions
+s0.sketchOptions.setValues(sheetSize=0.1, gridSpacing=0.002, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=0.002, 
+    decimalPlaces=3)
+s0.setPrimaryObject(option=SUPERIMPOSE)
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.projectReferencesOntoSketch(sketch=s0, filter=COPLANAR_EDGES)
+r, r0 = s0.referenceGeometry, s0.referenceVertices
+s0.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, e, d0 = p0.faces, p0.edges, p0.datums
+t = p0.MakeSketchTransform(sketchPlane=f[0], sketchPlaneSide=SIDE1, origin=(
+    0.025, 0.0125, 0.0))
+s = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=0.1, 
+    gridSpacing=0.002, transform=t)
+g, v, d = s.geometry, s.vertices, s.dimensions
+s.sketchOptions.setValues(sheetSize=0.1, gridSpacing=0.002, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=0.002, 
+    decimalPlaces=3)
+s.setPrimaryObject(option=SUPERIMPOSE)
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.projectReferencesOntoSketch(sketch=s, filter=COPLANAR_EDGES)
+r, r0 = s.referenceGeometry, s.referenceVertices
+s.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+p0 = mdb.models['Model-1'].parts['Part-1']
+del p0.features['Partition edge-1']
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.backup()
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, e, d0 = p0.faces, p0.edges, p0.datums
+t = p0.MakeSketchTransform(sketchPlane=f[0], sketchPlaneSide=SIDE1, origin=(
+    0.025, 0.0125, 0.0))
+s0 = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=0.1, 
+    gridSpacing=0.002, transform=t)
+g, v, d = s0.geometry, s0.vertices, s0.dimensions
+s0.sketchOptions.setValues(sheetSize=0.1, gridSpacing=0.002, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=0.002, 
+    decimalPlaces=3)
+s0.setPrimaryObject(option=SUPERIMPOSE)
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.projectReferencesOntoSketch(sketch=s0, filter=COPLANAR_EDGES)
+r, r0 = s0.referenceGeometry, s0.referenceVertices
+s0.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, e, d0 = p0.faces, p0.edges, p0.datums
+t = p0.MakeSketchTransform(sketchPlane=f[0], sketchPlaneSide=SIDE1, origin=(
+    0.025, 0.0125, 0.0))
+s = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=0.1, 
+    gridSpacing=0.002, transform=t)
+g, v, d = s.geometry, s.vertices, s.dimensions
+s.sketchOptions.setValues(sheetSize=0.1, gridSpacing=0.002, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=0.002, 
+    decimalPlaces=3)
+s.setPrimaryObject(option=SUPERIMPOSE)
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.projectReferencesOntoSketch(sketch=s, filter=COPLANAR_EDGES)
+r, r0 = s.referenceGeometry, s.referenceVertices
+s.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, e, d0 = p0.faces, p0.edges, p0.datums
+t = p0.MakeSketchTransform(sketchPlane=f[0], sketchPlaneSide=SIDE1, origin=(
+    0.025, 0.0125, 0.0))
+s0 = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=0.1, 
+    gridSpacing=0.002, transform=t)
+g, v, d = s0.geometry, s0.vertices, s0.dimensions
+s0.sketchOptions.setValues(sheetSize=0.1, gridSpacing=0.002, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=0.002, 
+    decimalPlaces=3)
+s0.setPrimaryObject(option=SUPERIMPOSE)
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.projectReferencesOntoSketch(sketch=s0, filter=COPLANAR_EDGES)
+r, r0 = s0.referenceGeometry, s0.referenceVertices
+s0.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, v0, e, d0 = p0.faces, p0.vertices, p0.edges, p0.datums
+faces =(f[0], )
+p0.PartitionFaceByShortestPath(point2=v0[3], faces=faces, 
+    point1=p0.InterestingPoint(edge=e[0], rule=MIDDLE))
+p0 = mdb.models['Model-1'].parts['Part-1']
+del p0.features['Partition face-1']
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.backup()
+p0 = mdb.models['Model-1'].parts['Part-1']
+f, v0, e, d0 = p0.faces, p0.vertices, p0.edges, p0.datums
+faces =(f[0], )
+p0.PartitionFaceByShortestPath(point2=v0[3], faces=faces, 
+    point1=p0.InterestingPoint(edge=e[0], rule=MIDDLE))
+import material
+import section
+mdb.models['Model-1'].Material('Material-1')
+mdb.models['Model-1'].materials['Material-1'].Conductivity(table=((45.0, ), ))
+mdb.models['Model-1'].Material('Material-2')
+mdb.models['Model-1'].materials['Material-2'].Conductivity(table=((25.0, ), ))
+mdb.models['Model-1'].HomogeneousSolidSection(name='Section-1', 
+    material='Material-1', thickness=1.0)
+mdb.models['Model-1'].HomogeneousSolidSection(name='Section-2', 
+    material='Material-2', thickness=1.0)
+p0 = mdb.models['Model-1'].parts['Part-1']
+f = p0.faces
+faces = f[0:1]
+region = regionToolset.Region(faces=faces)
+p1 = mdb.models['Model-1'].parts['Part-1']
+p1.assignSection(region=region, sectionName='Section-1')
+#: The section "Section-1" has been assigned to the selected regions.
+p0 = mdb.models['Model-1'].parts['Part-1']
+f = p0.faces
+faces = f[0:1]
+region = regionToolset.Region(faces=faces)
+p1 = mdb.models['Model-1'].parts['Part-1']
+p1.assignSection(region=region, sectionName='Section-1')
+#: The section "Section-1" has been assigned to the selected regions.
+p0 = mdb.models['Model-1'].parts['Part-1']
+f = p0.faces
+faces = f[1:2]
+region = regionToolset.Region(faces=faces)
+p1 = mdb.models['Model-1'].parts['Part-1']
+p1.assignSection(region=region, sectionName='Section-2')
+#: The section "Section-2" has been assigned to the selected regions.
+import assembly
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+a = mdb.models['Model-1'].rootAssembly
+a.DatumCsysByDefault(CARTESIAN)
+p = mdb.models['Model-1'].parts['Part-1']
+a.Instance(name='Part-1-1', part=p)
+import step
+mdb.models['Model-1'].HeatTransferStep(name='Step-1', previous='Initial', 
+    response=STEADY_STATE, amplitude=RAMP)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+mdb.models['Model-1'].FieldOutputRequest(name='F-Output-2', 
+    createStepName='Step-1', variables=('NT', 'HFL'))
+import interaction
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(interactions=ON, 
+    constraints=ON, connectors=ON)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Part-1-1'].edges
+side1Edges1 = s1[1:3]+s1[7:8]
+region=regionToolset.Region(side1Edges=side1Edges1)
+mdb.models['Model-1'].FilmCondition(name='Int-1', createStepName='Step-1', 
+    surface=region, definition=EMBEDDED_COEFF, filmCoeff=55.0, 
+    filmCoeffAmplitude='', sinkTemperature=20.0, sinkAmplitude='')
+#: The interaction "Int-1" has been created.
+import load
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    fields=ON, interactions=OFF, constraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Part-1-1'].edges
+side1Edges1 = s1[3:4]
+region = regionToolset.Region(side1Edges=side1Edges1)
+mdb.models['Model-1'].SurfaceHeatFlux(name='Load-1', createStepName='Step-1', 
+    region=region, magnitude=8000.0)
+a = mdb.models['Model-1'].rootAssembly
+f1 = a.instances['Part-1-1'].faces
+faces1 = f1[0:1]
+region = regionToolset.Region(faces=faces1)
+mdb.models['Model-1'].BodyHeatFlux(name='Load-2', createStepName='Step-1', 
+    region=region, magnitude=5000000.0)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['Part-1-1'].edges
+edges1 = e1[4:6]
+region = regionToolset.Region(edges=edges1)
+mdb.models['Model-1'].TemperatureBC(name='BC-1', createStepName='Step-1', 
+    region=region, fixed=OFF, distribution=UNIFORM, magnitude=110.0, 
+    amplitude=UNSET)
+import mesh
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, fields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+a0 = mdb.models['Model-1'].rootAssembly
+partInstances =(a0.instances['Part-1-1'], )
+a0.seedPartInstance(regions=partInstances, size=0.002)
+#: Global seeds have been assigned.
+a0 = mdb.models['Model-1'].rootAssembly
+partInstances =(a0.instances['Part-1-1'], )
+a0.deleteSeeds(regions=partInstances)
+#: Global seeds have been deleted.
+a0 = mdb.models['Model-1'].rootAssembly
+e1 = a0.instances['Part-1-1'].edges
+end1Edges =(e1[1], e1[0])
+end2Edges =(e1[7], )
+edges =((end1Edges, END1), (end2Edges, END2))
+a0.seedEdgeByBias(edges=edges, ratio=5.0, number=20)
+a0 = mdb.models['Model-1'].rootAssembly
+e01 = a0.instances['Part-1-1'].edges
+edges =(e01[0], e01[1], e01[7])
+a0.deleteSeeds(regions=edges)
+a0 = mdb.models['Model-1'].rootAssembly
+e1 = a0.instances['Part-1-1'].edges
+end1Edges =(e1[1], e1[0])
+end2Edges =(e1[7], )
+edges =((end1Edges, END1), (end2Edges, END2))
+a0.seedEdgeByBias(edges=edges, ratio=1.0, number=20)
+a0 = mdb.models['Model-1'].rootAssembly
+e01 = a0.instances['Part-1-1'].edges
+end1Edges =(e01[1], e01[0])
+end2Edges =(e01[7], )
+edges =((end1Edges, END1), (end2Edges, END2))
+a0.seedEdgeByBias(edges=edges, ratio=2.0, number=20)
+a0 = mdb.models['Model-1'].rootAssembly
+partInstances =(a0.instances['Part-1-1'], )
+a0.seedPartInstance(regions=partInstances, size=0.002)
+#: Global seeds have been assigned.
+a0 = mdb.models['Model-1'].rootAssembly
+f1 = a0.instances['Part-1-1'].faces
+regions =(f1[0], f1[1])
+a0.setMeshControls(regions=regions, elemShape=QUAD_DOMINATED, 
+    algorithm=ADVANCING_FRONT)
+elemType1 = mesh.ElemType(elemCode=DC2D4, elemLibrary=STANDARD)
+elemType2 = mesh.ElemType(elemCode=DC2D3, elemLibrary=STANDARD)
+a0 = mdb.models['Model-1'].rootAssembly
+f1 = a0.instances['Part-1-1'].faces
+faces1 = f1[0:2]
+regions =(faces1, )
+a0.setElementType(regions=regions, elemTypes=(elemType1, elemType2))
+a0 = mdb.models['Model-1'].rootAssembly
+partInstances =(a0.instances['Part-1-1'], )
+a0.generateMesh(regions=partInstances)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(interactions=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    datumAxes=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    datumPoints=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    referencePointLabels=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    referencePointSymbols=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    datumCoordSystems=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    datumPlanes=OFF, datumCoordSystems=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.geometryOptions.setValues(
+    datumCoordSystems=OFF)

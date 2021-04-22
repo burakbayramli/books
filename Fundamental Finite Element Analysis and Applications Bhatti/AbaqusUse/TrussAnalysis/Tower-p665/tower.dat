@@ -1,0 +1,394 @@
+1
+
+  ABAQUS VERSION 6.3-1                                     DATE 25-Jul-2003   TIME 17:30:17        PAGE     1
+ 
+
+
+
+
+
+    AAAAAA     BBBBBBBBB      AAAAAA      QQQQQQQQ    U        U    SSSSSSSS
+   A      A    B        B    A      A    Q        Q   U        U   S
+  A        A   B        B   A        A   Q        Q   U        U   S
+  A        A   B        B   A        A   Q        Q   U        U   S
+  AAAAAAAAAA   BBBBBBBBB    AAAAAAAAAA   Q        Q   U        U    SSSSSSSS
+  A        A   B        B   A        A   Q    Q   Q   U        U            S
+  A        A   B        B   A        A   Q     Q  Q   U        U            S
+  A        A   B        B   A        A   Q      Q Q   U        U            S
+  A        A   BBBBBBBBB    A        A    QQQQQQQQ     UUUUUUUU     SSSSSSSS
+ 
+
+
+
+                   <|> <|> <|> <|> <|> <|> <|> <|> <|> <|>
+                   <|> <|> <|> <|> <|> <|> <|>  |   |   | 
+                    |   |   |   |   |   |   |  <|> <|> <|>
+                   ---------------------------------------
+                   ---------------------------------------
+                    |  <|>  |  <|>  |   |  <|> <|> <|> <|>
+                    |  <|>  |   |   |   |   |  <|> <|> <|>
+                   <|>  |  <|>  |  <|> <|>  |  <|>  |  <|>
+                   <|>  |  <|> <|> <|> <|> <|> <|>  |   | 
+                   <|> <|> <|> <|> <|> <|> <|>  |  <|>  | 
+                   <|> <|> <|> <|> <|> <|> <|>  |  <|> <|>
+                   <|> <|> <|> <|> <|> <|> <|> <|> <|> <|>
+ 
+
+
+
+
+
+                      This program has been developed by
+ 
+                      Hibbitt, Karlsson & Sorensen, Inc.
+                                1080 Main Street
+                             Pawtucket, R.I. 02860
+ 
+
+
+                   Available for internal use at University of Iowa. 
+                   Support of your usage is not included in the license
+                   price.  To purchase support, or send information to HKS
+                   about a suspected error, please follow the procedures
+                   described in the ABAQUS academic support instructions
+                   document. A copy of this document has been sent to the
+                   designated user at your site. additional copies can be
+                   obtained by contacting HKS or your local HKS representative.
+
+                   Should you have any questions concerning the terms of
+                   this academic license, please contact the designated
+                   user at your university, Douglas Eltoft 
+                        On machine l-ecn018 
+                        you are authorized to run
+                        ABAQUS/Standard until 31-Aug-2003
+
+                        Your site id is: 03UIOWA4A 
+
+
+ 
+                    For assistance or any other information contact
+
+                             ABAQUS Solutions Midwest, Inc.  
+                             1440 Innovation Place  
+                             West Lafayette, IN 47906-1000  
+                             Tel: 765 497 1373  
+                             Fax: 765 497 4444  
+                             E-mail: support@abaqus-mw.com  
+
+
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+                *                                                         * 
+                *                   *****************                     * 
+                *                   *  N O T I C E  *                     * 
+                *                   *****************                     * 
+                *                                                         * 
+                *                                                         * 
+                *                 ABAQUS VERSION 6.3-1                    * 
+                *                                                         * 
+                *          BUILD ID: 2002_09_03-10.38.43 36270            * 
+                *                                                         * 
+                *                                                         * 
+                *  Please make sure you are using version 6.3 manuals     * 
+                *  plus the notes accompanying this release.              * 
+                *                                                         * 
+                *                                                         * 
+                *   This program may not be used for commercial purposes  * 
+                *           without payment of a monthly charge.          * 
+                *                                                         * 
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+
+ 
+
+
+
+     PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   *******************************************************
+
+
+     END PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   ***********************************************************
+
+
+
+
+     OPTIONS BEING PROCESSED
+   ***************************
+
+
+  *Heading
+          Transmission tower                                                                                                                                                                                                                                              
+  *Node
+  *Nset, nset=pin
+  *Nset, nset=roller
+  *Nset, nset=loaded
+  *Element, type=T2D2
+  *Elset, elset=set1
+  *Elset, elset=set2, generate
+  *material, name=steel
+  *elastic
+  *solidsection, elset=set1, material=steel
+  *solidsection, elset=set2, material=steel
+  *boundary
+  *boundary
+  *solidsection, elset=set1, material=steel
+  *solidsection, elset=set2, material=steel
+  *solidsection, elset=set1, material=steel
+  *solidsection, elset=set2, material=steel
+  *Step, name=Step-1
+  *output, field, variable=preselect
+  *output, history, variable=preselect
+  *Step, name=Step-1
+  *Step, name=Step-1
+  Vertical load 1000 lb                                                           
+  *static
+  *output, field, variable=preselect
+  *output, history, variable=preselect
+  *elprint, frequency=1
+  *endstep
+  *boundary
+  *boundary
+  *Step, name=Step-1
+  *static
+  *cload
+  *output, field, variable=preselect
+  *output, history, variable=preselect
+  *nodeprint, frequency=1
+  *endstep
+
+
+
+                            P R O B L E M   S I Z E
+
+
+          NUMBER OF ELEMENTS IS                                   29
+          NUMBER OF NODES IS                                      16
+          NUMBER OF NODES DEFINED BY THE USER                     16
+          TOTAL NUMBER OF VARIABLES IN THE MODEL                  32
+          (DEGREES OF FREEDOM PLUS ANY LAGRANGE MULTIPLIER VARIABLES)
+
+
+
+                              END OF USER INPUT PROCESSING
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =   1.9900    
+       SYSTEM TIME (SEC)    =  0.23000    
+       TOTAL CPU TIME (SEC) =   2.2200    
+       WALLCLOCK TIME (SEC) =         16
+1
+
+   ABAQUS VERSION 6.3-1                                     DATE 25-JUL-2003   TIME 17:30:36        PAGE    1
+   For use at University of Iowa under academic license from HKS Inc.                                                              
+
+     Transmission tower                                                                        STEP    1  INCREMENT    1
+     Vertical load 1000 lb                                                                TIME COMPLETED IN THIS STEP   0.00    
+
+
+                        S T E P       1     S T A T I C   A N A L Y S I S
+
+
+          Vertical load 1000 lb                                                           
+
+     AUTOMATIC TIME CONTROL WITH -
+          A SUGGESTED INITIAL TIME INCREMENT OF                 1.00    
+          AND A TOTAL TIME PERIOD OF                            1.00    
+          THE MINIMUM TIME INCREMENT ALLOWED IS                1.000E-05
+          THE MAXIMUM TIME INCREMENT ALLOWED IS                 1.00    
+  
+  
+  
+                   M E M O R Y   A N D   D I S K   E S T I M A T E
+  
+  
+           SUMMARY FOR CURRENT NODE ORDERING
+          (NOTE THAT IF NODE ORDERING CHANGES THE SIZE ESTIMATES FOR THE STEPS WILL CHANGE)
+  
+  
+           STEP   MAXIMUM DOF     FLOATING PT    MINIMUM MEMORY      MEMORY TO      REQUIRED DISKSPACE
+                  WAVEFRONT       OPERATIONS       REQUIRED        MINIMIZE I/O
+                                PER ITERATION     (MBYTES)           (MBYTES)          (KBYTES)
+  
+             1          10         1.26E+03         14.52              14.52              5.58
+          ----    ---------      ------------    -------------     -------------      -------------
+           MAX          10         1.26E+03         14.52              14.52              5.58
+  
+  
+          THE TABLE ABOVE PROVIDES A STEP BY STEP SUMMARY OF SOME BASIC SIZING INFORMATION
+          FOR THE PROBLEM. SOME FURTHER DESCRIPTION OF THE PARAMETERS GIVEN FOLLOWS:
+  
+          (1) MAXIMUM DOF WAVEFRONT - SIZE OF THE BIGGEST FRONT IN THE EQUATION SOLVER.
+              PROVIDES A BASIC SIZING OF THE MOST MEMORY INTENSIVE SEGMENT OF SOLVER.
+          (2) FLOATING POINT OPERATIONS PER ITERATION - MEASURE OF THE NUMBER OF FLOATING
+              POINT OPERATIONS REQUIRED FOR A SINGLE SOLVER PASS. ON A GIVEN PLATFORM
+              THE TIME REQUIRED FOR A SOLVER PASS WILL BE ROUGHLY A LINEAR FUNCTION
+              OF THIS VALUE.
+              NOTE - EXCEPT FOR THE FIRST STEP, THE VALUE IN THIS TABLE DOES NOT INCLUDE
+                     ADDITIONAL FLOATING POINT OPERATIONS THAT ARE REQUIRED IN MULTIPLE LOAD
+                     CASE STEPS WHEN CONSTRAINTS CHANGE FROM LOAD CASE TO LOAD CASE.  THIS
+                     SITUATION CAUSES A REORDERING TO BE PERFORMED, AT WHICH TIME AN UPPER
+                     BOUND ON THE NUMBER OF ADDITIONAL FLOATING POINT OPERATIONS WILL BE
+                     CALCULATED AND INCLUDED UNDER THE ESTIMATE SUMMARIES FOR THE RELEVANT
+                     STEPS (SEE NOTE BELOW ON REORDERING).
+          (3) MINIMUM MEMORY REQUIRED - MINIMUM POSSIBLE MEMORY VALUE FOR standard_memory
+              THAT ENABLES ABAQUS TO SOLVE THE PROBLEM. USE OF MEMORY WILL BE MINIMIZED BY
+              WRITING AS MUCH INFORMATION AS POSSIBLE TO DISK WHICH WILL INCREASE I/O TIME.
+          (4) MEMORY TO MINIMIZE I/O - VALUE OF standard_memory THAT ALLOWS ABAQUS TO KEEP
+              ALL SIGNIFICANT SCRATCH FILES IN MEMORY. THIS WILL MINIMIZE I/O TIME FOR THE USER
+              WITH ACCESS TO A LARGE AMOUNT OF MEMORY.
+          (5) REQUIRED DISKSPACE - AMOUNT OF DISK REQUIRED FOR SCRATCH FILES. THESE WILL BE
+              DELETED AT THE END OF THE ANALYSIS.
+  
+  
+           NOTE - WHENEVER POSSIBLE THE USER SHOULD SET standard_memory TO BE LESS THAN THE
+          PHYSICAL MEMORY ON THE MACHINE. UNLESS NECESSARY USERS SHOULD NOT MAKE USE
+          OF VIRTUAL MEMORY EVEN IN AN ATTEMPT TO KEEP SCRATCH FILES IN MEMORY.
+  
+           NOTE - IF A REORDERING IS PERFORMED (THIS WILL GENERALLY BE DONE ONLY FOR 3D-3D
+          LARGE SLIDING PROBLEMS), THE SIZE ESTIMATES DONE AT THIS TIME WILL NO LONGER BE VALID.
+          THE ESTIMATES WILL BE REDONE IN THE EVENT OF A REORDERING AND A NEW SUMMARY WILL BE
+          BE PRINTED FOR THE REMAINING STEPS.
+  
+  
+  
+           S I Z E   E S T I M A T E S   F O R   C U R R E N T   S T E P
+  
+          NUMBER OF EQUATIONS                        32
+          MAX DOF WAVEFRONT                          10
+          FLOATING POINT OPS PER SOLVER ITERATION    1.26E+03
+          MEMORY USED FOR STEP                      14.58 MBYTES
+  
+  
+           ESTIMATED FILE SIZES
+  
+           FILE            WORDS           KBYTES
+  
+          .fct           1536.000            1.500
+          .nck           928.000            0.906
+          .opr           3248.000            3.172
+          -------        -------          -------
+           TOTAL         5712.000            5.578
+  
+
+
+                                INCREMENT     1 SUMMARY
+
+
+ TIME INCREMENT COMPLETED   1.00    ,  FRACTION OF STEP COMPLETED   1.00    
+ STEP TIME COMPLETED        1.00    ,  TOTAL TIME COMPLETED         1.00    
+
+
+
+                                                  E L E M E N T   O U T P U T
+
+
+
+
+
+   THE FOLLOWING TABLE IS PRINTED FOR ALL ELEMENTS WITH TYPE T2D2 AT THE INTEGRATION POINTS
+
+ ELEMENT  PT FOOT-       S11         
+             NOTE 
+ 
+       1   1        -1.0972E-13
+       2   1         -100.0    
+       3   1         1.5705E-13
+       4   1         -100.0    
+       5   1          50.00    
+       6   1         -103.1    
+       7   1         6.0199E-14
+       8   1         -103.1    
+       9   1         -50.00    
+      10   1         -100.0    
+      11   1         8.6247E-14
+      12   1         -100.0    
+      13   1         -300.0    
+      14   1         -335.4    
+      15   1         -335.4    
+      16   1         -223.6    
+      17   1         -223.6    
+      18   1          200.0    
+      19   1          200.0    
+      20   1          300.0    
+      21   1          200.0    
+      22   1          200.0    
+      23   1        -1.7480E-13
+      24   1          111.8    
+      25   1         -50.00    
+      26   1        -2.4937E-13
+      27   1         -50.00    
+      28   1          111.8    
+      29   1         1.6609E-13
+
+ MAXIMUM              300.0                                                                                                    
+ ELEMENT              20                                                                                                    
+
+ MINIMUM             -335.4                                                                                                    
+ ELEMENT              14                                                                                                    
+
+
+
+
+                                       N O D E   O U T P U T
+
+
+
+
+   THE FOLLOWING TABLE IS PRINTED FOR ALL NODES
+
+    NODE FOOT-   U1          U2          
+         NOTE
+ 
+       3       3.1034E-04 -6.2069E-04 
+       4       6.2069E-04 -6.2069E-04 
+       5       2.6684E-04 -1.0630E-03 
+       6       5.9945E-05 -1.2141E-03 
+       7       2.0731E-03 -1.4768E-03 
+       8       8.3170E-04 -1.6279E-03 
+       9       1.9510E-03 -5.1906E-03 
+      10       8.9790E-04 -5.2300E-03 
+      11      -8.7931E-04 -1.3164E-02 
+      12      -5.1724E-05 -5.1906E-03 
+      13       7.7586E-04 -1.6837E-03 
+      14       2.0172E-03 -1.8348E-03 
+      15       2.8448E-03 -5.2300E-03 
+      16       3.6724E-03 -1.3092E-02 
+
+ MAXIMUM       3.6724E-03   0.000    
+ AT NODE          16           1     
+
+ MINIMUM      -8.7931E-04 -1.3164E-02
+ AT NODE          11          11     
+
+
+
+   THE FOLLOWING TABLE IS PRINTED FOR ALL NODES
+
+    NODE FOOT-   RF1         RF2         
+         NOTE
+ 
+       1        0.000       2000.     
+       2      -1.0972E-12   2000.     
+
+ MAXIMUM        0.000       2000.    
+ AT NODE           1           2     
+
+ MINIMUM      -1.0972E-12   0.000    
+ AT NODE           2           3     
+
+
+          THE ANALYSIS HAS BEEN COMPLETED
+
+
+
+                              ANALYSIS COMPLETE
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =  0.72000    
+       SYSTEM TIME (SEC)    =  9.00000E-02
+       TOTAL CPU TIME (SEC) =  0.81000    
+       WALLCLOCK TIME (SEC) =          8

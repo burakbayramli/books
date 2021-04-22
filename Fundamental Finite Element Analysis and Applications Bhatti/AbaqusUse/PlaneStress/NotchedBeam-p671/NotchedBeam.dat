@@ -1,0 +1,318 @@
+1
+
+  ABAQUS VERSION 6.3-1                                     DATE 25-Jul-2003   TIME 16:04:41        PAGE     1
+ 
+
+
+
+
+
+    AAAAAA     BBBBBBBBB      AAAAAA      QQQQQQQQ    U        U    SSSSSSSS
+   A      A    B        B    A      A    Q        Q   U        U   S
+  A        A   B        B   A        A   Q        Q   U        U   S
+  A        A   B        B   A        A   Q        Q   U        U   S
+  AAAAAAAAAA   BBBBBBBBB    AAAAAAAAAA   Q        Q   U        U    SSSSSSSS
+  A        A   B        B   A        A   Q    Q   Q   U        U            S
+  A        A   B        B   A        A   Q     Q  Q   U        U            S
+  A        A   B        B   A        A   Q      Q Q   U        U            S
+  A        A   BBBBBBBBB    A        A    QQQQQQQQ     UUUUUUUU     SSSSSSSS
+ 
+
+
+
+                   <|> <|> <|> <|> <|> <|> <|> <|> <|> <|>
+                   <|> <|> <|> <|> <|> <|> <|>  |   |   | 
+                    |   |   |   |   |   |   |  <|> <|> <|>
+                   ---------------------------------------
+                   ---------------------------------------
+                    |  <|>  |  <|>  |   |  <|> <|> <|> <|>
+                    |  <|>  |   |   |   |   |  <|> <|> <|>
+                   <|>  |  <|>  |  <|> <|>  |  <|>  |  <|>
+                   <|>  |  <|> <|> <|> <|> <|> <|>  |   | 
+                   <|> <|> <|> <|> <|> <|> <|>  |  <|>  | 
+                   <|> <|> <|> <|> <|> <|> <|>  |  <|> <|>
+                   <|> <|> <|> <|> <|> <|> <|> <|> <|> <|>
+ 
+
+
+
+
+
+                      This program has been developed by
+ 
+                      Hibbitt, Karlsson & Sorensen, Inc.
+                                1080 Main Street
+                             Pawtucket, R.I. 02860
+ 
+
+
+                   Available for internal use at University of Iowa. 
+                   Support of your usage is not included in the license
+                   price.  To purchase support, or send information to HKS
+                   about a suspected error, please follow the procedures
+                   described in the ABAQUS academic support instructions
+                   document. A copy of this document has been sent to the
+                   designated user at your site. additional copies can be
+                   obtained by contacting HKS or your local HKS representative.
+
+                   Should you have any questions concerning the terms of
+                   this academic license, please contact the designated
+                   user at your university, Douglas Eltoft 
+                        On machine l-ecn018 
+                        you are authorized to run
+                        ABAQUS/Standard until 31-Aug-2003
+
+                        Your site id is: 03UIOWA4A 
+
+
+ 
+                    For assistance or any other information contact
+
+                             ABAQUS Solutions Midwest, Inc.  
+                             1440 Innovation Place  
+                             West Lafayette, IN 47906-1000  
+                             Tel: 765 497 1373  
+                             Fax: 765 497 4444  
+                             E-mail: support@abaqus-mw.com  
+
+
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+                *                                                         * 
+                *                   *****************                     * 
+                *                   *  N O T I C E  *                     * 
+                *                   *****************                     * 
+                *                                                         * 
+                *                                                         * 
+                *                 ABAQUS VERSION 6.3-1                    * 
+                *                                                         * 
+                *          BUILD ID: 2002_09_03-10.38.43 36270            * 
+                *                                                         * 
+                *                                                         * 
+                *  Please make sure you are using version 6.3 manuals     * 
+                *  plus the notes accompanying this release.              * 
+                *                                                         * 
+                *                                                         * 
+                *   This program may not be used for commercial purposes  * 
+                *           without payment of a monthly charge.          * 
+                *                                                         * 
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+
+ 
+
+
+
+     PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   *******************************************************
+
+
+     END PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   ***********************************************************
+
+
+
+
+     OPTIONS BEING PROCESSED
+   ***************************
+
+
+  *Heading
+  *Node
+  *Element, type=CPS3
+  *Element, type=CPS4
+  *Elset, elset=ASSEMBLY_PART-1-1__I1
+  *Nset, nset=ASSEMBLY__PICKEDSET5
+  *Nset, nset=ASSEMBLY__PICKEDSET6
+  *Elset, elset=ASSEMBLY__PICKEDSET5
+  *Elset, elset=ASSEMBLY__PICKEDSET6
+  *Elset, elset=ASSEMBLY___PICKEDSURF4_S2
+  *Elset, elset=ASSEMBLY___PICKEDSURF4_S3
+  *Elset, elset=ASSEMBLY___PICKEDSURF4_S4
+  *surface, type=ELEMENT, name=ASSEMBLY__PICKEDSURF4
+  *material, name=MATERIAL-1
+  *elastic
+  *solidsection, elset=ASSEMBLY_PART-1-1__I1, material=MATERIAL-1
+  *boundary
+  *boundary
+  *solidsection, elset=ASSEMBLY_PART-1-1__I1, material=MATERIAL-1
+  *solidsection, elset=ASSEMBLY_PART-1-1__I1, material=MATERIAL-1
+  *surface, type=ELEMENT, name=ASSEMBLY__PICKEDSURF4
+  *Step, name=Step-1
+  *output, field, variable=PRESELECT
+  *output, field
+  *output, history, variable=PRESELECT
+  *Step, name=Step-1
+  *Step, name=Step-1
+  *static
+  *boundary
+  *boundary
+  *dsload
+  *output, field, variable=PRESELECT
+  *output, field
+  *elementoutput
+
+ ***WARNING: OUTPUT REQUEST LOADS IS NOT ACTIVE FOR DATABASE OUTPUT
+  *output, history, variable=PRESELECT
+  *elprint, frequency=999999
+  *endstep
+  *Step, name=Step-1
+  *static
+  *boundary
+  *boundary
+  *output, field, variable=PRESELECT
+  *output, field
+  *nodeoutput
+  *output, history, variable=PRESELECT
+  *nodeprint, frequency=999999
+  *endstep
+
+ ***WARNING: ELEMENT 126 INSTANCE PART-1-1 IS DISTORTED: ANGLE BETWEEN 
+             ISOPARAMETRIC LINES IS LESS THAN 45 OR GREATER THAN 135 DEG.  THE 
+             MIN/MAX ANGLE IS 39.895 DEG.
+
+ ***WARNING: ELEMENT 305 INSTANCE PART-1-1 IS DISTORTED: ANGLE BETWEEN 
+             ISOPARAMETRIC LINES IS LESS THAN 45 OR GREATER THAN 135 DEG.  THE 
+             MIN/MAX ANGLE IS 40.874 DEG.
+
+ ***WARNING: ELEMENT 306 INSTANCE PART-1-1 IS DISTORTED: ANGLE BETWEEN 
+             ISOPARAMETRIC LINES IS LESS THAN 45 OR GREATER THAN 135 DEG.  THE 
+             MIN/MAX ANGLE IS 40.485 DEG.
+
+ ***WARNING: 3 elements are distorted. Either the interior angles are out of 
+             the suggested limits or the triangular or tetrahedral quality 
+             measure is bad. The elements have been identified in element set 
+             WarnElemDistorted.
+
+     - (RAMP) OR (STEP) - INDICATE USE OF DEFAULT AMPLITUDES ASSOCIATED WITH THE STEP
+
+
+
+                            P R O B L E M   S I Z E
+
+
+          NUMBER OF ELEMENTS IS                                  317
+          NUMBER OF NODES IS                                     367
+          NUMBER OF NODES DEFINED BY THE USER                    367
+          TOTAL NUMBER OF VARIABLES IN THE MODEL                 734
+          (DEGREES OF FREEDOM PLUS ANY LAGRANGE MULTIPLIER VARIABLES)
+
+
+
+                              END OF USER INPUT PROCESSING
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =   2.5100    
+       SYSTEM TIME (SEC)    =  0.32000    
+       TOTAL CPU TIME (SEC) =   2.8300    
+       WALLCLOCK TIME (SEC) =          7
+1
+
+   ABAQUS VERSION 6.3-1                                     DATE 25-JUL-2003   TIME 16:04:53        PAGE    1
+   For use at University of Iowa under academic license from HKS Inc.                                                              
+
+                                                                                               STEP    1  INCREMENT    1
+                                                                                          TIME COMPLETED IN THIS STEP   0.00    
+
+
+                        S T E P       1     S T A T I C   A N A L Y S I S
+
+
+                                                                                          
+
+     AUTOMATIC TIME CONTROL WITH -
+          A SUGGESTED INITIAL TIME INCREMENT OF                 1.00    
+          AND A TOTAL TIME PERIOD OF                            1.00    
+          THE MINIMUM TIME INCREMENT ALLOWED IS                1.000E-05
+          THE MAXIMUM TIME INCREMENT ALLOWED IS                 1.00    
+  
+  
+  
+                   M E M O R Y   A N D   D I S K   E S T I M A T E
+  
+  
+           SUMMARY FOR CURRENT NODE ORDERING
+          (NOTE THAT IF NODE ORDERING CHANGES THE SIZE ESTIMATES FOR THE STEPS WILL CHANGE)
+  
+  
+           STEP   MAXIMUM DOF     FLOATING PT    MINIMUM MEMORY      MEMORY TO      REQUIRED DISKSPACE
+                  WAVEFRONT       OPERATIONS       REQUIRED        MINIMIZE I/O
+                                PER ITERATION     (MBYTES)           (MBYTES)          (KBYTES)
+  
+             1          46         4.00E+05         14.90              14.90            252.05
+          ----    ---------      ------------    -------------     -------------      -------------
+           MAX          46         4.00E+05         14.90              14.90            252.05
+  
+  
+          THE TABLE ABOVE PROVIDES A STEP BY STEP SUMMARY OF SOME BASIC SIZING INFORMATION
+          FOR THE PROBLEM. SOME FURTHER DESCRIPTION OF THE PARAMETERS GIVEN FOLLOWS:
+  
+          (1) MAXIMUM DOF WAVEFRONT - SIZE OF THE BIGGEST FRONT IN THE EQUATION SOLVER.
+              PROVIDES A BASIC SIZING OF THE MOST MEMORY INTENSIVE SEGMENT OF SOLVER.
+          (2) FLOATING POINT OPERATIONS PER ITERATION - MEASURE OF THE NUMBER OF FLOATING
+              POINT OPERATIONS REQUIRED FOR A SINGLE SOLVER PASS. ON A GIVEN PLATFORM
+              THE TIME REQUIRED FOR A SOLVER PASS WILL BE ROUGHLY A LINEAR FUNCTION
+              OF THIS VALUE.
+              NOTE - EXCEPT FOR THE FIRST STEP, THE VALUE IN THIS TABLE DOES NOT INCLUDE
+                     ADDITIONAL FLOATING POINT OPERATIONS THAT ARE REQUIRED IN MULTIPLE LOAD
+                     CASE STEPS WHEN CONSTRAINTS CHANGE FROM LOAD CASE TO LOAD CASE.  THIS
+                     SITUATION CAUSES A REORDERING TO BE PERFORMED, AT WHICH TIME AN UPPER
+                     BOUND ON THE NUMBER OF ADDITIONAL FLOATING POINT OPERATIONS WILL BE
+                     CALCULATED AND INCLUDED UNDER THE ESTIMATE SUMMARIES FOR THE RELEVANT
+                     STEPS (SEE NOTE BELOW ON REORDERING).
+          (3) MINIMUM MEMORY REQUIRED - MINIMUM POSSIBLE MEMORY VALUE FOR standard_memory
+              THAT ENABLES ABAQUS TO SOLVE THE PROBLEM. USE OF MEMORY WILL BE MINIMIZED BY
+              WRITING AS MUCH INFORMATION AS POSSIBLE TO DISK WHICH WILL INCREASE I/O TIME.
+          (4) MEMORY TO MINIMIZE I/O - VALUE OF standard_memory THAT ALLOWS ABAQUS TO KEEP
+              ALL SIGNIFICANT SCRATCH FILES IN MEMORY. THIS WILL MINIMIZE I/O TIME FOR THE USER
+              WITH ACCESS TO A LARGE AMOUNT OF MEMORY.
+          (5) REQUIRED DISKSPACE - AMOUNT OF DISK REQUIRED FOR SCRATCH FILES. THESE WILL BE
+              DELETED AT THE END OF THE ANALYSIS.
+  
+  
+           NOTE - WHENEVER POSSIBLE THE USER SHOULD SET standard_memory TO BE LESS THAN THE
+          PHYSICAL MEMORY ON THE MACHINE. UNLESS NECESSARY USERS SHOULD NOT MAKE USE
+          OF VIRTUAL MEMORY EVEN IN AN ATTEMPT TO KEEP SCRATCH FILES IN MEMORY.
+  
+           NOTE - IF A REORDERING IS PERFORMED (THIS WILL GENERALLY BE DONE ONLY FOR 3D-3D
+          LARGE SLIDING PROBLEMS), THE SIZE ESTIMATES DONE AT THIS TIME WILL NO LONGER BE VALID.
+          THE ESTIMATES WILL BE REDONE IN THE EVENT OF A REORDERING AND A NEW SUMMARY WILL BE
+          BE PRINTED FOR THE REMAINING STEPS.
+  
+  
+  
+           S I Z E   E S T I M A T E S   F O R   C U R R E N T   S T E P
+  
+          NUMBER OF EQUATIONS                        734
+          MAX DOF WAVEFRONT                          46
+          FLOATING POINT OPS PER SOLVER ITERATION    4.00E+05
+          MEMORY USED FOR STEP                      15.00 MBYTES
+  
+  
+           ESTIMATED FILE SIZES
+  
+           FILE           KWORDS           KBYTES
+  
+          .fct            15.797          123.414
+          .nck             2.534           19.797
+          .opr            13.931          108.836
+          -------        -------          -------
+           TOTAL          32.262          252.047
+  
+
+
+          THE ANALYSIS HAS BEEN COMPLETED
+
+
+
+                              ANALYSIS COMPLETE
+                              WITH     5 WARNING MESSAGES ON THE DAT FILE
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =   1.0900    
+       SYSTEM TIME (SEC)    =  0.12000    
+       TOTAL CPU TIME (SEC) =   1.2100    
+       WALLCLOCK TIME (SEC) =          2

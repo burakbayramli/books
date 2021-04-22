@@ -1,0 +1,31 @@
+// example19.edp
+// Book: Example 2.1, p. 11.
+
+// defining the boundary
+border C(t=0,2*pi){x=cos(t); y=sin(t);}
+// the triangulated domain Th is on the left side of its boundary
+// because boundary parameterization is CCW
+
+// plot(C(50),wait=true,ps="boundary19.eps");
+
+mesh Th = buildmesh (C(50));
+
+// plot(Th, wait=true, ps="mesh19.eps");
+
+                // the finite element space defined over Th is called here Vh
+fespace Vh(Th,P1);
+
+Vh u,v;               // defines u and v as piecewise-P1 continuous functions
+
+func f= x*y;                             // definition of a called f function
+
+real cpu=clock();                                  // get the clock in second
+
+solve Poisson(u,v, solver=UMFPACK) =                       // defines the PDE
+  int2d(Th)( dx(u)*dx(v) + dy(u)*dy(v) )                     // bilinear part
+  - int2d(Th)( f*v )                                       // right hand side
+   + on(C, u=0) ;                             // Dirichlet boundary condition
+
+plot(u, ps="solution19.eps");                                // plot solution
+
+cout << " CPU time = " << clock()-cpu << endl;         // print time required

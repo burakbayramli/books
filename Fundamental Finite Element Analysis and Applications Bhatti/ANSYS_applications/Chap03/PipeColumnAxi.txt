@@ -1,0 +1,103 @@
+/PREP7  
+!*  
+*set,pi,3.14159
+ET,1,PLANE25
+KEYOPT,1,1,0
+KEYOPT,1,2,1
+!*  
+!*  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,200000 
+MPDATA,PRXY,1,,0.25 
+*set,ri,50
+*set,ro,100
+*set,h,1000
+*set,p,5
+N,1,ri,0
+N,2,ro,0
+N,3,ri,h/5
+N,4,ro,h/5
+N,5,ri,2*h/5
+N,6,ro,2*h/5
+N,7,ri,3*h/5
+N,8,ro,3*h/5
+N,9,ri,4*h/5
+N,10,ro,4*h/5
+N,11,ri,5*h/5
+N,12,ro,5*h/5
+e,1, 2, 4, 3
+e,3, 4, 6, 5
+e,5, 6, 8, 7
+e,7, 8, 10, 9
+e,9, 10, 12, 11
+FINISH  
+/SOL
+ERESX,NO
+d,1,All
+d,2,all
+*do, i, 1,5,1
+SFE,i,2,PRES, ,p/4, , , 
+*enddo
+MODE,0,
+LSWRITE,1,  
+!*
+*do, i, 1,5,1
+SFEDELE,i,2,PRES
+SFE,i,2,PRES, ,p/pi, , , 
+*enddo
+MODE,1,1
+ERESX,NO
+LSWRITE,2,  
+!*
+*do, i, 1,5,1
+SFEDELE,i,2,PRES
+SFE,i,2,PRES, ,p/pi, , , 
+*enddo
+MODE,1,-1
+ERESX,NO
+LSWRITE,3,  
+!*
+!*
+*do, i, 1,5,1
+SFEDELE,i,2,PRES
+SFE,i,2,PRES, ,p/pi, , , 
+*enddo
+MODE,2,-1
+ERESX,NO
+LSWRITE,4,  
+!*
+*do, i, 1,5,1
+SFEDELE,i,2,PRES
+SFE,i,2,PRES, ,p/(3*pi), , , 
+*enddo
+MODE,3,1
+ERESX,NO
+LSWRITE,5,  
+!*
+!*
+*do, i, 1,5,1
+SFEDELE,i,2,PRES
+SFE,i,2,PRES, ,p/(3*pi), , , 
+*enddo
+MODE,3,-1
+ERESX,NO
+LSWRITE,6,  
+!*
+/STATUS,SOLU
+/SOL
+LSSOLVE,1,6,1,  
+FINISH  
+/POST1  
+*do, i, 1,6,1
+LCDEF,i,i,, 
+*enddo
+LCFILE,7,'ld7',' ',' '  
+*do, i, 1,6,1
+LCASE,i,
+*enddo
+*do, i, 1,6,1
+LCOPER,ADD,i, , ,
+*enddo
+!*  
+PRNSOL,U,X  

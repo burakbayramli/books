@@ -1,0 +1,94 @@
+// example38 from book, Section 3.14, p. 53ff
+verbosity = 1;
+bool anew = true;  // fresh start (false means restart)
+bool savefiles = false;
+real x0=0.5, y0=0, rr=0.2;
+
+border ccc(t=0,2){x=2-t; y=1;}
+border ddd(t=0,1){x=0; y=1-t;}  // second border is no. 2
+border aaa1(t=0,x0-rr){x=t; y=0;}
+border circle(t=pi,0){ x=x0+rr*cos(t); y=y0+rr*sin(t);}
+border aaa2(t=x0+rr,2){x=t; y=0;}
+border bbb(t=0,1){x=2; y=t;}
+
+int m=5; 
+mesh Th;
+if(anew){
+  Th = buildmesh (ccc(5*m) + ddd(3*m) + aaa1(2*m) + circle(5*m)
+                + aaa2(5*m) + bbb(2*m) );
+  plot(Th, wait=true);
+} else {
+  Th = readmesh("Th_circle.mesh"); 
+  plot(Th, wait=false);
+}
+
+real dt=0.01, u0=2, err0=0.00625;
+fespace Wh(Th,P1);
+fespace Vh(Th,P1);
+Wh u, v, u1, v1, uh, vh;
+Vh r, rh, r1;
+
+macro dn(u) (N.x*dx(u) + N.y*dy(u) ) //  def the normal derivative
+
+if(anew){ 
+  u1= u0; 
+  v1= 0; 
+  r1 = 1;
+} else {
+  ifstream g("u.txt");
+  g >> u1[];
+  ifstream gg("v.txt");
+  gg >> v1[];
+  ifstream ggg("r.txt");
+  ggg >> r1[];
+  plot(u1, value=true ,wait=true);
+  err0 = err0/10; 
+  dt = dt/10;
+}
+
+problem  eul(u,v,r,uh,vh,rh)
+   = int2d(Th)(  (u*uh + v*vh + r*rh)/dt
+              + ((dx(r)*uh+ dy(r)*vh) - (dx(rh)*u + dy(rh)*v)) )
+   + int2d(Th)(-(rh*convect([u1,v1],-dt,r1) + 
+        uh*convect([u1,v1],-dt,u1) + vh*convect([u1,v1],-dt,v1))/dt)
+   + int1d(Th,6)(rh*u)
+   + on(2,r=0) + on(2,u=u0) + on(2,v=0);
+
+int remesh=80;
+for(int k=0;k<3;k++) {
+  if(k==20){ 
+    err0 = err0/10; 
+    dt = dt/10; 
+    remesh = 5;
+  }
+  for(int i=0;i<remesh;i++){
+     eul; 
+     u1=u; 
+     v1=v; 
+     r1=abs(r);
+     cout<<"k="<< k <<"  E="<< int2d(Th)(u^2+v^2+r)<<endl;
+     plot(r, wait=false, value=true);
+  }
+  Th = adaptmesh (Th, r, nbvx=40000, err=err0, abserror=true, 
+      nbjacoby=2, omega=1.8, ratio=1.8, nbsmooth=3,
+      splitpbedge=true, maxsubdiv=5, rescaling=true) ;
+  plot(Th,wait=0);
+  // interpolate solution from old to new mesh
+  u = u;
+  v = v;
+  r = r;
+  
+  if (savefiles) {
+    savemesh(Th,"Th_circle.mesh");
+    ofstream f("u.txt");
+    f << u[];
+    ofstream ff("v.txt");
+    ff << v[];
+    ofstream fff("r.txt");
+    fff << r[];
+    r1 = sqrt(u*u+v*v);
+    plot(r1, value=true);
+    r1 = r;
+  }
+}
+  

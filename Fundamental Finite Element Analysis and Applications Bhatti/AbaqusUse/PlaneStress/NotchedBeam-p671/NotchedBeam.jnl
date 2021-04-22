@@ -1,0 +1,251 @@
+# Save by mabhatti on Fri Jul 25 10:27:02 2003
+from part import *
+mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=60.0)
+mdb.models['Model-1'].sketches['__profile__'].sketchOptions.setValues(
+    constructionGeometry=ON, decimalPlaces=2, dimensionTextHeight=1.0, 
+    grid=ON, gridFrequency=2, gridSpacing=1.0, sheetSize=60.0)
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 5.0), point2=(
+    6.0, 5.0))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(6.0, 5.0), point2=(
+    6.0, 0.0))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(6.0, 0.0), point2=(
+    54.0, 0.0))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(54.0, 0.0), point2=(
+    54.0, 12.0))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(54.0, 12.0), 
+    point2=(0.0, 12.0))
+mdb.models['Model-1'].sketches['__profile__'].Line(point1=(0.0, 12.0), point2=(
+    0.0, 5.0))
+mdb.models['Model-1'].Part(dimensionality=TWO_D_PLANAR, name='Part-1', 
+    type=DEFORMABLE_BODY)
+mdb.models['Model-1'].parts['Part-1'].BaseShell(
+    sketch=mdb.models['Model-1'].sketches['__profile__'])
+del mdb.models['Model-1'].sketches['__profile__']
+from material import *
+from section import *
+mdb.models['Model-1'].Material('Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((30000000.0, 
+    0.2), ))
+mdb.models['Model-1'].HomogeneousSolidSection(material='Material-1', 
+    name='Section-1', thickness=4.0)
+mdb.models['Model-1'].parts['Part-1'].assignSection(region=Region(
+    faces=mdb.models['Model-1'].parts['Part-1'].faces[0:1]), 
+    sectionName='Section-1')
+from assembly import *
+mdb.models['Model-1'].rootAssembly.DatumCsysByDefault(CARTESIAN)
+mdb.models['Model-1'].rootAssembly.Instance(name='Part-1-1', 
+    part=mdb.models['Model-1'].parts['Part-1'])
+# Save by mabhatti on Fri Jul 25 10:40:24 2003
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial')
+mdb.models['Model-1'].FieldOutputRequest(createStepName='Step-1', 
+    name='F-Output-2', variables=('S', 'U', 'LOADS', 'RF'))
+from interaction import *
+from load import *
+mdb.models['Model-1'].Pressure(amplitude=UNSET, createStepName='Step-1', 
+    distribution=UNIFORM, magnitude=50.0, name='Load-1', region=Region(
+    side1Edges=mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[4:5]))
+# Save by mabhatti on Fri Jul 25 10:57:35 2003
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+mdb.models['Model-1'].XsymmBC(createStepName='Step-1', name='BC-1', 
+    region=Region(
+    edges=mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[5:6]))
+mdb.models['Model-1'].EncastreBC(createStepName='Step-1', name='BC-2', 
+    region=Region(
+    edges=mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[3:4]))
+# Save by mabhatti on Fri Jul 25 11:02:18 2003
+from load import *
+from mesh import *
+mdb.models['Model-1'].rootAssembly.seedEdgeBySize(edges=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[0], 
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[1], 
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[5]), 
+    size=0.5)
+mdb.models['Model-1'].rootAssembly.seedEdgeBySize(edges=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].edges[3], ), 
+    size=1.0)
+mdb.models['Model-1'].rootAssembly.seedPartInstance(regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ), size=2.0)
+mdb.models['Model-1'].rootAssembly.setMeshControls(algorithm=ADVANCING_FRONT, 
+    elemShape=QUAD_DOMINATED, regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].faces[0], ))
+mdb.models['Model-1'].rootAssembly.setElementType(elemTypes=(ElemType(
+    elemCode=CPS4, elemLibrary=STANDARD), ElemType(elemCode=CPS3, 
+    elemLibrary=STANDARD)), regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'].faces[0:1], ))
+mdb.models['Model-1'].rootAssembly.generateMesh(regions=(
+    mdb.models['Model-1'].rootAssembly.instances['Part-1-1'], ))
+# Save by mabhatti on Fri Jul 25 15:56:37 2003
+from load import *
+from mesh import *
+from job import *
+mdb.Job(contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, historyPrint=OFF, model='Model-1', 
+    modelPrint=OFF, name='Job-1', nodalOutputPrecision=SINGLE, numCpus=1, 
+    preMemory=256.0, scratch='', standardMemory=256.0, 
+    standardMemoryPolicy=MODERATE, type=ANALYSIS, userSubroutine='')
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(STARTED, {'processId': 17677, 
+    'clientName': 'BatchPre', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'threadId': 0, 'timeStamp': 1059166712, 'phase': BATCHPRE_PHASE})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(WARNING, {'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'clientName': 'BatchPre', 
+    'message': 'OUTPUT REQUEST LOADS IS NOT ACTIVE FOR DATABASE OUTPUT', 
+    'timeStamp': 1059166730, 'phase': BATCHPRE_PHASE, 'threadId': 0, 
+    'processId': 17677})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(WARNING, {'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'clientName': 'BatchPre', 
+    'message': '3 elements are distorted. Either the interior angles are out of the suggested limits or the triangular or tetrahedral quality measure is bad. The elements have been identified in element set WarnElemDistorted.', 
+    'timeStamp': 1059166731, 'phase': BATCHPRE_PHASE, 'threadId': 0, 
+    'processId': 17677})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(ODB_FILE, {'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'clientName': 'BatchPre', 'timeStamp': 1059166732, 
+    'phase': BATCHPRE_PHASE, 'threadId': 0, 
+    'file': '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/Job-1.odb', 
+    'processId': 17677})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(COMPLETED, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'BatchPre', 
+    'message': 'Analysis phase complete', 'timeStamp': 1059166734, 
+    'phase': BATCHPRE_PHASE, 'threadId': 0, 'processId': 17677})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(STARTED, {'processId': 17679, 
+    'clientName': 'Standard', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'threadId': 0, 'timeStamp': 1059166739, 'phase': STANDARD_PHASE})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(STEP, {'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'clientName': 'Standard', 'timeStamp': 1059166740, 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'stepId': 1, 'processId': 17679})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(ODB_FRAME, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'frame': 0, 'timeStamp': 1059166742, 'phase': STANDARD_PHASE, 
+    'threadId': 0, 'step': 0, 'processId': 17679})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(STATUS, {'equilibrium': 0, 
+    'clientName': 'Standard', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'iterations': 0, 'step': 1, 
+    'increment': 0, 'stepTime': 0.0, 'timeStamp': 1059166742, 'severe': 0, 
+    'timeIncrement': 1.0, 'attempts': 0, 'processId': 17679, 'totalTime': 0.0})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(ODB_FRAME, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'frame': 1, 'timeStamp': 1059166742, 'phase': STANDARD_PHASE, 
+    'threadId': 0, 'step': 0, 'processId': 17679})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(STATUS, {'equilibrium': 1, 
+    'clientName': 'Standard', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'iterations': 1, 'step': 1, 
+    'increment': 1, 'stepTime': 1.0, 'timeStamp': 1059166742, 'severe': 0, 
+    'timeIncrement': 1.0, 'attempts': 1, 'processId': 17679, 'totalTime': 1.0})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(END_STEP, {'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'clientName': 'Standard', 'timeStamp': 1059166742, 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'stepId': 1, 'processId': 17679})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(COMPLETED, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'message': 'Analysis phase complete', 'timeStamp': 1059166742, 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'processId': 17679})
+mdb.jobs.has_key('Job-1')
+mdb.jobs['Job-1']._Message(JOB_COMPLETED, {'time': 'Fri Jul 25 15:59:05 2003', 
+    'clientName': 'Unknown', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'threadId': 0, 'timeStamp': 1059166745, 'processId': 17680})
+# Save by mabhatti on Fri Jul 25 15:59:37 2003
+# Save by mabhatti on Fri Jul 25 16:03:08 2003
+from load import *
+from mesh import *
+from job import *
+from visualization import *
+mdb.Job(contactPrint=OFF, description='', echoPrint=OFF, 
+    explicitPrecision=SINGLE, historyPrint=OFF, model='Model-1', 
+    modelPrint=OFF, name='NotchedBeam', nodalOutputPrecision=SINGLE, 
+    numCpus=1, preMemory=256.0, scratch='', standardMemory=256.0, 
+    standardMemoryPolicy=MODERATE, type=ANALYSIS, userSubroutine='')
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(STARTED, {'processId': 17702, 
+    'clientName': 'BatchPre', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'threadId': 0, 'timeStamp': 1059167081, 'phase': BATCHPRE_PHASE})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(WARNING, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'BatchPre', 
+    'message': 'OUTPUT REQUEST LOADS IS NOT ACTIVE FOR DATABASE OUTPUT', 
+    'timeStamp': 1059167085, 'phase': BATCHPRE_PHASE, 'threadId': 0, 
+    'processId': 17702})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(WARNING, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'BatchPre', 
+    'message': '3 elements are distorted. Either the interior angles are out of the suggested limits or the triangular or tetrahedral quality measure is bad. The elements have been identified in element set WarnElemDistorted.', 
+    'timeStamp': 1059167086, 'phase': BATCHPRE_PHASE, 'threadId': 0, 
+    'processId': 17702})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(ODB_FILE, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'BatchPre', 
+    'timeStamp': 1059167086, 'phase': BATCHPRE_PHASE, 'threadId': 0, 
+    'file': '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.odb', 
+    'processId': 17702})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(COMPLETED, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'BatchPre', 
+    'message': 'Analysis phase complete', 'timeStamp': 1059167088, 
+    'phase': BATCHPRE_PHASE, 'threadId': 0, 'processId': 17702})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(STARTED, {'processId': 17704, 
+    'clientName': 'Standard', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'threadId': 0, 'timeStamp': 1059167093, 'phase': STANDARD_PHASE})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(STEP, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'timeStamp': 1059167093, 'phase': STANDARD_PHASE, 'threadId': 0, 
+    'stepId': 1, 'processId': 17704})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(ODB_FRAME, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'frame': 0, 'timeStamp': 1059167095, 'phase': STANDARD_PHASE, 
+    'threadId': 0, 'step': 0, 'processId': 17704})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(STATUS, {'equilibrium': 0, 
+    'clientName': 'Standard', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'iterations': 0, 'step': 1, 
+    'increment': 0, 'stepTime': 0.0, 'timeStamp': 1059167095, 'severe': 0, 
+    'timeIncrement': 1.0, 'attempts': 0, 'processId': 17704, 'totalTime': 0.0})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(ODB_FRAME, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'frame': 1, 'timeStamp': 1059167095, 'phase': STANDARD_PHASE, 
+    'threadId': 0, 'step': 0, 'processId': 17704})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(STATUS, {'equilibrium': 1, 
+    'clientName': 'Standard', 'clientHost': 'l-ecn018.engr.uiowa.edu', 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'iterations': 1, 'step': 1, 
+    'increment': 1, 'stepTime': 1.0, 'timeStamp': 1059167095, 'severe': 0, 
+    'timeIncrement': 1.0, 'attempts': 1, 'processId': 17704, 'totalTime': 1.0})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(END_STEP, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'timeStamp': 1059167095, 'phase': STANDARD_PHASE, 'threadId': 0, 
+    'stepId': 1, 'processId': 17704})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(COMPLETED, {
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'clientName': 'Standard', 
+    'message': 'Analysis phase complete', 'timeStamp': 1059167095, 
+    'phase': STANDARD_PHASE, 'threadId': 0, 'processId': 17704})
+mdb.jobs.has_key('NotchedBeam')
+mdb.jobs['NotchedBeam']._Message(JOB_COMPLETED, {
+    'time': 'Fri Jul 25 16:04:56 2003', 'clientName': 'Unknown', 
+    'clientHost': 'l-ecn018.engr.uiowa.edu', 'threadId': 0, 
+    'timeStamp': 1059167097, 'processId': 17705})
+# Save by mabhatti on Fri Jul 25 16:06:50 2003

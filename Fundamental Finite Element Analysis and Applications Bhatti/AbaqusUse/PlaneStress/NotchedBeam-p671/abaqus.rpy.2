@@ -1,0 +1,147 @@
+#
+# ABAQUS/CAE Version 6.3-1 replay file
+# Internal Version: 2002_09_03-10.38.43 36270
+# Run by mabhatti on Fri Jul 25 15:41:56 2003
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+#: Warning: This hardware does not support the OpenGL driver with double buffering.
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(1.32468557357788, 
+    1.32261407375336), width=194.993713378906, height=130.409744262695)
+session.viewports['Viewport: 1'].makeCurrent()
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+openMdb(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae')
+#: The model database "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae" has been opened.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+import load
+import regionToolset
+import displayGroupMdbToolset as dgm
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    fields=ON, connectors=ON)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+import mesh
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON, loads=OFF, 
+    bcs=OFF, fields=OFF, connectors=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=ON)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['Part-1-1'].edges
+edges =(e1[0], e1[1], e1[5])
+a.seedEdgeBySize(edges=edges, size=0.5)
+a = mdb.models['Model-1'].rootAssembly
+e01 = a.instances['Part-1-1'].edges
+edges =(e01[3], )
+a.seedEdgeBySize(edges=edges, size=1.0)
+a = mdb.models['Model-1'].rootAssembly
+partInstances =(a.instances['Part-1-1'], )
+a.seedPartInstance(regions=partInstances, size=2.0)
+#: Global seeds have been assigned.
+a = mdb.models['Model-1'].rootAssembly
+f1 = a.instances['Part-1-1'].faces
+regions =(f1[0], )
+a.setMeshControls(regions=regions, elemShape=QUAD_DOMINATED, 
+    algorithm=ADVANCING_FRONT)
+elemType1 = mesh.ElemType(elemCode=CPS4, elemLibrary=STANDARD)
+elemType2 = mesh.ElemType(elemCode=CPS3, elemLibrary=STANDARD)
+a = mdb.models['Model-1'].rootAssembly
+f1 = a.instances['Part-1-1'].faces
+faces1 = f1[0:1]
+regions =(faces1, )
+a.setElementType(regions=regions, elemTypes=(elemType1, elemType2))
+a = mdb.models['Model-1'].rootAssembly
+partInstances =(a.instances['Part-1-1'], )
+a.generateMesh(regions=partInstances)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    constraints=ON)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshVisibleEdges=ALL)
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshVisibleEdges=EXTERIOR)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=OFF)
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(mesh=ON)
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
+session.printToFile(fileName='NotchedBeamModel', format=TIFF, canvasObjects=(
+    session.viewports['Viewport: 1'], ))
+import job
+session.viewports['Viewport: 1'].assemblyDisplay.meshOptions.setValues(
+    meshTechnique=OFF)
+mdb.Job(name='Job-1', model='Model-1', type=ANALYSIS, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, description='', 
+    userSubroutine='', numCpus=1, preMemory=256.0, standardMemory=256.0, 
+    standardMemoryPolicy=MODERATE, scratch='', echoPrint=OFF, modelPrint=OFF, 
+    contactPrint=OFF, historyPrint=OFF)
+mdb.jobs['Job-1'].submit()
+#: The job input file "Job-1.inp" has been submitted for analysis.
+#: Job Job-1: Solver Input File Processor completed successfully.
+#: Job Job-1: ABAQUS/Standard completed successfully.
+#: Job Job-1 completed successfully. 
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
+import visualization
+import xyPlot
+import displayGroupOdbToolset as dgo
+o0 = session.openOdb(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/Job-1.odb')
+#: Model: /tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/Job-1.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       2
+#: Number of Node Sets:          1
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o0)
+session.viewports['Viewport: 1'].odbDisplay.setPrimaryVariable(
+    variableLabel='S', outputPosition=INTEGRATION_POINT, refinement=(
+    INVARIANT, 'Mises'))
+session.viewports['Viewport: 1'].odbDisplay.setDeformedVariable(
+    variableLabel='U')
+session.viewports['Viewport: 1'].odbDisplay.setPlotMode(CONTOUR)
+session.printToFile(fileName='NotchedBeamStresses', format=TIFF, 
+    canvasObjects=(session.viewports['Viewport: 1'], ))
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
+openMdb(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae')
+#: The model database "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae" has been opened.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+mdb.Job(name='NotchedBeam', model='Model-1', type=ANALYSIS, 
+    explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, description='', 
+    userSubroutine='', numCpus=1, preMemory=256.0, standardMemory=256.0, 
+    standardMemoryPolicy=MODERATE, scratch='', echoPrint=OFF, modelPrint=OFF, 
+    contactPrint=OFF, historyPrint=OFF)
+mdb.jobs['NotchedBeam'].submit()
+#: The job input file "NotchedBeam.inp" has been submitted for analysis.
+#: Job NotchedBeam: Solver Input File Processor completed successfully.
+#: Job NotchedBeam: ABAQUS/Standard completed successfully.
+#: Job NotchedBeam completed successfully. 
+o0 = session.openOdb(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.odb')
+#: Model: /tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.odb
+#: Number of Assemblies:         1
+#: Number of Assembly instances: 0
+#: Number of Part instances:     1
+#: Number of Meshes:             1
+#: Number of Element Sets:       2
+#: Number of Node Sets:          1
+#: Number of Steps:              1
+session.viewports['Viewport: 1'].setValues(displayedObject=o0)
+session.viewports['Viewport: 1'].odbDisplay.setPlotMode(CONTOUR)
+session.printToFile(fileName='NotchedBeamStresses', format=TIFF, 
+    canvasObjects=(session.viewports['Viewport: 1'], ))
+session.viewports['Viewport: 1'].odbDisplay.setPlotMode(FAST)
+session.viewports['Viewport: 1'].odbDisplay.setPlotMode(UNDEFORMED_SHAPE)
+session.printToFile(fileName='NotchedBeamModel', format=TIFF, canvasObjects=(
+    session.viewports['Viewport: 1'], ))
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".

@@ -1,0 +1,74 @@
+!* Model creation
+/PREP7  
+!* Element type 
+ET,1,LINK1  
+!* Real constants  
+R,1,400, ,   
+R,2,200,,   
+!* Material property  
+!*
+*set,e,200000
+*set,h,10000
+*set,et,e*h/(e+h)
+*set, sy, 150
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,e   
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,2,,e   
+TB,BKIN,1,1,2,1 
+TBTEMP,0
+TBDATA,,sy,et,,,,   
+TB,BISO,2,1,2,  
+TBTEMP,0
+TBDATA,,sy,et,,,,   
+!* Create nodes  
+N,1,0,-1000,,,,,   
+N,2,4000,0,,,,,
+N,3,4000, 3000,,,,,
+N,4,2000, 2000,,,,, 
+!* Create elements
+!* with appropriate attributes
+MAT,1
+REAL,1
+E,1,2
+E,1,4
+MAT,2
+REAL,2
+e,2,4
+e,2,3
+!*
+!* Specify displacement boundary conditions
+D,1, ,0, , , ,UX,UY, , , ,   
+D,3, ,0, , , ,UX,UY, , , ,   
+!* Solution module
+/SOLU   
+ARCLEN,1,1,0.0001   
+AUTOTS,-1.0 
+NCNV,2,0,0,0,0  
+RESCONTRL,DEFINE,ALL,1,1
+OUTRES,ERASE
+OUTRES,ALL,-1   
+AUTOTS,-1.0 
+!* First load step - no applied load
+!* Used for initialization of the arc-length controls  
+LSWRITE,1,  
+!* Specify applied forces
+F,2,FY,20000 
+F,2,FX,34641 
+F,4,FX,-40000 
+LSWRITE,2,  
+!* Remove applied forces
+F,2,FY,0 
+F,2,FX,0 
+F,4,FX,0 
+LSWRITE,3,  
+LSSOLVE,1,3,1   
+FINISH  
+!* Postprocessing
+/POST1  
+SET,LAST   
+ETABLE,SIGMA,LS, 1 
+ETABLE,EPSPLAS,LEPPL, 1   
+PRETAB,SIGMA,EPSPLAS

@@ -1,0 +1,116 @@
+#
+# ABAQUS/CAE Version 6.3-1 replay file
+# Internal Version: 2002_09_03-10.38.43 36270
+# Run by mabhatti on Fri Jul 25 10:26:21 2003
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+#: Warning: This hardware does not support the OpenGL driver with double buffering.
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(1.32468557357788, 
+    1.32261407375336), width=194.993713378906, height=130.409744262695)
+session.viewports['Viewport: 1'].makeCurrent()
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+Mdb()
+#: A new model database has been created.
+#: The model "Model-1" has been created.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+mdb.saveAs(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam')
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
+import part
+import regionToolset
+import displayGroupMdbToolset as dgm
+s = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=60.0)
+g, v, d = s.geometry, s.vertices, s.dimensions
+s.sketchOptions.setValues(sheetSize=60.0, gridSpacing=1.0, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=1.0, 
+    decimalPlaces=2)
+s.setPrimaryObject(option=STANDALONE)
+s.unsetPrimaryObject()
+del mdb.models['Model-1'].sketches['__profile__']
+openMdb(
+    '/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae')
+#: The model database "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae" has been opened.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+s0 = mdb.models['Model-1'].Sketch(name='__profile__', sheetSize=60.0)
+g, v, d = s0.geometry, s0.vertices, s0.dimensions
+s0.sketchOptions.setValues(sheetSize=60.0, gridSpacing=1.0, grid=ON, 
+    gridFrequency=2, constructionGeometry=ON, dimensionTextHeight=1.0, 
+    decimalPlaces=2)
+s0.setPrimaryObject(option=STANDALONE)
+s0.Line(point1=(0.0, 5.0), point2=(6.0, 5.0))
+s0.Line(point1=(6.0, 5.0), point2=(6.0, 0.0))
+s0.Line(point1=(6.0, 0.0), point2=(54.0, 0.0))
+s0.Line(point1=(54.0, 0.0), point2=(54.0, 12.0))
+s0.Line(point1=(54.0, 12.0), point2=(0.0, 12.0))
+s0.Line(point1=(0.0, 12.0), point2=(0.0, 5.0))
+session.viewports['Viewport: 1'].view.fitView()
+p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=TWO_D_PLANAR, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Part-1']
+p.BaseShell(sketch=s0)
+s0.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+import material
+import section
+mdb.models['Model-1'].Material('Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((30000000.0, 
+    0.2), ))
+mdb.models['Model-1'].HomogeneousSolidSection(name='Section-1', 
+    material='Material-1', thickness=4.0)
+p1 = mdb.models['Model-1'].parts['Part-1']
+f = p1.faces
+faces = f[0:1]
+region = regionToolset.Region(faces=faces)
+p0 = mdb.models['Model-1'].parts['Part-1']
+p0.assignSection(region=region, sectionName='Section-1')
+#: The section "Section-1" has been assigned to the selected regions.
+import assembly
+a = mdb.models['Model-1'].rootAssembly
+session.viewports['Viewport: 1'].setValues(displayedObject=a)
+a = mdb.models['Model-1'].rootAssembly
+a.DatumCsysByDefault(CARTESIAN)
+p = mdb.models['Model-1'].parts['Part-1']
+a.Instance(name='Part-1-1', part=p)
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
+import step
+mdb.models['Model-1'].StaticStep(name='Step-1', previous='Initial')
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(step='Step-1')
+mdb.models['Model-1'].FieldOutputRequest(name='F-Output-2', 
+    createStepName='Step-1', variables=('S', 'U', 'LOADS', 'RF'))
+import interaction
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(interactions=ON, 
+    constraints=ON, connectors=ON)
+import load
+session.viewports['Viewport: 1'].assemblyDisplay.setValues(loads=ON, bcs=ON, 
+    fields=ON, interactions=OFF, constraints=OFF)
+a = mdb.models['Model-1'].rootAssembly
+s1 = a.instances['Part-1-1'].edges
+side1Edges1 = s1[4:5]
+region = regionToolset.Region(side1Edges=side1Edges1)
+mdb.models['Model-1'].Pressure(name='Load-1', createStepName='Step-1', 
+    region=region, distribution=UNIFORM, magnitude=50.0, amplitude=UNSET)
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['Part-1-1'].edges
+edges1 = e1[5:6]
+region = regionToolset.Region(edges=edges1)
+mdb.models['Model-1'].XsymmBC(name='BC-1', createStepName='Step-1', 
+    region=region)
+a = mdb.models['Model-1'].rootAssembly
+e1 = a.instances['Part-1-1'].edges
+edges1 = e1[3:4]
+region = regionToolset.Region(edges=edges1)
+mdb.models['Model-1'].EncastreBC(name='BC-2', createStepName='Step-1', 
+    region=region)
+mdb.save()
+#: The model database has been saved to "/tmp_mnt/nfs/server00/local/vol02/user5/mabhatti/WileyVol1/abaqus/Chap1/stress/NotchedBeam.cae".
