@@ -1,7 +1,8 @@
 function NCStokesSolver()
 fd = @(p) -min(min(min(1+p(:,2),1-p(:,2)),1+p(:,1)),1-p(:,1));
 fh = @(p) ones(size(p,1),1);
-[p,t,e] = distmesh( fd, fh, 0.05, [-1,-1;1,1], [-1,-1;-1,1;1,-1;1,1] );
+[p,t] = distmesh( fd, fh, 0.05, [-1,-1;1,1], [-1,-1;-1,1;1,-1;1,1] );
+#[p,e,t]=initmesh('squareg');  
 t2e=Tri2Edge(p,t); % triangle-to-edge adjacency
 nt=size(t,2); % number of triangles
 ne=max(t2e(:)); % number of edges
