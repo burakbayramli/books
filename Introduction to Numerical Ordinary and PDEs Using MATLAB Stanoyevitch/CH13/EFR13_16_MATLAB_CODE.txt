@@ -1,0 +1,302 @@
+%MATLAB CODE FOR EFR 13.16
+%NOTE:  FOR SOME OF THE EXAMPLES AND EXERCISES OF THE READER IN THIS CHAPTER
+%INVOLVING LONGER MATLAB CODES, WE PROVIDE TEXT FILES FOR THE COMPLETE CODES.
+%THEY ARE SET UP WITH COMMENTS SO THAT THE USER CAN SIMPLY PASTE ALL (OR ANY
+%PORTION) OF THEIR FILES DIRECTLY INTO THE MATLAB WINDOW.  THESE CODES CAN BE 
+%MODIFIED TO SOLVE RELATED FEM PROBLEMS. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Mesh Generation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A =36-pi*(4+1); %area of region
+delta = sqrt(A/2500); count = 1;
+%place interior nodes first
+for i=1:ceil(6/delta), for j=1:ceil(6/delta)
+xt=i*delta; yt=j*delta; xy=[xt yt];
+if norm(xy,2)>2+delta/2 & norm(xy-[6 0],2)>2+delta/2 & norm(xy-[6 6],2)>2+delta/2 &...
+norm(xy-[0 6],2)>2+delta/2 & norm(xy-[3 3],2)>1+delta/2 & xt<6-delta/2 & yt<6-delta/2 
+x(count)=xt; y(count)=yt; count=count+1;
+end, end, end
+nint=count-1; %number of interior nodes
+
+%now deploy boundary nodes; we will group them according to their boundary conditions;
+%as usual, the Robin nodes precede the Dirichlet nodes.  At the corners there is some 
+%ambiguity since the normal vector is undefined.  We make some conventions that Robin 
+%conditions take precedence over Neumann conditions, and for Neumann conditions at an 
+%interface, we simply average the values of the normal derivative values.  
+
+%Helpful Auxilliary Vectors:
+v1=linspace(2,4,2/delta); lenv1=length(v1);
+thetaout=linspace(0,pi/2,pi/delta); %node angular gaps for big quarter circles
+lenthout=length(thetaout);
+thetain=linspace(0,2*pi,2*pi/delta); %node angular gaps for smaller interior cirlce
+lenthin=length(thetain);
+
+%Neumann conditions with zero boundary values:
+for i=2:lenv1 %east
+x(count)=6; y(count)=v1(i); count=count+1;
+end
+for i=2:lenthout %northeast
+x(count)=6+2*cos(-pi/2-thetaout(i)); y(count)=6+2*sin(-pi/2-thetaout(i)); count=count+1;
+end
+toprightindex=count-1
+
+for i=2:lenv1 %north
+x(count)=6-v1(i); y(count)=6; count=count+1;
+end
+topleftindex=count-1
+
+for i=2:lenthout %northwest
+x(count)=2*cos(-thetaout(i)); y(count)=6+2*sin(-thetaout(i)); count=count+1;
+end
+
+for i=2:lenv1-1 %west
+x(count)=0; y(count)=6-v1(i); count=count+1;
+end
+lastwestind=count-1
+firstsouthind=count
+
+for i=2:lenv1-1 %south
+x(count)=v1(i); y(count)=0; count=count+1;
+end
+lastsouthind=count-1
+
+%Now we move on to the two Robin portions
+firstswind=count
+for i=1:lenthout %southwest
+x(count)=2*cos(thetaout(i)); y(count)=2*sin(thetaout(i)); count=count+1;
+end
+lastswind=count-1
+firstseind=count
+
+for i=1:lenthout %southeast
+x(count)=6+2*cos(pi/2+thetaout(i)); y(count)=2*sin(pi/2+thetaout(i)); count=count+1;
+end
+n=count-1 %number of interior and Robin nodes
+lastseind=n;
+
+% finally put in the Dirichlet nodes
+for i=1:lenthin
+x(count)=3+cos(thetain(i)); y(count)=3+sin(thetain(i)); count=count+1;
+end
+m=count-1   %number of nodes
+
+%ASIDE:  Enter these commands to plot the nodes
+%plot(x(1:nint),y(1:nint),'b.'), axis('equal')
+%hold on
+%plot(x(nint:m),y(nint:m),'rp'), axis('equal')
+
+%Since the domain is not convex (in 5 spots) we will use the technique of Example 13.3
+%of introducing 5 ghost nodes that will yield a triangulation from which it 
+%will be easier to delete the unwanted triangles
+
+x(m+1)=3; y(m+1)=3;
+x(m+2)=5; y(m+2)=1;
+x(m+3)=5; y(m+3)=5;
+x(m+4)=1; y(m+4)=5;
+x(m+5)=1; y(m+5)=1;
+tri=delaunay(x,y);
+trimesh(tri,x,y,'LineWidth', 1.2), axis('equal') %Plots the triangulation
+axis('equal')
+%Now we need to delete all elements which have a node with index in the range
+%m+1 to m+5.  
+size(tri)  %ans =5224  3  so there are 5224 elements
+badelcount=1;
+for ell=1:5224
+if sum(ismember(m+1:m+5, tri(ell,:)))>0
+badel(badelcount)=ell;
+badelcount=badelcount+1;
+end
+end
+
+tri=tri(setdiff(1:5224,badel),:);
+x=x(1:m); y=y(1:m);
+trimesh(tri,x,y), axis('equal')
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%ASSEMBLY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+N=[x' y'];
+E=tri;
+A=zeros(n); b=zeros(n,1);
+[L cL]=size(E);
+tic, for ell=1:L
+nodes=E(ell,:); %global node indices of element
+percent=100*ell/L %optional percent meter will show progress of main loop
+intnodes=nodes(find(nodes<=n)); %global interior/Robin node indices
+%find coefficients [a b c] of local basis functions
+% ax + by +c; for  int/robin nodes 
+for i=1:length(intnodes)
+xyt=N(intnodes(i),:); %main node for local basis function
+onodes=setdiff(nodes,intnodes(i));
+%global indices for two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+%local basis function coefficients using (6B)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-xys(1)*xyr(2)]/det(M);
+intgrad(i,:)=abccoeff(1:2)';
+abc(i,:)=abccoeff';
+end
+%next we find the gradients for local basis functions of any Dirichlet nodes
+dirnodes = find(nodes>n); %local indices of Dirichlet nodes, if any
+if ~isempty(dirnodes)
+numdir=length(dirnodes);
+for s=1:numdir
+dirnode = nodes(dirnodes(s)); global number of Dirichlet node
+xyt=N(dirnode,:); %main node for local basis function of Dirichlet node
+onodes=setdiff(nodes,dirnode);
+%global indices for two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+%local basis function coefficients using (6B)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-xys(1)*xyr(2)]/det(M);
+dirgrad(s,:)=abccoeff(1:2)';
+end
+end
+
+
+
+
+
+% determine if there are any Robin edges
+marker=0; %will change to 1 if there are Robin edges.
+roblocind=find(nodes<=n & nodes >=(nint+1)); 
+%local indices of nodes for possible robin edges
+if length(roblocind>1)
+elemnodes = N(nodes,:);
+%now find robin edges and make a 2 column matrix out of their local indices.
+rnodes=nodes(roblocind); %global indices of robin nodes
+count=1;
+for k=[(nint+1):lastwestind firstsouthind:lastsouthind firstswind:lastswind firstseind:lastseind]
+if ismember(k,rnodes) & ismember(k+1,rnodes)
+robedges(count,:)=[find(nodes==k)  find(nodes==k+1)];
+count=count+1; marker =1;
+end
+end
+%add on interface edges, if any (four to check)
+if ismember(nint+1,rnodes) & ismember(firstseind,rnodes)
+robedges(count,:)=[find(nodes==nint+1)  find(nodes==firstseind)];
+count=count+1; marker=1;
+end
+if ismember(lastwestind,rnodes) & ismember(lastswind,rnodes)
+robedges(count,:)=[find(nodes==lastwestind)  find(nodes==lastswind)];
+count=count+1; marker=1;
+end
+if ismember(firstswind,rnodes) & ismember(firstsouthind,rnodes)
+robedges(count,:)=[find(nodes==firstswind)  find(nodes==firstsouthind)];
+count=count+1; marker=1;
+end
+if ismember(lastseind,rnodes) & ismember(lastsouthind,rnodes)
+robedges(count,:)=[find(nodes==lastseind)  find(nodes==lastsouthind)];
+count=count+1; marker=1;
+end
+end
+
+
+
+%update stiffness matrix
+for i1=1:length(intnodes)
+for i2=1:length(intnodes)
+if intnodes(i1)>=intnodes(i2) %to save some computation, we use symmetry the stiffness matrix.
+fun1 = num2str(intgrad(i1,:)*intgrad(i2,:)',10); %integrand for (15ell)
+fun=inline(fun1,'x', 'y');
+integ=gaussianintapprox(fun,xyt,xyr,xys);
+A(intnodes(i1),intnodes(i2))=A(intnodes(i1),intnodes(i2))+integ;
+%now add Robin portion, if applicable
+%robin edges were computed above
+if marker==1
+ai1 = num2str(abc(i1,1),10); ai2 = num2str(abc(i2,1),10);  
+bi1 = num2str(abc(i1,2),10); bi2 = num2str(abc(i2,2),10);  
+ci1 = num2str(abc(i1,3),10); ci2 = num2str(abc(i2,3),10);
+prod=inline(['(',ai1,'*x+',bi1, '*y+', ci1,')*(',ai2,'*x+',bi2, '*y+', ci2,')'],'x','y');
+%since we cannot mix M-file and inline functions to input into another
+%M-file, we basically must recode the bdyintapprox M-file
+lineint=0;
+[rn cn] = size(robedges); %rn = number of Robin/Neumann edges
+% positive since 'marker=1'.
+for i=1:rn
+    locinds = robedges(i,:);  globinds = nodes(locinds);
+    N1=N(globinds(1),:); N2=N(globinds(2),:);  %vectors for xy coors of two endpt Robin %nodes.
+    N1x=N1(1); N1y=N1(2); N2x=N2(1); N2y=N2(2);
+    vec = N2-N1;
+    A1=feval(@r_EFR13_16,N1x,N1y);
+    A2=feval(prod,N1x, N1y);
+    AA=A1*A2;
+    B1=feval(@r_EFR13_16,(N1x+N2x)/2,(N1y+N2y)/2);
+    B2=feval(prod,(N1x+N2x)/2,(N1y+N2y)/2);
+    B=B1*B2;
+    C1=feval(@r_EFR13_16,N2x,N2y);
+    C2=feval(prod,N2x,N2y);
+    C=C1*C2;
+    approx=norm(vec,2)/6*(AA+4*B+C);
+    lineint=lineint+approx;
+end
+A(intnodes(i1),intnodes(i2))=A(intnodes(i1),intnodes(i2))+lineint;
+end
+end
+end
+end
+
+
+%update load vector
+for i1=1:length(intnodes)
+ai1 = num2str(abc(i1,1),10); 
+bi1 = num2str(abc(i1,2),10); 
+ci1 = num2str(abc(i1,3),10);
+phi=inline([ai1,'*x+',bi1, '*y+', ci1],'x','y');
+%We begin with the Robin portion, if applicable
+%robin edges were computed above
+if marker==1
+%since we cannot mix M-file and inline functions to input into another
+%M-file, we basically must recode the bdyintapprox M-file
+lineint=0;
+[rn cn] = size(robedges); %rn = number of Robin/Neumann edges
+% positive since 'marker=1'.
+for i=1:rn
+    locinds = robedges(i,:);  globinds = nodes(locinds)
+    N1=N(globinds(1),:); N2=N(globinds(2),:);  %vectors for xy coors of two endpt %Robin %nodes.
+    N1x=N1(1); N1y=N1(2); N2x=N2(1); N2y=N2(2);
+    vec = N2-N1;
+    AA=feval(@h_EFR13_16,N1x,N1y)*feval(phi,N1x, N1y);
+    B=feval(@h_EFR13_16,(N1x+N2x)/2,(N1y+N2y)/2)*feval(phi,(N1x+N2x)/2,(N1y+N2y)/2);
+    C=feval(@h_EFR13_16,N2x,N2y)*feval(phi,N2x,N2y);
+    approx=norm(vec,2)/6*(AA+4*B+C);
+    lineint=lineint+approx;
+end
+b(intnodes(i1))=b(intnodes(i1))+lineint;
+end
+%Now we subtract of any of the integrals arising from the Dirichlet part of the boundary.
+%These integrals will be present only when the element has a vertex among the Dirichlet 
+%boundary.
+if ~isempty(dirnodes)
+for s=1:numdir
+dirnode = nodes(dirnodes(s)); global index of Dirichlet node
+fun1 = num2str(100*intgrad(i1,:)*dirgrad(s,:)',10); %integrand for (16ell)
+fun=inline(fun1,'x', 'y');
+integ=gaussianintapprox(fun,xyt,xyr,xys);
+b(intnodes(i1))=b(intnodes(i1))-integ;
+clear roblocind rnodes robedges
+end
+end
+end
+end, toc
+
+A=A+A'-A.*eye(n); %Use symmetry to fill in remaining entries of A.
+
+
+
+
+sol=A\b;
+c(1:n)=sol';
+c(n+1:m)=100;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Plotting of the solution
+x=N(:,1); y=N(:,2);
+trimesh(E,x,y,c)
+hidden off
+xlabel('x-axis'), ylabel('y-axis')
+

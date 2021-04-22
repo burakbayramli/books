@@ -1,0 +1,135 @@
+%MATLAB CODE FOR EXERCISE FOR THE READER 13.11
+%NOTE:  FOR SOME OF THE EXAMPLES AND EXERCISES OF THE READER IN THIS CHAPTER
+%INVOLVING LONGER MATLAB CODES, WE PROVIDE TEXT FILES FOR THE COMPLETE CODES.
+%THEY ARE SET UP WITH COMMENTS SO THAT THE USER CAN SIMPLY PASTE ALL (OR ANY
+%PORTION) OF THE FILE DIRECTLY INTO THE MATLAB WINDOW.  THESE CODES CAN BE 
+%MODIFIED TO SOLVE RELATED FEM PROBLEMS. 
+
+%%%%TRIANGULATION
+>> delta=sqrt(3*pi/350);
+nodecount=1; ncirc=floor(1/delta); radgap=1/ncirc;
+
+for i=0:ncirc
+  rad=1+i*radgap; nnodes=floor(2*pi*rad/delta); anglegap=2*pi/nnodes;
+  for k=1:nnodes
+  x(nodecount)=rad*cos(k*anglegap); y(nodecount)=rad*sin(k*anglegap);
+   nodecount = nodecount+1;
+  end
+end
+
+
+
+
+
+%%%%%%REINDEX NODES SO INTERIOR NODES COME FIRST
+m = length(x); %m = total number of nodes.
+cnt1=1;, cnt2=1;
+for i=1:m
+if norm([x(i) y(i)],2)<1+4*eps %tests if node is on inner circle
+bdy1(cnt1)=i;, cnt1=cnt1+1;
+elseif norm([x(i) y(i)],2)>2-4*eps %tests if node is on outer circle
+bdy2(cnt2)=i;, cnt2=cnt2+1;
+end
+end
+n=m-length(bdy1)-length(bdy2); % n = total number of interior nodes 
+xnew=[x(setdiff(1:m, union(bdy1, bdy2))) x(bdy1) x(bdy2)];, x=xnew;
+ynew=[y(setdiff(1:m, union(bdy1, bdy2))) y(bdy1) y(bdy2)];, y=ynew;
+
+%%%%%%%%%%%%%%%%REMOVE BAD ELEMENTS AS IN SOLUTION TO EXAMPLE 13.3
+>> x(m+1)=0; y(m+1)=0; tri=delaunay(x,y); [rows cols] = size(tri);
+>> badelcount=1;
+for ell=1:rows %rows of tri is number of elements
+  if ismember(m+1,tri(ell,:))
+   badel(badelcount)=ell;
+   badelcount=badelcount+1;
+  end
+end
+ 
+>> tri=tri(setdiff(1:rows,badel),:);
+>> x=x(1:m); y=y(1:m);
+>> trimesh(tri,x,y), axis('equal')
+
+
+
+%%%%%%ASSIGN BOUNDARY VALUES.
+c(n+1:n+length(bdy1))=2;
+for i=n+length(bdy1)+1:m
+th=cart2pol(x(i),y(i));
+c(i)=cos(2*th);
+end
+
+
+
+
+
+%%%%%ASSEMBLY CODE
+N=[x' y'];
+E=tri;
+A=zeros(n);, b=zeros(n,1);
+[L cL]=size(E);
+>> for ell=1:L
+nodes=E(ell,:);
+bdynodes=nodes(find(nodes>n));
+intnodes=setdiff(nodes,bdynodes);
+
+%find gradients [a b] of local basis functions
+% ax + by +c; distinguish between int node 
+%local basis functions and bdy node local basis 
+%functions
+
+for i=1:length(intnodes)
+xyt=N(intnodes(i),:); %main node for local basis function
+onodes=setdiff(nodes,intnodes(i));
+%two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+xys(1)*xyr(2)]/det(M); %coefficients of basis function on triangle#ell, see formula (6a)
+intgrad(i,:)=abccoeff(1:2)';
+end
+
+for j=1:length(bdynodes)
+xyt=N(bdynodes(j),:); %main node for local basis function
+onodes=setdiff(nodes,bdynodes(j));%two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+xys(1)*xyr(2)]/det(M); %coefficents of basis function on triangle#ell, see formula (6a)
+bdygrad(j,:)=abccoeff(1:2)';
+end
+%update stiffness matrix
+for i1=1:length(intnodes)
+for i2=1:length(intnodes)
+fun1 = num2str(intgrad(i1,:)*intgrad(i2,:)',10); %integrand for (15ell)
+fun=inline(fun1,'x', 'y');
+integ=gaussianintapprox(fun,xyt,xyr,xys);
+A(intnodes(i1),intnodes(i2))=A(intnodes(i1),intnodes(i2))+integ;
+end
+end
+
+%update load vector
+for i=1:length(intnodes)
+for j=1:length(bdynodes)
+fun1 = num2str(intgrad(i,:)*bdygrad(j,:)',10); %integrand for (16ell)
+fun=inline(fun1,'x', 'y');
+integ=gaussianintapprox(fun,xyt,xyr,xys);
+b(intnodes(i))=b(intnodes(i))-c(bdynodes(j))*integ;
+end
+end
+
+end
+sol=A\b;
+c(1:n)=sol';
+
+
+
+
+%%%%%%COMMANDS USED TO PLOT THE FEM SOLUTION
+>> trimesh(tri,x,y,c)
+>> xlabel('x-axis'), ylabel('y-axis')
+>> hidden off
+
+
+
