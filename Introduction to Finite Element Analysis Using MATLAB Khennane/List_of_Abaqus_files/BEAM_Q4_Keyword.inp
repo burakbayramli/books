@@ -1,0 +1,60 @@
+*Heading
+ Analysis of cantilever beam as a plane stress problem using the 4-node bilinear quadrilateral
+*Preprint, echo=YES
+**
+**
+** Node generation
+**
+**
+*NODE
+ 1,    0.,       0.
+ 11,    0.,      20. 
+ 331,  60.,       0.
+ 342,  60.,      20. 
+*NGEN,NSET=Left_Edge
+ 1,11
+*NGEN,NSET=Right_Edge
+ 331,342
+*NFILL
+Left_Edge,Right_Edge,30,11
+*NSET, NSET = Loaded_node
+6
+**
+** Element generation
+**
+*ELEMENT,TYPE=CPS4R
+1, 1, 12, 13, 2
+*ELGEN, ELSET = All_Elements
+1, 10, 1, 1, 30, 11, 10
+**
+*MATERIAL, NAME =STEEL
+*ELASTIC
+200000., 0.3
+*SOLID SECTION, ELSET = All_Elements, MATERIAL = STEEL
+5.
+** 
+** BOUNDARY CONDITIONS
+** 
+** 
+*Boundary
+Right_Edge, encastre
+** 
+** STEP: Apply_Loads
+** 
+*Step, name=Apply_Loads
+*Static
+1., 1., 1e-05, 1.
+** 
+** LOADS
+** 
+*Cload
+Loaded_node, 2, -1000.
+**
+** 
+** OUTPUT REQUESTS
+** 
+** 
+*Output, field, variable=PRESELECT
+** 
+*Output, history, variable=PRESELECT
+*End Step

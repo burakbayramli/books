@@ -1,0 +1,66 @@
+*Heading
+ Analysis of cantilever beam as a plane stress problem
+*Preprint, echo=YES
+**
+**
+** Node generation
+**
+**
+*NODE
+ 1,    0.,       0.
+ 5,    0.,      20. 
+ 61,  60.,       0.
+ 65,  60.,      20. 
+*NGEN,NSET=Left_Edge
+ 1,5
+*NGEN,NSET=Right_Edge
+ 61,65
+*NFILL
+Left_Edge,Right_Edge,12,5
+*NSET, NSET = Loaded_node
+3
+**
+** Element generation
+**
+*ELEMENT,TYPE=CPS3
+1, 1, 6, 7
+*ELGEN, ELSET = ODD
+1, 4, 1, 2, 12, 5, 8
+**
+*ELEMENT,TYPE=CPS3
+2, 1, 7, 2
+*ELGEN,ELSET = EVEN
+2, 4, 1, 2, 12, 5, 8
+*ELSET, ELSET = All_Elements
+EVEN, ODD
+*MATERIAL, NAME =STEEL
+*ELASTIC
+200000., 0.3
+*SOLID SECTION, ELSET = All_Elements, MATERIAL = STEEL
+5.
+** 
+** BOUNDARY CONDITIONS
+** 
+** 
+*Boundary
+Right_Edge, encastre
+** 
+** STEP: Apply_Loads
+** 
+*Step, name=Apply_Loads
+*Static
+1., 1., 1e-05, 1.
+** 
+** LOADS
+** 
+*Cload
+Loaded_node, 2, -1000.
+**
+** 
+** OUTPUT REQUESTS
+** 
+** 
+*Output, field, variable=PRESELECT
+** 
+*Output, history, variable=PRESELECT
+*End Step

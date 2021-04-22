@@ -1,0 +1,87 @@
+*Heading
+  Beam_Problem Model keyword edition
+** 
+*Preprint, echo=No, model=NO, history=NO
+**
+**
+**  Define the end nodes
+**
+*Node
+      1,          -9.,           0.
+     17,           6.,           0.
+**
+** Generate the remaining nodes
+**
+*Ngen
+1,17,1
+**
+**  Define element 1
+**
+*Element, type=B21
+1,1,2
+**
+** Generate the elements
+**
+*Elgen, elset = all_elements
+1,16, 1, 1
+**
+**
+**
+*Nset, nset=Fixed_support
+ 1,
+*Nset, nset=Roller_supports
+ 5,  10,  17
+*Nset, nset=Loaded_node
+ 3
+*Elset, elset=UDL4, generate
+ 5,  9,  1
+*Elset, elset=UDL10, generate
+ 10,  16,   1
+**
+**
+** Section: Beam_section  Profile: Beam_Profile
+*Beam Section, elset=all_elements, material=Steel, section=I
+0.1795, 0.359, 0.172, 0.172, 0.013, 0.013, 0.008
+0.,0.,-1.
+**  
+** 
+** MATERIALS
+** 
+*Material, name=Steel
+*Elastic
+ 2e+08, 0.3
+** 
+** BOUNDARY CONDITIONS
+** 
+** 
+*Boundary
+Fixed_support, encastre
+Roller_supports, 2, 2
+** ----------------------------------------------------------------
+** 
+** STEP: Apply_Loads
+** 
+*Step, name=Apply_Loads
+*Static
+1., 1., 1e-05, 1.
+** 
+** LOADS
+** 
+*Cload
+Loaded_node, 2, -20.
+**
+*Dload
+UDL4, PY, -4.
+UDL10, PY, -10.
+** 
+** OUTPUT REQUESTS
+** 
+** 
+*Output, field
+*Node Output
+CF, RF, RM, U
+*Element Output
+ S
+** 
+*Output, history, variable=PRESELECT
+*End Step

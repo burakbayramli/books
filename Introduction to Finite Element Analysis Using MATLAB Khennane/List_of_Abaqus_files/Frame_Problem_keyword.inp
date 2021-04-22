@@ -1,0 +1,101 @@
+*Heading
+  Frame_Problem Model keyword edition
+** 
+*Preprint, echo=No, model=NO, history=NO
+**
+**
+**  Define the end nodes
+**
+*Node
+      1,          0.,           0.
+      5,          0.,           6.
+      9,          7.,           7.5
+      13,         14.,          6.
+     17,          14.,           0.
+**
+** Generate the remaining nodes
+**
+*Ngen
+1,5,1
+5,9,1
+9,13,1
+13,17,1
+**
+**  Define element 1
+**
+*Element, type=B21
+1,1,2
+**
+** Generate the elements
+**
+*Elgen, elset = all_elements
+1,16, 1, 1
+**
+**
+*Nset, nset=Pinned_supports
+ 1,  17
+*Elset, elset=Left_Column, generate
+ 1,  4,  1
+*Elset, elset=Right_Column, generate
+ 13,  16,   1
+*Elset, elset=Columns
+ Left_Column,  Right_Column
+**
+*Elset, elset=Left_Rafter, generate
+5,  8,  1 
+*Elset, elset=Right_Rafter, generate
+ 9,  12,  1  
+*Elset, elset=Rafters
+Left_Rafter,Right_Rafter,
+**
+**
+** Section: Beam_section  Profile: Rafter_Profile
+*Beam Section, elset=Rafters, material=Steel, section=I
+0.1795, 0.359, 0.172, 0.172, 0.013, 0.013, 0.008
+0.,0.,-1.
+**  
+**
+** Section: Beam_section  Profile: Column_Profile
+*Beam Section, elset=Columns, material=Steel, section=I
+0.163, 0.326, 0.172, 0.172, 0.013, 0.013, 0.014
+0.,0.,-1.
+**  
+** MATERIALS
+** 
+*Material, name=Steel
+*Elastic
+ 2e+08, 0.3
+** 
+** BOUNDARY CONDITIONS
+** 
+** 
+*Boundary
+Pinned_supports,PINNED
+** ----------------------------------------------------------------
+** 
+** STEP: Apply_Loads
+** 
+*Step, name=Apply_Loads
+*Static
+1., 1., 1e-05, 1.
+** 
+** LOADS
+** 
+**
+*Dload
+Right_column, PX, 10.
+Left_column, PX, 15.
+Left_rafter, P2, -12.
+Right_rafter, P2, 12.
+** 
+** OUTPUT REQUESTS
+** 
+** 
+*Output, field
+*Node Output
+CF, RF, RM, U
+*Element Output
+ S
+** 
+*Output, history, variable=PRESELECT
+*End Step
