@@ -1,0 +1,199 @@
+%MATLAB CODE FOR EXERCISE FOR THE READER 13.11
+%NOTE:  FOR SOME OF THE EXAMPLES AND EXERCISES OF THE READER IN THIS CHAPTER
+%INVOLVING LONGER MATLAB CODES, WE PROVIDE TEXT FILES FOR THE COMPLETE CODES.
+%THEY ARE SET UP WITH COMMENTS SO THAT THE USER CAN SIMPLY PASTE ALL (OR ANY
+%PORTION OF) THE FILE DIRECTLY INTO THE MATLAB WINDOW.  THESE CODES CAN BE 
+%MODIFIED TO SOLVE RELATED FEM PROBLEMS. 
+
+%%%%TRIANGULATION
+>> delta=sqrt(pi/1800); x(1)=0;  y(1)=0;
+>> nodecount=1; ncirc=floor(1/delta); minrad=1/ncirc;
+>> for i=1:ncirc
+    rad=i*minrad;
+    nnodes=floor(2*pi*rad/delta);
+    anglegap=2*pi/nnodes;
+    for k=1:nnodes
+      x(nodecount+1)=rad*cos(k*anglegap);
+      y(nodecount+1)=rad*sin(k*anglegap);
+      nodecount = nodecount+1;
+    end
+end
+>> m=length(x); %number of nodes
+>> n = min(find(x.^2+y.^2>1-10*eps))-1;  %number of interior nodes
+>> tri=delaunay(x,y); trimesh(tri,x,y), axis('equal')
+
+
+
+
+%%%%%%ASSIGN BOUNDARY VALUES.
+c=zeros(1,m);
+
+
+
+
+
+%%%%%ASSEMBLY CODE
+N=[x' y'];
+E=tri;
+A=zeros(n); b=zeros(n,1);
+[L cL]=size(E);
+>> for ell=1:L
+nodes=E(ell,:);
+bdynodes=nodes(find(nodes>n));
+intnodes=setdiff(nodes,bdynodes);
+
+%find gradients [a b] of local basis functions
+% ax + by +c; distinguish between int node 
+%local basis functions and bdy node local basis 
+%functions
+
+for i=1:length(intnodes)
+xyt=N(intnodes(i),:); %main node for local basis function
+onodes=setdiff(nodes,intnodes(i));
+%two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+xys(1)*xyr(2)]/det(M); %coefficients of basis function on triangle#L, see formula (6a)
+intgrad(i,:)=abccoeff(1:2)';
+end
+
+for j=1:length(bdynodes)
+xyt=N(bdynodes(j),:); %main node for local basis function
+onodes=setdiff(nodes,bdynodes(j));%two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+xys(1)*xyr(2)]/det(M); %coefficents of basis function on triangle#L, see formula (6a)
+bdygrad(j,:)=abccoeff(1:2)';
+end
+
+%update stiffness matrix
+for i1=1:length(intnodes)
+for i2=1:length(intnodes)
+fun1 = num2str(intgrad(i1,:)*intgrad(i2,:)',10); %integrand for (15ell)
+fun=inline(fun1,'x', 'y');
+integ=gaussianintapprox(fun,xyt,xyr,xys);
+A(intnodes(i1),intnodes(i2))=A(intnodes(i1),intnodes(i2))+integ;
+end
+end
+
+%update load vector
+for i1=1:length(intnodes)
+xyt=N(intnodes(i),:); %main node for local basis function
+onodes=setdiff(nodes,intnodes(i));
+%two other nodes (w/ zero values) for local basis function
+xyr=N(onodes(1),:);
+xys=N(onodes(2),:);
+M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+xys(1)*xyr(2)]/det(M); %coefficients of basis function on triangle#L, see formula (6a)
+%since we cannot mix M-file and inline functions to input into another
+%M-file, we basically must recode the gaussianintapprox M-file
+atemp=num2str(abccoeff(1),10); btemp=num2str(abccoeff(2),10); ctemp=num2str(abccoeff(3),10);
+phixy=inline([atemp, '*x+', btemp, '*y+',ctemp],'x','y');
+Atemp=feval(@EFR13_12f,(xyt(1)+xyr(1))/2,(xyt(2)+xyr(2))/2)*...
+feval(phixy,(xyt(1)+xyr(1))/2,(xyt(2)+xyr(2))/2);
+Btemp=feval(@EFR13_12f,(xyt(1)+xys(1))/2,(xyt(2)+xys(2))/2)*...
+feval(phixy,(xyt(1)+xys(1))/2,(xyt(2)+xys(2))/2);
+Ctemp=feval(@EFR13_12f,(xyr(1)+xys(1))/2,(xyr(2)+xys(2))/2)*...
+feval(phixy,(xyr(1)+xys(1))/2,(xyr(2)+xys(2))/2);
+M=[xyr(1) xyr(2) 1;xys(1) xys(2) 1; xyt(1) xyt(2) 1];
+area=abs(det(M))/2;
+integ=area*(Atemp+Btemp+Ctemp)/3;
+b(intnodes(i1))=b(intnodes(i1))+integ;
+end
+
+
+end
+sol=A\b;
+c(1:n)=sol';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Part (b):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%TRIANGULATION
+% node deployment, use concentric circles centered at (0, 1/2)
+% except for on the boundary
+% Step 1 inside Omega1 (small circle) has 50% of nodes
+% d1=common gap size
+% avg radius = 1/8, avg. circumf= pi/4, avg no. of nodes on circ = pi/4/d1
+% number of circles = 1/4/d1
+% setting 50% of 800 = [pi/4/d1][1/4/d1] gives
+d1=sqrt(pi/16/400);
+x(1)=0; y(1)=.5;
+nodecount=1; ncirc=floor(1/4/d1); minrad=1/4/ncirc;
+for i=1:ncirc, rad=i*minrad; nnodes=floor(2*pi*rad/d1); anglegap=2*pi/nnodes;
+for k=1:nnodes
+x(nodecount+1)=rad*cos(k*anglegap); y(nodecount+1)=rad*sin(k*anglegap)+.5;
+nodecount = nodecount+1;
+end
+end
+
+% step 2:  inside annulus Omega2 has 25% of nodes
+% d2=common gap size
+% avg radius = 3/8, avg circumf = 3pi/4, avg no of nodes on circ = 3pi/4/d2
+% number of circles = 1/4/d2
+d2=sqrt(3*pi/16/200); ncirc=floor(1/4/d2);minrad=1/4+(d1+d2)/2; %blend interface
+for i=1:ncirc
+rad=minrad + (i-1)*d2; nnodes=floor(2*pi*rad/d2); anglegap=2*pi/nnodes;
+for k=1:nnodes
+x(nodecount+1)=rad*cos(k*anglegap); y(nodecount+1)=rad*sin(k*anglegap)+.5;
+nodecount = nodecount+1;
+end
+end
+
+% step 3:  inside region Omega3 has 15% of nodes
+% d3 = common gap size
+% avg radius = 3/4, avg arclength (approx)= (2pi +pi)/2*3/4=9pi/8
+% number of circles = 1/2/d3
+d3=sqrt(9*pi/16/120); ncirc=floor(1/2/d3); minrad=1/2+(d2+d3)/2; %blend interface
+for i=1:ncirc
+rad=minrad + (i-1)*d3; nnodes=floor(2*pi*rad/d3); anglegap=2*pi/nnodes;
+for k=1:nnodes
+xtest=rad*cos(k*anglegap); ytest=rad*sin(k*anglegap)+.5;
+if norm([xtest ytest],2)<1-d3/2 %don't put nodes too close to bdy
+x(nodecount+1)=xtest; y(nodecount+1)=ytest; nodecount = nodecount+1;
+end
+end
+end
+
+% step 4: inside region Omega4 has 10% of nodes
+% d4 = common gap size
+% avg radius = 5/4, avg (approx) arclength =  5pi/4
+% number of circles = 1/2/d4
+d4=sqrt(5*pi/8/80); ncirc=floor(1/2/d4); minrad=1+(d3+d4)/2; %blend interface
+for i=1:ncirc
+rad=minrad + (i-1)*d4; nnodes=floor(2*pi*rad/d4); anglegap=2*pi/nnodes;
+for k=1:nnodes
+xtest=rad*cos(k*anglegap); ytest=rad*sin(k*anglegap)+.5;
+if norm([xtest ytest],2)<1-d4/2 %don't put nodes too close to bdy
+x(nodecount+1)=xtest; y(nodecount+1)=ytest; nodecount = nodecount+1;
+end
+end
+end
+
+% step 5: put nodes on boundary
+% if bdy point is touches Omega3 use d3 spacing
+% otherwise use d4 spacing
+theta=0;
+while theta<2*pi-d4
+x(nodecount+1)=cos(theta); y(nodecount+1)=sin(theta); nodecount = nodecount+1;
+if norm([cos(theta) sin(theta)]-[0 .5], 2)<.5
+theta=theta+d3;
+else
+theta=theta+d4;
+end
+end
+>> m=length(x); %number of nodes
+>> n = min(find(x.^2+y.^2>1-10*eps))-1;  %number of interior nodes
+>> tri=delaunay(x,y); trimesh(tri,x,y), axis('equal')
+%%%%%%%%%%%%%%%%%%%%END OF TRIANGULATION FOR PART(b)
+
+%%%%%%ASSIGNMENT OF BOUNDARY VALUES, ASSEMBLY, AND PLOTTING OF THE FEM SOLUTION
+%%%%%%CAN NOW BE ACCOMPLISHED WITH THE SAME CODE USED IN PART A.
+
+

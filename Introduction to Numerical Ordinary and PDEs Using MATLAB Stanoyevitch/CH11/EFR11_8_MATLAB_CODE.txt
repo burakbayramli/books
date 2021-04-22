@@ -1,0 +1,41 @@
+%%%%EFR11_8_MATLAB_CODE
+%%%THIS IS A TEXT FILE CONTAINING THE MATLAB CODE APPEARING IN THE SOLUTION
+%%%OF EXERCISE FOR THE READER 11.8 FOR OBTAINING THE MESH PLOT OF THE SOLUTION OF 
+%%%OF THE GIVEN HEAT PROBLEM WITH MIXED BOUNDARY CONDITIONS
+
+
+>> N=20;
+>> A=diag(4*ones(1,N^2))-diag(ones(1,N^2-N), N)-diag(ones(1,N^2-N),-N);
+>> %next create vector for sub/super diagonals
+>> v1=-ones(1,N-1); v=[v1 0];
+>> for i=1:N-1
+if i<N-1
+v=[v v1 0];
+else
+v=[v v1]; vlow=v; vlow(N-1)=-2;
+end
+end
+>> A=A+diag(v,1)+diag(v,-1);
+
+>> cblock = zeros(N,1); cblock(1)=100; C=cblock;
+>> for i=1:N-1
+C=[C;cblock];
+end
+>> C(1:N)=C(1:N)+2*ones(N,1);
+
+>> cblock = zeros(N,1); cblock(1)=100; C=cblock;
+>> for i=1:N-1
+C=[C;cblock];
+end
+C(1:N)=C(1:N)+2*ones(N,1);
+>> xgrid=0:.05:1;
+>> for i=1:21
+ygrid(i)=xgrid(22-i);
+end
+>> U=A\C;	
+Z=zeros(N,N);
+>> Z(:)=U; Z=Z';
+>> Z=[100*ones(N,1) Z];
+>> Z=[Z;[50 zeros(1,N)]];
+>> mesh(xgrid,ygrid,Z) %produces a mesh plot of the solution
+>> hidden off, xlabel('x-axis'), ylabel('y-axis')

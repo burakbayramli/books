@@ -1,0 +1,170 @@
+%MATLAB CODE FOR EXAMPLE 13.8
+%NOTE:  FOR SOME OF THE EXAMPLES AND EXERCISES OF THE READER IN THIS CHAPTER
+%INVOLVING LONGER MATLAB CODES, WE PROVIDE TEXT FILES FOR THE COMPLETE CODES.
+%THEY ARE SET UP WITH COMMENTS SO THAT THE USER CAN SIMPLY PASTE ALL (OR ANY
+%PORTION) OF THEIR FILES DIRECTLY INTO THE MATLAB WINDOW.  THESE CODES CAN BE 
+%MODIFIED TO SOLVE RELATED FEM PROBLEMS. 
+
+%%%%TRIANGULATION
+%%%STEP 1: INTERIOR NODES
+>> bdyf= inline('x.*(10-x)');
+>> delta=sqrt(500/3/350);
+>> nodecount=1;
+>> for i=1:10/delta
+for j=1:bdyf(i*delta)/delta
+  xtemp=i*delta; ytemp=j*delta;
+  if (bdyf(xtemp-delta/2)>ytemp)&... 
+  (bdyf(xtemp)>ytemp+delta/2)&(bdyf(xtemp+delta/2)>ytemp)
+%These conditions assure that the parabolic portion of the boundary does 
+%not get too close to the candidate (xtemp, ytemp) for an internal node.
+   x(nodecount)=xtemp; y(nodecount)=ytemp;
+   nodecount = nodecount+1;
+  end
+end
+end
+
+%%%%%STEP 2: BOUNDARY NODES
+>> arcint = inline('sqrt(101-40*x+4*x.^2)');
+>> xref1=0; xref2=delta/30; cumlen=quad(arcint,xref1,xref2);
+>> while xref1<10
+  while cumlen<delta
+   xref2=xref2+delta/30;;
+   cumlen=quad(arcint,xref1,xref2);
+  end
+  if xref2<10-delta/40
+   x(nodecount)=xref2; y(nodecount)=bdyf(xref2);
+   nodecount = nodecount+1;
+  end
+  xref1=xref2; xref2=xref2+delta/30;
+  cumlen=quad(arcint,xref1,xref2);
+end
+if quad(arcint,xref1,10)>delta/2
+  nodecount = nodecount+1;
+end
+>> x(nodecount)=10; y(nodecount)=0;
+>> nodecount = nodecount+1;
+>> %finally put nodes on interior of horizontal segment
+>> num = floor(10/delta); delta2=10/num; xref=10-delta2;
+>> while xref>delta2/4
+  x(nodecount)=xref; y(nodecount)=0;
+  nodecount = nodecount+1; xref=xref-delta2;
+end
+>> x(nodecount)=0; y(nodecount)=0; %last node
+>> nodecount = nodecount+1; tri=delaunay(x,y);
+
+%%PLOT TRIANGULATION AND INTRODUCE SPECIAL NODE NUMBERS
+>> trimesh(tri,x,y), axis('equal') %Plots the triangulation
+>> n=find(x==10&y==0)-1 %number of interior/Robin nodes
+>> nint=min(find(abs(y-bdyf(x))<10*eps))-1; %number of interior nodes
+>> m=length(x); %number of nodes  
+>> dir1 = m;%node (0,0), 
+>> dir2 = nint+1; %node (10,0)
+
+
+%%%%%ASSIGNMENT OF DIRICHLET BOUNDARY VALUES AND CREATION OF 
+%%%%%THE COEFFICIENT MATRIX
+>> c= zeros(m,1);
+
+
+
+
+
+
+
+%%%%%ASSEMBLY CODE
+%%%%%ASSIGNMENT OF BOUNDARY VALUES
+N=[x' y']; E=tri; A=zeros(n); b=zeros(n,1); [L cL]=size(E);
+for ell=1:L
+  nodes=E(ell,:); %global node indices of element
+  intnodes=nodes(find(nodes<=n)); %global interior/Robin node indices
+%find coefficients [a b c] of local basis functions
+% ax + by +c; for  int/robin nodes 
+  for i=1:length(intnodes)
+   xyt=N(intnodes(i),:); %main node for local basis function
+   onodes=setdiff(nodes,intnodes(i));
+%global indices for two other nodes (w/ zero values) for local basis %function
+   xyr=N(onodes(1),:);
+   xys=N(onodes(2),:);
+   M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+%local basis function coefficients using (6B)
+   abccoeff=[xyr(2)-xys(2);xys(1)-xyr(1);xyr(1)*xys(2)-xys(1)*xyr(2)]/... 
+   det(M);
+   intgrad(i,:)=abccoeff(1:2)';
+   abc(i,:)=abccoeff';
+end
+
+% determine if there are any Robin edges
+marker=0; %will change to 1 if there are Robin edges.
+roblocind=find(nodes==dir1|nodes==dir2|(nodes<=n& nodes >=(nint+1))); 
+%local indices of nodes for possible robin edges
+if length(roblocind)>1
+  elemnodes = N(nodes,:);
+%now find robin edges and make a 2 column matrix out of their local %indices.
+  rnodes=nodes(roblocind); %global indices of robin nodes
+  count=1;
+  for k=(nint+1):n
+   if ismember(k,rnodes) & ismember(k+1,rnodes)
+    robedges(count,:)=[find(nodes==k)  find(nodes==k+1)];
+    count=count+1; marker =1;
+  end
+end
+end
+
+%update stiffness matrix
+for i1=1:length(intnodes)
+for i2=1:length(intnodes)
+  if intnodes(i1)>=intnodes(i2) %to save some computation, we use 
+  %symmetry the stiffness matrix.
+  fun1 = num2str(intgrad(i1,:)*intgrad(i2,:)',10); 
+  %integrand a-integral
+  fun=inline(fun1,'x', 'y');
+  integ=gaussianintapprox(fun,xyt,xyr,xys);
+A(intnodes(i1),intnodes(i2))=A(intnodes(i1),intnodes(i2))+integ;
+end
+end
+end
+
+%update load vector
+for i1=1:length(intnodes)
+  ai1 = num2str(abc(i1,1),10); 
+  bi1 = num2str(abc(i1,2),10); 
+  ci1 = num2str(abc(i1,3),10);
+  fun=inline([ai1,'*x+',bi1, '*y+', ci1],'x','y'); 
+  integ=-1/25*gaussianintapprox(fun,xyt,xyr,xys);
+  b(intnodes(i1))=b(intnodes(i1))+integ;
+  %now add Robin portion, if applicable
+  %robin edges were computed above
+  if marker==1
+prod=inline(['y./(25.*sqrt(101-40.*x+4.*x.^2))','*(',ai1,'*x+',bi1,...
+ '*y+', ci1,')'],'x','y');
+b(intnodes(i1))=b(intnodes(i1))+bdyintapprox(prod, elemnodes,... 
+robedges);
+end
+end
+clear roblocind rnodes robedges
+end
+A=A+A'-A.*eye(n); %Use symmetry to fill in remaining entries of A.
+
+
+sol=A\b; c(1:n)=sol'; c(n+1:m)=0;
+
+%The result is now easily plotted using the 'trimesh' function of the %last section:
+
+x=N(:,1); y=N(:,2);
+trimesh(E,x,y,c), hidden off
+xlabel('x-axis'), ylabel('y-axis')
+
+%%%%%%PLOTTING OF ERROR GRAPH
+cexact = zeros(m,1);
+for i=1:length(x),cexact(i)=y(i)^2/50; end
+trimesh(E,x,y,abs(c-cexact))
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Part (b):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%CONSTRUCTION OF EXACT SOLUTION VALUES AT INTERIOR GRID POINTS
+%In order to modify the above code to work with the finer resolution
+%asked for in part (b), simply change the second line of the code to
+>> delta=sqrt(500/3/350);
+%Everything else is designed to carry over fine with this change. 

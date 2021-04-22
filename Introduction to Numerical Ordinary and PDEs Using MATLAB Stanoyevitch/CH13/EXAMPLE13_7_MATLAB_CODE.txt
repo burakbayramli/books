@@ -1,0 +1,136 @@
+%MATLAB CODE FOR EXAMPLE 13.7
+%NOTE:  FOR SOME OF THE EXAMPLES AND EXERCISES OF THE READER IN THIS CHAPTER
+%INVOLVING LONGER MATLAB CODES, WE PROVIDE TEXT FILES FOR THE COMPLETE CODES.
+%THEY ARE SET UP WITH COMMENTS SO THAT THE USER CAN SIMPLY PASTE ALL (OR ANY
+%PORTION) OF THEIR FILES DIRECTLY INTO THE MATLAB WINDOW.  THESE CODES CAN BE 
+%MODIFIED TO SOLVE RELATED FEM PROBLEMS. 
+
+%%%%TRIANGULATION
+delta=sqrt(pi/90); x(1)=0;  y(1)=0;
+>> nodecount=1; ncirc=floor(1/delta); minrad=1/ncirc;
+>> for i=1:ncirc
+    rad=i*minrad;
+    nnodes=floor(2*pi*rad/delta);
+    anglegap=2*pi/nnodes;
+    for k=1:nnodes
+      x(nodecount+1)=rad*cos(k*anglegap);
+      y(nodecount+1)=rad*sin(k*anglegap);
+      nodecount = nodecount+1;
+    end
+end
+tri=delaunay(x,y); m=length(x) 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%TO VIEW TRIANGULATION, REMOVE COMMENT SYMBOL % BELOW
+%trimesh(tri,x,y), axis('equal')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%DETERMINATION OF LAST INDEX n OF INTERIOR NODES
+n=1;
+>> while x(n)^2+y(n)^2<1-eps
+      n=n+1;
+end
+>> n=n-1 
+
+%%%%%ASSIGNMENT OF BOUNDARY VALUES
+for i=n+1:m
+  th=cart2pol(x(i),y(i));
+  if th<0, th=th+2*pi; end
+  %need to ensure th is in domain of boundary data function
+  c(i)=EX13_7_bdydata(th);
+end
+
+%%%%%ASSEMBLY CODE
+>> N=[x' y'];
+>> E=tri;
+>> syms x y
+>> A=zeros(n); b=zeros(n,1);
+>> [L cL]=size(E);
+>> for ell=1:L
+  nodes=E(ell,:);
+  intnodes=nodes(find(nodes<=n));
+  bdynodes=nodes(find(nodes>n));
+  %find gradients [a b] of local basis functions
+  % ax + by +c; distinguish between int node 
+  %local basis functions and bdy node local basis 
+  %functions
+
+  for i=1:length(intnodes)
+   xyt=N(intnodes(i),:); %main node for local basis function
+   onodes=setdiff(nodes,intnodes(i));
+   %two other nodes (w/ zero values) for local basis function
+   xyr=N(onodes(1),:);
+   xys=N(onodes(2),:);
+   M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+   abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+   xys(1)*xyr(2)]/det(M);%coefficents of basis function on triangle#L
+   %See formula (6a) 
+   intgrad(i,:)=abccoeff(1:2)';
+  end
+
+  for j=1:length(bdynodes)
+   xyt=N(bdynodes(j),:); %main node for local basis function
+   onodes=setdiff(nodes,bdynodes(j));%two other nodes 
+   % (w/ zero values) for local basis   function
+   xyr=N(onodes(1),:);
+   xys=N(onodes(2),:);
+   M=[xyr 1;xys 1;xyt 1]; %matrix M of (4)
+   abccoeff=[xyr(2)-xys(2); xys(1)-xyr(1); xyr(1)*xys(2)-...
+   xys(1)*xyr(2)]/det(M); %coefficents of basis function on triangle#L
+   bdygrad(j,:)=abccoeff(1:2)';
+  end
+
+  %update stiffness matrix
+  for i1=1:length(intnodes)
+  for i2=1:length(intnodes)
+   fun = sym(intgrad(i1,:)*intgrad(i2,:)'); %integrand for (15ell)
+   integ=triangquad2d(fun,xyt,xyr,xys);
+   A(intnodes(i1),intnodes(i2))=A(intnodes(i1),intnodes(i2))+integ;
+  end
+  end
+
+  %update load vector
+  for i=1:length(intnodes)
+  for j=1:length(bdynodes)
+   fun = sym(intgrad(i,:)*bdygrad(j,:)'); %integrand for part of (16ell)
+   integ=triangquad2d(fun,xyt,xyr,xys);
+   b(intnodes(i))=b(intnodes(i))-c(bdynodes(j))*integ;
+  end
+  end
+end
+sol=A\b;
+c(1:n)=sol';
+
+
+%%%%%%COMMANDS USED TO PLOT THE FEM SOLUTION
+>> x=N(:,1); y=N(:,2);
+>> trimesh(E,x,y,c)
+>> hidden off
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Part (b):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%CONSTRUCTION OF EXACT SOLUTION VALUES AT INTERIOR GRID POINTS
+>> cp=c; %initialize node values for Poisson integral method.
+>> for i=1:n
+[th, r]=cart2pol(N(i,1),N(i,2)); %polar coors for node #i
+cp(i)= quadl(@EX13_7_poisson,0,3,[],[],r,th);
+%since integrand vanishes on (3, 2*pi] we can reduce the interval of 
+%integration. 
+end
+
+%%%%%%PLOTTING OF ERROR GRAPH
+>> trimesh(E,x,y,abs(c-cp))
+>> hidden off
+>> xlabel('x-values'), ylabel('y-values')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Part (c):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%The above code is set up so that only one small change is 
+%needed to resolve with the FEM using a finer grid, only the
+%single line where the parameter delta is defined needs to 
+%be changed to
+%delta=sqrt(pi/900);
