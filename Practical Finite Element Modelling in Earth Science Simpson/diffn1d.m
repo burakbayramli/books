@@ -99,25 +99,24 @@ for n=1:ntime
     displ = b./lumped_diag ; % fully explicit, diagonalised solution
   end
 
-x = g_coord ;
-term1 = abs(x).*sqrt(pi).*erf((1/2)*abs(x)./(sqrt(kappa./t).*t));
-term2 = 2*t.*exp(-(1/4)*abs(x).^2./(kappa*t)).*sqrt(kappa./t);
-term3 = abs(x)*sqrt(pi) ;
-term4 = (tau*udot)/(2*kappa*sqrt(pi)*rho*Cp);
-Texact = term4*(term1+term2-term3);
+  x = g_coord ;
+  term1 = abs(x).*sqrt(pi).*erf((1/2)*abs(x)./(sqrt(kappa./t).*t));
+  term2 = 2*t.*exp(-(1/4)*abs(x).^2./(kappa*t)).*sqrt(kappa./t);
+  term3 = abs(x)*sqrt(pi) ;
+  term4 = (tau*udot)/(2*kappa*sqrt(pi)*rho*Cp);
+  Texact = term4*(term1+term2-term3);
 
-% plotting
-if mod(n,ii(k))==0
-k = k+1;
-hold on
-figure(1)
-plot(g_coord,displ,'o-',g_coord,Texact,'r')
-title(['Time (kyr) = ', num2str(t/seconds_per_yr/1e3)])
-xlabel('Distance away from fault (m)')
-ylabel('Temperature (o C)')
-drawnow
-t/seconds_per_yr
-pause
-end
-hold off
+  if mod(n,ii(k))==0
+    k = k+1;
+    hold on
+    figure(1)
+    plot(g_coord,displ,'o-',g_coord,Texact,'r')
+    title(['Time (kyr) = ', num2str(t/seconds_per_yr/1e3)])
+    xlabel('Distance away from fault (m)')
+    ylabel('Temperature (o C)')
+    drawnow
+    t/seconds_per_yr
+    pause
+  end
+  hold off
 end % end of time loop  
