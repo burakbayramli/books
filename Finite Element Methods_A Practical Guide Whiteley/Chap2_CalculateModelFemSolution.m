@@ -21,7 +21,8 @@ function [x,U] = Chap2_CalculateModelFemSolution(N)
   b ( N +1) = 0;
 
   U = A \ b ;
+  aux=figure();
   plot (x , U , '-o')
   xlabel ( 'x')
-  ylabel ( 'U')
-  
+  ylabel ( 'U')  
+  saveas (1, "/tmp/out.png");
