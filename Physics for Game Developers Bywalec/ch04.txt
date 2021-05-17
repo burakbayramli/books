@@ -1,0 +1,134 @@
+chapter: Kinetics
+==================
+//--------------------------------------------------------------------------------//
+int     DoSimulation(void)
+//--------------------------------------------------------------------------------//
+{
+     .
+     .
+     .
+
+     // new local variables:
+     double     sx1, vx1;
+     double     sy1, vy1;
+     double     sz1, vz1;
+
+     .
+     .
+     .
+
+     // Now we can calculate the position vector at this time
+
+     // Old position vector commented out:
+     //s.i = Vm * cosX * time + xe;
+     //s.j = (Yb + L * cos(Alpha*3.14/180)) + (Vm * cosY * time) −
+          (0.5 * g * time * time);
+     //s.k = Vm * cosZ * time + ze;
+
+     // New position vector calculations:
+     sx1 = xe;
+     vx1 = Vm * cosX;
+
+     sy1 = Yb + L * cos(Alpha * 3.14/180);
+     vy1 = Vm * cosY;
+
+     sz1 = ze;
+     vz1 = Vm * cosZ;
+
+     s.i =((m/Cd) * exp(-(Cd * time)/m) * ((-Cw * Vw * cos(GammaW * 3.14/180))/Cd −
+          vx1) - (Cw * Vw * cos(GammaW * 3.14/180) * time) / Cd ) -
+          ( (m/Cd) * ((-Cw * Vw * cos(GammaW * 3.14/180))/Cd - vx1) ) + sx1;
+
+     s.j = sy1 + ( -(vy1 + (m * g)/Cd) * (m/Cd) * exp(-(Cd*time)/m) −
+          (m * g * time) / Cd ) +  ( (m/Cd) * (vy1 + (m * g)/Cd) );
+
+     s.k =((m/Cd) * exp(-(Cd * time)/m) * ((-Cw * Vw * sin(GammaW * 3.14/180))/Cd −
+          vz1) - (Cw * Vw * sin(GammaW * 3.14/180) * time) / Cd ) -
+          ( (m/Cd) * ((-Cw * Vw * sin(GammaW * 3.14/180))/Cd - vz1) ) + sz1;
+     .
+     .
+     .
+}
+    
+    
+====================================
+//---------------------------------------------------------------------------------//
+LRESULT CALLBACK DemoDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+//---------------------------------------------------------------------------------//
+{
+     .
+     .
+     .
+
+          case WM_INITDIALOG:
+     .
+     .
+     .
+               // New variables:
+               sprintf( str, "%f", m );
+               SetDlgItemText(hDlg, IDC_M, str);
+
+               sprintf( str, "%f", Cd );
+               SetDlgItemText(hDlg, IDC_CD, str);
+
+               sprintf( str, "%f", Vw );
+               SetDlgItemText(hDlg, IDC_VW, str);
+
+               sprintf( str, "%f", GammaW );
+               SetDlgItemText(hDlg, IDC_GAMMAW, str);
+
+               sprintf( str, "%f", Cw );
+               SetDlgItemText(hDlg, IDC_CW, str);
+     .
+     .
+     .
+
+                    case IDC_REFRESH:
+     .
+     .
+     .
+                         // New variables:
+                         GetDlgItemText(hDlg, IDC_M, str, 15);
+                         m = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_CD, str, 15);
+                         Cd = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_VW, str, 15);
+                         Vw = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_GAMMAW, str, 15);
+                         GammaW = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_CW, str, 15);
+                         Cw = atof(str);
+     .
+     .
+     .
+
+                    case IDC_FIRE:
+     .
+     .
+     .
+                         // New variables:
+                         GetDlgItemText(hDlg, IDC_M, str, 15);
+                         m = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_CD, str, 15);
+                         Cd = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_VW, str, 15);
+                         Vw = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_GAMMAW, str, 15);
+                         GammaW = atof(str);
+
+                         GetDlgItemText(hDlg, IDC_CW, str, 15);
+                         Cw = atof(str);
+     .
+     .
+     .
+}
+    
+    
+==================

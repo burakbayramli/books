@@ -1,0 +1,113 @@
+chapter: Gaming from One Place to Another
+==================
+typedef enum {
+float lat;
+float lon;
+} Coordinate2D;
+    
+    
+====================================
+float distanceGreatCircle(Coordinate2D startPoint, Coordinate2D endPoint){
+
+    //Convert location from degrees to radians
+    float lat1 = (M_PI/180.) * startPoint.lat;
+    float lon1 = (M_PI/180.) * endPoint.longi;
+    float lat2 = (M_PI/180.) * endPoint.lat;
+    float lon2 = (M_PI/180.) * endPoint.longi;
+
+    //Calculate deltas
+float dLat = lat2 - lat1;
+    float dLon = lon2 - lon1;
+
+    //Calculate half chord legnth
+float a = sin(dLat/2) * sin(dLat/2) + cos(lat1) * cos(lat2) * sin(dLon/2) 
+                                                           * sin(dLon/2);
+
+//Calculate angular distance
+    float C = 2 * atan(sqrt(a)/sqrt(1-a));
+
+//Find arclength
+    float distance = 6371 * C; //6371 is radius of earth in km
+    return distance;
+}
+    
+    
+====================================
+float initialBearing (Coordinate2D startPoint, Coordinate2D endPoint){
+    //Convert location from degrees to radians
+    float lat1 = (M_PI/180.) * startPoint.lat;
+    float lon1 = (M_PI/180.) * startPoint.longi;
+    float lat2 = (M_PI/180.) * endPoint.lat;
+    float lon2 = (M_PI/180.) * endPoint.longi;
+
+    //Calculate deltas
+float dLat = lat2 - lat1;
+    float dLon = lon2 - lon1;
+
+    // Calculate bearing in radians
+float theta = atan2f( sin(dlon) * cos(lat2), cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)
+                                                                        *cos(dlon));
+
+//Convert to compass bearing
+Float bearing = theta * (180 / M_PI); //radians to degrees
+bearing = ( bearing > 0 ? bearing : (360.0 + bearing)); //fix range
+return bearing;
+}
+    
+    
+====================================
+float finalBearing (Coordinate2D startPoint, Coordinate2D endPoint){
+    //Convert location from degrees to radians
+    float lat1 = (M_PI/180.) * endPoint.lat;
+    float lon1 = (M_PI/180.) * endPoint.longi;
+float lat2 = (M_PI/180.) * startPoint.lat;
+    float lon2 = (M_PI/180.) * startPoint.longi;
+
+    //Calculate deltas
+float dLat = lat2 - lat1;
+    float dLon = lon2 - lon1;
+
+    //Calculate bearing in radians
+float theta = atan2f( sin(dlon) * cos(lat2), cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)
+                                                                        *cos(dlon));
+
+//Convert to compass bearing
+float bearing = theta * (180 / M_PI); //radians to degrees
+bearing = ( bearing > 0 ? bearing : (360.0 + bearing)); //fix range
+bearing = ((bearing + 180) % 360) //reverse heading
+return bearing;
+}
+    
+    
+====================================
+float rhumbBearing ( Coordinate2D startPoint, Coordinate2D endPoint){
+    //Convert location from degrees to radians
+float lat1 = (M_PI/180.) * startPoint.lat;
+    float lon1 = (M_PI/180.) * startPoint.longi;
+    float lat2 = (M_PI/180.) * endPoint.lat;
+    float lon2 = (M_PI/180.) * endPoint.longi;
+
+    //Calculate deltas
+float dLat = lat2 - lat1;
+    float dLon = lon2 - lon1;
+
+    //find delta phi
+    float deltaPhi = log(tan(lat2/2+(M_PI)/4)/tan(lat1+M_PI/4))
+    float q=(deltaPhi==0 ? dlat/deltaPhi : cos(lat1); //avoids division by 0
+
+if (abs(dLon) > M_PI){
+        dLon = (dLon>0 ? −(2*(M_PI-dLon):(2*M_PI+dLon));
+}
+
+float D = sqrt(dLat*dLat + q*q*dLon*dLo)* 6371;
+float theta = atan2f(dLon, deltaPhi);
+
+//now convert to compass heading
+float bearing = theta * (180 / M_PI); //radians to degrees
+bearing = ( bearing > 0 ? bearing : (360.0 + bearing)); //fix range
+
+return bearing;
+}
+    
+    
+==================

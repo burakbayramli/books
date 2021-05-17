@@ -1,0 +1,409 @@
+chapter: 2D Rigid-Body Simulator
+==================
+class RigidBody2D {
+public:
+    float    fMass;       // total mass (constant)
+    float    fInertia;    // mass moment of inertia
+    float    fInertiaInverse;   // inverse of mass moment of inertia
+    Vector    vPosition;        // position in earth coordinates
+    Vector    vVelocity;        // velocity in earth coordinates
+    Vector    vVelocityBody;    // velocity in body coordinates
+    Vector    vAngularVelocity; // angular velocity in body coordinates
+
+    float    fSpeed;            // speed
+    float    fOrientation;      // orientation
+
+    Vector    vForces;          // total force on body
+    Vector    vMoment;          // total moment on body
+
+    float    ThrustForce;       // Magnitude of the thrust force
+    Vector    PThrust, SThrust; // bow thruster forces
+
+    float    fWidth;            // bounding dimensions
+    float    fLength;
+    float    fHeight;
+
+    Vector    CD; // location of center of drag in body coordinates
+    Vector    CT; // location of center of propeller thrust in body coords.
+    Vector    CPT; // location of port bow thruster thrust in body coords.
+    Vector    CST; // location of starboard bow thruster thrust in body
+                   // coords.
+
+    float    ProjectedArea;     // projected area of the body
+
+    RigidBody2D(void);
+    void    CalcLoads(void);
+    void    UpdateBodyEuler(double dt);
+    void    SetThrusters(bool p, bool s);
+    void    ModulateThrust(bool up);
+};
+    
+    
+====================================
+RigidBody2D::RigidBody2D(void)
+{
+    fMass = 100;
+    fInertia = 500;
+    fInertiaInverse = 1/fInertia;
+    vPosition.x = 0;
+    vPosition.y = 0;
+    fWidth = 10;
+    fLength = 20;
+    fHeight = 5;
+    fOrientation = 0;
+
+    CD.x = −0.25*fLength;
+    CD.y = 0.0f;
+    CD.z = 0.0f;
+
+    CT.x = −0.5*fLength;
+    CT.y = 0.0f;
+    CT.z = 0.0f;
+
+    CPT.x = 0.5*fLength;
+    CPT.y = −0.5*fWidth;
+    CPT.z = 0.0f;
+
+    CST.x = 0.5*fLength;
+    CST.y = 0.5*fWidth;
+    CST.z = 0.0f;
+
+    ProjectedArea = (fLength + fWidth)/2 * fHeight; // an approximation
+    ThrustForce = _THRUSTFORCE;
+}
+    
+    
+====================================
+void    RigidBody2D::CalcLoads(void)
+{
+    Vector    Fb;        // stores the sum of forces
+    Vector    Mb;        // stores the sum of moments
+    Vector    Thrust;    // thrust vector
+
+    // reset forces and moments:
+    vForces.x = 0.0f;
+    vForces.y = 0.0f;
+    vForces.z = 0.0f;    // always zero in 2D
+
+    vMoment.x = 0.0f;    // always zero in 2D
+    vMoment.y = 0.0f;    // always zero in 2D
+    vMoment.z = 0.0f;
+
+    Fb.x = 0.0f;
+    Fb.y = 0.0f;
+    Fb.z = 0.0f;
+
+    Mb.x = 0.0f;
+    Mb.y = 0.0f;
+    Mb.z = 0.0f;
+
+    // Define the thrust vector, which acts through the craft's CG
+    Thrust.x = 1.0f;
+    Thrust.y = 0.0f;
+    Thrust.z = 0.0f;     // zero in 2D
+    Thrust *= ThrustForce;
+
+    // Calculate forces and moments in body space:
+    Vector   vLocalVelocity;
+    float    fLocalSpeed;
+    Vector   vDragVector;
+    float    tmp;
+    Vector   vResultant;
+    Vector   vtmp;
+
+    // Calculate the aerodynamic drag force:
+        // Calculate local velocity:
+        // The local velocity includes the velocity due to
+        // linear motion of the craft,
+        // plus the velocity at each element
+        // due to the rotation of the craft.
+
+        vtmp = vAngularVelocity^CD; // rotational part
+        vLocalVelocity = vVelocityBody + vtmp;
+
+        // Calculate local air speed
+        fLocalSpeed = vLocalVelocity.Magnitude();
+
+        // Find the direction in which drag will act.
+        // Drag always acts in line with the relative
+        // velocity but in the opposing direction
+        if(fLocalSpeed > tol)
+        {
+            vLocalVelocity.Normalize();
+            vDragVector = -vLocalVelocity;
+
+            // Determine the resultant force on the element.
+            tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed
+                         * ProjectedArea;
+            vResultant = vDragVector * _LINEARDRAGCOEFFICIENT * tmp;
+
+            // Keep a running total of these resultant forces
+            Fb += vResultant;
+
+            // Calculate the moment about the CG
+            // and keep a running total of these moments
+
+            vtmp = CD^vResultant;
+            Mb += vtmp;
+        }
+
+        // Calculate the Port & Starboard bow thruster forces:
+        // Keep a running total of these resultant forces
+
+        Fb += PThrust;
+
+
+        // Calculate the moment about the CG of this element's force
+        // and keep a running total of these moments (total moment)
+        vtmp = CPT^PThrust;
+        Mb += vtmp;
+
+        // Keep a running total of these resultant forces (total force)
+        Fb += SThrust;
+
+        // Calculate the moment about the CG of this element's force
+        // and keep a running total of these moments (total moment)
+        vtmp = CST^SThrust;
+        Mb += vtmp;
+
+    // Now add the propulsion thrust
+    Fb += Thrust; // no moment since line of action is through CG
+
+    // Convert forces from model space to earth space
+    vForces = VRotate2D(fOrientation, Fb);
+
+    vMoment += Mb;
+}
+    
+    
+====================================
+            vLocalVelocity.Normalize();
+            vDragVector = -vLocalVelocity;
+
+            // Determine the resultant force on the element.
+            tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed
+                         * ProjectedArea;
+            vResultant = vDragVector * _LINEARDRAGCOEFFICIENT * tmp;
+    
+    
+====================================
+#define LINEARDRAGCOEFFICIENT     1.25f
+    
+    
+====================================
+              Fb += vResultant;
+    
+    
+====================================
+              vtmp = CD^vResultant;
+              Mb += vtmp;
+    
+    
+====================================
+        Fb += PThrust;
+
+        vtmp = CPT^PThrust;
+        Mb += vtmp;
+    
+    
+====================================
+    Fb += Thrust; // no moment since line of action is through CG
+    
+    
+====================================
+Vector    VRotate2D( float angle, Vector u)
+{
+    float    x,y;
+
+    x = u.x * cos(DegreesToRadians(-angle)) +
+        u.y * sin(DegreesToRadians(-angle));
+    y = -u.x * sin(DegreesToRadians(-angle)) +
+        u.y * cos(DegreesToRadians(-angle));
+
+    return Vector( x, y, 0);
+}
+    
+    
+====================================
+void    RigidBody2D::UpdateBodyEuler(double dt)
+{
+        Vector a;
+        Vector dv;
+        Vector ds;
+        float  aa;
+        float  dav;
+        float  dr;
+
+        // Calculate forces and moments:
+        CalcLoads();
+
+        // Integrate linear equation of motion:
+        a = vForces / fMass;
+
+        dv = a * dt;
+        vVelocity += dv;
+
+        ds = vVelocity * dt;
+        vPosition += ds;
+
+        // Integrate angular equation of motion:
+        aa = vMoment.z / fInertia;
+
+        dav = aa * dt;
+
+        vAngularVelocity.z += dav;
+
+        dr = RadiansToDegrees(vAngularVelocity.z * dt);
+        fOrientation += dr;
+
+        // Misc. calculations:
+        fSpeed = vVelocity.Magnitude();
+        vVelocityBody = VRotate2D(-fOrientation, vVelocity);
+}
+    
+    
+====================================
+void    DrawCraft(RigidBody2D    craft, COLORREF clr)
+{
+    Vector    vList[5];
+    double    wd, lg;
+    int       i;
+    Vector    v1;
+
+    wd = craft.fWidth;
+    lg = craft.fLength;
+    vList[0].x = lg/2;     vList[0].y = wd/2;
+    vList[1].x = -lg/2;    vList[1].y = wd/2;
+    vList[2].x = -lg/2;    vList[2].y = -wd/2;
+    vList[3].x = lg/2;     vList[3].y = -wd/2;
+    vList[4].x = lg/2*1.5; vList[4].y = 0;
+    for(i=0; i<5; i++)
+    {
+        v1 = VRotate2D(craft.fOrientation, vList[i]);
+        vList[i] = v1 + craft.vPosition;
+    }
+
+    DrawLine(vList[0].x, vList[0].y, vList[1].x, vList[1].y, 2, clr);
+    DrawLine(vList[1].x, vList[1].y, vList[2].x, vList[2].y, 2, clr);
+    DrawLine(vList[2].x, vList[2].y, vList[3].x, vList[3].y, 2, clr);
+    DrawLine(vList[3].x, vList[3].y, vList[4].x, vList[4].y, 2, clr);
+    DrawLine(vList[4].x, vList[4].y, vList[0].x, vList[0].y, 2, clr);
+}
+    
+    
+====================================
+    for(i=0; i<5; i++)
+    {
+        v1 = VRotate2D(craft.fOrientation, vList[i]);
+        vList[i] = v1 + craft.vPosition;
+    }
+    
+    
+====================================
+// Global Variables:
+int            FrameCounter = 0;
+RigidBody2D    Craft;
+    
+    
+====================================
+bool    Initialize(void)
+{
+    Craft.vPosition.x = _WINWIDTH/10;
+    Craft.vPosition.y = _WINHEIGHT/2;
+    Craft.fOrientation = 0;
+
+    return true;
+}
+    
+    
+====================================
+void    UpdateSimulation(void)
+{
+    double  dt = _TIMESTEP;
+    RECT    r;
+
+    Craft.SetThrusters(false, false);
+
+    if (IsKeyDown(VK_UP))
+        Craft.ModulateThrust(true);
+
+    if (IsKeyDown(VK_DOWN))
+        Craft.ModulateThrust(false);
+
+    if (IsKeyDown(VK_RIGHT))
+        Craft.SetThrusters(true, false);
+
+    if (IsKeyDown(VK_LEFT))
+        Craft.SetThrusters(false, true);
+
+    // update the simulation
+    Craft.UpdateBodyEuler(dt);
+
+    if(FrameCounter >= _RENDER_FRAME_COUNT)
+    {
+        // update the display
+        ClearBackBuffer();
+
+        DrawCraft(Craft, RGB(0,0,255));
+
+        CopyBackBufferToWindow();
+        FrameCounter = 0;
+    } else
+        FrameCounter++;
+
+    if(Craft.vPosition.x > _WINWIDTH) Craft.vPosition.x = 0;
+    if(Craft.vPosition.x < 0) Craft.vPosition.x = _WINWIDTH;
+    if(Craft.vPosition.y > _WINHEIGHT) Craft.vPosition.y = 0;
+    if(Craft.vPosition.y < 0) Craft.vPosition.y = _WINHEIGHT;
+}
+    
+    
+====================================
+Craft.SetThrusters(false, false);
+    
+    
+====================================
+Craft.ModulateThrust(true);
+    
+    
+====================================
+void    RigidBody2D::ModulateThrust(bool up)
+{
+    double    dT = up ? _DTHRUST:-_DTHRUST;
+
+    ThrustForce += dT;
+
+    if(ThrustForce > _MAXTHRUST) ThrustForce = _MAXTHRUST;
+    if(ThrustForce < _MINTHRUST) ThrustForce = _MINTHRUST;
+}
+    
+    
+====================================
+void    RigidBody2D::SetThrusters(bool p, bool s)
+{
+    PThrust.x = 0;
+    PThrust.y = 0;
+    SThrust.x = 0;
+    SThrust.y = 0;
+
+    if(p)
+        PThrust.y = _STEERINGFORCE;
+    if(s)
+        SThrust.y = -_STEERINGFORCE;
+}
+    
+    
+====================================
+Craft.UpdateBodyEuler(dt)
+    
+    
+====================================
+#define  _THRUSTFORCE      5.0f
+#define  _MAXTHRUST        10.0f
+#define  _MINTHRUST        0.0f
+#define  _DTHRUST          0.001f
+#define  _STEERINGFORCE    3.0f
+#define  _LINEARDRAGCOEFFICIENT    1.25f
+    
+    
+==================

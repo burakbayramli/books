@@ -1,0 +1,155 @@
+chapter: Guns and Explosions
+==================
+alp = 90-Math.toDegrees(Math.atan(((200-aimY)*(targetH/(drawH)))/range));
+gmm = Math.toDegrees(Math.atan(((200-aimX)*(targetH/(drawH)))/range));
+    
+    
+====================================
+        timer = new Timer(100, TargetPanel);
+        timer.start();
+    
+    
+====================================
+        if (direction == true) {
+            breathHeight = breathHeight + 1;
+            if (breathHeight == 5) {
+                direction = false;
+                breathHeight = breathHeight + 1;
+            }
+        }
+
+        if (direction == false) {
+            breathHeight = breathHeight − 1;
+            if (breathHeight == −5) {
+                direction = true;
+            }
+        }
+
+        if (breathing) {
+            aimY = aimY + breathHeight;
+        }
+    
+    
+====================================
+void CreateParticleExplosion(int x, int y, int Vinit, int life,
+                             float gravity, float angle)
+{
+     int   i;
+     int   m;
+     float f;
+
+     Explosion.Active = TRUE;
+     Explosion.x = x;
+     Explosion.y = y;
+     Explosion.V0 = Vinit;
+
+     for(i=0; i<_MAXPARTICLES; i++)
+     {
+          Explosion.p[i].x = 0;
+          Explosion.p[i].y = 0;
+          Explosion.p[i].vi = tb_Rnd(Vinit/2, Vinit);
+
+          if(angle < 999)
+          {
+               if(tb_Rnd(0,1) == 0)
+                    m = −1;
+               else
+                    m = 1;
+               Explosion.p[i].angle = -angle + m * tb_Rnd(0,10);
+          } else
+               Explosion.p[i].angle = tb_Rnd(0,360);
+
+          f = (float) tb_Rnd(80, 100) / 100.0f;
+          Explosion.p[i].life = tb_Round(life * f);
+          Explosion.p[i].r = 255;//tb_Rnd(225, 255);
+          Explosion.p[i].g = 255;//tb_Rnd(85, 115);
+          Explosion.p[i].b = 255;//tb_Rnd(15, 45);
+          Explosion.p[i].time = 0;
+          Explosion.p[i].Active = TRUE;
+          Explosion.p[i].gravity = gravity;
+     }
+
+}
+    
+    
+====================================
+typedef     struct _TParticle
+{
+     float          x;              // x-coordinate of the particle
+     float          y;              // y-coordinate of the particle
+     float          vi;             // initial velocity
+     float          angle;          // initial trajectory (direction)
+     int            life;           // duration in milliseconds
+     int            r;              // red component of particle's color
+     int            g;              // green component of particle's color
+     int            b;              // blue component of particle's color
+     int            time;           // keeps track of the effect's time
+     float          gravity;        // gravity factor
+     BOOL           Active;         // indicates whether this particle
+                                    // is active or dead
+     float          mass;           //for calculating the particle's energy
+} TParticle;
+
+#define     _MAXPARTICLES 50
+#define    _MASSOFPARTICLE .25
+
+typedef struct _TParticleExplosion
+{
+     TParticle          p[_MAXPARTICLES];  // list of particles
+                                           // making up this effect
+     int           x;  // initial x location
+     int           y;  // initial y location
+     float         KE;  //Available kinect energy
+     float
+     BOOL          Active;      // indicates whether this effect is
+                                //active or dead
+} TParticleExplosion;
+    
+    
+====================================
+void CreateParticleExplosion(int x, int y, int KEb, int life,
+                             float gravity, float angle)
+{
+     int     i;
+     int     m;
+     float   f;
+
+     Explosion.Active = TRUE;
+     Explosion.x = x;
+     Explosion.y = y;
+     Explosion.KE = KEb;
+
+     for(i=0; i<_MAXPARTICLES; i++)
+     {
+          Explosion.p[i].x = 0;
+          Explosion.p[i].y = 0;
+          Explosion.p[i].m = _MASSOFPARTICLE; //Mass of a single gravel
+          Explosion.p[i].vi = tb_Rnd(0, sqrt(Explosion.KE/(_MASSOFPARTICLE*
+                                                            _MAXPARTICLES));
+          Explosion.KE = Explosion.KE - ((1/2)*(Explosion.p[i].m)*
+                                                       (Explosion.p[i].vi));
+
+          if(angle < 999)
+          {
+               if(tb_Rnd(0,1) == 0)
+                    m = −1;
+               else
+                    m = 1;
+               Explosion.p[i].angle = -angle + m * tb_Rnd(0,10);
+          } else
+               Explosion.p[i].angle = tb_Rnd(0,360);
+
+          f = (float) tb_Rnd(80, 100) / 100.0f;
+          Explosion.p[i].life = tb_Round(life * f);
+          Explosion.p[i].r = 255;//tb_Rnd(225, 255);
+          Explosion.p[i].g = 255;//tb_Rnd(85, 115);
+          Explosion.p[i].b = 255;//tb_Rnd(15, 45);
+          Explosion.p[i].time = 0;
+          Explosion.p[i].Active = TRUE;
+          Explosion.p[i].gravity = gravity;
+     }
+
+}
+    
+    
+==================

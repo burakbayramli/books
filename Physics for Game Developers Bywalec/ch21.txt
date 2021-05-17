@@ -1,0 +1,139 @@
+chapter: Accelerometers
+==================
+#define PI 3.14159
+
+float find2dAngle(void){
+
+    //LOCAL VARIABLES
+    float alpha,
+    double ax, ay;
+
+    //POLL ACCELEROMETER FOR ACCELERATIONS, API SPECIFIC
+    ax = getXacceleration();
+    ay = getYacceleration();
+
+    //FIND ANGLE
+    alpha = atan2(ay,ax);
+
+    if (alpha >= 0){
+        alpha = alpha * (180/PI);
+    else {
+        alpha = alpha * (-180/PI) + 180;
+    }
+
+    return alpha;
+}
+    
+    
+====================================
+- (void)viewDidLoad
+{
+    UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
+    accelerometer.delegate  = self;
+    accelerometer.updateInterval = kPollingRate;
+    [super viewDidLoad];
+}
+    
+    
+====================================
+- (void)accelerometer:(UIAccelerometer *)accelerometer 
+didAccelerate:(UIAcceleration *)acceleration{
+    [(SpriteView *)self.view setAcceleration:acceleration];
+    [(SpriteView *)self.view draw];
+}
+    
+    
+====================================
+-(id)initWithCoder:(NSCoder *)coder {
+    if((self = [super initWithCoder:coder])){
+        self.sprite = [UIImage imageNamed:@"sprite.png"];
+        self.currentPos = CGPointMake((self.bounds.size.width / 2.0f) +
+(sprite.size.width / 2.0f), (self.bounds.size.height /2.0f)+(sprite.size.height /2.0f));
+        xVelocity = 0.0f;
+        yVelcoity = 0.0f;
+
+        convertX = self.bounds.size.width / kWorldWidth;
+        convertY = self.bounds.size.height / kWorldHeight;
+
+    }
+    return self;
+}
+    
+    
+====================================
+- (void)setCurrentPos:(CGPoint)newPos {
+    prevPos = currentPos;
+    currentPos = newPos;
+
+    if(currentPos.x <0){
+        currentPos.x = 0;
+        xVelocity = 0.0f;
+    }
+    if(currentPos.y <0){
+        currentPos.y = 0;
+        yVelcoity = 0.0f;
+    }
+    if(currentPos.x > self.bounds.size.width - sprite.size.width){
+        currentPos.x = self.bounds.size.width - sprite.size.width;
+        xVelocity = 0.0f;
+    }
+    if(currentPos.y > self.bounds.size.height - sprite.size.height){
+        currentPos.y = self.bounds.size.height - sprite.size.height;
+        yVelocity = 0.0f;
+    }
+
+    CGRect curSpriteRect = CGRectMake(currentPos.x, currentPos.y, 
+currentPos.x+sprite.size.width, currentPos.y+sprite.size.height);
+    CGRect prevSpriteRect = CGRectMake(prevPos.x, prevPos.y, 
+prevPos.x+sprite.size.width, currentPos.y+sprite.size.height);
+    [self setNeedsDisplayInRect:CGRectUnion(curSpriteRect, prevSpriteRect)];
+
+}
+    
+    
+====================================
+- (void)draw {
+    static NSDate *lastUpdateTime;
+
+    if (lastUpdateTime != nil) {
+        NSTimeInterval secondsSinceUpdate = -([lastUpdateTime
+timeIntervalSinceNow]); //calculates interval in seconds from last update
+
+        //Calculate displacement
+        CGFloat deltaX = xVelocity * secondsSinceUpdate + 
+((acceleration.x*g*secondsSinceUpdate*secondsSinceUpdate)/2); // METERS
+        CGFloat deltaY = yVelocity * secondsSinceUpdate + 
+((acceleration.y*g*secondsSinceUpdate*secondsSinceUpdate)/2); // METERS
+
+        //Converts from meters to pixels based on defined World size
+        deltaX = deltaX * convertX;
+        deltaY = deltaY * convertY;
+
+        //Calculate new velocity at new current position
+        xVelocity = xVelocity + acceleration.x * g * secondsSinceUpdate; //assumes
+acceleration was constant over last update interval
+        yVelocity = yVelocity - (acceleration.y * g * secondsSinceUpdate); //assumes 
+acceleration was constant over last update interval
+
+        //Mutate currentPos which will update screen
+        self.currentPos = CGPointMake(self.currentPos.x + deltaX, 
+self.currentPos.y + deltaY);
+
+    }
+
+    [lastUpdateTime release];
+    lastUpdateTime = [[NSDate alloc] init];
+
+}
+    
+    
+====================================
+        CGFloat deltaX = xVelocity * secondsSinceUpdate +
+((acceleration.x*g*secondsSinceUpdate*secondsSinceUpdate)/2); // METERS
+    
+    
+====================================
+xVelocity = xVelocity + acceleration.x * g * secondsSinceUpdate;
+    
+    
+==================

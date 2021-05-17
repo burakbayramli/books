@@ -1,0 +1,57 @@
+chapter: Projectiles
+==================
+//----------------------------------------------------------------------------//
+// Global variables required for this simulation
+//----------------------------------------------------------------------------//
+TVector          V1;     // Initial velocity (given), m/s
+TVector          V2;     // Velocity vector at time t, m/s
+double           m;      // Projectile mass (given), kg
+TVector          s1;     // Initial position (given), m
+TVector          s2;     // The projectile's position (displacement) vector, m
+double           time;   // The time from the instant the projectile
+                         // is launched, s
+double           tInc;   // The time increment to use when stepping
+                         // through the simulation, s
+double           g;      // acceleration due to gravity (given), m/s^2
+double           spin;   // spin in rpm (given)
+double           omega;  // spin in radians per second
+double           radius; // radius of projectile (given), m
+
+#define          PI     3.14159f
+#define          RHO     1.225f       // kg/m^3
+
+//----------------------------------------------------------------------------//
+int     DoSimulation(void)
+//----------------------------------------------------------------------------//
+{
+     double     C = PI * PI * RHO * radius * radius * radius * omega;
+     double     t;
+
+     // step to the next time in the simulation
+     time+=tInc;
+     t = time;
+
+     // Calc. V2:
+     V2.i = 1.0f/(1.0f-(t/m)*(t/m)*C*C) * (V1.i + C * V1.j * (t/m) −
+            C * g * (t*t)/m);
+     V2.j = V1.j + (t/m)*C*V2.i - g*t;
+
+     // Calc. S2:
+     s2.i = s1.i + V1.i * t + (1.0f/2.0f) * (C/m * V2.j) * (t*t);
+     s2.j = s1.j + V1.j * t + (1.0f/2.0f) * ( ((C*V2.i) - m*g)/m ) * (t*t);
+
+
+     // Check for collision with ground (x-z plane)
+     if(s2.j <= 0)
+          return 2;
+
+     // Cut off the simulation if it's taking too long
+     // This is so the program does not get stuck in the while loop
+     if(time>60)
+          return 3;
+
+     return 0;
+}
+    
+    
+==================
