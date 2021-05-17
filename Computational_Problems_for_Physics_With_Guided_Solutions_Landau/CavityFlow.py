@@ -83,4 +83,4 @@ for j in range(0, Ny+1):
         utorr.write("%10.3e  \n"%(u[i,j]))      
 utorr.close()
 
-                      
+
