@@ -1,0 +1,1024 @@
+chapter: Sports
+==================
+#define    RADIANS(d)    (d/180.0*3.14159)
+#define    DEGREES(r)    (r*180.0/3.14159)
+    
+    
+====================================
+// Variables
+double alpha = 0.0;
+double alpha_dot = 0.0;
+double alpha_dotdot = 0.0;
+double beta = RADIANS(120.0);
+double beta_dot = 0.0;
+double beta_dotdot = 0.0;
+
+double J = 1.15; // kg m^2
+double I = 0.08; // kg m^2
+double Mc = 0.4; // kg
+double R = 0.62; // m
+double L = 1.1; // m
+double S = 0.4*1.1*0.75; // kg m
+double g = 9.8; // m/s^2
+double gamma = RADIANS(135.0);
+double theta = gamma - alpha;
+double SA = 7.3*0.62*0.5; // kg m
+double Qalpha = 100; // N m
+double Qbeta = −10; // N m
+double a = 0.1*g; // m/s^2
+double dt = 0.0025; // s
+double time = 0; // s
+double Vc = 0;
+    
+    
+====================================
+double ComputeAlphaDotDot(void)
+{
+    double A, B, C, D, F, G;
+    double num, denom;
+
+    A = (J + I + Mc * R * R + 2 * R * S * cos(beta));
+    B = -(I + R * S * cos(beta));
+    F = Qalpha - (beta_dot * beta_dot - 2 * alpha_dot * beta_dot) * R * S *
+        sin(beta) + S * (g * sin(theta + beta) - a * cos(theta + beta))
+        + (SA + Mc * R) * (g * sin(theta) - a * cos(theta));
+
+    C = B;
+    D = I;
+    G = Qbeta - alpha_dot * alpha_dot * R * S * sin(beta) −
+        S * (g * sin(theta + beta) - a * cos(theta + beta));
+
+    num = (F - (B * G / D));
+    denom = (A-(B*C/D));
+    return (F - (B * G / D)) / (A-(B*C/D));
+}
+    
+    
+====================================
+double ComputeBetaDotDot(void)
+{
+    double C, D, G;
+
+    C = -(I + R * S * cos(beta));
+    D = I;
+    G = Qbeta - alpha_dot * alpha_dot * R * S * sin(beta) −
+        S * (g * sin(theta + beta) - a * cos(theta + beta));
+
+    return (G - C * alpha_dotdot) / D;
+}
+    
+    
+====================================
+int _tmain(int argc, _TCHAR* argv[])
+{
+    double    a, at;
+    double    b, bt;
+    int       i;
+    FILE*     fp;
+    double    phi;
+    double    Vc2;
+
+    double  ak1, ak2, ak3, ak4;
+    double  bk1, bk2, bk3, bk4;
+
+    FILE*     fdebug;
+
+    fp = fopen("results.txt", "w");
+    fdebug = fopen("debug.txt", "w");
+
+    for(i = 0; i<200; i++)
+    {
+        time += dt;
+
+        if(time>=0.1)
+        {
+            Qbeta = 0;
+        }
+
+        // save results of previous time step
+        a = alpha;
+        b = beta;
+        at = alpha_dot;
+        bt = beta_dot;
+
+        // integrate alpha'' and beta''
+
+        // The K1 Step:
+        alpha_dotdot = ComputeAlphaDotDot();
+        beta_dotdot = ComputeBetaDotDot();
+
+        ak1 = alpha_dotdot * dt;
+        bk1 = beta_dotdot * dt;
+
+        alpha_dot = at + ak1/2;
+        beta_dot = bt + bk1/2;
+
+        // The K2 Step:
+        alpha_dotdot = ComputeAlphaDotDot();
+        beta_dotdot = ComputeBetaDotDot();
+
+        ak2 = alpha_dotdot * dt;
+        bk2 = beta_dotdot * dt;
+
+        alpha_dot = at + ak2/2;
+        beta_dot = bt + bk2/2;
+
+        // The K3 Step:
+        alpha_dotdot = ComputeAlphaDotDot();
+        beta_dotdot = ComputeBetaDotDot();
+
+        ak3 = alpha_dotdot * dt;
+        bk3 = beta_dotdot * dt;
+
+        alpha_dot = at + ak3;
+        beta_dot = bt + bk3;
+
+        // The K3 Step:
+        alpha_dotdot = ComputeAlphaDotDot();
+        beta_dotdot = ComputeBetaDotDot();
+
+        ak4 = alpha_dotdot * dt;
+        bk4 = beta_dotdot * dt;
+
+        alpha_dot = at + (ak1 + 2*ak2 + 2*ak3 + ak4) / 6;
+        beta_dot = bt + (bk1 + 2*bk2 + 2*bk3 + bk4) / 6;
+
+        alpha = a + alpha_dot * dt;
+        beta = b + beta_dot * dt;
+
+        theta = gamma - alpha;
+        Vc2 = (R*R + L*L + 2 * R * L * cos(beta)) * ( alpha_dot * alpha_dot)
+             + L*L * beta_dot * beta_dot
+              - 2 * (L*L + R * L * cos(beta)) * alpha_dot * beta_dot;
+
+        Vc = sqrt(Vc2);
+
+        phi = theta + beta;
+        fprintf(fp, "%f, %f, %f, %f, %f, %f\n", time, DEGREES(theta),
+                      DEGREES(alpha), DEGREES(beta), DEGREES(phi), Vc);
+
+        fprintf(fdebug, "%f, %f, %f, %f, %f, %f, %f\n", time, DEGREES(alpha),
+                 alpha_dot, alpha_dotdot, DEGREES(beta), beta_dot, beta_dotdot);
+    }
+
+    fclose(fp);
+    fclose(fdebug);
+    return 0;
+}
+    
+    
+====================================
+typedef struct _RigidBody {
+    float        fMass;      // Total mass (constant)
+    Matrix3x3    mInertia;   // Mass moment of inertia in body coordinates
+    Matrix3x3    mInertiaInverse;// Inverse of mass moment of inertia matrix
+    Vector    vPosition;     // Position in earth coordinates
+    Vector    vVelocity;     // Velocity in earth coordinates
+    Vector    vVelocityBody;  // Velocity in body coordinates
+    Vector    vAcceleration;  // Acceleration of cg in earth space
+    Vector    vAngularAcceleration; //Angular acceleration in body coordinates
+    Vector    vAngularAccelerationGlobal; // Angular acceleration
+                                          // in global coordinates
+    Vector    vAngularVelocity; // Angular velocity in body coordinates
+    Vector    vAngularVelocityGlobal; // Angular velocity in global coordinates
+    Vector    vEulerAngles;   // Euler angles in body coordinates
+    float     fSpeed;      // Speed (magnitude of the velocity)
+    Quaternion  qOrientation;    // Orientation in earth coordinates
+    Vector    vForces;        // Total force on body
+    Vector    vMoments;       // Total moment (torque) on body
+    Matrix3x3  mIeInverse;  // Inverse of moment of inertia in earth coordinates
+    float      fRadius;     // Ball radius
+} RigidBody, *pRigidBody;
+    
+    
+====================================
+typedef struct    _Collision {
+    int       body1;
+    int       body2;
+    Vector    vCollisionNormal;
+    Vector    vCollisionPoint;
+    Vector    vRelativeVelocity;
+    Vector    vRelativeAcceleration;
+    Vector    vCollisionTangent;
+}   Collision, *pCollision;
+    
+    
+====================================
+#define    BALLDIAMETER              0.05715f
+#define    BALLWEIGHT                1.612f
+#define    GRAVITY                   −9.87f
+#define    LINEARDRAGCOEFFICIENT     0.5f
+#define    ANGULARDRAGCOEFFICIENT    0.05f
+#define    FRICTIONFACTOR            0.5f
+#define    COEFFICIENTOFRESTITUTION  0.8f
+#define    COEFFICIENTOFRESTITUTIONGROUND  0.1f
+#define    FRICTIONCOEFFICIENTBALLS     0.1f
+#define    FRICTIONCOEFFICIENTGROUND    0.1f
+#define    ROLLINGRESISTANCECOEFFICIENT 0.025f
+    
+    
+====================================
+RigidBody      Bodies[NUMBODIES];
+Collision      Collisions[NUMBODIES*8];
+int            NumCollisions = 0;
+    
+    
+====================================
+void InitializeObjects(int configuration)
+{
+    float      iRoll, iPitch, iYaw;
+    int        i;
+    float      Ixx, Iyy, Izz;
+    float      s;
+
+    /////////////////////////////////////////////////////
+    // Initialize the cue ball:
+    // Set initial position
+    Bodies[0].vPosition.x = -BALLDIAMETER*50.0f;
+    Bodies[0].vPosition.y = 0.0f;
+    Bodies[0].vPosition.z = BALLDIAMETER/2.0f;
+
+    // Set initial velocity
+    s = 7.0;
+    Bodies[0].vVelocity.x = s;
+    Bodies[0].vVelocity.y = 0.0f;
+    Bodies[0].vVelocity.z = 0.0f;
+    Bodies[0].fSpeed = s;
+
+    // Set initial angular velocity
+    Bodies[0].vAngularVelocity.x = 0.0f; // rotate about long'l axis
+    Bodies[0].vAngularVelocity.y = 0.0f; // rotate about transverse axis
+    Bodies[0].vAngularVelocity.z = 0.0f; // rotate about vertical axis
+
+    Bodies[0].vAngularAcceleration.x = 0.0f;
+    Bodies[0].vAngularAcceleration.y = 0.0f;
+    Bodies[0].vAngularAcceleration.z = 0.0f;
+
+    Bodies[0].vAcceleration.x = 0.0f;
+    Bodies[0].vAcceleration.y = 0.0f;
+    Bodies[0].vAcceleration.z = 0.0f;
+
+    // Set the initial forces and moments
+    Bodies[0].vForces.x = 0.0f;
+    Bodies[0].vForces.y = 0.0f;
+    Bodies[0].vForces.z = 0.0f;
+
+    Bodies[0].vMoments.x = 0.0f;
+    Bodies[0].vMoments.y = 0.0f;
+    Bodies[0].vMoments.z = 0.0f;
+
+    // Zero the velocity in body space coordinates
+    Bodies[0].vVelocityBody.x = 0.0f;
+    Bodies[0].vVelocityBody.y = 0.0f;
+    Bodies[0].vVelocityBody.z = 0.0f;
+
+    // Set the initial orientation
+    iRoll = 0.0f;
+    iPitch = 0.0f;
+    iYaw = 0.0f;
+    Bodies[0].qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
+
+    // Set the mass properties
+    Bodies[0].fMass = BALLWEIGHT/(-g);
+
+    Ixx = 2.0f * Bodies[0].fMass / 5.0f * (BALLDIAMETER/2*BALLDIAMETER/2);
+    Izz = Iyy = Ixx;
+
+    Bodies[0].mInertia.e11 = Ixx;
+    Bodies[0].mInertia.e12 = 0;
+    Bodies[0].mInertia.e13 = 0;
+    Bodies[0].mInertia.e21 = 0;
+    Bodies[0].mInertia.e22 = Iyy;
+    Bodies[0].mInertia.e23 = 0;
+    Bodies[0].mInertia.e31 = 0;
+    Bodies[0].mInertia.e32 = 0;
+    Bodies[0].mInertia.e33 = Izz;
+
+    Bodies[0].mInertiaInverse = Bodies[0].mInertia.Inverse();
+
+    Bodies[0].fRadius = BALLDIAMETER/2;
+
+
+    /////////////////////////////////////////////////////
+    // Initialize the other balls
+    for(i=1; i<NUMBODIES; i++)
+    {
+        // Set initial position
+        if(i==1)
+        {
+            Bodies[i].vPosition.x = 0.0;
+            Bodies[i].vPosition.y = -(BALLDIAMETER/2.0f+0.25*BALLDIAMETER);
+            Bodies[i].vPosition.z = BALLDIAMETER/2.0f;
+        } else if(i==2) {
+            Bodies[i].vPosition.x = 0.0;
+            Bodies[i].vPosition.y = BALLDIAMETER/2.0f+0.25*BALLDIAMETER;
+            Bodies[i].vPosition.z = BALLDIAMETER/2.0f;
+        } else {
+            Bodies[i].vPosition.x = -BALLDIAMETER;
+            Bodies[i].vPosition.y = 0.0f;
+            Bodies[i].vPosition.z = BALLDIAMETER/2.0f;
+        }
+
+        // Set initial velocity
+        Bodies[i].vVelocity.x = 0.0f;
+        Bodies[i].vVelocity.y = 0.0f;
+        Bodies[i].vVelocity.z = 0.0f;
+        Bodies[i].fSpeed = 0.0f;
+
+        // Set initial angular velocity
+        Bodies[i].vAngularVelocity.x = 0.0f;
+        Bodies[i].vAngularVelocity.y = 0.0f;
+        Bodies[i].vAngularVelocity.z = 0.0f;
+
+        Bodies[i].vAngularAcceleration.x = 0.0f;
+        Bodies[i].vAngularAcceleration.y = 0.0f;
+        Bodies[i].vAngularAcceleration.z = 0.0f;
+
+        Bodies[i].vAcceleration.x = 0.0f;
+        Bodies[i].vAcceleration.y = 0.0f;
+        Bodies[i].vAcceleration.z = 0.0f;
+
+        // Set the initial forces and moments
+        Bodies[i].vForces.x = 0.0f;
+        Bodies[i].vForces.y = 0.0f;
+        Bodies[i].vForces.z = 0.0f;
+
+        Bodies[i].vMoments.x = 0.0f;
+        Bodies[i].vMoments.y = 0.0f;
+        Bodies[i].vMoments.z = 0.0f;
+
+        // Zero the velocity in body space coordinates
+        Bodies[i].vVelocityBody.x = 0.0f;
+        Bodies[i].vVelocityBody.y = 0.0f;
+        Bodies[i].vVelocityBody.z = 0.0f;
+
+        // Set the initial orientation
+        iRoll = 0.0f;
+        iPitch = 0.0f;
+        iYaw = 0.0f;
+        Bodies[i].qOrientation = MakeQFromEulerAngles(iRoll, iPitch, iYaw);
+
+        // Set the mass properties
+        Bodies[i].fMass = BALLWEIGHT/(-g);
+        Ixx = 2.0f * Bodies[i].fMass / 5.0f * (BALLDIAMETER*BALLDIAMETER);
+        Izz = Iyy = Ixx;
+
+        Bodies[i].mInertia.e11 = Ixx;
+        Bodies[i].mInertia.e12 = 0;
+        Bodies[i].mInertia.e13 = 0;
+        Bodies[i].mInertia.e21 = 0;
+        Bodies[i].mInertia.e22 = Iyy;
+        Bodies[i].mInertia.e23 = 0;
+        Bodies[i].mInertia.e31 = 0;
+        Bodies[i].mInertia.e32 = 0;
+        Bodies[i].mInertia.e33 = Izz;
+
+        Bodies[i].mInertiaInverse = Bodies[i].mInertia.Inverse();
+        Bodies[i].fRadius = BALLDIAMETER/2;
+    }
+}
+    
+    
+====================================
+void StepSimulation(float dtime)
+{
+    Vector     Ae;
+    int        i;
+    float      dt = dtime;
+    int        check = NOCOLLISION;
+    int        c = 0;
+
+    // Calculate all of the forces and moments on the balls:
+    CalcObjectForces();
+
+    // Integrate the equations of motion:
+    for(i=0; i<NUMBODIES; i++)
+    {
+        // Calculate the acceleration in earth space:
+        Ae = Bodies[i].vForces / Bodies[i].fMass;
+        Bodies[i].vAcceleration = Ae;
+
+        // Calculate the velocity in earth space:
+        Bodies[i].vVelocity += Ae * dt;
+
+        // Calculate the position in earth space:
+        Bodies[i].vPosition += Bodies[i].vVelocity * dt;
+
+        // Now handle the rotations:
+        float    mag;
+
+        Bodies[i].vAngularAcceleration = Bodies[i].mInertiaInverse *
+                                    (Bodies[i].vMoments -
+                                    (Bodies[i].vAngularVelocity^
+                                    (Bodies[i].mInertia *
+        Bodies[i].vAngularVelocity)));
+
+        Bodies[i].vAngularVelocity += Bodies[i].vAngularAcceleration * dt;
+
+        // Calculate the new rotation quaternion:
+        Bodies[i].qOrientation += (Bodies[i].qOrientation *
+                                   Bodies[i].vAngularVelocity) *
+                                   (0.5f * dt);
+
+        // Now normalize the orientation quaternion:
+        mag = Bodies[i].qOrientation.Magnitude();
+        if (mag != 0)
+            Bodies[i].qOrientation /= mag;
+
+        // Calculate the velocity in body space:
+        Bodies[i].vVelocityBody = QVRotate(~Bodies[i].qOrientation,
+                                    Bodies[i].vVelocity);
+
+        // Get the angular velocity in global coords:
+        Bodies[i].vAngularVelocityGlobal = QVRotate(Bodies[i].qOrientation,
+                                    Bodies[i].vAngularVelocity);
+
+        // Get the angular acceleration in global coords:
+        Bodies[i].vAngularAccelerationGlobal = QVRotate(Bodies[i].qOrientation,
+                                    Bodies[i].vAngularAcceleration);
+
+        // Get the inverse intertia tensor in global coordinates
+        Matrix3x3 R, RT;
+        R = MakeMatrixFromQuaternion(Bodies[i].qOrientation);
+        RT = R.Transpose();
+        Bodies[i].mIeInverse = R * Bodies[i].mInertiaInverse * RT;
+
+        // Calculate the air speed:
+        Bodies[i].fSpeed = Bodies[i].vVelocity.Magnitude();
+
+        // Get the Euler angles for our information
+        Vector u;
+
+        u = MakeEulerAnglesFromQ(Bodies[i].qOrientation);
+        Bodies[i].vEulerAngles.x = u.x;    // roll
+        Bodies[i].vEulerAngles.y = u.y;    // pitch
+        Bodies[i].vEulerAngles.z = u.z;    // yaw
+    }
+
+    // Handle Collisions    :
+    check = CheckForCollisions();
+    if(check == COLLISION)
+        ResolveCollisions();
+}
+    
+    
+====================================
+void CalcObjectForces(void)
+{
+    Vector    Fb, Mb;
+    Vector    vDragVector;
+    Vector    vAngularDragVector;
+    int       i, j;
+    Vector    ContactForce;
+    Vector    pt;
+    int       check = NOCOLLISION;
+    pCollision    pCollisionData;
+    Vector    FrictionForce;
+    Vector    fDir;
+    double    speed;
+    Vector    FRn, FRt;
+
+    for(i=0; i<NUMBODIES; i++)
+    {
+        // Reset forces and moments:
+        Bodies[i].vForces.x = 0.0f;
+        Bodies[i].vForces.y = 0.0f;
+        Bodies[i].vForces.z = 0.0f;
+
+        Bodies[i].vMoments.x = 0.0f;
+        Bodies[i].vMoments.y = 0.0f;
+        Bodies[i].vMoments.z = 0.0f;
+
+        Fb.x = 0.0f;    Mb.x = 0.0f;
+        Fb.y = 0.0f;    Mb.y = 0.0f;
+        Fb.z = 0.0f;    Mb.z = 0.0f;
+
+        // Do drag force:
+        vDragVector = -Bodies[i].vVelocityBody;
+        vDragVector.Normalize();
+        speed = Bodies[i].vVelocityBody.Magnitude();
+        Fb += vDragVector * ((1.0f/2.0f)*speed * speed * rho *
+            LINEARDRAGCOEFFICIENT * pow(Bodies[i].fRadius,2) *
+            Bodies[i].fRadius*pi);
+
+        vAngularDragVector = -Bodies[i].vAngularVelocity;
+        vAngularDragVector.Normalize();
+        Mb += vAngularDragVector * (Bodies[i].vAngularVelocity.Magnitude() *
+            Bodies[i].vAngularVelocity.Magnitude() * rho * ANGULARDRAGCOEFFICIENT
+            * 4 * pow(Bodies[i].fRadius,2)*pi);
+
+        // Convert forces from model space to earth space:
+        Bodies[i].vForces = QVRotate(Bodies[i].qOrientation, Fb);
+
+        // Apply gravity:
+        Bodies[i].vForces.z += GRAVITY * Bodies[i].fMass;
+
+        // Save the moments:
+        Bodies[i].vMoments += Mb;
+
+        // Handle contacts with ground plane:
+        Bodies[i].vAcceleration = Bodies[i].vForces / Bodies[i].fMass;
+        Bodies[i].vAngularAcceleration = Bodies[i].mInertiaInverse *
+                                    (Bodies[i].vMoments -
+                                    (Bodies[i].vAngularVelocity^
+                                    (Bodies[i].mInertia *
+                                     Bodies[i].vAngularVelocity)));
+
+
+        // Resolve ground plane contacts:
+        FlushCollisionData();
+        pCollisionData = Collisions;
+        NumCollisions = 0;
+        if(DOCONTACT)
+            check = CheckGroundPlaneContacts(pCollisionData, i);
+        if((check == CONTACT) && DOCONTACT)
+        {    j = 0;
+            {
+                assert(NumCollisions <= 1);
+
+                ContactForce = (Bodies[i].fMass * (-Bodies[i].vAcceleration *
+                            Collisions[j].vCollisionNormal)) *
+                            Collisions[j].vCollisionNormal;
+
+                if(DOFRICTION)
+                {
+                    double vt = fabs(Collisions[j].vRelativeVelocity *
+                            Collisions[j].vCollisionTangent);
+                    if(vt > VELOCITYTOLERANCE)
+                    {
+                        // Kinetic:
+                        FrictionForce = (ContactForce.Magnitude() *
+                                    FRICTIONCOEFFICIENTGROUND) *
+                                    Collisions[j].vCollisionTangent;
+                    } else {
+                        // Static:
+                        FrictionForce = (ContactForce.Magnitude() *
+                                    FRICTIONCOEFFICIENTGROUND * 2 *
+                                    vt/VELOCITYTOLERANCE) *
+                                    Collisions[j].vCollisionTangent;
+                    }
+
+                } else
+                    FrictionForce.x = FrictionForce.y = FrictionForce.z = 0;
+
+                // Do rolling resistance:
+                if(Bodies[i].vAngularVelocity.Magnitude() > VELOCITYTOLERANCE)
+                {
+                    FRn = ContactForce.Magnitude() *
+                          Collisions[j].vCollisionNormal;
+                    Collisions[j].vCollisionTangent.Normalize();
+                    Vector m = (Collisions[j].vCollisionTangent
+                                *(ROLLINGRESISTANCECOEFFICIENT *
+                                Bodies[i].fRadius))^FRn;
+                    double mag = m.Magnitude();
+                    Vector a = Bodies[i].vAngularVelocity;
+                    a.Normalize();
+                    Bodies[i].vMoments += -a * mag;
+                }
+
+                // accumlate contact and friction forces and moments
+                Bodies[i].vForces += ContactForce;
+                Bodies[i].vForces += FrictionForce;
+
+                ContactForce = QVRotate(~Bodies[i].qOrientation, ContactForce);
+                FrictionForce = QVRotate(~Bodies[i].qOrientation,
+                                   FrictionForce);
+                pt = Collisions[j].vCollisionPoint - Bodies[i].vPosition;
+                pt = QVRotate(~Bodies[i].qOrientation, pt);
+                Bodies[i].vMoments += pt^ContactForce;
+                Bodies[i].vMoments += pt^FrictionForce;
+
+            }
+        }
+
+    }
+}
+    
+    
+====================================
+Bodies[i].vAcceleration = Bodies[i].vForces / Bodies[i].fMass;
+
+ContactForce = (Bodies[i].fMass * (-Bodies[i].vAcceleration *
+                            Collisions[j].vCollisionNormal)) *
+                            Collisions[j].vCollisionNormal;
+    
+    
+====================================
+                ContactForce = (Bodies[i].fMass * (-Bodies[i].vAcceleration *
+                            Collisions[j].vCollisionNormal)) *
+                            Collisions[j].vCollisionNormal;
+
+                double vt = fabs(Collisions[j].vRelativeVelocity *
+                            Collisions[j].vCollisionTangent);
+                if(vt > VELOCITYTOLERANCE)
+                {
+                    // Kinetic:
+                    FrictionForce = (ContactForce.Magnitude() *
+                                FRICTIONCOEFFICIENTGROUND) *
+                                Collisions[j].vCollisionTangent;
+                } else {
+                    // Static:
+                    FrictionForce = (ContactForce.Magnitude() *
+                                FRICTIONCOEFFICIENTGROUND * 2 *
+                                vt/VELOCITYTOLERANCE) *
+                                Collisions[j].vCollisionTangent;
+                }
+    
+    
+====================================
+                // accumlate contact and friction forces and moments
+                Bodies[i].vForces += ContactForce;
+                Bodies[i].vForces += FrictionForce;
+
+                ContactForce = QVRotate(~Bodies[i].qOrientation, ContactForce);
+                FrictionForce = QVRotate(~Bodies[i].qOrientation,
+                                FrictionForce);
+                pt = Collisions[j].vCollisionPoint - Bodies[i].vPosition;
+                pt = QVRotate(~Bodies[i].qOrientation, pt);
+                Bodies[i].vMoments += pt^ContactForce;
+                Bodies[i].vMoments += pt^FrictionForce;
+    
+    
+====================================
+                // Do rolling resistance:
+                if(Bodies[i].vAngularVelocity.Magnitude() > VELOCITYTOLERANCE)
+                {
+                    FRn = ContactForce.Magnitude() *
+                          Collisions[j].vCollisionNormal;
+                    Collisions[j].vCollisionTangent.Normalize();
+                    Vector m = (Collisions[j].vCollisionTangent
+                                *(ROLLINGRESISTANCECOEFFICIENT *
+                                Bodies[i].fRadius))^FRn;
+                    double mag = m.Magnitude();
+                    Vector a = Bodies[i].vAngularVelocity;
+                    a.Normalize();
+                    Bodies[i].vMoments += -a * mag;
+                }
+    
+    
+====================================
+int    CheckForCollisions(void)
+{
+    int         status = NOCOLLISION;
+    int         i, j;
+    Vector      d;
+    pCollision  pCollisionData;
+    int         check = NOCOLLISION;
+    float       r;
+    float       s;
+    Vector      tmp;
+
+    FlushCollisionData();
+    pCollisionData = Collisions;
+    NumCollisions = 0;
+
+    // check object collisions with each other
+    for(i=0; i<NUMBODIES; i++)
+    {
+        for(j=0; j<NUMBODIES; j++)
+            if((j!=i) && !CollisionRecordedAlready(i, j))
+            {
+                // do a bounding sphere check
+                d = Bodies[i].vPosition - Bodies[j].vPosition;
+                r = Bodies[i].fRadius + Bodies[j].fRadius;
+                s = d.Magnitude() - r;
+                if(s < COLLISIONTOLERANCE)
+                {// possible collision
+                    Vector   pt1, pt2, vel1, vel2, n, Vr;
+                    float    Vrn;
+
+                    pt1 = (Bodies[i].vPosition + Bodies[j].vPosition)/2;
+                    tmp = pt2 = pt1;
+
+                    pt1 = pt1-Bodies[i].vPosition;
+                    pt2 = pt2-Bodies[j].vPosition;
+
+                    vel1 = Bodies[i].vVelocity +
+                           (Bodies[i].vAngularVelocityGlobal^pt1);
+                    vel2 = Bodies[j].vVelocity +
+                           (Bodies[j].vAngularVelocityGlobal^pt2);
+
+                    n = d;
+                    n.Normalize();
+
+                    Vr = (vel1 - vel2);
+                    Vrn = Vr * n;
+
+                    if(Vrn < -VELOCITYTOLERANCE)
+                    {
+                        // Have a collision so fill the data structure
+                        assert(NumCollisions < (NUMBODIES*8));
+                        if(NumCollisions < (NUMBODIES*8))
+                        {
+                            pCollisionData->body1 = i;
+                            pCollisionData->body2 = j;
+                            pCollisionData->vCollisionNormal = n;
+                            pCollisionData->vCollisionPoint = tmp;
+                            pCollisionData->vRelativeVelocity = Vr;
+                            pCollisionData->vCollisionTangent = (n^Vr)^n;
+                            pCollisionData->vCollisionTangent.Normalize();
+
+                            pCollisionData++;
+                            NumCollisions++;
+                            status = COLLISION;
+                        }                                                }
+                }
+            }
+    }
+
+    for(i=0; i<NUMBODIES; i++)
+        {
+            check = NOCOLLISION;
+
+            assert(NumCollisions < (NUMBODIES*8));
+            check = CheckGroundPlaneCollisions(pCollisionData, i);
+            if(check == COLLISION)
+            {
+                status = COLLISION;
+                pCollisionData++;
+                NumCollisions++;
+            }
+        }
+
+    return status;
+}
+    
+    
+====================================
+bool CollisionRecordedAlready(int i, int j)
+{
+    int k;
+    int b1, b2;
+
+    for(k=0; k<NumCollisions; k++)
+    {
+        b1 = Collisions[k].body1;
+        b2 = Collisions[k].body2;
+
+        if( ((b1 == i) && (b2 == j)) ||
+            ((b1 == j) && (b2 == i)) )
+            return true;
+    }
+
+    return false;
+}
+    
+    
+====================================
+int    CheckGroundPlaneCollisions(pCollision CollisionData, int body1)
+{
+    Vector    tmp;
+    Vector    vel1;
+    Vector    pt1;
+    Vector    Vr;
+    float     Vrn;
+    Vector    n;
+    int       status = NOCOLLISION;
+
+    if(Bodies[body1].vPosition.z <= (Bodies[body1].fRadius))
+    {
+        pt1 = Bodies[body1].vPosition;
+        pt1.z = COLLISIONTOLERANCE;
+        tmp = pt1;
+        pt1 = pt1-Bodies[body1].vPosition;
+        vel1 = Bodies[body1].vVelocity/*Body*/ +
+               (Bodies[body1].vAngularVelocityGlobal^pt1);
+
+        n.x = 0;
+        n.y = 0;
+        n.z = 1;
+
+        Vr = vel1;
+        Vrn = Vr * n;
+
+        if(Vrn < -VELOCITYTOLERANCE)
+        {
+            // Have a collision so fill the data structure
+            assert(NumCollisions < (NUMBODIES*8));
+            if(NumCollisions < (NUMBODIES*8))
+            {
+                CollisionData->body1 = body1;
+                CollisionData->body2 = −1;
+                CollisionData->vCollisionNormal = n;
+                CollisionData->vCollisionPoint = tmp;
+                CollisionData->vRelativeVelocity = Vr;
+
+                CollisionData->vCollisionTangent = (n^Vr)^n;
+                CollisionData->vCollisionTangent.Reverse();
+
+                CollisionData->vCollisionTangent.Normalize();
+                status = COLLISION;
+            }
+        }
+    }
+
+    return status;
+}
+    
+    
+====================================
+void ResolveCollisions(void)
+{
+    int       i;
+    double    j;
+    Vector    pt1, pt2, vB1V, vB2V, vB1AV, vB2AV;
+    float     fCr = COEFFICIENTOFRESTITUTION;
+    int       b1, b2;
+    float     Vrt;
+    float     muB = FRICTIONCOEFFICIENTBALLS;
+    float     muG = FRICTIONCOEFFICIENTGROUND;
+    bool      dofriction = DOFRICTION;
+
+    for(i=0; i<NumCollisions; i++)
+    {
+        b1 = Collisions[i].body1;
+        b2 = Collisions[i].body2;
+
+        if( (b1 != −1) && (b1 != b2) )
+        {
+            if(b2 != −1) // not ground plane
+            {
+                pt1 = Collisions[i].vCollisionPoint - Bodies[b1].vPosition;
+                pt2 = Collisions[i].vCollisionPoint - Bodies[b2].vPosition;
+
+                // Calculate impulse:
+                j = (-(1+fCr) * (Collisions[i].vRelativeVelocity *
+                    Collisions[i].vCollisionNormal)) /
+                    ((1/Bodies[b1].fMass + 1/Bodies[b2].fMass) +
+                    (Collisions[i].vCollisionNormal * ( ( (pt1 ^
+                     Collisions[i].vCollisionNormal) *
+                     Bodies[b1].mIeInverse )^pt1) ) +
+                    (Collisions[i].vCollisionNormal * ( ( (pt2 ^
+                     Collisions[i].vCollisionNormal) *
+                     Bodies[b2].mIeInverse )^pt2) ) );
+
+                Vrt = Collisions[i].vRelativeVelocity *
+                      Collisions[i].vCollisionTangent;
+
+                if(fabs(Vrt) > 0.0 && dofriction) {
+                    Bodies[b1].vVelocity +=
+                            ((j * Collisions[i].vCollisionNormal) +
+                            ((muB * j) * Collisions[i].vCollisionTangent)) /
+                            Bodies[b1].fMass;
+                    Bodies[b1].vAngularVelocityGlobal +=
+                            (pt1 ^ ((j * Collisions[i].vCollisionNormal) +
+                            ((muB * j) * Collisions[i].vCollisionTangent))) *
+                            Bodies[b1].mIeInverse;
+                    Bodies[b1].vAngularVelocity =
+                            QVRotate(~Bodies[b1].qOrientation,
+                            Bodies[b1].vAngularVelocityGlobal);
+
+                    Bodies[b2].vVelocity +=
+                            ((-j * Collisions[i].vCollisionNormal) + ((muB *
+                            j) * Collisions[i].vCollisionTangent)) /
+                            Bodies[b2].fMass;
+                    Bodies[b2].vAngularVelocityGlobal +=
+                            (pt2 ^ ((-j * Collisions[i].vCollisionNormal) +
+                            ((muB * j) * Collisions[i].vCollisionTangent)))
+                            * Bodies[b2].mIeInverse;
+
+                    Bodies[b2].vAngularVelocity =
+                            QVRotate(~Bodies[b2].qOrientation,
+                            Bodies[b2].vAngularVelocityGlobal);
+
+                } else {
+                    // Apply impulse:
+                    Bodies[b1].vVelocity +=
+                            (j * Collisions[i].vCollisionNormal) /
+                            Bodies[b1].fMass;
+                    Bodies[b1].vAngularVelocityGlobal +=
+                            (pt1 ^ (j * Collisions[i].vCollisionNormal)) *
+                            Bodies[b1].mIeInverse;
+                    Bodies[b1].vAngularVelocity =
+                            QVRotate(~Bodies[b1].qOrientation,
+                            Bodies[b1].vAngularVelocityGlobal);
+
+                    Bodies[b2].vVelocity -=
+                            (j * Collisions[i].vCollisionNormal) /
+                            Bodies[b2].fMass;
+                    Bodies[b2].vAngularVelocityGlobal -=
+                            (pt2 ^ (j * Collisions[i].vCollisionNormal)) *
+                            Bodies[b2].mIeInverse;
+                    Bodies[b2].vAngularVelocity =
+                            QVRotate(~Bodies[b2].qOrientation,
+                            Bodies[b2].vAngularVelocityGlobal);
+                }
+
+            } else { // Ground plane:
+                fCr = COEFFICIENTOFRESTITUTIONGROUND;
+                pt1 = Collisions[i].vCollisionPoint - Bodies[b1].vPosition;
+
+                // Calculate impulse:
+                j = (-(1+fCr) * (Collisions[i].vRelativeVelocity *
+                    Collisions[i].vCollisionNormal)) /
+                    ( (1/Bodies[b1].fMass) +
+                    (Collisions[i].vCollisionNormal *
+                    ( ( (pt1 ^ Collisions[i].vCollisionNormal) *
+                    Bodies[b1].mIeInverse )^pt1)));
+
+                Vrt = Collisions[i].vRelativeVelocity *
+                     Collisions[i].vCollisionTangent;
+
+                if(fabs(Vrt) > 0.0 && dofriction) {
+                    Bodies[b1].vVelocity +=
+                            ( (j * Collisions[i].vCollisionNormal) + ((muG *
+                            j) * Collisions[i].vCollisionTangent) ) /
+                            Bodies[b1].fMass;
+                    Bodies[b1].vAngularVelocityGlobal +=
+                            (pt1 ^ ((j * Collisions[i].vCollisionNormal) +
+                            ((muG * j) * Collisions[i].vCollisionTangent))) *
+                            Bodies[b1].mIeInverse;
+                    Bodies[b1].vAngularVelocity =
+                            QVRotate(~Bodies[b1].qOrientation,
+                            Bodies[b1].vAngularVelocityGlobal);
+                } else {
+                    // Apply impulse:
+                    Bodies[b1].vVelocity +=
+                            (j * Collisions[i].vCollisionNormal) /
+                            Bodies[b1].fMass;
+                    Bodies[b1].vAngularVelocityGlobal +=
+                            (pt1 ^ (j * Collisions[i].vCollisionNormal)) *
+                            Bodies[b1].mIeInverse;
+                    Bodies[b1].vAngularVelocity =
+                            QVRotate(~Bodies[b1].qOrientation,
+                            Bodies[b1].vAngularVelocityGlobal);
+                }
+            }
+        }
+    }
+}
+    
+    
+====================================
+int    CheckGroundPlaneContacts(pCollision CollisionData, int body1)
+{
+
+    Vector    v1[8];
+    Vector    tmp;
+    Vector    u, v;
+    Vector    f[4];
+    Vector    vel1;
+    Vector    pt1;
+    Vector    Vr;
+    float     Vrn;
+    Vector    n;
+    int       status = NOCOLLISION;
+    Vector    Ar;
+    float     Arn;
+
+    if(Bodies[body1].vPosition.z <= (Bodies[body1].fRadius + COLLISIONTOLERANCE))
+    {
+        pt1 = Bodies[body1].vPosition;
+        pt1.z = COLLISIONTOLERANCE;
+        tmp = pt1;
+        pt1 = pt1-Bodies[body1].vPosition;
+        vel1 = Bodies[body1].vVelocity/*Body*/ +
+              (Bodies[body1].vAngularVelocityGlobal^pt1);
+
+        n.x = 0;
+        n.y = 0;
+        n.z = 1;
+
+        Vr = vel1;
+        Vrn = Vr * n;
+
+        if(fabs(Vrn) <= VELOCITYTOLERANCE) // at rest
+        {
+            // Check the relative acceleration:
+            Ar = Bodies[body1].vAcceleration +
+                (Bodies[body1].vAngularVelocityGlobal ^
+                (Bodies[body1].vAngularVelocityGlobal^pt1)) +
+                (Bodies[body1].vAngularAccelerationGlobal ^ pt1);
+
+            Arn = Ar * n;
+
+            if(Arn <= 0.0f)
+            {
+                // We have a contact so fill the data structure
+                assert(NumCollisions < (NUMBODIES*8));
+                if(NumCollisions < (NUMBODIES*8))
+                {
+                    CollisionData->body1 = body1;
+                    CollisionData->body2 = −1;
+                    CollisionData->vCollisionNormal = n;
+                    CollisionData->vCollisionPoint = tmp;
+                    CollisionData->vRelativeVelocity = Vr;
+                    CollisionData->vRelativeAcceleration = Ar;
+
+                    CollisionData->vCollisionTangent = (n^Vr)^n;
+                    CollisionData->vCollisionTangent.Reverse();
+
+                    CollisionData->vCollisionTangent.Normalize();
+                    CollisionData++;
+                    NumCollisions++;
+                    status = CONTACT;
+                }
+            }
+        }
+    }
+
+    return status;
+}
+    
+    
+==================

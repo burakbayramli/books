@@ -1,0 +1,519 @@
+chapter: Connecting Objects
+==================
+typedef struct _Spring {
+    int        End1;
+    int        End2;
+    float      k;
+    float      d;
+    float      InitialLength;
+} Spring, *pSpring;
+    
+    
+====================================
+#define        _NUM_OBJECTS     10
+#define        _NUM_SPRINGS     9
+#define        _SPRING_K        1000
+#define        _SPRING_D        100
+
+Particle        Objects[_NUM_OBJECTS];
+Spring          Springs[_NUM_SPRINGS];
+    
+    
+====================================
+bool    Initialize(void)
+{
+    Vector    r;
+    int       i;
+
+    Objects[0].bLocked = true;
+
+    // Initialize particle locations from left to right.
+    for(i=0; i<_NUM_OBJECTS; i++)
+    {
+        Objects[i].vPosition.x = _WINWIDTH/2 + Objects[0].fLength * i;
+        Objects[i].vPosition.y = _WINHEIGHT/8;
+    }
+
+    // Initialize springs connecting particles from left to right.
+    for(i=0; i<_NUM_SPRINGS; i++)
+    {
+        Springs[i].End1 = i;
+        Springs[i].End2 = i+1;
+        r = Objects[i+1].vPosition - Objects[i].vPosition;
+
+        Springs[i].InitialLength = r.Magnitude();
+        Springs[i].k = _SPRING_K;
+        Springs[i].d = _SPRING_D;
+    }
+    return true;
+}
+    
+    
+====================================
+void    UpdateSimulation(void)
+{
+    double    dt = _TIMESTEP;
+    int       i;
+    double    f, dl;
+    Vector    pt1, pt2;
+    int       j;
+    Vector    r;
+    Vector    F;
+    Vector    v1, v2, vr;
+
+    // Initialize the spring forces on each object to zero.
+    for(i=0; i<_NUM_OBJECTS; i++)
+    {
+        Objects[i].vSprings.x = 0;
+        Objects[i].vSprings.y = 0;
+        Objects[i].vSprings.z = 0;
+    }
+
+    // Calculate all spring forces based on positions of connected objects.
+    for(i=0; i<_NUM_SPRINGS; i++)
+    {
+        j = Springs[i].End1;
+        pt1 = Objects[j].vPosition;
+        v1 = Objects[j].vVelocity;
+
+        j = Springs[i].End2;
+        pt2 = Objects[j].vPosition;
+        v2 = Objects[j].vVelocity;
+
+        vr = v2 - v1;
+        r = pt2 - pt1;
+        dl = r.Magnitude() - Springs[i].InitialLength;
+        f = Springs[i].k * dl; // - means compression, + means tension
+        r.Normalize();
+        F = (r*f) + (Springs[i].d*(vr*r))*r;
+
+        j = Springs[i].End1;
+        Objects[j].vSprings += F;
+
+        j = Springs[i].End2;
+        Objects[j].vSprings -= F;
+    }
+
+    .
+    .
+    .
+    // Integrate equations of motion as usual.
+    .
+    .
+    .
+    // Render the scene as usual.
+    .
+    .
+    .
+}
+    
+    
+====================================
+        dl = r.Magnitude() - Springs[i].InitialLength;
+    
+    
+====================================
+        f = Springs[i].k * dl;
+    
+    
+====================================
+        F = (r*f) + (Springs[i].d*(vr*r))*r;
+    
+    
+====================================
+        r.Normalize();
+    
+    
+====================================
+        j = Springs[i].End1;
+        Objects[j].vSprings += F;
+    
+    
+====================================
+        j = Springs[i].End2;
+        Objects[j].vSprings -= F;
+    
+    
+====================================
+typedef struct _Spring {
+    EndPoint    End1;
+    EndPoint    End2;
+    float        k;
+    float        d;
+    float        InitialLength;
+} Spring, *pSpring;
+    
+    
+====================================
+typedef struct _EndPointRef {
+    int       ref;
+    Vector    pt;
+} EndPoint;
+    
+    
+====================================
+#define        _NUM_OBJECTS     10
+#define        _NUM_SPRINGS     10
+#define        _SPRING_K        1000
+#define        _SPRING_D        100
+
+RigidBody2D       Objects[_NUM_OBJECTS];
+Spring            Springs[_NUM_SPRINGS];
+    
+    
+====================================
+bool    Initialize(void)
+{
+    Vector    r;
+    Vector    pt;
+    int       i;
+
+    // Initialize objects for linked chain.
+    for(i=0; i<_NUM_LINKS; i++)
+    {
+        Objects[i].vPosition.x = _WINWIDTH/2 + Objects[0].fLength * i;
+        Objects[i].vPosition.y = _WINHEIGHT/8;
+        Objects[i].fOrientation = 0;
+    }
+
+    // Connect end of the first object to a fixed point in space.
+    Springs[0].End1.ref = −1;
+    Springs[0].End1.pt.x = _WINWIDTH/2-Objects[0].fLength/2;
+    Springs[0].End1.pt.y = _WINHEIGHT/8;
+
+    Springs[0].End2.ref = 0;
+    Springs[0].End2.pt.x = -Objects[0].fLength/2;
+    Springs[0].End2.pt.y = 0;
+
+    pt = VRotate2D(Objects[0].fOrientation, Springs[0].End2.pt)
+         + Objects[0].vPosition;
+    r = pt - Springs[0].End1.pt;
+
+    Springs[0].InitialLength = r.Magnitude();
+    Springs[0].k = _SPRING_K;
+    Springs[0].d = _SPRING_D;
+
+    // Connect end of all remaining springs.
+    for(i=1; i<_NUM_LINKS; i++)
+    {
+        Springs[i].End1.ref = i-1;
+        Springs[i].End1.pt.x = Objects[i-1].fLength/2;
+        Springs[i].End1.pt.y = 0;
+
+        Springs[i].End2.ref = i;
+        Springs[i].End2.pt.x = -Objects[i].fLength/2;
+        Springs[i].End2.pt.y = 0;
+
+        pt = VRotate2D(Objects[i].fOrientation, Springs[i].End2.pt)
+              + Objects[i].vPosition;
+        r = pt - (VRotate2D(Objects[i-1].fOrientation, Springs[i].End1.pt)
+                  + Objects[i-1].vPosition);
+
+        Springs[i].InitialLength = r.Magnitude();
+        Springs[i].k = _SPRING_K;
+        Springs[i].d = _SPRING_D;
+    }
+
+    return true;
+}
+    
+    
+====================================
+    // Connect end of the first object to a fixed point in space.
+    Springs[0].End1.ref = −1;
+    Springs[0].End1.pt.x = _WINWIDTH/2-Objects[0].fLength/2;
+    Springs[0].End1.pt.y = _WINHEIGHT/8;
+
+    Springs[0].End2.ref = 0;
+    Springs[0].End2.pt.x = -Objects[0].fLength/2;
+    Springs[0].End2.pt.y = 0;
+
+    pt = VRotate2D(Objects[0].fOrientation, Springs[0].End2.pt)
+         + Objects[0].vPosition;
+    r = pt - Springs[0].End1.pt;
+
+    Springs[0].InitialLength = r.Magnitude();
+    Springs[0].k = _SPRING_K;
+    Springs[0].d = _SPRING_D;
+    
+    
+====================================
+    Springs[0].End2.pt.x = -Objects[0].fLength/2;
+    Springs[0].End2.pt.y = 0;
+    
+    
+====================================
+    pt = VRotate2D(Objects[0].fOrientation, Springs[0].End2.pt)
+         + Objects[0].vPosition;
+    r = pt - Springs[0].End1.pt;
+    
+    
+====================================
+        pt = VRotate2D(Objects[i].fOrientation, Springs[i].End2.pt)
+              + Objects[i].vPosition;
+        r = pt - (VRotate2D(Objects[i-1].fOrientation, Springs[i].End1.pt)
+                  + Objects[i-1].vPosition);
+    
+    
+====================================
+void    UpdateSimulation(void)
+{
+    .
+    .
+    .
+    Vector    M;
+    Vector    Fo;
+
+    // Initialize the spring forces and moments on each object to zero.
+    for(i=0; i<_NUM_OBJECTS; i++)
+    {
+        .
+        .
+        .
+
+        Objects[i].vMSprings.x = 0;
+        Objects[i].vMSprings.y = 0;
+        Objects[i].vMSprings.z = 0;
+    }
+
+    // Calculate all spring forces based on positions of connected objects
+    for(i=0; i<_NUM_SPRINGS; i++)
+    {
+        if(Springs[i].End1.ref == −1)
+        {
+            pt1 = Springs[i].End1.pt;
+            v1.x = v1.y = v1.z = 0; // point is not moving
+        } else {
+            j = Springs[i].End1.ref;
+            pt1 = Objects[j].vPosition + VRotate2D(Objects[j].fOrientation,
+                                                   Springs[i].End1.pt);
+            v1 = Objects[j].vVelocity + VRotate2D(Objects[j].fOrientation,
+                 Objects[j].vAngularVelocity^Springs[i].End1.pt);
+        }
+
+        if(Springs[i].End2.ref == −1)
+        {
+            pt2 = Springs[i].End2.pt;
+            v2.x = v2.y = v2.z = 0;
+        } else {
+            j = Springs[i].End2.ref;
+            pt2 = Objects[j].vPosition + VRotate2D(Objects[j].fOrientation,
+                                                   Springs[i].End2.pt);
+            v2 = Objects[j].vVelocity + VRotate2D(Objects[j].fOrientation,
+                 Objects[j].vAngularVelocity^Springs[i].End2.pt);
+        }
+
+        // Compute spring-damper force.
+        vr = v2 - v1;
+        r = pt2 - pt1;
+        dl = r.Magnitude() - Springs[i].InitialLength;
+        f = Springs[i].k * dl;
+        r.Normalize();
+        F = (r*f) + (Springs[i].d*(vr*r))*r;
+
+        // Aggregate the spring force on each connected object
+        j = Springs[i].End1.ref;
+        if(j != −1)
+            Objects[j].vSprings += F;
+
+        j = Springs[i].End2.ref;
+        if(j != −1)
+            Objects[j].vSprings −= F;
+
+
+        // convert force to first ref local coords
+        // Get local lever
+        // calc moment
+
+        // Compute and aggregate moments due to spring force
+        // on each connected object.
+        j = Springs[i].End1.ref;
+        if(j != −1)
+        {
+            Fo = VRotate2D(-Objects[j].fOrientation, F);
+            r = Springs[i].End1.pt;
+            M = r^Fo;
+            Objects[j].vMSprings += M;
+        }
+
+        j = Springs[i].End2.ref;
+        if(j!= −1)
+        {
+            Fo = VRotate2D(-Objects[j].fOrientation, F);
+            r = Springs[i].End2.pt;
+            M = r^Fo;
+            Objects[j].vMSprings −= M;
+        }
+    }
+    .
+    .
+    .
+    // Integrate equations of motion as usual.
+    .
+    .
+    .
+    // Render the scene as usual.
+    .
+    .
+    .
+}
+    
+    
+====================================
+pt1 = Objects[j].vPosition + VRotate2D(Objects[j].fOrientation,
+                                       Springs[i].End1.pt);
+    
+    
+====================================
+v1 = Objects[j].vVelocity + VRotate2D(Objects[j].fOrientation,
+     Objects[j].vAngularVelocity^Springs[i].End1.pt);
+    
+    
+====================================
+            Fo = VRotate2D(-Objects[j].fOrientation, F);
+            r = Springs[i].End1.pt;
+            M = r^Fo;
+            Objects[j].vMSprings += M;
+    
+    
+====================================
+            Fo = VRotate2D(-Objects[j].fOrientation, F);
+    
+    
+====================================
+bool    Initialize(void)
+{
+    Vector    r;
+    Vector    pt;
+    int       i;
+
+    // Position objects
+    Objects[0].vPosition.x = _WINWIDTH/2;
+    Objects[0].vPosition.y = _WINHEIGHT/8+Objects[0].fLength/2;
+    Objects[0].fOrientation = 90;
+
+    Objects[1].vPosition.x = _WINWIDTH/2+Objects[1].fLength/2;
+    Objects[1].vPosition.y = _WINHEIGHT/8+Objects[0].fLength;
+    Objects[1].fOrientation = 0;
+
+    // Connect end of the first object to the earth:
+    Springs[0].End1.ref = −1;
+    Springs[0].End1.pt.x = _WINWIDTH/2;
+    Springs[0].End1.pt.y = _WINHEIGHT/8;
+
+    Springs[0].End2.ref = 0;
+    Springs[0].End2.pt.x = -Objects[0].fLength/2;
+    Springs[0].End2.pt.y = 0;
+
+    pt = VRotate2D(Objects[0].fOrientation, Springs[0].End2.pt) +
+         Objects[0].vPosition;
+    r = pt - Springs[0].End1.pt;
+
+    Springs[0].InitialLength = r.Magnitude();
+    Springs[0].k = _SPRING_K;
+    Springs[0].d = _SPRING_D;
+
+    // Connect other end of first object to end of second object
+    i = 1;
+    Springs[i].End1.ref = i-1;
+    Springs[i].End1.pt.x = Objects[i-1].fLength/2;
+    Springs[i].End1.pt.y = 0;
+
+    Springs[i].End2.ref = i;
+    Springs[i].End2.pt.x = -Objects[i].fLength/2;
+    Springs[i].End2.pt.y = 0;
+
+    pt = VRotate2D(Objects[i].fOrientation, Springs[i].End2.pt) +
+         Objects[i].vPosition;
+    r = pt - (VRotate2D(Objects[i-1].fOrientation, Springs[i].End1.pt) +
+              Objects[i-1].vPosition);
+
+    Springs[i].InitialLength = r.Magnitude();
+    Springs[i].k = _SPRING_K;
+    Springs[i].d = _SPRING_D;
+
+    // Connect CG of objects to each other
+    Springs[2].End1.ref = 0;
+    Springs[2].End1.pt.x = 0;
+    Springs[2].End1.pt.y = 0;
+
+    Springs[2].End2.ref = 1;
+    Springs[2].End2.pt.x = 0;
+    Springs[2].End2.pt.y = 0;
+
+    r = Objects[1].vPosition - Objects[0].vPosition;
+
+    Springs[2].InitialLength = r.Magnitude();
+    Springs[2].k = _SPRING_K;
+    Springs[2].d = _SPRING_D;
+}
+    
+    
+====================================
+    Objects[0].vPosition.x = _WINWIDTH/2;
+    Objects[0].vPosition.y = _WINHEIGHT/8+Objects[0].fLength/2;
+    Objects[0].fOrientation = 90;
+
+    Objects[1].vPosition.x = _WINWIDTH/2+Objects[1].fLength/2;
+    Objects[1].vPosition.y = _WINHEIGHT/8+Objects[0].fLength;
+    Objects[1].fOrientation = 0;
+    
+    
+====================================
+    // Connect end of the first object to the earth:
+    Springs[0].End1.ref = −1;
+    Springs[0].End1.pt.x = _WINWIDTH/2;
+    Springs[0].End1.pt.y = _WINHEIGHT/8;
+
+    Springs[0].End2.ref = 0;
+    Springs[0].End2.pt.x = -Objects[0].fLength/2;
+    Springs[0].End2.pt.y = 0;
+
+    pt = VRotate2D(Objects[0].fOrientation, Springs[0].End2.pt) +
+         Objects[0].vPosition;
+    r = pt - Springs[0].End1.pt;
+
+    Springs[0].InitialLength = r.Magnitude();
+    Springs[0].k = _SPRING_K;
+    Springs[0].d = _SPRING_D;
+    
+    
+====================================
+    // Connect other end of first object to end of second object
+    i = 1;
+    Springs[i].End1.ref = i-1;
+    Springs[i].End1.pt.x = Objects[i-1].fLength/2;
+    Springs[i].End1.pt.y = 0;
+
+    Springs[i].End2.ref = i;
+    Springs[i].End2.pt.x = -Objects[i].fLength/2;
+    Springs[i].End2.pt.y = 0;
+
+    pt = VRotate2D(Objects[i].fOrientation, Springs[i].End2.pt) +
+         Objects[i].vPosition;
+    r = pt - (VRotate2D(Objects[i-1].fOrientation, Springs[i].End1.pt) +
+              Objects[i-1].vPosition);
+
+    Springs[i].InitialLength = r.Magnitude();
+    Springs[i].k = _SPRING_K;
+    Springs[i].d = _SPRING_D;
+    
+    
+====================================
+    // Connect CG of objects to each other
+    Springs[2].End1.ref = 0;
+    Springs[2].End1.pt.x = 0;
+    Springs[2].End1.pt.y = 0;
+
+    Springs[2].End2.ref = 1;
+    Springs[2].End2.pt.x = 0;
+    Springs[2].End2.pt.y = 0;
+
+    r = Objects[1].vPosition - Objects[0].vPosition;
+
+    Springs[2].InitialLength = r.Magnitude();
+    Springs[2].k = _SPRING_K;
+    Springs[2].d = _SPRING_D;
+    
+    
+==================

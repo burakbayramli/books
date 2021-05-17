@@ -1,0 +1,454 @@
+chapter: Aircraft
+==================
+//------------------------------------------------------------------------//
+// This model uses a set of eight discrete elements to represent the
+// airplane.  The elements are described below:
+//
+//          Element 0:  Outboard; port (left) wing section fitted with ailerons
+//          Element 1:  Inboard; port wing section fitted with landing flaps
+//          Element 2:  Inboard; starboard (right) wing section fitted with
+                        landing flaps
+//          Element 3:  Outboard; starboard wing section fitted with ailerons
+//          Element 4:  Port elevator fitted with flap
+//          Element 5:  Starboard elevator fitted with flap
+//          Element 6:  Vertical tail/rudder (no flap; the whole thing rotates)
+//          Element 7:  The fuselage
+//
+//  This function first sets up each element and then goes on to calculate
+//  the combined weight, center of gravity, and inertia tensor for the plane.
+//  Some other properties of each element are also calculated, which you'll
+//  need when calculating the lift and drag forces on the plane.
+//------------------------------------------------------------------------//
+void     CalcAirplaneMassProperties(void)
+{
+     float     mass;
+     Vector    vMoment;
+     Vector    CG;
+     int       i;
+     float     Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
+     float     in, di;
+
+     // Initialize the elements here
+     // Initially the coordinates of each element are referenced from
+     // a design coordinates system located at the very tail end of the plane,
+     // its baseline and center line.  Later, these coordinates will be adjusted
+     // so that each element is referenced to the combined center of gravity of
+     // the airplane.
+     Element[0].fMass = 6.56f;
+     Element[0].vDCoords = Vector(14.5f,12.0f,2.5f);
+     Element[0].vLocalInertia = Vector(13.92f,10.50f,24.00f);
+     Element[0].fIncidence = −3.5f;
+     Element[0].fDihedral = 0.0f;
+     Element[0].fArea = 31.2f;
+     Element[0].iFlap = 0;
+
+     Element[1].fMass = 7.31f;
+     Element[1].vDCoords = Vector(14.5f,5.5f,2.5f);
+     Element[1].vLocalInertia = Vector(21.95f,12.22f,33.67f);
+     Element[1].fIncidence = −3.5f;
+     Element[1].fDihedral = 0.0f;
+     Element[1].fArea = 36.4f;
+     Element[1].iFlap = 0;
+
+     Element[2].fMass = 7.31f;
+     Element[2].vDCoords = Vector(14.5f,−5.5f,2.5f);
+     Element[2].vLocalInertia = Vector(21.95f,12.22f,33.67f);
+     Element[2].fIncidence = −3.5f;
+     Element[2].fDihedral = 0.0f;
+     Element[2].fArea = 36.4f;
+     Element[2].iFlap = 0;
+
+     Element[3].fMass = 6.56f;
+     Element[3].vDCoords = Vector(14.5f,−12.0f,2.5f);
+     Element[3].vLocalInertia = Vector(13.92f,10.50f,24.00f);
+     Element[3].fIncidence = −3.5f;
+     Element[3].fDihedral = 0.0f;
+     Element[3].fArea = 31.2f;
+     Element[3].iFlap = 0;
+
+     Element[4].fMass = 2.62f;
+     Element[4].vDCoords = Vector(3.03f,2.5f,3.0f);
+     Element[4].vLocalInertia = Vector(0.837f,0.385f,1.206f);
+     Element[4].fIncidence = 0.0f;
+     Element[4].fDihedral = 0.0f;
+     Element[4].fArea = 10.8f;
+     Element[4].iFlap = 0;
+
+     Element[5].fMass = 2.62f;
+     Element[5].vDCoords = Vector(3.03f,−2.5f,3.0f);
+     Element[5].vLocalInertia = Vector(0.837f,0.385f,1.206f);
+     Element[5].fIncidence = 0.0f;
+     Element[5].fDihedral = 0.0f;
+     Element[5].fArea = 10.8f;
+     Element[5].iFlap = 0;
+
+     Element[6].fMass = 2.93f;
+     Element[6].vDCoords = Vector(2.25f,0.0f,5.0f);
+     Element[6].vLocalInertia = Vector(1.262f,1.942f,0.718f);
+     Element[6].fIncidence = 0.0f;
+     Element[6].fDihedral = 90.0f;
+     Element[6].fArea = 12.0f;
+     Element[6].iFlap = 0;
+
+     Element[7].fMass = 31.8f;
+     Element[7].vDCoords = Vector(15.25f,0.0f,1.5f);
+     Element[7].vLocalInertia = Vector(66.30f,861.9f,861.9f);
+     Element[7].fIncidence = 0.0f;
+     Element[7].fDihedral = 0.0f;
+     Element[7].fArea = 84.0f;
+     Element[7].iFlap = 0;
+
+     // Calculate the vector normal (perpendicular) to each lifting surface.
+     // This is required when you are calculating the relative air velocity for
+     // lift and drag calculations.
+     for (i = 0; i< 8; i++)
+     {
+          in = DegreesToRadians(Element[i].fIncidence);
+          di = DegreesToRadians(Element[i].fDihedral);
+          Element[i].vNormal = Vector((float)sin(in), (float)(cos(in)*sin(di)),
+                                      (float)(cos(in)*cos(di)));
+          Element[i].vNormal.Normalize();
+     }
+
+     // Calculate total mass
+     mass = 0;
+     for (i = 0; i< 8; i++)
+          mass += Element[i].fMass;
+
+     // Calculate combined center of gravity location
+     vMoment = Vector(0.0f, 0.0f, 0.0f);
+     for (i = 0; i< 8; i++)
+     {
+          vMoment += Element[i].fMass*Element[i].vDCoords;
+     }
+     CG = vMoment/mass;
+
+     // Calculate coordinates of each element with respect to the combined CG
+     for (i = 0; i< 8; i++)
+     {
+          Element[i].vCGCoords = Element[i].vDCoords − CG;
+     }
+
+     // Now calculate the moments and products of inertia for the
+     // combined elements.
+     // (This inertia matrix (tensor) is in body coordinates)
+     Ixx = 0;     Iyy = 0;     Izz = 0;
+     Ixy = 0;     Ixz = 0;     Iyz = 0;
+     for (i = 0; i< 8; i++)
+     {
+          Ixx += Element[i].vLocalInertia.x + Element[i].fMass *
+                 (Element[i].vCGCoords.y*Element[i].vCGCoords.y +
+                 Element[i].vCGCoords.z*Element[i].vCGCoords.z);
+          Iyy += Element[i].vLocalInertia.y + Element[i].fMass *
+                 (Element[i].vCGCoords.z*Element[i].vCGCoords.z +
+                 Element[i].vCGCoords.x*Element[i].vCGCoords.x);
+          Izz += Element[i].vLocalInertia.z + Element[i].fMass *
+                 (Element[i].vCGCoords.x*Element[i].vCGCoords.x +
+                 Element[i].vCGCoords.y*Element[i].vCGCoords.y);
+          Ixy += Element[i].fMass * (Element[i].vCGCoords.x *
+                 Element[i].vCGCoords.y);
+          Ixz += Element[i].fMass * (Element[i].vCGCoords.x *
+                 Element[i].vCGCoords.z);
+          Iyz += Element[i].fMass * (Element[i].vCGCoords.y *
+                 Element[i].vCGCoords.z);
+     }
+
+     // Finally, set up the airplane's mass and its inertia matrix and take the
+     // inverse of the inertia matrix.
+     Airplane.fMass = mass;
+     Airplane.mInertia.e11 = Ixx;
+     Airplane.mInertia.e12 = -Ixy;
+     Airplane.mInertia.e13 = -Ixz;
+     Airplane.mInertia.e21 = -Ixy;
+     Airplane.mInertia.e22 = Iyy;
+     Airplane.mInertia.e23 = -Iyz;
+     Airplane.mInertia.e31 = -Ixz;
+     Airplane.mInertia.e32 = -Iyz;
+     Airplane.mInertia.e33 = Izz;
+
+     Airplane.mInertiaInverse = Airplane.mInertia.Inverse();
+}
+    
+    
+====================================
+//------------------------------------------------------------------------//
+//  Given the attack angle and the status of the flaps, this function
+//  returns the appropriate lift coefficient for a cambered airfoil with
+//  a plain trailing-edge flap (+/- 15 degree deflection).
+//------------------------------------------------------------------------//
+float     LiftCoefficient(float angle, int flaps)
+{
+     float clf0[9] = {−0.54f, −0.2f, 0.2f, 0.57f, 0.92f, 1.21f, 1.43f, 1.4f,
+                      1.0f};
+     float clfd[9] = {0.0f, 0.45f, 0.85f, 1.02f, 1.39f, 1.65f, 1.75f, 1.38f,
+                      1.17f};
+     float clfu[9] = {−0.74f, −0.4f, 0.0f, 0.27f, 0.63f, 0.92f, 1.03f, 1.1f,
+                      0.78f};
+     float a[9]      = {−8.0f, −4.0f, 0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f,
+                        24.0f};
+     float cl;
+     int   i;
+
+     cl = 0;
+     for (i=0; i<8; i++)
+     {
+          if( (a[i] <= angle) && (a[i+1] > angle) )
+          {
+               switch(flaps)
+               {
+                    case 0:// flaps not deflected
+                         cl = clf0[i] - (a[i] - angle) * (clf0[i] - clf0[i+1]) /
+                             (a[i] - a[i+1]);
+                         break;
+                    case −1: // flaps down
+                         cl = clfd[i] - (a[i] - angle) * (clfd[i] - clfd[i+1]) /
+                             (a[i] - a[i+1]);
+                         break;
+                    case 1: // flaps up
+                         cl = clfu[i] - (a[i] - angle) * (clfu[i] - clfu[i+1]) /
+                             (a[i] - a[i+1]);
+                         break;
+               }
+               break;
+          }
+     }
+
+     return cl;
+}
+
+//------------------------------------------------------------------------//
+//  Given the attack angle and the status of the flaps, this function
+//  returns the appropriate drag coefficient for a cambered airfoil with
+//  a plain trailing-edge flap (+/- 15 degree deflection).
+//------------------------------------------------------------------------//
+float     DragCoefficient(float angle, int flaps)
+{
+     float cdf0[9] = {0.01f, 0.0074f, 0.004f, 0.009f, 0.013f, 0.023f, 0.05f,
+                      0.12f, 0.21f};
+     float cdfd[9] = {0.0065f, 0.0043f, 0.0055f, 0.0153f, 0.0221f, 0.0391f, 0.1f,
+                      0.195f, 0.3f};
+     float cdfu[9] = {0.005f, 0.0043f, 0.0055f, 0.02601f, 0.03757f, 0.06647f,
+                      0.13f, 0.18f, 0.25f};
+     float a[9]      = {−8.0f, −4.0f, 0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f,
+                        24.0f};
+     float cd;
+     int   i;
+
+     cd = 0.5;
+     for (i=0; i<8; i++)
+     {
+          if( (a[i] <= angle) && (a[i+1] > angle) )
+          {
+               switch(flaps)
+               {
+                    case 0:// flaps not deflected
+                         cd = cdf0[i] - (a[i] - angle) * (cdf0[i] - cdf0[i+1]) /
+                              (a[i] - a[i+1]);
+                         break;
+                    case −1: // flaps down
+                         cd = cdfd[i] - (a[i] - angle) * (cdfd[i] - cdfd[i+1]) /
+                              (a[i] - a[i+1]);
+                         break;
+                    case 1: // flaps up
+                         cd = cdfu[i] - (a[i] - angle) * (cdfu[i] - cdfu[i+1]) /
+                              (a[i] - a[i+1]);
+                         break;
+               }
+               break;
+          }
+     }
+
+     return cd;
+
+}
+    
+    
+====================================
+//------------------------------------------------------------------------//
+//  Given the attack angle, this function returns the proper lift coefficient
+//  for a symmetric (no camber) airfoil without flaps.
+//------------------------------------------------------------------------//
+float     RudderLiftCoefficient(float angle)
+{
+     float clf0[7] = {0.16f, 0.456f, 0.736f, 0.968f, 1.144f, 1.12f, 0.8f};
+     float a[7]      = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
+     float cl;
+     int       i;
+     float     aa = (float) fabs(angle);
+
+     cl = 0;
+     for (i=0; i<8; i++)
+     {
+          if( (a[i] <= aa) && (a[i+1] > aa) )
+          {
+               cl = clf0[i] - (a[i] - aa) * (clf0[i] - clf0[i+1]) /
+                   (a[i] - a[i+1]);
+               if (angle < 0) cl = -cl;
+               break;
+          }
+     }
+     return cl;
+}
+
+//------------------------------------------------------------------------//
+//  Given the attack angle, this function returns the proper drag coefficient
+//  for a symmetric (no camber) airfoil without flaps.
+//------------------------------------------------------------------------//
+float     RudderDragCoefficient(float angle)
+{
+     float cdf0[7] = {0.0032f, 0.0072f, 0.0104f, 0.0184f, 0.04f, 0.096f, 0.168f};
+     float a[7]      = {0.0f, 4.0f, 8.0f, 12.0f, 16.0f, 20.0f, 24.0f};
+     float cd;
+     int       i;
+     float     aa = (float) fabs(angle);
+
+     cd = 0.5;
+     for (i=0; i<8; i++)
+     {
+          if( (a[i] <= aa) && (a[i+1] > aa) )
+          {
+               cd = cdf0[i] - (a[i] - aa) * (cdf0[i] - cdf0[i+1]) /
+                   (a[i] - a[i+1]);
+               break;
+          }
+     }
+     return cd;
+}
+    
+    
+====================================
+//------------------------------------------------------------------------//
+// This function calculates all of the forces and moments acting on the
+// plane at any given time.
+//------------------------------------------------------------------------//
+void     CalcAirplaneLoads(void)
+{
+     Vector     Fb, Mb;
+
+     // reset forces and moments:
+     Airplane.vForces.x = 0.0f;
+     Airplane.vForces.y = 0.0f;
+     Airplane.vForces.z = 0.0f;
+
+     Airplane.vMoments.x = 0.0f;
+     Airplane.vMoments.y = 0.0f;
+     Airplane.vMoments.z = 0.0f;
+
+     Fb.x = 0.0f;     Mb.x = 0.0f;
+     Fb.y = 0.0f;     Mb.y = 0.0f;
+     Fb.z = 0.0f;     Mb.z = 0.0f;
+
+     // Define the thrust vector, which acts through the plane's CG
+     Thrust.x = 1.0f;
+     Thrust.y = 0.0f;
+     Thrust.z = 0.0f;
+     Thrust *= ThrustForce;
+
+     // Calculate forces and moments in body space:
+     Vector    vLocalVelocity;
+     float     fLocalSpeed;
+     Vector    vDragVector;
+     Vector    vLiftVector;
+     float     fAttackAngle;
+     float     tmp;
+     Vector    vResultant;
+     int       i;
+     Vector    vtmp;
+
+     Stalling = false;
+
+     for(i=0; i<7; i++) // loop through the seven lifting elements
+                        // skipping the fuselage
+     {
+          if (i == 6) // The tail/rudder is a special case since it can rotate;
+          {           // thus, you have to recalculate the normal vector.
+               float in, di;
+               in = DegreesToRadians(Element[i].fIncidence); // incidence angle
+               di = DegreesToRadians(Element[i].fDihedral);  // dihedral angle
+               Element[i].vNormal = Vector(     (float)sin(in),
+                                                (float)(cos(in)*sin(di)),
+                                                (float)(cos(in)*cos(di)));
+               Element[i].vNormal.Normalize();
+          }
+
+          // Calculate local velocity at element
+          // The local velocity includes the velocity due to linear
+          // motion of the airplane,
+          // plus the velocity at each element due to the
+          // rotation of the airplane.
+
+          // Here's the rotational part
+          vtmp = Airplane.vAngularVelocity^Element[i].vCGCoords;
+
+          vLocalVelocity = Airplane.vVelocityBody + vtmp;
+
+          // Calculate local air speed
+          fLocalSpeed = vLocalVelocity.Magnitude();
+
+          // Find the direction in which drag will act.
+          // Drag always acts inline with the relative
+          // velocity but in the opposing direction
+          if(fLocalSpeed > 1.)
+               vDragVector = -vLocalVelocity/fLocalSpeed;
+
+          // Find the direction in which lift will act.
+          // Lift is always perpendicular to the drag vector
+          vLiftVector = (vDragVector^Element[i].vNormal)^vDragVector;
+          tmp = vLiftVector.Magnitude();
+          vLiftVector.Normalize();
+
+          // Find the angle of attack.
+          // The attack angle is the angle between the lift vector and the
+          // element normal vector. Note, the sine of the attack angle
+          // is equal to the cosine of the angle between the drag vector and
+          // the normal vector.
+          tmp = vDragVector*Element[i].vNormal;
+          if(tmp > 1.) tmp = 1;
+          if(tmp < −1) tmp = −1;
+          fAttackAngle = RadiansToDegrees((float) asin(tmp));
+
+          // Determine the resultant force (lift and drag) on the element.
+          tmp = 0.5f * rho * fLocalSpeed*fLocalSpeed * Element[i].fArea;
+          if (i == 6) // Tail/rudder
+          {
+               vResultant =  (vLiftVector*RudderLiftCoefficient(fAttackAngle) +
+                              vDragVector*RudderDragCoefficient(fAttackAngle))
+                              * tmp;
+          } else
+               vResultant =  (vLiftVector*LiftCoefficient(fAttackAngle,
+                              Element[i].iFlap) +
+                              vDragVector*DragCoefficient(fAttackAngle,
+                              Element[i].iFlap) ) * tmp;
+          // Check for stall.
+          // We can easily determine stall by noting when the coefficient
+          // of lift is 0. In reality, stall warning devices give warnings well
+          // before the lift goes to 0 to give the pilot time to correct.
+          if (i<=0)
+          {
+               if (LiftCoefficient(fAttackAngle, Element[i].iFlap) == 0)
+                    Stalling = true;
+          }
+
+          // Keep a running total of these resultant forces (total force)
+          Fb += vResultant;
+
+          // Calculate the moment about the CG of this element's force
+          // and keep a running total of these moments (total moment)
+          vtmp = Element[i].vCGCoords^vResultant;
+          Mb += vtmp;
+     }
+
+     // Now add the thrust
+     Fb += Thrust;
+
+     // Convert forces from model space to earth space
+     Airplane.vForces = QVRotate(Airplane.qOrientation, Fb);
+
+     // Apply gravity (g is defined as −32.174 ft/s^2)
+     Airplane.vForces.z += g * Airplane.fMass;
+
+     Airplane.vMoments += Mb;
+}
+    
+    
+==================

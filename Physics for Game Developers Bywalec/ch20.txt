@@ -1,0 +1,27 @@
+chapter: Touch Screens
+==================
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch* touch = [[event touchesForView:self] anyObject];
+    firstTouch = [touch locationInView:self];
+    self.status = YES;
+    [self trigger];
+}
+    
+    
+====================================
+- (void)storeTouchPoints:(NSSet *)touches{
+    if ([touches count] > 0) {
+        for (UITouch *touch in touches) {
+            CGPoint *point = (CGPoint                 
+            *)CFDictionaryGetValue(touchBeginPoints, touch);
+            if (point == NULL) {
+                point = (CGPoint *)malloc(sizeof(CGPoint));
+                CFDictionarySetValue(touchBeginPoints, touch, point);
+            }
+            *point = [touch locationInView:view.superview];
+        }
+    }
+    
+    
+==================

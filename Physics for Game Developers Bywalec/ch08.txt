@@ -1,0 +1,437 @@
+chapter: Particles
+==================
+class Particle {
+public:
+  float   fMass;      // Total mass
+  Vector  vPosition;  // Position
+  Vector  vVelocity;  // Velocity
+  float   fSpeed;     // Speed (magnitude of the velocity)
+  Vector  vForces;    // Total force acting on the particle
+  float   fRadius;    // Particle radius used for collision detection
+  Vector  vGravity;   // Gravity force vector
+
+  Particle(void);     // Constructor
+  void  CalcLoads(void);  // Aggregates forces acting on the particle
+  void  UpdateBodyEuler(double dt); // Integrates one time step
+  void  Draw(void);   // Draws the particle
+};
+    
+    
+====================================
+Particle::Particle(void)
+{
+  fMass = 1.0;
+  vPosition.x = 0.0;
+  vPosition.y = 0.0;
+  vPosition.z = 0.0;
+  vVelocity.x = 0.0;
+  vVelocity.y = 0.0;
+  vVelocity.z = 0.0;
+  fSpeed = 0.0;
+  vForces.x = 0.0;
+  vForces.y = 0.0;
+  vForces.z = 0.0;
+  fRadius = 0.1;
+  vGravity.x = 0;
+  vGravity.y = fMass * _GRAVITYACCELERATION;
+}
+    
+    
+====================================
+#define  _GRAVITYACCELERATION  −9.8f
+    
+    
+====================================
+void  Particle::CalcLoads(void)
+{
+  // Reset forces:
+  vForces.x = 0.0f;
+  vForces.y = 0.0f;
+
+  // Aggregate forces:
+  vForces += vGravity;
+}
+    
+    
+====================================
+void  Particle::UpdateBodyEuler(double dt)
+{
+    Vector a;
+    Vector dv;
+    Vector ds;
+
+    // Integrate equation of motion:
+    a = vForces / fMass;
+
+    dv = a * dt;
+    vVelocity += dv;
+
+    ds = vVelocity * dt;
+    vPosition += ds;
+
+    // Misc. calculations:
+    fSpeed = vVelocity.Magnitude();
+}
+    
+    
+====================================
+void  Particle::Draw(void)
+{
+  RECT   r;
+  float  drawRadius = max(2, fRadius);
+
+  SetRect(&r, vPosition.x − drawRadius,
+          _WINHEIGHT − (vPosition.y − drawRadius),
+          vPosition.x + drawRadius,
+      _WINHEIGHT − (vPosition.y + drawRadius));
+  DrawEllipse(&r, 2, RGB(0,0,0));
+}
+    
+    
+====================================
+// Global Variables:
+int      FrameCounter = 0;
+Particle Units[_MAX_NUM_UNITS];
+    
+    
+====================================
+bool  Initialize(void)
+{
+  int i;
+
+  GetRandomNumber(0, _WINWIDTH, true);
+
+  for(i=0; i<_MAX_NUM_UNITS; i++)
+  {
+    Units[i].vPosition.x = GetRandomNumber(_WINWIDTH/2-_SPAWN_AREA_R*2,
+                           _WINWIDTH/2+_SPAWN_AREA_R*2, false);
+    Units[i].vPosition.y = _WINHEIGHT −
+                          GetRandomNumber(_WINHEIGHT/2-_SPAWN_AREA_R,
+                          _WINHEIGHT/2, false);
+  }
+
+  return true;
+}
+    
+    
+====================================
+void  UpdateSimulation(void)
+{
+  double dt = _TIMESTEP;
+  int    i;
+
+  // initialize the back buffer
+  if(FrameCounter >= _RENDER_FRAME_COUNT)
+  {
+    ClearBackBuffer();
+  }
+
+  // update the particles (Units)
+  for(i=0; i<_MAX_NUM_UNITS; i++)
+  {
+    Units[i].CalcLoads();
+    Units[i].UpdateBodyEuler(dt);
+
+    if(FrameCounter >= _RENDER_FRAME_COUNT)
+    {
+      Units[i].Draw();
+    }
+
+    if(Units[i].vPosition.x > _WINWIDTH) Units[i].vPosition.x = 0;
+    if(Units[i].vPosition.x < 0) Units[i].vPosition.x = _WINWIDTH;
+    if(Units[i].vPosition.y > _WINHEIGHT) Units[i].vPosition.y = 0;
+    if(Units[i].vPosition.y < 0) Units[i].vPosition.y = _WINHEIGHT;
+  }
+
+  // Render the scene if required
+  if(FrameCounter >= _RENDER_FRAME_COUNT) {
+    CopyBackBufferToWindow();
+    FrameCounter = 0;
+  }  else
+    FrameCounter++;
+}
+    
+    
+====================================
+void  Particle::CalcLoads(void)
+{
+  // Reset forces:
+  vForces.x = 0.0f;
+  vForces.y = 0.0f;
+
+  // Aggregate forces:
+
+  // Gravity
+  vForces += vGravity;
+
+  // Still air drag
+  Vector  vDrag;
+  Float   fDrag;
+
+  vDrag-=vVelocity;
+  vDrag.Normalize();
+  fDrag = 0.5 * _AIRDENSITY * fSpeed * fSpeed *
+          (3.14159 * fRadius * fRadius) * _DRAGCOEFFICIENT;
+
+  vDrag*=fDrag;
+
+  vForces += vDrag;
+
+  // Wind
+  Vector  vWind;
+  vWind.x = 0.5 * _AIRDENSITY * _WINDSPEED *
+            _WINDSPEED * (3.14159 * fRadius * fRadius) *
+            _DRAGCOEFFICIENT;
+  vForces += vWind;
+}
+    
+    
+====================================
+fDrag = 0.5 * _AIRDENSITY * fSpeed * fSpeed *
+        (3.14159 * fRadius * fRadius) * _DRAGCOEFFICIENT;
+    
+    
+====================================
+class Particle {
+  .
+  .
+  .
+  Vector  vPreviousPosition;
+  Vector  vImpactForces;
+  bool    bCollision;
+  .
+  .
+  .
+};
+    
+    
+====================================
+void  Particle::CalcLoads(void)
+{
+  // Reset forces:
+  vForces.x = 0.0f;
+  vForces.y = 0.0f;
+
+  // Aggregate forces:
+  if(bCollision) {
+    // Add Impact forces (if any)
+    vForces += vImpactForces;
+  } else {
+    // Gravity
+    vForces += vGravity;
+
+    // Still air drag
+    Vector  vDrag;
+    float  fDrag;
+
+    vDrag -= vVelocity;
+    vDrag.Normalize();
+    fDrag = 0.5 * _AIRDENSITY * fSpeed * fSpeed *
+           (3.14159 * fRadius * fRadius) * _DRAGCOEFFICIENT;
+    vDrag *= fDrag;
+    vForces += vDrag;
+
+    // Wind
+    Vector  vWind;
+    vWind.x = 0.5 * _AIRDENSITY * _WINDSPEED * _WINDSPEED *
+             (3.14159 * fRadius * fRadius) * _DRAGCOEFFICIENT;
+    vForces += vWind;
+  }
+}
+    
+    
+====================================
+void  UpdateSimulation(void)
+{
+  .
+  .
+  .
+
+  // update computer controlled units:
+  for(i=0; i<_MAX_NUM_UNITS; i++)
+  {
+    Units[i].bCollision = CheckForCollisions(&(Units[i]));
+    Units[i].CalcLoads();
+    Units[i].UpdateBodyEuler(dt);
+    .
+    .
+    .
+  } // end i-loop
+
+  .
+  .
+  .
+}
+    
+    
+====================================
+bool  CheckForCollisions(Particle* p)
+{
+  Vector  n;
+  Vector  vr;
+  float   vrn;
+  float   J;
+  Vector  Fi;
+  bool    hasCollision = false;
+
+
+    // Reset aggregate impact force
+    p->vImpactForces.x = 0;
+    p->vImpactForces.y = 0;
+
+    // check for collisions with ground plane
+    if(p->vPosition.y <= (_GROUND_PLANE+p->fRadius)) {
+      n.x = 0;
+      n.y = 1;
+      vr = p->vVelocity;
+      vrn = vr * n;
+      // check to see if the particle is moving toward the ground
+      if(vrn < 0.0) {
+        J = -(vr*n) * (_RESTITUTION + 1) * p->fMass;
+        Fi = n;
+        Fi *= J/_TIMESTEP;
+        p->vImpactForces += Fi;
+
+        p->vPosition.y = _GROUND_PLANE + p->fRadius;
+        p->vPosition.x = ((_GROUND_PLANE + p->fRadius −
+                         p->vPreviousPosition.y) /
+                        (p->vPosition.y - p->vPreviousPosition.y) *
+                        (p->vPosition.x - p->vPreviousPosition.x)) +
+                        p->vPreviousPosition.x;
+
+        hasCollision = true;
+      }
+    }
+
+  return hasCollision;
+}
+    
+    
+====================================
+        J = -(vr*n) * (_RESTITUTION + 1) * p->fMass;
+        Fi = n;
+        Fi *= J/_TIMESTEP;
+        p->vImpactForces += Fi;
+
+        p->vPosition.y = _GROUND_PLANE + p->fRadius;
+        p->vPosition.x = (_GROUND_PLANE + p->fRadius −
+                         p->vPreviousPosition.y) /
+                        (p->vPosition.y - p->vPreviousPosition.y) *
+                        (p->vPosition.x - p->vPreviousPosition.x) +
+                         p->vPreviousPosition.x;
+
+        hasCollision = true;
+    
+    
+====================================
+Particle      Obstacles[_NUM_OBSTACLES];
+    
+    
+====================================
+bool  Initialize(void)
+{
+  .
+  .
+  .
+
+  for(i=0; i<_NUM_OBSTACLES; i++)
+  {
+    Obstacles[i].vPosition.x = GetRandomNumber(_WINWIDTH/2 −
+                               _OBSTACLE_RADIUS*10,
+                               _WINWIDTH/2 +
+                               _OBSTACLE_RADIUS*10, false);
+    Obstacles[i].vPosition.y = GetRandomNumber(_GROUND_PLANE +
+                               _OBSTACLE_RADIUS, _WINHEIGHT/2 −
+                               _OBSTACLE_RADIUS*4, false);
+    Obstacles[i].fRadius = _OBSTACLE_RADIUS;
+    Obstacles[i].fMass = 100;
+  }
+  .
+  .
+  .
+}
+    
+    
+====================================
+void DrawObstacles(void)
+{
+  int    i;
+
+  for(i=0; i<_NUM_OBSTACLES; i++)
+  {
+    Obstacles[i].Draw();
+  }
+
+}
+    
+    
+====================================
+void  UpdateSimulation(void)
+{
+  .
+  .
+  .
+
+  // initialize the back buffer
+  if(FrameCounter >= _RENDER_FRAME_COUNT)
+  {
+    ClearBackBuffer();
+    // Draw ground plane
+    DrawLine(0, _WINHEIGHT - _GROUND_PLANE,
+             _WINWIDTH, _WINHEIGHT - _GROUND_PLANE,
+             3, RGB(0,0,0));
+
+    DrawObstacles();
+  }
+  .
+  .
+  .
+}
+    
+    
+====================================
+bool  CheckForCollisions(Particle* p)
+{
+  .
+  .
+  .
+
+    // Check for collisions with obstacles
+    float r;
+    Vector d;
+    float s;
+
+    for(i=0; i<_NUM_OBSTACLES; i++)
+    {
+      r = p->fRadius + Obstacles[i].fRadius;
+      d = p->vPosition - Obstacles[i].vPosition;
+      s = d.Magnitude() - r;
+
+      if(s <= 0.0)
+      {
+        d.Normalize();
+        n = d;
+        vr = p->vVelocity - Obstacles[i].vVelocity;
+        vrn = vr*n;
+
+
+        if(vrn < 0.0)
+        {
+          J = -(vr*n) * (_RESTITUTION + 1) /
+             (1/p->fMass + 1/Obstacles[i].fMass);
+          Fi = n;
+          Fi *= J/_TIMESTEP;
+          p->vImpactForces += Fi;
+
+          p->vPosition -= n*s;
+          hasCollision = true;
+        }
+      }
+    }
+  .
+  .
+  .
+}
+    
+    
+==================

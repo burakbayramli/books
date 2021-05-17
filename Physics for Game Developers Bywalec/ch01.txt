@@ -1,0 +1,101 @@
+chapter: Basic Concepts
+==================
+typedef struct _PointMass
+{
+   float mass;
+   Vector designPosition;
+   Vector correctedPosition;
+} PointMass;
+
+// Assume that _NUMELEMENTS has been defined
+PointMassElements[_NUMELEMENTS];
+    
+    
+====================================
+int  i;
+float TotalMass;
+Vector CombinedCG;
+Vector FirstMoment;
+
+TotalMass = 0;
+for(i=0; i<_NUMELEMENTS; i++)
+   TotalMass FAC+= Elements[i].mass;
+
+FirstMoment = Vector(0, 0, 0);
+for(i=0; i<_NUMELEMENTS; i++)
+{
+   FirstMoment += Element[i].mass * Element[i].designPosition;
+}
+CombinedCG = FirstMoment / TotalMass;
+    
+    
+====================================
+for(i=0; i<_NUMELEMENTS; i++)
+{
+   Element[i].correctedPosition = Element[i].designPosition -
+                  CombinedCG;
+}
+    
+    
+====================================
+typedef struct _PointMass
+{
+   float mass;
+   Vector designPosition;
+   Vector correctedPosition;
+   Vector localInertia;
+} PointMass;
+    
+    
+====================================
+float   Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
+Matrix3x3 InertiaTensor;
+
+Ixx = 0;  Iyy = 0;  Izz = 0;
+Ixy = 0;  Ixz = 0;  Iyz = 0;
+
+for (i = 0; i<_NUMELEMENTS; i++)
+{
+   Ixx += Element[i].LocalInertia.x +
+      Element[i].mass * (Element[i].correctedPosition.y *
+      Element[i].correctedPosition.y +
+      Element[i].correctedPosition.z *
+      Element[i].correctedPosition.z);
+
+   Iyy += Element[i].LocalInertia.y +
+      Element[i].mass * (Element[i].correctedPosition.z *
+      Element[i].correctedPosition.z +
+      Element[i].correctedPosition.x *
+      Element[i].correctedPosition.x);
+
+   Izz += Element[i].LocalInertia.z +
+      Element[i].mass * (Element[i].correctedPosition.x *
+      Element[i].correctedPosition.x +
+      Element[i].correctedPosition.y *
+      Element[i].correctedPosition.y);
+
+   Ixy += Element[i].mass * (Element[i].correctedPosition.x *
+      Element[i].correctedPosition.y);
+
+   Ixz += Element[i].mass * (Element[i].correctedPosition.x *
+      Element[i].correctedPosition.z);
+
+   Iyz += Element[i].mass * (Element[i].correctedPosition.y *
+      Element[i].correctedPosition.z);
+}
+
+// e11 stands for element on row 1 column 1, e12 for row 1 column 2, etc.
+InertiaTensor.e11 = Ixx;
+InertiaTensor.e12 = -Ixy;
+InertiaTensor.e13 = -Ixz;
+
+InertiaTensor.e21 = -Ixy;
+InertiaTensor.e22 = Iyy;
+InertiaTensor.e23 = -Iyz;
+
+InertiaTensor.e31 = -Ixz;
+InertiaTensor.e32 = -Iyz;
+InertiaTensor.e33 = Izz;
+    
+    
+==================

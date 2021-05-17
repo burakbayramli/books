@@ -1,0 +1,356 @@
+chapter: Kinematics
+==================
+    FIRE BUTTON PRESSED EVENT:
+
+        Fetch and store user input values for global variables,
+        Vm, Alpha, Gamma, L, Yb, X, Y, Z, Length, Width, Height...
+
+        Initialize the time and status variables...
+        status = 0;
+        time = 0;
+
+        Start stepping through time for the simulation
+        until the target is hit, the shell hits
+        the ground, or the simulation times out...
+
+        while(status == 0)
+        {
+            // do the next time step
+            status = DoSimulation();
+
+            Update the display...
+
+        }
+
+        // Report results
+        if (status == 1)
+            Display DIRECT HIT message to the user...
+
+        if (status == 2)
+            Display MISSED TARGET message to the user...
+
+        if (status == 3)
+            Display SIMULATION TIMED OUT message to the user...
+    
+    
+====================================
+//---------------------------------------------------------------------------//
+// Define a custom type to represent
+// the three components of a 3D vector, where
+// i represents the x component, j represents
+// the y component, and k represents the z
+// component
+//---------------------------------------------------------------------------//
+typedef struct TVectorTag
+{
+     double i;
+     double j;
+     double k;
+} TVector;
+
+//---------------------------------------------------------------------------//
+// Now define the variables required for this simulation
+//---------------------------------------------------------------------------//
+double          Vm;    // Magnitude of muzzle velocity, m/s
+double          Alpha; // Angle from y-axis (upward) to the cannon.
+                       // When this angle is 0, the cannon is pointing
+                       // straight up, when it is 90 degrees, the cannon
+                       // is horizontal
+double          Gamma; // Angle from x-axis, in the x-z plane to the cannon.
+                       // When this angle is 0, the cannon is pointing in
+                       // the positive x-direction, positive values of this angle
+                       // are toward the positive z-axis
+double          L;     // This is the length of the cannon, m
+double          Yb;    // This is the base elevation of the cannon, m
+
+double          X;     // The x-position of the center of the target, m
+double          Y;     // The y-position of the center of the target, m
+double          Z;     // The z-position of the center of the target, m
+double          Length; // The length of the target measured along the x-axis, m
+double          Width;  // The width of the target measured along the z-axis, m
+double          Height; // The height of the target measure along the y-axis, m
+
+TVector          s;     // The shell position (displacement) vector
+
+double          time;   // The time from the instant the shell leaves
+                        // the cannon, seconds
+double          tInc;   // The time increment to use when stepping through
+                        // the simulation, seconds
+
+double          g;      // acceleration due to gravity, m/s^2
+
+//-----------------------------------------------------------------------------//
+// This function steps the simulation ahead in time. This is where the kinematic
+// properties are calculated. The function will return 1 when the target is hit,
+// and 2 when the shell hits the ground (x-z plane) before hitting the target;
+// otherwise, the function returns 0.
+//-----------------------------------------------------------------------------//
+int    DoSimulation(void)
+//-----------------------------------------------------------------------------//
+{
+    double    cosX;
+    double    cosY;
+    double    cosZ;
+    double    xe, ze;
+    double    b, Lx, Ly, Lz;
+    double    tx1, tx2, ty1, ty2, tz1, tz2;
+
+    // step to the next time in the simulation
+    time+=tInc;
+
+    // First calculate the direction cosines for the cannon orientation.
+    // In a real game, you would not want to put this calculation in this
+    // function since it is a waste of CPU time to calculate these values
+    // at each time step as they never change during the sim. We only put them
+     // here in this case so you can see all the calculation steps in a single
+    // function.
+    b = L * cos((90-Alpha) *3.14/180);  // projection of barrel onto x-z plane
+    Lx = b * cos(Gamma * 3.14/180);    // x-component of barrel length
+    Ly = L * cos(Alpha * 3.14/180);    // y-component of barrel length
+    Lz = b  * sin(Gamma * 3.14/180);    // z-component of barrel length
+
+    cosX = Lx/L;
+    cosY = Ly/L;
+    cosZ = Lz/L;
+
+    // These are the x and z coordinates of the very end of the cannon barrel
+    // we'll use these as the initial x and z displacements
+    xe = L * cos((90-Alpha) *3.14/180) * cos(Gamma * 3.14/180);
+    ze = L * cos((90-Alpha) *3.14/180) * sin(Gamma * 3.14/180);
+
+    // Now we can calculate the position vector at this time
+    s.i =     Vm * cosX * time + xe;
+    s.j =     (Yb + L * cos(Alpha*3.14/180)) + (Vm * cosY * time) −
+        (0.5 * g * time * time);
+    s.k =     Vm * cosZ * time + ze;
+
+    // Check for collision with target
+    // Get extents (bounding coordinates) of the target
+    tx1 = X - Length/2;
+    tx2 = X + Length/2;
+    ty1 = Y - Height/2;
+    ty2 = Y + Height/2;
+    tz1 = Z - Width/2;
+    tz2 = Z + Width/2;
+
+    // Now check to see if the shell has passed through the target
+    // We're using a rudimentary collision detection scheme here where
+    // we simply check to see if the shell's coordinates are within the
+    // bounding box of the target. This works for demo purposes, but
+    // a practical problem is that you may miss a collision if for a given
+    // time step the shell's change in position is large enough to allow
+    // it to "skip" over the target.
+    // A better approach is to look at the previous time step's position data
+    // and to check the line from the previous position to the current position
+    // to see if that line intersects the target bounding box.
+    if( (s.i >= tx1 && s.i <= tx2) &&
+        (s.j >= ty1 && s.j <= ty2) &&
+        (s.k >= tz1 && s.k <= tz2) )
+        return 1;
+
+    // Check for collision with ground (x-z plane)
+    if(s.j <= 0)
+        return 2;
+
+    // Cut off the simulation if it's taking too long
+    // This is so the program does not get stuck in the while loop
+    if(time>3600)
+        return 3;
+
+    return 0;
+}
+    
+    
+====================================
+    // Now we can calculate the position vector at this time
+    s.i =     Vm * cosX * time + xe;
+    s.j =     (Yb + L * cos(Alpha*3.14/180)) + (Vm * cosY * time) −
+        (0.5 * g * time * time);
+    s.k =     Vm * cosZ * time + ze;
+    
+    
+====================================
+//---------------------------------------------------------------------------//
+// Define a custom type to represent each particle in the effect.
+//---------------------------------------------------------------------------//
+typedef     struct _TParticle
+{
+     float          x;           // x coordinate of the particle
+     float          y;           // y coordinate of the particle
+     float          vi;          // initial velocity
+     float          angle;       // initial trajectory (direction)
+     int            life;        // duration in milliseconds
+     int            r;           // red component of particle's color
+     int            g;           // green component of particle's color
+     int            b;           // blue component of particle's color
+     int            time;        // keeps track of the effect's time
+     float          gravity;     // gravity factor
+     BOOL           Active;      // indicates whether this particle
+                                 // is active or dead
+} TParticle;
+
+#define     _MAXPARTICLES 50
+
+typedef struct _TParticleExplosion
+{
+     TParticle     p[_MAXPARTICLES];  // list of particles
+                                      // making up this effect
+     int           V0; // initial velocity, or strength, of the effect
+     int           x;  // initial x location
+     int           y;  // initial y location
+     BOOL          Active;      // indicates whether this effect is
+                                //active or dead
+} TParticleExplosion;
+
+//---------------------------------------------------------------------------//
+// Now define the variables required for this simulation
+//---------------------------------------------------------------------------//
+TParticleExplosion     Explosion;
+
+int                      xc;         // x coordinate of the effect
+int                      yc;         // y coordinate of the effect
+int                      V0;         // initial velocity
+int                      Duration;   // life in milliseconds
+float                    Gravity;    // gravity factor (acceleration)
+float                    Angle;      // indicates particles' direction
+    
+    
+====================================
+/////////////////////////////////////////////////////////////////////
+/*     This function creates a new particle explosion effect.
+
+     x,y:      starting point of the effect
+     Vinit:    a measure of how fast the particles will be sent flying
+               (it's actually the initial velocity of the particles)
+     life:     life of the particles in milliseconds; particles will
+               fade and die out as they approach
+               their specified life
+     gravity:  the acceleration due to gravity, which controls the
+               rate at which particles will fall
+               as they fly
+     angle:    initial trajectory angle of the particles,
+               specify 999 to create a particle explosion
+               that emits particles in all directions; otherwise,
+               0 right, 90 up, 180 left, etc...
+*/
+void CreateParticleExplosion(int x, int y, int Vinit, int life,
+                             float gravity, float angle)
+{
+     int   i;
+     int   m;
+     float f;
+
+     Explosion.Active = TRUE;
+     Explosion.x = x;
+     Explosion.y = y;
+     Explosion.V0 = Vinit;
+
+     for(i=0; i<_MAXPARTICLES; i++)
+     {
+          Explosion.p[i].x = 0;
+          Explosion.p[i].y = 0;
+          Explosion.p[i].vi = tb_Rnd(Vinit/2, Vinit);
+
+          if(angle < 999)
+          {
+               if(tb_Rnd(0,1) == 0)
+                    m = −1;
+               else
+                    m = 1;
+               Explosion.p[i].angle = -angle + m * tb_Rnd(0,10);
+          } else
+               Explosion.p[i].angle = tb_Rnd(0,360);
+
+          f = (float) tb_Rnd(80, 100) / 100.0f;
+          Explosion.p[i].life = tb_Round(life * f);
+          Explosion.p[i].r = 255;//tb_Rnd(225, 255);
+          Explosion.p[i].g = 255;//tb_Rnd(85, 115);
+          Explosion.p[i].b = 255;//tb_Rnd(15, 45);
+          Explosion.p[i].time = 0;
+          Explosion.p[i].Active = TRUE;
+          Explosion.p[i].gravity = gravity;
+     }
+
+}
+    
+    
+====================================
+while(status)
+{
+    Clear the off screen buffer...
+
+    status = DrawParticleExplosion( );
+
+    Copy the off screen buffer to the screen...
+}
+    
+    
+====================================
+//---------------------------------------------------------------------------//
+// Draws the particle system and updates the state of each particle.
+// Returns false when all of the particles have died out.
+//---------------------------------------------------------------------------//
+
+BOOL     DrawParticleExplosion(void)
+{
+     int      i;
+     BOOL     finished = TRUE;
+     float    r;
+
+     if(Explosion.Active)
+       for(i=0; i<_MAXPARTICLES; i++)
+       {
+          if(Explosion.p[i].Active)
+          {
+               finished = FALSE;
+
+               // Calculate a color scale factor to fade the particle's color
+               // as its life expires
+               r = ((float)(Explosion.p[i].life-
+                     Explosion.p[i].time)/(float)(Explosion.p[i].life));
+
+               ...
+               Draw the particle as a small circle...
+               ...
+
+               Explosion.p[i].Active = UpdateParticleState(&(Explosion.p[i]),
+                                                           10);
+          }
+       }
+
+     if(finished)
+          Explosion.Active = FALSE;
+
+     return !finished;
+}
+
+//---------------------------------------------------------------------------//
+/*  This is generic function to update the state of a given particle.
+     p:         pointer to a particle structure
+     dtime:     time increment in milliseconds to
+                advance the state of the particle
+
+     If the total elapsed time for this particle has exceeded the particle's
+     set life, then this function returns FALSE, indicating that the particle
+     should expire.
+*/
+BOOL     UpdateParticleState(TParticle* p, int dtime)
+{
+     BOOL retval;
+     float     t;
+
+     p->time+=dtime;
+     t = (float)p->time/1000.0f;
+     p->x = p->vi * cos(p->angle*PI/180.0f) * t;
+     p->y = p->vi * sin(p->angle*PI/180.0f) * t + (p->gravity*t*t)/2.0f;
+
+     if (p->time >= p->life)
+          retval = FALSE;
+     else
+          retval = TRUE;
+
+     return retval;
+}
+    
+    
+==================

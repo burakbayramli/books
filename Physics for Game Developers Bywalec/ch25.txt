@@ -1,0 +1,40 @@
+chapter: Optical Tracking
+==================
+{(x[i],y[i],z[i],t[i]),(x[i+1],y[i+1],z[i+1],t[i+1]) ,
+(x[i+2],y[i+2],z[i+2],t[i+2]), ...}
+    
+    
+====================================
+Vector findVelocity (x[i-1], y[i-1], z[i-1], t[i-1], x[i], y[i], z[i], t[i]){
+
+    float vx, vy, vz;
+
+    vx = (x[i] − x[i-1])/(t[i]-t[i-1]);
+    vy = (y[i] − y[i-1])/(t[i]-t[i-1]);
+    vz = (z[i] − z[i-1])/(t[i]-t[i-1]);
+
+    vector velocity = {vx, vy, vz};
+
+    return velocity;
+
+}
+    
+    
+====================================
+Vector findAcceleration (x[i-2], y[i-2], z[i-2], t[i-2], x[i-1], y[i-1], z[i-1], 
+                         t[i-1], x[i], y[i], z[i], t[i] ){
+
+    float ax, ay, az, h;
+    vector acceleration;
+
+    h = t[i]-t[i-1];
+
+    ax = (x[i] − 2*x[i-1] + x[i-2]) / h;
+    ay = (y[i] − 2*y[i-1] + y[i-2]) / h;
+    az = (z[i] − 2*z[i-1] + z[i-2]) / h;
+
+    return acceleration = {ax, ay, az};
+}
+    
+    
+==================

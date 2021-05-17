@@ -1,0 +1,87 @@
+chapter: Sound
+==================
+int main()
+{
+    ALuint      uiBuffer;
+    ALuint      uiSource;
+    ALint       iState;
+
+    // Initialize Framework
+    ALFWInit();
+
+    if (!ALFWInitOpenAL())
+    {
+        ALFWprintf("Failed to initialize OpenAL\n");
+        ALFWShutdown();
+        return 0;
+    }
+
+    // Generate an AL Buffer
+    alGenBuffers( 1, &uiBuffer );
+
+    // Load Wave file into OpenAL Buffer
+    if (!ALFWLoadWaveToBuffer((char*)ALFWaddMediaPath(TEST_WAVE_FILE), uiBuffer))
+    {
+        ALFWprintf("Failed to load %s\n", ALFWaddMediaPath(TEST_WAVE_FILE));
+    }
+
+    // Specify the location of the Listener
+    alListener3f(AL_POSITION, 0, 0, 0);
+
+    // Generate a Source to playback the Buffer
+    alGenSources( 1, &uiSource );
+
+    // Attach Source to Buffer
+    alSourcei( uiSource, AL_BUFFER, uiBuffer );
+
+    // Set the Doppler effect factor
+    alDopplerFactor(10);
+
+    // Initialize variables used to reposition the source
+    float x = 75;
+    float y = 0;
+    float z = −10;
+    float dx = −1;
+    float dy = 0.1;
+    float dz = 0.25;
+
+    // Set Initial Source properties
+    alSourcei(uiSource, AL_LOOPING, AL_TRUE);
+    alSource3f(uiSource, AL_POSITION, x, y, z);
+    alSource3f(uiSource, AL_VELOCITY, dx, dy, dz);
+
+    // Play Source
+    alSourcePlay( uiSource );
+
+    do
+    {
+        Sleep(100);
+
+        if(fabs(x) > 75) dx = -dx;
+        if(fabs(y) > 5) dy = -dy;
+        if(fabs(z) > 10) dz = -dz;
+        alSource3f(uiSource, AL_VELOCITY, dx, dy, dz);
+
+        x += dx;
+        y += dy;
+        z += dz;
+        alSource3f(uiSource, AL_POSITION, x, y, z);
+
+        // Get Source State
+        alGetSourcei( uiSource, AL_SOURCE_STATE, &iState);
+    } while (iState == AL_PLAYING);
+
+    // Clean up by deleting Source(s) and Buffer(s)
+    alSourceStop(uiSource);
+    alDeleteSources(1, &uiSource);
+    alDeleteBuffers(1, &uiBuffer);
+
+    ALFWShutdownOpenAL();
+
+    ALFWShutdown();
+
+    return 0;
+}
+    
+    
+==================
