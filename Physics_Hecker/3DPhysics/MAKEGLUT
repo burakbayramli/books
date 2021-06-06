@@ -1,0 +1,37 @@
+NAME=physics
+
+CC  = cl -c -W3 -Zi -O2ab1gityp- -G5s -QIfdiv- -DSTRICT -DWIN32 -D_WIN32
+ASM = ml -c -D_WIN32=1 -Zi -Zf -coff
+LINK= link -map -pdb:none -debug:full -debugtype:cv -out:$(NAME).exe -subsystem:console
+DEF =-DDEBUG -DSTRICT
+RC  = rc
+
+OBJ  = glut.obj $(NAME).obj math3d.obj
+
+LIBS = opengl32.lib glu32.lib glut32.lib gdi32.lib user32.lib comdlg32.lib winmm.lib
+
+.cpp.obj:
+       $(CC) /Fo$*.obj /Fl$*.lst $< 
+
+.asm.obj:
+       $(ASM) /Fo$*.obj /Fl $<
+
+goal: $(NAME).exe
+
+$(NAME).exe: $(OBJ) $(NAME).res makefile
+        $(LINK) $(OBJ) $(LIBS) $(NAME).res
+
+$(NAME).res: $(NAME).rc $(NAME).ico
+        $(RC) -r $(NAME).rc
+
+clean:
+        del $(NAME).exe
+                del *.lst
+        del *.res
+        del *.err
+        del *.obj
+        del *.map
+        del *.sym
+        del *.cod
+        del *.pdb
+
