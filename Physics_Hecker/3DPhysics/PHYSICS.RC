@@ -1,0 +1,55 @@
+/*----------------------------------------------------------------------------
+
+3D Physics Test Program - a cheesy test harness for 3D physics
+
+by Chris Hecker for my Game Developer Magazine articles.  See my homepage
+for more information.
+
+NOTE: This is a hacked test program, not a nice example of Windows programming.
+physics.cpp the only part of this you should look at!!!
+
+This material is Copyright 1997 Chris Hecker, All Rights Reserved.
+It's for you to read and learn from, not to put in your own articles
+or books or on your website, etc.  Thank you.
+
+Chris Hecker
+checker@d6.com
+http://www.d6.com/users/checker
+
+*/
+
+#include "windows.h"
+#include "win32.h"
+
+AppIcon  ICON   physics.ico
+
+AppAbout DIALOG DISCARDABLE  0, 0, 255, 86
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About the Cheesy Physics App"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,5,65,50,14
+    LTEXT           "Cheesy 3D Physics Test App for my Game Developer Magazine articles",
+                    -1,5,5,250,8
+    LTEXT           "by Chris Hecker (checker@d6.com)",-1,5,15,150,8
+    LTEXT           "http://www.d6.com/users/checker",-1,5,25,250,8
+    LTEXT           "Arrow keys rotate and i and o keys move in and out.",-1,5,40,250,8
+        ICON                    "AppIcon",-1,225,30,0,0
+END
+
+AppMenu menu
+begin
+        POPUP "&File"
+        BEGIN
+                MENUITEM "&About",      MENU_ABOUT
+                MENUITEM "&Exit",       MENU_EXIT
+        END
+        POPUP "&Toggles"
+        BEGIN
+                MENUITEM "&WorldSprings\aW",    MENU_WORLDSPRING
+                MENUITEM "&BodySprings\aB",     MENU_BODYSPRING
+                MENUITEM "&Damping\aD", MENU_DAMPING
+                MENUITEM "&Gravity\aG", MENU_GRAVITY
+        END
+end
+
