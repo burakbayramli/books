@@ -307,8 +307,11 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
             # keep the triangles whose geometrical center is inside the shape
             t = t[np.where(fd(pmid) < -geps)]
             bars = np.concatenate((t[:,[0,1]],t[:,[0,2]], t[:,[1,2]]))
+            print ('bars aft concat',bars.shape)
             # delete repeated bars
-            bars = unique_rows(np.sort(bars))
+            #bars = unique_rows(np.sort(bars))
+            bars = np.unique(np.sort(bars),axis=0)
+            print ('bars uniq',bars.shape)
             print (bars.shape)
             if Iflag == 4:
                 min_q, min_angle_deg = triqual_flag(p,t)
@@ -321,9 +324,8 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
                 ktrimesh(p,bars)
 
         # move mesh points based on bar lengths L and forces F
-
-        print (p.shape)
-        print (bars.shape)
+        print ('p',p.shape)
+        print ('bars',bars.shape)
         barvec = p[bars[:,0],:] - p[bars[:,1],:]
         L = np.sqrt(np.sum(barvec**2,axis=1))
         hbars = 0.5*(fh(p[bars[:,0],:]) + fh(p[bars[:,1],:]))

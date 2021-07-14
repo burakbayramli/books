@@ -31,7 +31,7 @@ def plot_shapes(xc,yc,r):
     plt.xlabel('x')
     plt.ylabel('y')
     plt.axis('equal')
-    plt.show()
+    #plt.show()
     return
 
 # ------------- Optional plot ---------------------------------------
