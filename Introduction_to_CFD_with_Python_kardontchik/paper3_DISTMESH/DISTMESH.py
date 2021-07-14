@@ -307,7 +307,6 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
             # keep the triangles whose geometrical center is inside the shape
             t = t[np.where(fd(pmid) < -geps)]
             bars = np.concatenate((t[:,[0,1]],t[:,[0,2]], t[:,[1,2]]))
-            print ('bars aft concat',bars.shape)
             # delete repeated bars
             #bars = unique_rows(np.sort(bars))
             bars = np.unique(np.sort(bars),axis=0)
@@ -324,8 +323,6 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
                 ktrimesh(p,bars)
 
         # move mesh points based on bar lengths L and forces F
-        print ('p',p.shape)
-        print ('bars',bars.shape)
         barvec = p[bars[:,0],:] - p[bars[:,1],:]
         L = np.sqrt(np.sum(barvec**2,axis=1))
         hbars = 0.5*(fh(p[bars[:,0],:]) + fh(p[bars[:,1],:]))
@@ -375,10 +372,12 @@ def distmesh(fd,fh,h0,xmin,ymin,xmax,ymax,pfix,ttol=0.1,dptol=0.001,Iflag=1,qmin
     t = t[np.where(fd(pmid) < -geps)]
     bars = np.concatenate((t[:,[0,1]],t[:,[0,2]], t[:,[1,2]]))
     # delete repeated bars
-    bars = unique_rows(np.sort(bars))
+    #bars = unique_rows(np.sort(bars))
+    bars = np.unique(np.sort(bars),axis=0)
     # orient all the triangles counterclockwise (ccw)
     t = ccw_tri(p,t)
     # graphical output of the current mesh
+    print ('bars 2',bars.shape)
     ktrimesh(p,bars)
     triqual(p,t,fh)
     return p,t,bars
