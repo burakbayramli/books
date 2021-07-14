@@ -38,7 +38,6 @@ def ktrimesh(p,bars,pflag=0):
         yp = np.array([yy1[i],yy2[i]])
         plt.plot(xmin,ymin,'.',xmax,ymax,'.',markersize=0.1)
         plt.plot(xp,yp,'k')
-        plt.hold('on')
     plt.axis('equal')
     if pflag == 0:
         stitle = 'Triangular Mesh'
@@ -48,7 +47,6 @@ def ktrimesh(p,bars,pflag=0):
     plt.title(stitle)
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.hold('off')
     plt.show()
     return 1
 
