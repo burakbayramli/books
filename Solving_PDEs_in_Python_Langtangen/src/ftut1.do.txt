@@ -1,0 +1,68 @@
+# #include "mako_code.txt"
+
+% if FORMAT == "sphinx":
+# Sphinx cannot have more than 63 chars in the title...
+TITLE: The FEniCS Tutorial Volume I
+% elif FORMAT == "pdflatex":
+TITLE: Solving PDEs in Python \\ -- The FEniCS Tutorial Volume I
+% elif FORMAT == "html":
+TITLE: Solving PDEs in Python - <br> The FEniCS Tutorial Volume I
+% endif
+AUTHOR: Hans Petter Langtangen {copyright|CC BY} at Center for Biomedical Computing, Simula Research Laboratory & Department of Informatics, University of Oslo
+AUTHOR: Anders Logg {copyright|CC BY} Email: logg@chalmers.se at Department of Mathematical Sciences, Chalmers University of Technology & Center for Biomedical Computing, Simula Research Laboratory & Computational Engineering and Design, Fraunhofer-Chalmers Centre
+
+__Preface.__
+
+This book gives a concise and gentle introduction to finite element
+programming in Python based on the popular FEniCS software library.
+Through a series of examples, including among others the Poisson
+equation, the equations of linear elasticity, the incompressible
+Navier--Stokes equations, and systems of nonlinear
+advection--diffusion--reaction equations, the reader is guided through
+the essential steps of how to quickly solve a PDE in FEniCS, including
+how to define a finite variational problem, how to set boundary
+conditions, how to solve linear and nonlinear systems, and how to
+visualize solutions and structure finite element Python programs.
+
+This document is also available in
+% if FORMAT in ("sphinx",):
+"PDF": "${pub_url}/pdf/fenics-tutorial-vol1.pdf" and
+"HTML": "${pub_url}/html/ftut1.html"
+formats.
+% elif FORMAT in ("latex", "pdflatex"):
+"Sphinx": "${pub_url}/sphinx1/" and
+"HTML": "${pub_url}/html/ftut1.html"
+formats.
+% elif FORMAT == "html":
+"PDF": "${pub_url}/pdf/fenics-tutorial-vol1.pdf" and
+"Sphinx": "${pub_url}/sphinx1/"
+formats.
+% endif
+
+DATE: today
+
+!split
+TOC: on
+
+!split
+# #include "vol1/preface.do.txt"
+
+!split
+# #include "vol1/preliminaries.do.txt"
+
+!split
+# #include "vol1/fundamentals.do.txt"
+
+!split
+# #include "vol1/gallery.do.txt"
+
+!split
+# #include "vol1/subdomains.do.txt"
+
+!split
+# #include "vol1/extensions.do.txt"
+
+!split
+======= Bibliography =======
+
+BIBFILE: bib/papers.pub
