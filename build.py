@@ -8,5 +8,6 @@ if sys.argv[1] == 'title':
     for f in files:
         fname = f.replace("_"," ")
         fname = fname.replace("-"," ")
+        if "build.py" in fname: continue
         print ("- [%s](%s)" % (fname,f))
 
