@@ -1,0 +1,4 @@
+function cleargraphics()
+
+drawnow;
+cla;
