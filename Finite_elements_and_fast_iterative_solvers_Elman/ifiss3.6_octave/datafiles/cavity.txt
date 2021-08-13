@@ -1,0 +1,640 @@
+navier_testproblem
+
+specification of reference Navier-Stokes problem.
+
+choose specific example (default is cavity)
+     1  Channel domain
+     2  Flow over a backward facing step
+     3  Lid driven cavity
+     4  Flow over a plate
+     5  Flow around a square obstruction
+     6  Flow in a symmetric step channel
+ : 3
+cavity type leaky/tight/regularised 1/2/3 (regularised) : 
+
+
+Grid generation for cavity domain.
+grid parameter: 3 for underlying 8x8 grid (default is 16x16) : 6
+uniform/stretched grid (1/2) (default is uniform) : 2
+computed stretch ratio is     1.0977 
+Q1-Q1/Q1-P0/Q2-Q1/Q2-P1: 1/2/3/4? (default Q1-P0) : 4
+setting up Q2-P1 matrices...  done
+system matrices saved in square_stokes_nobc.mat ...
+Enclosed flow problem ...
+viscosity parameter (default 1/100) : 1/1000
+Picard/Newton/hybrid linearization 1/2/3 (default hybrid) : 
+number of Picard iterations (default 3) : 
+number of Newton iterations (default 5) : 
+nonlinear tolerance (default 1.1*eps) : 
+stokes system ...
+setting up Q2 convection matrix...  done.
+uniform/nonuniform streamlines 1/2 (default uniform) : 
+
+
+initial nonlinear residual is 7.767655e+01 
+Stokes solution residual is 4.343780e-01
+
+Picard iteration number 1 
+setting up Q2 convection matrix...  done.
+nonlinear residual is 1.062875e-02
+   velocity change is 1.144428e+01
+
+Picard iteration number 2 
+setting up Q2 convection matrix...  done.
+nonlinear residual is 8.650068e-03
+   velocity change is 4.813112e+00
+
+Picard iteration number 3 
+setting up Q2 convection matrix...  done.
+nonlinear residual is 3.927925e-03
+   velocity change is 2.433842e+00
+
+Newton iteration number 1 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 2.755527e-04
+   velocity change is 1.304101e+00
+
+Newton iteration number 2 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 1.839085e-05
+   velocity change is 2.922488e-01
+
+Newton iteration number 3 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 3.967687e-08
+   velocity change is 1.224835e-02
+
+Newton iteration number 4 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 5.831377e-13
+   velocity change is 5.063285e-05
+
+Newton iteration number 5 
+setting up Q2 Newton Jacobian matrices...  done.
+setting up Q2 convection matrix...  done.
+nonlinear residual is 8.851309e-17
+   velocity change is 1.579320e-10
+
+finished, nonlinear convergence test satisfied
+
+Enclosed flow ..
+FAST Q2-P1 NS a posteriori error estimation 
+checking edge numbering and computing edge lengths ... done
+Q2-P1 local N-S error estimator ...  
+interior residual RHS assembly took 2.3683e-01 seconds
+flux jump RHS assembly took 5.5101e-02 seconds
+LDLT factorization took 1.6535e-02 seconds
+triangular solves took 1.5296e-02 seconds
+computing divergence of discrete velocity solution ...  done
+estimated velocity divergence error:  2.474061e-03 
+estimated energy error is 8.4816e-01 
+plotting element data... done
+
+refviscosity= viscosity;
+save steadysol xns nnv refviscosity
+
+>> unsteady_navier
+Unsteady flow in a square domain ...
+viscosity parameter (default 1/200) : 1/1000
+Discrete Saddle-Point DAE system ...
+target time? (default 1e8) : 
+accuracy tolerance? (default 3e-5) : 1e-4
+number of Picard steps? (default 2) : 1
+averaging frequency? (default 10) : 
+plot vorticity evolution? 1/0 : 0
+Solving DAE system using stabilized TR ...
+
+AxBhandle = @defaultAxB
+
+  initial nonlinear residual is 6.436582e-04 
+             boundary change is 6.966559e-08 
+setting up Q2 convection matrix...  done.
+
+lastmsg =
+
+Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  1.995705e-16.
+
+This should not cause difficulty for enclosed flow problems.
+
+ StabTR with  1 nonlinear corrections
+   step  timestep       time        divresidual     acceleration
+     1   1.000e-09     2.000e-09    0.000e+00        2.474e-01
+  0.00e+00   --- nonlinear correction  
+     2   1.000e-09     2.000e-09    2.416e-26        2.474e-01
+  1.45e-08   --- nonlinear correction  
+     3   6.023e-05     6.023e-05    3.703e-26        2.474e-01
+  3.73e-05   --- nonlinear correction  
+     4   1.165e-03     1.225e-03    5.688e-20        2.481e-01
+  1.87e-04   --- nonlinear correction  
+     5   1.569e-03     2.794e-03    1.344e-19        3.338e-01
+  2.98e-04   --- nonlinear correction  
+     6   2.218e-03     5.012e-03    7.075e-19        3.872e-01
+  8.37e-04   --- nonlinear correction  
+     7   3.784e-03     8.796e-03    4.906e-19        4.436e-01
+  1.72e-03   --- nonlinear correction  
+     8   5.521e-03     1.432e-02    1.312e-17        4.958e-01
+  2.56e-03   --- nonlinear correction  
+     9   7.559e-03     2.188e-02    2.307e-18        5.376e-01
+  3.08e-03   --- nonlinear correction  
+    10   9.997e-03     3.187e-02    4.651e-17        5.640e-01
+    10   4.999e-03     2.687e-02  --- Averaging step
+  3.85e-03   --- nonlinear correction  
+    11   1.273e-02     3.960e-02    2.285e-07        5.686e-01
+  7.30e-03   --- nonlinear correction  
+    12   1.498e-02     5.458e-02    3.910e-17        5.760e-01
+  1.60e-02   --- nonlinear correction  
+    13   1.723e-02     7.181e-02    1.677e-17        5.578e-01
+  2.97e-02   --- nonlinear correction  
+    14   2.105e-02     9.285e-02    4.945e-17        5.306e-01
+  5.18e-02   --- nonlinear correction  
+    15   2.587e-02     1.187e-01    2.231e-17        4.904e-01
+  7.31e-02   --- nonlinear correction  
+    16   2.939e-02     1.481e-01    2.211e-17        4.417e-01
+  9.45e-02   --- nonlinear correction  
+    17   3.430e-02     1.824e-01    1.584e-17        3.904e-01
+  1.07e-01   --- nonlinear correction  
+    18   3.794e-02     2.204e-01    3.147e-17        3.391e-01
+  1.13e-01   --- nonlinear correction  
+    19   4.252e-02     2.629e-01    6.339e-17        2.925e-01
+  1.12e-01   --- nonlinear correction  
+    20   4.680e-02     3.097e-01    3.909e-17        2.513e-01
+    20   2.340e-02     2.863e-01  --- Averaging step
+  1.13e-01   --- nonlinear correction  
+    21   5.216e-02     3.384e-01    3.758e-07        2.333e-01
+  1.06e-01   --- nonlinear correction  
+    22   5.458e-02     3.930e-01    1.872e-17        2.003e-01
+  1.06e-01   --- nonlinear correction  
+    23   6.603e-02     4.590e-01    7.431e-17        1.735e-01
+  8.38e-02   --- nonlinear correction  
+    24   6.548e-02     5.245e-01    1.972e-16        1.502e-01
+  7.87e-02   --- nonlinear correction  
+    25   7.894e-02     6.035e-01    3.499e-17        1.332e-01
+  7.54e-02   --- nonlinear correction  
+    26   8.828e-02     6.917e-01    1.319e-16        1.180e-01
+  7.44e-02   --- nonlinear correction  
+    27   1.017e-01     7.934e-01    1.506e-16        1.057e-01
+  7.67e-02   --- nonlinear correction  
+    28   1.138e-01     9.072e-01    5.132e-17        9.537e-02
+  8.49e-02   --- nonlinear correction  
+    29   1.259e-01     1.033e+00    1.408e-16        8.707e-02
+  9.71e-02   --- nonlinear correction  
+    30   1.342e-01     1.167e+00    3.121e-16        8.053e-02
+    30   6.709e-02     1.100e+00  --- Averaging step
+  9.86e-02   --- nonlinear correction  
+    31   1.384e-01     1.239e+00    9.319e-10        7.765e-02
+  1.14e-01   --- nonlinear correction  
+    32   1.465e-01     1.385e+00    9.955e-17        7.338e-02
+  1.19e-01   --- nonlinear correction  
+    33   1.457e-01     1.531e+00    7.146e-17        7.032e-02
+  1.16e-01   --- nonlinear correction  
+    34   1.426e-01     1.673e+00    7.408e-16        6.832e-02
+  1.12e-01   --- nonlinear correction  
+    35   1.409e-01     1.814e+00    1.393e-16        6.711e-02
+  1.08e-01   --- nonlinear correction  
+    36   1.397e-01     1.954e+00    5.018e-16        6.645e-02
+  1.05e-01   --- nonlinear correction  
+    37   1.392e-01     2.093e+00    7.985e-17        6.620e-02
+  1.01e-01   --- nonlinear correction  
+    38   1.390e-01     2.232e+00    2.697e-16        6.622e-02
+  9.77e-02   --- nonlinear correction  
+    39   1.390e-01     2.371e+00    1.232e-16        6.640e-02
+  9.36e-02   --- nonlinear correction  
+    40   1.391e-01     2.510e+00    9.997e-17        6.668e-02
+    40   6.955e-02     2.441e+00  --- Averaging step
+  8.81e-02   --- nonlinear correction  
+    41   1.391e-01     2.580e+00    1.521e-15        6.625e-02
+  8.67e-02   --- nonlinear correction  
+    42   1.431e-01     2.723e+00    9.105e-17        6.659e-02
+  8.40e-02   --- nonlinear correction  
+    43   1.435e-01     2.866e+00    4.829e-17        6.696e-02
+  7.76e-02   --- nonlinear correction  
+    44   1.420e-01     3.008e+00    3.171e-16        6.724e-02
+  7.18e-02   --- nonlinear correction  
+    45   1.419e-01     3.150e+00    2.025e-16        6.741e-02
+  6.68e-02   --- nonlinear correction  
+    46   1.422e-01     3.293e+00    8.121e-16        6.747e-02
+  6.17e-02   --- nonlinear correction  
+    47   1.431e-01     3.436e+00    2.190e-16        6.743e-02
+  5.79e-02   --- nonlinear correction  
+    48   1.444e-01     3.580e+00    2.444e-15        6.728e-02
+  5.44e-02   --- nonlinear correction  
+    49   1.461e-01     3.726e+00    5.565e-16        6.703e-02
+  5.06e-02   --- nonlinear correction  
+    50   1.484e-01     3.875e+00    2.336e-15        6.668e-02
+    50   7.418e-02     3.800e+00  --- Averaging step
+  4.78e-02   --- nonlinear correction  
+    51   1.508e-01     3.951e+00    1.241e-15        6.597e-02
+  4.69e-02   --- nonlinear correction  
+    52   1.558e-01     4.107e+00    3.530e-16        6.557e-02
+  4.55e-02   --- nonlinear correction  
+    53   1.591e-01     4.266e+00    2.085e-15        6.511e-02
+  4.21e-02   --- nonlinear correction  
+    54   1.609e-01     4.427e+00    3.494e-16        6.457e-02
+  3.94e-02   --- nonlinear correction  
+    55   1.638e-01     4.591e+00    9.172e-15        6.395e-02
+  3.77e-02   --- nonlinear correction  
+    56   1.670e-01     4.758e+00    5.649e-16        6.327e-02
+  3.57e-02   --- nonlinear correction  
+    57   1.707e-01     4.929e+00    1.970e-16        6.251e-02
+  3.33e-02   --- nonlinear correction  
+    58   1.747e-01     5.103e+00    1.463e-14        6.171e-02
+  3.13e-02   --- nonlinear correction  
+    59   1.789e-01     5.282e+00    3.769e-16        6.086e-02
+  3.00e-02   --- nonlinear correction  
+    60   1.833e-01     5.465e+00    2.870e-16        5.997e-02
+    60   9.166e-02     5.374e+00  --- Averaging step
+  2.89e-02   --- nonlinear correction  
+    61   1.882e-01     5.562e+00    2.601e-16        5.911e-02
+  2.82e-02   --- nonlinear correction  
+    62   1.947e-01     5.757e+00    1.958e-16        5.820e-02
+  2.70e-02   --- nonlinear correction  
+    63   2.006e-01     5.957e+00    2.568e-16        5.728e-02
+  2.52e-02   --- nonlinear correction  
+    64   2.046e-01     6.162e+00    4.277e-16        5.633e-02
+  2.40e-02   --- nonlinear correction  
+    65   2.099e-01     6.372e+00    4.978e-16        5.536e-02
+  2.30e-02   --- nonlinear correction  
+    66   2.157e-01     6.587e+00    4.082e-16        5.435e-02
+  2.20e-02   --- nonlinear correction  
+    67   2.220e-01     6.809e+00    2.394e-16        5.332e-02
+  2.07e-02   --- nonlinear correction  
+    68   2.287e-01     7.038e+00    1.894e-16        5.229e-02
+  1.95e-02   --- nonlinear correction  
+    69   2.357e-01     7.274e+00    2.402e-16        5.125e-02
+  1.86e-02   --- nonlinear correction  
+    70   2.427e-01     7.517e+00    2.260e-16        5.021e-02
+    70   1.214e-01     7.395e+00  --- Averaging step
+  1.81e-02   --- nonlinear correction  
+    71   2.502e-01     7.645e+00    2.680e-16        4.940e-02
+  1.79e-02   --- nonlinear correction  
+    72   2.588e-01     7.904e+00    7.287e-16        4.837e-02
+  1.74e-02   --- nonlinear correction  
+    73   2.678e-01     8.172e+00    7.312e-16        4.736e-02
+  1.63e-02   --- nonlinear correction  
+    74   2.743e-01     8.446e+00    2.375e-15        4.635e-02
+  1.54e-02   --- nonlinear correction  
+    75   2.824e-01     8.729e+00    1.820e-16        4.535e-02
+  1.47e-02   --- nonlinear correction  
+    76   2.903e-01     9.019e+00    4.103e-16        4.436e-02
+  1.42e-02   --- nonlinear correction  
+    77   2.989e-01     9.318e+00    3.936e-16        4.338e-02
+  1.37e-02   --- nonlinear correction  
+    78   3.080e-01     9.626e+00    7.793e-16        4.240e-02
+  1.31e-02   --- nonlinear correction  
+    79   3.172e-01     9.943e+00    5.677e-16        4.143e-02
+  1.25e-02   --- nonlinear correction  
+    80   3.270e-01     1.027e+01    2.417e-16        4.049e-02
+    80   1.635e-01     1.011e+01  --- Averaging step
+  1.20e-02   --- nonlinear correction  
+    81   3.365e-01     1.044e+01    2.384e-16        3.982e-02
+  1.18e-02   --- nonlinear correction  
+    82   3.478e-01     1.079e+01    4.113e-15        3.894e-02
+  1.16e-02   --- nonlinear correction  
+    83   3.596e-01     1.115e+01    1.092e-15        3.808e-02
+  1.12e-02   --- nonlinear correction  
+    84   3.679e-01     1.152e+01    2.960e-16        3.723e-02
+  1.07e-02   --- nonlinear correction  
+    85   3.780e-01     1.190e+01    3.408e-16        3.640e-02
+  1.03e-02   --- nonlinear correction  
+    86   3.891e-01     1.229e+01    1.014e-15        3.558e-02
+  9.91e-03   --- nonlinear correction  
+    87   4.005e-01     1.269e+01    3.503e-16        3.479e-02
+  9.57e-03   --- nonlinear correction  
+    88   4.115e-01     1.310e+01    1.225e-15        3.401e-02
+  9.26e-03   --- nonlinear correction  
+    89   4.244e-01     1.352e+01    4.427e-16        3.324e-02
+  8.95e-03   --- nonlinear correction  
+    90   4.381e-01     1.396e+01    1.676e-15        3.248e-02
+    90   2.191e-01     1.374e+01  --- Averaging step
+  8.72e-03   --- nonlinear correction  
+    91   4.522e-01     1.419e+01    8.422e-16        3.195e-02
+  8.74e-03   --- nonlinear correction  
+    92   4.696e-01     1.466e+01    2.652e-15        3.121e-02
+  8.73e-03   --- nonlinear correction  
+    93   4.885e-01     1.515e+01    9.132e-15        3.048e-02
+  8.45e-03   --- nonlinear correction  
+    94   5.011e-01     1.565e+01    4.006e-16        2.974e-02
+  8.14e-03   --- nonlinear correction  
+    95   5.173e-01     1.617e+01    4.858e-16        2.899e-02
+  7.84e-03   --- nonlinear correction  
+    96   5.347e-01     1.670e+01    1.316e-15        2.822e-02
+  7.58e-03   --- nonlinear correction  
+    97   5.535e-01     1.726e+01    8.388e-16        2.745e-02
+  7.40e-03   --- nonlinear correction  
+    98   5.736e-01     1.783e+01    3.028e-15        2.666e-02
+  7.25e-03   --- nonlinear correction  
+    99   5.958e-01     1.843e+01    1.117e-15        2.586e-02
+  7.06e-03   --- nonlinear correction  
+   100   6.200e-01     1.905e+01    6.244e-16        2.504e-02
+   100   3.100e-01     1.874e+01  --- Averaging step
+  6.88e-03   --- nonlinear correction  
+   101   6.456e-01     1.938e+01    3.291e-16        2.452e-02
+  6.77e-03   --- nonlinear correction  
+   102   6.715e-01     2.005e+01    8.292e-16        2.370e-02
+  6.67e-03   --- nonlinear correction  
+   103   7.062e-01     2.076e+01    7.264e-16        2.286e-02
+  6.43e-03   --- nonlinear correction  
+   104   7.304e-01     2.149e+01    1.815e-15        2.201e-02
+  6.19e-03   --- nonlinear correction  
+   105   7.611e-01     2.225e+01    2.182e-14        2.117e-02
+  5.93e-03   --- nonlinear correction  
+   106   7.940e-01     2.305e+01    4.182e-16        2.032e-02
+  5.64e-03   --- nonlinear correction  
+   107   8.297e-01     2.388e+01    5.809e-15        1.948e-02
+  5.39e-03   --- nonlinear correction  
+   108   8.687e-01     2.474e+01    1.449e-15        1.865e-02
+  5.19e-03   --- nonlinear correction  
+   109   9.122e-01     2.566e+01    4.336e-16        1.784e-02
+  4.99e-03   --- nonlinear correction  
+   110   9.606e-01     2.662e+01    2.938e-15        1.704e-02
+   110   4.803e-01     2.614e+01  --- Averaging step
+  4.90e-03   --- nonlinear correction  
+   111   1.014e+00     2.715e+01    2.377e-15        1.658e-02
+  4.77e-03   --- nonlinear correction  
+   112   1.053e+00     2.820e+01    1.050e-15        1.580e-02
+  4.71e-03   --- nonlinear correction  
+   113   1.128e+00     2.933e+01    1.566e-15        1.503e-02
+  4.58e-03   --- nonlinear correction  
+   114   1.188e+00     3.052e+01    6.278e-16        1.426e-02
+  4.44e-03   --- nonlinear correction  
+   115   1.260e+00     3.178e+01    6.437e-16        1.349e-02
+  4.33e-03   --- nonlinear correction  
+   116   1.345e+00     3.312e+01    6.839e-15        1.271e-02
+  4.22e-03   --- nonlinear correction  
+   117   1.445e+00     3.457e+01    7.303e-16        1.192e-02
+  4.14e-03   --- nonlinear correction  
+   118   1.566e+00     3.614e+01    1.788e-12        1.110e-02
+  4.10e-03   --- nonlinear correction  
+   119   1.708e+00     3.784e+01    5.117e-15        1.025e-02
+  4.12e-03   --- nonlinear correction  
+   120   1.863e+00     3.971e+01    1.496e-15        9.382e-03
+   120   9.314e-01     3.878e+01  --- Averaging step
+  4.17e-03   --- nonlinear correction  
+   121   2.018e+00     4.079e+01    1.500e-15        8.923e-03
+  4.44e-03   --- nonlinear correction  
+   122   2.106e+00     4.290e+01    5.226e-16        8.016e-03
+  4.78e-03   --- nonlinear correction  
+   123   2.265e+00     4.516e+01    5.655e-16        7.155e-03
+  5.15e-03   --- nonlinear correction  
+   124   2.446e+00     4.761e+01    7.108e-16        6.310e-03
+  5.43e-03   --- nonlinear correction  
+   125   2.646e+00     5.026e+01    2.377e-15        5.472e-03
+  5.86e-03   --- nonlinear correction  
+   126   2.882e+00     5.314e+01    3.488e-16        4.628e-03
+  6.28e-03   --- nonlinear correction  
+   127   3.077e+00     5.621e+01    1.590e-14        3.778e-03
+  5.99e-03   --- nonlinear correction  
+   128   3.132e+00     5.935e+01    5.812e-16        2.982e-03
+  5.04e-03   --- nonlinear correction  
+   129   3.050e+00     6.240e+01    4.822e-16        2.326e-03
+  4.19e-03   --- nonlinear correction  
+   130   3.075e+00     6.547e+01    4.377e-16        1.853e-03
+   130   1.537e+00     6.393e+01  --- Averaging step
+  3.84e-03   --- nonlinear correction  
+   131   3.226e+00     6.716e+01    4.606e-16        1.679e-03
+  3.25e-03   --- nonlinear correction  
+   132   3.459e+00     7.062e+01    1.069e-15        1.370e-03
+  2.77e-03   --- nonlinear correction  
+   133   3.607e+00     7.423e+01    9.602e-15        1.106e-03
+  2.38e-03   --- nonlinear correction  
+   134   3.824e+00     7.805e+01    1.234e-15        8.839e-04
+  1.86e-03   --- nonlinear correction  
+   135   3.859e+00     8.191e+01    2.057e-15        7.029e-04
+  1.65e-03   --- nonlinear correction  
+   136   3.954e+00     8.586e+01    1.044e-15        5.752e-04
+  1.42e-03   --- nonlinear correction  
+   137   4.128e+00     8.999e+01    1.993e-15        4.907e-04
+  1.26e-03   --- nonlinear correction  
+   138   4.215e+00     9.421e+01    2.153e-15        4.136e-04
+  1.27e-03   --- nonlinear correction  
+   139   4.437e+00     9.864e+01    4.418e-16        3.504e-04
+  1.04e-03   --- nonlinear correction  
+   140   4.488e+00     1.031e+02    5.916e-16        2.962e-04
+   140   2.244e+00     1.009e+02  --- Averaging step
+  8.25e-04   --- nonlinear correction  
+   141   4.719e+00     1.056e+02    7.056e-16        2.673e-04
+  8.14e-04   --- nonlinear correction  
+   142   5.336e+00     1.109e+02    6.942e-16        2.343e-04
+  7.85e-04   --- nonlinear correction  
+   143   5.642e+00     1.166e+02    1.390e-15        2.018e-04
+  7.71e-04   --- nonlinear correction  
+   144   5.972e+00     1.226e+02    1.021e-15        1.745e-04
+  6.92e-04   --- nonlinear correction  
+   145   6.288e+00     1.288e+02    6.778e-16        1.558e-04
+  6.50e-04   --- nonlinear correction  
+   146   6.527e+00     1.354e+02    1.905e-15        1.378e-04
+  7.17e-04   --- nonlinear correction  
+   147   6.900e+00     1.423e+02    4.148e-16        1.217e-04
+  5.71e-04   --- nonlinear correction  
+   148   7.118e+00     1.494e+02    5.937e-15        1.095e-04
+  6.97e-04   --- nonlinear correction  
+   149   7.428e+00     1.568e+02    3.440e-15        9.920e-05
+  5.71e-04   --- nonlinear correction  
+   150   7.749e+00     1.646e+02    5.027e-16        8.770e-05
+   150   3.874e+00     1.607e+02  --- Averaging step
+  3.91e-04   --- nonlinear correction  
+   151   8.006e+00     1.687e+02    5.115e-16        7.396e-05
+  3.05e-04   --- nonlinear correction  
+   152   1.023e+01     1.789e+02    2.154e-15        6.641e-05
+  3.25e-04   --- nonlinear correction  
+   153   1.125e+01     1.902e+02    2.137e-15        5.712e-05
+  3.52e-04   --- nonlinear correction  
+   154   1.248e+01     2.027e+02    6.526e-16        4.812e-05
+  3.10e-04   --- nonlinear correction  
+   155   1.341e+01     2.161e+02    5.757e-16        4.124e-05
+  3.05e-04   --- nonlinear correction  
+   156   1.445e+01     2.305e+02    1.517e-15        3.457e-05
+  3.14e-04   --- nonlinear correction  
+   157   1.519e+01     2.457e+02    9.635e-16        3.019e-05
+  3.47e-04   --- nonlinear correction  
+   158   1.560e+01     2.613e+02    9.162e-16        2.691e-05
+  3.80e-04   --- nonlinear correction  
+   159   1.596e+01     2.773e+02    6.419e-15        2.347e-05
+  3.77e-04   --- nonlinear correction  
+   160   1.639e+01     2.937e+02    1.516e-15        2.203e-05
+   160   8.197e+00     2.855e+02  --- Averaging step
+  1.55e-04   --- nonlinear correction  
+   161   1.666e+01     3.021e+02    7.932e-16        1.195e-05
+  1.69e-04   --- nonlinear correction  
+   162   2.359e+01     3.257e+02    2.887e-15        1.011e-05
+  1.51e-04   --- nonlinear correction  
+   163   2.648e+01     3.522e+02    5.834e-16        8.863e-06
+  1.48e-04   --- nonlinear correction  
+   164   3.035e+01     3.825e+02    5.160e-16        8.664e-06
+  1.63e-04   --- nonlinear correction  
+   165   3.192e+01     4.145e+02    1.654e-15        9.283e-06
+  1.96e-04   --- nonlinear correction  
+   166   3.246e+01     4.469e+02    1.094e-15        1.022e-05
+  2.25e-04   --- nonlinear correction  
+   167   3.204e+01     4.790e+02    5.161e-16        1.074e-05
+  2.37e-04   --- nonlinear correction  
+   168   3.154e+01     5.105e+02    1.337e-15        1.089e-05
+  2.37e-04   --- nonlinear correction  
+   169   3.112e+01     5.416e+02    8.816e-16        1.137e-05
+  2.53e-04   --- nonlinear correction  
+   170   3.036e+01     5.720e+02    3.649e-15        1.293e-05
+   170   1.518e+01     5.568e+02  --- Averaging step
+  9.23e-05   --- nonlinear correction  
+   171   2.870e+01     5.855e+02    2.932e-15        4.066e-06
+  9.08e-05   --- nonlinear correction  
+   172   4.152e+01     6.270e+02    1.793e-15        4.141e-06
+  8.09e-05   --- nonlinear correction  
+   173   4.538e+01     6.724e+02    9.617e-15        4.450e-06
+  8.59e-05   --- nonlinear correction  
+   174   5.121e+01     7.236e+02    8.666e-16        5.125e-06
+  9.78e-05   --- nonlinear correction  
+   175   5.252e+01     7.761e+02    4.571e-15        5.818e-06
+  1.13e-04   --- nonlinear correction  
+   176   5.266e+01     8.288e+02    1.290e-15        6.411e-06
+  1.25e-04   --- nonlinear correction  
+   177   5.153e+01     8.803e+02    1.320e-15        6.715e-06
+  1.29e-04   --- nonlinear correction  
+   178   5.047e+01     9.308e+02    2.731e-15        6.798e-06
+  1.29e-04   --- nonlinear correction  
+   179   4.961e+01     9.804e+02    1.559e-15        6.945e-06
+  1.34e-04   --- nonlinear correction  
+   180   4.863e+01     1.029e+03    6.219e-16        7.539e-06
+   180   2.431e+01     1.005e+03  --- Averaging step
+  4.20e-05   --- nonlinear correction  
+   181   4.671e+01     1.051e+03    5.415e-16        2.175e-06
+  4.03e-05   --- nonlinear correction  
+   182   6.972e+01     1.121e+03    1.197e-14        2.204e-06
+  3.46e-05   --- nonlinear correction  
+   183   7.767e+01     1.199e+03    1.321e-15        2.241e-06
+  3.37e-05   --- nonlinear correction  
+   184   9.110e+01     1.290e+03    5.226e-15        2.368e-06
+  3.47e-05   --- nonlinear correction  
+   185   9.796e+01     1.388e+03    8.025e-14        2.532e-06
+  3.80e-05   --- nonlinear correction  
+   186   1.032e+02     1.491e+03    7.749e-16        2.735e-06
+  4.14e-05   --- nonlinear correction  
+   187   1.049e+02     1.596e+03    1.108e-15        2.910e-06
+  4.38e-05   --- nonlinear correction  
+   188   1.050e+02     1.701e+03    1.706e-15        3.023e-06
+  4.43e-05   --- nonlinear correction  
+   189   1.044e+02     1.805e+03    1.290e-15        3.044e-06
+  4.33e-05   --- nonlinear correction  
+   190   1.040e+02     1.909e+03    9.073e-16        2.993e-06
+   190   5.200e+01     1.857e+03  --- Averaging step
+  9.28e-06   --- nonlinear correction  
+   191   1.043e+02     1.962e+03    6.266e-16        6.244e-07
+  8.80e-06   --- nonlinear correction  
+   192   1.759e+02     2.138e+03    3.033e-15        6.666e-07
+  7.55e-06   --- nonlinear correction  
+   193   2.050e+02     2.343e+03    1.474e-15        6.829e-07
+  6.87e-06   --- nonlinear correction  
+   194   2.532e+02     2.596e+03    1.390e-15        6.844e-07
+  5.96e-06   --- nonlinear correction  
+   195   2.857e+02     2.881e+03    5.445e-16        6.620e-07
+  5.39e-06   --- nonlinear correction  
+   196   3.222e+02     3.204e+03    2.520e-15        6.247e-07
+  5.01e-06   --- nonlinear correction  
+   197   3.559e+02     3.560e+03    5.197e-16        5.758e-07
+  4.88e-06   --- nonlinear correction  
+   198   3.932e+02     3.953e+03    1.038e-14        5.217e-07
+  4.81e-06   --- nonlinear correction  
+   199   4.342e+02     4.387e+03    1.652e-15        4.672e-07
+  4.70e-06   --- nonlinear correction  
+   200   4.813e+02     4.868e+03    9.733e-15        4.158e-07
+   200   2.406e+02     4.628e+03  --- Averaging step
+  6.26e-07   --- nonlinear correction  
+   201   5.352e+02     5.163e+03    5.026e-15        6.379e-08
+  4.75e-07   --- nonlinear correction  
+   202   1.048e+03     6.210e+03    6.102e-16        6.338e-08
+  3.71e-07   --- nonlinear correction  
+   203   1.392e+03     7.603e+03    6.910e-16        6.193e-08
+  3.34e-07   --- nonlinear correction  
+   204   1.926e+03     9.529e+03    6.505e-15        5.972e-08
+  2.97e-07   --- nonlinear correction  
+   205   2.385e+03     1.191e+04    5.014e-15        5.674e-08
+  2.69e-07   --- nonlinear correction  
+   206   2.901e+03     1.481e+04    7.082e-16        5.310e-08
+  2.35e-07   --- nonlinear correction  
+   207   3.397e+03     1.821e+04    4.127e-15        4.890e-08
+  2.01e-07   --- nonlinear correction  
+   208   3.926e+03     2.214e+04    1.119e-15        4.428e-08
+  1.67e-07   --- nonlinear correction  
+   209   4.484e+03     2.662e+04    2.207e-15        3.949e-08
+  1.37e-07   --- nonlinear correction  
+   210   5.106e+03     3.173e+04    4.995e-15        3.485e-08
+   210   2.553e+03     2.917e+04  --- Averaging step
+  2.26e-08   --- nonlinear correction  
+   211   5.804e+03     3.498e+04    3.216e-15        2.146e-09
+  1.64e-08   --- nonlinear correction  
+   212   1.569e+04     5.066e+04    1.563e-15        2.223e-09
+  1.09e-08   --- nonlinear correction  
+   213   2.327e+04     7.393e+04    8.023e-16        2.213e-09
+  8.32e-09   --- nonlinear correction  
+   214   3.681e+04     1.107e+05    2.533e-14        2.152e-09
+  6.01e-09   --- nonlinear correction  
+   215   4.929e+04     1.600e+05    3.978e-15        2.052e-09
+  4.72e-09   --- nonlinear correction  
+   216   6.426e+04     2.243e+05    9.307e-16        1.927e-09
+  3.87e-09   --- nonlinear correction  
+   217   7.894e+04     3.032e+05    1.737e-14        1.794e-09
+  3.43e-09   --- nonlinear correction  
+   218   9.454e+04     3.978e+05    1.325e-15        1.664e-09
+  3.16e-09   --- nonlinear correction  
+   219   1.102e+05     5.080e+05    2.272e-15        1.550e-09
+  2.93e-09   --- nonlinear correction  
+   220   1.261e+05     6.340e+05    1.127e-15        1.459e-09
+   220   6.304e+04     5.710e+05  --- Averaging step
+  3.88e-10   --- nonlinear correction  
+   221   1.416e+05     7.126e+05    7.539e-16        4.222e-11
+  2.60e-10   --- nonlinear correction  
+   222   4.890e+05     1.202e+06    8.268e-14        3.973e-11
+  1.66e-10   --- nonlinear correction  
+   223   8.042e+05     2.006e+06    2.607e-15        3.760e-11
+  1.34e-10   --- nonlinear correction  
+   224   1.464e+06     3.470e+06    2.521e-14        3.522e-11
+  1.06e-10   --- nonlinear correction  
+   225   2.151e+06     5.621e+06    1.663e-15        3.303e-11
+  8.79e-11   --- nonlinear correction  
+   226   3.053e+06     8.674e+06    5.237e-16        3.086e-11
+  7.14e-11   --- nonlinear correction  
+   227   3.988e+06     1.266e+07    1.705e-15        2.891e-11
+  5.79e-11   --- nonlinear correction  
+   228   5.007e+06     1.767e+07    7.288e-16        2.721e-11
+  4.63e-11   --- nonlinear correction  
+   229   6.025e+06     2.369e+07    5.584e-16        2.586e-11
+  3.74e-11   --- nonlinear correction  
+   230   7.033e+06     3.073e+07    1.968e-15        2.491e-11
+   230   3.517e+06     2.721e+07  --- Averaging step
+  6.50e-12   --- nonlinear correction  
+   231   7.978e+06     3.519e+07    1.128e-15        5.549e-13
+  4.48e-12   --- nonlinear correction  
+   232   3.033e+07     6.552e+07    1.487e-15        5.881e-13
+  3.04e-12   --- nonlinear correction  
+   233   3.448e+07     1.000e+08    5.387e-16        5.892e-13
+finished in  233 steps!
+Integration took  9.391e+02 seconds
+
+use new (enter figno) or existing (0) figure, default is 0 : 17
+234 timesteps
+step 234 : final time is 1.000e+08
+minimum energy is 2.47352e-10 and maximum is 0.54942
+
+computing divergence of discrete velocity solution ...  done
+estimated velocity divergence error:  2.836226e-04 
+
+snaptime=[10,110,175,234];
+square_unsteadyflowref(qmethod,mv,U,time,A,By,Bx,G,xy,xyp,x,y,bound,snaptime);
+
+   Plotting flow field snapshots ... 
+   step   time        mean_vorticity    min_phi  max_phi
+    10    0.022        2.649e-01       -0.00054  0.000e+00
+   110   25.657        1.600e+00       -0.17481  1.088e-03
+   175  723.620        1.600e+00       -0.22011  4.414e-03
+   234  100000000.00   1.600e+00       -0.22011  4.400e-03
+   All done
+
+load steadysol
+ufinal=U(:,end);
+norm(ufinal-xns(1:nnv),inf)
+ans = 2.0902e-06
+
+diary off

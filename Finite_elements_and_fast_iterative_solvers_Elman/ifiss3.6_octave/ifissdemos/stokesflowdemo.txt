@@ -1,0 +1,117 @@
+stokesflowdemo
+This is IFISS version 3.6: released 23 January 2019
+For help, type "helpme".
+Working in batch mode from data file S3_batch.m
+
+specification of reference Stokes problem.
+
+choose specific example (default is cavity)
+     1  Channel domain
+     2  Flow over a backward facing step
+     3  Lid driven cavity
+     4  Colliding flow
+
+ 3
+cavity type leaky/tight/regularised 1/2/3 (regularised)
+ 3
+
+
+Grid generation for cavity domain.
+grid parameter: 3 for underlying 8x8 grid (default is 16x16)
+ 6
+uniform/stretched grid (1/2) (default is uniform)
+ 2
+computed stretch ratio is     1.0977
+Q1-Q1/Q1-P0/Q2-Q1/Q2-P1: 1/2/3/4? (default Q1-P0)
+ 4
+setting up Q2-P1 matrices...  done
+system matrices saved in square_stokes_nobc.mat ...
+imposing (enclosed flow) boundary conditions ...
+Stokes system solved in 1.994e-01 seconds
+uniform/nonuniform streamlines 1/2 (default uniform)
+ 2
+
+Enclosed flow ..
+FAST Stokes Q2-P1 a posteriori error estimation
+checking edge numbering and computing edge lengths ... done
+Q2-P1 local error estimator ...
+interior residual RHS assembly took 1.1528e+00 seconds
+flux jump RHS assembly took 1.1788e-01 seconds
+LDLT factorization took 2.5571e-02 seconds
+triangular solves took 2.0679e-02 seconds
+computing divergence of discrete velocity solution ...  done
+estimated velocity divergence error:  7.441513e-03
+estimated energy error is 2.9567e-02
+plotting Q2 element data... done
+
+CHECK OUT the Stokes driven cavity flow solution
+
+
+CHECK the iterative solver convergence ...
+Working in batch mode from data file itsolve_stokesx1_batch.m
+Inexact AMG block preconditioning ..
+number of V-Cycles? (default 1)
+ 1
+AMG grid coarsening ...  12 grid levels constructed.
+AMG with point damped Gauss-Seidel smoothing ..
+Enclosed flow ..
+checking edge numbering and computing edge lengths ... done
+Q2-P1 local error estimator ...
+interior residual RHS assembly took 1.2752e+00 seconds
+flux jump RHS assembly took 1.3381e-01 seconds
+LDLT factorization took 2.7842e-02 seconds
+triangular solves took 1.8706e-02 seconds
+Call to EST_MINRES with built in error control ...
+
+   k    Estimated-Error   Algebraic-Bound   Residual-Error
+   1    6.7839e+00                          1.2057e+00
+   2    3.5953e+00                          1.1510e+00
+   3    2.6205e+00                          6.7249e-01
+   4    5.2730e-01                          5.1638e-01
+   5    7.9704e-01                          4.2154e-01
+   6    6.1398e-01        1.1261e+00        2.1421e-01
+   7    6.2805e-01        1.1260e+00        2.1419e-01
+   8    3.1579e-01        7.0126e-01        1.2523e-01
+   9    1.3678e-01        6.5200e-01        1.1587e-01
+  10    2.3234e-01        4.9444e-01        8.6172e-02
+  11    1.3283e-01        3.1041e-01        5.2587e-02
+  12    1.5694e-01        3.0879e-01        5.2307e-02
+  13    5.1152e-02        1.6155e-01        2.6595e-02
+  14    3.4364e-02        1.3696e-01        2.2454e-02
+  15    6.7931e-02        9.9896e-02        1.6223e-02
+  16    3.5868e-02        6.4090e-02        1.0263e-02
+  17    4.7005e-02        5.9944e-02        9.5826e-03
+  18    2.9131e-02        2.9867e-02        4.6880e-03
+  19    2.8869e-02        2.8548e-02        4.4777e-03  Bingo!
+
+convergence in  19 iterations
+  5.7555e+00 seconds
+
+
+ Eigenvalue convergence
+    k     infsup     lambda
+    3         NaN         NaN
+    4      0.4312      0.9543
+    5      0.3630      0.9371
+    6      0.3308      0.9183
+    7      0.2690      0.8634
+    8      0.2690      0.8633
+    9      0.2525      0.8134
+   10      0.2513      0.8035
+   11      0.2465      0.7644
+   12      0.2396      0.7034
+   13      0.2396      0.7027
+   14      0.2328      0.6448
+   15      0.2319      0.6341
+   16      0.2297      0.6217
+   17      0.2265      0.6136
+   18      0.2261      0.6128
+   19      0.2220      0.6084
+
+
+ Final estimated error is 2.8869e-02
+ Optimality in  19 iterations
+velocity solution difference is 9.306e-04
+
+End of Stokes flow demo. Voila!
+diary off

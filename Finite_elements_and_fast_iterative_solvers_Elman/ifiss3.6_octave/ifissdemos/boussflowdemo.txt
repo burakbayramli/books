@@ -1,0 +1,451 @@
+boussflowdemo
+
+Boussinesq flow over a heated step  ...
+running STABTR for 200 timesteps  ...
+Working in batch mode from data file B-NS2_batch.m
+
+Specification of unsteady Boussinesq problem.
+
+choose specific example
+     1  Bottom heated cavity
+     2  Laterally heated cavity
+     3  Bottom heated forward step
+ 3
+
+--------------------------------------------------------
+Boussinesq flow over a backward facing step
+--------------------------------------------------------
+
+Grid generation for Boussinesq backward facing step domain
+Input the outlet length L (default 5)
+ 20
+grid parameter: 3 for underlying 8x24 grid (default is 4)
+ 5
+grid stretch factor (default is 1)
+ 1.3000
+   Grid generation for x-channel ...done.
+   outlet subdivision parameter set to 4
+   ... associated uniform grid value is 8
+   Grid generation for x-channel ...done.
+   Merger of two x-channel grids
+   zip distance is 0.0000e+00 ... it should be close to zero!
+  All done.
+
+
+Grid statistics (level  1):
+   Number of elements:  1408 (184 x  32)
+   hxmin=0.0210    hxmax=0.1315
+   hymin=0.0210    hymax=0.1315
+Grid data saved in step_grid1h.mat.
+
+SPACE DISCRETISATION OF THE BOUSSINESQ PROBLEM (u,p,T):
+Setting up Q2-Q1-Q2 matrices:
+   Number of elements:              1408
+   Number of velocity dofs (x+y):  11698
+   Number of pressure dofs:         1517
+   Number of temperature dofs:      5849
+   Total number of dofs:           19064
+   System setup in    1.439 seconds
+Grid data re-saved in step_grid1h.mat.
+System matrices saved in step_bouss_nobc.mat.
+
+
+Unsteady Boussinesq flow in a backward step domain ...
+To restart integration from Checkpoint datafile run restart_bouss
+Rayleigh number (default 17750)
+ 17750
+Prandtl number (default 7.1)
+ 7.1000
+target time? (default 100)
+ 100
+number of timesteps (x200)? (default 5)
+ 1
+accuracy tolerance? (default 3e-5)
+   3.0000e-04
+number of nonlinear Picard correction steps? (default is none)
+0
+averaging frequency? (default 10)
+ 10
+plot solution evolution? 1/0
+0
+generate solution history data points? 1/0 (default is no)
+0
+      fluid viscosity parameter is 2.00e-02
+temperature viscosity parameter is 2.82e-03
+Integrating using stabilized TR ...
+intermediate (CheckPoint) datafile: stabtrBouss_restart
+
+ StabTR with no nonlinear corrections
+
+   step  timestep    time    meanKE   vorticity
+     2   1.00e-09     0.00   0.0000   0.0000
+     3   5.40e-08     0.00   0.0000   0.0000
+     4   2.05e-07     0.00   0.0000   0.0000
+     5   1.21e-06     0.00   0.0000   0.0000
+     6   3.41e-06     0.00   0.0000   0.0001
+     7   8.70e-06     0.00   0.0000   0.0002
+     8   1.68e-05     0.00   0.0001   0.0005
+     9   2.86e-05     0.00   0.0002   0.0010
+    10   4.25e-05     0.00   0.0004   0.0017   --- Averaging
+    11   5.79e-05     0.00   0.0005   0.0024
+    12   1.76e-03     0.00   0.0068   0.0313
+    13   4.18e-03     0.01   0.0214   0.0932
+    14   5.66e-03     0.01   0.0403   0.1679
+    15   7.60e-03     0.02   0.0639   0.2569
+    16   1.01e-02     0.03   0.0925   0.3600
+    17   1.14e-02     0.04   0.1215   0.4591
+    18   1.20e-02     0.05   0.1485   0.5476
+    19   1.28e-02     0.07   0.1742   0.6273
+    20   1.32e-02     0.08   0.1973   0.6955   --- Averaging
+    21   1.41e-02     0.09   0.2091   0.7287
+    22   1.10e-02     0.10   0.2250   0.7718
+    23   8.88e-03     0.11   0.2366   0.8017
+    24   6.43e-03     0.11   0.2444   0.8210
+    25   5.56e-03     0.12   0.2508   0.8362
+    26   4.67e-03     0.12   0.2558   0.8481
+    27   4.25e-03     0.13   0.2602   0.8581
+    28   3.85e-03     0.13   0.2641   0.8666
+    29   3.64e-03     0.13   0.2676   0.8742
+    30   3.44e-03     0.14   0.2707   0.8810   --- Averaging
+    31   3.32e-03     0.14   0.2722   0.8840
+    32   8.98e-03     0.15   0.2799   0.8996
+    33   9.75e-03     0.16   0.2875   0.9140
+    34   1.07e-02     0.17   0.2951   0.9271
+    35   1.31e-02     0.18   0.3034   0.9400
+    36   1.23e-02     0.19   0.3102   0.9493
+    37   1.57e-02     0.21   0.3179   0.9580
+    38   1.38e-02     0.22   0.3237   0.9631
+    39   1.80e-02     0.24   0.3303   0.9669
+    40   1.54e-02     0.26   0.3350   0.9682   --- Averaging
+    41   2.01e-02     0.27   0.3384   0.9681
+    42   2.29e-02     0.29   0.3437   0.9659
+    43   2.90e-02     0.32   0.3490   0.9603
+    44   2.07e-02     0.34   0.3520   0.9551
+    45   2.61e-02     0.37   0.3551   0.9476
+    46   2.12e-02     0.39   0.3571   0.9411
+    47   2.48e-02     0.41   0.3591   0.9333
+    48   2.19e-02     0.44   0.3605   0.9263
+    49   2.43e-02     0.46   0.3619   0.9186
+    50   2.25e-02     0.48   0.3629   0.9116   --- Averaging
+    51   2.40e-02     0.50   0.3635   0.9078
+    52   4.62e-02     0.54   0.3650   0.8943
+    53   6.75e-02     0.61   0.3667   0.8767
+    54   5.29e-02     0.66   0.3677   0.8646
+    55   7.76e-02     0.74   0.3689   0.8493
+    56   6.75e-02     0.81   0.3698   0.8380
+    57   8.59e-02     0.89   0.3709   0.8258
+    58   8.21e-02     0.98   0.3717   0.8162
+    59   9.27e-02     1.07   0.3727   0.8071
+    60   9.31e-02     1.16   0.3736   0.7995   --- Averaging
+    61   9.86e-02     1.21   0.3741   0.7959
+    62   1.43e-01     1.36   0.3753   0.7875
+    63   1.53e-01     1.51   0.3766   0.7807
+    64   1.65e-01     1.67   0.3779   0.7752
+    65   1.75e-01     1.85   0.3792   0.7708
+    66   1.85e-01     2.03   0.3805   0.7674
+    67   1.92e-01     2.23   0.3818   0.7649
+    68   1.99e-01     2.43   0.3830   0.7631
+    69   2.04e-01     2.63   0.3842   0.7618
+    70   2.08e-01     2.84   0.3854   0.7611   --- Averaging
+    71   2.11e-01     2.94   0.3860   0.7608
+    72   2.28e-01     3.17   0.3871   0.7607
+    73   2.32e-01     3.40   0.3882   0.7608
+    74   2.36e-01     3.64   0.3893   0.7613
+    75   2.40e-01     3.88   0.3902   0.7619
+    76   2.44e-01     4.12   0.3911   0.7627
+    77   2.48e-01     4.37   0.3920   0.7635
+    78   2.54e-01     4.63   0.3928   0.7645
+    79   2.60e-01     4.89   0.3935   0.7655
+    80   2.67e-01     5.15   0.3942   0.7665   --- Averaging
+    81   2.76e-01     5.30   0.3945   0.7670
+    82   2.98e-01     5.59   0.3952   0.7680
+    83   3.08e-01     5.90   0.3958   0.7691
+    84   3.18e-01     6.22   0.3963   0.7701
+    85   3.27e-01     6.55   0.3969   0.7711
+    86   3.33e-01     6.88   0.3973   0.7721
+    87   3.37e-01     7.22   0.3978   0.7729
+    88   3.40e-01     7.56   0.3981   0.7738
+    89   3.41e-01     7.90   0.3985   0.7746
+    90   3.41e-01     8.24   0.3988   0.7753   --- Averaging
+    91   3.40e-01     8.41   0.3990   0.7756
+    92   3.53e-01     8.76   0.3993   0.7764
+    93   3.53e-01     9.11   0.3995   0.7771
+    94   3.52e-01     9.47   0.3998   0.7778
+    95   3.50e-01     9.82   0.4000   0.7784
+    96   3.49e-01    10.16   0.4002   0.7791
+    97   3.47e-01    10.51   0.4004   0.7797
+    98   3.46e-01    10.86   0.4006   0.7803
+    99   3.44e-01    11.20   0.4008   0.7808
+   100   3.43e-01    11.55   0.4010   0.7814   --- Averaging
+   101   3.41e-01    11.72   0.4011   0.7816
+   102   3.48e-01    12.06   0.4012   0.7821
+   103   3.47e-01    12.41   0.4014   0.7826
+   104   3.43e-01    12.75   0.4015   0.7831
+   105   3.40e-01    13.09   0.4016   0.7836
+   106   3.36e-01    13.43   0.4018   0.7840
+   107   3.31e-01    13.76   0.4019   0.7844
+   108   3.27e-01    14.09   0.4020   0.7848
+   109   3.22e-01    14.41   0.4021   0.7852
+   110   3.16e-01    14.72   0.4022   0.7856   --- Averaging
+   111   3.11e-01    14.88   0.4022   0.7857
+   112   3.13e-01    15.19   0.4023   0.7860
+   113   3.07e-01    15.50   0.4024   0.7863
+   114   3.00e-01    15.80   0.4025   0.7867
+   115   2.93e-01    16.09   0.4026   0.7870
+   116   2.86e-01    16.38   0.4027   0.7873
+   117   2.79e-01    16.66   0.4027   0.7875
+   118   2.72e-01    16.93   0.4028   0.7878
+   119   2.64e-01    17.19   0.4029   0.7881
+   120   2.57e-01    17.45   0.4030   0.7884   --- Averaging
+   121   2.51e-01    17.57   0.4030   0.7885
+   122   2.52e-01    17.82   0.4030   0.7888
+   123   2.45e-01    18.07   0.4031   0.7891
+   124   2.39e-01    18.31   0.4032   0.7894
+   125   2.32e-01    18.54   0.4032   0.7897
+   126   2.26e-01    18.76   0.4033   0.7900
+   127   2.20e-01    18.98   0.4034   0.7903
+   128   2.14e-01    19.20   0.4035   0.7907
+   129   2.08e-01    19.41   0.4035   0.7910
+   130   2.03e-01    19.61   0.4036   0.7913   --- Averaging
+   131   1.98e-01    19.71   0.4036   0.7915
+   132   1.99e-01    19.90   0.4037   0.7918
+   133   1.95e-01    20.10   0.4038   0.7922
+   134   1.90e-01    20.29   0.4038   0.7926
+   135   1.85e-01    20.47   0.4039   0.7929
+   136   1.81e-01    20.66   0.4040   0.7933
+   137   1.77e-01    20.83   0.4041   0.7937
+   138   1.73e-01    21.00   0.4042   0.7942
+   139   1.69e-01    21.17   0.4042   0.7946
+   140   1.65e-01    21.34   0.4043   0.7950   --- Averaging
+   141   1.62e-01    21.42   0.4044   0.7952
+   142   1.63e-01    21.58   0.4044   0.7956
+   143   1.60e-01    21.74   0.4045   0.7961
+   144   1.57e-01    21.90   0.4046   0.7966
+   145   1.54e-01    22.05   0.4047   0.7971
+   146   1.51e-01    22.20   0.4048   0.7976
+   147   1.48e-01    22.35   0.4049   0.7981
+   148   1.45e-01    22.49   0.4050   0.7986
+   149   1.43e-01    22.64   0.4051   0.7992
+   150   1.40e-01    22.78   0.4052   0.7997   --- Averaging
+   151   1.38e-01    22.85   0.4052   0.7999
+   152   1.39e-01    22.98   0.4053   0.8005
+   153   1.37e-01    23.12   0.4054   0.8011
+   154   1.34e-01    23.26   0.4055   0.8017
+   155   1.32e-01    23.39   0.4057   0.8023
+   156   1.30e-01    23.52   0.4058   0.8029
+   157   1.28e-01    23.65   0.4059   0.8035
+   158   1.27e-01    23.77   0.4060   0.8041
+   159   1.25e-01    23.90   0.4061   0.8048
+   160   1.23e-01    24.02   0.4062   0.8055   --- Averaging
+   161   1.22e-01    24.08   0.4063   0.8057
+   162   1.23e-01    24.20   0.4064   0.8064
+   163   1.21e-01    24.33   0.4065   0.8071
+   164   1.19e-01    24.44   0.4066   0.8078
+   165   1.18e-01    24.56   0.4067   0.8085
+   166   1.16e-01    24.68   0.4068   0.8093
+   167   1.15e-01    24.79   0.4070   0.8100
+   168   1.14e-01    24.91   0.4071   0.8108
+   169   1.12e-01    25.02   0.4072   0.8115
+   170   1.11e-01    25.13   0.4073   0.8123   --- Averaging
+   171   1.10e-01    25.18   0.4074   0.8126
+   172   1.11e-01    25.30   0.4075   0.8133
+   173   1.10e-01    25.41   0.4076   0.8141
+   174   1.08e-01    25.51   0.4077   0.8149
+   175   1.07e-01    25.62   0.4079   0.8157
+   176   1.06e-01    25.73   0.4080   0.8165
+   177   1.04e-01    25.83   0.4081   0.8173
+   178   1.03e-01    25.93   0.4082   0.8181
+   179   1.02e-01    26.04   0.4084   0.8190
+   180   1.01e-01    26.14   0.4085   0.8198   --- Averaging
+   181   9.99e-02    26.19   0.4085   0.8200
+   182   1.01e-01    26.29   0.4087   0.8209
+   183   9.95e-02    26.39   0.4088   0.8217
+   184   9.82e-02    26.48   0.4089   0.8225
+   185   9.70e-02    26.58   0.4090   0.8233
+   186   9.59e-02    26.68   0.4092   0.8241
+   187   9.49e-02    26.77   0.4093   0.8249
+   188   9.38e-02    26.87   0.4094   0.8256
+   189   9.28e-02    26.96   0.4095   0.8264
+   190   9.18e-02    27.05   0.4096   0.8272   --- Averaging
+   191   9.08e-02    27.10   0.4097   0.8275
+   192   9.14e-02    27.19   0.4098   0.8282
+   193   9.04e-02    27.28   0.4099   0.8290
+   194   8.92e-02    27.37   0.4100   0.8298
+   195   8.82e-02    27.45   0.4102   0.8305
+   196   8.73e-02    27.54   0.4103   0.8313
+   197   8.63e-02    27.63   0.4104   0.8320
+   198   8.54e-02    27.71   0.4105   0.8327
+   199   8.46e-02    27.80   0.4106   0.8335
+Terminated -- step limit reached!
+   200   8.37e-02    27.88   0.4108   0.8342   --- Averaging --- CheckPoint
+finished in  201 steps!
+final time solution data is saved in stabtrBouss_end.mat
+integration took  1.376e+02 seconds
+
+Timestep history ... use new (enter figno) or existing (0) figure, default is 0
+ 13
+201 timesteps
+
+final time solution ...
+   Plotting temperature snapshots ...    All done
+
+   Plotting flow field snapshots ...
+   step   time    mean_vorticity    min_phi  max_phi
+     1   27.840    2.216e-05       -0.03841  6.708e-01
+   All done
+computing divergence of discrete velocity solution ...  done
+estimated velocity divergence error:  1.988250e-01
+
+CHECK OUT the time step history and final solution
+
+
+Unsteady Boussinesq flow postpocessing.
+loading data from Checkpoint datafile ...
+STEP domain flow problem
+Movies ...nstep =  200
+running  Boussinesq flow animation ... done
+To expore solvers run snapshot_solvebouss...
+
+
+Finally, CHECK the iterative solver convergence ...
+Working in batch mode from data file snapshot_boussx1_batch.m
+
+Iterative solution of a SNAPSHOT Boussinesq linear system
+Enclosed flow is NOT assumed ...
+
+Solution data available for 27.7981 seconds
+              start time is 0 seconds
+Approximate time for the SNAPSHOT? (default is the end)
+ 25
+Time step number 169
+Time step is 0.113604
+Constructing system at time 24.9074 seconds
+
+GMRES
+stopping tolerance? (default 1e-8)
+   1.0000e-08
+maximum number of iterations? (default 100)
+ 30
+preconditioner:
+   0  none
+   3  least-squares commutator (LSC)
+   5  boundary-adjusted least-squares commutator (LSC*)
+   9  modified pressure convection-diffusion (PCD*)
+default is PCD*
+ 9
+ideal / AMG iterated  preconditioning? 1/2 (default ideal)
+ 2
+setting up modified Q1 pressure preconditioning matrices...
+Robin pressure on inflow boundary
+compute / load convection-diffusion AMG data? 1/2 (default 1)
+ 1
+AMG grid coarsening ...  14 grid levels constructed.
+
+AMG fine level smoothing strategy? PDJ/ILU 1/2  (default ILU)
+ 2
+ILU smoothing on finest level..
+AMG iterated PCD* preconditioning ...
+AMG grid coarsening ...  10 grid levels constructed.
+BinvGB AMG setup done.
+ILU smoothing on finest level..
+AMG grid coarsening ...  18 grid levels constructed.
+
+Temperature AMG grid setup done.
+ILU smoothing on finest level..
+GMRES iteration ...
+convergence in  14 iterations
+
+    k  log10(||r_k||/||r_0||)
+    0           0.0000
+    1          -0.0262
+    2          -0.4715
+    3          -1.4541
+    4          -2.1046
+    5          -2.6792
+    6          -3.2229
+    7          -3.8432
+    8          -4.4242
+    9          -5.1245
+   10          -5.6468
+   11          -6.2320
+   12          -6.8651
+   13          -7.5354
+   14          -8.1353
+Bingo!
+
+  1.1167e+00 seconds
+
+
+use new (enter figno) or existing (0) figure, default is 0
+ 19
+colour (b,g,r,c,m,y,k): enter 1--7 (default 1)
+ 1
+Working in batch mode from data file snapshot_boussx2_batch.m
+
+Iterative solution of a SNAPSHOT Boussinesq linear system
+Enclosed flow is NOT assumed ...
+
+Solution data available for 27.7981 seconds
+              start time is 0 seconds
+Approximate time for the SNAPSHOT? (default is the end)
+ 25
+Time step number 169
+Time step is 0.113604
+Constructing system at time 24.9074 seconds
+
+GMRES
+stopping tolerance? (default 1e-8)
+   1.0000e-08
+maximum number of iterations? (default 100)
+ 30
+preconditioner:
+   0  none
+   3  least-squares commutator (LSC)
+   5  boundary-adjusted least-squares commutator (LSC*)
+   9  modified pressure convection-diffusion (PCD*)
+default is PCD*
+ 3
+ideal / AMG iterated  preconditioning? 1/2 (default ideal)
+ 2
+compute / load convection-diffusion AMG data? 1/2 (default 1)
+ 2
+AMG fine level smoothing strategy? PDJ/ILU 1/2  (default ILU)
+ 2
+ILU smoothing on finest level..
+AMG iterated LSC preconditioning ...
+AMG grid coarsening ...  10 grid levels constructed.
+BinvGB setup done.
+ILU smoothing on finest level..
+AMG grid coarsening ...  18 grid levels constructed.
+Temperature AMG grid setup done.
+ILU smoothing on finest level..
+GMRES iteration ...
+convergence in  10 iterations
+
+    k  log10(||r_k||/||r_0||)
+    0           0.0000
+    1          -0.0262
+    2          -1.4022
+    3          -2.3925
+    4          -3.3293
+    5          -4.2613
+    6          -5.1751
+    7          -5.9440
+    8          -6.7638
+    9          -7.8511
+   10          -8.6305
+Bingo!
+
+  8.0349e-01 seconds
+
+
+use new (enter figno) or existing (0) figure, default is 0
+0
+figure number (default is current active figure)
+ 19
+colour (b,g,r,c,m,y,k): enter 1--7 (default 1)
+ 7
+End of Boussinesq flow demo. Voila!
+
+
+diary off

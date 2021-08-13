@@ -1,0 +1,41 @@
+These notes are associated with the updates from version 3.4 to 3.6.
+
+The major updates in IFISS 3.4 were:
+o new function install_ifiss (to supplement helpme)
+o new function newchannel_domain 
+  (extended outflow compared to channel_domain)
+o inclusion of rsquare_domain and usquare_domain 
+  (called in place of square_domain for convection-difusion test problems) 
+o new symmetric step domain and functionality for solving associated 
+  steady and unsteady flow problems (see symmetricstep.txt)
+
+
+The significant updates in IFISS 3.5 were the addition of new 
+functionality within the /timestepping/ directory:
+o  updated driver function stabtrNS.m with the inclusion of an option 
+   to perform nonlinear (Picard) iterations at every time step
+o  new driver restart_stabtrNS to effect a warm restart from a 
+   previously computed solution
+o  new post-processing function (energymeanvorticity.m) that generates
+   mean vorticity and acceleration data (to allow one to assess 
+   convergence to a steady-state)  
+o  enhanced post-processing of unsteady flow solution data: notably
+   in the generation of (.avi) animations using the enhanced 
+   video functionality built into recent releases of MATLAB.
+
+The most significant update in IFISS 3.6 is the addition of 
+the /biharmonic/ directory and functionality. 
+Other changes include
+o removal of the GMG functionality when solving Stokes and 
+  N-S flow problems using it_solve
+o removal of stabilised approximation (Q1-P0, Q1-Q1) when solving
+  unsteady flow problems
+o removal of shifted domain option when solving poisson control
+  problems
+o correction of the error estimation for steady Stokes and N-S
+  (the functions q1div.m and q2div.m were originally coded incorrectly
+  so Tables 3.4 and 3.5 and 8.1 in [ESW2014] are incorrect)
+
+David Silvester
+2 February 2019.
+ 
