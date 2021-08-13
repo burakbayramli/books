@@ -1,0 +1,421 @@
+unsteadyflowdemo
+This is IFISS version 3.6: released 23 January 2019
+For help, type "helpme".
+
+Driven cavity unsteady flow  ...
+running STABTR to 100 time units ...
+Working in batch mode from data file T-NS3_batch.m
+
+specification of reference unsteady flow problem.
+
+choose specific example (default is step)
+     1  Channel domain
+     2  Flow over a backward facing step
+     3  Lid driven cavity
+     5  Flow around a square obstruction
+     6  Flow in a symmetric step channel
+
+ 3
+cavity type leaky/tight/regularised 1/2/3 (regularised)
+ 3
+
+
+Grid generation for cavity domain.
+grid parameter: 3 for underlying 8x8 grid (default is 16x16)
+ 6
+uniform/stretched grid (1/2) (default is uniform)
+ 2
+computed stretch ratio is     1.0977
+Q1-Q1/Q1-P0/Q2-Q1/Q2-P1: 1/2/3/4? (default Q1-P0)
+ 3
+setting up Q2-Q1 matrices...  done
+system matrices saved in square_stokes_nobc.mat ...
+Unsteady flow in a square domain ...
+viscosity parameter (default 1/200)
+ 0.0050000
+Discrete Saddle-Point DAE system ...
+target time? (default 1e8)
+ 10000
+accuracy tolerance? (default 3e-5)
+   3.0000e-05
+number of Picard steps? (default 2)
+0
+averaging frequency? (default 10)
+ 10
+plot vorticity evolution? 1/0
+0
+Solving DAE system using stabilized TR ...
+AxBhandle = @defaultAxB
+
+  initial nonlinear residual is 2.569594e-03
+             boundary change is 5.188603e-08
+setting up Q2 convection matrix...  done.
+
+ StabTR with no nonlinear corrections
+   step  timestep       time        divresidual     acceleration
+     1   1.000e-09     2.000e-09    0.000e+00        4.298e-01
+     2   1.000e-09     2.000e-09    9.024e-27        4.298e-01
+     3   3.354e-05     3.354e-05    3.161e-26        4.298e-01
+     4   9.031e-04     9.366e-04    7.347e-22        4.298e-01
+     5   1.145e-03     2.082e-03    3.419e-20        4.815e-01
+     6   1.372e-03     3.455e-03    1.706e-19        5.488e-01
+     7   2.023e-03     5.478e-03    3.051e-19        6.070e-01
+     8   2.740e-03     8.218e-03    2.495e-19        6.698e-01
+     9   3.428e-03     1.165e-02    2.929e-19        7.281e-01
+    10   4.239e-03     1.589e-02    4.230e-18        7.757e-01
+    10   2.119e-03     1.377e-02  --- Averaging step
+    11   5.190e-03     1.896e-02    1.383e-07        7.931e-01
+    12   5.900e-03     2.486e-02    3.830e-18        8.298e-01
+    13   6.674e-03     3.153e-02    1.692e-18        8.493e-01
+    14   7.994e-03     3.952e-02    2.317e-18        8.582e-01
+    15   9.227e-03     4.875e-02    3.957e-18        8.566e-01
+    16   1.051e-02     5.926e-02    1.826e-17        8.448e-01
+    17   1.190e-02     7.116e-02    7.525e-18        8.234e-01
+    18   1.339e-02     8.455e-02    1.089e-17        7.934e-01
+    19   1.492e-02     9.947e-02    1.283e-17        7.562e-01
+    20   1.656e-02     1.160e-01    6.193e-18        7.133e-01
+    20   8.279e-03     1.078e-01  --- Averaging step
+    21   1.813e-02     1.259e-01    8.250e-07        6.893e-01
+    22   1.841e-02     1.443e-01    9.904e-18        6.426e-01
+    23   2.091e-02     1.652e-01    3.679e-18        5.921e-01
+    24   1.924e-02     1.844e-01    6.159e-18        5.426e-01
+    25   2.307e-02     2.075e-01    4.533e-18        5.013e-01
+    26   2.430e-02     2.318e-01    2.170e-17        4.573e-01
+    27   2.582e-02     2.576e-01    1.260e-17        4.171e-01
+    28   2.803e-02     2.857e-01    1.855e-16        3.801e-01
+    29   2.920e-02     3.149e-01    8.007e-17        3.459e-01
+    30   3.194e-02     3.468e-01    2.980e-17        3.157e-01
+    30   1.597e-02     3.308e-01  --- Averaging step
+    31   3.327e-02     3.641e-01    3.304e-07        3.015e-01
+    32   3.502e-02     3.991e-01    3.081e-17        2.754e-01
+    33   4.118e-02     4.403e-01    6.347e-17        2.519e-01
+    34   3.930e-02     4.796e-01    8.759e-17        2.292e-01
+    35   4.487e-02     5.245e-01    2.223e-16        2.113e-01
+    36   4.858e-02     5.731e-01    6.157e-16        1.943e-01
+    37   5.327e-02     6.263e-01    3.552e-17        1.791e-01
+    38   5.812e-02     6.844e-01    3.601e-16        1.653e-01
+    39   6.346e-02     7.479e-01    6.845e-16        1.529e-01
+    40   6.944e-02     8.174e-01    4.428e-16        1.418e-01
+    40   3.472e-02     7.826e-01  --- Averaging step
+    41   7.557e-02     8.582e-01    1.717e-08        1.366e-01
+    42   8.099e-02     9.392e-01    1.322e-16        1.267e-01
+    43   8.785e-02     1.027e+00    2.676e-16        1.179e-01
+    44   9.483e-02     1.122e+00    4.632e-16        1.101e-01
+    45   1.023e-01     1.224e+00    1.869e-16        1.031e-01
+    46   1.096e-01     1.334e+00    3.914e-16        9.685e-02
+    47   1.164e-01     1.450e+00    5.225e-16        9.128e-02
+    48   1.229e-01     1.573e+00    9.827e-17        8.634e-02
+    49   1.290e-01     1.702e+00    9.420e-14        8.195e-02
+    50   1.347e-01     1.837e+00    3.796e-16        7.806e-02
+    50   6.734e-02     1.769e+00  --- Averaging step
+    51   1.401e-01     1.910e+00    3.440e-12        7.619e-02
+    52   1.435e-01     2.053e+00    2.149e-16        7.287e-02
+    53   1.501e-01     2.203e+00    2.108e-16        6.995e-02
+    54   1.534e-01     2.357e+00    1.091e-16        6.729e-02
+    55   1.585e-01     2.515e+00    6.712e-16        6.490e-02
+    56   1.638e-01     2.679e+00    5.836e-16        6.271e-02
+    57   1.695e-01     2.848e+00    4.524e-16        6.068e-02
+    58   1.753e-01     3.024e+00    1.810e-15        5.879e-02
+    59   1.812e-01     3.205e+00    3.826e-16        5.702e-02
+    60   1.874e-01     3.392e+00    5.812e-16        5.533e-02
+    60   9.371e-02     3.299e+00  --- Averaging step
+    61   1.944e-01     3.493e+00    2.897e-16        5.443e-02
+    62   1.990e-01     3.692e+00    4.610e-16        5.286e-02
+    63   2.092e-01     3.901e+00    1.079e-15        5.138e-02
+    64   2.140e-01     4.115e+00    1.159e-15        4.996e-02
+    65   2.209e-01     4.336e+00    1.454e-16        4.859e-02
+    66   2.285e-01     4.565e+00    1.863e-16        4.725e-02
+    67   2.375e-01     4.802e+00    2.931e-16        4.595e-02
+    68   2.475e-01     5.050e+00    2.517e-14        4.468e-02
+    69   2.570e-01     5.307e+00    1.887e-15        4.346e-02
+    70   2.653e-01     5.572e+00    2.113e-16        4.226e-02
+    70   1.327e-01     5.439e+00  --- Averaging step
+    71   2.729e-01     5.712e+00    1.121e-15        4.160e-02
+    72   2.780e-01     5.990e+00    2.883e-15        4.041e-02
+    73   2.911e-01     6.281e+00    2.229e-15        3.923e-02
+    74   2.998e-01     6.581e+00    6.936e-16        3.802e-02
+    75   3.133e-01     6.894e+00    2.963e-16        3.684e-02
+    76   3.268e-01     7.221e+00    1.008e-15        3.568e-02
+    77   3.383e-01     7.559e+00    8.991e-16        3.457e-02
+    78   3.488e-01     7.908e+00    2.553e-16        3.348e-02
+    79   3.605e-01     8.269e+00    4.118e-16        3.240e-02
+    80   3.754e-01     8.644e+00    1.825e-15        3.129e-02
+    80   1.877e-01     8.456e+00  --- Averaging step
+    81   3.938e-01     8.850e+00    9.901e-16        3.069e-02
+    82   4.051e-01     9.255e+00    3.868e-16        2.953e-02
+    83   4.320e-01     9.687e+00    6.600e-16        2.838e-02
+    84   4.480e-01     1.014e+01    1.071e-15        2.721e-02
+    85   4.681e-01     1.060e+01    8.175e-16        2.606e-02
+    86   4.891e-01     1.109e+01    1.768e-16        2.492e-02
+    87   5.115e-01     1.160e+01    7.065e-16        2.379e-02
+    88   5.365e-01     1.214e+01    6.308e-16        2.265e-02
+    89   5.647e-01     1.271e+01    3.307e-16        2.151e-02
+    90   5.956e-01     1.330e+01    1.647e-15        2.036e-02
+    90   2.978e-01     1.300e+01  --- Averaging step
+    91   6.290e-01     1.363e+01    9.123e-16        1.976e-02
+    92   6.468e-01     1.428e+01    2.632e-16        1.857e-02
+    93   6.943e-01     1.497e+01    3.117e-16        1.742e-02
+    94   7.320e-01     1.570e+01    3.448e-16        1.624e-02
+    95   7.789e-01     1.648e+01    2.443e-15        1.508e-02
+    96   8.329e-01     1.732e+01    3.782e-16        1.392e-02
+    97   8.920e-01     1.821e+01    1.324e-15        1.278e-02
+    98   9.535e-01     1.916e+01    1.552e-15        1.166e-02
+    99   1.014e+00     2.018e+01    1.323e-15        1.057e-02
+   100   1.078e+00     2.125e+01    3.589e-16        9.540e-03
+   100   5.389e-01     2.072e+01  --- Averaging step
+   101   1.152e+00     2.187e+01    2.395e-16        9.052e-03
+   102   1.204e+00     2.307e+01    8.146e-16        8.086e-03
+   103   1.302e+00     2.437e+01    6.276e-15        7.201e-03
+   104   1.459e+00     2.583e+01    7.119e-16        6.356e-03
+   105   1.608e+00     2.744e+01    1.484e-16        5.522e-03
+   106   1.770e+00     2.921e+01    1.303e-16        4.712e-03
+   107   1.931e+00     3.114e+01    2.169e-16        3.933e-03
+   108   2.054e+00     3.320e+01    1.668e-16        3.203e-03
+   109   2.168e+00     3.536e+01    1.484e-16        2.550e-03
+   110   2.267e+00     3.763e+01    2.553e-16        1.989e-03
+   110   1.134e+00     3.650e+01  --- Averaging step
+   111   2.401e+00     3.890e+01    2.434e-16        1.756e-03
+   112   2.488e+00     4.139e+01    8.229e-16        1.322e-03
+   113   2.718e+00     4.410e+01    1.074e-16        9.792e-04
+   114   2.978e+00     4.708e+01    1.052e-15        6.988e-04
+   115   3.269e+00     5.035e+01    1.206e-16        4.780e-04
+   116   3.656e+00     5.401e+01    4.984e-16        3.108e-04
+   117   4.091e+00     5.810e+01    1.164e-15        1.896e-04
+   118   4.703e+00     6.280e+01    4.715e-16        1.086e-04
+   119   5.594e+00     6.839e+01    6.978e-16        5.777e-05
+   120   6.837e+00     7.523e+01    1.026e-16        2.949e-05
+   120   3.419e+00     7.181e+01  --- Averaging step
+   121   8.881e+00     8.069e+01    8.517e-17        2.221e-05
+   122   1.034e+01     9.104e+01    1.027e-16        1.077e-05
+   123   1.444e+01     1.055e+02    3.835e-16        7.890e-06
+   124   1.947e+01     1.249e+02    4.678e-16        4.176e-06
+   125   2.552e+01     1.505e+02    6.846e-16        2.540e-06
+   126   3.357e+01     1.840e+02    1.574e-15        1.091e-06
+   127   4.002e+01     2.241e+02    1.534e-15        9.877e-07
+   128   4.986e+01     2.739e+02    1.300e-15        1.321e-06
+   129   5.681e+01     3.307e+02    3.520e-15        8.720e-07
+   130   6.584e+01     3.966e+02    1.810e-15        9.206e-07
+   130   3.292e+01     3.637e+02  --- Averaging step
+   131   7.264e+01     4.363e+02    1.640e-15        7.412e-08
+   132   1.987e+02     6.350e+02    2.166e-15        1.325e-07
+   133   2.394e+02     8.744e+02    6.253e-15        4.692e-08
+   134   3.878e+02     1.262e+03    1.148e-14        9.622e-08
+   135   4.885e+02     1.751e+03    1.367e-14        6.987e-08
+   136   6.082e+02     2.359e+03    9.370e-14        6.605e-08
+   137   7.263e+02     3.085e+03    1.912e-14        7.875e-08
+   138   8.188e+02     3.904e+03    2.240e-14        6.704e-08
+   139   9.095e+02     4.814e+03    1.678e-13        7.188e-08
+   140   9.829e+02     5.796e+03    3.052e-14        7.190e-08
+   140   4.914e+02     5.305e+03  --- Averaging step
+   141   1.042e+03     6.347e+03    2.053e-14        1.995e-09
+   142   3.653e+03     1.000e+04    3.997e-14        1.615e-09
+finished in  142 steps!
+Integration took  8.179e+01 seconds
+
+use new (enter figno) or existing (0) figure, default is 0
+ 14
+143 timesteps
+step 143 : final time is 1.000e+04
+minimum energy is 4.29764e-10 and maximum is 0.523607
+
+
+To generate snapshots of stationary streamlines
+run <strong>square_unsteadyflowref</strong>
+To generate a streamline movie run <strong>square_flowmovie</strong>
+computing divergence of discrete velocity solution ...  done
+estimated velocity divergence error:  2.208240e-02
+
+CHECK OUT the time step history
+
+CHECK OUT the solution evolution
+
+   Plotting flow field snapshots ...
+   step   time    mean_vorticity    min_phi  max_phi
+    50    1.702    1.600e+00       -0.08005  1.138e-05
+    80    8.269    1.600e+00       -0.15707  1.773e-05
+   143  10000.000    1.600e+00       -0.21185  1.063e-03
+   All done
+
+CHECK OUT the snapshots of the flow evolution
+
+x-section analysis | y = -6.4670e-15
+x-section flow volume is -8.1067e-04
+
+CHECK OUT the final time solution mid-plane X-section
+
+
+CHECK the iterative solver convergence ...
+Working in batch mode from data file snapshot_flowx1_batch.m
+
+Iterative solution of a SNAPSHOT linear system
+Solution data available for 10000 seconds
+Approximate time for the SNAPSHOT? (default is the end)
+ 10
+
+Time step number 84
+Constructing system at time 9.68726 seconds
+    current timestep is 0.431983 seconds
+enclosed flow (cavity) problem ...
+stopping tolerance? (default 1e-8)
+   1.0000e-06
+maximum number of iterations? (default 100)
+ 30
+preconditioner:
+   0  none
+   2  modified pressure convection-diffusion (Fp)
+   3  least-squares commutator
+   4  corrected pressure convection-diffusion (Fp*)
+   5  boundary-adjusted least-squares commutator (LSC*)
+default is Fp*
+ 4
+ideal / AMG iterated  preconditioning? 1/2 (default ideal)
+ 2
+setting up modified Q1 pressure preconditioning matrices...
+singular matrices are used here
+AMG grid coarsening ...  18 grid levels constructed.
+AMG fine level smoothing strategy? PDJ/ILU 1/2  (default ILU)
+ 2
+ILU smoothing on finest level..
+AMG iterated PCD* preconditioning ...
+fixing singularity in pressure matrix... done
+AMG grid coarsening ...  9 grid levels constructed.
+AMG setup of Ap done.
+ILU smoothing on finest level..
+
+GMRES iteration ...
+convergence in  30 iterations
+
+    k  log10(||r_k||/||r_0||)
+    0           0.0000
+    1          -0.0132
+    2          -0.2399
+    3          -0.6601
+    4          -1.0235
+    5          -1.3572
+    6          -1.6834
+    7          -1.9564
+    8          -2.1746
+    9          -2.3352
+   10          -2.4573
+   11          -2.5739
+   12          -2.7090
+   13          -2.8660
+   14          -3.0356
+   15          -3.2319
+   16          -3.4491
+   17          -3.6505
+   18          -3.8382
+   19          -4.0503
+   20          -4.2804
+   21          -4.5025
+   22          -4.7161
+   23          -4.9172
+   24          -5.0976
+   25          -5.2722
+   26          -5.4295
+   27          -5.5785
+   28          -5.7340
+   29          -5.9039
+   30          -6.0775
+Bingo!
+
+  1.0001e+00 seconds
+
+
+use new (enter figno) or existing (0) figure, default is 0
+ 1
+colour (b,g,r,c,m,y,k): enter 1--7 (default 1)
+ 1
+Working in batch mode from data file snapshot_flowx2_batch.m
+
+Iterative solution of a SNAPSHOT linear system
+Solution data available for 10000 seconds
+Approximate time for the SNAPSHOT? (default is the end)
+ 10
+
+Time step number 84
+Constructing system at time 9.68726 seconds
+    current timestep is 0.431983 seconds
+enclosed flow (cavity) problem ...
+stopping tolerance? (default 1e-8)
+   1.0000e-06
+maximum number of iterations? (default 100)
+ 50
+preconditioner:
+   0  none
+   2  modified pressure convection-diffusion (Fp)
+   3  least-squares commutator
+   4  corrected pressure convection-diffusion (Fp*)
+   5  boundary-adjusted least-squares commutator (LSC*)
+default is Fp*
+ 4
+ideal / AMG iterated  preconditioning? 1/2 (default ideal)
+ 2
+setting up modified Q1 pressure preconditioning matrices...
+singular matrices are used here
+AMG grid coarsening ...  18 grid levels constructed.
+AMG fine level smoothing strategy? PDJ/ILU 1/2  (default ILU)
+ 1
+point damped Jacobi smoothing on finest level ..
+AMG iterated PCD* preconditioning ...
+fixing singularity in pressure matrix... done
+AMG grid coarsening ...  9 grid levels constructed.
+AMG setup of Ap done.
+point damped Jacobi smoothing on finest level ..
+
+GMRES iteration ...
+convergence in  38 iterations
+
+    k  log10(||r_k||/||r_0||)
+    0           0.0000
+    1          -0.0135
+    2          -0.2444
+    3          -0.6105
+    4          -0.9109
+    5          -1.2275
+    6          -1.4572
+    7          -1.6544
+    8          -1.8070
+    9          -1.9549
+   10          -2.1053
+   11          -2.2555
+   12          -2.4061
+   13          -2.5504
+   14          -2.6820
+   15          -2.8020
+   16          -2.9110
+   17          -3.0180
+   18          -3.1293
+   19          -3.2619
+   20          -3.4125
+   21          -3.5245
+   22          -3.6146
+   23          -3.7186
+   24          -3.8392
+   25          -3.9654
+   26          -4.0640
+   27          -4.1801
+   28          -4.3074
+   29          -4.4506
+   30          -4.5673
+   31          -4.7123
+   32          -4.8695
+   33          -5.0697
+   34          -5.2760
+   35          -5.4935
+   36          -5.7046
+   37          -5.8643
+   38          -6.0361
+Bingo!
+
+  1.5821e+00 seconds
+
+
+use new (enter figno) or existing (0) figure, default is 0
+0
+figure number (default is current active figure)
+ 1
+colour (b,g,r,c,m,y,k): enter 1--7 (default 1)
+ 7
+End of unsteady NS flow demo. Voila!
+diary off
