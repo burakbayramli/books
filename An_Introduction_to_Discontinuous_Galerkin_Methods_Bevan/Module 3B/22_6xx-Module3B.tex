@@ -1,0 +1,181 @@
+\documentclass{beamer}
+\usefonttheme[onlymath]{serif}
+\usepackage[english]{babel}							%For internationalization
+\usepackage[utf8]{inputenc}							%For character encoding
+\usepackage{amsmath}								%For mathematical typesetting
+\usepackage{amssymb}								%For mathematical typesetting
+\usepackage{graphicx}								%For handling graphics
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\bea}{\begin{equation*}}
+\newcommand{\ben}[1]{\begin{equation}\label{#1}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\eea}{\end{equation*}}
+\newcommand{\aq}{\overset{\sim}{q}}
+
+\mathchardef\mhyphen="2D
+
+\title
+{An Introduction to Discontinuous Galerkin Methods}
+\subtitle{Module 3B: To Higher-Orders - Discrete System}
+\author[Bevan]
+{J.~Bevan}
+\institute[UMass Lowell]
+{
+  Department of Mechanical Engineering, Grad Student\\
+  University of Massachusetts at Lowell
+}
+\date[Fall 2014]
+{}
+\subject{Discontinuous Galerkin}
+
+\begin{document}
+\frame{\titlepage}
+\frame{\frametitle{Module 3B: To Higher-Orders - Discrete System}\tableofcontents}
+
+%NEW SECTION
+\section{Numerical Quadrature (Gauss)} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item We now have a method for generating a robust arbitrary order solution approximation, but unlike before it isn't practical to analytically pre-calculate all the integrals.
+\item We can use a numerical quadrature technique to do this instead, able to integrate arbitrary functions
+\item If we call the interpolation of a function $In f$ then we assume that for a sufficiently accurate interpolation, we can use the interpolation of the function wherever we could use the function itself before. This is in general M-1 order accurate.
+\be f \approx In f =\sum_{i=0}^M f(x_i)L_i(x) \ee
+\end{itemize}
+\be \int f \approx \int In f = \int \sum_{i=0}^M f(x_i)L_i(x) =  \sum_{i=0}^M f(x_i) \int L_i(x) =  \sum_{i=0}^M f(x_i)w_i\ee
+}
+
+%NEW SECTION
+\section{Hermite Interpolation (and quadrature)} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item Recall: Hermite interpolation includes derivatives of interpolated function as well
+\item Consider a Hermite interpolation polynomial that includes first derivatives as well, the interpolation would be $2M-1$ accurate. The quadrature using this polynomial would look like:
+\be \int f \, dx \approx \sum_{i=0}^M f(x_i)w_i+\sum_{i=0}^M\left[ f'(x_i)\int (x-x_i)L_i^2(x) \, dx \right] \ee
+\item It turns out if we choose our quadrature/interpolation points to be the Legendre roots, the integral for the second term is zero. Thus no first derivative terms are needed for the Hermite quadrature, even though it is $2M-1$ order accurate.
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Truncation error/exact quadrature} 
+\frame[shrink]{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item It is important to consider error sources from the approximation to the solution and integrals, these can affect convergence
+\item Three main error sources in quadrature: aliasing, truncation, and inexact quadrature
+\item Aliasing occurs if the function is not sampled frequently enough, it is assumed that the sol'n is sufficiently smooth and the discretization suitably fine to avoid this in most cases
+\item Truncation is unavoidable except where the exact function is of equal or lesser order than the interpolation/quadrature. Higher order terms present in the exact function are left off.
+\item Inexact quadrature occurs when the total polynomial order of the product of the interpolated functions undergoing quadrature exceeds the exactness of the quadrature. For Gauss-Legendre quadrature this isn't a problem for one and even two functions in the integrand. Each function is of order M-1 and the quadrature is exact for 2M-1, so the quadrature is able to exactly integrate the interpolation
+\end{itemize}
+}
+
+%NEW SECTION
+\section{GL Lagrange Orthogonality} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item A final useful property of the Lagrange basis with Legendre interpolation points is orthogonality
+\item The product of two $M-1$ order Lagrange bases can be rearranged to be a Legendre poly of order $M$ and a remainder polynomial of order $M-2$
+\item The remainder polynomial can be expressed as a linear combination of Legendre polys all of order $<M$, all are orthogonal to the order $M$ Legendre, so
+\be \int_{-1}^1 L_i(x)L_j(x) \,dx = \delta_{ij}w_i \ee
+\end{itemize}
+}
+
+
+%NEW SECTION
+\section{Local Mapping Function (Jacobian)} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item The domain of orthogonality for Legendre polynomials (and by extension GL Lagrange) is $[-1, 1]$
+\item Elements may be arbitrary sizes though, we'd like to be able to transform $x \in [x_L, x_R] \rightarrow X \in [-1, 1]$ by means of a mapping $x=g(X)$ and it's inverse $X=G(x)$
+\be x=g(X)=\frac{X+1}{2}\Delta x + x_L\quad ,\quad X=G(x)=\frac{2(x-x_L)}{\Delta x}+1 \ee
+\item Applying a change of variables for the mapping
+\be \int_{x_L}^{x_R} L_i(x) L_j(x) \,dx \rightarrow \int_{-1}^1 L_i(g(X))L_j(g(X)) g' \, dX \ee
+\item $J=g'=\frac{\Delta x}{2}$ is called the determinant of the Jacobian matrix
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Mass Matrix- Diagonalization} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item We have done what seems like quite a bit of tangential work, but it now pays off
+\be \sum_{i=0}^M \frac{d \aq_i}{dt} \int_k \psi_i(x) \phi_j(x) \,dx = \sum_{i=0}^M \frac{d \aq_i}{dt} \int_I L_i(X) L_j(X) \frac{\Delta x}{2} \,dX \ee
+\be=   \frac{\Delta x}{2} \sum_{i=0}^M \frac{d q_i}{dt} \delta_{ij}w_i =  \frac{\Delta x}{2}q_j'w_j \quad for\,all\, j \ee
+\item We've reduced the full mass matrix into a diagonal mass matrix with all other terms zero, compared to Module 2 solver case the mass matrix is trivially invertible. We have: $\frac{\Delta x}{2}\mathbf{q' \,M}$ where $\mathbf{M}_{jj} = w_j$
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Log differentiation} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item We can get a closed form expression for $L_j'(x)$ in the stiffness term by using logarithmic differentiation
+\item The main idea is that in general $f'/f = ln(f)$ so applying this to our Lagrange basis
+\be L_j'(x) = L_j \sum_{r=0,r\neq j}^N \frac{1}{x-x_r} \ee
+\item using our previous function code for "\textit{Lag(x)}" we can get a general expression
+\textit{dLag= @(x,nv) Lag(x,nv).*sum(1./bsxfun(@minus,x,nn(nv,:,:)),3)}
+\item We need a more involved method for evaluation at the interp points (see dLagrange.m)
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Stiffness Integral} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item We now have a routine for calculating $L_j'$, and suitable quadrature; we can evaluate the stiffness integral
+\be \int_k \, \sum_{i=0}^M\left[ c\aq_i \psi_i(x)\right] \phi'_j(x) \,dx = \sum_{i=0}^M c\aq_i \int_I L_i(X) L_j'(X) \,dX \ee
+\item No Jacobian term from the mapping. The derivative in the integrand produces a complementary $1/J$ that cancels due to the change of variables.
+\item No tricks to be had for reducing the stiffness matrix, it is a full matrix. We have: $c\mathbf{K}_{ji} \, \mathbf{\aq}$ 
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Numerical Flux (Extrapolated)} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item One downside of using Gauss-Legendre points is there are no points on the boundary
+\item It is easy to calculate the boundary solution values from the solution interpolation at the left end (same idea for the right)
+\be \aq(x_L) = \sum_{i=0}^M \aq_i L_i(x_L) \ee
+\item Call $L_i(x_L) = L_{iL}$, the vector notation is then $\aq_L = \mathbf{L}_{iL}^T \, \mathbf{\aq}$
+\item So that our numerical flux vector is $\mathbf{\hat{f}} =c(\overset{k}{q}_R\mathbf{L}_{jR}-\overset{k-1}{q_R}\mathbf{L}_{jL})$
+\item Lobatto alternative gives boundary points, but would make the mass matrix a full matrix. Inversion is likely more expensive than interpolation
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Assembly of System} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item We can now combine the mass, stiffness, and numerical flux terms
+\be \frac{\Delta x}{2}\mathbf{q' \,M} + \mathbf{\hat{f}} -  c\mathbf{K}_{ji} \, \mathbf{\aq}=0 \ee
+\item solving for $q'$
+\be \mathbf{\aq}' = \frac{2}{\Delta x} (c\mathbf{K}_{ji} \, \mathbf{\aq} -\mathbf{\hat{f}}) \mathbf{M}^{-1} \ee
+\item it is also possible to represent it componentwise easily thanks to the diagonal mass matrix
+\be \aq_j' = \frac{2}{w_j\Delta x }(c \mathbf{K}_{j\mhyphen}\mathbf{\aq}-\hat{f}_j)\ee
+\end{itemize}
+}
+
+%NEW SECTION
+\section{RK4 Time discretization} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item Compared to the simple linear DG solver, we'd like to use a higher order time discretization, Runge-Kutta 4th order: RK4. We can express as a function: $\mathbf{\aq}'(\mathbf{\aq})$ from our discrete system. RK4 consists of 4 trial steps:
+
+$k_1 =  \mathbf{\aq}'(\mathbf{\aq}) \, \Delta t$\\
+$k_2 =  \mathbf{\aq}'(\mathbf{\aq}+\frac{k_1}{2}) \, \Delta t$\\
+$k_3 =  \mathbf{\aq}'(\mathbf{\aq}+\frac{k_2}{2}) \, \Delta t$\\
+$k_4 =  \mathbf{\aq}'(\mathbf{\aq}+k_3) \, \Delta t$\\
+$\mathbf{q}(t+1) = \mathbf{q} + \frac{k_1}{6}+ \frac{k_2}{3}+ \frac{k_3}{3}+ \frac{k_4}{6}$
+\end{itemize}
+}
+
+%NEW SECTION
+\section{Investigate p-Convergence} 
+\frame{\frametitle{\textbf{\secname}}
+\begin{itemize}
+\item How does the p-convergence rate compare with h-convergence?
+\item Does the smoothness of the initial sol'n seem to effect the rate of convergence? (e.g. sin(x) vs gaussian curve)
+\item Does h or p refinement seem to be more efficient?
+\end{itemize}
+}
+
+\end{document}
