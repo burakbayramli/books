@@ -1,4 +1,3 @@
-% Driver script for solving the 2D Euler equations
 Globals2D;
 
 % Order of polynomials used for approximation 
