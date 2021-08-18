@@ -123,6 +123,7 @@ Source codes for various books I collected over the years.
 - [Practical Regression Anove Using R Faraway](Practical_Regression_Anove_Using_R_Faraway)
 - [WTTE RNN Weibull Time To Event Recurrent Neural Network Martinsson](WTTE-RNN_Weibull_Time_To_Event_Recurrent_Neural_Network_Martinsson)
 - [Stochastic Modeling of Scientific Data Guttorp](Stochastic_Modeling_of_Scientific_Data_Guttorp)
+- [An Introduction to Discontinuous Galerkin Methods Bevan](An_Introduction_to_Discontinuous_Galerkin_Methods_Bevan)
 - [Lattice Boltzmann Equation Succi](Lattice_Boltzmann_Equation_Succi)
 - [Physics Hecker](Physics_Hecker)
 - [Systematic Trading](Systematic_Trading)
@@ -207,6 +208,7 @@ Source codes for various books I collected over the years.
 - [Applied Mathematics Body and Soul](Applied_Mathematics_Body_and_Soul)
 - [Finite Element Method Theory Implementation and Applications Larson](Finite_Element_Method_Theory_Implementation_and_Applications_Larson)
 - [This Time Is Different Rogoff](This_Time_Is_Different_Rogoff)
+- [GPU Computing Gems Jade Edition](GPU_Computing_Gems_Jade_Edition)
 - [Applied Linear Regression Sanford](Applied_Linear_Regression_Sanford)
 - [Finite volume method in CFD Darwish](Finite_volume_method_in_CFD_Darwish)
 - [kalman filtering theory and practice with matlab](kalman_filtering_theory_and_practice_with_matlab)
@@ -230,6 +232,7 @@ Source codes for various books I collected over the years.
 - [Solving PDEs in C++ Code](Solving_PDEs_in_C++_Code)
 - [Partial Differential Equations Gockenbach](Partial_Differential_Equations_Gockenbach)
 - [Solving Differential Equations in R Cash](Solving_Differential_Equations_in_R_Cash)
+- [Nodal Discontinuous Galerkin Methods DTU Lecture](Nodal_Discontinuous_Galerkin_Methods_DTU_Lecture)
 - [Python and Algorithms and Data Structures master](Python-and-Algorithms-and-Data-Structures-master)
 - [hadoop definitive](hadoop_definitive)
 - [Regression Analysis Uni Ontario](Regression_Analysis_Uni_Ontario)
@@ -250,7 +253,6 @@ Source codes for various books I collected over the years.
 - [FEM and sparse linear system solving Arbenz](FEM_and_sparse_linear_system_solving_Arbenz)
 - [Computational Physics Problem Solving with Python Landau](Computational_Physics_Problem_Solving_with_Python_Landau)
 - [Principles of Econometrics](Principles_of_Econometrics)
-
 
 See my other blogs, repos
 
