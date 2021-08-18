@@ -7,7 +7,7 @@ function [Nv, VX, VY, K, EToV, BCType] = MeshReaderGambitBC2D(FileName)
 Globals2D;
 
 Fid = fopen(FileName, 'rt');
-
+disp(FileName);
 % read intro
 for i=1:6
   line = fgetl(Fid);
