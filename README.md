@@ -141,6 +141,7 @@ Source codes for various books I collected over the years.
 - [An Invitation to 3D Vision Sastry](An_Invitation_to_3D_Vision_Sastry)
 - [Principles of Helicopter Aerodynamics Leisman](Principles_of_Helicopter_Aerodynamics_Leisman)
 - [Empirical Market Microstructure](Empirical_Market_Microstructure)
+- [Numerical Methods for Conservation Laws Hesthaven](Numerical_Methods_for_Conservation_Laws_Hesthaven)
 - [Introduction to Lattice Boltzmann Methods Sukop](Introduction_to_Lattice_Boltzmann_Methods_Sukop)
 - [hadoop in practice](hadoop_in_practice)
 - [Statistics Chaos Complexity and Inference Shalizi](Statistics_Chaos_Complexity_and_Inference_Shalizi)
