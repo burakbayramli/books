@@ -1,3 +1,5 @@
+pkg load signal
+
 %Copyright (c) 2014, Josh Bevan
 %All rights reserved.
 %This code is licensed under the BSD 3-Clause License, see License.txt for the full license.
