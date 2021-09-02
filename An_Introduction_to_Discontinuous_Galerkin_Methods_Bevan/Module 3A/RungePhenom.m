@@ -19,3 +19,4 @@ nn2=elim(Qx(1:N)',Qx(1:N)',[1 3 2]);
 Lag2= @(x,nv) prod(bsxfun(@rdivide,bsxfun(@minus,x,nn2(nv,:,:)),bsxfun(@minus,Qx(nv),nn2(nv,:,:))),3);
 interp_f2=@(x) f(Qx')*Lag2(x,1:N);
 plot(xx,interp_f2(xx),'r')
+print -djpg rung1.jpg
