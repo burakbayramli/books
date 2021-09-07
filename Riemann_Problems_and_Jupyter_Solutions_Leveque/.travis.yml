@@ -1,0 +1,32 @@
+language: python
+sudo: true
+
+python:
+  - "2.7"
+  - "3.6"
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq gfortran
+  - git clone --branch=master --depth=100 --quiet git://github.com/clawpack/clawpack
+  - cd clawpack
+  - git submodule init
+  - git submodule update clawutil visclaw riemann
+  - cd riemann
+  - git checkout master
+  - git pull # get very latest Riemann
+  - cd ..
+  - cd visclaw
+  - git checkout master
+  - git pull # get very latest visclaw
+  - cd ..
+  - python setup.py install
+  - cd ..
+
+install: 
+  - pip install -U pip setuptools # Travis breaks without this
+  - pip install -r requirements.txt
+  - jupyter nbextension enable --py widgetsnbextension
+
+script: 
+  - python test.py

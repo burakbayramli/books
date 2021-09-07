@@ -1,0 +1,68 @@
+% Default to the notebook output style
+((* if not cell_style is defined *))
+    ((* set cell_style = 'style_ipython.tplx' *))
+((* endif *))
+
+% Inherit from the specified cell style.
+((* extends cell_style *))
+
+
+%===============================================================================
+% Latex Book
+%===============================================================================
+
+((* block predoc *))
+    ((( super() )))
+    ((* block tableofcontents *))\tableofcontents((* endblock tableofcontents *))
+((* endblock predoc *))
+
+((* block docclass *))
+\documentclass{SIAMbook2016}
+((* endblock docclass *))
+
+((* block author *))
+\author{David I. Ketcheson \and Randall J. LeVeque \and Mauricio J. del Razo}
+
+((* endblock author *))
+
+((* block markdowncell scoped *))
+((( cell.source | citation2latex | strip_files_prefix | convert_pandoc('markdown', 'json',extra_args=[]) | resolve_references | convert_pandoc('json','latex', extra_args=["--top-level-division=chapter"]) )))
+((* endblock markdowncell *))
+
+((* block title *))
+\input{latexdefs.tex}
+
+\title{Riemann Problems and Jupyter Solutions}
+((* endblock title *))
+
+((* block maketitle *))
+\maketitle
+((* endblock maketitle *))
+
+((* block bibliography *))
+\bibliographystyle{siamplain}
+\bibliography{riemann}
+((* endblock bibliography *))
+
+((*- block any_cell -*))
+((*- if not 'hide' in cell['metadata'].get('tags', {}) -*))
+((( super() )))
+((*- endif -*))
+((*- endblock any_cell -*))
+
+((* block input scoped *))
+    ((( add_my_prompt(cell.source | highlight_code(strip_verbatim=True), cell, 'In ', 'incolor') )))
+((* endblock input *))
+
+% Purpose: Renders an output/input prompt
+((* macro add_my_prompt(text, cell, prompt, prompt_color) -*))
+    ((*- if cell.execution_count is defined -*))
+    ((*- set execution_count = "" ~ (cell.execution_count | replace(None, " ")) -*))
+    ((*- else -*))
+    ((*- set execution_count = " " -*))
+    ((*- endif -*))
+    ((*- set indention =  " " * (execution_count | length + 7) -*))
+\begin{Verbatim}[fontsize=\small,commandchars=\\\{\}]
+((( text | add_prompts(first='{\color{' ~ prompt_color ~ '}' ~ prompt ~ '[{\\color{' ~ prompt_color ~ '}' ~ execution_count ~ '}]:} ', cont=indention) )))
+\end{Verbatim}
+((*- endmacro *))
