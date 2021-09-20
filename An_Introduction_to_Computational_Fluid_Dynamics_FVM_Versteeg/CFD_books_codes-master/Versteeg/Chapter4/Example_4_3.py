@@ -1,5 +1,7 @@
-# A cylindrical fin with uniform cross-sectional area A.The base is at a temperature of 100 C and the end is insulated.
-# The fin is exposed to an ambient temperature of 20 C. L = 1 m, hP/kA = 25/m2 (note that kA is constant).
+# A cylindrical fin with uniform cross-sectional area A.The base is at
+# a temperature of 100 C and the end is insulated.  The fin is exposed
+# to an ambient temperature of 20 C. L = 1 m, hP/kA = 25/m2 (note that
+# kA is constant).
 
 import numpy as np
 from matplotlib import pyplot as plt

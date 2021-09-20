@@ -1,6 +1,8 @@
-# A property is transported by means of convection and diffusion through the one-dimensional domain.
-# The boundary conditions are phi_0 =1 at x=0 and phi_L =0 at x=L.
-# Calculate the distribution of phi as a function of x. Length L = 1.0 m, density = 1.0 kg/m3, Gamma=0.1 kg/ms
+# A property is transported by means of convection and diffusion
+# through the one-dimensional domain.  The boundary conditions are
+# phi_0 =1 at x=0 and phi_L =0 at x=L.  Calculate the distribution of
+# phi as a function of x. Length L = 1.0 m, density = 1.0 kg/m3,
+# Gamma=0.1 kg/ms
 
 import numpy as np
 from matplotlib import pyplot as plt

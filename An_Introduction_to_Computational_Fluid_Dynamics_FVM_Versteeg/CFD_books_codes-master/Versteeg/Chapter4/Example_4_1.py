@@ -1,6 +1,8 @@
-# Consider the problem of source-free heat conduction in an insulated rod whose ends are maintained at
-# constant temperatures of 100 C and 500 C respectively. Calculate the steady state temperature distribution in the rod.
-# Thermal conductivity k equals 1000 W/mK, cross-sectional area A is 10 x 10-3 m2.
+# Consider the problem of source-free heat conduction in an insulated
+# rod whose ends are maintained at constant temperatures of 100 C and
+# 500 C respectively. Calculate the steady state temperature
+# distribution in the rod.  Thermal conductivity k equals 1000 W/mK,
+# cross-sectional area A is 10 x 10-3 m2.
 
 import numpy as np
 from matplotlib import pyplot as plt
