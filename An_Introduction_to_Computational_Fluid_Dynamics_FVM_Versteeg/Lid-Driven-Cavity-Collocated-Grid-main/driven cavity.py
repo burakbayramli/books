@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 import math
 
 
-
-
 n_x=30
 n_y=30
 

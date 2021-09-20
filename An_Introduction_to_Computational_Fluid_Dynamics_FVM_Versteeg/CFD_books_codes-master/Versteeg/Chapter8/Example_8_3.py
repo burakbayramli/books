@@ -1,7 +1,9 @@
-# Consider convection and diffusion in the one-dimensional domain. Calculate the transient temperature field if the
-# initial temperature is zero everywhere and the boundary conditions are phi = 0 at x = 0 and dphi/dx = 0 at x = L.
-# The data are L = 1.5 m, u = 2 m/s, rho = 1.0 kg/m3 and Gamma = 0.03 kg/m.s. The source distribution defined with
-# a = -200, b = 100, x1 = 0.6 m, x2 = 0.2 m.
+# Consider convection and diffusion in the one-dimensional
+# domain. Calculate the transient temperature field if the initial
+# temperature is zero everywhere and the boundary conditions are phi =
+# 0 at x = 0 and dphi/dx = 0 at x = L.  The data are L = 1.5 m, u = 2
+# m/s, rho = 1.0 kg/m3 and Gamma = 0.03 kg/m.s. The source
+# distribution defined with a = -200, b = 100, x1 = 0.6 m, x2 = 0.2 m.
 
 import numpy as np
 from matplotlib import pyplot as plt

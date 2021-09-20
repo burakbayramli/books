@@ -1,9 +1,11 @@
-# We consider a planar nozzle. Flow is steady and frictionless. Using SIMPLE write down the discretised momentum and
-# pressure correction equations and solve for the unknown pressures and velocities at nodes.
-# Density is 1 kg/m3. Nozzle length is 2 m.
-# Cross-sectional area at the inlet is 0.5 m2, and exit is 0.1 m2. (linear function of distance)
-# Initial velocity field: Guess a mass flow rate is 1 kg/sec
-# Initial pressure field:  assume a linear pressure variation, inlet 10 Pa and exit 0 Pa
+# We consider a planar nozzle. Flow is steady and frictionless. Using
+# SIMPLE write down the discretised momentum and pressure correction
+# equations and solve for the unknown pressures and velocities at
+# nodes.  Density is 1 kg/m3. Nozzle length is 2 m.  Cross-sectional
+# area at the inlet is 0.5 m2, and exit is 0.1 m2. (linear function of
+# distance) Initial velocity field: Guess a mass flow rate is 1 kg/sec
+# Initial pressure field: assume a linear pressure variation, inlet 10
+# Pa and exit 0 Pa
 
 
 import numpy as np

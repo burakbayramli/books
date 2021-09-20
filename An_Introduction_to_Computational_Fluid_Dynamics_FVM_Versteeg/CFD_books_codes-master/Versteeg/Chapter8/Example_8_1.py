@@ -1,7 +1,10 @@
-# A thin plate is initially at a uniform temperature of 200 C. At a certain time t = 0 the temperature of the east side
-# of the plate is suddenly reduced to 0 C. The other surface is insulated. Use the explicit finite volume method in
-# conjunction with a suitable time step size to calculate the transient temperature distribution of the slab.
-# Plate thickness L = 2 cm, thermal conductivity k = 10 W/mK and rho*c = 10 x 106 J/m3K
+# A thin plate is initially at a uniform temperature of 200 C. At a
+# certain time t = 0 the temperature of the east side of the plate is
+# suddenly reduced to 0 C. The other surface is insulated. Use the
+# explicit finite volume method in conjunction with a suitable time
+# step size to calculate the transient temperature distribution of the
+# slab.  Plate thickness L = 2 cm, thermal conductivity k = 10 W/mK
+# and rho*c = 10 x 106 J/m3K
 
 import numpy as np
 from matplotlib import pyplot as plt

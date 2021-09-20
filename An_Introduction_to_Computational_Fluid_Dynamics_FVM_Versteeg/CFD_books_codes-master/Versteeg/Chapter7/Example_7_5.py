@@ -1,6 +1,8 @@
-# Consider solving a one-dimensional conduction equation for an insulated metal rod which has internal heat generation.
-# The dimensions and other data are as follows- length of the rod is 1 m, cross-sectional area of the rod is 0.01 m2,
-# Thermal conductivity k = 5 W/mK, generation g = 20 kW/m3, the ends are at 100 C and 500 C
+# Consider solving a one-dimensional conduction equation for an
+# insulated metal rod which has internal heat generation.  The
+# dimensions and other data are as follows- length of the rod is 1 m,
+# cross-sectional area of the rod is 0.01 m2, Thermal conductivity k =
+# 5 W/mK, generation g = 20 kW/m3, the ends are at 100 C and 500 C
 
 import numpy as np
 from matplotlib import pyplot as plt
