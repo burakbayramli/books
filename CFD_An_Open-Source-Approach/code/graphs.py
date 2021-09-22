@@ -2354,13 +2354,13 @@ def main():
     # exact_solutions()
 
     # Turbulence
-    # logistic_map()
+    logistic_map()
     # energy_cascade()
     # law_of_the_wall()
 
     # Reynolds averaging
     # time_average()
-    # ensemble_average()
+    ensemble_average()
     # heated_plate_flow()
 
     # Simplified systems
@@ -2424,7 +2424,7 @@ def main():
 
     # muscl_scheme()
     # multigrid()
-    lid_cavity_flow()
+    #lid_cavity_flow()
 
 if __name__ == '__main__':
     #plt.style.use('style.mplstyle')
