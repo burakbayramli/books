@@ -1,0 +1,86 @@
+In diesem Verzeichnis finden Sie folgende Dateien:
+
+P1DS.F 	Ein Programm zur Lösung einer stationären, eindimensionalen
+	Konvektions-/Diffusionsgleichung mit der Finite-Differenzen-
+	Methode und verschiedenen Diskretisierungen. Es wurde benutzt, 
+ 	um die im Abschnitt 3.11 präsentierten Ergebnisse zu erstellen. 
+	Man kann folgende Parameter variieren (entweder durch Eingabe
+	wenn vom Programm während der Ausführung dazu aufgefordert,
+	oder durch Modifikation der Daten in einer Eingabedatei,
+	auf die die Eingabe umgeleitet wurde):
+
+	- Name einer Ausgabedatei
+	- Dichte (DEN)
+	- Geschwindigkeit (VEL)
+	- Diffusionskoeffizienten (GAM)
+	- Randwerte der Variablen (FI bei X=XMIN und X=XMAX)
+	- Wahl der Diskretisierung für Konvektion (Aufwind- oder
+		Zentraldifferenzen)
+	- Grenzen des Lösungsgebietes (XMIN und XMAX)
+	- Expansionsfaktor für das Gitter (EXP)
+	- Anzahl der Gitterpunkte, inklusiver Randpunkte (N)
+	- Gleichungslöser (Jakobi, Gauß-Seidel, sukzessive Überrelaxation
+		(SOR) oder Thomas-Algorithmus (TDMA)
+	- Überrelaxationsparameter, falls SOR gewählt wurde
+
+	Das Programm kann man z.B. mit
+
+	f77 p1ds.f -o p1ds
+
+	übersetzen, wobei "f77" für den Ausführungsbefehl des FORTRAN77-
+	Compilers steht (dies kann auch "g77" oder anders - je nach
+	Betriebssystem - sein) und nach "- o" der Name der ausführbaren 
+	datei kommt. 
+
+
+P1DS.IN  Beispiel einer Eingabedatei für das Programm P1DS.F
+
+	Wenn man das Programm mit den Daten aus dieser datei ausführen
+	möchte, muss man folgendes Befehl in die Kommandozeile eingeben:
+
+	P1DS < P1DS.inp
+
+	
+
+P1DUS.F	 Ein Programm zur Lösung einer instationären, eindimensionalen
+	Konvektions-/Diffusionsgleichung mit der Finite-Differenzen-
+	Methode und verschiedenen Diskretisierungen. Es wurde benutzt, 
+	um die in Abb. 6.2 und 6.3 präsentierten Ergebnisse zu erstellen.
+	Das Problem hat eine stationäre Lösung (siehe Abschnitt 3.11);
+	hier wird die Entwicklung der Lösung von einer Anfangslösung
+	(alle Variablenwerte in inneren Gitterpunkten gleich null) zum
+ 	Zeitpunkt 0 hin zur stationären Lösung berechnet, da die 
+	Randwerte zeitlich konstant sind. Man kann aber das Programm
+	modifizieren, um eine zeitliche Variation der randwerte
+	vorzuschreiben und die Reaktion der Lösung im Inneren auf
+	die Veränderung der Randwerte zu untersuchen. 
+
+	Man kann folgende Parameter variieren (entweder durch Eingabe
+	wenn vom Programm während der Ausführung dazu aufgefordert,
+	oder durch Modifikation der Daten in einer Eingabedatei,
+	auf die die Eingabe umgeleitet wurde):
+
+	- Name einer Ausgabedatei
+	- Dichte (DEN)
+	- Geschwindigkeit (VEL)
+	- Diffusionskoeffizienten (GAM)
+	- Zeitschrittweite (DT)
+	- Häufigkeit der Ausgabe der Ergebnisse (alle NTPR-Zeitschritte)
+	- Anzahl der Zeitschritte (NTMAX)
+	- Randwerte der Variablen (FI bei X=XMIN und X=XMAX)
+	- Wahl der Diskretisierung für Konvektion (Aufwind- oder
+		Zentraldifferenzen)
+	- Wahl der Diskretisierung für Zeitintegration (Euler explizit,
+		Euler implizit, Crank-Nicolson, implizit mit 3 Zeitebenen)
+	- Grenzen des Lösungsgebietes (XMIN und XMAX)
+	- Expansionsfaktor für das Gitter (EXP)
+	- Anzahl der Gitterpunkte, inklusiver Randpunkte (N)
+
+	Die Übersetzung und Ausführung erfolgt wie im obigen Fall.
+
+P1DUS.INP  Beispiel einer Eingabedatei für das Programm P1DS.F
+
+
+
+M. Peric, Erlangen, 2008
+

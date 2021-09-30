@@ -1,0 +1,40 @@
+1996-08-30
+----------
+
+The following files are presently included in this directory:
+
+GRID.F      This file contains a code for generating 3D Cartesian multigrid
+            grids. Its main part is the 2D grid generation code described
+            in more detail in directory 2DC. In addition, it is also used
+            to set boundary conditions, since the type of boundary for
+            CV-faces along boundaries can be prescribed by assigning a
+            particular value to an integer array identifying each boundary
+            cell face. More details will be given for the updated version.
+
+DG          An example of input data for the above code; it generates a
+            non-uniform grid for a cubic cavity as used to predict flows in
+            lid-driven cavities.
+
+PROG.F      This file contains the code for solving the steady three-dimensional
+            Navier-Stokes equations using Cartesian grids and colocated
+            arrangement of variables. Multigrid FAS scheme is used to
+            accelerate outer iterations. It is set to calculate lid-driven 
+            cavity flows and was used to produce results published by
+            Lilek, Muzaferija and Peric in Numer. Heat Transfer, Part B
+            ("Efficiency and Accuracy Aspects of a Full-Multigrid 
+            SIMPLE-Algorithm for Three-Dimensional Flows").
+
+DC          An example of input data for the above code (set for lid-driven
+            cavity flow at Re = 1000).
+
+
+
+REMARK:  We have assumed that all variables will be initialized by
+         compiler with zero values; problems may be encountered if the
+         variables are initialized as "undefined", since some variable
+         values are used before they are re-initialized (and it is
+         assumed that these values are equal to zero). The codes were
+         run on several Unix workstations, under Linux and under DOS using
+         various compilers without problems, but one reader reported
+         problems...
+ 

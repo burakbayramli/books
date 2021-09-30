@@ -1,0 +1,43 @@
+#!/bin/sh --
+
+DEFNAME=caffa
+EXENAME=$1
+F77=g77
+
+if [ ! "${EXENAME}" ] ; then
+  EXENAME=${DEFNAME}
+fi
+
+echo ""
+echo "  Compiling caffa "
+echo "  Executable name: ${EXENAME} "
+echo ""
+
+if [ ! -d .CaffaTmp ] ; then
+    mkdir .CaffaTmp
+fi
+
+cd .CaffaTmp
+
+ln -sf ../exe/../sol  sol
+
+ln -sf sol/bound.inc  bound.inc
+ln -sf sol/charac.inc charac.inc
+ln -sf sol/coef.inc   coef.inc
+ln -sf sol/float.inc  float.inc
+ln -sf sol/geo.inc    geo.inc
+ln -sf sol/grad.inc   grad.inc
+ln -sf sol/indexc.inc indexc.inc
+ln -sf sol/logic.inc  logic.inc
+ln -sf sol/rcont.inc  rcont.inc
+ln -sf sol/var.inc    var.inc
+ln -sf sol/varold.inc varold.inc
+ln -sf sol/caffa.f    caffa.f
+ln -sf ../param.inc   param.inc
+ln -sf ../user.f      user.f   
+
+${F77} caffa.f  -o ../${EXENAME}
+
+cd ..
+/bin/rm -r .CaffaTmp
+

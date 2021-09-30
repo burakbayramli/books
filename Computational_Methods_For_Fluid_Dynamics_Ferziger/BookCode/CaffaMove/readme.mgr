@@ -1,0 +1,166 @@
+
+====================================================================== 
+CAFFA -- Computer-Aided Fluid Flow Analysis; Version 2, Dec. 2001
+====================================================================== 
+ 
+MODIFIED VERSION FOR GRID MOVEMENT AND PRESSURE BOUNDARY CONDITIONS
+Extensions by Hidajet Hadzic, TU Hamburg-Harburg
+November 2001
+-------------------------------------------------------------------
+
+This directory contains the modified version of the program CAFFA 
+which can predict flows with moving grids. Additionally the
+pressure boundary condition was implemented.
+
+There are no other changes to the original version of the code. All
+basic features related to the discretization principles remain the
+same (for details see 'readme' file in directory 2dgl/sg or its copy
+in this directory). The treatment of the grid movement has been
+incorporated as described in Chapter 12.
+
+
+ORGANIZATION OF THE PACKAGE
+---------------------------
+
+In order to make the use of the program easier we organized the
+files as follows:
+
+The program is split into two directories:
+
+ - directory "sol" contains main program (flow-solver) and
+ - directory "prepost" contains grid generator and post processor.
+
+The directory "cases" contains subdirectories with the input data
+for some example cases (here two examples with moving grid and three
+examples with pressure boundary conditions are given).
+
+The directory "exe" contains the scripts for the compilation and
+linkage (tested under Linux, but should work on other Unix systems).
+
+
+INSTRUCTIONS FOR INSTALLATION
+---------------------------------
+
+In order to install the package go to the directory "exe" and type:
+
+      install
+
+It will compile the grid generator and post-processor, producing the 
+executable files named 'grid' and 'plot' which will be placed in 
+the directory "exe". The user is advised first to select appropriate
+precision for computation. Default is set to double precision.
+The g77 Fortran compiler, which is the most common on Linux systems, 
+is used for the compilation.
+
+In order to run examples go to an example directory (e.g. 
+cases/hchannel) and make a symbolic link to the directory "exe", for 
+example by typing:
+
+      ../../exe/crlink
+
+depending on the relative position of the case directory to the 
+directory "exe".  This command will make following symbolic links:
+
+  exe       - link to the directory "exe",
+  grgen     - link to the grid generator,
+  post      - link to the post-processor,
+  linkcaffa - link to the compilation script of the flow solver.
+
+
+HOW TO GENERATE GRID
+-------------------- 
+
+To run the grid generator type:
+
+      grgen
+
+and follow the instructions given by the program. For additional 
+details on how to use the grid generator see accompanying readme file.
+
+Note: In this version the problem name can have up to 30 characters. 
+A new logical variable 'LSMO' was introduced to control the grid 
+smoothing. In some cases (very fine grid near boundaries with strong 
+curvature) the smoothing produces the grid with points lying outside 
+computational domain. Therefore in such cases the smoothing should be 
+disabled.
+
+
+HOW TO CALCULATE FLUID FLOW
+---------------------------
+
+After the grid is generated, the flow solver needs to be compiled. 
+Before this is done, the file 'user.f', which is placed in the case 
+directory, can be adapted. It contains routines which specify
+boundary conditions, grid movement and printout of specific quantities. 
+
+To compile flow solver type:
+
+      linkcaffa 
+
+It will produce the executable file named 'caffa' (default executable 
+name). If one wants to have another executable name, one should type:
+linkcaffa <exename>, where <exename> is the desirable executable name 
+of the flow solver.
+
+Before running the solver the input file, named 'name.cin' (where
+'name' is the problem name given when generating the grid), has
+to be prepared. It should be done as in given examples.
+
+When the input file is prepared, run the flow solver by typing:
+
+      caffa
+
+and give the problem name.
+
+
+HOW TO PLOT RESULTS
+-------------------
+
+After the computation is finished one can start the post-processor by 
+typing:
+
+      post
+
+The user is asked to specify problem name first. If one wants to 
+include some reference data (e.g. from experiments or someone else's
+results) in the profiles plotted at given X=const or Y=const, one has 
+to give the name of the file containing the reference data. If such 
+data is not used, give some dummy name after prompted to do so. To 
+see how the reference data should be prepared, see comments in the 
+program 'plot.f' in directory "prepost".
+
+Prior to executing the post-processor, the file 'name.pin' has to be
+set-up; it contains definitions of what is to be plotted (see input 
+files provided with example cases).
+
+
+OTHER SPECIAL FEATURES
+----------------------
+
+The grid movement is introduced through modification of the basic 
+grid which has to be generated first (usually that is the grid for 
+the first time step). Only the modifications of the coordinates
+of boundary points should be programmed by the user in the
+subroutine `newcor` in the file 'user.f'. The flow solver will
+take care about the generation of the new grid and its smoothing
+after the new boundary points are defined.
+
+Moving of the grid is activated by setting the logical control
+parameter 'MOVGR' in input file to 'T'.
+
+At pressure boundaries the user should specify the pressure. It can be
+done as in given examples.
+
+In the equation for scalar quantities, zero gradient of dependent
+variables (Neumann boundary conditions) is assumed at boundaries
+where pressure is prescribed. The user can modify
+this boundary condition to be also of Dirichlet type (the value of 
+dependent variable specified at the boundary).
+
+----------------------------------------------------------------------
+If necessary (e.g. a bug is found), contact: 
+
+Milovan.Peric@t-online.de
+----------------------------------------------------------------------
+Hamburg, December 3, 2001 
+----------------------------------------------------------------------

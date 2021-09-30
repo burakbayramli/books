@@ -1,0 +1,10 @@
+#!/bin/sh
+
+F77=g77
+F77OPT=-O 
+
+echo "     Compiling grid-generator : grid "
+${F77} ${F77OPT}  grid.f -o ../exe/grid
+
+echo "     Compiling post-processor : plot "
+${F77} ${F77OPT}  plot.f -o ../exe/plot

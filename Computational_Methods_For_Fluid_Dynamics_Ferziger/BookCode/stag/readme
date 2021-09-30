@@ -1,0 +1,33 @@
+This directory contains the code for solving Navier-Stokes equations
+using Cartesian grids and staggered arrangement of variables. The 
+following files are in this directory:
+
+GRID.F    Grid generation code for Cartesian grids. It is identical to
+          the code GRID.F in directory 2DC for colocated grids. Here no
+          multigrid version of the flow solver is available (colocated
+          arrangement is nice especially because the implementation of
+          multigrid is easy, as only one set of CVs is present), so one
+          should generate only a single grid.
+
+GRID.INP  An example of input data for the above code.
+
+PSTAG.F   Flow solver using Cartesian grids and staggered arrangement of
+          variables. Velocity U is displaced to the east, V to the north
+          face of continuity CVs. See Sect. 7.5.1 for details on the
+          algorithm. There are many comments in the code which make it
+          easy to recognize the elements of the algorithm. Only steady
+          version; it is easy to implement time integration following the
+          strategy from PCOL.F (time integration does not depend on 
+          variable arrangement). Upwind or central differencing can be
+          chosen for convective terms. The code is set for a lid-driven
+          cavity flow; it could be a good excercise for a student to
+          adapt it to a flow with inlet and outlet...
+
+PSTAG.INP An example of input data for the above code.
+
+PLOT.F    The code which produces vector, profile, contour, and colour fill
+          plots of results. It is the same code that is used for colocated
+          Cartesian (directory 2DC) and non-orthogonal (directory 2DG)
+          grids.
+
+PLOT.INP  An example of input data for the above code.

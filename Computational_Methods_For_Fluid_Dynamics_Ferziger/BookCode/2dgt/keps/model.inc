@@ -1,0 +1,6 @@
+      COMMON /VARTUR/ TE(NXYA),ED(NXYA),TEO(NXYA),EDO(NXYA)
+     *               ,TEOO(NXYA),EDOO(NXYA),GEN(NXYA)
+     *               ,DN(NWA),YPL(NWA),VISW(NWA)
+     *               ,DCOEF,TEIN,EDIN,SIGT,SIGTE,SIGED,ITE,IED,IVIS
+     *               ,CE1,CE2,CMU,CMU25,CMU75,CAPPA,CTRANS,ELOG
+

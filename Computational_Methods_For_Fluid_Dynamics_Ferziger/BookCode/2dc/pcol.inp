@@ -1,0 +1,13 @@
+Lid-driven cavity flow at Re = 1000, single-grid                           
+f t f f t f                      LREAD,LWRITE,LTEST,LOUTS,LOUTE,LTIME
+450 5 5 2 2 1.e-4 1.e3 0.92      MAXIT,IMON,JMON,IPR,JPR,SORMAX,SLARGE,ALFA
+1. 1.E-3 0.1 0. 0. 0. 0. 0. 0.0  DENSIT,VISC,PRM,GRAVX,GRAVY,BETA,TH,TC,TREF
+0. 0. 0. 0.0 1.0 1.e0            UIN,VIN,PIN,TIN,ULID,TPER
+1 1 1.E20 1.                     ITST,NPRT,DT,GAMT
+t t t f                          (LCAL(I),I=1,NPHI)
+0.8 0.8 0.2 0.9                  (URF(I),I=1,NPHI)
+0.2 0.2 0.2 0.2                  (SOR(I),I=1,NPHI)
+1 1 6 1                          (NSW(I),I=1,NPHI)
+1. 1. 1. 1.                      (GDS(I),I=1,NPHI)
+rct                              NAME OF FILE FOR UNSTEADY RESULTS               
+

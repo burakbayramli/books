@@ -1,0 +1,48 @@
+CAFFA-MG: Multigrid Version of the CAFFA-code
+=============================================
+
+The CAFFAC.F version of the code (see directory "sg") was extended
+by implementing the multigrid acceleration for the outer iterations
+(multigrid acceleration for inner iterations does not bring much;
+it would only make sense for the pressure-correction equation and
+would reduce the computing time by at most a factor of 2; see directory
+"solvers" for a multigrid version of SIP, which could be directly
+implemented in CAFFA-codes instead of single-grid SIP solver).
+The method is described in Chap. 11, Sect. 11.1; a detailed description
+can also be found in a paper:
+
+Lilek, Z., Muzaferija, S., Peric, M.: Efficiency and accuracy 
+aspects of a full-multigrid SIMPLE algorithm for three-dimensional
+flows, Numer. Heat Transfer, Part B, Vol. 31, pp. 23--42 (1997).
+
+The program includes a lot of comments which describe all the 
+extensions; users familiar with the single-grid version and after
+reading Sect. 11.1 will have no problems in following the steps.
+
+In the directory "examples" there are several test cases set up for
+the multigrid computations: 'cav45l' (lid-driven cavity with inclined
+walls at 45 deg.), 'cav90l' (lid-driven square cavity), 'hotcol'
+(square cavity with one wall hot and the other cold), 'chanel'
+(complex channel with a strongly non-orthogonal grid), 'concil' 
+(buoyancy-driven flow between concentric cylinders, inner hot and
+outer cold; only one half computed), etc. The parameters
+used in these test calculations have not been optimized (number
+of iterations on each grid level, under-relaxation factors etc.).
+The speed-up compared with the single-grid version is remarkable.
+
+Note that for unsteady problems one usually needs only few outer
+iterations per time step, so multigrid acceleration does not lead
+to a significant reduction of computing time. Steady, elliptic
+problems may be speeded-up by as much as 100 times (at sixth level)!
+
+I guess that an additional modification is needed in the code for
+O- and C-grids (such test problems have not been tried so far); the
+new version will replace this one after the correction is applied.
+
+I appreciate the help provided by Martin Schmid (who found and
+corrected most of the bugs I made in programming the code extensions)
+and Samir Muzaferija (who helped find the most difficult ones).
+
+M. Peric, Hamburg, 1998
+Milovan.Peric@t-online.de
+
