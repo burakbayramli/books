@@ -1,0 +1,505 @@
+General Remarks
+===============
+
+In addition to the codes described below, this directory contains
+also the file 'caffauns.f', which is identical to 'caffac.f', except
+that it contains many detailed comments regarding extension to
+unstructured grids. Since there are already several free or low-cost
+grid generators for unstructured grids available on internet, we
+intended to provide an unstructured version of CAFFA-code. However,
+since I moved from university to industry, I have neither time nor
+students to help me finish this project. On the other hand, interested
+readers may find the comments in the file 'caffauns.f' useful if they
+want to perform this extension themselves (in principle it is easy,
+but one needs time to implement and test all the necessary changes,
+in particular to the solver for linear equation systems).
+
+Another extension that was planed has been completed: a version that
+incorporates moving grids and pressure boundary conditions is provided
+in the directory CaffaMove.
+
+M. Peric, March 2002
+
+
+
+======================================================================
+CAFFA -- Computer-Aided Fluid Flow Analysis; Version 1.5, Sept. 1998
+======================================================================
+
+
+FEATURES
+--------
+
+This directory contains grid generator, flow solver, and post-processor
+for a single-block, non-orthogonal, boundary-fitted grid. It is based
+on the methodology described in Chapter 8. Many comments are included to
+make the adaptation and extension easier.
+
+H-type, C-type and O-type grids with the following boundary conditions 
+can be generated and used: inlet, outlet, wall, and symmetry. The cuts
+in O- and C-grids are sorted in a list like the other boundary faces;
+however, these faces are treated as inner cell faces, i.e. the routines 
+which calculate surface integrals for the faces of inner CVs are applied 
+(see routines FLUXUV and FLUXM, and the lists for inlet and outlet, for 
+which these routines are also used). Only the solver needed
+a minor modification to update the residuals along cuts; the
+treatment is as in the case of parallel computing (see Chapter 11 and
+references on parallel computing). When the method is extended to
+block-structured grids, block-interfaces can be treated in exactly the
+same way; in other words, the flow solver is set for block-structured
+grids already -- it only needs another pointer (block ID in addition 
+to grid level) and the grid generator has to be extended to generate
+grids block by block and search all interfaces (boundary type 10) for
+matching pairs. See paper by Lilek et al., An implicit finite-volume
+method using non-matching blocks of structured grid, Numer. Heat
+Transfer, Part B, vol. 32, pp. 385-401 (1997) for details on the
+extension to block-structured grids.
+
+SIMPLE algorithm is used, and the non-orthogonality is neglected in the
+pressure-correction equation ('caffa.f'), or taken into account interactively
+('caffac.f'). When the non-orthogonality effects are neglected, one has to
+use lower values of under-relaxation parameters for pressure;
+we suggest to use 0.1 for strongly non-orthogonal grids and
+0.2 otherwise for all steady flows. In the case of unsteady flows, the
+under-relaxation parameter for pressure may be increased as far as to 1.0,
+depending on the time step size (higher values for smaller time steps).
+For small time steps, the under-relaxation parameters for the velocity
+components may also be increased as far as to 1.0. The non-orthogonality 
+effects is (in 'caffac.f') taken into account by performing a second corrector 
+step, as described in Sect. 8.8. However, for all but extremely 
+non-orthogonal grids (angles below 30 deg. and stretched cells), the 
+simplified method will work fine. It may be helpful to solve the pressure-
+correction equation more accurately in the case of unsteady flows, i.e.
+to reduce the tolerance, say to 0.01, and to increase the allowed number
+of inner iterations for p'-equation to 20-30.
+
+In the sub-directory "examples" there are several subdirectories which include 
+input files for several examples. Three of them refer to test cases for 
+which detailed solutions are presented in the paper by Demirdzic, Lilek and 
+Peric: "Fluid Flow and Heat Transfer Test Problems for Non-Orthogonal 
+Grids: Bench-Mark Solutions", Int. J. Numer. Methods Fluids, Vol. 15, 
+pp. 329-354 (1992). One case is the lid-driven flow in an inclined cavity 
+(angle 45 deg.; files in the subdirectory 'cav45l'); the other is 
+buoyancy-driven flow in the same cavity (files in 'cav45b'); 
+the third is buoyancy-driven flow around a hot cylinder in a square channel 
+with cold side walls and adiabatic upper and lower wall (files 
+in 'buocyl'). There are also input files for a steady flow around a
+foil-like body which requires C-type grid (files in 'foil00')
+two sets of files for a flow around a circular cylinder, which
+requires O-type grid (one for steady flow, files in 'cylstd',
+and one for unsteady flow, files in 'cyluns'), a set of
+files for a channel with one 180-degree turn and one 90-degree turn
+(files in 'chanel'), and a set of files for a model of a damp diffuser, 
+with an axi-symmetric geometry (files in 'damdif'). There are also two 
+versions of grid for the flow around a circular cylinder with a splitter 
+plate in the wake ('splitt' and 'split1'). These test cases demonstrate 
+the applicability of the code to different flow types. 
+
+For each problem, there are input files for grid generator (extension
+'gin'), for flow solver (extension 'cin'), and for post-processor
+(extension 'pin').
+
+The 'param.ing' file specifies dimension parameters for the grid generator.
+If these parameters are large enough, one does not have to recompile the
+code to generate different grids (the present version is good for all
+test cases; for finer grids, the dimensions may have to be increased --
+a message is issued if the dimensions are too small).
+
+The grid generator creates for each grid a new file 'param.inc', which
+goes into flow solver. It has to be recompiled for each new grid. The
+post-processor is dimensioned for one grid only, and these dimensions
+should be big enough for the finest grid. It does not have to be recompiled;
+present version is good for all test cases and all grid levels. If
+necessary, change the dimensions in the file 'param.inp' and recompile
+the file 'plot.f'.
+
+A file 'float.inc' has been included to enable switching between single
+and double precission computations. All codes should be compiled using
+the same version of this file, since otherwise the format of files
+with grid and results data will not be exchangable between the codes.
+
+It would make sense to put all '*.ing', '*.f', and '*.inc' files in a special 
+directory, in which also the compiled grid generator and post-processor
+should reside. When solving a particular problem, one should create
+a directory and copy to it 'user.gen'-file and one of the existing '*.cin' 
+files, as these need to be adapted to each new problem (see below).
+The modified 'user.gen'-file should be re-named 'user.f'. Upon generating
+the grid, one should compile the file 'caffa.f' from the special directory,
+using '*.inc' files from the same directory and the 'user.f' and
+'param.inc' files from the current directory. Since this arrangement
+depends on the operating system being used, this is left to each user
+to organize as it best suits her or him.
+
+
+HOW TO GENERATE THE GRID
+------------------------
+
+The grid generation is described for the case requiring C-grid. One has
+to first compile the grid generator, i.e. the file 'grid.f'; once this
+is done, the grids can be generated for other problems without 
+re-compilation, as long as the dimensions set in 'param.ing' are not 
+exceeded. If this does happen, a warning is issued.
+
+How to compile the code depends on the compiler used. Here is the
+command which works on most Unix or Linux based machines:
+
+   f77 grid.f -o grid
+
+The executable file is named 'grid', so to run the grid generator, one
+has to just type:
+
+   grid
+
+The user is first asked to enter the problem name; it has to have six
+characters. For running one of the test cases provided with the code,
+one has to type the appropriate name as indicated above.
+
+The next question concerns the input of data: the user is asked whether
+the input comes from the keyboard or not. When generating a new grid,
+data is usually input from keyboard, i.e. interactively. If the answer 
+is no, the program opens the file 'name.gin' and reads all input data
+from it ('name' is the six-character problem name). That is what happens
+when one of the supplied problems are used. When the data is read from
+a file, the echo goes to the unnamed file attached to unit 1 ('fort.1'
+on most Unix-machines). Since it is identical to the file used to read
+the data from, it can be deleted.
+
+In an interactive grid generation session, a descriptive prompt is
+printed for each data input required. These are self-explanatory and will
+not be described here in detail -- only a short description is given
+below; in case of doubt, have a look at the code portion from which the 
+prompt is issued -- it should be obvious what it means.
+
+The grid generator allows one to specify for each block side a number of
+lines, and to enter for each line:
+
+- coordinates of line begin and end;
+- number of segments (cell faces), line type and boundary type
+  (line types:     1 - straight; 2 - circle; 3 - arbitrary, specified 
+                   point by point.
+   boundary types: 1 - inlet; 2 - outlet; 3 - symmetry; 4 - isothermal
+                   wall; 5 - adiabatic wall; 10 - O and C cuts.)
+- size of the first segment, expansion factor.
+
+This is useful when one block side contains both circular and straight
+lines (arbitrary lines are also possible, but all grid points have to
+be specified on such a line; no spline interpolation is included yet for 
+refinement of such boundary lines). Also, one can cut a single straight or
+circle line into several pieces and specify different expansion
+factors for different parts. Note that, if zero is specified for both 
+segment size and expansion ratio, the line will be uniformly subdivided. 
+If the size of the first segment is non-zero, it will be used to calculate 
+the value of the expansion factor and the typed value for it is ignored.
+In order to specify the expansion factor (or contraction, if the value
+is less than unity), one has to type zero for the segment size and
+the desired value of the expansion factor. For a line consisting of a
+circle segment, one has to specify -- in addition to the line begin and
+line end -- the coordinates of a third point on a line (or of the center 
+point if the circle is closed). Also, one has to specify the angle (measured 
+counterclockwise from the direction of the positive X-axis) corresponding
+to line begin and line end. The angles do not have to be exact, since
+they are only used to calculate coordinates of the points between 
+the end-points, but should be close to the real ones. The angle can
+either increase or decrease, and be either positive or negative; it
+is only important that the angle variation from line begin to line
+end is correct. Thus, for a full circle all these specifications for
+FIS (angle at line start) and FIE (angle at line end) are
+correct: 0 and 360; 90 and 450; 360 and 0; -90 and 270, etc.
+ 
+On each block side, the lines are sorted in the increasing order of 
+the grid index, i.e. from west to east or from south to north. The 
+grid generator is meant to run interactively when a new grid is generated,
+but it also creates an echo file which can be later edited to improve 
+the grid quality or change the fineness. Unfortunately, the user has
+to specify the number of CVs in each direction in advance; if these
+do not match the total number of segments on all lines on one side, a
+warning is issued.
+
+Care is needed when generating C- and O-type grids. The cut-line
+has to be specified twice, but the number of segments and their size
+must be the same. For O-grids, this is easy to ensure, since the cut-line
+appears on the opposite sides of the block -- either once on west and
+once on east, or once on south and once on north side. One needs than to
+enter the same coordinates for line begin and end, the same number
+of segments, and the same expansion factor or the size of the first
+segment. In the case of C-grids, the situation is more complicated.
+The cut-line appears twice on the same side of the block (e.g. north
+in the example 'foil00'), but the beginning and end are interchanged;
+also, because the numbering is reversed too, the expansion factor on
+one line is the reciprocal value of the expansion factor on the other
+line. If the grid points on the two cut-lines do not fall to the same
+locations (within some tolerance), the program will not be able to
+identify the cell faces along the cut and a warning will be issued
+(INTERFACE PAIR NOT FOUND...). If that happens, check the line data
+carefully. It is unlikely that the tolerance EPSREL will need to be
+modified in the routine OCFIND of 'grid.f', but it is there that faces
+are paired.
+
+Depending on the values of logical parameter LPRINT, grid data is or is not
+printed in the file 'name.got'. If the input was from keyboard, than an
+echo file 'name.gin' is created so that the session can be re-run. This
+file can be edited in order to change parameters if desired. Finally, 
+the file 'name.grd' is created, to which the grid data needed by the 
+flow solver is written. Also, postscript files showing grid of each level
+are created; these are named grid1.ps, grid2.ps, grid3.ps, etc. One can 
+view them with ghostview or ghostscript or another postscript preview 
+program, or one can print them on a postscript printer. The program also
+creates the file 'param.inc', which contains proper dimensions of all
+variables for the flow solver; since the flow solver may have to run
+for a longer time, it makes sense to set the dimensions just right.
+
+
+HOW TO CALCULATE FLUID FLOW
+---------------------------
+
+Once the grid is generated, the flow solver needs to be compiled.
+Before this is done, the file 'user.f' needs to be adapted. It contains
+routines which specify boundary conditions and printout of specific
+quantities. Three example files are provided: 'user.gen' as a generic
+case, 'user.cav' that is specific for closed cavity flows, and 'user.cyl',
+which is specific to the flow around cylinder (where pressure
+and shear stress distribution around cylinder and the total forces
+are printed; the total forces are recorded for each time step in a file
+'name.to1' for the grid level 1, 'name.to2' for the grid level 2, etc.).
+***NOTE: using a wrong file 'user.f' when compiling the programm may
+cause a lot of trouble, and this happened to me (M. Peric) many times!!!
+
+Compilation of the flow solver can be done on most machines by typing:
+
+   f77 caffa.f -o caffa
+
+The executable file is named 'caffa'. Before running the code, one has
+to prepare the input file, which has to be named 'name.cin' (where
+'name' is again the six-character problem name given when generating
+the grid). One can use one of the delivered files as an example and edit it
+to create the appropriate file for the problem being solved. At the end
+of each line the names of variables being set are listed; see routine 
+INIT for a description of their meaning. 
+
+Note that, if the version with multiple pressure corrections is used 
+(NPCOR > 1), the under-relaxation factors for both velocities and pressure 
+can be increased from current settings (which are set for the code 'caffa.f').
+For example, one can use 0.8 and 0.2 as under-relaxation factors for
+velocity and pressure instead of 0.7 and 0.1 in cases 'cav45l', 'cav45b'
+and 'chanel' when using 'caffac.f'. This results in faster convergence.
+When the grid is non-smooth, one can set NIGRAD to a value greater than 1,
+so that the correction given by Eq. (8.35) is invoked, leading to a higher
+accuracy of gradients and convective terms and to smooth pressure contours.
+
+Once the file 'name.cin' is set-up, one can run the flow solver by typing:
+
+   caffa
+
+The user is prompted to enter the problem name; again, this has to be
+the six-character name given when generating the grid.
+
+On a Pentium 166 processor, all steady flow cases run (on all grids) in
+a minute or so. The result is an output file ('name.out'), from which the 
+convergence (or divergence) can be analyzed by looking at residual levels and 
+variable values at a monitoring location after each outer iteration;
+also, some other information will be printed out, like forces (shear
+and pressure) and heat fluxes at walls, as specified in the routines 
+SOUT and TOUT of the file 'user.f'. What is now included in samples of
+this file is meant to demonstrate how additional information (which is often 
+needed for comparison purposes) can be obtained. Note that profiles at
+any X- or Y-cross-section can be produced by the post processor.
+
+Other files are also created: some are meant to enable re-start, the others
+are for post-processing. Re-start is possible for both steady and
+unsteady flow problems. In the case of a steady flow (logical variable
+LTIME=F in the input data file, and LWRITE=T), specify the grid level
+from which to re-start. If, for example, the specified maximum number
+of outer iterations for the third grid ( LSG(3) ) was not sufficient
+to reach convergence, but solutions on levels one and two have
+converged, just set LREAD=T and specify value 3 for KIN (line
+two in the input data file). The solutions from all three grids will
+be read in from the result files named 'name.re1', 'name.re2' and
+'name.re3', and the computation will be continued on the third grid. 
+The file 'name.re3' will in this case be overwritten by the new 
+solution (if in doubt whether the new solution will be good, save the
+old file under a different name before re-running the code). In
+the case of an unsteady flow computation, the results needed for
+re-start are written in the same way as for the steady flow problems
+but include also the old values (from one but last time step). Again,
+one can re-start calculation on any grid -- the computation will continue
+in time. Note: if one wants to continue computation in time on the
+say second grid level, but does not want to discard previous results
+on the finer grids, one should specify zero as the number of iterations
+for all finer grids. In that case the execution will stop after the
+specified number of time steps is performed on the grid level two.
+One can then re-start the computation again, this time specifying the
+level 3 from which to re-start. This provides the flexibility in
+deciding which simulation should be continued. 
+
+The files which contain results for post-processing are named 'name.x',
+where extension 'x' is the data set number. For steady flows, this is 
+the grid number (1, 2, 3, etc.). For unsteady flows, data is saved for
+each NOTT-th time step. When this is done for the first time, the data
+set gets the number 1; each time it is saved again, the data set number
+is incremented by one (variable ICONT in 'caffa.f'). Note that, if
+unsteady flow is computed on several grids in one run, the results
+of coarser grids are over-written. If the results from all grids should
+be post-processed, one should first finish simulation on one grid
+(set the number of outer iterations on finer grids to zero), than 
+re-start computation on that grid for one time step while setting an
+appropriate number of iterations on the next finer grid, so that the
+results are extrapolated from the coarse grid to initialize the
+computation on the next finer grid (if this is not desired, provide
+the correct initial values in the routine BCIN of the file 'user.f');
+one time step will be calculated on that grid, and the re-start file
+will be written. Thereafter, one can re-start the computation on that
+grid again by changing the re-start level (KIN) in the input file
+('*.cin'), where also the number of time steps to be calculated
+should be changed from one to a desired number.
+
+Convergence criterion may need adaptation. For most flows, the residual
+levels will be of the order of unity at the beginning so the value of
+SORMAX around 0.001 is appropriate to terminate outer iterations.
+Should in an application the initial level be much lower, then the
+value of SORMAX should also be lowered. The residual levels should
+drop by three to four orders of magnitude (except in an unlikely
+event that the initial fields already satisfy all equations). Even 
+when a solution from one fine grid is used to initiate calculation
+on a still finer grid, the residuals jump considerably, although the
+variables do not change much. A value of 10^4 is used as SLARGE to
+stop unnecessary iterations if the solution process starts diverging;
+if the initial residuals happen to be of the order of 10^3, they may
+temporarily rise above this value without meaning that divergence is
+occurring; just to make sure re-run with SLARGE increased two orders of 
+magnitude. The ALFA parameter of the Stone's solver is set at 0.92; 
+this is usually good for all problems (although not the optimum value).
+Note also that the components of the gravity vector, GRAVX and GRAVY, bare
+a sign, depending on the direction of gravity relative to X and Y
+coordinate (GRAVY=-9.81 if Y is directed upwards).
+
+When solving unsteady problems, time marching is performed first on the
+coarsest grid. If the boundary conditions are steady, the routine BCIN
+is called only once at the beginning of the first time step; in case that
+the boundary conditions vary in time, the logical switch INIBC should be
+set TRUE in the routine BCIN, and the variation of the boundary data
+should be programmed there (BCIN is part of the problem-dependent code
+contained in the file 'user.f'). When all time steps on one grid
+are done, the solution continues on the next grid level with time reset
+to zero. However, the latest solution from the preceding grid is 
+extrapolated to the next finer grid; this is useful when periodic flows
+are studied, like the vortex shedding in the flow around circular
+cylinder. In the case that the solution on the refined grid should
+start from a specific initial field, this should be programmed in the 
+BCIN-routine, so that the extrapolated solution from the coarser grid 
+is overwritten. For periodic flows, however, it is helpful to start from
+the coarse grid solution since it may take long computation time before
+a fully periodic stage is obtained when starting from zero fields (or a
+disturbance may be necessary). The file 'cyluns.cin' specifies that
+500 time steps are to be run on the first and second grid level only 
+(LSG set to zero for the third grid). No true periodic state is obtained
+on the first grid; it is too coarse and the central-differencing probably
+leads to some disturbances. On the second grid, periodic solution is 
+obtained if computations are continued long enough, but the amplitudes of 
+oscillations of lift and drag are still too small. On the third grid,
+reasonable values are obtained. However, in order to obtain accurate 
+Strouhal number and drag and lift coefficients, one needs another 
+refinement (the fourth grid with 192 x 128 CV). Also, the outer boundary 
+should be displaced further from cylinder, since the boundary conditions 
+there are not exact (just repeat the simulation at a doubled distance 
+and compare the results -- a nice exercise for a student!). Use the 
+procedure described above to continue simulation on finer grids. When 
+starting from extrapolated coarser grid solution, the development time 
+before the periodic state is achieved will be much shorter on all 
+subsequent grids (few oscillation periods will suffice). 
+
+In addition to the field values stored for post-processing, some
+additional data may be stored for each time step in the file 'name.to?',
+where ? is the grid level. For example, in the case of an unsteady flow
+around a circular cylinder, the file 'cyluns.to3' contains time, 
+pressure force in X and Y direction and shear force in X and Y direction.
+This enables plotting of time variation of drag and lift forces. Any
+data written to this file must be prepared in the routine TOUT of the
+file 'user.f', which is called at the end of each time step. The data
+in this file can be plotted using 'gnuplot'-software, which is available
+on each Unix-computer. An example is:
+
+    gnuplot
+    plot 'cyluns.to2' using 1:2 with line
+    ....
+
+to plot the variation of pressure force on cylinder for the second
+grid, connecting points by line.
+
+
+HOW TO PLOT RESULTS
+-------------------
+
+The post-processor (file 'plot.f') needs to be compiled only once (with
+sufficiently large dimensions). The procedure is as for other codes, e.g.:
+
+f77 plot.f -o plot
+
+The executable file is named 'plot'. When it is run, the user is asked to
+specify problem name first; this is the six-character name given to the
+problem under consideration when generating the grid and used for flow
+calculation. If one wants to include some reference data (e.g. from
+experiments or somebody else's results) in the profiles plotted at given
+X=const or Y=const, one has to give the name of the file containing the
+reference data. If such data is not used, give some dummy name after
+prompted to do so. To see how the reference data should be prepared,
+see comments in the program 'plot.f'.
+
+As noted above, during computation of flow, several result files may be
+created (one for each grid level in the case of steady flows, or one after
+each NOTT time steps in unsteady computations). The code includes a loop
+which is passed up to 100 times, unless an earlier exit is forced; each
+pass plots data from one data set, and the user is asked to give the data
+set number. Therefore, if the results from third grid are to be processed,
+enter 3; the file 'name.3' will then be opened.
+
+Prior to executing the post-processor, the file 'name.pin' has to be
+set-up; it contains definitions of what is to be plotted. One can also
+modify the code to enter this data from keyboard. Use one of existing
+files and modify it accordingly. What each entry means is obvious from the
+comments given in the code (see file 'plot.f').
+
+The result are postscript files. 'grid?.ps' contains plot of grid on
+level '?'; 'isob?.ps' contains isobars, 'pres?.ps' is the color-filled plot
+of pressure distribution. 'isot.ps' are isotherms, 'temp?.ps' is the 
+color-fill of temperature; finally, 'strl?.ps' are streamlines, 'strc?.ps' 
+are color-filled streamlines. For isolines, one can choose whether to use
+color or black lines. Which isolines are plotted depends on the control
+parameters in the file 'name.pin'. In the case that the zooming option
+is used, the whole domain is processed, but shown is only what fits the 
+A4 paper size. The bounding box can be edited to a smaller or larger
+portion when including the figure in another document (don't forget to
+switch the clipping option on in order to get rid of the unwanted region).
+An example is shown in the file 'sample.ps', produced by using Latex
+(see file 'sample.tex').
+
+One can easily extend the code to plot other fields. For example, one
+can easily calculate vorticity from the velocity field (include the routine
+'grad(...)' from 'caffa.f' to calculate velocity gradients, and the calculation
+of vorticity is trivial), store it in the array FI and just copy the section
+of code which plots isotherms to produce isolines and color fill for
+the vorticity... One can also adapt it to process measurement data, or to
+get three-dimensional plots of a scalar quantity.
+
+The postscript files can be pre-viewed before printing using Ghostscript
+or Ghostview (available on all Unix systems). The code can also be easily
+adapted to show the figures interactively on the screen (using say X11
+graphics); it is left to each user to adapt the source code to her or his
+own needs...
+
+
+CLOSING REMARKS
+---------------
+
+A version of this code which incorporates multigrid acceleration of the outer
+iterations is included in the directory 'mg'.
+
+Two versions incorporating two turbulence models are included in the directory
+'2dgt' (only as single-grid versions).
+
+If absolutely necessary (e.g. a bug is found), contact:
+
+Milovan.Peric@t-online.de
+
+--------------------------------------------------------------------------
+Nuernberg, March 04, 2002
+--------------------------------------------------------------------------

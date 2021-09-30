@@ -1,0 +1,56 @@
+CODES FOR RANSE
+===============
+
+This directory contains two versions of the CAFFA-code which
+include turbulence models for high-Reynolds-number flows. 
+One version includes the standard k-epsilon model with wall
+functions; the corresponding files are in the sub-directory
+"keps". The other version includes the k-omega model of Wilcox;
+the files are in the sub-directory "komega". The codes are
+otherwise very similar to the laminar version, which is now 
+in the directory "2dgl"; both models were implemented by
+Martin Schmid, PhD student at the Institute of Shipbuilding
+in Hamburg. See the readme-file in the directory "2dgl" for
+more information on code structure and how to run it.
+
+The extensions are described through comments in the code;
+otherwise see Chap. 9 for a description of the k-epsilon
+model (or the original references cited therein) and the
+literature listed in the "readme"-file in the sub-directory
+"komega" for the k-omega model.
+
+In the sub-directory "examples" there are input files for
+some of the test cases already used for laminar flow
+computations. I have tested the "channel", "damdif", and
+"bfstep", but I can not guarantee that the codes are bug-free,
+since it is not easy to test codes with turbulence models.
+In the case of laminar flows, there is a number of test cases
+with very accurate solutions, so we know exactly what we must
+get. With turbulence models, we may get similar results to
+someone else's in one or two test cases and still have a bug
+in the code... We shall keep testing these codes and I'll
+appreciate any reports on problems experienced by other users.
+
+The parameters used in the input files for the test cases listed
+above are those I suggest for general applications. They have not 
+been optimized in any sense and are rather conservative; the user
+may achieve a substantial improvement of convergence rates by 
+playing with the under-relaxation factors, but note that these
+are problem-dependent. In general, if the grid is orthogonal,
+one can use higher values of under-relaxation parameters for 
+U, V, K, etc. (but use always 0.1 to 0.2 for pressure). Also,
+central differencing will not work in general for k, eps
+equations due to strong peaks; here one would need a local
+blending with UDS to avoid oscillations. This is a well-known
+technique which I have been too lazy to implement (only the
+global blending with a fixed blending factor is implemented).
+See papers from aero-experts using TVD, MUSCLE, ENO and other
+bounded schemes; also a number of Leonard's papers on this topic
+(e.g. in Advances in Numerical Heat Transfer, pp. 1-57,
+W.J. Minkowycz and E.M. Sparrow, Eds., Taylor and Francis,
+New York, 1997).
+
+Questions specific to the implementation of the models may
+be directed either to me or to Martin Schmid; Email
+addresses are listed at the beginning of the code.
+

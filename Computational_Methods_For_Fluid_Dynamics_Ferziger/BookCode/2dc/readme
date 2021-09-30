@@ -1,0 +1,195 @@
+Dieses Verzeichnis beinhaltet Rechenprogramme zur Lösung der
+zweidimensionaler Strömungs- und Wärmeübergangsprobleme mit der
+Finite-Volumen-Methode unter Verwendung von kartesischen Gittern
+mit nichtversetzter Anordnung von Variablen. Folgende Datein
+stehen zur Verfügung:
+
+GRID.F	Ein Programm zur Erzeugung von kartesischen Gittern
+	(Mehrgitterversion). Das Lösungsgebiet wird zuerst in  
+	einige Teilgebiete in jede Richtung unterteilt. In jedem
+	Teilgebiet können Gitterabstände expandieren oder
+	kontrahieren; dies kann man entweder durch die Vorgabe 
+	eines Expansionsfaktors oder der Größe der Maschenweite
+	am Anfang des Interwals und der Anzahl der Zellen steuern.
+	Ein Gitter wird durch die vorgegebenen Parameter erzeugt;
+	die feineren und ggf. die gröberen Gitterebenen werden
+	danach durch automatische Unterteilung oder Zusammenlegung
+	von Zellen erstellt. Bei der Verfeinerung wird der
+	Expansionsfaktor berücksichtigt - auf dem feineren Gitter
+	nimmt man den Wurzel aus dem Expansionsfaktor des nächst
+	gröberen Gitter; damit bleiben die Gitterlinien des gröberen
+	Gitter im feineren enthalten, in einer Grobgitterzelle sind
+	vier Fengitterzellen enthalten, und der Expansionsfaktor
+	bleicht konstant für alle Zellen eines Teilgebietes. Möchte
+	man im gröbsten Gitter 5 nichtäquidistanten Zellen in einer 
+	Richtung haben, so kann man das zweite Gitter mit 10 Zellen
+	aus zwei Teilgebiete erzeugen (im ersten Teilgebiet mit
+	expandierenden Zellen, im zweiten Teilgebiet mit 
+	kontrahierenden Zellen); das gröbere Gitter wird dann in
+	der Mitte eine große Zelle und beidseitig kleinere Zellen
+	haben. Im Programm gibt es viele Kommentarzeilen mit 
+	Erläuterungen. 
+
+GRID.INP  Ein Beispiel für die Eingabedatei; wenn bei der Ausführung
+	des oben beschriebenen Programms die Eingabe auf diese Datei 
+	umgeleitet wird, werden die benötigten Parameter daraus gelesen -
+	sonst muss man sie nach Aufforderung auf der Kommandozeile
+	eintippen. Während der Ausführung des Programms wird auch eine
+	Echodatei mit den eingegebenen Daten erzeugt; diese kann 
+	editiert werden und für Erzeugung von anderen Gittern 
+	später verwendet werden.
+
+	Die Übersetzung und die Ausführung des programms kann wie folgt
+	durchgeführt werden (vorausgesetzt, der Compiler heißt "f77"):
+
+	f77 grid.f -o gg
+	gg 
+
+	Danach wird man nach dem Namen der Eingabedatei gefragt;
+	geben Sie 
+
+	grid.inp
+
+	ein, wenn Sie die vorbereiteten Daten verwenden wollen, oder
+
+	*
+
+	wenn Sie ein neues Gitter durch die erstmalige Eingabe der
+	Daten über die Tastatur (nach Aufforderung) erstellen wollen.
+	Man kann ein anderes Gitter auch durch die Änderungen der
+	Daten in der Datei "grid.inp" erzeugen.
+
+
+PSC.F 	Dieses programm löst eine generische Transportgleichung für
+	eine skalare Größe in 2D. Es werden sowohl der konvektive als
+	auch der diffusive Transport berücksichtigt, aber das 
+	Geschwindigkeitsfeld muss vorgegeben werden. Im Programm wird
+	das Geschwindigkeitsfeld einer Potentialströmung um einen 
+	Staupunkt festgelegt (dies kann - z.B. als eine Übungsaufgabe -
+	durch die Vorgabe einer anderen Potentialströmung geändert
+ 	werden). Das zu lösende Problem ist im Buch in Abschnitt 4.8
+	beschrieben worden. Die Finite-Volumen-Methode wurde benutzt;
+	man kann bei der Diskretisierung der konvektiven Flüsse 
+	zwischen Aufwind- und Zentraldifferenzen wählen, während
+	diffusive Flüsse mit Zentraldifferenzen approximiert wurden.
+	Das Gitter wird ebenfalls in diesem Programm erzeugt; es kann
+	nichtäquidistant sein, was durch einen Expansionsparameter
+	kontrolliert werden kann. Drei Gleichungslöser stehen zur
+	Verfügung: linienweise Anwendung des Thomas-Algorithmus
+	(TDMA) in X- bzw. Y-Richtung und ILU-Löser nach Stone (SIP; 
+	siehe Abschnitt 5.3.4). Eingabedaten können entweder während
+	der Ausführung des Programmen nach Aufforderung eingegeben,
+	oder aus einer Datei eingelesen werden.
+
+	Die Übersetzung und die Ausführung des programms kann wie folgt
+	durchgeführt werden (vorausgesetzt, der Compiler heißt "f77"):
+
+	f77 psc.f -o psc
+	psc < psc.inp
+	
+
+PSC.INP	Diese Datei beinhaltet die Eingabedaten für das obige Programm;
+	die Daten wurden im Programm durch Kommentare beschrieben.
+
+
+PSCUS.F	Dies ist eine für instationäre Vorgänge erweiterte Version des
+ 	Programmes PSC.F. Man kann zusätzlich die Methode zur
+	Zeitintegration wählen: explizite Euler-Methode (EE), implizite
+	Euler-Methode (IE), Crank-Nicolson Methode (CN) oder implizite
+	Methode mit drei Zeitebenen (I3L). Das Programm wurde verwendet,
+	um das instationäre 2D-Problem aus Abschnitt 6.4 zu lösen.
+
+
+PSCUS.INP Die Eingabedaten für das Programm PSCUS.F.
+
+
+PCOL.F	Dieses Programm beinhaltet das Berechnungsverfahren zur Lösung
+	der Navier-Stokes-Gleichungen und verwendet Finite-Volumen-Methode,
+	kartesische Gitter, nichtversetzte Anordnung der variablen und
+	die SIMPLE-basierte Prediktor-Korrektor-Lösungsmethode. Die
+	Bezeichungen für Variablen entsprechen in etwa denen aus
+	Kapitel 7. Das Programm ist zur Berechnung von deckelgetriebenen
+	und auftriebsgetriebenen Strömungen in geschlossenen Nischen
+	vorbereitet. Man kann zwischen Aufwind- und Zentraldifferenzen
+	für die konvektiven Flüsse, und zwischen impliziten Euler-Methode
+	und der impliziten Methode mit drei Zeitebenen für Zeitintegration
+	wählen. Diffusiven Flüsse werden mit Zentraldifferenzen
+	approximiert. Der ILU-Löser nach Stone (SIP) wird zur Lösung
+	der linearen algebraischen Gleichungen (innere Iterationen)
+	eingesetzt. Es gibt viele Kommentare im Programm, die alle Schritte
+	und die meisten Variablen beschreiben. Die Bedeutung der
+	Eingabedaten wird ebenfalls durch Kommentare beschrieben.
+	Dieses Programm wurde verwendet, um die Beispiele aus Abschnitt 
+	7.8 zu berechnen. 
+
+	Die Übersetzung des Programms erfolgt wie oben beschrieben. Bei
+	der Ausführung wird man nach den Namen der Eingabedatei, der
+	Ausgabedatei, der Gitterdatei und der Ergebnisdatei gefragt.
+	Die vorbereitete Eingabedatei ist "pcol.inp"; die Ausgabedatei
+	kann beliebig genannt werden; für die Gitterdatei muss man den
+	bei der Gittererzeugung gegebenen Namen für die dortige
+	Ausgabedatei verwenden. Für die Ergebnisdatei kann man einen
+	beliebigen Namen angeben; dieser wird bem Postprozessing
+	verlangt.
+
+PCOL.INP  Beispiel für die Eingabedaten für das Programm "pcol.f" (hier
+	für die stationäre dekelgetriebene Nischenströmung).
+
+PLOT.F	Dieses Programm erstellt Bilder: das Gitter, die 
+	Geschwindigkeitsvektoren, die Profile der Geschwindigkeitskomponenten
+	und der Temperatur, die Konturen des Druckes und der Temperatur
+	(Isobaren und Isothermen), die Stromlinien sowie die farbgefüllten
+	Konturen des Druckes, der Temperatur und der Stromfunktion können
+	gezeichnet werden. Im Falle von mehreren Gittern oder instationären
+	Strömungen, dateien mit mehreren Datensätzen können verarbeitet
+	werden. Jedes Bild wird in einer separaten Datei gespeichert, deren 
+	Name aus der Bezeichung der Variablen (z.B. VECT für 
+	Geschwindigkeitsvektoren) und der Nummer des Datensatzes besteht,
+	um eine einfache Zuordnung zu ermöglichen. Alle Bilder werden
+	als Postscript-Dateien erstellt, da dieses Format hardwareunabhängig
+	ist; das Programm kann leicht adaptiert werden, um die Bilder in
+	einem graphischen Fenster am Bildschirm darzustellen. Viele 
+	Kommentare im Programm beschreiben die Vorgehensweise bei der
+	Erstellung der Bilder sowie die benötigten Eingabedaten.
+
+	Bei der Ausführung des Programmes wird man zuerst nach den 
+	Dateinamen gefragt (Eingabedatei mit Steuerparametern, Ergebnisdatei
+	mit den Ergebnissen der Berechung mit "pcol.f", Datei mit
+	eventuellen Vergleichsdaten für Profilbilder - wenn nicht vorhanden,
+	kann ein beliebiges Zeichen eingegeben werden - und die Nummer
+	des Datensatzes - die Gitterebene bei stationären Strömungen
+	oder die Nummer des gespeicherten Datensatzes bei instationären
+	Strömungen).
+
+
+PLOT.INP Diese Datei beinhaltet ein Beispiel für die Eingabedaten für 
+	das Programm "plot.f". Diese Datei muss für jeden Anwendungsfall
+	adaptiert werden, je nach dem, was für Bilder erstellt werden
+	sollen (siehe Beschreibung der Daten im Programm).
+
+pcompact.f  Eine Version des Programmes "psc.f", in der für die konvektiven
+	Flüsse eine Interpolation 4. Ordnung für die Bestimmung der
+	Variablenwerte in der Mitte der KV-Seite ebenfalls zur Verfügung 
+        steht.
+
+
+Im Unterverzeichnis PIPE befinden sich folgende Dateien:
+
+GRID.F	Dieselbe Datei wie im Verzeichnis eine Stufe höher.
+
+PCOL1.F	Eine Version des Programmes "pcol.f", die Einstrom- und
+	Ausstromrandbedingung beinhaltet. Das Programm ist zur Berechnung
+	der laminaren Strömung in einem ebenen Kanal oder in einem Rohr
+	(je nach dem, ob die achsensymmetrische Option aktiviert wurde).
+	Hier wird demonstriert, wie die Geschwindigkeiten am Ausstromrand
+	zunächst extrapoliert und dann korrigiert werden, um die globale
+	Massenerhaltung zu gewährleisten. Die Druckkorrekturgleichung
+	muss nicht geändert werden, da die Geschwindigkeiten am Rand
+	als vorgegeben (für eine äußere Iteration) betrachtet werden;
+	somit hat die Druckkorrekturgleichung immer die Neumann-
+	Randbedingungen an allen Rändern.
+
+DGPIPE	Eingabedatei für "grid.f".
+
+DCPIPE	Eingabedatei für "pcol1.f".
+

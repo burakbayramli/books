@@ -1,0 +1,127 @@
+This directory contains a number of solvers for linear equation systems.
+The files included at present (March 1996) are:
+
+LAPL2D.F    Program for solving Laplace or Poisson equation in 2D using 
+            different solvers. The Laplace equation is discretzed on a 
+            Cartesian grid using FV method and central differences. The 
+            boundary conditions for the Laplace-equation can be chosen 
+            such that the converged solution is exact; therefore, after 
+            each iteration one can calculate the iteration convergence 
+            error. In the case of Poisson-equation, one has to take care
+            that the sum of sorce terms equals zero if Neumann conditions
+            are applied at all boundaries as otherwise there will be no 
+            steady-state solution. The program was used to
+            solve 2D problems presented in Sect. 5.7.
+
+            The solvers included are:
+
+            1.  Gauss-Seidel solver (GS);
+
+            2.  Line-by-line application of TDMA solver, alternately
+                in X- and Y-direction (often called ADI-TDMA);
+
+            3.  Strongly implicit procedure of Stone (SIP) (see Sect.
+                5.3.4);
+
+            4.  Conjugate gradient solver for symmetric matrices (ICCG),
+                preconditioned by incomplete Cholesky decomposition
+                (in flow calculation, suitable only for the pressure
+                or pressure-correction equation; equations which
+                contain a convective term produce non-symmetric
+                matrices);
+
+            5.  ADI solver;
+
+            6.  Multigrid solver (correction scheme) using GS as smoother;
+
+            7.  Multigrid solver using SIP as smoother;
+
+            8.  Multigrid solver using ICCG as smoother;
+
+            The program requires the following input data, which can be
+            entered upon request during execution, or be prepared in an
+            input file to which standard input has to be re-directed
+            when runing the code, e.g. by typing LAPL2D < LAPL2D.INP:
+
+            - Output file name (FILEO);
+
+            - Maximum number of allowed iterations (MAXIT);
+
+            - Residual level at which iterations are stoped (RESMAX);
+
+            - Dimension of the solution domain in X- and Y-direction,
+              XMAX and YMAX;
+
+            - Grid expansion factor in X- and Y-direction, EXX and EXY;
+
+            - Number of CVs in X- and Y-direction, N and M;
+
+            - Solver choice, ISOL (1 -> GS, 2 -> LBL-TDMA, 3 -> SIP,
+              4 -> ICCG, 5 -> ADI, 6 -> MG+GS, 7 -> MG+SIP, 8 -> MG+ICCG);
+
+            - Parameters ALPHA (needed for SIP solver; see Sect. 5.3.4) and 
+              BETA (needed for ADI-solver).
+
+            The solvers can be easily adapted and implemented in other
+            programs. The code is heavily commented and self-explanatory.
+
+LAPL2D.INP  An example of input data for the above code.
+
+
+LAPL3D.F    Program for solving the three-dimensional Laplace equation
+            using FD method and uniform grids in each direction. Three
+            solvers are included, which can be easily adapted to other
+            similar problems:
+
+            1. Three-dimensional version of the SIP-solver (see Sect.
+               5.3.4 and a paper by Leister and Peric, 1994), suitable
+               also for convection-dominated problems;
+
+            2. Three-dimensional version of the ICCG-solver (applicable
+               to symmetric matrices only, e.g. pressure or pressure-
+               correction equation in incompressible flows, heat conduction
+               equation etc.);
+
+            3. CGSTAB solver (see Sect. 5.3.7 for a description of the
+               algorithm; the code structure and the variable names largerly
+               correspond to the text in the book), suitable for both
+               symmetric and non-symmetric matrices.
+
+            The code requires the following input data, which can be either
+            entered upon request during execution, or be prepared in an
+            input file to which standard input has to be re-directed
+            when runing the code, e.g. by typing LAPL3D < LAPL3D.INP:
+
+            - The number of nodes in X, Y and Z direction (NI, NJ, NK);
+
+            - The maximum allowed number of iterations (MAXIT) and the
+              residual level at which iterations are stoped (RESMAX);
+
+            - The dimensions of the solution domain (XL, YL, ZL);
+
+            - The value of LTEST which controls additional output
+              (1 -> print additional output, 0 -> don't print it);
+
+            - Choice of solver (ISOL): 1 -> SIP3D, 2 -> ICCG3D, 
+              3 -> CGSTAB3D;
+
+            - The value of ALFA (relevant for SIP only).
+
+
+LAPL3D.INP  An example of input data for the above code.
+
+
+In addition to these two programs, which involve most of the frequently
+used solvers, the following file is also included:
+
+SIPVEC.F    Computer program including the vectorized version of the
+            SIP3D-solver. It is here presented in the form where arrays
+            use three indices; this solver and a detailed description 
+            for the one-dimensional indices used in the above codes can
+            be found in a paper by Leister and Peric (1994); see the
+            list of references in the book.
+
+Note that conjugate gradient solvers and the Gauss-Seidel solver can 
+easily be adapted to unstructured grids as well. Also note that SIP
+can be used as pre-conditioner in the ICCG and CGSTAB solvers, increasing
+the efficiency on fine grids substantially.

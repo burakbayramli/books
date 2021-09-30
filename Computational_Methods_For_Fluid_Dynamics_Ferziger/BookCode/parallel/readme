@@ -1,0 +1,1066 @@
+Although the PVM is no longer used (replaced by MPI), these files
+are still included as the procedure for adapting the code to
+parallel processing and the communication pattern remain valid
+(unfortunately, we have not had time to adapt the communication
+routines to mpi).
+
+Below is the original text from 1996...
+----------
+
+This file contains description of a sample CFD code employing PVM 
+parallelization. The CFD code is described first; communication via
+PVM follows. The files apearing in this directory are also described.
+At the end, there are instructions on how to run the flow solver on
+a parallel computer (or network) using PVM.
+
+---------------------------
+PARP.F
+---------------------------
+
+The CFD code described herein is based on the Finite Volume Method (FVM)
+and uses cartesian grids (or axisymmetric rectangular grids). It has been
+adapted to the calculation of cavity flows (lid-driven or buoyancy-driven),
+without in- or outflow. It uses a single, equidistant grid and is therefore
+the basic code suitable for teaching purposes (non-uniform grids are
+programmed, but only uniform grids are generated; non-uniform grids must
+be read from input). NI and NJ are the numbers of nodes in each coordinate
+direction; the number of control volumes (CVs) is NI-2 and NJ-2, respectively,
+since there are boundary nodes on each side. At interfaces between two
+subdomains, values from neighbour rows of CVs are stored at these locations.
+
+All field variables are stored in one-dimensional arrays. The nodes are
+'collected' along lines I=const, from I=1 to I=NI. The index which defines
+the position of an element in such an array, IJ, is related to the grid
+indices as follows:
+
+I,J     ->  IJ ( = LI(I)+J, where LI(I)=(I-1)*NJ )
+I+1,J   ->  IJ+NJ
+I-1,J   ->  IJ-NJ
+I,J+1   ->  IJ+1
+I,J-1   ->  IJ-1
+
+The conversion between the two locations is therefore easy.
+
+
+***********************************************************
+        PROGRAM COMET
+***********************************************************
+
+The main routine sets first the numbers of subdomains in x- and y-direction,
+NPRX and NPRY, respectively. The total number of subdomains (processors or
+processes, if more than one are running on one mashine) is then 
+NPROC=NPRX*NPRY. Then the PVM environment is initialized and the same code
+is started on other processors by calling INITCO. This is described
+in the second part of this file. On returning from INITCO each process
+knows its identifier ME, which ranges from 1 to NPROC. The files containing
+input data, output and results are named DATA_#, OUT_# and RES_#,
+respectively, where # is ME-number. These files must be prepared and exist
+on the mashine before the job is started. In the present case the user does
+this manually; for a more complex code, a parallel preprocessor would
+normally do that job. In order to know which files to use, each process
+writes its ME-identifier to the character variables FILIN, FILOUT and FILRES,
+together with the unique prefixes mentioned above. The files are then
+openned and rewound. 
+
+Input data is read next; this is performed by the section MODINP of the 
+routine INOUT, which will be described later. All processes are reading their 
+data (most of which - except for grid data in complex CFD codes - is same
+for all of them). Initial output is printed by the section OUT1 of the 
+same routine.    
+
+If the logical variable LREAD was set true, results of the previous run 
+are read from the results file. This file must have been created by the 
+same process before; it contains only the data of the particular 
+subdomain, as if it were the only one.
+
+If the flow problem is unsteady, the time loop is started; current values of
+variables are copied to arrays storing old values. In case of steady flows,
+ITST=1 and DT=1.e20 should be specified in the input data file.
+
+Boundary values of the dependent variables are set by the section BCIN of
+the routine INOUT. If the logical variable LOUTS was set true, initial
+field values of all variables are printed out by calling OUTRES. Each 
+process creates its output file and prints data from its subdomain - 
+the data is not collected together (this can be performed by the 
+postprocessor in case of the complex CFD code, unles the postprocessing
+is also performed in parallel). Index of the monitoring location is 
+defined and its position is printed out (each process or subdomain has 
+its monitoring location and prints variable values from that location 
+to its output file).
+
+The next loop performs up to MAXIT iterations within the time step, using
+SIMPLE-Algorithm. Momentum equations for U and V are discretized and 
+solved within CALCUV routine, pressure-correction equation in CALCP and
+temperature equation within CALCT routine. Logical variables LCAL(Ivar)
+decides which equation is solved, where Ivar is the variable identifier
+(IU, IV, IP, IEN, which are given values 1, 2, 3 and 4, respectively).
+These routines calculate new elements of the coefficient matrix (AE, AW,
+AN, AS and AP) and the source vector (SU or SV), using the newest variable 
+values from the previous outer iteration. Before solving the new matrix 
+equation system, residual vector is calculated, using new matrix and source
+elements and the prevailing variable values. The sum of absolute values
+of all elements of the residual vector matrix is stored for each variable
+in the array RESOR. Inner iterations are performed in solver to update the
+variable. The RESOR values are here normalized with the appropriate
+normalization factors SNOR.
+
+Each process calculates residuals only for control volumes (CVs) within
+its subdomain. Since in some subdomains the residuals may be larger than
+in others, the convergence criterion has to be based on the sum of
+RESOR values from all subdomains. Here the routine COLLECT is called,
+in which all processes send their RESOR array to the master, and the master
+adds them all up. Each processor prints one line of output containing
+residual levels and variable values at the monitoring location. Only
+master will be printing out the total sum of residuals; all other processes
+print only the sum from their own subdomain. Monitoring values are in any
+case from each individual subdomain - we have therefore the printout of
+variable values at NPROC monitoring locations, where NPROC is the number
+of processes.
+
+The maximum value of RESOR is relevant for the decission whether to go
+on or stop outer iterations within the time step. Since only the master
+knows the total values, it has to broadcast the maximum value (SOURCE)
+to all other processes (where the received value overwrites the one
+they calculated themselves). Each processor will then check whether
+iterations are diverging (SOURCE.GT.SLARGE) or wheter the converged stage
+has been reached (SOURCE.LT.SORMAX). Otherwise, after MAXIT outer 
+iterations are performed, the next time step is started or final output
+is performed before stop.
+
+If the logical variable LOUTE was set true, field values of variables are 
+printed out. Additional output (like the total heat flux or shear force at
+a wall) is printed from the section OUT2 of the routine INOUT. Finally,
+if LWRITE was set true, all the data needed for a restart of the calculation
+are written to the results file, which is also used for post-processing.
+The postprocessor can then either bring all subdomains together, or plot
+data from each subdomain in parallel using the same reference point and
+scalling factors, so that the individual plots fit together.
+
+==========================================
+        SUBROUTINE CALCUV
+==========================================
+
+The routine CALCUV assembles the coefficient and sorce matrices for the
+momentum equations and calls solver to improve U and V. Here are URF the
+under-relaxation factors and GDS is the blending factor between CDS and UDS
+schemes for convection (typically 1.0, i.e. pure CDS is used). Routine
+PBOUND is called to calculate pressure on external boundaries. Then, arrays
+SU, SV, APU, APV, DPX and DPY are initialized with zero. This is necessary
+since contributions to these elements is calculated at CV faces and added
+to whatever is stored in the array (each element receives contribution
+from four faces).
+
+Surface integrals (convection and diffusion fluxes) are first approximated
+for vertical CV faces. This is done by the routine FLUXE, which considers
+one vertical CV face between nodes IJ and IJ+NJ (east face). Each face is
+visited only once; contributions to the matrix elements of the two CVs
+(around node IJ and its east neighbour) are calculated and appropriately 
+stored - see description of FLUXE.  The parameters passed to this routine 
+are the I and J index of the node IJ, and a factor multiplying viscosity
+in the diffusion flux (1. for momentum equations, 1/Pr for temperature,
+where Pr is the Prandtl number; the same routine FLUXE is used for 
+momentum and scalar equations; in the momentum equations, constant density
+and viscosity are assumed, so that these equations have the same form as
+the scalar equations - only the diffusion coefficient is different).
+
+The routine FLUXE passes back (via COMMON /COEF/) the values of AE1 and
+AW1, which store the difference between UDS and CDS coefficient. The UDS
+coefficient is taken implicitly (AE(IJ), AW(IJ+NJ) and the corresponding
+contribution to AP(IJ) and AP(IJ+NJ)), while the difference - multiplied
+by GAM - is taken into account explicitely. The terms added to SU and SV at
+nodes IJ and IPJ apear after the call to FLUXE.
+
+The same procedure applies to the horizontal CV faces. One could have
+used the same routine to approximate surface integrals along all faces,
+but more parameters would have had to be passed, as distinction between
+AE, AW and AN, AS has to be made. The program is longer with having FLUXN
+additionaly, but on structured grids, this simplifies the programming.
+FLUXN returns AN1 and AS1, which account for the explicit correction to
+UDS fluxes, to produce CDS fluxes at converged state.
+
+The routines FLUXE and FLUXN are called here only for the inner CV faces
+(note difference in index bounds for J and I in the corresponding loops).
+Boundary CV faces are handled later.
+
+Next loop goes over all CVs and assembles volume integrals. X(I) and Y(J) 
+represent coordinates of CV boundaries (east and north; west corresponds
+to index I-1, south to J-1). FX(I) and FY(J) are the interpolation factors
+at CV center, such that CV face values are linearly extrapolated as shown  
+below for pressure. R(J) is the radius at north CV face. The pressure term
+is for cartesian grids the same if considered as a volumetric (pressure
+gradient) or surface (projection of pressure * area) forces. Pressure at
+CV faces is calculated using linear interpolation (PE, PW, PN and PS) and
+the pressure gradient is calculated by dividing this difference with CV
+width, DX or DY (which may vary from CV to CV, as X(I) and Y(J) store the
+actual positions of CV faces). Pressure gradients are stored for later
+use in CALCP; multiplied by CV volume, they are added to the source terms
+SU(IJ) and SV(IJ).
+
+Contributions to the source term due to buoyancy (GRAVX nad GRAVY are the
+components of the gravity vector in the x and y coordinate direction
+respectively, and BETA is the volumetric expansion coefficient) are
+calculated if the energy equation is also solved. In case of an axi-symmetric
+geometry (LAXIS set true), a contribution to the central coefficient for
+the V-equation is calculated and stored in the array APV(IJ), which will
+be needed later to store the reciprocal value of AP(IJ) for the V-equation.
+
+In case of unsteady calculations (LTIME set true), contributions to the
+source term and to the ceentral coefficient are also calculated. Here
+only the fully implicit scheme is programmed; it is not accurate and
+should be substituted by a Crank-Nicolson scheme or fully implicit three
+time levels scheme (which are second order schemes) if time accuracy is
+important. Contribution to the central coefficient AP(IJ) for the U-equation
+is stored in the array APU(IJ). It will be later overwritten by 1/AP(IJ);
+its present content is no longer needed once AP(IJ) is assembled.
+
+The boundary conditions are implemented by calling section BCUV of the
+routine BCOND. It will be described later. After that, the central
+coefficient AP(IJ) is assembled for the U-equation by summing all the
+neighbour coefficients and other contributions which were temporarily
+stored in APU(IJ). Under-relaxation is applied (multiplication of AP by
+urfu = 1./urf(iu), and addition of an extra term to the source term SU(IJ)),
+1./AP(IJ) is stored as APU(IJ) to be used in the pressure-correction equation
+and the U-equation is then solved. Two solvers can be invoked for the
+linear equation systems: Gauss-Seidel based solver (routine SOLGS) or
+ILU based solver after Stone (routine SIPSOL). The decission depends on the
+value of the parameter KSW. The same solver is used for all equations.
+
+After solving for U, the central coefficient and the source term are
+assembled for V. AP is the same for both velocities in the interior, but
+they differ along external boundaries. One could possibly use only one
+of them in the pressure-correction equation without much sacrafice; for
+the sake of completeness, both are separately stored (1./AP for V as APV)
+to be used later.  V-equation is then solved using the same solver; that's
+why the source term SV is copied into SU, which is used in the solver.
+
+In order to be able to assemble the pressure-correction equation at CVs
+along subdomain interfaces, one has to exchange some information between 
+processes. While the coefficients in the transport equations depend only
+on the geometry, fluid properties and mass fluxes stored and calculated
+within own subdomain, for the pressure-correction equation we need APU,
+APV, DPX and DPY from neighbour CVs on the other side of interface. These
+are obtained from neighbour processor and stored in boundary array elements,
+so that CV faces at subdomain interfaces are treated exactly as any other
+inner CV face. Exchange of this data is performed by the routine EXCH,
+which will be described later. If computation and communication can take
+place simultaneously, transfer can be started before starting solution
+of V-equation. Since the values to be exchanged will be nedded only after
+V-solution is obtained and some other work is done in CALCP, such a
+communication may not then halt computation at all.
+
+========================================
+        SUBROUTINE CALCP
+========================================
+
+This routine assembles and solves the pressure-correction equation. First
+the arrays AP and SU are initialized with zero. Then, all inner vertical
+CV faces are visited by calling the routine EASTP(I,J), which calculates
+face velocity, mass flux F1(IJ) and the coefficient AE(IJ) for the CV on 
+the left and AW(IJ+NJ) for the CV on the right hand side. In the next loop, 
+horizontal CV faces are visited by calling NORDP(I,J), which calculates
+mass fluxes F2(IJ) and the coefficients AN(IJ) for the CV below and AS(IJ+1)
+for the CV above the face. Boundary conditions are implemented through the
+routine BCPP, which will be described later.
+
+The factor 1./URPP allows the simulation of artificial compressibility.
+URPP is <= 1. (sometimes needs to be < 1. for large number of processors
+and coarse grids), for small number of processors (order of 10) can be
+1. in all cases. It increases the central coefficient AP(IJ), makes the
+pressure-correction equation to converge faster but mass conservation is
+not assured until convergence of the outer iterations even if the pressure-
+correction equation were solved to mashine accuracy. Any contribution
+to AP(IJ) other than the sum of neighbour coefficients (arising from
+boundary conditions) is temporarily stored in the array AP before the
+neighbour coefficients are added. Source term SU(IJ) is the sum of mass
+fluxes, as usual.
+
+Once the coefficient and source matrices are assembled, the arrays DPX,
+DPY and PP are reset to zero values. DPX and DPY will be filled with 
+gradients of pressure correction, and PP will be the calculated pressure
+correction (iterations for PP start in each outer iteration from zero
+values; at convergence, they should remain negligibly small).
+
+The pressure-correction equation is solved by invoking one of the two
+solvers, as in the case of momentum equations. Then the routine PBOUND(PP)
+is called to extrapolate pressure correction to external boundaries.
+Values of PP on the other side of internal subdomain boundaries are known
+in each subdomain, as the solver exchanges them after each inner iteration.
+The value of PP at the specified reference location (IPR,JPR) is denoted
+PPO. Since each subdomain will obtain different PPO, and they all should
+be subtracting the same value from PP when correcting pressure, the master
+has to broadcast its value to all other processors. Again there is some
+work to be done (correction of mass fluxes) before PPO is neded, so if
+communication and calculation can go on simultaneously, the communication
+overhead may be eliminated.
+
+The mass fluxes through the horizontal CV faces, F1(IJ), are corrected
+for all such faces, including the boundary ones (I=1 and I=NIM, see loop
+limits). If the subdomain boundary is an external boundary, than the
+corresponding coefficient AE(IJ)=0., and the boundary mass flux will not
+be corrected. If, on the other hand, the subdomain boundary is an interface
+between two subdomains, than the correct mass flux correction will be
+obtained. For the same CV face at an interface between two subdomains,
+both subdomains will calculate correction and both will get the same value,
+since the coefficient is guaranteed the same, as well as the pressure
+correction values on either side. The same comments apply to the horizontal
+CV faces, for which F2(IJ) is corrected in the same way.
+
+For the correction of velocities at CV centers (which is not absolutely
+necessary, but may save some iterations), we have to calculate gradients
+of pressure correction. This is done in the next loop, which runs over all
+CVs. The value of PP at each CV face center is calculated by linear 
+interpolation, the difference at opposite faces is multiplied by the face 
+area (which is equivalent to multiplying the gradient with CV volume) and 
+the velcoity correction is calculated by multiplying this quantity with 
+1./AP(IJ) from the corresponding momentum equation. The URF(IP)-portion 
+of the pressure correction (from which PPO is subtracted, to keep pressure 
+constant at one specified reference location) is now added to pressure at 
+each CV. This finishes one SIMPLE corrector step. In case of non-orthogonal 
+grids, more correctors may be necessary.
+
+After correcting velocities and pressure, the values along subdomain
+interfaces have to be exchanged between processes. This is done by calling
+the routine EXCH for each of these variables.
+
+=========================================
+        SUBROUTINE CALCT
+=========================================
+
+This routine assembles and solves the temperature equation. It is very
+similar to the CALCUV routine, so only the differences will be described.
+
+When calculating diffusion fluxes, reciprocal Prandtl number PRR is needed
+as the factor which multiplies viscosity (this factor was unity for
+velocities). The only volumetric source term in this routine is the
+unsteady term. Contribution to AP(IJ) is added to the initial value,
+which was preset to zero at the begining of the routine. Boundary
+conditions are set in MODT. AP and SU are assembled in their final form,
+the under-relaxation is applied and the temperature equation is solved.
+There is no need for an additional data exchange, since this has been
+done in the solver and the temperature was not modified afterwards.
+
+=========================================
+        ENTRY EASTP(I,J)
+=========================================
+
+This routine calculates mass fluxes through vertical CV faces (east).
+DPXEL is the pressure gradient at CV face, obtained by linear interpolation
+from nodal values of CVs which share that face (nodes IJ and IPJ). FX(I)
+is the interpolation factor (distance from node IJ to cell face divided
+by the distance from node IJ to node IPJ). APUE is the value of 1./AP(IJ)
+from the U-equation linearly interpolated for the CV face location. UEL is
+the U-velocity at CV face calculated by linear interpolation. UE is the
+cell face velocity, obtained by adding a correction term to the linearly
+interpolated value. XC(I) and YC(J) are the coordinates of CV center.
+The correction term consists of APUE * (volume of staggered CV) * 
+(pressure gradient calculated at cell face  - linearly interpolated 
+gradient). DX from the volume cancels with DX from the pressure gradient 
+at the cell face, so only DPXEL is multiplied by DX. The mass flux F1(IJ) 
+is equal to density * area * velocity. The coefficient AE(IJ) equals 
+density * area * area * APUE. AW(IPJ) is equal to AE(IJ) (the coefficient 
+matrix is symmetric).
+
+=========================================
+        ENTRY NORDP(I,J)
+=========================================
+
+This routine is identical to EASTP, it only operates on horizontal faces
+and therefore needs other indices.
+
+=========================================
+        ENTRY FLUXE(I,J,FAC)
+=========================================
+
+This routine approximates convection and diffusion fluxes through vertical
+CV faces in transport equations (for velocities and temperature). It is
+simpler than in general cases, since constant fluid properties are assumed.
+With central difference approximations, diffusion flux is expressed as
+diffusion coefficient (VISC*FAC) times area (DY*RE) times gradient at CV
+face center (value at IJ+NJ - value at IJ divided by the distance DXE).
+This gives the coefficient DE which multiplies both variable values - it
+makes the symmetric part of the coefficient matrix. The convection flux 
+is split into an implicit part due to upwind scheme (UDS), which is equal
+to the mass flux throght CV face F1(IJ) times the variable value at the 
+upstream CV center, and an explicit part, which is equal to the difference
+between the flux obtained by multiplying the mass flux F1(IJ) with
+linearly interpolated velocity at CV face (central difference approximation,
+CDS) and the UDS flux approximation. The contributions to the coefficients 
+AE(IJ) and AW(IJ+NJ) are CE and CW respectively. One of them is always zero.
+The explicit part is defined by the coefficients AE1 and AW1, which are
+returned to the calling program, where the explicit parts are assembled
+and added to the source term (see routines CALCUV and CACT).
+
+
+=========================================
+        ENTRY FLUXN(I,J,FAC)
+=========================================
+
+This routine calculates fluxes through horizontal CV faces. It is fully
+analogous to the above routine and needs no further description.
+
+
+=========================================
+        SUBROUTINE PRINT
+=========================================
+
+This routine prints field values of variables, in a format which resembles
+numerical grid. It is self explanatory.
+
+
+=========================================
+        SUBROUTINE SIPSOL(FI,IFI)
+=========================================
+
+This routine uses the ILU method of Stone to iteratively solve a system of
+linear algebraic equations with a pentadiagonal coefficient matrix.
+The arrays BW, BE, BS, BN and BP store the elements of the lower and 
+upper triangular matrices (BP is the reciprocal value). Their calculation
+is performed only once per call to this routine (i.e., once per outer
+iteration).
+
+RES(IJ) is first defined as the residual at node IJ, calculated using the
+new coefficients and source terms, and prevailing variable values (from
+previous iteration). Absolute values are summed in RESAB. RES(IJ) is then
+overwritten with the auxilliary vector resulting from inverting the lower
+triangular matrix; see literature for details.
+
+In the first inner iteration, the value of RESAB is stored as RESOR(IFI),
+which is used to check the convergence of outer iterations. The level of
+residuals relative to the starting one is calculated for subsequent
+inner iterations, in case the convergence of inner iterations needs to be 
+checked (in most cases a fixed number of inner iterations is specified -
+relying on experience; optimization is easy on single processor but may
+eat up a lot of time if done on multiprocessor systems, especially under
+PVM for workstation networks).
+
+Finally, in a back substitution the correction of variable values is
+calculated; the value overwrites RES(IJ) and is then added to FI(IJ).
+
+For good convergence of inner iterations when domain decomposition is
+used, values at subdomain boundaries must be updated after each inner
+iteration. In any one inner iteration, at say east subdomain boundary the
+coefficient AE multiplies the variable value at I=NI which is assumed
+known; it is actually the value at I=2 in the neighbour subdomain,
+calculated in the previous iteration. See literature for the description
+of the modified iteration matrix in case of domain decomposition.
+
+Variable values around subdomain boundaries are exchanged between
+neighbour processors by calling the routine EXCH(FI).
+
+Either NSW(IFI) inner iterations are performed, or iterations are stopped 
+when the level of residuals has fallen by a factor SOR(IFI). In a parallel 
+implementation, checking of convergence of inner iterations would require 
+reporting of residual sums to the master by calling the routine COLLECT 
+and broadcasting of the total sum over the whole domain by the master by
+calling the routine BROADC (see the description of the main program). 
+This is necessary in order to prevent some processors from stopping 
+sooner than the others, which would jam the PVM. However, since this 
+communication is expensive we specify here a fixed number of inner 
+iterations, i. e. always all NSW(IFI) iterations are performed and no
+convergence check is performed.
+
+
+=========================================
+        SUBROUTINE SOLGS(FI,IFI)
+=========================================
+
+This routine incorporates the Gauss-Seidel solver for the linear equation
+systems. It calculates first the sum of absolute residuals before starting
+inner iterations; this is necessary for checking the convergence of outer
+iterations (new coefficients and sources are used with old variable values).
+The sum is stored as RESOR(IFI). 
+
+In the inner iteration loop, the variable values are updated by adding to
+the old value the residual divided by AP(IJ). The sum of absolute 
+residuals (which are not the true residuals as in SIPSOL, since some
+values have already been updated) may be used for controlling the number
+of inner iterations performed. However, for reasons described above all
+processors are here performing a prescribed number of iterations.
+
+Variable values along subdomain interfaces are exchanged by calling 
+EXCH(FI), as in the previous example.
+
+
+=========================================
+        SUBROUTINE PBOUND(FI)
+=========================================
+
+This routine extrapolates pressure or pressure correction to the outer
+domain boundaries. Pressure is needed on solution domain boundaries, but
+it can not be specified a priori for the class of problems considered here.
+There is a way to link normal pressure gradient with the gradient of the
+shear stress, but most authors simply extrapolate pressure linearly, which
+is also done here. It is done only for external boundaries, i. e. for 
+subdomains which belong to the first or last processor in each direction, 
+(IPROC=1 or NPRX, and JPROC=1 or NPRY).
+
+
+=========================================
+        ENTRY BCPP
+=========================================
+
+This part of the subroutine BCOND calculates mass fluxes and coefficients
+for the pressure-correction equation at block interfaces. This is done by
+calling routines NORDP(I,1) on south boundaries, NORDP(I,NJM) on north
+boundaries, EASTP(1,J) on west and EASTP(NIM,J) on east boundaries if these
+are not outer domain boundaries (IPROC not 1 or NPRX, JPROC not 1 or NPRY).
+
+At outer domain boundaries, velocities and mass fluxes are specified (here
+equal to zero for cavities), so they do not need to be corrected. This
+means that the pressure-correction gradient there is equal to zero, and
+therefore the coefficient of the boundary node is simply left equal to
+zero as previously initialized.
+
+
+=========================================
+        ENTRY BCUV
+=========================================
+
+This routine incorporates the boundary conditions for the momentum 
+equations. At external domain boundaries, the convection fluxes through
+boundary CV faces are equal to zero, so only the diffusion flux contribution
+to the coefficients and source terms needs to be calculated. At south and
+north boundaries, the flux of U-momentum is defined as the shear stress
+times the area, while the flux of V-momentum is equal to zero as normal
+stresses at walls are equal to zero. In approximating the gradient of U
+with respect to Y, one-sided differences are used - but only over half CV
+width. So, although the approximation of the gradient at the boundary is
+only of 1st order, the error is not much larger than in 2nd order
+approximations at inner CV faces, due to this smaller distance. The
+contribution to the coefficients of the central and boundary node resulting
+from the above approximation is expressed as viscosity times area over
+distance between nodes. At south boundary, zero wall velocity is assumed
+so there is no contribution to the source term, only contribution to AP
+is temporarily stored in APU. At north boundary, the product of the 
+diffusion contribution (DN) and the lid velocity is added to the source term.
+
+When south and north boundaries are subdomain interfaces, fluxes through
+boundary CV faces are calculated in exactly the same way as for any other
+inner CV face, see CALCUV: the routine FLUXN(I,1,1.) or FLUXN(I,NJM,1.)
+is called. The explicit contribution of convection flux approximation due
+to deferred correction is added to the source terms.
+
+At west and east boundaries the same procedure applies, only here the 
+flux of V-momentum has a contribution from shear stress, and the flux of
+U-momentum is equal to zero. At subdoamin interfaces, FLUXE(1,J,1.) is
+called at west and FLUXE(NIM,J,1.) is called at east boundaries.
+
+
+=========================================
+        ENTRY MODT
+=========================================
+
+This routine provides boundary condition for the temperature equation.
+It is analogous to the above section for the momentum equations. South
+and north boundaries are assumed adiabatic if they coincide with outside
+domain boundaries (for JPROC=1 and JPROC=NPRY, respectively). In that case
+both convection and diffusion fluxes are equal to zero, so there is no
+contribution from these sides to the algebraic equation for next-to-boundary
+CVs. If these boundaries are subdomain interfaces, they are theated like
+inner CV faces, see CALCT. The flux approximation is performed by the
+routine FLUXN(I,1,PRR) at south and FLUXN(I,NJM,PRR) at north boundary,
+where PRR is the reciprocal Prandtl number. Explicit part of convection
+flux is also added here to the source term.
+
+West and east outer boundaries are assumed to be isothermal. Therefore,
+for IPROC=1 and IPROC=NPRX the contribution from diffusion flux to the 
+central coefficient (stored in AP) and to the source term is calculated,
+as was the case for the momentum equations. The diffusion coefficient
+DW or DE is expressed as viscosity times area times reciprocal Prandtl
+number divided by the distance from wall to the CV center. The product 
+of this coefficient and the wall temperature is included in the source term.
+When these boundaries are subdomain interfaces, they are treated as any
+inner CV face, see CALCT. The routine FLUXE(1,J,PRR) is called at west
+and FLUXE(NIM,J,PRR) at east boundaries.
+
+
+============================================
+        ENTRY MODINP
+============================================
+
+This section of the SUBROUTINE INOUT  reads the input data, defines the grid,
+calculates interpolation factors and initializes the fields. First the
+character variable TITLE is read (up to 80 characters). Next line in the
+input data file, attached to unit 5, contains logical variables LREAD,
+LWRITE, LTEST, LOUTS, LOUTE and LTIME, which decide whether the results of
+previous run are to be read from the results file, whether the results at the 
+end should be written to the results file, whether test output is to be
+printed, whether initial and final field values are to be printed out and
+whether the calculated flow is unsteady or not. Next line contains some 
+control parameters: MAXIT is the maximum allowed number of outer iterations 
+per time step, IMON and JMON are grid indices of the monitoring point 
+whose variable values will be printed out for each outer iteration for 
+convergence check, IPR and JPR are grid indices of the point at which 
+the pressure is kept constant, SORMAX and SLARGE are the limits for the 
+absolute summs of residuals which define convergence and divergence, 
+respectively, ALFA is the relaxation parameter in the SIP-solver and 
+URPP is the under-relaxation parameter in the pressure-correction equation,
+which can be used to simulate the artificial compressibility method of
+solution.
+
+The next line contains density (DENSIT), dynamic viscosity (VISC), Prandtl
+number (PRM), x- and y-component of the gravity vector (GRAVX and GRAVY,
+respectively), coefficient of volumetric expansion (BETA), temperature of
+the hot (TH) and cold wall (TC) and the reference temperature (TREF) at
+which density, viscosity and Prandtl number are defined. The following line
+of input data contains: initial values of U and V velocity, pressure and
+temperature (UIN, VIN, PIN, TIN), velocity of sliding lid (UMAX), number
+of time steps to be performed (ITST), time step size (DT) and an integer
+defining which solver shall be used (KSW; 0 - Gauss-Seidel solver, any
+other value - SIP solver of Stone).
+
+The next five lines of input data contain: logical variable identifier
+LCAL(I), I=1,NFI (where NFI is the number of variables, here 4), defining
+which equations are to be solved; Under-relaxations factors URF(I); 
+convergence criterion for inner iterations SOR(I), defining the ratio of
+absolute residual sums when inner iterations are to be stopped to the
+initial absolute residual sum; maximum allowed number of inner iterations
+for each variable, NSW(I); blending factor GDS(I), defining the proportion
+of central differencing scheme used (1.0 - pure central; 0.0 - pure upwind).
+In all five cases, I varies from 1 to NFI, and the variable assignment is
+as follows: 1 - U, 2 - V, 3 - P, 4 - T. The integers IU, IV, IP and IEN 
+are assigned these values, so that e. g. the under-relaxation factor for 
+U is URF(IU), etc.
+
+The last but one line of input data contains: XMIN, XMAX - x-coordinates of 
+the west and east cavity wall; YMIN, YMAX - y-coordinates of the south and 
+north cavity wall; NICV, NJCV - number of control volumes in x- and 
+y-direction. Note that XMIN and XMAX are the global domain coordinates,
+not coordinates for the individual subdomains. Up to here, the data is 
+identical for all subdomains (all processes).
+
+The last input data line contains IPROC and JPROC - subdomain indices in 
+the array ranging from 1 to NPRX and from 1 to NPRY in the two directions, 
+respectively. These indices should be unique to each data file. Data 
+files are given names DATA_#, where the number # ranges from 1 to NPROC.
+DATA_1 must have IPROC=1 and JPROC=1. If NPRY > 1, then DATA_2 should 
+have IPROC=1 and JPROC=2, and so on, until JPROC=NPRY. The next data file 
+will then have IPROC=2 and JPROC=1 and so on, until IPROC=NPRX. This is 
+a convention adopted for the present code, and it is essential to adher 
+to it. 
+
+In a 'real' CFD code, input data files for each processor will be 
+generated by a pre-processor which does the domain decomposition. It 
+will read the general input data common to all subdomains, and by appending 
+to it the data specific to each subdomain, it will create input data files
+for all NPROC-subdomains. The subdomains would be identified by one index 
+only, and the input file would also have to contain information about the 
+neighbour subdomains (processor numbers). One possibility is to record 
+how many neighbors one subdomain (processor) has, and create as many tables 
+defining which CVs from one side correspond to which CVs on the other side. 
+
+The number of nodes in each direction (including boundary nodes, or nodes
+on the other side of subdomain interfaces) is defined as NI=NICV+2 and
+NJ=NJCV+2. NIJ is the total number of nodes in one array. Integer array
+LI(I), I=1,NI stores the number of nodes in all I-grid lines prior to
+current I.
+
+In this code it is assumed that all subdomains have equal number of CVs
+in each direction, and that the grid is uniform (the code will handle
+nonuniform grids if grid coordinates are differently generated than
+in this section, but the parallel processing would not function). This
+simplification is not essential for the performance of parallel computing -
+it only simplifies the description and the organization of the 
+communication due to the implicit neighbourhood connections. The grid
+spacing DX and DY is thus calculated as
+
+DX = (XMAX - XMIN)/(NPRX*NICV)
+DY = (YMAX - YMIN)/(NPRY*NJCV)
+
+The coordinates X(1),...,X(NIM) and Y(1),...,Y(NJM) are easily calculated.
+The coordinates of CV centers XC(2),...,XC(NIM) and YC(2),...,YC(NJM) are
+calculated as half the sum of face coordinates. XC(1) and XC(NI), and
+YC(1) and YC(NJ) are equal to XMIN and XMAX, and YMIN and YMAX, respectively,
+when the subdomain boundaries coincide with external domain boundary 
+(IPROC=1 or IPROC=NPRX, JPROC=1 or JPROC=NPRY). If the subdomain boundaries 
+are interfaces between two subdomains, then the coordinates of CV centers 
+in the neighbour subdomain next to interface are asigned to XC(1), XC(NI), 
+YC(1) and YC(NJ). Since the grid is uniform, these are simply XC(2)-DX, 
+XC(NIM)+DX, YC(2)-DY and YC(NJM)+DY, respectively. Again, in a more
+complex CFD code, the parallel preprocessor would pick up the coordinates
+from the global grid and assign them to boundary nodes of each subdomain.
+
+The interpolation factors FX and FY are calculated - although the grid is 
+assumed uniform - for all locations where needed; only the cell face and 
+CV center coordinates of own subdomain are needed for this purpose. For plane
+geometries, R(J) is set equal to unity; for axi-symmetric geometries, it
+equals Y(J).
+
+
+========================================================
+        ENTRY BCIN
+========================================================
+
+In this section, boundary condition are set. Since we are only concerned
+with cavity flows (lid-driven or buoyancy-driven), this is an easy task:
+west boundary (IPROC=1) is assumed to have temperature TH, east (IPROC=NPRX)
+has temperature TC. South and north wall are assumed adiabatic in any case.
+The north boundary (JPROC=NPRY) moves with velocity UMAX. It is equal to
+zero for buoyancy-driven and to lid velocity for lid-driven flows. In case
+of lid-driven flow, TH=TC=TREF=TIN, and the temperature equation is not
+solved. The normalization factors for residual sums SNOR(L), L=1,NFI play
+no role in this code. 
+
+
+========================================================
+        ENTRY OUTRES
+========================================================
+
+In this section the field values of U, V, P and T are printed, if the
+value of the corresponding element of array LCAL is set true. In addition,
+mass fluxes in x- and y-direction, F1 and F2, are also printed if the 
+logical variable LTEST is set true.
+
+
+========================================================
+        ENTRY OUT1
+========================================================
+
+In this section some control parameters are printed. It is self-explanatory.
+
+
+========================================================
+        ENTRY OUT2
+========================================================
+
+In this section the heat fluxes through both isothermal walls in case of
+buoyancy-driven cavity and wall shear force in case of lid-driven cavity
+are calculated and printed. Only processors operating on subdomains which
+involve external boundaries (IPROC=1, IPROC=NPRX or JPROC=NPRY) will
+execute this code.
+
+
+********************************************************
+        COMMUNICATION ROUTINES FOR PVM-PARALLELIZATION
+********************************************************
+
+This section describes communication routines which enable parallel
+execution on a network using PVM. They can easily be adapted to other
+message passing libraries, such as TCGMSG, EXPRESS etc.
+
+
+========================================================
+        SUBROUTINE INITCO
+========================================================
+
+This routine initializes communication between processors. The meaning
+of variables is described in the code. 
+
+The calculation is initialized by starting the code on the 'master' mashine. 
+It should have in the working directory the data file DATA_1, with 
+IPROC and JPROC set to 1. INITCO is the first routine called. This calls
+in turn the PVM routine PVMFMYTID(MYTID), which givs the process under PVM
+a unique task identifier MYTID (an integer variable with a special meaning,
+see PVM manual). For all processors which start the execution of the same
+code later, this will also be the first PVM routine called. For the master
+(or parent process), this routine creates the task identifier; for other
+processors (children), the routine PVMFMYTID returns the task identifier
+which was assigned as the parent started the process, see below.
+
+Since the same code runs on all processors, the distinction has to be made
+between parent and children. The next routine called is PVMFPARENT(ITID),
+which, when called by the parent who starts the execution, returns a
+negative integer, and when called by a child process, returns the task
+identifier of the parent process. Each process must know the task 
+identifiers of all other processes in order to be able to communicate
+with them (in principle, more than one process may run on one mashine, 
+although this is useful only for testing purposes - in production runs, 
+one would try to minimize the number of subdomains in order to reduce 
+communication overhead and to achieve higher numerical efficiency).
+
+If the routine PVMFPARENT returns a negative integer in ITIDS(1), then the 
+code is running on the master processor, who has to initiate other processes.
+This process already knows its task identifier, which is then stored in the 
+array ITIDS(I) at position 1 (ITIDS(1)). I ranges from I to NPROC. Also, 
+the integer identifier ME is set to 1; this identifier specifies the 
+position of the process in the array ITIDS. The parrent process has to 
+start the others. To be able to do this, it has to know on which mashines 
+and it needs the name of the executable file. The names of mashines are 
+read from the file 'hosts', which has to be in the working directory of 
+the master processor. It contains the names of the mashines on which the 
+processes are to be started, as they are known in the network. If only one 
+process per mashine is started, then the file 'hosts' contains the same 
+computer names as the file 'hostfile', which also must reside in the working 
+directory of the master processor (see instructions for running the code). 
+However, since more than one process may be started on each mashine, some 
+names may appear in the file 'hosts' more than once. No names other than 
+those specified in the 'hostfile' may appear in the file 'hosts'. The file 
+'hosts' must have NPROC entries, while the 'hostfile' may have only one 
+line, if all processes are to be run on one computer.
+
+The name of the executable file is obtained by calling the routine 
+GETARG(0,PNAME); PNAME is then the name of the file executed on the master.
+The same executable file must exist on all mashines, in directories
+specified in the 'hostfile'. In the present case this has to be taken care
+of by the user; in a production code, the user would provide the hostfile,
+and the parallel preprocessor should compile the code and put the executable
+file in the specified directories of all mashines as specified in the 
+'hostfile'.
+
+With the above information, the parent process can start execution of the
+same code on other mashines. This is performed (if NPROC is greater than 1)
+by calling the PVM routine PVMFSPAWN for each process from I=2 to I=NPROC.
+The parameters are: program name PNAME, the PVM variable PVMHOST which is
+obtained from the PVM file 'fpvm3.h' (which must be included in the user
+code), the host name (stored in the array HOSTS(I)), the task identifier
+of the process to be started (returned parameter) and an integer INFO,
+which is zero or positive if the process was succesfully started, and
+negative otherwise. Should the process initialization fail, the routine
+PVMFEXIT(INFO) is called, which terminates the PVM execution of the code.
+The value of INFO can help to trace the problem, see PVM manual.
+
+When all processes from I=2 to I=NPROC are started, the parent process
+has task identifiers of all processes stored in the array ITIDS(I). This
+information has now to be passed to all other processes, which by now have
+started execution of the code and only know their own task identifier and
+the task identifier of the parent process. One 'global communication' has
+to be performed, in which the master broadcasts some information to all
+other processors. This is achieved in three steps. First, the PVM routine
+PVMFINITSEND(0,INFO) is called. The parameter INFO has in all PVM routines
+the same meaning, see above. This routines prepares the buffer which is
+to accept the information to be transferred. Next, the information is
+packed by calling PVMFPACK. The parameters in this call are: data type
+(here INTEGER4), the first element of the array ITIDS which is to be sent
+(ITIDS(1)), the number of elements to be sent (NPROC), and INFO. When this 
+is done, the send buffer is broadcast to all processes by calling PVMFMCAST. 
+The parameters for this call are: the number of processes which are to
+receive the message (here NPROC-1), the element of the array containing task 
+identifiers refering to the first process which is to receive the message 
+(ITIDS(2)) and INFO. With this call the initialization of PVM execution 
+of the CFD code on the master processor is finished.
+
+In case of processes started by the parent process, the call to PVMFPARENT
+will return the task identifier of the parent process. This enables the
+child process to accept the message containing task identifiers of other
+processes from the parent, which the parent is broadcasting. The call to
+PVMFRECV accepts the message from the process identified by ITIDS(1) - the
+parent process. The message is then unpacked by calling the routine 
+PVMFUNPACK. The list of parameters must be identical to those in the 
+parent's call to PVMFPACK, see above. Now each process knows task identifiers 
+of all other processes. It finds its own position in the array 1,...,NPROC 
+by comparing its own task identifier, MYTID, with the elements of ITIDS(I), 
+and sets ME=I when the two are identical. In the present code, the neighbour
+processes are implicitly defined by the convention about subdomain 
+arrangement. Each process will read the data file DATA_#, where #=ME. 
+Since the data files DATA_# have to be created such that 
+#=(IPROC-1)*NPRY+JPROC, each process has neighbours ME-NPRY on the west 
+side, ME+NPRY on the east side, ME-1 on the south and ME+1 on the north 
+side. In a more complex CFD code, processors will be arranged only in a 
+one one-dimensional array from 1 to NPROC, and the parallel preprocessor 
+will number the solution subdomains and the input data files in a similar 
+way as described above. It will also have to provide for each subdomain 
+the number of neighbour subdomains (processes or processors), say NNSUB, 
+and the unique numbers of those subdomains (their ME), say 
+NSIND(L), L=1,NNSUB.
+
+
+=========================================================
+        SUBROUTINE SENDNB
+=========================================================
+ 
+This routine sends an array to a neighbour. It is used for 'local
+communication' across subdomain interfaces. The parameters are: FITR -
+the array to be sent (it has an implied dimension (*)); IJ1 - the first 
+element of the array to be sent; NEL - the number of elements to be sent;
+NBTID - task identifier of the neighbour to receive the message; MTAG -
+message tag, which may be used to distinguish between different messages,
+or to identify the message when debugging.
+
+The sending process consists of three steps. First, the PVM routine
+PVMFINITSEND(0,INFO) is called. The parameter INFO has in all PVM routines
+the same meaning, see above. This routines prepares the buffer which is
+to accept the information to be transferred. Next, the information is
+packed by calling PVMFPACK. The parameters in this call are: data type
+(here REAL8 for double precission real values), the first element of the
+array FITR which is to be sent, the number of elements
+to be sent (NEL), and INFO. When this is done, the send buffer is
+sent to the process whose task identifier is NBTID by calling PVMFSEND. 
+
+In order to minimize communication overhead, one can pack more than one 
+actual CFD code array together and send them in one call rather then
+sending each array separately, in case that more than one array has to
+be transmitted at the same time. For example, in the present code four 
+arrays needed to be exchanged at the end of CALCUV: APU, APV, DPX and DPY. 
+For simplicity reasons here they are transmitted one by one, but for 
+systems with slow communication, repacking would be more efficient.
+
+
+=========================================================
+        SUBROUTINE RECVNB
+=========================================================
+ 
+This routine receives a message from another process. The parameters have
+the same meaning ans in the routine SENDNB. The receiving process consists
+of two steps. First, the routine PVMFRECV is called to receeive the message
+from the process whose task identifier is NBTID. The message is then unpacked
+in exactly the same way as it was packed in the routine SENDNB. This
+routine is used for local communication ascross subdomain boundaries.
+
+
+
+=========================================================
+        SUBROUTINE BROADC
+=========================================================
+ 
+This routine broadcasts some information from the master (parent) to all
+other processes. The parameters are the single variable to be broadcast 
+(VALUE) and the message tag MTAG. This routine is used to broadcast the 
+pressure correction value at the global reference location (which is the 
+pressure referencee location within the subdomain #1 (IPROC=1, JPROC=1), 
+and the maximum global residual sum (SOURCE, see the main routine).
+
+When called from the parent process (MYTID=ITIDS(1)), the communication
+is initiated, the VALUE is packed and then sent as in the routine SENDNB,
+except that PVMFMCAST is used insted of PVMFSEND, since the message is
+to be sent to more than one process, see description in INITCO.
+All other processes are receiving the VALUE, as in the routine RECVNB, so
+no additional description is necessary.
+
+
+=========================================================
+        SUBROUTINE COLLECT
+=========================================================
+ 
+This routine is used when master processor needs to collect some values
+from all other processes, e. g. the absolute residual sums of each 
+subdomain. The parameters sind the array VALUES, the number of elements
+to be transfered, NEL, and the message tag, MTAG.
+
+All children (MYTID not equal to ITIDS(1)) will initialize sending, pack
+the array VALUES and send it to the process whose task identifier is ITIDS(1),
+as described for the routine SENDNB. The parent process receives the 
+messages in a loop for L=2,...,NPROC. The array sent is received in a
+temporary array FITR, and the array VALUES is accumulating entries from
+all subdomains to obtain at the end the residual sum for the whole domain.
+
+
+
+=========================================================
+        SUBROUTINE EXCH
+=========================================================
+ 
+This routine organizes the local communication across subdomain interfaces.
+In the present code, first odd IPROC-processors send to their east neighbour
+and and even IPROC-processors receive from their west neighbour, then
+vice-versa. The same is repeated in the y-direction. The parameter is the
+field variable FI (U, V,...). The routine is subdivided into four sections: 
+for even and odd subdomain numbers in each coordinate direction.
+
+When MOD(IPROC,2)=1, IPROC is odd, and the process sends
+boundary data to its east neighbour first, unless IPROC=NPRX. The data to
+be sent is the content of the last CV column along east subdomain
+boundary, i. e. FI for I=NIM. Since the data in FI is arranged along
+lines of constant I, it is not necessary to repack it; only the initial
+index is determined (IJ1=LI(NIM)+1, the point at south boundary next to
+east boundary) and NJ elements of FI, starting at IJ1, are transmitted
+to the neighbour whose task identifier is ITIDS(ME+NPRY) by calling the
+routine SENDNB, see above. As already noted, the east neighbour process
+is determined by ME+NPRY, where ME is the position of the current process
+in the array ITIDS from 1 to NPROC. 
+
+After sending to east neighbour, the process receives from its west
+neighbour NJ elements of FI starting at LI(1)+1 - the southwest corner
+value, by calling RECVNB. After that, the NJ values at I=2 are sent to
+the west neighbour, and finally NJ values at I=NI are received from the
+east neighbour.
+
+Similar procedure applies to even IPROC-subdomains. After that, the same
+is repeated in the y-direction if NPRY is greater than 1. In this case
+the data is not contiguous along south and north boundaries. For that
+reason, the elements of say FI at J=2, to be sent to the south neighbour,
+are first copied to the array FIS(I), I=1,NI. The receiving process
+would unpack the data and copy FIS(I) again to FI at I=1,...,NI for J=NJ. 
+The same procedure will have to be applied on unstructured grids. If the 
+number of CVs along interface is NCVI, then the mapping of FI(N) to FIS(L), 
+L=1,...,NCVI has to be provided by the parallel preprocessor. 
+
+In the present case, the communication pattern ensures that local
+communication is performed in parallel. In a more general case, it may
+happen that two processes are sending to the same process at the same time;
+one will then have to wait, which increases the communication overhead.
+The parallel preprocessor mentioned above would have to optimize the
+storage of neighbour numbers in the array NSIND(L), L=1,...,NNSUB, see
+description of INITCO. One could try to achieve similar communication
+pattern by say sending first to the neighbour #1, then receiving from 
+neighbour #2, then sending to #2 and the receeiving from #1. The same 
+would then be repeated for neighbours #3 and #4, and so on. The 
+optimization should avoid that one process is required to rceeive
+messages from more than one neighbour at the same time. This is a
+difficult issue, since the timing of communication can not be precisly
+determined a priori.
+
+The use of message tags to distinguish between messages is mostly useful 
+if problems occur; one can use the same tag for all local communication, 
+since the messages are equally identified by knowing from which to which 
+process they go. Here the message to east/from west is given MTAG=2, 
+to west/from east has MTAG=1, to north/from south has MTAG=4  and 
+to south/from north has MTAG=3.
+
+
+=======================================================
+      SUBROUTINE EXITNET
+=======================================================
+
+This subroutine only calls the PVM routine PVMFEXIT, which disconnects
+the current process from PVM. It has to be called before STOP statement.
+
+
+************************************************************
+        INSTRUCTIONS FOR RUNNING THE CODE
+************************************************************
+
+In order to run the code as it is, the user has to proceed as follows.
+
+1.      First, prepare the files 'hostfile' and 'hosts'. See examples 
+        provided and substitute the entries by appropriate values for 
+        your network.
+
+2.      Edit the file PARP.F and replace the path to the PVM file FPVM3.H in 
+        INCLUDE '/.../FPVM3.H'
+        by the appropriate path at your site. Make sure the path is
+        updated in all routines where the above INCLUDE statement appears.
+
+3.      Make sure that the input data file DATA_1 resides on the mashine
+        from which you intend to start the calculation. Input data files
+        DATA_# should reside on #-th mashine in the list from file 'hosts',
+        in the directory specified in the 'hostfile'.
+
+        Apparently, PVM runs 'children'-processes in home-directories if
+        more than one process run on one mashine, so the data files 
+        should be placed there (there might be a way of specifying 
+        somewhere the directory to be used for each process, but at  
+        present we don't know it).
+
+4.      Compile the code. Make sure to link the PVM libraries 'libpvm3.a'
+        and 'libfpvm3.a'; see example script file enclosed. Copy the
+        executable to all mashines to be used and place it in the directory 
+        specified by the 'ep=' parameter in the 'hostfile'.
+
+5.      Start 'pvmd3' daemon by executing the following command on the
+        master mashine from a directory which contains 'hostfile':
+
+        pvmd3 hostfile &
+
+        pvmd3 will run in background. Now start - from another window -
+        the PVM-console by typing:
+
+        pvm
+
+        It is assumed here that the path to these commands is known to
+        the process; otherwise, type the full path. The PVM-console allows
+        the control of PVM processes, see PVM manual. The most important
+        commands are 'reset' and 'halt', which kill all PVM processes
+        (useful if something goes wrong and the mashine hang). 'halt' shuts
+        down PVM completely, including the console.
+
+6.      Start the calculation by typing the name of the executable
+        produced by compilation. If all goes well, a minute or two later
+        the job will be finished. Output files OUT_# and result files 
+        RES_# will exist on all mashines used. The result should - to
+        within convergence tolerance - be identical to what a single
+        processor version of the code would produce for the whole
+        solution domain.
+
+7.      Execute command 'halt' from the PVM console to exit PVM.
+
+

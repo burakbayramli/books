@@ -1,0 +1,30 @@
+#!/bin/sh
+
+echo " "
+echo " "
+echo " Run install script "
+echo " "
+
+CAFFAexe=`/bin/pwd`
+
+# Create crlink
+
+echo "     Create crlink "
+
+echo "#!/bin/csh"                            > ./crlink
+echo "/bin/rm -rf exe"                      >> ./crlink
+echo "/bin/ln -sf" $CAFFAexe "exe"          >> ./crlink
+echo "/bin/ln -sf exe/grid grgen"           >> ./crlink
+echo "/bin/ln -sf exe/plot post"            >> ./crlink
+echo "/bin/ln -sf exe/linkcaffa linkcaffa"  >> ./crlink
+chmod 755 ./crlink
+
+
+# Compile grid-generator & post-processor 
+cd ../prepost
+./com
+
+echo
+echo
+
+
