@@ -1,0 +1,74 @@
+# Grid file (in)
+laval.grd
+#
+# Results to plot (out)
+plot_r.v2d
+#
+# Convergence history (out)
+conver_r.v2d
+#
+# Restart solution (in/out)
+rest_r
+#
+# Physics
+# -------
+ 1.E+5    # inlet total pressure [Pa]
+ 288.     # inlet total temperature [K]
+ 0.7E+5   # outlet static pressure [Pa]
+ 1.4      # ratio of specific heats
+ 1005.    # specific heat coeff. at constant pressure [J/kgK]
+#
+# Iteration control
+# -----------------
+ 5        # number of multigrid levels
+ 3        # start grid (1=finest)
+ 20       # max. number of single grid iterations (before multigrid)
+ 50       # max. number of multigrid cycles on coarse grids (if FMG)
+ 500      # max. number of multigrid cycles on the finest grid
+ V        # type of multigrid cycles (V or W)
+ 1.E-5    # convergence tolerance
+ N        # read restart solution (N=no, Y=yes)
+#
+# Numerical parameters for the finest grid
+# ----------------------------------------
+ 4.5      # CFL-number
+ 0.8      # coefficient of implicit residual smoothing
+ R        # C=central scheme / U=CUSP scheme / R=Roe's upwind scheme
+ 0.0      # artificial dissipation coefficient - k2   (central scheme)
+ 0.0      # artificial dissipation coefficient - 1/k4 (central scheme)
+ 3        # space: 1=1st-order / 2=2nd-order / 3=kappa=1/3 (central, Roe)
+ 1.5      # limiter coefficient (Roe's scheme)
+ 0.05     # entropy correction coefficient (Roe's scheme)
+ 5        # number of stages
+ 0.0695, 0.1602, 0.2898, 0.5060, 1.000    # stage coefficients
+ 1.00  , 1.00  , 1.00  , 1.00  , 1.00     # dissipation blending coeff.
+ 1     , 1     , 1     , 1     , 1        # dissipation evaluation (1=yes)
+ 1     , 1     , 1     , 1     , 1        # residual smoothing (1=yes)
+#
+# Numerical parameters for all coarse grids
+# -----------------------------------------
+ 4.5      # CFL-number
+ 0.4      # coefficient of implicit residual smoothing
+ R        # C=central scheme / U=CUSP scheme / R=Roe's upwind scheme
+ 0.0      # artificial dissipation coefficient - k2   (central scheme)
+ 0.0      # artificial dissipation coefficient - 1/k4 (central scheme)
+ 1        # space: 1=1st-order / 2=2nd-order / 3=kappa=1/3 (central, Roe)
+ 1.5      # limiter coefficient (Roe's scheme)
+ 0.05     # entropy correction coefficient (Roe's scheme)
+ 5        # number of stages
+ 0.0533, 0.1263, 0.2375, 0.4414, 1.000    # stage coefficients
+ 1.00  , 1.00  , 1.00  , 1.00  , 1.00     # dissipation blending coeff.
+ 1     , 1     , 1     , 1     , 1        # dissipation evaluation (1=yes)
+ 1     , 1     , 1     , 1     , 1        # residual smoothing (1=yes)
+
+###############################################################################
+
+ 0.0695, 0.1602, 0.2898, 0.5060, 1.000    # stage coefficients
+ 1.00  , 1.00  , 1.00  , 1.00  , 1.00     # dissipation blending coeff.
+ 1     , 1     , 1     , 1     , 1        # dissipation evaluation (1=yes)
+ 1     , 1     , 1     , 1     , 1        # residual smoothing (1=yes)
+
+ 0.0533, 0.1263, 0.2375, 0.4414, 1.000    # stage coefficients
+ 1.00  , 1.00  , 1.00  , 1.00  , 1.00     # dissipation blending coeff.
+ 1     , 1     , 1     , 1     , 1        # dissipation evaluation (1=yes)
+ 1     , 1     , 1     , 1     , 1        # residual smoothing (1=yes)
