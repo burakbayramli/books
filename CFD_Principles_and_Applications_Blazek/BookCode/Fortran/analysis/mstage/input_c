@@ -1,0 +1,49 @@
+stab_c.v2d
+ampl_c.v2d
+ 1         # Model
+ 0         # Discretization
+ 1         # Implicit residual smoothing
+ 53        # Multistage scheme
+ 3.6       # CFL-number basic scheme
+ 7.5       # CFL-number smoothed scheme
+ 0.0       # Ratio of viscous to convective eigenvalue
+64.0       # Artificial dissipation coefficient (if discretization = 0; given as 1/eps^(4))
+ 0.8       # Coefficient of implicit residual smoothing
+ 0.25  0.1667  0.375  0.5  1.0   # Stage coefficients
+ -9.5  2.  # xbeg, xend
+ -5.   5.  # ybeg, yend
+
+-------------------------------------------------------------------------------
+
+1st plot file: stability region and Fourier symbols
+2nd plot file: amplification factor over the phase angle
+
+Model:
+  1 = convection model equation (similar to Euler)
+  2 = convection-diffusion model equation (similar to Navier-Stokes)
+
+Discretization:
+  0 = central with 3rd-order artificial dissipation
+  1 = 1st-order upwind
+  2 = 2nd-order upwind
+
+Implicit residual smoothing:
+  1 = central
+  2 = upwind
+
+Multistage scheme:
+  31 = (3,1)-scheme
+  32 = (3,2)-scheme
+  33 = (3,3)-scheme
+  41 = (4,1)-scheme
+  42 = (4,2)-scheme
+  44 = (4,4)-scheme
+  52 = (5,2)-scheme
+  53 = (5,3)-scheme with blended dissipation (hybrid)
+  55 = (5,5)-scheme
+
+xbeg, xend:
+  x-axis range for the plot of stability region (e.g., -5.  1.)
+
+ybeg, yend:
+  y-axis range (e.g., -5.  +5.)

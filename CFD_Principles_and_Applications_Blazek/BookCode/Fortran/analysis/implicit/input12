@@ -1,0 +1,22 @@
+plot12.v2d
+ 2       # Model
+ 2       # Discretization of the explicit operator (RHS)
+ 0.0     # Dissipation coefficient at RHS (given as 1/eps^(4)) if RHS discr.=0
+ 1       # Discretization of the implicit operator (LHS)
+ 0.0     # Dissipation coefficient at LHS (given as 1/eps^(2)) if RHS discr.=0
+ 1.0     # Time accuracy (1.0=1st-order in time, 0.5=2nd-order)
+10.0     # CFL-number
+ 2.0     # Ratio of viscous to convective eigenvalue (if model=2)
+ 1       # Diffusion term included in the implicit operator (0=no, 1=yes)
+
+-------------------------------------------------------------------------------
+
+Model:
+  1 = convection model equation (similar to Euler)
+  2 = convection-diffusion model equation (similar to Navier-Stokes)
+
+Discretization:
+  0 = central scheme with 3rd-order artificial dissipation (RHS)
+      or 1st-order dissipation (LHS)
+  1 = 1st-order upwind
+  2 = 2nd-order upwind
