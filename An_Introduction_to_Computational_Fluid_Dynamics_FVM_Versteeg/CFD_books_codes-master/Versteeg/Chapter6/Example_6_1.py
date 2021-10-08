@@ -1,6 +1,7 @@
-# We consider the steady, one dimensional row of a constant-density fluid through a duct with constant area
-# We use the staggered grid. Density 1.0 kg/m3 is constant. Duct area A is constant. d = 1.0
-# Boundary conditions: u1 = 10 m/s and P_boundary = 0 Pa.
+# We consider the steady, one dimensional row of a constant-density
+# fluid through a duct with constant area We use the staggered
+# grid. Density 1.0 kg/m3 is constant. Duct area A is constant. d =
+# 1.0 Boundary conditions: u1 = 10 m/s and P_boundary = 0 Pa.
 
 import numpy as np
 from matplotlib import pyplot as plt
