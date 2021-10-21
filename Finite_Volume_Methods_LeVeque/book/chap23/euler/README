@@ -1,0 +1,19 @@
+
+Euler equations on a quadrilateral grid.  
+A chevron shaped grid is used that is not orthogonal.
+
+The Sod Riemann problem is solved in the x-direction on this grid.
+See setprob.f and qinit.f.   
+fdisc.f is used to specify the initial discontinuity.
+
+Using extrapolation boundary conditions causes some problems at the top and
+bottom boundaries since extrapolation is done in the direction of the grid
+lines instead of normal to the boundary.  Solid wall boundary conditions at
+these boundaries gives much better results.
+
+Set PlotType=4 to plot a scatter plot of the results vs. x and compare
+with the true Riemann solution stored in rpsoln.
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+

@@ -1,0 +1,21 @@
+
+Advection on a quadrilateral grid.
+
+The advection equation q_t + u*q_x + v*q_y = 0 is solved with u=1, v=0,
+on a quarter anulus in polar coordinates.  The initial data is q=0
+and q=1 is specified along a portion of the inflow boundary.
+
+The velocity is specified using a stream function in stream.f,
+called in setaux.f.  
+
+The grid is specified by mapc2p.f.   To plot the results using plotclaw2
+in matlab, MappedGrid=1 is set in setplot2.m so that mapc2p.m is used, which
+should be consistent with mapc2p.m.
+
+Setting MappedGrid=0 shows the results in the rectangular computational
+domain.
+
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+

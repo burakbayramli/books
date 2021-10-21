@@ -1,0 +1,17 @@
+
+This directory contains a modified limiter.f function which implements the
+TVB method of Shu as an extension of the second-order minmod method.
+
+The value of M, set in setprob.data, should be chosen as an approximation to
+q_{xx} at the extrema to be captured.   The grid should be fine enough that 
+M*dx is small or the method will be dispersive.  
+
+For the wave-packet problem used here, you might experiment with
+  M = 6500 or other values 
+  different resolutions, such as 400 or 800 points
+  different limiters besides minmod (which may work poorly!)
+   
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+

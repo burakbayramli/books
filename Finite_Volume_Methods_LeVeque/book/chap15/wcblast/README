@@ -1,0 +1,37 @@
+
+claw/applications/euler/1d/wcblast
+
+Euler equations with colliding blast waves
+(Woodward-Colella test problem) also called the "bang-bang problem".
+
+To plot a comparison of fine and coarse grid solutions,
+first run code in subdirectory qref, then in main directory.
+The afterframe command calls plotqref.m,  to plot the reference solution
+and compute the error based on finer grid solution in qref:
+
+ make
+ cd qref
+ ../xclaw
+ cd ..
+ xclaw
+ matlab
+ plotclaw1
+
+
+To use the HLLE solver instead of the Roe solver, switch to rp1euhlle.f and
+rp1euhlle.o in Makefile.  You must also change mwaves from 3 to 2 in both
+driver.f and claw1ez.data.
+
+
+To produce the x-t plot of Figure 15.4:
+
+ make
+ cd xtplot
+ ../xclaw
+ matlab
+ plotxt
+
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+

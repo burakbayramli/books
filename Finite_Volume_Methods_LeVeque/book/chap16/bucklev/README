@@ -1,0 +1,21 @@
+
+Buckley-Leverett equation (a nonconvex flux)
+
+Observe that setting setting 
+    method(1) = 0
+    dtv(1) < dx/2.1
+results in a stable method that gives good results, while setting
+    method(1) = 1
+    cflv(1) = 1
+    cflv(2) = 0.8
+results in poor results because the estimate of CFL used by clawpack
+is not sufficient in this case to keep the actual Courant number below 1.
+This is because the nonconvexity of f(q) hides points where f'(q) is greater
+than the observed shock speed calculated by 
+    s = (f(Q_i) - f(Q_{i-1})) / (Q_i - Q_{i-1})
+
+    
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+

@@ -1,0 +1,2 @@
+axis square
+yrbcolormap
