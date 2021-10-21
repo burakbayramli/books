@@ -1,0 +1,140 @@
+c
+c     =====================================================
+      subroutine mapc2p(xc,yc,xp,yp)
+c     =====================================================
+c
+c     # on input,  (xc,yc) is a computational grid point
+c     # on output, (xp,yp) is corresponding point in physical space
+c
+      implicit double precision (a-h,o-z)
+c
+c     # radial coordinates, xc = r,  yc = theta
+c
+      xp = xc * dcos(yc) 
+      yp = xc * dsin(yc)
+c
+      return
+      end
+c
+c     =================================================
+      function stream(x,y)
+c     =================================================
+c
+c     # stream function in physical space (x,y)
+
+      implicit double precision (a-h,o-z)
+
+      stream = y
+c
+      return
+      end
+c
+c     ============================================
+      subroutine setaux(maxmx,maxmy,mbc,mx,my,xlower,ylower,dxc,dyc,
+     &                  maux,aux)
+c     ============================================
+c
+c     # set auxiliary arrays for advection on a curvilinear grid
+c
+c     # on input, (xc(i),yc(j)) gives uniformly spaced computational grid.
+c     # on output, 
+c     #   aux(i,j,1) is edge velocity at "left" boundary of grid point (i,j)
+c     #   aux(i,j,2) is edge velocity at "bottom" boundary of grid point (i,j)
+c     #   aux(i,j,3) = kappa  is ratio of cell area to dxc*dyc
+c     
+      implicit double precision (a-h,o-z)
+      parameter (maxm3 = 1003)
+      dimension xc(-1:maxm3), yc(-1:maxm3)
+      dimension xp(-1:maxm3,-1:maxm3), yp(-1:maxm3,-1:maxm3)
+      dimension aux(1-mbc:maxmx+mbc,1-mbc:maxmy+mbc, 3)
+c
+      if (mx+mbc+1.gt.maxm3 .or. my+mbc+1.gt.maxm3) then
+	 write(6,*)'***  increase size of maxm3 in setaux ***'
+	 stop
+	 endif
+c
+c     # Set xc and yc so that (xc(i),yc(j)) is the 
+c     # lower left corner of (i,j) cell in computational space:
+c
+      do 10 i=1-mbc,mx+mbc+1
+         xc(i) = xlower + (i-1.d0) * dxc
+   10    continue
+c
+      do 12 j=1-mbc,my+mbc+1
+         yc(j) = ylower + (j-1.d0) * dyc
+   12    continue
+
+c     # compute corners in physical space:
+c
+      do 15 j=1-mbc,my+mbc+1
+         do 15 i=1-mbc,mx+mbc+1
+            call mapc2p(xc(i),yc(j),xp(i,j),yp(i,j))
+   15	    continue
+
+c
+      do 20 j=1-mbc,my+mbc
+         do 20 i=1-mbc,mx+mbc
+c
+c           # compute edge velocities by differencing stream function:
+c
+	    aux(i,j,1) = (stream(xp(i,j+1),yp(i,j+1))
+     &			  - stream(xp(i,j),yp(i,j))) / dyc
+c
+	    aux(i,j,2) = -(stream(xp(i+1,j),yp(i+1,j)) 
+     & 			   - stream(xp(i,j),yp(i,j))) / dxc
+
+c           # compute area of physical cell from four corners:
+            
+	    area = 0.5d0*((yp(i,j+1)+yp(i,j))*(xp(i,j+1)-xp(i,j)) 
+     &	          + (yp(i+1,j+1)+yp(i,j+1))*(xp(i+1,j+1)-xp(i,j+1)) 
+     &	          + (yp(i+1,j)+yp(i+1,j+1))*(xp(i+1,j)-xp(i+1,j+1)) 
+     &	          + (yp(i,j)+yp(i+1,j))*(xp(i,j)-xp(i+1,j)))
+c
+c           # capacity kappa:
+	    aux(i,j,3) = area / (dxc*dyc)
+c
+   20       continue
+       return
+       end
+c
+c
+c     =====================================================
+      subroutine bc2(maxmx,maxmy,meqn,mbc,mx,my,xlower,ylower,
+     &		     dx,dy,q,maux,aux,t,dt,mthbc)
+c     =====================================================
+c
+c     # modified for inflow boundary conditions on left edge of quarter circle
+c     # on polar grid  (at top boundary of computational domain)
+c
+
+  MUCH DELETED HERE!
+
+c-------------------------------------------------------
+c     # top boundary:
+c-------------------------------------------------------
+      go to (400,410,420,430) mthbc(4)+1
+c
+  400 continue
+c
+c     # inflow boundary conditions on left edge of quarter circle
+c     # on polar grid
+c
+      do 401 jbc=1,mbc
+         do 401 i = 1-mbc, mx+mbc
+	    xc = xlower + (i-0.5d0)*dx
+	    yc = ylower + (my+jbc-0.5d0)*dy 
+	    call mapc2p(xc,yc,xp,yp)
+	    if (yp .ge. 1.d0 .and. yp .le. 2.0d0) then
+                q(i,my+jbc,1) = 1.d0
+	      else
+                q(i,my+jbc,1) = 0.d0
+	      endif
+  401    continue
+      go to 499
+
+c ETC
+
+  499 continue
+
+      return
+      end

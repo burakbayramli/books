@@ -1,0 +1,65 @@
+#
+#               Makefile for the lib code:
+#
+#       To make an executable, type:            make xclaw
+#       (from the application sub-directory)
+#
+#       To compile a single file.f type:          make file.o
+#       (from the application sub-directory)
+#
+#       To compile the lib library files type:    make claw1
+#       (from the claw/clawpack/1d/lib sub-directory)
+#
+#       To combine all source files type:         make program
+#       (from the application sub-directory)
+#       (sometimes easier to debug all in one)
+
+#
+#
+FFLAGS =  -O
+LFLAGS =  -O
+LINK	= f77
+# .f.o: ; $(LINK) $(FFLAGS) $*.f
+OBJECTS = \
+  driver.o \
+  qinit.o \
+  b4step1.o \
+  rp1llf.o 
+
+LIBOBJECTS = \
+  $(CLAW)/clawpack/1d/lib/setprob.o \
+  $(CLAW)/clawpack/1d/lib/setaux.o \
+  $(CLAW)/clawpack/1d/lib/claw1ez.o \
+  $(CLAW)/clawpack/1d/lib/bc1.o \
+  $(CLAW)/clawpack/1d/lib/out1.o \
+  $(CLAW)/clawpack/1d/lib/claw1.o \
+  $(CLAW)/clawpack/1d/lib/step1.o \
+  $(CLAW)/clawpack/1d/lib/copyq1.o \
+  $(CLAW)/clawpack/1d/lib/limiter.o \
+  $(CLAW)/clawpack/1d/lib/philim.o \
+  $(CLAW)/clawpack/1d/lib/src1.o 
+
+SOURCES = \
+  driver.f \
+  qinit.f \
+  rp1llf.f \
+  b4step1.f \
+  $(CLAW)/clawpack/1d/lib/setprob.f \
+  $(CLAW)/clawpack/1d/lib/setaux.f \
+  $(CLAW)/clawpack/1d/lib/claw1ez.f \
+  $(CLAW)/clawpack/1d/lib/bc1.f \
+  $(CLAW)/clawpack/1d/lib/out1.f \
+  $(CLAW)/clawpack/1d/lib/claw1.f \
+  $(CLAW)/clawpack/1d/lib/step1.f \
+  $(CLAW)/clawpack/1d/lib/copyq1.f \
+  $(CLAW)/clawpack/1d/lib/limiter.f \
+  $(CLAW)/clawpack/1d/lib/philim.f \
+  $(CLAW)/clawpack/1d/lib/src1.f 
+
+xclaw: $(OBJECTS)
+	$(LINK) $(LFLAGS) $(OBJECTS) $(LIBOBJECTS) -o xclaw
+
+program : $(SOURCES)
+	cat $(SOURCES) > clawpack1.f
+
+### DO NOT remove this line - make depends on it ###

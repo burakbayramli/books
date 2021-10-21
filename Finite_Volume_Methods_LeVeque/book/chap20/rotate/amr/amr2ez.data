@@ -1,0 +1,66 @@
+ 50                mx          = cells in x direction
+ 50                my          = cells in y direction
+  3                mxnest      = max. number of allowable grid levels
+ 2 2 2             inrat       = refinement ratios (1..mxnest)
+
+0                  nout        = number of output times to print results
+3                  outstyle    = style of specifying output times
+15,45              iout,nstop  = output interval, total number of steps
+
+0.01d0             dtv(1)      = initial dt (used in all steps if method(1)=0)
+1.0d99             dtv(2)      = max allowable dt 
+1.0d0              cflv(1)     = max allowable Courant number
+0.9d0              cflv(2)     = desired Courant number
+500                nv(1)       = max number of time steps per call to claw2
+
+1                  method(1)   = 1 for variable dt
+2                  method(2)   = order 
+2                  method(3)   = transverse order
+0                  method(4)   = verbosity of output
+0                  method(5)   = source term splitting
+0                  method(6)   = mcapa
+2                  method(7)   = maux (should agree with parameter in driver)
+   "leftface"       aux1 = u-velocity at left face
+   "bottomface"     aux2 = v-velocity at bottom face
+
+1  		meqn     (# variables - e.g. 4 for Euler)
+1 		mwaves for clawpack  (number of waves in soln to Riemann prob)
+4                  (mthlim(mw), mw=1,mwaves)    selects limiter
+
+0.d0               t0          = initial time
+-1.0d0              xlower      = left edge of computational domain
+1.0d0              xupper      = right edge of computational domain
+-1.0d0              ylower      = bottom edge of computational domain
+1.0d0              yupper      = top edge of computational domain
+
+2                  nghost   (# ghost cells for stencil)
+1                  mthbc(1)    = type of boundary conditions at left
+1                  mthbc(2)    = type of boundary conditions at right
+1                  mthbc(3)    = type of boundary conditions at bottom
+1                  mthbc(4)    = type of boundary conditions at top
+
+F               do a restart (input from restart.data)
+1000            iousr
+
+0.02 	        tol 	 (tolerance for Richardson estimator)
+0.02             tolsp	 (spatial tolerance for refinement)
+3               kcheck   (how often to est. error - related to buffer size)
+3               ibuff    (buffer zone size - add # of flagged pts to add) 
+.70             cutoff   (efficiency cutoff for grid generator)
+
+
+F               PRINT option  (if T prints soln. to out2d)
+F		NCAR graphics
+T               Matlab graphics
+
+
+F		dprint -  verbose domain flags
+F		eprint -  error estimation - output the flags
+F		edebug -  even more error est. output
+F		gprint - grid generation output (bisection, clustering,...)
+F		nprint - proper nesting output
+F		pprint - projectiong of tagged pts. output
+F		rprint - verbose regridding - output new grid summary
+F		sprint - space (memory) output
+T		tprint - time step reporting - for each level
+F		uprint - updating/upbnding reporting

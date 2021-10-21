@@ -1,0 +1,24 @@
+
+Variable coefficient advection equation -- nonconservative color equation
+
+The velocity u(x) in cell i is stored in aux(i,1) and is set in setaux.
+
+The initial data in qinit consists of a smooth hump with parameters set in
+setprob.data, and square pulse.
+
+In matlab, the true solution on a grid determined by x is computed in
+computetrue.m   (and plotted by plottrue.m).   This uses ode45 to trace the
+characteristics and produces the solution at a set of times specified in
+tspan.   The velocity specified in xprime.m should be the negative of the
+velocity u(x) specified in setaux (since we trace backwards along
+characteristics).   The function used to compute q0 in computetrue should be
+consistent with the data set in qinit.   
+
+The function computetrue.m is called in afterframe.m.
+This can be deleted to suppress this comparison with the true solution.
+
+
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+

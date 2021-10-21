@@ -1,0 +1,29 @@
+
+Variable-coefficient traffic flow model.  The flux function is
+  f(q,x) = u(x)*q*(1-q)
+where the "speed limit" u(x) varies with x. 
+It's value in cell i is stored in aux(i,1) (see setaux.f).
+
+Here a Riemann problem is solved with 
+   u(x) = 2 for x<0
+   u(x) = 1 for x>0
+
+The initial data is set in qinit.f.   
+Set ql to 0.13 for Figure 16.9
+Set ql to 0.2 for Figure 16.10
+
+The method used is based on splitting the flux difference into f-waves Z
+as described in Section ?? and implemented in rp1trvfw.f.
+
+Note that this requires a modified routine step1fw.f in place of the library
+routine step1.f in order to implement the modified wave-propagation
+algorithm.
+
+The transonic rarefaction case is very sensitive to the flux splitting used.
+The approach taken in rp1trvfw.f gives the correct solution for this case
+but has not been extensively tested...
+
+
+WARNING: This example was modified February, 2006 to use
+Version 4.3 of clawpack and the associated matlab scripts.
+
