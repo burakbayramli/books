@@ -1,8 +1,7 @@
-// this is the main function file 
-//this peogram is a 2D fluid simulation using finite volume method with multiblocks structure mesh 
-// code is accelerated by GPU device 
-// allright keep by the writer cofludy 
-// connect Cofludy@gmail.com
+// this is the main function file this program is a 2D fluid
+// simulation using finite volume method with multiblocks structure
+// mesh code is accelerated by GPU device allright keep by the writer
+// cofludy connect Cofludy@gmail.com
 
 
 #include<fstream>
