@@ -1,5 +1,8 @@
 # Riemann Solvers
-Code snippets follow from ___Riemann Solvers and Numerical Methods for Fluid Dynamics___ by Eleuterio F. Toro, where essentials of CFD are discussed in detail.
+
+Code snippets follow from ___Riemann Solvers and Numerical Methods for
+Fluid Dynamics___ by Eleuterio F. Toro, where essentials of CFD are
+discussed in detail.
 
 ## Linear Advection(ch2 & ch5 & ch13)
 Both _smooth_ and _discontinous_ initial velocity profile are examined.  
@@ -47,7 +50,11 @@ Usage:
 > * Plot: `python3 animate.py`
 
 ### Godunov's Method(ch6)
-The essential ingredient of Godunov's method is to solve _Riemann Problem_ locally, and the keypoint in numerical parctice is to identify all of the 10 possible wave patterns so that the inter-cell flux can be calculated properly.
+
+The essential ingredient of Godunov's method is to solve _Riemann
+Problem_ locally, and the keypoint in numerical parctice is to
+identify all of the 10 possible wave patterns so that the inter-cell
+flux can be calculated properly.
 
 Usage:
 > * Compile: `g++ main.cc -std=c++11 -o Godunov.out`  
@@ -75,8 +82,14 @@ Usage:
 > * Plot: `python3 animate.py`
 
 ### FVS(ch8)
-Here, the inter-cell flux is not calculatd directly from the exact solution of Riemann Problem. Instead, the flux at each point is splitted into 2 parts: __upstream traveling__ and __downstream traveling__, then, for each inter-cell, the flux is seen as the sum of the upstream traveling part from the __left__ point and the downstream traveling part from the __right__ point.  
-3 typical splitting techniques are introduced.  
+
+Here, the inter-cell flux is not calculated directly from the exact
+solution of Riemann Problem. Instead, the flux at each point is
+splitted into 2 parts: __upstream traveling__ and __downstream
+traveling__, then, for each inter-cell, the flux is seen as the sum of
+the upstream traveling part from the __left__ point and the downstream
+traveling part from the __right__ point.  3 typical splitting
+techniques are introduced.
 
 #### Steger-Warming
 
