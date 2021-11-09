@@ -1,0 +1,233 @@
+// tetin file version 1.1
+// written by ICEM CFD - version 16.1 on Thu Jul 30 19:35:17 2020
+// written by ICEM CFD - version 16.1 on Fri Jul 31 15:28:45 2020
+// written by ICEM CFD - version 16.1 on Fri Jul 31 20:29:37 2020
+
+set_triangulation_tolerance 1e-006
+define_family GEOM color 16663866
+define_family WALLS color 10606643
+
+prescribed_point -1 1 0 family WALLS name WALLS.78
+prescribed_point -0.3 1 0 family WALLS name WALLS.79
+prescribed_point -0.3 0.2 0 family WALLS name WALLS.80
+prescribed_point -0.2 0.2 0 family WALLS name WALLS.81
+prescribed_point -0.2 1 0 family WALLS name WALLS.82
+prescribed_point 1 1 0 family WALLS name WALLS.83
+prescribed_point 1 -1 0 family WALLS name WALLS.84
+prescribed_point -0.2 -1 0 family WALLS name WALLS.85
+prescribed_point -0.2 -0.2 0 family WALLS name WALLS.86
+prescribed_point -0.3 -0.2 0 family WALLS name WALLS.87
+prescribed_point -0.3 -1 0 family WALLS name WALLS.88
+prescribed_point -1 -1 0 family WALLS name WALLS.89
+define_curve family WALLS tetra_size 1e+010 name crv.00 vertex1 WALLS.78 vertex2 WALLS.79
+bspline
+2,2,0
+0,0,1,1
+-1,1,0
+-0.3,1,0
+define_curve family WALLS tetra_size 1e+010 name crv.01 vertex1 WALLS.79 vertex2 WALLS.80
+bspline
+2,2,0
+0,0,1,1
+-0.3,1,0
+-0.3,0.2,0
+define_curve family WALLS tetra_size 0.0099999998 name crv.02 vertex1 WALLS.80 vertex2 WALLS.81
+bspline
+2,2,0
+0,0,1,1
+-0.3,0.2,0
+-0.2,0.2,0
+define_curve family WALLS tetra_size 1e+010 name crv.03 vertex1 WALLS.81 vertex2 WALLS.82
+bspline
+2,2,0
+0,0,1,1
+-0.2,0.2,0
+-0.2,1,0
+define_curve family WALLS tetra_size 1e+010 name crv.04 vertex1 WALLS.82 vertex2 WALLS.83
+bspline
+2,2,0
+0,0,1,1
+-0.2,1,0
+1,1,0
+define_curve family WALLS tetra_size 1e+010 name crv.05 vertex1 WALLS.83 vertex2 WALLS.84
+bspline
+2,2,0
+0,0,1,1
+1,1,0
+1,-1,0
+define_curve family WALLS tetra_size 1e+010 name crv.06 vertex1 WALLS.84 vertex2 WALLS.85
+bspline
+2,2,0
+0,0,1,1
+1,-1,0
+-0.2,-1,0
+define_curve family WALLS tetra_size 1e+010 name crv.07 vertex1 WALLS.85 vertex2 WALLS.86
+bspline
+2,2,0
+0,0,1,1
+-0.2,-1,0
+-0.2,-0.2,0
+define_curve family WALLS tetra_size 0.0099999998 name crv.08 vertex1 WALLS.86 vertex2 WALLS.87
+bspline
+2,2,0
+0,0,1,1
+-0.2,-0.2,0
+-0.3,-0.2,0
+define_curve family WALLS tetra_size 1e+010 name crv.09 vertex1 WALLS.87 vertex2 WALLS.88
+bspline
+2,2,0
+0,0,1,1
+-0.3,-0.2,0
+-0.3,-1,0
+define_curve family WALLS tetra_size 1e+010 name crv.10 vertex1 WALLS.88 vertex2 WALLS.89
+bspline
+2,2,0
+0,0,1,1
+-0.3,-1,0
+-1,-1,0
+define_curve family WALLS tetra_size 1e+010 name crv.11 vertex1 WALLS.89 vertex2 WALLS.78
+bspline
+2,2,0
+0,0,1,1
+-1,-1,0
+-1,1,0
+define_curve family GEOM tetra_size 0.0099999998 name crv.14 vertex1 WALLS.86 vertex2 WALLS.81
+bspline
+2,2,0
+0,0,1,1
+-0.2,-0.2,0
+-0.2,0.2,0
+define_curve family GEOM tetra_size 0.0099999998 name crv.15 vertex1 WALLS.87 vertex2 WALLS.80
+bspline
+2,2,0
+0,0,1,1
+-0.3,-0.2,0
+-0.3,0.2,0
+define_surface name srf.00 family GEOM tetra_size 1e+010
+trim_surface n_loops 1
+loop n_curves 6
+coedge 3dcurve   crv.00
+polyline n_points 2
+0,0
+1,0
+coedge 3dcurve   crv.01
+polyline n_points 2
+1,0
+1,0.39999999850988
+coedge 3dcurve - crv.15
+polyline n_points 2
+1,0.39999999850988
+1,0.60000000149012
+coedge 3dcurve   crv.09
+polyline n_points 2
+1,0.60000000149012
+1,1
+coedge 3dcurve   crv.10
+polyline n_points 2
+1,1
+0,1
+coedge 3dcurve   crv.11
+polyline n_points 2
+0,1
+0,0
+bspline
+2,2,2,2,0
+0,0,1,1
+0,0,1,1
+-1,1,0
+-0.3,1,0
+-1,-1,0
+-0.3,-1,0
+define_surface name srf.01 family GEOM tetra_size 1e+010
+trim_surface n_loops 1
+loop n_curves 6
+coedge 3dcurve - crv.06
+polyline n_points 2
+0,0
+1,0
+coedge 3dcurve - crv.05
+polyline n_points 2
+1,0
+1,1
+coedge 3dcurve - crv.04
+polyline n_points 2
+1,1
+0,1
+coedge 3dcurve - crv.03
+polyline n_points 2
+0,1
+0,0.60000000149012
+coedge 3dcurve - crv.14
+polyline n_points 2
+0,0.60000000149012
+0,0.39999999850988
+coedge 3dcurve - crv.07
+polyline n_points 2
+0,0.39999999850988
+0,0
+bspline
+2,2,2,2,0
+0,0,1,1
+0,0,1,1
+-0.2,-1,0
+1,-1,0
+-0.2,1,0
+1,1,0
+define_surface name srf.02 family GEOM tetra_size 1e+010
+trim_surface n_loops 1
+loop n_curves 4
+coedge 3dcurve   crv.02
+polyline n_points 2
+0,0
+1,0
+coedge 3dcurve - crv.14
+polyline n_points 2
+1,0
+1,1
+coedge 3dcurve   crv.08
+polyline n_points 2
+1,1
+0,1
+coedge 3dcurve   crv.15
+polyline n_points 2
+0,1
+0,0
+bspline
+2,2,2,2,0
+0,0,1,1
+0,0,1,1
+-0.3,0.2,0
+-0.2,0.2,0
+-0.3,-0.2,0
+-0.2,-0.2,0
+affix 0
+define_model 0.050000001 reference_size 1
+global_meshing_parameter mesh_type "0"
+global_meshing_parameter mesh_method "1"
+global_meshing_parameter simple_offset "0"
+global_meshing_parameter bunch_respect "0"
+global_meshing_parameter protect_line "0"
+global_meshing_parameter bound_smooth "0"
+global_meshing_parameter block_mapping "0.2"
+global_meshing_parameter adjust_nodes_max "0.0"
+global_meshing_parameter proj_surf "1"
+global_meshing_parameter surf_sizes "0"
+global_meshing_parameter ign_size "1e-6"
+global_meshing_parameter try_harder "1"
+global_meshing_parameter impr_level "1"
+global_meshing_parameter mesh_dormant "0"
+global_meshing_parameter smooth_dormant "0"
+global_meshing_parameter max_area "0.0"
+global_meshing_parameter max_length "0.0"
+global_meshing_parameter min_angle "0.0"
+global_meshing_parameter max_nodes "0"
+global_meshing_parameter max_elements "0"
+global_meshing_parameter merge_surfs "1"
+global_meshing_parameter mapped_method "1"
+global_meshing_parameter free_bunch "0"
+global_meshing_parameter shrinkwrap_nsmooth "5"
+global_meshing_parameter shrinkwrap_projfactor "0.1"
+global_meshing_parameter snorm "1"
+global_meshing_parameter quadratic "0"
+define_prism_meshing_parameters law 0 nlay 3 hratio 1.2 min_quality 0.01 fillet 0.1 tetra_smooth_limit 0.3
+return

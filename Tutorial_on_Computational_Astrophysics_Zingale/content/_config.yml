@@ -1,0 +1,49 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+title: Tutorial on Computational Astrophysics
+author: <a href="https://zingale.github.io">Michael Zingale</a>
+logo: rt_small.png
+copyright: "2021"
+
+# Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
+execute:
+  execute_notebooks: force
+
+# Define the name of the latex output file for PDF builds
+latex:
+  latex_documents:
+    targetname: book.tex
+
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/zingale/comp_astro_tutorial  # Online location of your book
+  path_to_book: content  # Optional path to your book, relative to the repository root
+  branch: main  # Which branch of the repository should be used when creating links (optional)
+
+# Add GitHub buttons to your book
+# See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
+html:
+  use_issues_button: true
+  use_repository_button: true
+  extra_footer: |
+    <p>
+    &copy; 2021; CC-BY-NC-SA 4.0
+    <p>
+
+sphinx:
+  config:
+    html_show_copyright: false
+
+launch_buttons:
+   binderhub_url: "https://mybinder.org"
+   colab_url: "https://colab.research.google.com"
+
+
+parse:
+  myst_enable_extensions:
+    # don't forget to list any other extensions you want enabled,
+    # including those that are enabled by default!
+    - amsmath
+    - dollarmath
