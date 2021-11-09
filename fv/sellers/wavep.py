@@ -86,3 +86,8 @@ for n in range (nsteps):
         delta_p1= np.subtract(Q[ : , i + 1 ] ,Q[ : , i ] )
 
         
+        # Alpha−c o e f f i c i e n t s o f ( 1 5 . 3 9 ) p . 3 2 2 , LeVeque [ 2 ]
+        alpha1_m1 = ( ( u_avg_m1+c_m1 ) * delta_m1 [ 0 ] - delta_m1 [ 1 ] )/2/c_m1
+        alpha2_m1 = ( -(u_avg_m1-c_m1 ) * delta_m1 [ 0 ] + delta_m1 [ 1 ] )/2/c_m1
+
+        
