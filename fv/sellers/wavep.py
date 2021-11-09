@@ -92,3 +92,16 @@ for n in range (nsteps):
 
         alpha1_p1 = ( ( u_avg_p1+c_p1 ) * delta_p1[ 0 ] - delta_p1[ 1 ] )/2/c_p1
         alpha2_p1 = ( -( u_avg_p1-c_p1 ) * delta_p1[ 0 ] + delta_p1[ 1 ] )/2/c_p1        
+
+        # Compute f l u c t u a t i o n s
+        Ap_m1h = np.zeros(2 )
+        Am_p1h = np.zeros(2 )
+        Ap_m1h [ 0 ] = sp1_m1* alpha1_m1 + sp2_m1* alpha2_m1
+        Ap_m1h [ 1 ] = sp1_m1* alpha1_m1 *lambda1_m1 + sp2_m1*alpha2_m1 *lambda2_m1
+        Am_p1h [ 0 ] = sp1_p1 * alpha1_p1 + sp2_p1 * alpha2_p1
+        Am_p1h [ 1 ] = sp1_p1 * alpha1_p1 * lambda1_p1 + sp2_p1 *alpha2_p1 * lambda2_p1
+        
+        Afluc = np . add ( Ap_m1h , Am_p1h)
+        
+        method = str(ss.argv [ 1 ] )
+
