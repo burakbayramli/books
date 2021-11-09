@@ -90,4 +90,5 @@ for n in range (nsteps):
         alpha1_m1 = ( ( u_avg_m1+c_m1 ) * delta_m1 [ 0 ] - delta_m1 [ 1 ] )/2/c_m1
         alpha2_m1 = ( -(u_avg_m1-c_m1 ) * delta_m1 [ 0 ] + delta_m1 [ 1 ] )/2/c_m1
 
-        
+        alpha1_p1 = ( ( u_avg_p1+c_p1 ) * delta_p1[ 0 ] - delta_p1[ 1 ] )/2/c_p1
+        alpha2_p1 = ( -( u_avg_p1-c_p1 ) * delta_p1[ 0 ] + delta_p1[ 1 ] )/2/c_p1        
