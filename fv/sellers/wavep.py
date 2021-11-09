@@ -59,7 +59,19 @@ for n in range (nsteps):
         uip1 =Q[ 1 , i +1]/ hip1    
 
 
+        # Roe−averaged q u a n t i t i e s a t l e f t c e l l boundary
+        h_avg_m1 = ( him1 + hi ) /2
+        u_avg_m1 = ( np.sqrt(him1 ) * uim1 + np.sqrt(hi)*ui ) /(np.sqrt( him1 ) +
+                                                               np.sqrt( hi ) )
+        c_m1 = np.sqrt(g*h_avg_m1 )
+        lambda1_m1 = u_avg_m1 - c_m1
+        lambda2_m1 = u_avg_m1 + c_m1
 
 
-
-
+        # Roe−averaged q u a n t i t i e s a t r i g h t c e l l boundary
+        h_avg_p1 = ( hip1+ hi ) /2
+        u_avg_p1 = ( np.sqrt( hip1 ) * uip1 + np.sqrt(hi)*ui ) /(np.sqrt( hip1 ) +
+                                                                 np.sqrt(hi ) )
+        c_p1 = np.sqrt(g* h_avg_p1 )
+        lambda1_p1 = u_avg_p1 - c_p1
+        lambda2_p1 = u_avg_p1 + c_p1
