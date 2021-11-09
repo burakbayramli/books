@@ -132,3 +132,39 @@ for n in range (nsteps):
         Fm1h [ 1 ] = np.absolute ( lambda2_m1 ) *(1-cour *np.absolute(lambda2_m1 ) ) * limiter[1] * (alpha1_m1 * lambda1_m1 + alpha2_m1 * lambda2_m1) /2
         Fp1h [ 0 ] = np.absolute( lambda1_p1 ) *(1-cour *np.absolute (lambda1_p1 ) ) * limiter[0] * (alpha1_p1 + alpha2_p1 ) /2
         Fp1h [ 1 ] = np.absolute( lambda2_p1 ) * (1-cour * np.absolute( lambda2_p1 ) ) * limiter[1] * (alpha1_p1 * lambda1_p1 + alpha2_p1 * lambda2_p1) /2 
+
+        dFcor = np.subtract ( Fm1h , Fp1h )
+        Fcorr[0][i]=cour * dFcor [ 0 ]
+        Fcorr[1][i]=cour * dFcor [ 1 ]
+
+        # Apply Courant number t o f l u c u t a t i o n s
+        flux_arr[0][i]=cour * Afluc [0]
+        flux_arr[1][i] = cour * Afluc [1]
+
+    # Update c e l l average
+    Qtild=np.subtract(Q,flux_arr )
+    Qnp1 [n]=np.subtract( Qtild , Fcorr )
+    Q = Qnp1 [n]
+
+    # S t o r e maximum wave speed a t l e f t c e l l boundary
+    smax[n] = np.maximum( lambda1_m1 , lambda2_m1 )
+
+# Maximum wave speed
+smaxi = np.amax ( smax )
+
+# Choose time s t e p t o p l o t
+N = 12
+time = dt*N
+x = np.linspace ( ax , bx ,m)
+
+plt.figure(1)                                                              
+plt.subplot(211)
+plt.plot( x , Qnp1 [N] [ 0 ] , 'b' ,linewidth = 2.0 )      
+plt.title ( 'Height a t time t =%1.2f ' %time ) 
+plt.ylabel ( 'h' )                                                         
+plt.subplot (212)                                                           
+plt.plot( x , Qnp1 [N] [ 1 ] , 'b' , linewidth = 2.0 )      
+plt.title ('Momentum a t time t =%1.2f ' %time )                      
+plt.ylabel ( 'hu' )                                                  
+plt.subplots_adjust ( hspace = .4 )                          
+plt.show() 
