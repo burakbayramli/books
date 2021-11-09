@@ -75,3 +75,14 @@ for n in range (nsteps):
         c_p1 = np.sqrt(g* h_avg_p1 )
         lambda1_p1 = u_avg_p1 - c_p1
         lambda2_p1 = u_avg_p1 + c_p1
+
+        # Wave speeds
+        sp1_m1 = np . maximum( lambda1_m1 , 0. )
+        sp2_m1 = np . maximum( lambda2_m1 , 0. )
+        sp1_p1 = np . minimum ( lambda1_p1 , 0. )
+        sp2_p1 = np . minimum ( lambda2_p1 , 0. ) 
+        
+        delta_m1 = np.subtract(Q [: , i ] ,Q[:, i-1])
+        delta_p1= np.subtract(Q[ : , i + 1 ] ,Q[ : , i ] )
+
+        
