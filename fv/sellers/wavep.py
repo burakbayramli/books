@@ -103,5 +103,32 @@ for n in range (nsteps):
         
         Afluc = np . add ( Ap_m1h , Am_p1h)
         
-        method = str(ss.argv [ 1 ] )
+        method = str(sys.argv [ 1 ] )
+        limiter = [0 , 0]
+        if method == " lw " :
+            # Compute MC wave l i m i t e r
+            if delta_m1 [ 0 ] == 0 or delta_m1 [ 1 ] == 0 :
+                theta = [ 1. , 1. ]
+            else :
+                theta = np.divide ( delta_p1 , delta_m1 )        
 
+
+            phi_1 = [ .5 , .5 ] + np.divide(theta,2)
+            phi_2 = [ 2. , 2. ]
+            phi_3 = np.multiply(theta, 2 )
+            phi_i = np.minimum ( phi_1 , phi_2 , phi_3 )
+            phi = np.maximum( 0 , phi_i )
+            limiter = phi            
+
+        elif method == " upwind " :
+            limiter = [0 , 0]
+
+        #print (limiter)
+            
+        # Compute second order c o r r e c t i o n
+        Fm1h = np.zeros ( 2 )
+        Fp1h = np.zeros ( 2 )
+        Fm1h [ 0 ] = np.absolute ( lambda1_m1 ) *(1-cour *np.absolute(lambda1_m1 ) ) * limiter[0] * (alpha1_m1 + alpha2_m1 ) /2
+        Fm1h [ 1 ] = np.absolute ( lambda2_m1 ) *(1-cour *np.absolute(lambda2_m1 ) ) * limiter[1] * (alpha1_m1 * lambda1_m1 + alpha2_m1 * lambda2_m1) /2
+        Fp1h [ 0 ] = np.absolute( lambda1_p1 ) *(1-cour *np.absolute (lambda1_p1 ) ) * limiter[0] * (alpha1_p1 + alpha2_p1 ) /2
+        Fp1h [ 1 ] = np.absolute( lambda2_p1 ) * (1-cour * np.absolute( lambda2_p1 ) ) * limiter[1] * (alpha1_p1 * lambda1_p1 + alpha2_p1 * lambda2_p1) /2 
