@@ -16,6 +16,7 @@ dx = ( bx-ax ) /(m+1)
 nsteps = 30
 dt = tfinal / nsteps
 cour = dt/dx
+
 # Dam −break problem
 hl = 3
 hr = 1
