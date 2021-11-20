@@ -1,7 +1,6 @@
       program burgers  
 c...Computes some very simple exact solutions to Burgers' equation
 c...Assume periodic domain [-1,1]. 
-
       open(unit=9,file='burgers.dat')
 
  5    write(*,*) "input 1 or 2"
