@@ -93,6 +93,7 @@ Source codes for various books I collected over the years.
 - [Iterative Methods for Optimization Kelley](Iterative_Methods_for_Optimization_Kelley)
 - [fv](fv)
 - [18 086 Computational Science And Engineering II Stoop](18_086_Computational_Science_And_Engineering_II_Stoop)
+- [Computational Gasdynamics Laney](Computational_Gasdynamics_Laney)
 - [Computational Problems for Physics With Guided Solutions Landau](Computational_Problems_for_Physics_With_Guided_Solutions_Landau)
 - [Optimal Control Aerospace Apps Prussing](Optimal_Control_Aerospace_Apps_Prussing)
 - [The Finite Element Method for Taylor Zienkiewicz](The_Finite_Element_Method_for_Taylor_Zienkiewicz)
