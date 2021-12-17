@@ -1,0 +1,193 @@
+# examples on using git.
+# inspired from http://www.vogella.com/articles/Git/article.html
+
+
+# we will create a new project, create a remote repository from it, and
+# create a second clone of it, and show how to interact between them.
+
+
+       user 1                    user 2
+        /  \                       |
+       /    \                      |
+      /      \                     |
+ myproject  myproject.git       myproject
+ (working   (remote/bare         (clone)
+   copy)        repo)
+
+
+1. make a bare repo for the project -- this will be a common sync
+   point for all developers.  By using a bare repo, we never need to
+   worry about whether this repo has untracked work, etc.
+
+   -- git init --bare --shared myproject.git
+
+   -- (optional: change the group for this to a group that all
+       your developers are part of)
+
+      chgrp -R groupname myproject.git
+
+
+2. create our working copy of the repo.  This is where we will do our
+   development.
+
+   -- git clone myproject.git
+
+
+3. add some files.
+
+   -- create README
+
+   -- tell git to track this file
+
+      git add README
+
+   -- git commit README
+
+      Notice that an editor window pops up (vi by default).  It is
+      very good practice to put in a descriptive message about the
+      change here.  This will be stored in the log this file /
+      project, and help you understand the history of changes.
+
+   -- now send the changes to the bare repo:
+ 
+      git push
+
+
+
+So far this workflow is basically what a single user would do.  Not
+all that exciting.  Now imagine someone else comes along.  They are
+potentially on a different machine (or continent).  They can clone our
+repo:
+
+4. User 2 clones our project into their home directory
+
+    -- git clone /path/to/myproject.git
+
+       if the repo is on another machine, then you can specify the
+       machine and then path, like you would do with ssh.
+
+    -- cd myproject
+
+    Note that we have the same files -- this is a new local copy of
+    our source tree that someone else can work on.
+
+5. User 2 makes changes and pushes:
+
+    -- edit README, add some stuff
+
+    -- git commit .
+
+    -- git push
+
+   This pushes your changes to the remote repository
+
+
+User 1 can see the changes that were made by User 2
+
+6. in User 1's directory:
+
+   -- git pull
+
+   This gets the new changes from the other user.
+
+
+This is the simplest work flow -- these two users can share changes.  Git
+manages the history and syncs things up.  It will also resolve conflicts
+if there are changes to the same file, etc.
+
+
+Fancier things:
+
+A. if your bare repo is on a remote server, you can:
+
+   git clone username@server:/path/to/repo
+
+   to get a clone on your local machine.  Now when you push and pull, you
+   will be prompted for your password.
+
+
+B. rolling back to an earlier version via branching
+
+   branches are working places for the source.  They let you
+   experiment and then either discard or merge your changes.
+
+   -- git branch
+
+   This shows the current branches
+
+   -- git checkout hash
+
+   where hash is the first commit
+
+   This will switch us to a new (detached) branch looking at the source
+   at an earlier instance in time.
+
+   -- git branch
+
+   We are no longer on the master
+
+   -- git checkout master
+
+   Back to the master source -- latest time
+
+
+   We can use this to make a named branch for experimentation
+
+   -- git checkout -b experiment
+
+   This creates a new branch called experiment and switches us to it.
+   Note that right now, the source is identical to what we started
+   with.
+
+   When we are happy with our work on experiment, we can merge.
+
+   -- git checkout master
+
+   -- git merge experiment
+
+
+
+C. destructive rolling back
+
+   In the git logs, there is a hash next to each change.  This uniquely 
+   identifies the version of the code.  You can force your repo to go
+   back in time as:
+
+   git reset --hard hash
+
+   Note: this destroys the changes after that in your local copy of the
+   repo.  Don't worry, you can always clone again from the remote.
+
+   Don't do this in your only copy of a repo (i.e. one that has never
+   been cloned).
+
+   There are other methods of just getting old versions 
+   (look at revert, for example)
+
+
+D. you can put a link to your bare repo on the web and anyone can
+   anonymously clone it:
+
+   http://bender.astro.sunysb.edu/hydro_by_example/download/
+
+   I make this a separate bare repo that is not writable to by others.
+
+   This bare repo is update nightly via cron through this script:
+
+   cd /home/www/hydro_by_example/download
+
+   # _stage/pyro2 has as its origin the remote repo that I interact
+   # with when developing
+   cd _stage/pyro2     
+   git pull
+
+   # this pushes any updates we just got from my main remote repo
+   # to the version I have for distribution
+   git push --all ../../pyro2.git/
+
+   # this command is necessary to make the changes available over 
+   # the web
+   cd ../../pyro2.git/
+   git update-server-info -f
+
+
