@@ -1,5 +1,9 @@
 import os, sys, glob
 
+if len(sys.argv) < 2:
+    print ("options: title | dot")
+    exit()  
+    
 if sys.argv[1] == 'dot':
     os.system("zip /tmp/dotbooks.zip -r /home/burak/Documents/books/.git/")
     
