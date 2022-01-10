@@ -1,7 +1,8 @@
 # README
 
-Dr. Kardontchik shared these codes with me which closely follow Toro's book
-Riemann Solvers and Numerical Methods for Fluid Dynamics. 
+Dr. Kardontchik kindly shared these codes with me whose content
+closely follow Toro's book Riemann Solvers and Numerical Methods for
+Fluid Dynamics.
 
 Reference papers:
 
