@@ -1,0 +1,37 @@
+\newcommand{\meshnodes}{
+  \coordinate (a) at (4.53,2.86) ;
+  \coordinate (b) at (3.21,3.55) ;
+  \coordinate (c) at (2.25,1.8) ;
+  \coordinate (g) at (2.77,0.7) ;
+  \coordinate (h) at (3.96,3.54) ;
+  \coordinate (m) at (3.93,1.65) ;
+  \coordinate (q) at (4.72,1.32) ;
+  \coordinate (r) at (3.02,2.27) ;
+
+  \coordinate (fa) at ($(a) + (0, 0, 0.7-0.3) $);
+  \coordinate (fb) at ($(b) + (0, 0, 1.1-0.3) $);
+  \coordinate (fc) at ($(c) + (0, 0, 1.6-0.3) $);
+  \coordinate (fg) at ($(g) + (0, 0, 1.3-0.3) $);
+  \coordinate (fh) at ($(h) + (0, 0, 1.4-0.3) $);
+  \coordinate (fm) at ($(m) + (0, 0, 1.4-0.3) $);
+  \coordinate (fq) at ($(q) + (0, 0, 1.2-0.3) $);
+  \coordinate (fr) at ($(r) + (0, 0, 1.7-0.3) $);
+}
+
+
+\newcommand{\withmeshtris}[1]{
+  #1 rcg #1 crb #1 rah
+  #1 rgm #1 ram #1 qam
+  #1 gqm #1 bhr
+}
+
+\newcommand{\drawtriangle}[3]
+  {\draw[meshtriangle] (#1) -- (#2) -- (#3) -- cycle;}
+\newcommand{\drawfunctriangle}[3]
+  {\draw[functriangle] (f#1) -- (f#2) -- (f#3) -- cycle;}
+\newcommand{\meshtris}{
+  \withmeshtris\drawtriangle
+}
+\newcommand{\nodeloop}{\foreach \i in {a,b,c,g,h,m,q,r}}
+
+  
