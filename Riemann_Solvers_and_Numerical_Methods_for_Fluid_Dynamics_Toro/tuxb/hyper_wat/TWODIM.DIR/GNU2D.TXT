@@ -1,0 +1,34 @@
+set parametric
+set nohidden3d  
+
+set surface
+set nocontour
+set key 
+#
+splot 'gnuxy.out' u 1:2:3 w l
+#
+pause -1 "Press return"
+
+set autoscale
+set hidden3d
+set view 50,170
+#
+splot 'gnuxy.out' u 1:2:3 w l
+#
+pause -1 "Press return"
+#
+set contour
+set cntrparam levels auto 50
+set nosurface
+set nogrid
+set nokey
+set noxtics
+set noytics
+set noztics
+
+set view 0,0,1
+replot
+pause -1 "Press return"
+
+#gnuplot < gnu2d
+
