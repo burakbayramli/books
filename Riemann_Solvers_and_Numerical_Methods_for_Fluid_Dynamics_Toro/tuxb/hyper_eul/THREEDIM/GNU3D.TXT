@@ -1,0 +1,53 @@
+#
+# The following set of gnu commands can be used 
+# to plot surfaces and contour plots. The 2 and 3
+# dimensional fortran programs produce data in the 
+# form
+#
+# x   y   f1  f2  ...
+#
+# where x and y define the coordinates of an
+# array of points in the plane X-Y, and fi is
+# a quantity to plot. As an example below we plot
+# a file 'e3wcu2.out' using x, y and f1
+#
+set surface
+set nocontour
+set key 
+#
+splot 'e3wcu2.out' u 1:2:3 w l
+#
+pause -1 "Press return"
+
+set autoscale
+set hidden3d
+#
+set view 40,30
+#
+# plot surface
+#
+splot 'e3wcu2.out' u 1:2:3 w l
+#
+pause -1 "Press return"
+#
+set contour
+set cntrparam levels auto 100
+set nosurface
+set nogrid
+set nokey
+set noxtics
+set noytics
+set noztics
+#
+set view 0,0,1
+#
+# plot contours
+#
+replot
+pause -1 "Press return"
+#
+
+
+
+
+    
