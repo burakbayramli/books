@@ -1,4 +1,4 @@
-# Run with python -u godu.py; convert -loop 0 -delay 15 out*.png /tmp/out.gif
+# Run with python -u godu.py; convert -loop 0 -delay 15 /tmp/out*.png /tmp/out.gif
 # Based on first_order_FV.py
 import scipy.integrate as integrate
 from scipy.optimize import fsolve
@@ -92,4 +92,4 @@ for i in range(30):
         plt.ylim([-1.0, 1.0])
         plt.title('Finite Volume Solution to Burgers Equation')
         plt.legend()
-        plt.savefig('out-%02d.png' % i)
+        plt.savefig('/tmp/out-%02d.png' % i)
