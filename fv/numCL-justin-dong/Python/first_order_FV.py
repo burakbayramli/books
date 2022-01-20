@@ -186,8 +186,8 @@ while t < T:
 	um = u
 	up = np.roll(u,-1)
 	# fR = roe_flux(um, up)
-	# fR = godunov_flux(um, up) 
-	fR = lf_flux(um, up, A)
+	fR = godunov_flux(um, up) 
+	#fR = lf_flux(um, up, A)
 	# fR = eo_flux(um, up)
 	# fR = lw_flux(um, up, dx, dt)
 
