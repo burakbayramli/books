@@ -94,7 +94,8 @@ def riemann_solution_interact():
         pass
 
 	
-
+if __name__ == "__main__": 
+    riemann_solution_interact()
 
 
 
