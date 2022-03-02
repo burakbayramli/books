@@ -92,13 +92,10 @@ def make_plot_function(states_list, speeds_list, riemann_eval_list,
         plt.show()
         return None
 
-    if plot_chars:
-        return plot_function
-    else:
-        def real_plot_function(t):
-            plot_function(t,None)
+    def real_plot_function(t):
+        plot_function(t,None)
 
-        return real_plot_function
+    return real_plot_function
 
 
 def plot_waves(states, s, riemann_eval, wave_types, t=0.1, ax=None,
@@ -106,6 +103,9 @@ def plot_waves(states, s, riemann_eval, wave_types, t=0.1, ax=None,
 
     if wave_types is None:
         wave_types = ['contact']*len(s)
+
+    print ('t',t)    
+    print ('s',s)    
 
     colors = {}
     if color == 'multi':
@@ -121,28 +121,19 @@ def plot_waves(states, s, riemann_eval, wave_types, t=0.1, ax=None,
         fig, ax = plt.subplots()
 
     tmax = 1.0
-    if xmax is None:
-        xmax = 0.
+    if xmax is None: xmax = 0.
+    print ('s',s)
     for i in range(len(s)):
-        if wave_types[i] in ['shock','contact']:
-            x1 = tmax * s[i]
-            ax.plot([0,x1],[0,tmax],color=colors[wave_types[i]])
+        print ('here2')
+        speeds = np.linspace(s[i][0],s[i][1],5)
+        print ('speeds',speeds)
+        for ss in speeds:
+            x1 = tmax * ss
+            print (x1)
             xmax = max(xmax,abs(x1))
-        else:  # plot rarefaction fan
-            speeds = np.linspace(s[i][0],s[i][1],5)
-            for ss in speeds:
-                x1 = tmax * ss
-                ax.plot([0,x1],[0,tmax],color=colors['raref'],lw=0.6)
-                xmax = max(xmax,abs(x1))
 
     xmax = max(0.001, xmax)
     ax.set_xlim(-xmax,xmax)
-    ax.plot([-xmax,xmax],[t,t],'--k',linewidth=0.5)
-    if t_pointer:
-        ax.text(-1.8*xmax,t,'t = %4.2f -->' % t)
-    ax.set_title('Waves in x-t plane')
-    ax.set_ylim(0,tmax)
-
 
     
 def plot_riemann(states, s, riemann_eval, wave_types=None, t=0.1, ax=None,
@@ -224,10 +215,7 @@ def plot_riemann(states, s, riemann_eval, wave_types=None, t=0.1, ax=None,
         else:
             ax[i+1].set_ylim((qmin-0.1*qdiff, qmax+0.1*qdiff))
 
-        if layout == 'horizontal':
-            ax[i+1].set_title(variable_names[i]+' at t = %6.3f' % t)
-        elif layout == 'vertical':
-            ax[i+1].set_ylabel(variable_names[i])
+        ax[i+1].set_title(variable_names[i]+' at t = %6.3f' % t)
 
     x = np.linspace(-xmax, xmax, 1000)
     if t>0:
@@ -240,6 +228,7 @@ def plot_riemann(states, s, riemann_eval, wave_types=None, t=0.1, ax=None,
 
         wavespeeds = np.array(wavespeeds)
         xm = 0.5*(wavespeeds[1:]+wavespeeds[:-1])*t
+        print ('xm',xm)
         iloc = np.searchsorted(x,xm)
         x = np.insert(x, iloc, xm)
 
@@ -266,6 +255,6 @@ def convert_to_list(x):
         return [x]
    
 res = rarefaction()
-print (res(0.4))
+print (res(0.3))
 
 
