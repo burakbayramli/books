@@ -173,24 +173,14 @@ def plot_riemann(states, s, riemann_eval, wave_types=None, t=0.1, ax=None,
         existing_plots = False
         num_axes = num_vars+1
         if extra_axes: num_axes += extra_axes
-        if layout == 'horizontal':
-            # Plots side by side
-            if num_axes >= 4:
-                fig_width = 10
-            else:
-                fig_width = 3*num_axes
-            fig, ax = plt.subplots(1,num_axes,figsize=(fig_width,3))
-            plt.subplots_adjust(wspace=0.5)
-            plt.tight_layout()
-        elif layout == 'vertical':
-            # Plots on top of each other, with shared x-axis
-            fig_width = 8
-            fig_height = 1.5*(num_axes-1)
-            fig, ax = plt.subplots(num_axes,1,figsize=(fig_width,fig_height),sharex=True)
-            plt.subplots_adjust(hspace=0)
-            ax[-1].set_xlabel('x')
-            ax[0].set_ylabel('t')
-            ax[0].set_title('t = %6.3f' % t)
+        # Plots side by side
+        if num_axes >= 4:
+            fig_width = 10
+        else:
+            fig_width = 3*num_axes
+        fig, ax = plt.subplots(1,num_axes,figsize=(fig_width,3))
+        plt.subplots_adjust(wspace=0.5)
+        plt.tight_layout()
     else:
         assert len(ax) == num_vars + 1 + extra_axes
         existing_plots = True
