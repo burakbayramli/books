@@ -238,13 +238,8 @@ def plot_riemann(states, s, riemann_eval, wave_types=None, t=0.1, ax=None,
         q = derived_variables(q)
 
     for i in range(num_vars):
-        if color == 'multi':
-            ax[i+1].plot(x,q[i][:],'-k',lw=2)
-        else:
-            ax[i+1].plot(x,q[i][:],'-',color=color,lw=2)
-        if i in fill:
-            ax[i+1].fill_between(x,q[i][:],color='b')
-            ax[i+1].set_ybound(lower=0)
+        ax[i+1].plot(x,q[i][:],'-k',lw=2)
+        print ('q',q[i][:])
 
     return ax
     
