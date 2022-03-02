@@ -16,6 +16,7 @@ def speed(q, xi):
     return q
 
 def exact_riemann_solution(q_l,q_r):
+    print (q_l,q_r)
     r"""Exact solution to the Riemann problem for the Burgers' equation."""
     f = lambda q: 0.5*q*q
     states = np.array([[q_l, q_r]])
