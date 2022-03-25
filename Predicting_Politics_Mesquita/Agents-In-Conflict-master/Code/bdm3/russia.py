@@ -26,19 +26,20 @@ data.Salience /= 100
 agents = []
 for i, row in data.iterrows():
     agent = BDMActor(row.Stakeholder, row.Resources, row.Position, row.Salience)
-    agent.decision_model.Q = 0.5
+    agent.decision_model.Q = 0.8
     agent.decision_model.T = 0.5
     agent.decision_model.verbose = False
     agents.append(agent)
 
 model = NegotiationModel(agents)
 
-print (model.find_median())
+print (model.find_mean(), model.find_median())            
 for agent in model.agents: print(agent)
 
 for i in range(30):
     print ('step', i)
     model.step()
     for agent in model.agents: print(agent)
-    print (model.find_median())            
+    print (model.find_mean(), model.find_median())            
+    #print (model.find_median())            
   
