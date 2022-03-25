@@ -1,0 +1,52 @@
+How to modify the library:
+
+1) To create *.o modules:
+
+g95 -c sub1.f03
+g95 -c sub2.f03    or do them all with
+g95 -c *.f03
+
+
+2) To create the whole library (assume library is called mainlib.a):
+
+ar -r mainlib.a *.o
+
+2a) To add modules to the library :
+
+ar -r mainlib.a sub1.o
+
+2b) To remove modules from the library:
+
+ar -d mainlib.a sub1.o
+
+3) Creation of the *.mod file.
+A typical interface module (called main_int.f03) looks like:
+
+MODULE main
+!
+INTERFACE
+!
+SUBROUTINE mesh(g_coord,g_num,ips)
+!
+!  this subroutine draw the finite element mesh
+!
+ IMPLICIT NONE
+ REAL,INTENT(IN)::g_coord(:,:)
+ INTEGER,INTENT(IN)::g_num(:,:),ips
+END SUBROUTINE mesh
+!
+SUBROUTINE interp(k,dt,rt,rl,al,ntp)
+.
+.
+.
+END SUBROUTINE interp
+!
+END INTERFACE
+!
+END MODULE MAIN
+
+
+4) Compile modified interface file:
+g95 -c main_int.f03
+
+This command creates main.mod

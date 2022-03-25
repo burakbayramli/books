@@ -1,0 +1,50 @@
+How to modify the library:
+
+1) To create *.o modules:
+
+g95 -c sub1.f03
+g95 -c sub2.f03    or do them all with
+g95 -c *.f03
+
+
+2) To create the whole library  (assume library is called mainlib.a):
+
+ar -r mainlib.a *.o
+
+2a) To add modules to the library:
+
+ar -r mainlib.a sub1.o
+
+2b) To remove modules from the library (assume library is called libmain.a):
+
+ar -d mainlib.a sub1.o
+
+3) Creation of the *.mod file.
+A typical interface module (called geom_int.f03) looks like:
+
+
+MODULE geom
+!
+INTERFACE
+SUBROUTINE bc_rect(nxe,nye,nf,dir)
+ IMPLICIT NONE
+ INTEGER,INTENT(IN)::nxe,nye
+ CHARACTER(LEN=1),INTENT(IN)::dir
+ INTEGER,INTENT(OUT)::nf(:,:)
+END SUBROUTINE bc_rect
+!
+SUBROUTINE emb_2d_bc(nx1,nx2,ny1,ny2,nf)
+.
+.
+.
+END SUBROUTINE emb_2d_bc
+!                                                                             
+END INTERFACE
+!
+END MODULE geom
+
+
+4) Compile modified interface file:
+g95 -c main_int.f03
+
+This command creates main.mod

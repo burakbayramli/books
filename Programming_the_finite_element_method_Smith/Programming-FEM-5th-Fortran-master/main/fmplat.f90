@@ -1,0 +1,96 @@
+SUBROUTINE fmplat(d2x,d2y,d2xy,points,aa,bb,i)
+!
+! This subroutine forms the 2nd derivatives for rectangular
+! plate bending elements.
+!
+ IMPLICIT NONE
+ INTEGER,PARAMETER::iwp=SELECTED_REAL_KIND(15)
+ REAL(iwp),INTENT(IN)::points(:,:),aa,bb
+ REAL(iwp),INTENT(OUT)::d2x(:),d2y(:),d2xy(:)
+ INTEGER,INTENT(IN)::i
+ REAL(iwp)::x,e,xp1,xp12,xp13,ep1,ep12,ep13,p1,q1,p2,q2,p3,q3,p4,q4,dp1,  &
+   dq1,dp2,dq2,dp3,dq3,dp4,dq4,d2p1,d2p2,d2p3,d2p4,d2q1,d2q2,d2q3,d2q4,   &
+   pt25=0.25_iwp,pt375=0.375_iwp,pt5=0.5_iwp,pt75=0.75_iwp,one=1.0_iwp,   &
+   opt5=1.5_iwp,d3=3.0_iwp
+ x=points(i,1)
+ e=points(i,2)
+ xp1=x+one
+ xp12=xp1*xp1
+ xp13=xp12*xp1
+ ep1=e+one
+ ep12=ep1*ep1
+ ep13=ep12*ep1
+ p1=one-pt75*xp12+pt25*xp13
+ q1=one-pt75*ep12+pt25*ep13
+ p2=pt5*aa*xp1*(one-xp1+pt25*xp12)
+ q2=pt5*bb*ep1*(one-ep1+pt25*ep12)
+ p3=pt25*xp12*(d3-xp1)
+ q3=pt25*ep12*(d3-ep1)
+ p4=pt25*aa*xp12*(pt5*xp1-one)
+ q4=pt25*bb*ep12*(pt5*ep1-one)
+ dp1=opt5*xp1*(pt5*xp1-one)
+ dq1=opt5*ep1*(pt5*ep1-one)
+ dp2=aa*(pt5-xp1+pt375*xp12)
+ dq2=bb*(pt5-ep1+pt375*ep12)
+ dp3=opt5*xp1*(one-pt5*xp1)
+ dq3=opt5*ep1*(one-pt5*ep1)
+ dp4=pt5*aa*xp1*(pt75*xp1-one)
+ dq4=pt5*bb*ep1*(pt75*ep1-one)
+ d2p1=opt5*x
+ d2p2=pt25*aa*(d3*x-one)
+ d2p3=-d2p1
+ d2p4=pt25*aa*(d3*x+one)
+ d2q1=opt5*e
+ d2q2=pt25*bb*(d3*e-one)
+ d2q3=-d2q1
+ d2q4=pt25*bb*(d3*e+one)
+ d2x(1)=d2p1*q1
+ d2x(2)=d2p2*q1
+ d2x(3)=d2p1*q2
+ d2x(4)=d2p2*q2
+ d2x(5)=d2p1*q3
+ d2x(6)=d2p2*q3
+ d2x(7)=d2p1*q4
+ d2x(8)=d2p2*q4
+ d2x(9)=d2p3*q3
+ d2x(10)=d2p4*q3
+ d2x(11)=d2p3*q4
+ d2x(12)=d2p4*q4
+ d2x(13)=d2p3*q1
+ d2x(14)=d2p4*q1
+ d2x(15)=d2p3*q2
+ d2x(16)=d2p4*q2
+ d2y(1)=p1*d2q1
+ d2y(2)=p2*d2q1
+ d2y(3)=p1*d2q2
+ d2y(4)=p2*d2q2
+ d2y(5)=p1*d2q3
+ d2y(6)=p2*d2q3
+ d2y(7)=p1*d2q4
+ d2y(8)=p2*d2q4
+ d2y(9)=p3*d2q3
+ d2y(10)=p4*d2q3
+ d2y(11)=p3*d2q4
+ d2y(12)=p4*d2q4
+ d2y(13)=p3*d2q1
+ d2y(14)=p4*d2q1
+ d2y(15)=p3*d2q2
+ d2y(16)=p4*d2q2
+ d2xy(1)=dp1*dq1
+ d2xy(2)=dp2*dq1
+ d2xy(3)=dp1*dq2
+ d2xy(4)=dp2*dq2
+ d2xy(5)=dp1*dq3
+ d2xy(6)=dp2*dq3
+ d2xy(7)=dp1*dq4
+ d2xy(8)=dp2*dq4
+ d2xy(9)=dp3*dq3
+ d2xy(10)=dp4*dq3
+ d2xy(11)=dp3*dq4
+ d2xy(12)=dp4*dq4
+ d2xy(13)=dp3*dq1
+ d2xy(14)=dp4*dq1
+ d2xy(15)=dp3*dq2
+ d2xy(16)=dp4*dq2
+RETURN
+END SUBROUTINE fmplat

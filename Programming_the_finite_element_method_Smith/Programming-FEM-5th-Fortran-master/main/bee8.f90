@@ -1,0 +1,428 @@
+SUBROUTINE bee8(bee,coord,xi,eta,det)
+!
+! Analytical version of the bee matrix for an 8-node quad      
+!
+ IMPLICIT NONE
+ INTEGER,PARAMETER::iwp=SELECTED_REAL_KIND(15)
+ REAL(iwp),INTENT(IN)::coord(:,:),xi,eta
+ REAL(iwp),INTENT(OUT)::bee(:,:),det
+ REAL::x1,x2,x3,x4,x5,x6,x7,x8,y1,y2,y3,y4,y5,y6,y7,y8,xi2,xi3,et2,et3,   &
+   xi2et2,xi1et1,xi2et1,xi1et2,xy12,xy13,xy14,xy15,xy16,xy17,xy18,xy23,   &
+   xy24,xy25,xy26,xy27,xy28,xy34,xy35,xy36,xy37,xy38,xy45,xy46,xy47,xy48, &
+   xy56,xy57,xy58,xy67,xy68,xy78,xcu,xsq,xon,ecu,esq,eon,x2e2,x1e1,x2e1,  &
+   x1e2,cons,bot,top,dn1dx,dn2dx,dn3dx,dn4dx,dn5dx,dn6dx,dn7dx,dn8dx,     &
+   dn1dy,dn2dy,dn3dy,dn4dy,dn5dy,dn6dy,dn7dy,dn8dy,zero=0.0_iwp,          &
+   one=1.0_iwp,two=2.0_iwp,d3=3.0_iwp,d4=4.0_iwp,d5=5.0_iwp,d6=6.0_iwp,   &
+   d8=8.0_iwp,pt125=0.125_iwp
+ x1=coord(1,1)
+ x2=coord(2,1)
+ x3=coord(3,1)
+ x4=coord(4,1)
+ x5=coord(5,1)
+ x6=coord(6,1)
+ x7=coord(7,1)
+ x8=coord(8,1)
+ y1=coord(1,2)
+ y2=coord(2,2)
+ y3=coord(3,2)
+ y4=coord(4,2)
+ y5=coord(5,2)
+ y6=coord(6,2)
+ y7=coord(7,2)
+ y8=coord(8,2)
+ xi2=xi*xi
+ xi3=xi2*xi
+ et2=eta*eta
+ et3=et2*eta
+ xi2et2=xi2*et2
+ xi1et1=xi*eta
+ xi2et1=xi2*eta
+ xi1et2=xi*et2
+ xy12=x1*y2-y1*x2
+ xy13=x1*y3-y1*x3
+ xy14=x1*y4-y1*x4
+ xy15=x1*y5-y1*x5
+ xy16=x1*y6-y1*x6
+ xy17=x1*y7-y1*x7
+ xy18=x1*y8-y1*x8
+ xy23=x2*y3-y2*x3
+ xy24=x2*y4-y2*x4
+ xy25=x2*y5-y2*x5
+ xy26=x2*y6-y2*x6
+ xy27=x2*y7-y2*x7
+ xy28=x2*y8-y2*x8
+ xy34=x3*y4-y3*x4
+ xy35=x3*y5-y3*x5
+ xy36=x3*y6-y3*x6
+ xy37=x3*y7-y3*x7
+ xy38=x3*y8-y3*x8
+ xy45=x4*y5-y4*x5
+ xy46=x4*y6-y4*x6
+ xy47=x4*y7-y4*x7
+ xy48=x4*y8-y4*x8
+ xy56=x5*y6-y5*x6
+ xy57=x5*y7-y5*x7
+ xy58=x5*y8-y5*x8
+ xy67=x6*y7-y6*x7
+ xy68=x6*y8-y6*x8
+ xy78=x7*y8-y7*x8
+ xcu=-d8*xy48+d4*(-xy14+xy38+xy47+xy58)+two*(xy13+xy15-xy37-xy57)
+ xsq=two*(-xy13+xy14-xy17+xy18+xy24-xy28-xy34+xy35-xy38-xy45+xy46+xy47-   &
+   xy57+xy58+xy68-xy78)+one*(-xy12+xy16-xy23-xy25+xy27-xy36-xy56-xy67) 
+ xon=d8*xy48+two*(xy14-xy18+xy34-xy38-xy45-xy47-xy58-xy78)+xy12-xy16+xy23-&
+   xy25+xy27+xy36-xy56-xy67
+ ecu=-d8*xy26+d4*(xy16+xy25+xy36+xy27)+two*(-xy15-xy17-xy35-xy37)
+ esq=two*(-xy12+xy13-xy16+xy17-xy23+xy24+xy25-xy27-xy28-xy35+xy36+xy46-   &
+   xy56+xy57-xy67+xy68)-xy14+xy18-xy34+xy38-xy45-xy47-xy58-xy78
+ eon=d8*xy26+two*( xy12-xy16-xy23-xy25-xy27-xy36-xy56+xy67)+xy14-xy18-    &
+   xy34+xy38-xy45+xy47-xy58+xy78
+ x2e2=d6*(xy24-xy28+xy46+xy68)+d3*(-xy12+xy13-xy14+xy16-xy17+xy18-xy23-   &
+   xy25+xy27-xy34+xy35-xy36+xy38-xy45-xy47-xy56+xy57-xy58-xy67-xy78)
+ x1e1=d8*(-xy24-xy28+xy46-xy68)+d6*(-xy12+xy18+xy23+xy34-xy45-xy56+xy67+  &
+   xy78)+two*(xy14-xy16+xy25+xy27-xy36+xy38-xy47+xy58)
+ x2e1=d8*(xy24+xy28+xy46-xy68)+d5*( xy17-xy18-xy34+xy35-xy45+xy78)+d4*    &
+   (xy12-xy16-xy23-xy25-xy27-xy36-xy56+xy67)+d3*(-xy14+xy15+xy37-xy38-    &
+   xy47+xy58)
+ x1e2=d8*(-xy24+xy28+xy46+xy68)+d5*(xy12-xy13+xy23+xy57-xy56-xy67)+d4*    &
+   (xy14-xy18+xy34-xy38-xy45-xy47-xy58-xy78)+d3*(-xy15+xy16+xy25-xy27-    &
+   xy36+xy37)
+ cons= two*(-xy24+xy28-xy46-xy68)
+!
+ bot=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ bot=bot+xi2et2*x2e2+xi1et1*x1e1
+ bot=bot+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ det=pt125*bot
+!
+ xcu=two*y3-d4*y4+two*y5
+ xsq=-y2-two*y3+two*y4+y6-two*y7+two*y8
+ xon=y2+two*y4 -y6-two*y8
+ ecu=-two*y5+d4*y6-two*y7
+ esq=-two*y2+two*y3-y4-two*y6+two*y7+y8
+ eon=two*y2+y4-two*y6-y8
+ x2e2=-d3*y2+d3*y3-d3*y4+d3*y6-d3*y7+d3*y8
+ x1e1=-d6*y2+two*y4-two*y6+d6*y8
+ x2e1=d4*y2-d3*y4+d3*y5-d4*y6+d5*y7-d5*y8
+ x1e2=d5*y2-d5*y3+d4*y4-d3*y5+d3*y6-d4*y8
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn1dx=top/bot
+!
+ xcu=zero
+ xsq=y1-y3+two*y4-y5+y7-two*y8
+ xon=-y1+y3-y5+y7      
+ ecu=d4*y5-d8*y6+d4*y7
+ esq=two*y1-two*y3+two*y4+two*y5-two*y7-two*y8
+ eon=-two*y1-two*y3-two*y5+d8*y6-two*y7      
+ x2e2= d3*y1-d3*y3+d6*y4-d3*y5+d3*y7-d6*y8
+ x1e1= d6*y1+d6*y3-d8*y4+two*y5+two*y7-d8*y8
+ x2e1=-d4*y1-d4*y3+d8*y4-d4*y5-d4*y7+d8*y8
+ x1e2=-d5*y1+d5*y3-d8*y4+d3*y5-d3*y7+d8*y8
+ cons=-two*y4+two*y8
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn2dx=top/bot
+!
+ xcu=-two*y1-two*y7+d4*y8
+ xsq=two*y1+y2-two*y4+two*y5-y6-two*y8
+ xon=-y2+two*y4+y6-two*y8
+ ecu=-two*y5+d4*y6-two*y7
+ esq=-two*y1+two*y2-y4-two*y5+two*y6+y8
+ eon=two*y2-y4-two*y6+y8
+ x2e2=-d3*y1+d3*y2-d3*y4+d3*y5-d3*y6+d3*y8
+ x1e1=-d6*y2+d6*y4-two*y6+two*y8
+ x2e1=+d4*y2-d5*y4+d5*y5-d4*y6+d3*y7-d3*y8
+ x1e2=d5*y1-d5*y2+d4*y4-d3*y6+d3*y7-d4*y8
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn3dx=top/bot
+!
+ xcu=d4*y1+d4*y7-d8*y8
+ xsq=-two*y1-two*y2+two*y3-two*y5+two*y6+two*y7
+ xon=-two*y1-two*y3-two*y5-two*y7+d8*y8
+ ecu=zero
+ esq=y1-two*y2+y3-y5+two*y6-y7
+ eon=-y1+y3-y5+y7 
+ x2e2=d3*y1-d6*y2+d3*y3-d3*y5+d6*y6-d3*y7  
+ x1e1=-two*y1+d8*y2-d6*y3-d6*y5+d8*y6-two*y7 
+ x2e1=d3*y1-d8*y2+d5*y3-d5*y5+d8*y6-d3*y7 
+ x1e2=-d4*y1+d8*y2-d4*y3-d4*y5+d8*y6-d4*y7  
+ cons=two*y2-two*y6
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn4dx=top/bot
+!
+ xcu=-two*y1-two*y7+d4*y8
+ xsq=y2-two*y3+two*y4-y6-two*y7+two*y8
+ xon=y2 +two*y4-y6-two*y8
+ ecu=two*y1-d4*y2+two*y3
+ esq=-two*y2+two*y3+y4-two*y6+two*y7-y8
+ eon=two*y2+y4-two*y6-y8
+ x2e2=d3*y2-d3*y3+d3*y4-d3*y6+d3*y7-d3*y8 
+ x1e1=-two*y2+d6*y4-d6*y6+two*y8
+ x2e1=-d3*y1+d4*y2-d5*y3+d5*y4-d4*y6+d3*y8
+ x1e2=d3*y1-d3*y2+d4*y4-d5*y6+d5*y7-d4*y8 
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn5dx=top/bot
+!
+ xcu=zero     
+ xsq=-y1+y3-two*y4+y5-y7+two*y8
+ xon=y1-y3+y5-y7 
+ ecu=-d4*y1+d8*y2-d4*y3
+ esq=two*y1-two*y3-two*y4+two*y5-two*y7+two*y8
+ eon=two*y1-d8*y2+two*y3+two*y5+two*y7 
+ x2e2=-d3*y1+d3*y3-d6*y4+d3*y5-d3*y7+d6*y8 
+ x1e1=two*y1+two*y3-d8*y4+d6*y5+d6*y7-d8*y8
+ x2e1=d4*y1+d4*y3-d8*y4+d4*y5+d4*y7-d8*y8
+ x1e2=-d3*y1+d3*y3-d8*y4+d5*y5-d5*y7+d8*y8 
+ cons=two*y4-two*y8
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn6dx=top/bot
+!
+ xcu=two*y3-d4*y4+two*y5         
+ xsq=two*y1-y2-two*y4+two*y5+y6-two*y8
+ xon=-y2+two*y4+y6-two*y8
+ ecu=two*y1-d4*y2+two*y3
+ esq=-two*y1+two*y2+y4-two*y5+two*y6-y8
+ eon=two*y2-y4-two*y6+y8
+ x2e2=d3*y1-d3*y2+d3*y4-d3*y5+d3*y6-d3*y8 
+ x1e1=-two*y2+two*y4-d6*y6+d6*y8
+ x2e1=-d5*y1+d4*y2-d3*y3+d3*y4-d4*y6+d5*y8
+ x1e2=d3*y2-d3*y3+d4*y4-d5*y5+d5*y6-d4*y8 
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn7dx=top/bot
+!
+ xcu=-d4*y3+d8*y4-d4*y5         
+ xsq=-two*y1+two*y2+two*y3-two*y5-two*y6+two*y7 
+ xon=two*y1+two*y3-d8*y4+two*y5+two*y7 
+ ecu=zero      
+ esq=-y1+two*y2-y3+y5-two*y6+y7 
+ eon=y1-y3+y5-y7  
+ x2e2=-d3*y1+d6*y2-d3*y3+d3*y5-d6*y6+d3*y7  
+ x1e1=-d6*y1+d8*y2-two*y3-two*y5+d8*y6-d6*y7  
+ x2e1=d5*y1-d8*y2+d3*y3-d3*y5+d8*y6-d5*y7  
+ x1e2=d4*y1-d8*y2+d4*y3+d4*y5-d8*y6+d4*y7  
+ cons=-two*y2+two*y6
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn8dx=top/bot
+!
+ y1=-x1
+ y2=-x2
+ y3=-x3
+ y4=-x4
+ y5=-x5
+ y6=-x6
+ y7=-x7
+ y8=-x8
+!
+ xcu=two*y3-d4*y4+two*y5
+ xsq=-y2-two*y3+two*y4+y6-two*y7+two*y8
+ xon=y2+two*y4-y6-two*y8
+ ecu=-two*y5+d4*y6-two*y7
+ esq=-two*y2+two*y3-y4-two*y6+two*y7+y8
+ eon=two*y2+y4-two*y6-y8
+ x2e2=-d3*y2+d3*y3-d3*y4 +d3*y6-d3*y7+d3*y8
+ x1e1=-d6*y2+two*y4-two*y6+d6*y8
+ x2e1=d4*y2-d3*y4+d3*y5-d4*y6+d5*y7-d5*y8
+ x1e2=d5*y2-d5*y3+d4*y4-d3*y5+d3*y6-d4*y8
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn1dy=top/bot
+!
+ xcu=zero
+ xsq=y1-y3+two*y4-y5+y7-two*y8
+ xon=-y1+y3-y5+y7 
+ ecu=d4*y5-d8*y6+d4*y7
+ esq=two*y1-two*y3+two*y4+two*y5-two*y7-two*y8
+ eon=-two*y1-two*y3-two*y5+d8*y6-two*y7 
+ x2e2=d3*y1-d3*y3+d6*y4-d3*y5+d3*y7-d6*y8
+ x1e1=d6*y1+d6*y3-d8*y4+two*y5+two*y7-d8*y8
+ x2e1=-d4*y1-d4*y3+d8*y4-d4*y5-d4*y7+d8*y8
+ x1e2=-d5*y1+d5*y3-d8*y4+d3*y5-d3*y7+d8*y8
+ cons=-two*y4+two*y8
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn2dy=top/bot
+!
+ xcu=-two*y1-two*y7+d4*y8
+ xsq=two*y1+y2-two*y4+two*y5-y6-two*y8
+ xon=-y2+two*y4+y6-two*y8
+ ecu=-two*y5+d4*y6-two*y7
+ esq=-two*y1+two*y2-y4-two*y5+two*y6+y8
+ eon=two*y2-y4-two*y6+y8
+ x2e2=-d3*y1+d3*y2-d3*y4+d3*y5-d3*y6+d3*y8
+ x1e1=-d6*y2+d6*y4-two*y6+two*y8
+ x2e1=d4*y2-d5*y4+d5*y5-d4*y6+d3*y7-d3*y8
+ x1e2=d5*y1-d5*y2+d4*y4-d3*y6+d3*y7-d4*y8
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn3dy=top/bot
+!
+ xcu=d4*y1+d4*y7-d8*y8
+ xsq=-two*y1-two*y2+two*y3-two*y5+two*y6+two*y7
+ xon=-two*y1-two*y3-two*y5-two*y7+d8*y8
+ ecu=zero
+ esq=y1-two*y2+y3-y5+two*y6-y7
+ eon=-y1+y3-y5+y7 
+ x2e2=d3*y1-d6*y2+d3*y3-d3*y5+d6*y6-d3*y7  
+ x1e1=-two*y1+d8*y2-d6*y3-d6*y5+d8*y6-two*y7 
+ x2e1=d3*y1-d8*y2+d5*y3-d5*y5+d8*y6-d3*y7 
+ x1e2=-d4*y1+d8*y2-d4*y3-d4*y5+d8*y6-d4*y7  
+ cons=two*y2-two*y6
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn4dy=top/bot
+!
+ xcu=-two*y1-two*y7+d4*y8
+ xsq=y2-two*y3+two*y4-y6-two*y7+two*y8
+ xon=y2+two*y4-y6-two*y8
+ ecu=two*y1-d4*y2+two*y3
+ esq=-two*y2+two*y3+y4-two*y6+two*y7-y8
+ eon=two*y2+y4-two*y6-y8
+ x2e2=d3*y2-d3*y3+d3*y4-d3*y6+d3*y7-d3*y8 
+ x1e1=-two*y2+d6*y4-d6*y6+two*y8
+ x2e1=-d3*y1+d4*y2-d5*y3+d5*y4-d4*y6 +d3*y8
+ x1e2=d3*y1-d3*y2+d4*y4-d5*y6+d5*y7-d4*y8 
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn5dy=top/bot
+!
+ xcu=zero          
+ xsq=-y1+y3-two*y4+y5-y7+two*y8
+ xon=y1-y3+y5-y7 
+ ecu=-d4*y1+d8*y2-d4*y3
+ esq=two*y1-two*y3-two*y4+two*y5-two*y7+two*y8
+ eon=two*y1-d8*y2+two*y3+two*y5+two*y7 
+ x2e2=-d3*y1+d3*y3-d6*y4+d3*y5-d3*y7+d6*y8 
+ x1e1=two*y1+two*y3-d8*y4+d6*y5+d6*y7-d8*y8
+ x2e1=d4*y1+d4*y3-d8*y4+d4*y5+d4*y7-d8*y8
+ x1e2=-d3*y1+d3*y3-d8*y4+d5*y5-d5*y7+d8*y8 
+ cons=two*y4-two*y8
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn6dy=top/bot
+!
+ xcu=two*y3-d4*y4+two*y5         
+ xsq=two*y1-y2-two*y4+two*y5+y6-two*y8
+ xon=-y2+two*y4+y6-two*y8
+ ecu=two*y1-d4*y2+two*y3
+ esq=-two*y1+two*y2+y4-two*y5+two*y6-y8
+ eon=two*y2-y4-two*y6+y8
+ x2e2=d3*y1-d3*y2+d3*y4-d3*y5+d3*y6-d3*y8 
+ x1e1=-two*y2+two*y4-d6*y6+d6*y8
+ x2e1=-d5*y1+d4*y2-d3*y3+d3*y4-d4*y6+d5*y8
+ x1e2=d3*y2-d3*y3+d4*y4-d5*y5+d5*y6-d4*y8 
+ cons=zero
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn7dy=top/bot
+!
+ xcu=-d4*y3+d8*y4-d4*y5         
+ xsq=-two*y1+two*y2+two*y3-two*y5-two*y6+two*y7 
+ xon=two*y1+two*y3-d8*y4+two*y5+two*y7 
+ ecu=zero      
+ esq=-y1+two*y2-y3+y5-two*y6+y7 
+ eon=y1-y3+y5-y7  
+ x2e2=-d3*y1+d6*y2-d3*y3+d3*y5-d6*y6+d3*y7  
+ x1e1=-d6*y1+d8*y2-two*y3-two*y5+d8*y6-d6*y7  
+ x2e1=d5*y1-d8*y2+d3*y3-d3*y5+d8*y6-d5*y7  
+ x1e2=d4*y1-d8*y2+d4*y3+d4*y5-d8*y6+d4*y7  
+ cons=-two*y2+two*y6
+!
+ top=xi3*xcu+xi2*xsq+xi*xon+et3*ecu+et2*esq+eta*eon
+ top=top+xi2et2*x2e2+xi1et1*x1e1
+ top=top+xi2et1*x2e1+xi1et2*x1e2+cons
+!
+ dn8dy=top/bot
+!
+ bee=zero
+ bee(1,1)=dn1dx
+ bee(1,3)=dn2dx
+ bee(1,5)=dn3dx
+ bee(1,7)=dn4dx
+ bee(1,9)=dn5dx   
+ bee(1,11)=dn6dx
+ bee(1,13)=dn7dx   
+ bee(1,15)=dn8dx
+ bee(2,2)=dn1dy
+ bee(2,4)=dn2dy
+ bee(2,6)=dn3dy
+ bee(2,8)=dn4dy
+ bee(2,10)=dn5dy
+ bee(2,12)=dn6dy
+ bee(2,14)=dn7dy
+ bee(2,16)=dn8dy
+ bee(3,1)=dn1dy
+ bee(3,3)=dn2dy
+ bee(3,5)=dn3dy
+ bee(3,7)=dn4dy
+ bee(3,9)=dn5dy
+ bee(3,11)=dn6dy
+ bee(3,13)=dn7dy
+ bee(3,15)=dn8dy
+ bee(3,2)=dn1dx
+ bee(3,4)=dn2dx   
+ bee(3,6)=dn3dx
+ bee(3,8)=dn4dx
+ bee(3,10)=dn5dx
+ bee(3,12)=dn6dx   
+ bee(3,14)=dn7dx
+ bee(3,16)=dn8dx
+ RETURN
+END SUBROUTINE bee8
