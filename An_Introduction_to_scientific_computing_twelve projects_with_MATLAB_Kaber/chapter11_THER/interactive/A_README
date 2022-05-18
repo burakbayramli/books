@@ -1,0 +1,59 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%    An Introduction to Scientific Computing          %%%%%%%
+%%%%%%%    I. Danaila, P. Joly, S. M. Kaber & M. Postel     %%%%%%%
+%%%%%%%                 Springer, 2005                      %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This directory contains the Matlab scripts solving the steady heat
+equation with discontinuous thermal diffusivity, modelling an
+idealistic industrial furnace (see Chap 11 of the book).
+
+The program offers a Graphical User's Interface (GUI) which allows
+to easily change the physical parameters, the position and
+intensity of the heating resistances, to print the results, etc.
+The implementation follows the theoretical guides given in Chap
+11, with a slightly different programming style using massively
+vector operations.
+
+
+To launch the interface just type "Main" in the Matlab execution
+window. Then follow the messages in the diary window.
+
+
+The finite elements (FE) triangular mesh is generated outside
+Matlab with two different free softwares available on the Web:
+
+1) FreeFem++ (http://www.freefem.org) is a friendly PDE solver
+using FE. An example of a FreeFem++ script (Furnace_direct_R6.edp)
+can be found in this directory. This script was used to generate
+the mesh file "meshFF.msh" and also to solve the direct problem
+with 6 resistances (in fact, our Matlab program was verified in
+this way).
+
+We identify mesh files generated with FreeFem++ by the extension
+".msh"
+
+2) EMC2 (http://www-rocq1.inria.fr/gamma/cdrom/www/emc2/eng.htm)
+is an interactive software generating two-dimensional meshes. More
+functions (moving, removing, adding vertices, regularization,etc)
+are available to generate complex meshes.
+
+We identify mesh files generated with EMC2 by the extension ".amb"
+
+
+Note that the format of "msh" and "amb" mesh files are slightly
+different (the functions reading the mesh for each format are
+available in this directory). Available mesh files are:
+
+meshFF.msh
+
+mesh0.amb
+
+mesh1.amb
+
+mesh2.amb
+
+meshSMILEY.msh (the corresponding FreeFem++ script is
+meshSMILEY.edp)
+
+                      Have fun!

@@ -1,0 +1,119 @@
+// Furnace computational project - direct problem
+// FreeFem script to verify the matlab program with interface
+// can be used to generate meshes only --> files.msh
+//=======================================================================================
+// physical constants
+//=======================================================================================
+    real Lext =2, Hext=2, Lint=1, Hint=0.4;
+    real Ts =100, Tn=50;  //  Dirichlet b.c.
+    real Kon1=1, Kon2=10;      // conductivities
+
+// coordinates and radii for the 6 resistances
+//=======================================================================================
+    int nr=6; 
+    real [int] xr=[-Lint/2, 0, Lint/2, -Lint/2, 0, Lint/2];cout<<"xr="<<xr<<endl;
+    real yrl=(Hext+Hint)/4;
+    real [int] yr=[yrl,yrl,yrl,-yrl,-yrl,-yrl];cout<<"yr="<<yr<<endl;
+    real rr=(Hext-Hint)/20;cout<<"rr="<<rr<<endl;
+
+// intensity of the resistances
+    real qr=25000;  
+
+// computational domain and finite elements mesh
+//=======================================================================================
+    // outside rectangle
+    border Gamma1(t=-Lext/2,Lext/2)   {label=1;x=t;y=-Hext/2;};
+    border Gamma2(t=-Hext/2,Hext/2)   {label=0;x=Lext/2;y=t;};
+    border Gamma3(t=Lext/2,-Lext/2)   {label=3;x=t;y=Hext/2;};
+    border Gamma4(t=Hext/2,-Hext/2)   {label=0;x=-Lext/2;y=t;};
+
+    // inside rectangle
+    border gamma1(t=-Lint/2,Lint/2)   {label=0;x=t;y=-Hint/2;};
+    border gamma2(t=-Hint/2,Hint/2)   {label=0;x=Lint/2;y=t;};
+    border gamma3(t=Lint/2,-Lint/2)   {label=0;x=t;y=Hint/2;};
+    border gamma4(t=Hint/2,-Hint/2)   {label=0;x=-Lint/2;y=t;};
+
+
+// final (nice mesh) (triangles of ~ the same size)
+//=======================================================================================
+    int nbseg= 20;
+    real HsL=Hext/Lext, lsL=Lint/Lext, hsL=Hint/Lext, hrL=(2*pi*rr)/Lext;;
+    mesh Th=buildmesh(Gamma1(nbseg)+Gamma2(nbseg*HsL)
+                     +Gamma3(nbseg)+Gamma4(nbseg*HsL)
+                     +gamma1(nbseg*lsL)+gamma2(nbseg*hsL)
+                     +gamma3(nbseg*lsL)+gamma4(nbseg*hsL));
+    savemesh(Th,"oven.msh"); // saves the mesh
+    plot(Th,wait=1);         // plots the mesh
+
+
+// defines the finite elements spaces P1 and P0
+//======================================================================================= 
+   fespace Vh(Th,P1);   
+   fespace Ph(Th,P0); 
+
+// identification of the domains labels
+//=======================================================================================
+   Ph labelR=region;int [int] labeld(2);
+   labeld[0]=labelR(-0.45*Lext,0);  // outside domain
+   labeld[1]=labelR(0,0);           // inside domain
+
+   cout<<"labeld="<<labeld<<endl; 
+   plot(labelR,value=1,fill=1,wait=1,cmm="domains labels"); 
+
+// labels of the boundaries
+   int south=1, nord=3; 
+
+// thermal conductivities
+//======================================================================================= 
+   Ph Kon=Kon1+(region==labeld[1])*(Kon2-Kon1);
+   plot(Kon,fill=1,wait=1,cmm="conductivities",value=1); 
+
+
+// main variables
+//=======================================================================================
+   Vh u; // solution function
+   Vh v; // test function
+   Vh f; //  RHS function
+
+// Problem without resistances
+//=======================================================================================
+   f=0;      
+   problem A(u,v) = int2d(Th)(Kon*(dx(u)*dx(v)+dy(u)*dy(v)))
+                  -int2d(Th)(f*v) 
+                  + on(south, u=Ts)
+                  + on(nord,u=Tn);
+   A;    // solves the problem
+  plot(u,wait=1,ps="temp_hom.eps",value=1,fill=0,nbiso=30,cmm="Solution without resistances");
+
+
+// problem with resistances
+//=======================================================================================
+   Vh ur;      // solution for a single resistance
+
+//  -------  if the resistance is acting only in a triangle
+   Ph nuT;
+   for(int i=0;i<nuT[].n;i++)
+     nuT[][i]=i;
+   
+   for(int ir=0;ir<nr;ir++)   // loop on resistances
+{  
+   string comr="resistance "+(ir+1);
+   f=qr*0.5*exp(-0.5*((x-xr[ir])*(x-xr[ir])+(y-yr[ir])*(y-yr[ir]))/(rr*rr));
+   //f[][nuT(xr[ir],yr[ir])]=qr; // acting in the triangle only  
+
+ 
+   plot(f,fill=1,wait=1,cmm=("heating "+comr),value=1); // resistance heating   
+
+// ------- resolution of the problem
+   problem Ar(ur,v) = int2d(Th)(Kon*(dx(ur)*dx(v)+dy(ur)*dy(v)))
+                     -int2d(Th)(f*v) 
+                     + on(south, ur=0)
+                     + on(nord,ur=0);
+   Ar;    // solution du probleme
+   plot(ur,wait=1,ps="temp_r1.eps",value=1,fill=1,cmm=("Temperature field of "+comr));
+
+// ------- linear proplem: add to the homogeneous solution
+   u=u+ur;
+  plot(u,wait=1,ps="temp_tot.eps",value=1,fill=0,nbiso=30,cmm=("Field with resistances 1 +...+"+comr));
+
+}

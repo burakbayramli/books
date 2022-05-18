@@ -1,0 +1,23 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%    An Introduction to Scientific Computing          %%%%%%%
+%%%%%%%    I. Danaila, P. Joly, S. M. Kaber & M. Postel     %%%%%%%
+%%%%%%%                 Springer, 2005                      %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+close all
+f=inline('cos(3*pi*x).*exp(-x)');
+fprim=inline('-3*pi*sin(3*pi*x).*exp(-x)-cos(3*pi*x).*exp(-x)');
+coll=[0 1/4 3/4 1]';
+T=[coll zeros(size(coll)) f(coll) ];
+%T=[coll ones(size(coll)) f(coll) fprim(coll)];
+[xx,dd]=APP_ddHermite(T);
+%plot the function on a fine grid
+x=linspace(0,1,100);n=length(dd);
+y=dd(n)*ones(size(x));
+for k=n-1:-1:1
+   y=dd(k)+y.*(x-xx(k));
+end;
+plot(x,y,x,f(x),'r');hold on;plot(coll,f(coll),'+')
+title('Lagrange interpolation of cos(3*pi*x).*exp(-x)')
+%title('Hermite interpolation of cos(3*pi*x).*exp(-x)')
+legend('I_nf','f','xy_i')

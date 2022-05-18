@@ -1,0 +1,32 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%    An Introduction to Scientific Computing          %%%%%%%
+%%%%%%%    I. Danaila, P. Joly, S. M. Kaber & M. Postel     %%%%%%%
+%%%%%%%                 Springer, 2005                      %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Solution of exercise 3.5
+ind=[];lebE=[];
+for n=10:5:30
+    x=(-n/2:n/2)/n*2;      %equidistant points 
+    l=APP_Lebesgue(x)
+    ind=[ind;n];lebE=[lebE;l];
+end;
+figure(1);plot(ind,log(lebE),'+-','LineWidth',2,'MarkerSize',20)
+set(gca,'XTick',10:4:30,'FontSize',24)
+set(gca,'YTick',2:2:16)
+%figure(1);plot(ind,log(lebE),ind, .5*ind,'+-')
+title('Lebesgue constant (uniform case)')
+ind=[];lebT=[];
+for n=10:5:30
+    x=cos(pi*(.5+n:-1:0)/(n+1));    %Chebyshev points
+    l=APP_Lebesgue(x);
+    ind=[ind;n];lebT=[lebT;l];
+end;
+figure(2);plot(ind,exp(lebT),'+-','LineWidth',2,'MarkerSize',20)
+set(gca,'XTick',10:4:30,'FontSize',24)
+set(gca,'YTick',2:2:16)
+title('Lebesgue constant (Chebyshev points)')
+
+
+
+
+

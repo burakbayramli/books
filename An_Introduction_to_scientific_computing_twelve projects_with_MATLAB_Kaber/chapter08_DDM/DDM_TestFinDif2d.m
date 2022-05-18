@@ -1,0 +1,58 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%    An Introduction to Scientific Computing          %%%%%%%
+%%%%%%%    I. Danaila, P. Joly, S. M. Kaber & M. Postel     %%%%%%%
+%%%%%%%                 Springer, 2005                      %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Exercise 8.3
+%%  Finite differences resolution  of the boundary problem
+%%  -nabla u=f  on [a1,b1]x[a2,b2]
+%%  Test cases 1 and 2: Dirichlet boundary conditions
+%%  u(a1,x2)=f2(x2)          u(x1,a2)=f1(x1)
+%%  u(b1,x2)=g2(x2)          u(x1,b2)=g1(x1) 
+%%  Test case 3: Fourier and Neumann boundary conditions on edges // x2
+%%  du/dx1(a1,x2)+ca(u-uext)=0          u(x1,a2)=f1(x1)
+%%  du/dx1(b1,x2)+cb(u-uext)=0          u(x1,b2)=g1(x1)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear
+close all
+global a1
+global a2
+global b1
+global b2
+%
+fprintf('\n\n Finite differences resolution  of the boundary problem\n')
+fprintf(' -nabla u=f  on [a1,b1]x[a2,b2]\n\n')
+fprintf('\n Test case with a known solution sin(x1+x2)\n');
+% size of global domain (b2 contraint may not be exactly obtained)
+a1=0; a2=0;  b1=1; b2=2;    
+n1=10;  % number of points in x1 direction 
+tic
+[n2,b2, Solm]=DDM_FinDif2dDirichlet(n1,a1, a2,b1,b2,'DDM_rhs2dExact','DDM_f1Exact','DDM_g1Exact',...
+   'DDM_f2Exact','DDM_g2Exact',1);
+toc
+fprintf('Hit any key to go on\n');pause;
+fprintf('\n Isovalues of the error between FD and exact solution\n');
+h=(b1-a1)/(n1+1);
+X=a1+h*[0:n1+1];
+Y=a2+h*[0:n2+1];
+SolExact=feval('DDM_U02dExact',X,Y);
+figure
+mesh(a2+h*[0:n2+1],a1+h*[0:n1+1],Solm-SolExact)
+fprintf('Hit any key to go on\n');pause;
+%
+fprintf('\n Thermal shock test case\n');
+%
+b1=6; b2=20;n1=7;
+%figure
+[n2,b2, Solm1]=DDM_FinDif2dDirichlet(n1,a1, a2,b1,b2,'DDM_rhs2dCT','DDM_f1CT','DDM_g1CT',...
+   'DDM_f2CT','DDM_f2CT',1);
+fprintf('Hit any key to go on\n');pause;
+%
+fprintf('\n Fourier and Neumann boundary conditions on edges // x2. \n')
+fprintf('Modeling of temperature in a bus bar\n');
+%
+a1=0;  a2=0; b1=6; b2=20;     n1=5;
+figure
+[n2,b2, Solm2]=DDM_FinDif2dFourier(n1,a1, a2,b1,b2,'DDM_rhs2dBB','DDM_f1BB','DDM_g1BB',1);

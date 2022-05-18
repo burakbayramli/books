@@ -1,0 +1,13 @@
+//=======================================================================================
+// FreeFem++ script
+// generating a Smiley mesh 
+//=======================================================================================
+
+int n=50;
+border a(t=0,2*pi){label=1;x = cos(t);y = sin(t);}
+border b(t=0,2*pi){label=2;x = 0.4+0.2*cos(t);y = 0.4+0.2*sin(t);}
+border c(t=0,2*pi){label=3;x = -0.4+0.2*cos(t);y = 0.4+0.2*sin(t);}
+border d(t=0,2*pi){label=0;x = 0.5*cos(t);y = -0.4+0.2*sin(t);}
+mesh th=buildmesh(a(n)+b(-n)+c(-n)+d(n));
+savemesh(th,"meshSMILEY.msh");
+    plot(th,wait=1);         // plots the mesh
