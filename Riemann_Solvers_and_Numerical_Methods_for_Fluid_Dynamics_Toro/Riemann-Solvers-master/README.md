@@ -41,9 +41,15 @@ Usage:
 1-D Euler equation(ch3) with ideal gases.
 
 ### Exact solution(ch4)
-The general solution of the exact solution follows the 3-wave pattern, where the _contact_ must lies in between, _shock_ and _rarefaction_ waves stay at left or right.  
-The exact solution can be calculate numerically, where a iterative procedure is necessary for solving the _pressure_. The exact solution requies much computational effort and this is why approximate riemann solvers are studied extensively back in 1980s.
-Especially, vacuum condition is considered for completeness.
+
+The general solution of the exact solution follows the 3-wave pattern,
+where the _contact_ must lies in between, _shock_ and _rarefaction_
+waves stay at left or right.  The exact solution can be calculate
+numerically, where a iterative procedure is necessary for solving the
+_pressure_. The exact solution requies much computational effort and
+this is why approximate riemann solvers are studied extensively back
+in 1980s.  Especially, vacuum condition is considered for
+completeness.
 
 Usage:  
 > * Compile: `g++ main.cc -o Exact.out`  
@@ -63,9 +69,12 @@ Usage:
 > * Plot: `python3 animate.py`
 
 ### Lax-Friedrichs(ch5 & ch6)
-Follow the guide to rewrite the differential scheme into conservative form.  
-It's interesting to notice that Lax-Friedrichs scheme is identical to the Riemann Solution averaged at the __half__ of each time step.
-The key part in parctice is the Lax-Friedrichs inter-cell flux, see (5.77).
+
+Follow the guide to rewrite the differential scheme into conservative
+form.  It's interesting to notice that Lax-Friedrichs scheme is
+identical to the Riemann Solution averaged at the __half__ of each
+time step.  The key part in parctice is the Lax-Friedrichs inter-cell
+flux, see (5.77).
 
 Usage:
 > * Compile: `g++ main.cc -std=c++11 -o Lax.out`  
@@ -73,9 +82,13 @@ Usage:
 > * Plot: `python3 animate.py`
 
 ### Richtmyer(ch5 & ch6)
-Again, rewrite the differential scheme into its conservative form.  
-Lax-Wendroff is of 2nd-order accuracy in space and time.  
-The Richtmyer version(2-step Lax-Wendroff), introduces an intermediate step where a tempory conservative variable is computed, and the inter-cell flux is calculated later on based on this tempory conservative variable.
+
+Again, rewrite the differential scheme into its conservative form.
+Lax-Wendroff is of 2nd-order accuracy in space and time.  The
+Richtmyer version(2-step Lax-Wendroff), introduces an intermediate
+step where a tempory conservative variable is computed, and the
+inter-cell flux is calculated later on based on this tempory
+conservative variable.
 
 Usage:
 > * Compile: `g++ main.cc -std=c++11 -o Richtmyer.out`  
@@ -153,10 +166,15 @@ Usage:
 > * Plot: `python3 animate.py`
 
 ### HLL(ch10)
-By esitmate the 2 fastest wave spreading speed, the averaged flow variable in between are __constant__!
+
+By esitmate the 2 fastest wave spreading speed, the averaged flow
+variable in between are __constant__!
 
 #### Direct estimation under Roe-average
-The wave spreading speed at left and right front are esitmated according to corresponding __eigenvalues__. The key part in practice is the __Roe-averaged eigenvalues__.  
+
+The wave spreading speed at left and right front are esitmated
+according to corresponding __eigenvalues__. The key part in practice
+is the __Roe-averaged eigenvalues__.
 
 Usage:
 > * Compile: `g++ direct.cc -std=c++11 -o Euler.out`  
@@ -188,7 +206,15 @@ Usage:
 > * Plot: `python3 animate.py`
 
 ### Roe(ch11)
-Instead of estimating the signal prompting speed, another approach seeks to approximate the Jacobian matrix with known left and right states such that 3 essential properties(Hyperbolicity, Consistency and Conservation across discontinuities) are satisfied. An ingenious way to construct such a linearized Jacobian matrix is given by Roe, where the famous parameter vector consists the __square root of density__ is introduced. In practice, the inter-cell flux is computed from the wave strength, eigenvalues and eigenvectors explicitly.
+
+Instead of estimating the signal prompting speed, another approach
+seeks to approximate the Jacobian matrix with known left and right
+states such that 3 essential properties(Hyperbolicity, Consistency and
+Conservation across discontinuities) are satisfied. An ingenious way
+to construct such a linearized Jacobian matrix is given by Roe, where
+the famous parameter vector consists the __square root of density__ is
+introduced. In practice, the inter-cell flux is computed from the wave
+strength, eigenvalues and eigenvectors explicitly.
 
 Usage:
 > * Compile: `g++ main.cc -std=c++11 -o Euler.out`  
@@ -204,12 +230,21 @@ Usage:
 > * Plot: `python3 animate.py`  
 
 ### MUSCL(ch14)
-MUSCL scheme is famous for its novel idea to produce high-order schemes by reconstructing primitive variables. 
-In practice, slope vector at each point is calculated firstly, then the boundary value of each cell is extrapolated with corresponding slope vector. Extrapolated values at boundaries are evolved half of current time-setp from the approximation of governing equations afterwards. Finally, these evolved values are treated as piecewise constant, and are used as the intial profile of Riemann Problem. Once the Riemann problem is solved, the intercell flux can be calculated.
+
+MUSCL scheme is famous for its novel idea to produce high-order
+schemes by reconstructing primitive variables.  In practice, slope
+vector at each point is calculated firstly, then the boundary value of
+each cell is extrapolated with corresponding slope
+vector. Extrapolated values at boundaries are evolved half of current
+time-setp from the approximation of governing equations
+afterwards. Finally, these evolved values are treated as piecewise
+constant, and are used as the intial profile of Riemann Problem. Once
+the Riemann problem is solved, the intercell flux can be calculated.
 
 #### Basic
-Basic version of the MUSCL-Hancock Scheme, no limiter applied to the slope vector.  
-Only the first test case can be used for reference.  
+
+3mBasic version of the MUSCL-Hancock Scheme, no limiter applied to the
+slope vector.  Only the first test case can be used for reference.
 
 Usage:
 > * Compile: `g++ basic.cc -std=c++11 -o Euler.out`
