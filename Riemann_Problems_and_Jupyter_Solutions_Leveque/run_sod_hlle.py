@@ -12,6 +12,9 @@ def primitive_to_conservative(rho, u, p, gamma=1.4):
     E   = p/(gamma-1.) + 0.5*rho*u**2
     return rho, mom, E
 
+def pospart(x):
+    return np.maximum(1.e-15,x)
+
 def conservative_to_primitive(rho, mom, E, gamma=1.4):
     u = mom/pospart(rho)
     p = (gamma-1.)*(E - 0.5*rho*u**2)
@@ -82,11 +85,12 @@ def compare_solutions(left, right):
     x = np.linspace(-xmax, xmax, 100)
     t = 0.7 # change this value to see graph at different time points
     q = reval(x/(t+1e-10))
+    q = cons_to_prim(q)
 
     fig, axes = plt.subplots(3, 1, figsize=(5, 6), sharex=True)
-    axes[0].plot(x,q[0])
-    axes[1].plot(x,q[1])
-    axes[2].plot(x,q[2])
+    axes[0].plot(x,q[0]); axes[0].set_ylim(0,4)
+    axes[1].plot(x,q[1]); axes[0].set_ylim(0,1)
+    axes[2].plot(x,q[2]); axes[0].set_ylim(0,4)
     
     plt.savefig('/tmp/sod-out.png')
 
