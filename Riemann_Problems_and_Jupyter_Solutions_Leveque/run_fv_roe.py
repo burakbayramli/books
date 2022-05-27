@@ -1,3 +1,4 @@
+# Documents/repos/clawpack/pyclaw/src/pyclaw/classic/solver.py
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -103,10 +104,10 @@ def shocktube(q_l, q_r, N=50, riemann_solver='HLL',
     from clawpack import pyclaw
     from clawpack import riemann
 
-    if riemann_solver == 'Roe':
-        rs = euler_roe_1D
+    if riemann_solver == 'Roe': rs = euler_roe_1D
         
     solver = pyclaw.ClawSolver1D(rs)        
+    #solver = mysolver.ClawSolver1D(rs)
 
     solver.kernel_language = 'Python'
     
