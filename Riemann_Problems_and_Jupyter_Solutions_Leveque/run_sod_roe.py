@@ -7,8 +7,6 @@ primitive_variables = ('Density', 'Velocity', 'Pressure')
 Primitive_State = namedtuple('State', primitive_variables)
 Conserved_State = namedtuple('State', conserved_variables)
 
-#State = Primitive_State()
-
 def primitive_to_conservative(rho, u, p, gamma=1.4):
     mom = rho*u
     E   = p/(gamma-1.) + 0.5*rho*u**2
@@ -76,15 +74,19 @@ def compare_solutions(left, right):
     q_l = np.array(primitive_to_conservative(*left))
     q_r = np.array(primitive_to_conservative(*right))
 
-
     states, speeds, reval, wave_types = Euler_roe(q_l, q_r)
     xmax = 2
     x = np.linspace(-xmax, xmax, 1000)
-    t = 0.5 # change this value to see graph at different time points
+    t = 0.2 # change this value to see graph at different time points
     q = reval(x/(t+1e-10))
-    print (q)
-    plt.plot(q[0])
-    plt.show()
+    #print (q)
+    #plt.plot(q[2])
+
+    fig, axes = plt.subplots(3, 1, figsize=(5, 6), sharey=True)
+    axes[0].plot(q[0])
+    axes[1].plot(q[1])
+    axes[2].plot(q[2])       
+    plt.savefig('/tmp/sod-out.png')
 
 
 left  = Primitive_State(Density = 3.,
