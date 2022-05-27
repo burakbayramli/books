@@ -1,10 +1,7 @@
-from clawpack.riemann.euler_with_efix_1D_constants \
-    import density, momentum, energy, num_eqn
-
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+density, momentum, energy = 0,1,2
 
 num_eqn = 3
 
@@ -107,14 +104,9 @@ def shocktube(q_l, q_r, N=50, riemann_solver='HLL',
     from clawpack import riemann
 
     if riemann_solver == 'Roe':
-        #rs = riemann.euler_1D_py.euler_roe_1D
         rs = euler_roe_1D
-
-    if solver_type == 'classic':
-        solver = pyclaw.ClawSolver1D(rs)        
-        solver.limiters = pyclaw.limiters.tvd.MC
-    else:
-        solver = pyclaw.SharpClawSolver1D(rs)
+        
+    solver = pyclaw.ClawSolver1D(rs)        
 
     solver.kernel_language = 'Python'
     
