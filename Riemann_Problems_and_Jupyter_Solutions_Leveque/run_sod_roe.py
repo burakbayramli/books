@@ -1,6 +1,13 @@
 import numpy as np
+from collections import namedtuple
+import matplotlib.pyplot as plt
 
+conserved_variables = ('Density', 'Momentum', 'Energy')
+primitive_variables = ('Density', 'Velocity', 'Pressure')
 Primitive_State = namedtuple('State', primitive_variables)
+Conserved_State = namedtuple('State', conserved_variables)
+
+#State = Primitive_State()
 
 def primitive_to_conservative(rho, u, p, gamma=1.4):
     mom = rho*u
@@ -33,7 +40,7 @@ def Euler_roe(q_l, q_r, gamma=1.4):
     u_r = rhou_r/rho_r
     
     u_hat, c_hat, H_hat = roe_averages(q_l, q_r, gamma)
-    
+
     dq = q_r - q_l
     
     s1 = u_hat - c_hat
@@ -65,12 +72,27 @@ def Euler_roe(q_l, q_r, gamma=1.4):
     return states, speeds, reval, wave_types
 
 
-left  = State(Density = 3.,
+def compare_solutions(left, right):
+    q_l = np.array(primitive_to_conservative(*left))
+    q_r = np.array(primitive_to_conservative(*right))
+
+
+    states, speeds, reval, wave_types = Euler_roe(q_l, q_r)
+    xmax = 2
+    x = np.linspace(-xmax, xmax, 1000)
+    t = 0.5 # change this value to see graph at different time points
+    q = reval(x/(t+1e-10))
+    print (q)
+    plt.plot(q[0])
+    plt.show()
+
+
+left  = Primitive_State(Density = 3.,
               Velocity = 0.,
               Pressure = 3.)
-right = State(Density = 1.,
+right = Primitive_State(Density = 1.,
               Velocity = 0.,
               Pressure = 1.)
 
-states, speeds, reval, wave_types = states = Euler_roe(left, right)
+compare_solutions(left, right)
 
