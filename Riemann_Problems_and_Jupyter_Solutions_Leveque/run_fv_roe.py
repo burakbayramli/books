@@ -1,10 +1,91 @@
-from clawpack import riemann
 from clawpack.riemann.euler_with_efix_1D_constants \
     import density, momentum, energy, num_eqn
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+num_eqn = 3
+
+def roe_averages(q_l,q_r,problem_data):
+    # Solver parameters
+    gamma1 = problem_data['gamma1']
+
+    # Calculate Roe averages
+    rhsqrtl = np.sqrt(q_l[0,...])
+    rhsqrtr = np.sqrt(q_r[0,...])
+    pl = gamma1 * (q_l[2,...] - 0.5 * (q_l[1,...]**2) / q_l[0,...])
+    pr = gamma1 * (q_r[2,...] - 0.5 * (q_r[1,...]**2) / q_r[0,...])
+    rhsq2 = rhsqrtl + rhsqrtr
+    u = (q_l[1,...] / rhsqrtl + q_r[1,...] / rhsqrtr) / rhsq2
+    enthalpy = ((q_l[2,...] + pl) / rhsqrtl + (q_r[2,...] + pr) / rhsqrtr) / rhsq2
+    a = np.sqrt(gamma1 * (enthalpy - 0.5 * u**2))
+
+    return u, a, enthalpy, pl, pr
+
+def euler_roe_1D(q_l,q_r,aux_l,aux_r,problem_data):
+    r"""
+    Roe Euler solver in 1d
+    *aug_global* should contain -
+     - *gamma* - (float) Ratio of the heat capacities
+     - *gamma1* - (float) :math:`1 - \gamma`
+     - *efix* - (bool) Whether to use an entropy fix or not
+    See :ref:`pyclaw_rp` for more details.
+    :Version: 1.0 (2009-6-26)
+    """
+
+    # Problem dimensions
+    num_rp = q_l.shape[1]
+    num_waves = 3
+
+    # Return values
+    wave = np.empty( (num_eqn, num_waves, num_rp) )
+    s = np.empty( (num_waves, num_rp) )
+    amdq = np.zeros( (num_eqn, num_rp) )
+    apdq = np.zeros( (num_eqn, num_rp) )
+
+    # Solver parameters
+    gamma1 = problem_data['gamma1']
+
+    # Calculate Roe averages
+    u, a, enthalpy = roe_averages(q_l,q_r,problem_data)[0:3]
+
+    # Find eigenvector coefficients
+    delta = q_r - q_l
+    a2 = gamma1 / a**2 * ((enthalpy -u**2)*delta[0,...] + u*delta[1,...] - delta[2,...])
+    a3 = (delta[1,...] + (a-u) * delta[0,...] - a*a2) / (2.0*a)
+    a1 = delta[0,...] - a2 - a3
+
+    # Compute the waves
+    wave[0,0,...] = a1
+    wave[1,0,...] = a1 * (u-a)
+    wave[2,0,...] = a1 * (enthalpy - u*a)
+    s[0,...] = u - a
+
+    wave[0,1,...] = a2
+    wave[1,1,...] = a2 * u
+    wave[2,1,...] = a2 * 0.5 * u**2
+    s[1,...] = u
+
+    wave[0,2,...] = a3
+    wave[1,2,...] = a3 * (u+a)
+    wave[2,2,...] = a3 * (enthalpy + u*a)
+    s[2,...] = u + a
+
+    # Entropy fix
+    if problem_data['efix']:
+        raise NotImplementedError("Entropy fix has not been implemented!")
+    else:
+        # Godunov update
+        s_index = np.zeros((2,num_rp))
+        for m in range(num_eqn):
+            for mw in range(num_waves):
+                s_index[0,:] = s[mw,:]
+                amdq[m,:] += np.min(s_index,axis=0) * wave[m,mw,:]
+                apdq[m,:] += np.max(s_index,axis=0) * wave[m,mw,:]
+
+    return wave,s,amdq,apdq
 
 def pospart(x):
     return np.maximum(1.e-15,x)
@@ -26,9 +107,8 @@ def shocktube(q_l, q_r, N=50, riemann_solver='HLL',
     from clawpack import riemann
 
     if riemann_solver == 'Roe':
-        rs = riemann.euler_1D_py.euler_roe_1D
-    elif riemann_solver == 'HLL':
-        rs = riemann.euler_1D_py.euler_hll_1D
+        #rs = riemann.euler_1D_py.euler_roe_1D
+        rs = euler_roe_1D
 
     if solver_type == 'classic':
         solver = pyclaw.ClawSolver1D(rs)        
