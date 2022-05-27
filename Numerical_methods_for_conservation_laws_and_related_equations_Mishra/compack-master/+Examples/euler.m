@@ -25,7 +25,7 @@ function soln = euler
 
 
 	%% Run solver
-    soln = runSolver(conf);
+	soln = runSolver(conf);
 
 
 	%% Display data, etc.
