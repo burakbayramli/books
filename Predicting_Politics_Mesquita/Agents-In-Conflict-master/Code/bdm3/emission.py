@@ -29,4 +29,6 @@ for i in range(20):
     model.step()
     print (model.find_mean())
     
+for agent in model.agents:
+    print(agent)
   
