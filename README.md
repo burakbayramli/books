@@ -2,6 +2,7 @@
 Source codes for various books I collected over the years.
 
 - [stanford lall ee365 stochastic control](stanford-lall-ee365-stochastic-control)
+- [An Introduction to scientific computing twelve projects with MATLAB Kaber](An_Introduction_to_scientific_computing_twelve projects_with_MATLAB_Kaber)
 - [Mahout in Action](Mahout_in_Action)
 - [Introductory Time Series with R Metcalfe](Introductory_Time_Series_with_R_Metcalfe)
 - [Introduction to Statistics using Python](Introduction_to_Statistics_using_Python)
@@ -90,6 +91,7 @@ Source codes for various books I collected over the years.
 - [A Course DSP Porat](A_Course_DSP_Porat)
 - [Signals and Systems for Dummies Wickert](Signals_and_Systems_for_Dummies_Wickert)
 - [Python Deep Learning](Python-Deep-Learning)
+- [MATH 5343 Numerical Solutions to PDE Zeng](MATH_5343_Numerical_Solutions_to_PDE_Zeng)
 - [Iterative Methods for Optimization Kelley](Iterative_Methods_for_Optimization_Kelley)
 - [Numerical PDE MIT Qiqi Wang](Numerical_PDE_MIT_Qiqi_Wang)
 - [fv](fv)
@@ -153,6 +155,7 @@ Source codes for various books I collected over the years.
 - [c FEM Lecture Abedi](c_FEM_Lecture_Abedi)
 - [An Invitation to 3D Vision Sastry](An_Invitation_to_3D_Vision_Sastry)
 - [Principles of Helicopter Aerodynamics Leisman](Principles_of_Helicopter_Aerodynamics_Leisman)
+- [Predicting Politics Mesquita](Predicting_Politics_Mesquita)
 - [Empirical Market Microstructure](Empirical_Market_Microstructure)
 - [Numerical Methods for Conservation Laws Hesthaven](Numerical_Methods_for_Conservation_Laws_Hesthaven)
 - [Introduction to Lattice Boltzmann Methods Sukop](Introduction_to_Lattice_Boltzmann_Methods_Sukop)
@@ -186,6 +189,7 @@ Source codes for various books I collected over the years.
 - [Mastering Probabilistic Graphical Models Using Python](Mastering_Probabilistic_Graphical_Models_Using_Python)
 - [Non Linear Finite Element Analysis of Solids and Structures Borst](Non_Linear_Finite_Element_Analysis_of_Solids_and_Structures_Borst)
 - [Sampling Regression Experiment Design and Analysis](Sampling_Regression_Experiment_Design_and_Analysis)
+- [Numerical Methods for PDEs CS555 Kloneckner](Numerical_Methods_for_PDEs_CS555_Kloneckner)
 - [Advanced control of aircraft spacecraft Tewari](Advanced_control_of_aircraft_spacecraft_Tewari)
 - [Linear Programming with Matlab Wright](Linear_Programming_with_Matlab_Wright)
 - [AI A Modern Approach Russell Norvig](AI_A_Modern_Approach_Russell_Norvig)
@@ -194,6 +198,7 @@ Source codes for various books I collected over the years.
 - [toront math pde lecture notes](toront-math-pde-lecture-notes)
 - [Python for Signal Processing Unpingco](Python-for-Signal-Processing-Unpingco)
 - [Numerical Methods for Chemical Engineering Applications in MATLAB Kenneth](Numerical_Methods_for_Chemical_Engineering_Applications_in_MATLAB_Kenneth)
+- [Solving Hyperbolic Equations with Finite Volume Methods Vazquez](Solving_Hyperbolic_Equations_with_Finite_Volume_Methods_Vazquez)
 - [Introduction to numerical programming using Python and CPP Beu](Introduction_to_numerical_programming_using_Python_and_CPP_Beu)
 - [neural networks and deep learning](neural-networks-and-deep-learning)
 - [Intelligent Control Systems Introduction to System of Systems Engineering Jamshidi](Intelligent_Control_Systems_Introduction_to_System_of_Systems_Engineering_Jamshidi)
@@ -220,9 +225,11 @@ Source codes for various books I collected over the years.
 - [Kelso Celestrak](Kelso_Celestrak)
 - [murphy probrob](murphy_probrob)
 - [GPS GNSS inertial navigation and integration Grewal](GPS_GNSS_inertial_navigation_and_integration_Grewal)
+- [Programming the finite element method Smith](Programming_the_finite_element_method_Smith)
 - [Pattern Theory](Pattern_Theory)
 - [Robotics Vision and Control Fundamental Algorithms MATLAB Corke](Robotics_Vision_and_Control_Fundamental_Algorithms_MATLAB_Corke)
 - [CUDA by Example Sanders](CUDA-by-Example-Sanders)
+- [Intro Solid Mechanics Adeeb](Intro_Solid_Mechanics_Adeeb)
 - [CfdVolpiani](CfdVolpiani)
 - [FEM with Python Utah](FEM_with_Python_Utah)
 - [Applied Mathematics Body and Soul](Applied_Mathematics_Body_and_Soul)
@@ -279,6 +286,7 @@ Source codes for various books I collected over the years.
 - [FEM and sparse linear system solving Arbenz](FEM_and_sparse_linear_system_solving_Arbenz)
 - [Computational Physics Problem Solving with Python Landau](Computational_Physics_Problem_Solving_with_Python_Landau)
 - [Principles of Econometrics](Principles_of_Econometrics)
+- [Numerical methods for conservation laws and related equations Mishra](Numerical_methods_for_conservation_laws_and_related_equations_Mishra)
 
 See my other blogs, repos
 
