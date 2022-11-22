@@ -1,0 +1,90 @@
+from sympy import *
+from numpy import * 
+import sympy as sp 
+import numpy as np
+import matplotlib.pyplot as plt
+sp.init_printing(use_latex = "mathjax")
+x, a1, a2, a3, a4, E, p, A, L= symbols("x a_1 a_2 a_3 a_4 E p A L")
+p = 5*x**2
+display("Exact")
+u = Function("u")
+u1_1 = u(x).subs(x,0)
+u2_1 = u(x).subs(x,L)
+s = dsolve(E*u(x).diff(x,2)+ p/A, u(x), ics = {u1_1:0, u2_1:0})
+u = s.rhs.subs({E:100000, L:2, A:(25/100)**2})
+stress0 = (E * u.diff(x)).subs({E:100000, L:2, A:(25/100)**2})
+display("displacement and stress: ", u, stress0)
+display("Second Degree")
+u2 = a1*x+a2*x**2
+sol = solve(u2.subs(x,L), a2)
+u2 = u2.subs(a2,sol[0])
+display("a2:", sol)
+display(u2)
+PE2 = (1/2)*(integrate(E*A*((u2.diff(x))**2), (x,0,L))) - integrate(p*u2, (x,0,L))
+PE2 = PE2.subs({E:100000, L:2, A:(25/100)**2})
+display("Potential Energy: ", PE2)
+Eq1_2 = PE2.diff(a1)
+sol1 = solve(Eq1_2,a1)
+display("a1:", sol1)
+u2 = u2.subs(a1,sol1[0]).subs(L,2)
+display("Best Second degree Polynomial(Rayleigh Ritz method): ", u2)
+stress2 = (E * u2.diff(x)).subs(E,100000)
+display("stress: ", stress2)
+display("Third Degree")
+u3 = a1*x+a2*x**2+a3*x**3
+sol = solve(u3.subs(x,L), a3)
+display("a3: ", sol)
+u3 = u3.subs(a3,sol[0])
+PE3 = (1/2)*(integrate(E*A*((u3.diff(x))**2), (x,0,L))) - integrate(p*u3, (x,0,L))
+PE3 = PE3.subs({E:100000, L:2, A:(25/100)**2})
+display("Potential Energy: ", PE3)
+Eq1_3 = PE3.diff(a1)
+Eq2_3 = PE3.diff(a2)
+sol1 = solve((Eq1_3, Eq2_3),a1, a2)
+display("Minimize:", Eq1_3, Eq2_3)
+display("Solve: ", sol1)
+u3 = u3.subs({a1:sol1[a1], a2:sol1[a2], L:2})
+display("Best Third degree Polynomial(Rayleigh Ritz method): ", u3)
+stress3 = (E * u3.diff(x)).subs(E,100000)
+display("stress: ", stress3)
+display("Fourth Degree")
+u4 = a1*x+a2*x**2+a3*x**3+a4*x**4
+sol = solve(u4.subs(x,L), a4)
+display("a4: ", sol)
+u4 = u4.subs(a4,sol[0])
+PE4 = (1/2)*(integrate(E*A*((u4.diff(x))**2), (x,0,L))) - integrate(p*u4, (x,0,L))
+PE4 = PE4.subs({E:100000, L:2, A:(25/100)**2})
+display("Potential Energy: ", PE4)
+Eq1_4 = PE4.diff(a1)
+Eq2_4 = PE4.diff(a2)
+Eq3_4 = PE4.diff(a3)
+sol1 = solve((Eq1_4, Eq2_4, Eq3_4),(a1, a2, a3))
+display("Minimize:", Eq1_4, Eq2_4, Eq3_4)
+display("Solve: ", sol1)
+u4 = u4.subs({a1:sol1[a1], a2:sol1[a2], a3:sol1[a3]}).subs(L,2)
+display("Best Fourth degree Polynomial(Rayleigh Ritz method): ", u3)
+stress4 = (E * u4.diff(x)).subs(E,100000)
+display("stress: ", stress4)
+fig, ax = plt.subplots(1,2, figsize = (15,6))
+plt.setp(ax[0], xlabel = "X1 m ", ylabel = "u(m)")
+plt.setp(ax[1], xlabel = "X1 m", ylabel = "Stress(Pa)")
+x1 = np.arange(0,2.1,0.1)
+u_list = [u.subs({x:i}) for i in x1]
+u2_list = [u2.subs({x:i}) for i in x1]
+u3_list = [u3.subs({x:i}) for i in x1]
+u4_list = [u4.subs({x:i}) for i in x1]
+stress0_list = [stress0.subs({x:i}) for i in x1]
+stress2_list = [stress2.subs({x:i}) for i in x1]
+stress3_list = [stress3.subs({x:i}) for i in x1]
+stress4_list = [stress4.subs({x:i}) for i in x1]
+display("Comparison")
+ax[0].plot(x1, u_list, 'blue', label = "exact")
+ax[0].plot(x1, u2_list, 'orange', label = "u2")
+ax[0].plot(x1, u3_list, 'green', label = "u3")
+ax[0].plot(x1, u4_list, 'red', label = "u4")
+ax[0].legend()
+ax[1].plot(x1, stress0_list, 'blue', label = "exact")
+ax[1].plot(x1, stress2_list, 'orange', label = "u2")
+ax[1].plot(x1, stress3_list, 'green', label = "u3")
+ax[1].plot(x1, stress4_list, 'red', label = "u4")
+ax[1].legend()
