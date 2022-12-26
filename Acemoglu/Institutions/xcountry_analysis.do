@@ -6,25 +6,41 @@ capture log close
 
 
 /******************************************************************
-All the sources and descriptions of the variables included are explained in Section 4 of the paper.
+
+All the sources and descriptions of the variables included are
+explained in Section 4 of the paper.
 
 People who use the Protestant missionary data should cite:
 
-Woodberry, Robert D. 2012. "The Missionary Roots of Liberal Democracy." American Political Science Review 106(2): 244-274.
+Woodberry, Robert D. 2012. "The Missionary Roots of Liberal
+Democracy." American Political Science Review 106(2): 244-274.
 
 People who use the subnational mission data should also cite:
-Woodberry, Robert D. and Juan Carlos Esparza Ochoa. 2006. Project on Religion and Economic Change Website. http://www.prec.com/ 
+Woodberry, Robert D. and Juan Carlos Esparza Ochoa. 2006. Project on
+Religion and Economic Change Website. http://www.prec.com/
 
-People using data on Protestant missionaries at the country level should notice that the variable "dummy_dennis" in the xcountry_data.dta file indicates the countries we constructed information on the number of Protestant missionaries from Dennis et al. (1911) and not from Woodberry (2012).
+People using data on Protestant missionaries at the country level
+should notice that the variable "dummy_dennis" in the
+xcountry_data.dta file indicates the countries we constructed
+information on the number of Protestant missionaries from Dennis et
+al. (1911) and not from Woodberry (2012).
 
 For those interested in additional variables about missions see:
-https://nus.academia.edu/RobertWoodberry  &  http://www.prec.com/
+https://nus.academia.edu/RobertWoodberry & http://www.prec.com/
 
-The data set presented below includes a correction for Hong Kong (the dummy_dennis is equal to 1, as the data for Hong Kong was taken from Dennis et al., 1914), therefore some of the results of the regressions below are not exactly the same as in the published paper. 
+The data set presented below includes a correction for Hong Kong (the
+dummy_dennis is equal to 1, as the data for Hong Kong was taken from
+Dennis et al., 1914), therefore some of the results of the regressions
+below are not exactly the same as in the published paper.
 
-In addition, users can experiment with two alternative definitions of Protestant missionaries for the countries taken from Dennis et al. 1914.
+In addition, users can experiment with two alternative definitions of
+Protestant missionaries for the countries taken from Dennis et
+al. 1914.
 
-Alternative Definition 1, including as Protestant missionaries to all foreign missionaries (including both ordained and un-ordained people), this is closer to the definition used by Woodberry (2012). In this case users should run the following Stata commands:
+Alternative Definition 1, including as Protestant missionaries to all
+foreign missionaries (including both ordained and un-ordained people),
+this is closer to the definition used by Woodberry (2012). In this
+case users should run the following Stata commands:
 
 replace protmiss=0.1097143 if code=="AUS"
 replace protmiss=0.4702282 if code=="CAN"
@@ -32,7 +48,10 @@ replace protmiss=0.1011323 if code=="HKG"
 replace protmiss=0.209569 if code=="NZL"
 replace protmiss=0.0530361 if code=="USA"
 
-Alternative Definition 2, including as Protestant missionaries to all foreign and native missionaries (including both ordained and un-ordained people). In this case users should run the following Stata commands:
+Alternative Definition 2, including as Protestant missionaries to all
+foreign and native missionaries (including both ordained and
+un-ordained people). In this case users should run the following Stata
+commands:
 
 replace protmiss=0.1988751 if code=="AUS"
 replace protmiss=0.8611575 if code=="CAN"
