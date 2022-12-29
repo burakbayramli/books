@@ -116,6 +116,7 @@ Source codes for various books I collected over the years.
 - [Numerical Methods in Engineering with Python Kiusalaas](Numerical_Methods_in_Engineering_with_Python_Kiusalaas)
 - [Physics for Game Developers Bywalec](Physics_for_Game_Developers_Bywalec)
 - [DSP Ifeachor](DSP_Ifeachor)
+- [Practical System Programming for Rust Developers Eshwarla](Practical_System_Programming_for_Rust_Developers_Eshwarla)
 - [Model Building in Mathematical Programming 5th Ed Williams](Model_Building_in_Mathematical_Programming_5th_Ed_Williams)
 - [Solving PDEs in Python Langtangen](Solving_PDEs_in_Python_Langtangen)
 - [creating apps in kivy](creating_apps_in_kivy)
