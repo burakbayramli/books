@@ -2,7 +2,6 @@
 Source codes for various books I collected over the years.
 
 - [stanford lall ee365 stochastic control](stanford-lall-ee365-stochastic-control)
-- [An Introduction to scientific computing twelve projects with MATLAB Kaber](An_Introduction_to_scientific_computing_twelve projects_with_MATLAB_Kaber)
 - [Mahout in Action](Mahout_in_Action)
 - [Introductory Time Series with R Metcalfe](Introductory_Time_Series_with_R_Metcalfe)
 - [Introduction to Statistics using Python](Introduction_to_Statistics_using_Python)
@@ -217,6 +216,7 @@ Source codes for various books I collected over the years.
 - [The Scientist and Engineers Guide to DSP Smith](The_Scientist_and_Engineers_Guide_to_DSP_Smith)
 - [Introduction to Optimization Chong Zak](Introduction_to_Optimization_Chong_Zak)
 - [Hidden Markov Models DTU Lecture](Hidden_Markov_Models_DTU_Lecture)
+- [An Introduction to scientific computing twelve projects with MATLAB Kaber](An_Introduction_to_scientific_computing_twelve_projects_with_MATLAB_Kaber)
 - [Computational Science and Engineering Strang](Computational_Science_and_Engineering_Strang)
 - [Algorithmic Trading Chan](Algorithmic_Trading_Chan)
 - [Quantitative Trading Chan](Quantitative_Trading_Chan)
