@@ -7,5 +7,5 @@ for i in range(3):
     Nn[0,2*i] = Nn[1,2*i+1] = Shapefun[i]
 rb = Matrix([[rb1],[rb2]])
 f = Matrix([[integrate(i,(x1,0,1-x2),(x2,0,1))]for i in Nn.T*rb])
-display("Nodal Force due to Body Force:")
-display("f^e =",f)
+print("Nodal Force due to Body Force:")
+print("f^e =",f)

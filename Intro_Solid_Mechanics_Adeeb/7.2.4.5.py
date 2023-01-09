@@ -13,4 +13,4 @@ s = Matrix([[stressvector[0], stressvector[2], 0],
             [stressvector[2], stressvector[1], 0],
             [0, 0, 0]])
 s[2,2] = Nu*(s[0,0] + s[1,1])
-display("stress matrix: ", s)
+print("stress matrix: ", s)

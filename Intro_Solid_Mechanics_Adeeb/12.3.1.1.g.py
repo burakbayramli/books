@@ -11,5 +11,5 @@ for i in range(6):
 rb = Matrix([rb1,rb2])
 solve = Nn.T*rb
 f = Matrix([[simplify(integrate(solve[i],(x1,0,1-x2),(x2,0,1)))]for i in range (12)])
-display("Nodal Force due to Body Force:")
-display("f^e =",f)
+print("Nodal Force due to Body Force:")
+print("f^e =",f)

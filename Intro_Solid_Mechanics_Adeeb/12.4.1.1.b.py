@@ -7,7 +7,7 @@ from scipy.integrate import dblquad
 xi, eta, rb1, rb2 = sp.symbols("xi eta rb_1 rb_2")
 coordinates = Matrix([[0,0],[1,0.1],[1.2,1.2],[0.2,1]])
 t = 1
-display("Plane Stress")
+print("Plane Stress")
 E = 1
 nu = 0
 Cc = E/(1+nu)/(1-nu)*Matrix([[1,nu,0],[nu,1,0],[0,0,(1-nu)/2]])
@@ -54,8 +54,8 @@ for i in range(8):
 # for (i,j), expr in sc.ndenumerate(k1):
 #     tmp = sp.lambdify((xi, eta), expr*J.det(), 'math')
 #     K[i,j] = dblquad(tmp, -1, 1, lambda xi: -1, lambda xi:1)[0]
-display(K)
+print(K)
 rb = Matrix([rb1,rb2])
 fbeforeintegration = Nn.transpose()*rb*J.det()
 f3 = Matrix([integrate(fbeforeintegration[i],(xi,-1,1),(eta,-1,1))for i in range(8)])
-display("Nodal Forces: ", f3)
+print("Nodal Forces: ", f3)

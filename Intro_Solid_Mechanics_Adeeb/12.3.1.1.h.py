@@ -7,5 +7,5 @@ for i in range(3):
     Nn[0,2*i] = Nn[1,2*i+1] = Shapefun[i]
 tn = Matrix([[t1],[t2]])
 f = Matrix([[(integrate(i,(x2,0,1))).subs({x1:0})]for i in Nn.T*tn])
-display("Nodal Force due to Traction Vector on One Side:")
-display("f^e =",f)
+print("Nodal Force due to Traction Vector on One Side:")
+print("f^e =",f)

@@ -21,9 +21,9 @@ svector = svector.subs({E11:100,E22:100,E33:200,G12:35,G13:35,G23:35,})
 s=Matrix([[svector[0],svector[3],svector[4]],
           [svector[3],svector[1],svector[5]],
           [svector[4],svector[5],svector[2]]])
-display("\u03B5 =",E)
-display("\u03B5_vector =",Evect)
-display("\u03C3_vector =",svector)
-display("\u03C3 =",s)
+print("\u03B5 =",E)
+print("\u03B5_vector =",Evect)
+print("\u03C3_vector =",svector)
+print("\u03C3 =",s)
 Energy = sum([s[i]*E[i] for i in range(9)])/2
-display("Energy (U) =",Energy)
+print("Energy (U) =",Energy)

@@ -12,17 +12,17 @@ Ss = Matrix([[1/E11, -nu21/E22, -nu31/E33, 0, 0, 0],
              [0, 0, 0, 0, 1/G13, 0],
              [0, 0, 0, 0, 0, 1/G23]])
 s = Matrix([[1,0,0], [0,0,0], [0,0,0]])
-display("stress matrix in B: ", s)
+print("stress matrix in B: ", s)
 #this rotates clockwise, so use - of the angle
 Q = rot_axis3(pi/4)
-display("rotation matrix required: ", Q)
+print("rotation matrix required: ", Q)
 sdash = Q*s*Transpose(Q)
-display("stress matrix in B': ", sdash)
+print("stress matrix in B': ", sdash)
 sigmavector = Matrix([[sdash[0,0]], [sdash[1,1]], [sdash[2,2]], [sdash[0,1]], [sdash[0,2]], [sdash[1,2]]])
 strvector = Ss*sigmavector
 strdash = Matrix([[strvector[0], strvector[3]/2, strvector[4]/2], 
                   [strvector[3]/2, strvector[1], strvector[4]/2], 
                   [strvector[4]/2, strvector[5]/2, strvector[2]]])
-display("strain matrix in  B': ", strdash)
+print("strain matrix in  B': ", strdash)
 strain = Transpose(Q) * strdash * Q
-display("strain matrix in B: ", strain)
+print("strain matrix in B: ", strain)

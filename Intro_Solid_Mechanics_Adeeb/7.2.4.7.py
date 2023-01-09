@@ -40,7 +40,7 @@ u = Matrix([[0.02*X1 + 0.02*X1*X2], [0.0015*X2*X1**2 + 0.02*X2]])
 limits = [0,5,0,1]
 plotVector(u,limits, "u")
 gradu = Matrix([[diff(ui,Xj) for Xj in X[:2]] for ui in u])
-display("plane gradient for displacement function: ", gradu)
+print("plane gradient for displacement function: ", gradu)
 esmall = 1/2 * (gradu + Transpose(gradu))
 strvector = Matrix([esmall[0,0], esmall[1,1], 2*esmall[0,1]])
 Ee = 1000
@@ -50,13 +50,13 @@ Cc = Matrix([[1/(1-Nu), Nu/(1-Nu), 0],
              [0,0,1/2]])
 Cc = Ee/(1+Nu) * Cc
 stressvector = Cc * strvector
-display("stressvector: ", stressvector)
+print("stressvector: ", stressvector)
 strain = Matrix([[esmall[0,0], esmall[0,1], 0],
                  [esmall[1,0], esmall[1,1], 0],
                  [0, 0, -Nu/Ee * (stressvector[0] + stressvector[1])]])
 thickness = 1
 delta = strain[2,2] * thickness
-display("strain component: ")
-display(Eq(e33, v/E*(s11+s22)))
-display(Eq(e33, delta))
+print("strain component: ")
+print(Eq(e33, v/E*(s11+s22)))
+print(Eq(e33, delta))
 plotContour(delta, limits, "delta thickness mm")

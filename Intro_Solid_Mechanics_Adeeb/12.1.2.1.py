@@ -8,7 +8,7 @@ c,L,EA = 1,1,1
 # Exact Calculations
 u_exact = c*L**2/2/EA*x - c/sp.Rational("6")/EA*x**3
 s_exact = u_exact.diff(x)
-display("u_exact(x) =",u_exact,"s_exact(x) =",s_exact)
+print("u_exact(x) =",u_exact,"s_exact(x) =",s_exact)
 F = lambdify(x,u_exact)
 dF = lambdify(x,s_exact)
 y_exact = F(xL)

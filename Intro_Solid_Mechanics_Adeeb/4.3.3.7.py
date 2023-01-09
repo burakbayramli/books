@@ -7,18 +7,18 @@ sp.init_printing(use_latex="mathjax")
 # calculation
 X1, X2 = sp.symbols("X_1 X_2")
 u = Matrix([0.2*X1, 0.09*X2*X1])
-display("u =",u)
+print("u =",u)
 X = Matrix([X1, X2])
 x = X + u
-display("x =", x)
+print("x =", x)
 F = Matrix([[diff(xi,Xj) for Xj in X] for xi in x])
-display("F =",F)
+print("F =",F)
 grad_u = F - eye(2)
-display("\u2207u =",grad_u)
+print("\u2207u =",grad_u)
 small_strain = (grad_u+grad_u.T)/2
-display("small strain =",small_strain)
+print("small strain =",small_strain)
 green_strain = (grad_u+grad_u.T+grad_u.T*grad_u)/2
-display("green strain =",green_strain)
+print("green strain =",green_strain)
 # plots
 
 # vector plots

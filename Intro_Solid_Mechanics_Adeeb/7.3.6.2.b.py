@@ -6,11 +6,11 @@ F = Matrix([[1/4,-1/(2*sp.sqrt(2)),1/4],
 J = det(F)
 mu = 1
 p = sp.symbols("p")
-display("J = det(F) =",J)
-display("F =",F)
+print("J = det(F) =",J)
+print("F =",F)
 I = sum(F*F.T)
-display("I = sum(FF^T)",I)
+print("I = sum(FF^T)",I)
 P = 4*mu*F+J*p*F.inv().T
-display("P = 4\u03BCF + JpF^(-T) =",P)
+print("P = 4\u03BCF + JpF^(-T) =",P)
 s = 4*mu*F*F.T+p*eye(3)
-display("\u03C3 = 4\u03BCFFF^T+pI =",s)
+print("\u03C3 = 4\u03BCFFF^T+pI =",s)

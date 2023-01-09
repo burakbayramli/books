@@ -41,23 +41,23 @@ x, x1, x2, x3, X1, X2, X3, u, pb1, pb2, pb3= symbols("x x_1 x_2 x_3 X_1 X_2 X_3 
 x1 = X1 + 0.001*X2 + 0.0002*X1**2
 x2 = 1.001*X2 - 0.0002*X2**2
 x3 = X3
-display("displacement function: ")
+print("displacement function: ")
 X = Matrix([[X1], [X2], [X3]])
 x = Matrix([[x1], [x2], [x3]])
 u = x - X
-display(u)
+print(u)
 limits = [0,2,0,1]
 uplane = u[:2]
-display(uplane)
+print(uplane)
 plotVector(uplane, limits, "u")
 gradu = Matrix([[diff(ui,Xj) for Xj in X] for ui in u])
-display("displacement tensor gradient", gradu)
+print("displacement tensor gradient", gradu)
 strGreen = 1/2 * (gradu + Transpose(gradu) + Transpose(gradu) * gradu)
 strain = 1/2 * (gradu + Transpose(gradu))
-display("engineering strain matrix: ", strain)
-display("Green strain matrix: ", strGreen)
+print("engineering strain matrix: ", strain)
+print("Green strain matrix: ", strGreen)
 strainvector = Matrix([[strain[0,0]], [strain[1,1]], [strain[2,2]], [2 * strain[0,1]], [2 * strain[0,2]                       ], [2 * strain[1, 2]]])
-display("small strain vector: ", strainvector)
+print("small strain vector: ", strainvector)
 Ee = 210000
 Nu = 0.3
 G = Ee/2/(1+Nu)
@@ -69,19 +69,19 @@ Cc = Matrix([[1/Ee, -Nu/Ee, -Nu/Ee, 0, 0, 0],
              [0, 0, 0, 0, 0, 1/G]])
 Dd = Inverse(Cc)
 stressvector = Dd * strainvector
-display("stressvector: ", stressvector)     
+print("stressvector: ", stressvector)     
 stressmatrix = Matrix([[stressvector[0], stressvector[3], stressvector[4]],
                        [stressvector[3], stressvector[1], stressvector[5]],
                        [stressvector[4], stressvector[5], stressvector[2]]])
-display("stressmatrix: ", stressmatrix)
+print("stressmatrix: ", stressmatrix)
 s = stressmatrix
 sum1 = -sum(diff(s[i,0], X[i]) for i in range(3)) 
-display(Eq(pb1, sum1))
+print(Eq(pb1, sum1))
 sum2 = -sum(diff(s[i,1], X[i]) for i in range(3)) 
-display(Eq(pb2, sum2))
+print(Eq(pb2, sum2))
 sum3 = sum(diff(s[i,2], X[i]) for i in range(3)) 
-display(Eq(pb3, sum3))
+print(Eq(pb3, sum3))
 a = vonMises(stressmatrix)
-display("von Mises stress: ", a)
+print("von Mises stress: ", a)
 plotContour(a,limits,"vonMises")
 plotContour(s[2,2],limits, "s33")

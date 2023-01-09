@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 xi, eta, rb1, rb2 = sp.symbols("xi eta rb_1 rb_2")
 coordinates = Matrix([[0,0],[1,0.1],[1.2,1.2],[0.2,1],[0.5,0],[1.1,0.65],[0.7,1.2],[0.1,0.5]])
 t = 1
-display("Plane Stress")
+print("Plane Stress")
 E = 1
 nu = 0.3
 Cc = E/(1+nu)/(1-nu)*Matrix([[1,nu,0],[nu,1,0],[0,0,(1-nu)/2]])
@@ -58,4 +58,4 @@ print(k1)
 rb = Matrix([rb1,rb2])
 fbeforeintegration = Nn.transpose()*rb*J.det()
 f3 = Matrix([integrate(fbeforeintegration[i],(xi,-1,1),(eta,-1,1))for i in range(16)])
-display("Nodal Forces: ", f3)
+print("Nodal Forces: ", f3)

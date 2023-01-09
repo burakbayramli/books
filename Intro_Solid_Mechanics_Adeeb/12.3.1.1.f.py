@@ -14,4 +14,4 @@ Cc = Ee/(1 + nu)*Matrix([[(1-nu)/(1-2*nu),nu/(1-2*nu),0],
                          [0, 0, 1/2]])   
 Kbeforeintegration = t*simplify(B.T*Cc*B)
 K = Matrix([[simplify(integrate(Kbeforeintegration[i,j],(x1,0,1-x2),(x2,0,1)))for i in range (12)] for j in range (12)])
-display("K^e =",K)
+print("K^e =",K)

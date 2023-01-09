@@ -9,14 +9,14 @@ x2 = 1.001*X2-0.0002*X2**2
 x3 = X3
 x = Matrix([x1,x2,x3])
 u = x-X
-display("u =",u)
+print("u =",u)
 gradu = Matrix([[diff(i,j) for j in X] for i in u])
-display("\u2207u =",gradu)
+print("\u2207u =",gradu)
 esmall = 1/2*(gradu+gradu.T)
-display("\u03B5 =",esmall)
+print("\u03B5 =",esmall)
 strainvector = Matrix([esmall[0,0], esmall[1,1], esmall[2,2], 
                2*esmall[0,1], 2*esmall[0,2], 2*esmall[1,2]])
-display("Strain vector =",strainvector)
+print("Strain vector =",strainvector)
 Ee = 210000
 Nu = 0.3
 G = Ee/2/(1+Nu)
@@ -28,23 +28,23 @@ Cc = Matrix([[1/Ee,-Nu/Ee,-Nu/Ee,0,0,0],
       [0,0,0,0,0,1/G]])
 Dd = Cc.inv()
 stressvector = Dd*strainvector
-display("Stress vector =",stressvector)
+print("Stress vector =",stressvector)
 S = Matrix([[stressvector[0], stressvector[3], stressvector[4]],
             [stressvector[3], stressvector[1], stressvector[5]],
             [stressvector[4], stressvector[5], stressvector[2]]])
-display("Stress Matrix =",S)
+print("Stress Matrix =",S)
 StrainEnergy = simplify(sum([S[i]*esmall[i]/2 for i in range(9)]))
-display("Strain energy (U) =",StrainEnergy)
+print("Strain energy (U) =",StrainEnergy)
 TotalEnergy = integrate(StrainEnergy,(X1,0,2),(X2,0,1),(X3,0,0.01))
-display("Total Energy =",TotalEnergy)
+print("Total Energy =",TotalEnergy)
 Udeviatoric = simplify(1/12/G*((S[0,0]-S[1,1])**2 + (S[2,2]- 
                   S[1,1])**2 + (S[0,0] - S[2,2])**2 + 
                   6*(S[0,1]**2 + S[0,2]**2 + S[1,2]**2)))
-display("U_deviatoric =",Udeviatoric)
+print("U_deviatoric =",Udeviatoric)
 Uvolumetric = simplify((1-2*Nu)/6/Ee*(S[0,0]+S[1,1]+S[2,2])**2)
-display("U_volumetric =",Uvolumetric)
-display("Check for energy total:",simplify(StrainEnergy-Udeviatoric-Uvolumetric))
-display("Contour plots:")
+print("U_volumetric =",Uvolumetric)
+print("Check for energy total:",simplify(StrainEnergy-Udeviatoric-Uvolumetric))
+print("Contour plots:")
 def plot(f, limits, title):
     x1, xn, y1, yn = limits
     dx, dy = 10/100*(xn-x1),10/100*(yn-y1)

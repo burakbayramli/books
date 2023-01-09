@@ -7,4 +7,4 @@ Cc = Ee*t/2/(1 + nu)*Matrix([[(1-nu)/(1-2*nu),nu/(1-2*nu),0],
                          [nu/(1-2*nu),(1-nu)/(1-2*nu), 0], 
                          [0, 0, 1/2]])
 K = simplify(B.T*Cc*B)
-display("K^e =",K)
+print("K^e =",K)

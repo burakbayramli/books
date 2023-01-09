@@ -6,6 +6,6 @@ Q = Matrix([[1/sqrt(3),1/sqrt(3),1/sqrt(3)],
    [1/sqrt(6),1/sqrt(6),-2/sqrt(6)]])
 a = Matrix([a1, a2, a3])
 s = Q.T*a;
-display("\u03C3 =",s)
-display("2*\u03C3_y=")
+print("\u03C3 =",s)
+print("2*\u03C3_y=")
 simplify((s[0]-s[1])**2+(s[1]-s[2])**2+(s[0]-s[2])**2)

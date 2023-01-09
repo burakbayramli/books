@@ -6,7 +6,7 @@ def func(x,a,b):
 xdata = np.array([0,0.0185,0.0468,0.0924,0.1795,0.2368])
 ydata = np.array([0,35,90,150,210,230])
 popt,pcov = curve_fit(func,xdata,ydata)
-display("a value =",popt[0],"b value =",popt[1])
+print("a value =",popt[0],"b value =",popt[1])
 xfundata = np.array([i/20*0.25 for i in range(20)])
 yfundata = func(xfundata,*popt)
 plt.plot(xdata,ydata,'o',label='Data')

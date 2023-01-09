@@ -14,17 +14,17 @@ Nn = Matrix([[1-xi-eta],[xi],[eta]])
 Cc1 = E/(1+nu)*Matrix([[(1-nu)/(1-2*nu),nu/(1-2*nu),0], 
                        [nu/(1-2*nu),(1-nu)/(1-2*nu),0], 
                        [0,0,1/2]])
-display("Plane Strain: ", Cc1)
+print("Plane Strain: ", Cc1)
 def calculate(e):
     xe = sum(Nn[i]*e[i,0] for i in range(3)) 
     ye = sum(Nn[i]*e[i,1] for i in range(3))
-    display("Mapping functions =",xe,ye)
+    print("Mapping functions =",xe,ye)
     J = Matrix([[xe.diff(xi), xe.diff(eta)], [ye.diff(xi), ye.diff(eta)]])
-    display("Jacobian Transformation =", J)
+    print("Jacobian Transformation =", J)
     Jin1t = J.T.inv()
-    display("Inverse =", Jin1t)
+    print("Inverse =", Jin1t)
     JD = J.det()
-    display("Determinant =", JD)
+    print("Determinant =", JD)
     Mat1 = Matrix([[1,0,0,0],[0,0,0,1],[0,1,1,0]])
     Mat2 = Matrix([[Jin1t[0,0], Jin1t[0,1],0,0],
                     [Jin1t[1,0],Jin1t[1,1],0,0],
@@ -35,15 +35,15 @@ def calculate(e):
                    [0,Nn[0].diff(xi),0,Nn[1].diff(xi),0,Nn[2].diff(xi)],
                    [0,Nn[0].diff(eta),0,Nn[1].diff(eta),0,Nn[2].diff(eta)]])
     B = Mat1*Mat2*Mat3
-    display("B =", B)
+    print("B =", B)
     Kb2 = B.T*Cc1*B
     K = JD*Kb2
     Ki = (1/2)*K
-    display("Ki =",Ki)
+    print("Ki =",Ki)
     return Ki
-display("Element E1")
+print("Element E1")
 Ki1 = calculate(e1)
-display("Element E2")
+print("Element E2")
 Ki2 = calculate(e2)
 ktotal = Matrix([[0 for x in range(8)] for y in range(8)])
 for i in range(6):
@@ -52,10 +52,10 @@ for i in range(6):
         i2,j2 = map2[i]-1,map2[j]-1
         ktotal[i1,j1] = ktotal[i1,j1]+Ki1[i,j]
         ktotal[i2,j2] = ktotal[i2,j2]+Ki2[i,j]
-display("ktotal =",ktotal)
+print("ktotal =",ktotal)
 Kk = Matrix(ktotal[4:8,4:8])
-display(Kk)
+print(Kk)
 ff = Matrix([0,0,0,-50000000])
-display("Force vector =",ff)
+print("Force vector =",ff)
 u = Kk.inv()*ff
-display("Displacements =",u)
+print("Displacements =",u)
