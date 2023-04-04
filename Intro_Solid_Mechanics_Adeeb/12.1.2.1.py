@@ -58,3 +58,4 @@ for i in ax:
     i.axvline(x = 0, color = 'k')
     i.set_xlabel("x")
     i.legend()
+plt.savefig('/tmp/out-12.1.2.1.jpg')
