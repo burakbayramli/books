@@ -1,0 +1,35 @@
+%% Keyword/Input File for the Model under investigation
+% Author: User      % Date:   18th July, 2016
+%%--------------------------------------------------------------------------------------
+%% MATERIAL AND GEOMETRY DATA:  Physical Problem parameters
+    E                       =   210e9;                % unit:  N/m^2m
+    d                       =   4e-3;             % unit:  m
+%% -------------------------------------------------------------------------------------
+%% MESH DATA:  Idealized Problem Parameters
+    elementNodes            =   [1 2; 2 3; 3 1];
+    nodeCoordinates         =   [0 0; 1 0; 1 1]; % unit:  m
+%% -------------------------------------------------------------------------------------
+%% BOUNDARY CONDITIONS DATA: Force and Displacement
+    loadValues              =   1000*[1];    %Specify the load values on the structure
+    loadNodesDof            =   [5];                	%The degrees of freedom for loaded Nodes
+    zeroDispNodesDof        =   [ 1 2 4 6];                           %List DoF for nodes with zero displacement
+%% -------------------------------------------------------------------------------------
+%% MODEL DISPLAY AND DEBUGGING OPTIONS
+    scaleMultiplier         =   200;   %    A number that specifies the scale effect of deformation
+    detailedDisplay         =   1;      %0 - display detailed results; 1 - do not;
+    deformedStructure       =   0;      %0 - sketch deformed structure, 1 - do not
+%% -------------------------------------------------------------------------------------
+%% Key to Model Parameters
+    %E:                         Modulus of Elasticity
+    %d:                         Radius for cross-sectional area being circle
+    %A:                         Area of cross-section
+    %L:                         Length of bar
+    %GDof:                      Total number of degrees of freedom
+    %numberElements:            The Number of Elements
+    %numberNodes:               The Numbers of nodes in the structure
+    %elementNodes:              The nodal points associated with each element/member
+    %nodeCoordinates:           The nodal coordinates for all nodes in the structure
+    %loadValues:                Externally applied load values imposed on structure
+    %loadNodesDof:              The degree of freedom of loaded nodes
+    %zeroDispNodesDof           The degree of freedom of nodes with zero displacement
+%% -------------------------------------------------------------------------------------

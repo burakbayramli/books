@@ -1,0 +1,44 @@
+%% ******************************************************************************************************************
+%% PBC2DGEN - 2D Periodic Boundary Conditions Generator Computational Options File 
+%% ******************************************************************************************************************
+%   Author:    Michael Okereke
+%   Date:      21/09/2014
+%% ******************************************************************************************************************
+%% ******************************************************************************************************************   
+    %--------------------------------------------------------------------------------------------- 
+    %BOUNDARY CONDITIONS OPTIONS
+        %***Regularly change these options to set up job; always arrange in ascending order****
+    PBC2D.LCType4Unial  = [0 1 2];  %0 - X-axis, 1 - Y-axis; 2 - ShearXY (in-plane);
+    PBC2D.Strain        = 0.3;      %Specify the maximum strain imposed on the RVE3D
+    PBC2D.linearLim     = 0.005;    %Specify the limit on strain axis at which elastic properties are determined
+    %---------------------------------------------------------------------------------------------
+    %MATERIAL OPTIONS
+        %***Regularly change these options to set up job****
+    PBC2D.PrintMatType  = 1;        %0 - Print None, 1 - Elastic Mat(PP)& Fibre(GF), 
+                                    %2 - Umat for Mat(PP), 21 - Umat(PP)+ elastic E-glass fibre
+                                    %3 - Lamina (fibre+matrix)-shell else only; 4 - Eng Constant(fibre-matrix)
+                                    %5 - Print Steel Material (for MatIDNum = 10)
+                                    %
+    PBC2D.MatIDNum      = 0;       %0 - GFRP(Plytron); 1-Boron-Aluminium (see CTSun 1992); 2-GEpoxy(AS4/3501-6)
+                                    %10- Steel (isotropic) Hookean material
+    %---------------------------------------------------------------------------------------------
+    %GENERAL OPTIONS
+    PBC2D.pickINP       = 1;        %0 - automatic picking, 1-user selects from list of *.inps
+    PBC2D.plotRVE       = 0;        %0 - Plot graphs of RVE; 1 - do not plot
+    PBC2D.dispRVE2DInfo = 1;        %0 - display total nodes info on RVE Faces, 1 - dont
+    PBC2D.PrintRemINP   = 0;        %0 - Print remainder of INP file (Assembly, Material, BCs, STEPS), 1-dont
+    PBC2D.EleOutputHist = 1;        %0 - print output history requests for all elements (for UMAT only), 1- do not
+    PBC2D.ChoseBCMode   = 0;        %0 - displacement BC type, 1 -  velocity BC type
+    PBC2D.ChoseTStep    = 0;        %0 - Automatic (i.e. allow ABAQUS decide) time step size , 
+                                    %1 - user-controlled time-step size choice (only for UMATS)
+    PBC2D.UMATPath      = '../';    %Specify path before the UMAT file containing the UMAT Exe
+    %---------------------------------------------------------------------------------------------
+    %JOBSCRIPT CREATING OPTIONS
+    PBC2D.JobScript     = 1;        %0 - create a *.tcsh Jobscript for running all jobs, 1 - dont
+    PBC2D.HistScript    = 0;        %0 - create a *.py script for processing history output data, 1 - don't
+    %---------------------------------------------------------------------------------------------
+%% ******************************************************************************************************************
+%% ******************************************************************************************************************
+
+
+
