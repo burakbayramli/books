@@ -1,0 +1,18 @@
+Example 5.3.2: Cantilever beam (Timoshenko RIE element) TITLE
+   2  0  0                     MODEL, NTYPE, ITEM
+   1  2                        IELEM, NEM
+   1  1                       ICONT, NPRNT
+   0.0      1.5      1.5       DX(I)
+   4.689E9  0.0                AX0=GAK(G=80GPa,B=1,H=0.0703385),AX1     
+   5.8E6    0.0                BX0=EI, BX1     See Eq. (5.2.33)
+   0.0      0.0                CX0, CX1        for the data
+   2.4E4   -0.8E04   0.0       FX0, FX1, FX2  
+
+   2                           NSPV
+   1    1   0.0                ISPV(1,1), ISPV(1,2), VSPV(1)
+   1    2   0.0                ISPV(2,1), ISPV(2,2), VSPV(2)
+
+   1                           NSSV
+   3    1   6.0E4              ISSV(1,1), ISSV(1,2), VSSV(1)=q0
+   0                           NNBC
+   0                           NMPC

@@ -1,0 +1,28 @@
+ Example 3b: Axial deformation of a composite bar with a spring
+   1  0  0                 MODEL, NTYPE, ITEM
+   1  3                    IELEM, NEM
+   0  1                    ICONT, NPRNT
+   0.0  12.0  8.0  4.0     DX(I)
+ 
+  12.56637E07  0.0 0.0     AX0, AX1, AX2
+   0.0 0.0                 BX0, BX1
+   0.0 0.0                 CX0, CX1
+   0.0 0.0 0.0             FX0, FX1, FX2
+
+   3.141593E07 0.0 0.0     AX0, AX1, AX2
+   0.0 0.0                 BX0, BX1
+   0.0 0.0                 CX0, CX1
+   0.0 0.0 0.0             FX0, FX1, FX2
+
+   9.424778E07 0.0 0.0     AX0, AX1, AX2
+   0.0 0.0                 BX0, BX1
+   0.0 0.0                 CX0, CX1
+   0.0 0.0 0.0             FX0, FX1, FX2
+
+   1                       NSPV
+   1   1    0.0            ISPV(1,1),ISPV(1,2),VSPV(1)
+   1                       NSSV
+   2   1  -2.0E05          ISSV(1,1),ISSV(1,2),VSSV(1) 
+   1                       NNBC           
+   4   1   1.0E10  0.0     INBC(1,1),INBC(1,2),VNBC(1),UREF(1)                                                                                 
+   0                       NMPC         

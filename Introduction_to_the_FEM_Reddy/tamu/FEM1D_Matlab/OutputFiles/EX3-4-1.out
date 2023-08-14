@@ -1,0 +1,104 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+Example 3.4.1: Solution of an axisymmetric problem (4L)			      
+ 1  0  0                               MODEL, NTYPE, ITEM 
+ 1  4                                  IELEM, NEM
+ 1  2                                  ICONT, NPRNT
+ 0.0   0.0125  0.0125  0.0125  0.0125  DX(I)
+ 0.0  40.0                             AX0,  AX1
+ 0.0   0.0                             BX0,  BX1
+ 0.0   0.0                             CX0, CX1
+ 0.0   4.0E6  0.0                      FX0, FX1, FX2
+ 0                                     NSPV
+ 0                                     NSSV     
+ 1                                     NNBC
+ 5   1   20.0  20.0                   INBC(1,1),INBC(1,2),VNBC(1),UREF
+ 0                                     NMPC
+
+Example 3.4.1: Solution of an axisymmetric problem (2Q)			      
+ 1  0  0                               MODEL, NTYPE, ITEM 
+ 2  2                                  IELEM, NEM
+ 1  2                                  ICONT, NPRNT
+ 0.0   0.025  0.025                    DX(I)
+ 0.0  40.0                             AX0,  AX1
+ 0.0   0.0                             BX0,  BX1
+ 0.0   0.0                             CX0, CX1
+ 0.0   4.0E6  0.0                      FX0, FX1, FX2
+ 0                                     NSPV
+ 0                                     NSSV     
+ 1                                     NNBC
+ 5   1   20.0  20.0                    INBC(1,1),INBC(1,2),VNBC(1),UREF
+ 0                                     NMPC
+
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 1, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 2.00000e+001	-2.00000e+001
+	-2.00000e+001	 2.00000e+001
+
+Element source vector, {ELF}:
+	 1.04167e+002	 2.08333e+002
+
+Element coefficient matrix, [ELK]:
+	 6.00000e+001	-6.00000e+001
+	-6.00000e+001	 6.00000e+001
+
+Element source vector, {ELF}:
+	 4.16667e+002	 5.20833e+002
+
+Element coefficient matrix, [ELK]:
+	 1.00000e+002	-1.00000e+002
+	-1.00000e+002	 1.00000e+002
+
+Element source vector, {ELF}:
+	 7.29167e+002	 8.33333e+002
+
+Element coefficient matrix, [ELK]:
+	 1.40000e+002	-1.40000e+002
+	-1.40000e+002	 1.40000e+002
+
+Element source vector, {ELF}:
+	 1.04167e+003	 1.14583e+003
+
+Global coefficient matrix, [GLK]:
+	 2.00000e+001	-2.00000e+001
+	 8.00000e+001	-6.00000e+001
+	 1.60000e+002	-1.00000e+002
+	 2.40000e+002	-1.40000e+002
+	 1.40000e+002	 0.00000e+000
+
+Global source vector, {GLF}:
+	 1.04167e+002	 6.25000e+002	 1.25000e+003	 1.87500e+003	 1.14583e+003
+
+Global coefficient matrix, [GLK]:
+	 2.00000e+001	-2.00000e+001
+	 8.00000e+001	-6.00000e+001
+	 1.60000e+002	-1.00000e+002
+	 2.40000e+002	-1.40000e+002
+	 1.60000e+002	 0.00000e+000
+
+SOLUTION (values of pvs) at the NODES:
+ 3.34683e+002  3.29474e+002  3.17321e+002  2.97530e+002  2.70000e+002 

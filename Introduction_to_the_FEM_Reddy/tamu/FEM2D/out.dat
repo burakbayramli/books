@@ -1,0 +1,133 @@
+     *** ECHO OF THE INPUT DATA STARTS ***
+
+  Example 8.1: Solution of the Poisson equation on a square domain              
+    0   1   0   0                                 ITYPE,IGRAD,ITEM,NEIGN        
+    0   3   1   0                                 IELTYP,NPE,MESH,NPRNT         
+                                                                                
+    2   2                                         NX,NY                         
+    0.0  0.5  0.5                                 X0,DX(I)                      
+    0.0  0.5  0.5                                 Y0,DY(I)                      
+                                                                                
+    5                                             NSPV                          
+    3 1    6 1    7 1    8 1    9 1               ISPV(I,J)                     
+    0.0    0.0    0.0    0.0    0.0               VSPV(I)                       
+                                                                                
+    0                                             NSSV                          
+                                                                                
+    1.0  0.0  0.0                                 A10, A1X, A1Y                 
+    1.0  0.0  0.0                                 A20, A2X, A2Y                 
+    0.0                                           A00                           
+                                                                                
+    0                                             ICONV                         
+                                                                                
+    1.0  0.0  0.0                                 F0,  FX,  FY                  
+                                                                                
+     **** ECHO OF THE INPUT DATA ENDS ****
+
+  Example 8.1: Solution of the Poisson equation on a square domain              
+  ______________________________________________________________________
+
+            OUTPUT  from  program *** FEM2D *** by J. N. REDDY
+  ______________________________________________________________________
+
+
+                ANALYSIS  OF   A  POISSON/LAPLACE  EQUATION
+
+     COEFFICIENTS OF THE DIFFERENTIAL EQUATION:
+
+        Coefficient, A10 ........................=  0.1000E+01
+        Coefficient, A1X ........................=  0.0000E+00
+        Coefficient, A1Y ........................=  0.0000E+00
+        Coefficient, A20 ........................=  0.1000E+01
+        Coefficient, A2X ........................=  0.0000E+00
+        Coefficient, A2Y ........................=  0.0000E+00
+        Coefficient, A00 ........................=  0.0000E+00
+
+
+     CONTINUOUS SOURCE COEFFICIENTS:
+
+        Coefficient, F0  ........................=  0.1000E+01
+        Coefficient, FX  ........................=  0.0000E+00
+        Coefficient, FY  ........................=  0.0000E+00
+
+
+        ******* A STEADY-STATE PROBLEM is analyzed *******
+
+        *** A mesh of   TRIANGLES    is chosen by user ***
+
+     FINITE ELEMENT MESH INFORMATION:
+
+        Element type: 0 = Triangle; >0 = Quad.)..=   0
+        Number of nodes per element, NPE ........=   3
+        No. of primary deg. of freedom/node, NDF =   1
+        Number of elements in the mesh, NEM .....=   8
+        Number of nodes in the mesh, NNM ........=   9
+        Number of equations to be solved, NEQ ...=   9
+        Half bandwidth of the matrix GLK, NHBW ..=   5
+        Mesh subdivisions, NX and NY ............=   2   2
+
+        No. of specified PRIMARY variables, NSPV =   5
+  ______________________________________________________________________
+
+     Node   x-coord.   y-coord.    Speci. primary & secondary variables
+                                      (0, unspecified; >0, specified)
+                                         Primary DOF  Secondary DOF
+  ______________________________________________________________________
+
+       1  0.0000E+00  0.0000E+00                0             0
+       2  0.5000E+00  0.0000E+00                0             0
+       3  0.1000E+01  0.0000E+00                1             0
+       4  0.0000E+00  0.5000E+00                0             0
+       5  0.5000E+00  0.5000E+00                0             0
+       6  0.1000E+01  0.5000E+00                1             0
+       7  0.0000E+00  0.1000E+01                1             0
+       8  0.5000E+00  0.1000E+01                1             0
+       9  0.1000E+01  0.1000E+01                1             0
+  ______________________________________________________________________
+
+
+     NUMERICAL INTEGRATION DATA:
+
+        Full Integration polynomial degree, IPDF =   3
+        Number of full integration points,  NIPF =   4
+        Reduced Integration polynomial deg.,IPDR =   1
+        No.  of reduced integration points, NIPR =   1
+        Integ. poly. deg. for stress comp., ISTR =   1
+        No. of integ. pts. for stress comp.,NSTR =   1
+
+
+     S O L U T I O N :
+
+  _________________________________________________________________
+
+     Node    x-coord.      y-coord.    Primary DOF
+  _________________________________________________________________
+
+       1   0.00000E+00   0.00000E+00   0.31250E+00
+       2   0.50000E+00   0.00000E+00   0.22917E+00
+       3   0.10000E+01   0.00000E+00   0.00000E+00
+       4   0.00000E+00   0.50000E+00   0.22917E+00
+       5   0.50000E+00   0.50000E+00   0.17708E+00
+       6   0.10000E+01   0.50000E+00   0.00000E+00
+       7   0.00000E+00   0.10000E+01   0.00000E+00
+       8   0.50000E+00   0.10000E+01   0.00000E+00
+       9   0.10000E+01   0.10000E+01   0.00000E+00
+  _____________________________________________________________________________
+
+  _____________________________________________________________________________
+
+    The orientation of  gradient vector is measured from  the positive x-axis
+
+    x-coord.     y-coord.   -a11(du/dx)  -a22(du/dy)   Flux Mgntd  Orientation
+  _____________________________________________________________________________
+
+   0.3333E+00   0.1667E+00   0.1667E+00   0.1042E+00   0.1965E+00     32.01
+   0.1667E+00   0.3333E+00   0.1042E+00   0.1667E+00   0.1965E+00     57.99
+   0.8333E+00   0.1667E+00   0.4583E+00  -0.0000E+00   0.4583E+00     -0.00
+   0.6667E+00   0.3333E+00   0.3542E+00   0.1042E+00   0.3692E+00     16.39
+   0.3333E+00   0.6667E+00   0.1042E+00   0.3542E+00   0.3692E+00     73.61
+   0.1667E+00   0.8333E+00  -0.0000E+00   0.4583E+00   0.4583E+00     90.00
+   0.8333E+00   0.6667E+00   0.3542E+00  -0.0000E+00   0.3542E+00     -0.00
+   0.6667E+00   0.8333E+00  -0.0000E+00   0.3542E+00   0.3542E+00     90.00
+  _____________________________________________________________________________
+

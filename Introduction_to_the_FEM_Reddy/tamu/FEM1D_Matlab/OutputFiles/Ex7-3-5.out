@@ -1,0 +1,89 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+ Example 7.3.5: Deformation of a circular disk (2 quadratic elements)     
+   1  1  0                                   MODEL, NTYPE, ITEM
+   2  2                                      IELEM, NEM
+   1  1                                      ICONT, NPRNT
+     0.0  0.50    0.50                       DX(I)
+     1.0  1.0                                AX0, AX1
+     0.3  1.0                                BX0, BX1
+     0.0  0.0                                CX0, CX1
+     0.0  1.0     0.0                        FX0, FX1, FX2
+   1                                         NSPV
+   1  1   0.0                                ISPV(1,1), ISPV(1,2), VSPV(1)
+   0                                         NSSV
+   0                                         NNBC
+   0                                         NMPC
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 1, AND TYPE 1 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 1.50183e+000	 6.45653e-010	 1.07609e-009
+	 6.45653e-010	 4.39560e+000	-2.19780e+000
+	 1.07609e-009	-2.19780e+000	 2.52747e+000
+
+Element source vector, {ELF}:
+	-2.08333e-003	 2.50000e-002	 1.87500e-002
+
+Element coefficient matrix, [ELK]:
+	 2.91470e+000	-3.59323e+000	 5.23286e-001
+	-3.59323e+000	 9.18658e+000	-5.09332e+000
+	 5.23286e-001	-5.09332e+000	 4.98692e+000
+
+Element source vector, {ELF}:
+	 1.87500e-002	 1.91667e-001	 8.12500e-002
+
+SOLUTION (values of pvs) at the NODES:
+ 0.00000e+000  7.07064e-002  1.30038e-001  1.68752e-001  1.75000e-001 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+x is the Global coord. if icont=1 and it is the local coord. if icont=0
+		 x 		Displacement 	 Radial Stress 	 Hoop Stress
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+	 0.00000e+000	 0.00000e+000	 3.05576e-001	
+	 6.25000e-002	 1.87430e-002	 4.22161e-001	 4.26536e-001	
+	 1.25000e-001	 3.67751e-002	 4.07786e-001	 4.16536e-001	
+	 1.87500e-001	 5.40962e-002	 3.93411e-001	 4.06536e-001	
+	 2.50000e-001	 7.07064e-002	 3.79036e-001	 3.96536e-001	
+	 3.12500e-001	 8.66056e-002	 3.64661e-001	 3.86536e-001	
+	 3.75000e-001	 1.01794e-001	 3.50286e-001	 3.76536e-001	
+	 4.37500e-001	 1.16271e-001	 3.35911e-001	 3.66536e-001	
+	 5.00000e-001	 1.30038e-001	 3.21536e-001	 3.56536e-001	
+	 5.00000e-001	 1.30038e-001	 3.27266e-001	 3.58255e-001	
+	 5.62500e-001	 1.42760e-001	 2.89518e-001	 3.40651e-001	
+	 6.25000e-001	 1.53453e-001	 2.51115e-001	 3.20859e-001	
+	 6.87500e-001	 1.62117e-001	 2.12234e-001	 2.99477e-001	
+	 7.50000e-001	 1.68752e-001	 1.72995e-001	 2.76901e-001	
+	 8.12500e-001	 1.73358e-001	 1.33481e-001	 2.53407e-001	
+	 8.75000e-001	 1.75934e-001	 9.37500e-002	 2.29193e-001	
+	 9.37500e-001	 1.76482e-001	 5.38464e-002	 2.04401e-001	
+	 1.00000e+000	 1.75000e-001	 1.38021e-002	 1.79141e-001	
+______________________________________________________________________________
+

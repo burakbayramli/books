@@ -1,0 +1,18 @@
+Example 5.2.1: Cantilever beam (E-B element) TITLE
+   3  0  0                                   MODEL, NTYPE, ITEM
+   0  2                                      IELEM, NEM
+   1  1                                      ICONT, NPRNT
+   0.0      1.5       1.5                    DX(I)
+   0.0      0.0                              AX0, AX1     
+   5.8E6    0.0                              BX0, BX1     See Eq. (5.2.33)
+   0.0      0.0                              CX0, CX1     
+   2.4E4   -0.8E04    0.0                    FX0, FX1, FX2  
+
+   2                                         NSPV
+   1    1   0.0                              ISPV(1,1), ISPV(1,2), VSPV(1)
+   1    2   0.0                              ISPV(2,1), ISPV(2,2), VSPV(2)
+
+   1                                         NSSV
+   3    1   6.0E4                            ISSV(1,1), ISSV(1,2), VSSV(1)
+   0                                         NNBC
+   0                                         NMPC

@@ -1,0 +1,35 @@
+Prob 4.6.3: DEFORMATION OF A CONSTRAINED STRUCTURE
+  1  0  0              MODEL, NTYPE, ITEM 
+  1  3                 IELEM, NEM
+  0  1                 ICONT, NPRNT
+  5                    NNM  
+
+  1      3      0.3    NOD(1,J)    
+  35.0E6 0.0           AX0, AX1      Data for
+  0.0    0.0           BX0, BX1      Element1
+  0.0    0.0           CX0, CX1    
+  0.0    0.0    0.0    FX0,FX1,FX2 
+
+  2      4      0.4    NOD(2,J)    
+ 120.0E6 0.0           AX0, AX1      Data for
+  0.0    0.0           BX0, BX1      Element2
+  0.0    0.0           CX0, CX1    
+  0.0    0.0    0.0    FX0,FX1,FX2 
+
+  1      5      1.0    NOD(3,J)    
+  0.0    0.0           AX0, AX1      Data for
+  0.0    0.0           BX0, BX1      Element3
+  0.0    0.0           CX0, CX1    
+  0.0    0.0    0.0    FX0,FX1,FX2 
+
+   2                   NSPV
+   3 1   0.0           ISPV(1,1),ISPV(1,2),VSPV(1)
+   4 1   0.0           ISpV(2,1),ISpV(2,2),VSpV(2)
+   0                   NSSV
+   0                   NNBC
+   2                   NMPC
+   1 1   5 1  3.0 -1.0 0.0 0.0
+   2 1   5 1  1.8 -1.0 0.0 3.E4           
+			     IMC1(1,1),IMC1(1,2),IMC2(1,1),IMC2(1,2),
+			     (VMPC(1,I), I=1to4)
+

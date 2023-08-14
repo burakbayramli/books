@@ -1,0 +1,22 @@
+ Example 4.6.1: ANALYSIS OF A PLANE TRUSS 
+   4  0  0                                   MODEL, NTYPE, ITEM
+   0  3                                      IELEM, NEM
+   0  1                                      ICONT, NPRNT
+      3                                      NNM
+     1.0  1.0   1.0   1.0    0.0    0.0      SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(1,I) (Elem1) (data is based
+     1.0  1.414 1.0   0.707  0.707  0.0      same for Elem2    on nondim. form) 
+      1    3
+     1.0  1.0   1.0   0.0  1.0 0.0 			Same for Element3
+     1    2
+     0                                       NCON
+     4                                       NSPV
+     1     1    0.0              
+     1     2    0.0                          ISPV, VSPV
+     2     1    0.0                        
+     2     2    0.0              
+     2                                       NSSV
+     3     1   -2.0                          ISSV, VSSV
+     3     2    1.0
+     0                                       NNBC
+     0                                       NMPC

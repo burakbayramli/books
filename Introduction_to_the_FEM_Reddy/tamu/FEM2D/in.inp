@@ -1,0 +1,22 @@
+  Example 8.1: Solution of the Poisson equation on a square domain
+    0   1   0   0                                 ITYPE,IGRAD,ITEM,NEIGN
+    0   3   1   0                                 IELTYP,NPE,MESH,NPRNT
+
+    2   2                                         NX,NY
+    0.0  0.5  0.5                                 X0,DX(I)
+    0.0  0.5  0.5                                 Y0,DY(I)
+
+    5                                             NSPV
+    3 1    6 1    7 1    8 1    9 1               ISPV(I,J)
+    0.0    0.0    0.0    0.0    0.0               VSPV(I)
+
+    0                                             NSSV
+
+    1.0  0.0  0.0                                 A10, A1X, A1Y
+    1.0  0.0  0.0                                 A20, A2X, A2Y
+    0.0                                           A00
+
+    0                                             ICONV
+
+    1.0  0.0  0.0                                 F0,  FX,  FY
+

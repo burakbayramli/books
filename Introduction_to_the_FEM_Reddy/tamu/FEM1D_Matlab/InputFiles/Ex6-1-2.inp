@@ -1,0 +1,33 @@
+Example 6.1.2a: NATURAL VIBRATIONS OF A CANTILEVER BEAM (E-B; w/o RI)
+   3  0  3                             MODEL, NTYPE, ITEM
+   0  4                                IELEM, NEM
+   1  1                                ICONT, NPRNT
+     0.0    0.25   0.25   0.25   0.25  DX(I)
+     0.0    0.0                        AX0, AX1
+     1.0    0.0                        BX0, BX1
+     0.0    0.0                        CX0, CX1
+     2                                 NSPV
+   1  1                                ISPV(1,J)
+   1  2                                ISPV(2,J)
+     0                                 NNBC
+     0                                 NMPC
+   1.0      0.0                        CT0, CT1 
+Example 6.1.2b: NATURAL VIB. OF A CANTILEVER BEAM (TIM element w RI)
+   2  0  3                             MODEL, NTYPE, ITEM
+   1  4                                IELEM, NEM
+   1  2                                ICONT, NPRNT
+     0.0    0.25   0.25   0.25   0.25  DX(I)
+     4.0E4  0.0                        AX0, AX1 (nu=0.25, H=0.01)
+     1.0    0.0                        BX0, BX1
+     0.0    0.0                        CX0, CX1
+     2                                 NSPV
+   1  1                                ISPV(1,J)
+   1  2                                ISPV(2,J)
+     0                                 NNBC
+     0                                 NMPC
+     1.0  0.0833333E-4                 CT0, CT1  (L/H=100)
+
+
+
+ 
+

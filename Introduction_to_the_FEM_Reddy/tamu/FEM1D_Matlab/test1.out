@@ -1,0 +1,127 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+Example 3.2.1: Solution of a differential equation (4Q)			      
+ 1  0  0                               MODEL, NTYPE, ITEM 
+ 2  4                                  IELEM, NEM
+ 1  0                                  ICONT, NPRNT
+ 0.0   0.25  0.25  0.25  0.25          DX(I)
+ 1.0   0.0                             AX0,  AX1
+ 0.0   0.0                             BX0,  BX1
+-1.0   0.0                             CX0, CX1
+ 0.0   0.0  -1.0                       FX0, FX1, FX2
+ 2                                     NSPV
+ 1  1  0.0                             ISPV(1,1), ISPV(1,2), VSPV(1)
+ 9  1  0.0                             ISPV(1,1), ISPV(1,2), VSPV(1)
+ 0                                     NSSV     
+ 0                                     NNBC
+ 0                                     NMPC
+
+Example 3.2.1: Solution of a differential equation (2L)			      
+ 1  0  0                               MODEL, NTYPE, ITEM 
+ 1  2                                  IELEM, NEM
+ 1  0                                  ICONT, NPRNT
+ 0.0   0.5  0.5                        DX(I)
+ 1.0   0.0                             AX0,  AX1
+ 0.0   0.0                             BX0,  BX1
+-1.0   0.0                             CX0, CX1
+ 0.0   0.0  -1.0                       FX0, FX1, FX2
+ 2                                     NSPV
+ 1  1  0.0                             ISPV(1,1), ISPV(1,2), VSPV(1)
+ 3  1  0.0                             ISPV(1,1), ISPV(1,2), VSPV(1)
+ 0                                     NSSV     
+ 0                                     NNBC
+ 0                                     NMPC
+
+Example 3.2.1: Solution of a differential equation (2Q)			      
+ 1  0  0                               MODEL, NTYPE, ITEM 
+ 2  2                                  IELEM, NEM
+ 1  0                                  ICONT, NPRNT
+ 0.0   0.5  0.5                        DX(I)
+ 1.0   0.0                             AX0,  AX1
+ 0.0   0.0                             BX0,  BX1
+-1.0   0.0                             CX0, CX1
+ 0.0   0.0  -1.0                       FX0, FX1, FX2
+ 2                                     NSPV
+ 1  1  0.0                             ISPV(1,1), ISPV(1,2), VSPV(1)
+ 5  1  0.0                             ISPV(1,1), ISPV(1,2), VSPV(1)
+ 0                                     NSSV     
+ 0                                     NNBC
+ 0                                     NMPC
+
+
+
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 1, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+SOLUTION (values of pvs) at the NODES:
+ 0.00000e+000 -1.19268e-002 -2.33750e-002 -3.34499e-002 -4.07604e-002 -4.34996e-002 -3.94174e-002 -2.59073e-002  0.00000e+000 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+x is the Global coord. if icont=1 and it is the local coord. if icont=0
+		 x 		P. Variable 	S. Variable
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+	 0.00000e+000	 0.00000e+000	-9.73286e-002	 
+	 3.12500e-002	-3.02656e-003	-9.63714e-002	 
+	 6.25000e-002	-6.02322e-003	-9.54143e-002	 
+	 9.37500e-002	-8.98996e-003	-9.44571e-002	 
+	 1.25000e-001	-1.19268e-002	-9.35000e-002	 
+	 1.56250e-001	-1.48337e-002	-9.25428e-002	 
+	 1.87500e-001	-1.77107e-002	-9.15857e-002	 
+	 2.18750e-001	-2.05578e-002	-9.06285e-002	 
+	 2.50000e-001	-2.33750e-002	-8.96714e-002	 
+	 2.50000e-001	-2.33750e-002	-9.16569e-002	 
+	 2.81250e-001	-2.61529e-002	-8.61281e-002	 
+	 3.12500e-001	-2.87580e-002	-8.05992e-002	 
+	 3.43750e-001	-3.11903e-002	-7.50704e-002	 
+	 3.75000e-001	-3.34499e-002	-6.95415e-002	 
+	 4.06250e-001	-3.55367e-002	-6.40126e-002	 
+	 4.37500e-001	-3.74507e-002	-5.84838e-002	 
+	 4.68750e-001	-3.91919e-002	-5.29549e-002	 
+	 5.00000e-001	-4.07604e-002	-4.74261e-002	 
+	 5.00000e-001	-4.07604e-002	-4.91991e-002	 
+	 5.31250e-001	-4.20847e-002	-3.55564e-002	 
+	 5.62500e-001	-4.29826e-002	-2.19137e-002	 
+	 5.93750e-001	-4.34543e-002	-8.27092e-003	 
+	 6.25000e-001	-4.34996e-002	 5.37181e-003	 
+	 6.56250e-001	-4.31185e-002	 1.90145e-002	 
+	 6.87500e-001	-4.23112e-002	 3.26573e-002	 
+	 7.18750e-001	-4.10775e-002	 4.63000e-002	 
+	 7.50000e-001	-3.94174e-002	 5.99427e-002	 
+	 7.50000e-001	-3.94174e-002	 5.84925e-002	 
+	 7.81250e-001	-3.72021e-002	 8.32868e-002	 
+	 8.12500e-001	-3.42120e-002	 1.08081e-001	 
+	 8.43750e-001	-3.04470e-002	 1.32875e-001	 
+	 8.75000e-001	-2.59073e-002	 1.57670e-001	 
+	 9.06250e-001	-2.05927e-002	 1.82464e-001	 
+	 9.37500e-001	-1.45033e-002	 2.07258e-001	 
+	 9.68750e-001	-7.63905e-003	 2.32053e-001	 
+	 1.00000e+000	 0.00000e+000	 2.56847e-001	 
+______________________________________________________________________________
+

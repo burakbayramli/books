@@ -1,0 +1,158 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+Example 4.6.4: ANALYSIS OF A PLANE TRUSS WITH INCLINED SUPPORT (Penalty)
+   4  0  0                                   MODEL, NTYPE, ITEM
+   1  3                                      IELEM, NEM
+   0  2                                      ICONT, NPRNT
+      3                                      NNM
+   210.0E9 1.0     0.6E-03    0.0     1.0    0.0   SE, SL, SA, CS, SN, HF
+      1    2                                 NOD(1,I)
+   210.0E9 1.0     0.6E-03    1.0     0.0    0.0   SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(2,I)
+   210.0E9 1.4142  0.8485E-03 0.7071  0.7071 0.0   SE, SL, SA, CS, SN, HF
+      1    3                                 NOD(3,I)  
+      0                                      NCON
+      3                                      NSPV
+      1    1    0.0                          ISPV(1,1),ISPV(1,2),VSPV(1)
+      1    2    0.0                          ISPV(2,1),ISPV(2,2),VSPV(2)
+      2    2    0.0                          ISPV(3,1),ISPV(3,2),VSPV(3) 
+      1                                      NSSV
+      2    1    1.0E6                        ISSV(1,1),ISSV(1,2),VSSV(1) 
+      0                                      NNBC
+      1                                      NMPC
+      3 1   3 2  -0.7071  0.7071 0.0   0.0E6
+
+
+Problem 4.43: ANALYSIS OF A PLANE TRUSS WITH INCLINED SUPPORT (Penalty)
+   4  0  0                                   MODEL, NTYPE, ITEM
+   1  3                                      IELEM, NEM
+   0  2                                      ICONT, NPRNT
+      3                                      NNM
+   207.0E9 1.0     0.5E-03    1.0     0.0    0.0   SE, SL, SA, CS, SN, HF
+      1    2                                 NOD(1,I)
+   207.0E9 1.0     0.5E-03    0.0     1.0    0.0   SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(2,I)
+   207.0E9 1.4142  0.5E-03    0.7071  0.7071 0.0   SE, SL, SA, CS, SN, HF
+      1    3                                 NOD(3,I)  
+      0                                      NCON
+      4                                      NSPV
+      1    1    0.0                          ISPV(1,1),ISPV(1,2),VSPV(1)
+      1    2    0.0                          ISPV(2,1),ISPV(2,2),VSPV(2)
+      3    1    0.0                          ISPV(4,1),ISPV(4,2),VSPV(4) 
+      3    2    0.0                          ISPV(5,1),ISPV(5,2),VSPV(5)
+      1                                      NSSV
+      2    1    1.0E6                      
+      0                                      NNBC
+      1                                      NMPC
+      2 1   2 2  -0.866  0.5 0.0   0.0
+      
+
+
+Problem 4.43: ANALYSIS OF A PLANE TRUSS WITH INCLINED SUPPORT (direct)
+   4  0  0                                   MODEL, NTYPE, ITEM
+   1  3                                      IELEM, NEM
+   0  2                                      ICONT, NPRNT
+      3                                      NNM
+   207.0E9 1.0     0.5E-03    1.0     0.0    0.0   SE, SL, SA, CS, SN, HF
+      1    2                                 NOD(1,I)
+   207.0E9 1.0     0.5E-03    0.0     1.0    0.0   SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(2,I)
+   207.0E9 1.4142  0.5E-03    0.7071  0.7071 0.0   SE, SL, SA, CS, SN, HF
+      1    3                                 NOD(3,I)  
+      1                                      NCON
+      2    60.0                              ICON(1), VCON(1)
+      5                                      NSPV
+      1    1    0.0                          ISPV(1,1),ISPV(1,2),VSPV(1)
+      1    2    0.0                          ISPV(2,1),ISPV(2,2),VSPV(2)
+      2    2    0.0                          ISPV(3,1),ISPV(3,2),VSPV(3) 
+      3    1    0.0                          ISPV(4,1),ISPV(4,2),VSPV(4) 
+      3    2    0.0                          ISPV(5,1),ISPV(5,2),VSPV(5)
+      1                                      NSSV
+      2    1    0.866E6                      ISSV(1,1),ISSV(1,2),VSSV(1)
+      0                                      NNBC
+      0                                      NMPC
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 4, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 0.00000e+000	 0.00000e+000	-0.00000e+000	-0.00000e+000
+	 0.00000e+000	 1.26000e+008	-0.00000e+000	-1.26000e+008
+	-0.00000e+000	-0.00000e+000	 0.00000e+000	 0.00000e+000
+	-0.00000e+000	-1.26000e+008	 0.00000e+000	 1.26000e+008
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 1.26000e+008	 0.00000e+000	-1.26000e+008	-0.00000e+000
+	 0.00000e+000	 0.00000e+000	-0.00000e+000	-0.00000e+000
+	-1.26000e+008	-0.00000e+000	 1.26000e+008	 0.00000e+000
+	-0.00000e+000	-0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 6.29973e+007	 6.29973e+007	-6.29973e+007	-6.29973e+007
+	 6.29973e+007	 6.29973e+007	-6.29973e+007	-6.29973e+007
+	-6.29973e+007	-6.29973e+007	 6.29973e+007	 6.29973e+007
+	-6.29973e+007	-6.29973e+007	 6.29973e+007	 6.29973e+007
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Global coefficient matrix, [GLK]:	 6.29973e+007	 6.29973e+007	 0.00000e+000	 0.00000e+000	-6.29973e+007	-6.29973e+007
+	 1.88997e+008	 0.00000e+000	-1.26000e+008	-6.29973e+007	-6.29973e+007	 0.00000e+000
+	 1.26000e+008	 0.00000e+000	-1.26000e+008	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 1.26000e+008	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 1.88997e+008	 6.29973e+007	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 6.29973e+007	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Global coefficient matrix, [GLK]:
+	 6.29973e+007	 6.29973e+007	 0.00000e+000	 0.00000e+000	-6.29973e+007	-6.29973e+007
+	 1.88997e+008	 0.00000e+000	-1.26000e+008	-6.29973e+007	-6.29973e+007	 0.00000e+000
+	 1.26000e+008	 0.00000e+000	-1.26000e+008	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 1.26000e+008	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 6.30177e+011	-6.29925e+011	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 6.30051e+011	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Global source vector, {GLF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Global coefficient matrix, [GLK]:
+	 1.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 1.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 1.26000e+008	 0.00000e+000	-1.26000e+008	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 1.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 6.30177e+011	-6.29925e+011	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+	 6.30051e+011	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+SOLUTION (values of pvs) at the NODES:
+ 0.00000e+000  0.00000e+000  1.19053e-002  0.00000e+000  3.96882e-003  3.96803e-003 
+
+Forces at the constrained points:
+
+-5.00000e+005	
+ 5.00000e+005	

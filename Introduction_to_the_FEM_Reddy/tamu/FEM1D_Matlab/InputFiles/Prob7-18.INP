@@ -1,0 +1,42 @@
+ PROBLEM 5.7: BEAM PROBLEM USING FRAME ELEMENT 
+   4  1  0                     MODEL, NTYPE, ITEM
+   0  2                        IELEM, NEM
+   0  1                        ICONT, NPRNT
+      3                        NNM
+   0.3 6.0E8 96.0  1.0  1.0  1.0  0.0 
+   0.0 50.0  0.0   0.0  0.0  1.0 
+     1  2   
+   0.3 6.0E8 48.0  1.0  1.0  1.0  0.0 
+   0.0  0.0  1.E3 48.0  0.0  1.0 
+     2  3   
+   0                           NCON
+   3                           NSPV
+   1  1    0.0                 ISPV(1,1),ISPV(1,2),VSPV(1) 
+   1  2    0.0                 ISPV(1,1),ISPV(1,2),VSPV(1) 
+   2  2    0.0                 ISPV(2,1),ISPV(2,2),VSPV(2) 
+   0                           NSSV
+   0                           NNBC
+   0                           NMPC
+
+ PROBLEM 5.7: BEAM PROBLEM 
+   3  0  0                     MODEL, NTYPE, ITEM
+   0  2                        IELEM, NEM
+   0  1                        ICONT, NPRNT
+      3                        NNM
+     1  2  96.0                NOD(1,J),GLX(1)
+     0.0    0.0                AX0, AX1
+     6.0E8  0.0                BX0, BX1
+     0.0    0.0                CX0, CX1
+    50.0    0.0  0.0           FX0,FX1,FX2
+     2  3  48.0                NOD(1,J),GLX(2)
+     0.0    0.0                AX0, AX1 
+     6.0E8  0.0                BX0, BX1
+     0.0    0.0                CX0, CX1
+     0.0    0.0  0.0           FX0,FX1,FX2
+   2                           NSPV
+   1  1    0.0                 ISPV(1,1),ISPV(1,2),VSPV(1) 
+   2  1    0.0                 ISPV(2,1),ISPV(2,2),VSPV(2) 
+   1                           NSSV
+   3  1   1000.0               ISSV(1,1),ISSV(1,2),VSSV(1) 
+   0                           NNBC  
+   0                           NMPC

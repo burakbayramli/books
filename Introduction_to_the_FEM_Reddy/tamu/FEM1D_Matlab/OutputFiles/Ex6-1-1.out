@@ -1,0 +1,139 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+ Example 6.1.1a: EIGENVALUES OF A HEAT TRANSFER PROBLEM (Set1, 2L)              
+    1  0  3                                   MODEL, NTYPE, ITEM                 
+    1  2                                      IELEM, NEM                         
+    1  1                                      ICONT, NPRNT                       
+      0.0  0.5  0.5                           DX(I)                              
+      1.0  0.0                                AX0, AX1                           
+      0.0  0.0                                BX0, BX1                           
+      0.0  0.0                                CX0, CX1                           
+       2                                      NSPV                               
+    1  1                                      ISPV(1,1), ISPV(1,2)               
+    3  1                                      ISPV(2,1), ISPV(2,2)               
+       0                                      NNBC                               
+       0                                      NMPC                               
+      1.0  0.0                                CT0, CT1    
+	 
+Example 6.1.1b: EIGENVALUES OF A HEAT TRANSFER PROBLEM (Set2, 8L)
+   1  0  3                                   MODEL, NTYPE, ITEM
+   1  8                                      IELEM, NEM
+   1  1                                      ICONT, NPRNT
+     0.0  0.125  0.125  0.125  0.125  0.125       
+          0.125  0.125  0.125                DX(I)
+     1.0  0.0                                AX0, AX1
+     0.0  0.0                                BX0, BX1
+     0.0  0.0                                CX0, CX1
+      1                                      NSPV
+   1  1                                      ISPV(1,J)
+      1                                      NNBC
+   9  1   1.0   0.0                          INBC(1,1), INBC(1,2), VNBC(1)                           
+      0                                      NMPC
+     1.0  0.0                                CT0, CT1
+
+Example 6.1.1b: EIGENVALUES OF A HEAT TRANSFER PROBLEM (Set1, 4Q)
+   1  0  3                                   MODEL, NTYPE, ITEM
+   2  4                                      IELEM, NEM
+   1  2                                      ICONT, NPRNT
+     0.0  0.25  0.25  0.25  0.25             DX(I)
+     1.0  0.0                                AX0, AX1
+     0.0  0.0                                BX0, BX1
+     0.0  0.0                                CX0, CX1
+      2                                      NSPV
+   1  1                                      ISPV(1,J)
+   9  1
+      0                                      NNBC
+      0                                      NMPC
+     1.0  0.0                                CT0, CT1
+
+Example 6.1.1b: EIGENVALUES OF A HEAT TRANSFER PROBLEM (Set2, 4Q)
+   1  0  3                                   MODEL, NTYPE, ITEM
+   2  4                                      IELEM, NEM
+   1  2                                      ICONT, NPRNT
+     0.0  0.25  0.25  0.25  0.25             DX(I)
+     1.0  0.0                                AX0, AX1
+     0.0  0.0                                BX0, BX1
+     0.0  0.0                                CX0, CX1
+      1                                      NSPV
+   1  1                                      ISPV(1,J)
+      1                                      NNBC
+   9  1   1.0   0.0                          INBC(1,1), INBC(1,2), VNBC(1)                           
+      0                                      NMPC
+     1.0  0.0                                CT0, CT1
+
+
+
+Example 6.1.1b: EIGENVALUES OF A HEAT TRANSFER PROBLEM (Set 2, 8L)
+   1  0  3                                   MODEL, NTYPE, ITEM
+   1  8                                      IELEM, NEM
+   1  1                                      ICONT, NPRNT
+     0.0  0.125  0.125  0.125  0.125  0.125       
+          0.125  0.125  0.125                DX(I)
+     1.0  0.0                                AX0, AX1
+     0.0  0.0                                BX0, BX1
+     0.0  0.0                                CX0, CX1
+      1                                      NSPV
+   1  1                                      ISPV(1,J)
+      1                                      NNBC
+   9  1   1.0   0.0                          INBC(1,1), INBC(1,2), VNBC(1)                           
+      0                                      NMPC
+     1.0  0.0                                CT0, CT1
+
+Example 6.1.1a: EIGENVALUES OF A HEAT TRANSFER PROBLEM (Set 1, 2L)
+   1  0  3                                   MODEL, NTYPE, ITEM
+   1  2                                      IELEM, NEM
+   1  1                                      ICONT, NPRNT
+     0.0  0.5  0.5                           DX(I)
+     1.0  0.0                                AX0, AX1
+     0.0  0.0                                BX0, BX1
+     0.0  0.0                                CX0, CX1
+      2                                      NSPV
+   1  1                                      ISPV(1,1), ISPV(1,2)
+   3  1                                      ISPV(2,1), ISPV(2,2)
+      0                                      NNBC
+      0                                      NMPC
+     1.0  0.0                                CT0, CT1
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 1, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 2.00000e+000	-2.00000e+000
+	-2.00000e+000	 2.00000e+000
+
+Element coefficient matrix, [ELM]:
+	 1.66667e-001	 8.33333e-002
+	 8.33333e-002	 1.66667e-001
+
+Element coefficient matrix, [ELK]:
+	 2.00000e+000	-2.00000e+000
+	-2.00000e+000	 2.00000e+000
+
+Element coefficient matrix, [ELM]:
+	 1.66667e-001	 8.33333e-002
+	 8.33333e-002	 1.66667e-001
+
+EIGENVALUE(1) =  1.20000e+001 	 SQRT(EGNVAL) =  3.46410e+000
+EIGENVECTOR:
+ 1.00000e+000	 0.00000e+000	 0.00000e+000	

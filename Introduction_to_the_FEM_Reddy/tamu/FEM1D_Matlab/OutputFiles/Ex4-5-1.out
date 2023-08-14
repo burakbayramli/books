@@ -1,0 +1,88 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+ Example 4.5.1: Axial deformation of a pier (2 linear elements)  
+  1  0  0                         MODEL, NTYPE, ITEM 
+  1  2                            IELEM, NEM
+  1  1                            ICONT, NPRNT
+   0.0      1.0    1.0            DX(1)=X0; DX(2), etc. Ele. lengths
+   7.0E9    7.0E9                 AX0,  AX1
+   0.0      0.0                   BX0,  BX1
+   0.0      0.0                   CX0,  CX1
+   6.25E3   6.25E3   0.0          FX0,  FX1,  FX2
+  1                               NSPV
+  3  1    0.0                     ISPV(1,1), ISPV(1,2), VSPV(1)
+  1                               NSSV 
+  1  1    5.0E3                   ISSV(1,1), ISSV(1,2), VSSV(1)    
+  0                               NNBC
+  0                               NMPC
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 1, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 1.05000e+010	-1.05000e+010
+	-1.05000e+010	 1.05000e+010
+
+Element source vector, {ELF}:
+	 4.16667e+003	 5.20833e+003
+
+Element coefficient matrix, [ELK]:
+	 1.75000e+010	-1.75000e+010
+	-1.75000e+010	 1.75000e+010
+
+Element source vector, {ELF}:
+	 7.29167e+003	 8.33333e+003
+
+SOLUTION (values of pvs) at the NODES:
+ 2.11111e-006  1.23810e-006  0.00000e+000 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+x is the Global coord. if icont=1 and it is the local coord. if icont=0
+		 x 		P. Variable 	S. Variable
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+	 0.00000e+000	 2.11111e-006	-6.11111e+003	 
+	 1.25000e-001	 2.00198e-006	-6.87500e+003	 
+	 2.50000e-001	 1.89286e-006	-7.63889e+003	 
+	 3.75000e-001	 1.78373e-006	-8.40278e+003	 
+	 5.00000e-001	 1.67460e-006	-9.16667e+003	 
+	 6.25000e-001	 1.56548e-006	-9.93056e+003	 
+	 7.50000e-001	 1.45635e-006	-1.06944e+004	 
+	 8.75000e-001	 1.34722e-006	-1.14583e+004	 
+	 1.00000e+000	 1.23810e-006	-1.22222e+004	 
+	 1.00000e+000	 1.23810e-006	-1.73333e+004	 
+	 1.12500e+000	 1.08333e-006	-1.84167e+004	 
+	 1.25000e+000	 9.28571e-007	-1.95000e+004	 
+	 1.37500e+000	 7.73810e-007	-2.05833e+004	 
+	 1.50000e+000	 6.19048e-007	-2.16667e+004	 
+	 1.62500e+000	 4.64286e-007	-2.27500e+004	 
+	 1.75000e+000	 3.09524e-007	-2.38333e+004	 
+	 1.87500e+000	 1.54762e-007	-2.49167e+004	 
+	 2.00000e+000	 0.00000e+000	-2.60000e+004	 
+______________________________________________________________________________
+

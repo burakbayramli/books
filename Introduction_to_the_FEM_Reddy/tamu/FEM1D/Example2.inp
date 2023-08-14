@@ -1,0 +1,28 @@
+Example 2: Heat transfer in a composite wall 	                                                                                                           
+    1  0  0                    MODEL, NTYPE, ITEM                 
+    1  3                       IELEM, NEM                         
+    0  1                       ICONT, NPRNT                       
+    0.0  0.02  0.025  0.04     DX(I)                                                            
+
+   70.0  0.0  0.0              AX0, AX1, AX2           Data for            
+    0.0  0.0                   BX0, BX1                Element 1           
+    0.0  0.0                   CX0, CX1                             
+    0.0  0.0  0.0              FX0,FX1,FX2                       
+                                                                                 
+   40.0  0.0  0.0              AX0, AX1, AX2           Data for            
+    0.0  0.0                   BX0, BX1                Element 2           
+    0.0  0.0                   CX0, CX1                          
+    0.0  0.0  0.0              FX0,FX1,FX2                       
+                                                        
+   20.0  0.0  0.0              AX0, AX1, AX2           Data for            
+    0.0  0.0                   BX0, BX1                Element 3           
+    0.0  0.0                   CX0, CX1                          
+    0.0  0.0  0.0              FX0,FX1,FX2                  
+     
+    1                          NSPV                               
+    1    1  200.0              ISPV(1,1), ISPV(1,2), VSPV(1)                                                                                     
+    0                          NSSV                               
+    1                          NNBC           
+    4    1   10.0  50.0        INBC(1,1),INBC(1,2),VNBC(1),UREF(1)                                                                                 
+    0                          NMPC         
+                         

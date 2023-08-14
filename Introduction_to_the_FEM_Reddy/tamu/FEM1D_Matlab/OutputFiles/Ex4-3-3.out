@@ -1,0 +1,120 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+Example 4.3.3: Heat transfer in a rod  TITLE
+  1  0  0                               MODEL, NTYPE, ITEM 
+  1  4                                  IELEM, NEM
+  1  1                                  ICONT, NPRNT
+  0.0  1.25E-02 1.25E-02 1.25E-02 1.25E-02  DX(1)=X0; DX(2), etc. 
+  1.0   0.0                             AX0,  AX1
+  0.0   0.0                             BX0,  BX1
+400.0   0.0                             CX0,  CX1
+  0.0   0.0  0.0                        FX0,  FX1, FX2
+  1                                     NSPV
+  1   1   300.0                         ISPV(1,1), ISPV(1,2), VSPV(1)
+  0                                     NSSV     
+  0                                     NNBC
+  0                                     NMPC
+ 
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 1, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 8.16667e+001	-7.91667e+001
+	-7.91667e+001	 8.16667e+001
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 8.16667e+001	-7.91667e+001
+	-7.91667e+001	 8.16667e+001
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 8.16667e+001	-7.91667e+001
+	-7.91667e+001	 8.16667e+001
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 8.16667e+001	-7.91667e+001
+	-7.91667e+001	 8.16667e+001
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000
+
+SOLUTION (values of pvs) at the NODES:
+ 3.00000e+002  2.51519e+002  2.18924e+002  2.00155e+002  1.94028e+002 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+x is the Global coord. if icont=1 and it is the local coord. if icont=0
+		 x 		P. Variable 	S. Variable
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+	 0.00000e+000	 3.00000e+002	-3.87846e+003	 
+	 1.56250e-003	 2.93940e+002	-3.87846e+003	 
+	 3.12500e-003	 2.87880e+002	-3.87846e+003	 
+	 4.68750e-003	 2.81820e+002	-3.87846e+003	 
+	 6.25000e-003	 2.75760e+002	-3.87846e+003	 
+	 7.81250e-003	 2.69700e+002	-3.87846e+003	 
+	 9.37500e-003	 2.63639e+002	-3.87846e+003	 
+	 1.09375e-002	 2.57579e+002	-3.87846e+003	 
+	 1.25000e-002	 2.51519e+002	-3.87846e+003	 
+	 1.25000e-002	 2.51519e+002	-2.60763e+003	 
+	 1.40625e-002	 2.47445e+002	-2.60763e+003	 
+	 1.56250e-002	 2.43370e+002	-2.60763e+003	 
+	 1.71875e-002	 2.39296e+002	-2.60763e+003	 
+	 1.87500e-002	 2.35222e+002	-2.60763e+003	 
+	 2.03125e-002	 2.31147e+002	-2.60763e+003	 
+	 2.18750e-002	 2.27073e+002	-2.60763e+003	 
+	 2.34375e-002	 2.22998e+002	-2.60763e+003	 
+	 2.50000e-002	 2.18924e+002	-2.60763e+003	 
+	 2.50000e-002	 2.18924e+002	-1.50149e+003	 
+	 2.65625e-002	 2.16578e+002	-1.50149e+003	 
+	 2.81250e-002	 2.14232e+002	-1.50149e+003	 
+	 2.96875e-002	 2.11886e+002	-1.50149e+003	 
+	 3.12500e-002	 2.09540e+002	-1.50149e+003	 
+	 3.28125e-002	 2.07193e+002	-1.50149e+003	 
+	 3.43750e-002	 2.04847e+002	-1.50149e+003	 
+	 3.59375e-002	 2.02501e+002	-1.50149e+003	 
+	 3.75000e-002	 2.00155e+002	-1.50149e+003	 
+	 3.75000e-002	 2.00155e+002	-4.90176e+002	 
+	 3.90625e-002	 1.99389e+002	-4.90176e+002	 
+	 4.06250e-002	 1.98623e+002	-4.90176e+002	 
+	 4.21875e-002	 1.97858e+002	-4.90176e+002	 
+	 4.37500e-002	 1.97092e+002	-4.90176e+002	 
+	 4.53125e-002	 1.96326e+002	-4.90176e+002	 
+	 4.68750e-002	 1.95560e+002	-4.90176e+002	 
+	 4.84375e-002	 1.94794e+002	-4.90176e+002	 
+	 5.00000e-002	 1.94028e+002	-4.90176e+002	 
+______________________________________________________________________________
+

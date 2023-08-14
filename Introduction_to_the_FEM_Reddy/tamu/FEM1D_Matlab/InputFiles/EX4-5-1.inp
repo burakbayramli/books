@@ -1,0 +1,15 @@
+ Example 4.5.1: Axial deformation of a pier (2 linear elements)  
+  1  0  0                         MODEL, NTYPE, ITEM 
+  1  2                            IELEM, NEM
+  1  1                            ICONT, NPRNT
+   0.0      1.0    1.0            DX(1)=X0; DX(2), etc. Ele. lengths
+   7.0E9    7.0E9                 AX0,  AX1
+   0.0      0.0                   BX0,  BX1
+   0.0      0.0                   CX0,  CX1
+   6.25E3   6.25E3   0.0          FX0,  FX1,  FX2
+  1                               NSPV
+  3  1    0.0                     ISPV(1,1), ISPV(1,2), VSPV(1)
+  1                               NSSV 
+  1  1    5.0E3                   ISSV(1,1), ISSV(1,2), VSSV(1)    
+  0                               NNBC
+  0                               NMPC

@@ -1,0 +1,99 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+ Example 4.6.1: ANALYSIS OF A PLANE TRUSS 
+   4  0  0                                   MODEL, NTYPE, ITEM
+   0  3                                      IELEM, NEM
+   0  1                                      ICONT, NPRNT
+      3                                      NNM
+     1.0  1.0   1.0   1.0    0.0    0.0      SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(1,I) (Elem1) (data is based
+     1.0  1.414 1.0   0.707  0.707  0.0      same for Elem2    on nondim. form) 
+      1    3
+     1.0  1.0   1.0   0.0  1.0 0.0 			Same for Element3
+     1    2
+     0                                       NCON
+     4                                       NSPV
+     1     1    0.0              
+     1     2    0.0                          ISPV, VSPV
+     2     1    0.0                        
+     2     2    0.0              
+     2                                       NSSV
+     3     1   -2.0                          ISSV, VSSV
+     3     2    1.0
+     0                                       NNBC
+     0                                       NMPC
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 4, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 1.00000e+000	 0.00000e+000	-1.00000e+000	-0.00000e+000
+	 0.00000e+000	 0.00000e+000	-0.00000e+000	-0.00000e+000
+	-1.00000e+000	-0.00000e+000	 1.00000e+000	 0.00000e+000
+	-0.00000e+000	-0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 3.53500e-001	 3.53500e-001	-3.53500e-001	-3.53500e-001
+	 3.53500e-001	 3.53500e-001	-3.53500e-001	-3.53500e-001
+	-3.53500e-001	-3.53500e-001	 3.53500e-001	 3.53500e-001
+	-3.53500e-001	-3.53500e-001	 3.53500e-001	 3.53500e-001
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 0.00000e+000	 0.00000e+000	-0.00000e+000	-0.00000e+000
+	 0.00000e+000	 1.00000e+000	-0.00000e+000	-1.00000e+000
+	-0.00000e+000	-0.00000e+000	 0.00000e+000	 0.00000e+000
+	-0.00000e+000	-1.00000e+000	 0.00000e+000	 1.00000e+000
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+SOLUTION (values of pvs) at the NODES:
+ 0.00000e+000  0.00000e+000  0.00000e+000  0.00000e+000 -3.00000e+000  5.82885e+000 
+
+		Generalized internal forces in the element
+	Second line gives the results in the global coordinates
+
+______________________________________________________________________________
+
+ele  force, h1   force, v1   force, h2  force, v2 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+1 	 3.00000e+000 	 0.00000e+000 	-3.00000e+000 	 0.00000e+000 	
+ 	 3.00000e+000 	 0.00000e+000 	-3.00000e+000 	 0.00000e+000 	
+
+2 	-1.41400e+000 	 0.00000e+000 	 1.41400e+000 	 0.00000e+000 	
+ 	-1.00000e+000 	-1.00000e+000 	 1.00000e+000 	 1.00000e+000 	
+
+3 	 0.00000e+000 	 0.00000e+000 	 0.00000e+000 	 0.00000e+000 	
+ 	 0.00000e+000 	 0.00000e+000 	 0.00000e+000 	 0.00000e+000 	
+
+______________________________________________________________________________
+

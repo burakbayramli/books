@@ -1,0 +1,147 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+Example 6.1.2a: NATURAL VIBRATIONS OF A CANTILEVER BEAM (E-B; w/o RI)
+   3  0  3                             MODEL, NTYPE, ITEM
+   0  4                                IELEM, NEM
+   1  1                                ICONT, NPRNT
+     0.0    0.25   0.25   0.25   0.25  DX(I)
+     0.0    0.0                        AX0, AX1
+     1.0    0.0                        BX0, BX1
+     0.0    0.0                        CX0, CX1
+     2                                 NSPV
+   1  1                                ISPV(1,J)
+   1  2                                ISPV(2,J)
+     0                                 NNBC
+     0                                 NMPC
+   1.0      0.0                        CT0, CT1 
+Example 6.1.2b: NATURAL VIB. OF A CANTILEVER BEAM (TIM element w RI)
+   2  0  3                             MODEL, NTYPE, ITEM
+   1  4                                IELEM, NEM
+   1  2                                ICONT, NPRNT
+     0.0    0.25   0.25   0.25   0.25  DX(I)
+     4.0E4  0.0                        AX0, AX1 (nu=0.25, H=0.01)
+     1.0    0.0                        BX0, BX1
+     0.0    0.0                        CX0, CX1
+     2                                 NSPV
+   1  1                                ISPV(1,J)
+   1  2                                ISPV(2,J)
+     0                                 NNBC
+     0                                 NMPC
+     1.0  0.0833333E-4                 CT0, CT1  (L/H=100)
+
+
+
+ 
+
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 3, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 7.68000e+002	-9.60000e+001	-7.68000e+002	-9.60000e+001
+	-9.60000e+001	 1.60000e+001	 9.60000e+001	 8.00000e+000
+	-7.68000e+002	 9.60000e+001	 7.68000e+002	 9.60000e+001
+	-9.60000e+001	 8.00000e+000	 9.60000e+001	 1.60000e+001
+
+Element coefficient matrix, [ELM]:
+	 9.28571e-002	-3.27381e-003	 3.21429e-002	 1.93452e-003
+	-3.27381e-003	 1.48810e-004	-1.93452e-003	-1.11607e-004
+	 3.21429e-002	-1.93452e-003	 9.28571e-002	 3.27381e-003
+	 1.93452e-003	-1.11607e-004	 3.27381e-003	 1.48810e-004
+
+Element coefficient matrix, [ELK]:
+	 7.68000e+002	-9.60000e+001	-7.68000e+002	-9.60000e+001
+	-9.60000e+001	 1.60000e+001	 9.60000e+001	 8.00000e+000
+	-7.68000e+002	 9.60000e+001	 7.68000e+002	 9.60000e+001
+	-9.60000e+001	 8.00000e+000	 9.60000e+001	 1.60000e+001
+
+Element coefficient matrix, [ELM]:
+	 9.28571e-002	-3.27381e-003	 3.21429e-002	 1.93452e-003
+	-3.27381e-003	 1.48810e-004	-1.93452e-003	-1.11607e-004
+	 3.21429e-002	-1.93452e-003	 9.28571e-002	 3.27381e-003
+	 1.93452e-003	-1.11607e-004	 3.27381e-003	 1.48810e-004
+
+Element coefficient matrix, [ELK]:
+	 7.68000e+002	-9.60000e+001	-7.68000e+002	-9.60000e+001
+	-9.60000e+001	 1.60000e+001	 9.60000e+001	 8.00000e+000
+	-7.68000e+002	 9.60000e+001	 7.68000e+002	 9.60000e+001
+	-9.60000e+001	 8.00000e+000	 9.60000e+001	 1.60000e+001
+
+Element coefficient matrix, [ELM]:
+	 9.28571e-002	-3.27381e-003	 3.21429e-002	 1.93452e-003
+	-3.27381e-003	 1.48810e-004	-1.93452e-003	-1.11607e-004
+	 3.21429e-002	-1.93452e-003	 9.28571e-002	 3.27381e-003
+	 1.93452e-003	-1.11607e-004	 3.27381e-003	 1.48810e-004
+
+Element coefficient matrix, [ELK]:
+	 7.68000e+002	-9.60000e+001	-7.68000e+002	-9.60000e+001
+	-9.60000e+001	 1.60000e+001	 9.60000e+001	 8.00000e+000
+	-7.68000e+002	 9.60000e+001	 7.68000e+002	 9.60000e+001
+	-9.60000e+001	 8.00000e+000	 9.60000e+001	 1.60000e+001
+
+Element coefficient matrix, [ELM]:
+	 9.28571e-002	-3.27381e-003	 3.21429e-002	 1.93452e-003
+	-3.27381e-003	 1.48810e-004	-1.93452e-003	-1.11607e-004
+	 3.21429e-002	-1.93452e-003	 9.28571e-002	 3.27381e-003
+	 1.93452e-003	-1.11607e-004	 3.27381e-003	 1.48810e-004
+
+EIGENVALUE(1) =  9.08306e+005 	 SQRT(EGNVAL) =  9.53051e+002
+EIGENVECTOR:
+ 1.17043e-003	-4.78130e-002	 1.78742e-003	-1.34471e-001	 3.33905e-003	-2.81948e-001	 1.92800e-002	 2.23714e-001	-1.00000e+000	 7.93863e-019	
+
+EIGENVALUE(2) =  3.37386e+005 	 SQRT(EGNVAL) =  5.80849e+002
+EIGENVECTOR:
+-1.31099e-002	 7.16927e-001	 4.53070e-003	 1.00000e+000	 1.82114e-002	 2.67919e-001	 3.69288e-002	-1.64475e-001	-9.65346e-001	 3.64724e-018	
+
+EIGENVALUE(3) =  1.34241e+005 	 SQRT(EGNVAL) =  3.66390e+002
+EIGENVECTOR:
+ 4.66406e-003	-1.00000e+000	-3.30969e-002	 1.66196e-001	 1.64363e-002	 8.75313e-001	 5.59118e-002	-8.98733e-001	-3.42143e-001	 8.14568e-018	
+
+EIGENVALUE(4) =  5.20467e+004 	 SQRT(EGNVAL) =  2.28137e+002
+EIGENVECTOR:
+-1.10754e-002	-3.85224e-001	 1.51863e-003	 4.38947e-001	 7.20384e-003	-3.99947e-001	-3.35324e-002	 1.00000e+000	-4.61516e-001	-3.36142e-017	
+
+EIGENVALUE(5) =  2.56000e+004 	 SQRT(EGNVAL) =  1.60000e+002
+EIGENVECTOR:
+-8.59221e-016	-6.16269e-015	 6.84414e-016	 1.00499e-014	-2.43940e-016	-9.86030e-015	-5.27384e-016	 1.00000e+000	-1.00000e+000	-1.22637e-016	
+
+EIGENVALUE(6) =  1.50449e+004 	 SQRT(EGNVAL) =  1.22658e+002
+EIGENVECTOR:
+-2.73275e-002	-1.25611e-001	 2.81996e-002	-7.31256e-003	-2.43126e-002	 1.07436e-001	 3.80867e-002	 5.74026e-001	-1.00000e+000	-1.93795e-016	
+
+EIGENVALUE(7) =  3.86572e+003 	 SQRT(EGNVAL) =  6.21749e+001
+EIGENVECTOR:
+ 1.30800e-001	-2.86566e-001	 3.95237e-003	 1.00000e+000	-1.05155e-001	-4.76447e-001	 1.80034e-001	-4.26253e-001	-9.91532e-001	-7.08807e-016	
+
+EIGENVALUE(8) =  4.86651e+002 	 SQRT(EGNVAL) =  2.20602e+001
+EIGENVECTOR:
+ 1.05920e-001	-5.80415e-001	 1.81176e-001	 1.14938e-001	 3.42968e-002	 9.87881e-001	-2.53836e-001	 1.00000e+000	 2.13736e-001	 9.07145e-016	
+
+EIGENVALUE(9) =  1.23632e+001 	 SQRT(EGNVAL) =  3.51613e+000
+EIGENVECTOR:
+-6.74498e-002	 5.04799e-001	-2.35397e-001	 8.06365e-001	-4.56027e-001	 9.33953e-001	-6.93316e-001	 1.00000e+000	-4.56458e-002	 7.66868e-016	
+
+EIGENVALUE(10) =  2.56000e+004 	 SQRT(EGNVAL) =  1.60000e+002
+EIGENVECTOR:
+ 5.95490e-016	-1.34375e-014	-1.42662e-015	 5.92741e-015	 5.96652e-016	 5.01168e-015	 3.16321e-016	 1.00000e+000	-1.00000e+000	 7.48935e-015	

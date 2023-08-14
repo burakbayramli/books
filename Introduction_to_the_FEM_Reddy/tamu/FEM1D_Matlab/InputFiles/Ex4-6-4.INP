@@ -1,0 +1,71 @@
+Example 4.6.4: ANALYSIS OF A PLANE TRUSS WITH INCLINED SUPPORT (Penalty)
+   4  0  0                                   MODEL, NTYPE, ITEM
+   1  3                                      IELEM, NEM
+   0  2                                      ICONT, NPRNT
+      3                                      NNM
+   210.0E9 1.0     0.6E-03    0.0     1.0    0.0   SE, SL, SA, CS, SN, HF
+      1    2                                 NOD(1,I)
+   210.0E9 1.0     0.6E-03    1.0     0.0    0.0   SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(2,I)
+   210.0E9 1.4142  0.8485E-03 0.7071  0.7071 0.0   SE, SL, SA, CS, SN, HF
+      1    3                                 NOD(3,I)  
+      0                                      NCON
+      3                                      NSPV
+      1    1    0.0                          ISPV(1,1),ISPV(1,2),VSPV(1)
+      1    2    0.0                          ISPV(2,1),ISPV(2,2),VSPV(2)
+      2    2    0.0                          ISPV(3,1),ISPV(3,2),VSPV(3) 
+      1                                      NSSV
+      2    1    1.0E6                        ISSV(1,1),ISSV(1,2),VSSV(1) 
+      0                                      NNBC
+      1                                      NMPC
+      3 1   3 2  -0.7071  0.7071 0.0   0.0E6
+
+
+Problem 4.43: ANALYSIS OF A PLANE TRUSS WITH INCLINED SUPPORT (Penalty)
+   4  0  0                                   MODEL, NTYPE, ITEM
+   1  3                                      IELEM, NEM
+   0  2                                      ICONT, NPRNT
+      3                                      NNM
+   207.0E9 1.0     0.5E-03    1.0     0.0    0.0   SE, SL, SA, CS, SN, HF
+      1    2                                 NOD(1,I)
+   207.0E9 1.0     0.5E-03    0.0     1.0    0.0   SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(2,I)
+   207.0E9 1.4142  0.5E-03    0.7071  0.7071 0.0   SE, SL, SA, CS, SN, HF
+      1    3                                 NOD(3,I)  
+      0                                      NCON
+      4                                      NSPV
+      1    1    0.0                          ISPV(1,1),ISPV(1,2),VSPV(1)
+      1    2    0.0                          ISPV(2,1),ISPV(2,2),VSPV(2)
+      3    1    0.0                          ISPV(4,1),ISPV(4,2),VSPV(4) 
+      3    2    0.0                          ISPV(5,1),ISPV(5,2),VSPV(5)
+      1                                      NSSV
+      2    1    1.0E6                      
+      0                                      NNBC
+      1                                      NMPC
+      2 1   2 2  -0.866  0.5 0.0   0.0
+      
+
+
+Problem 4.43: ANALYSIS OF A PLANE TRUSS WITH INCLINED SUPPORT (direct)
+   4  0  0                                   MODEL, NTYPE, ITEM
+   1  3                                      IELEM, NEM
+   0  2                                      ICONT, NPRNT
+      3                                      NNM
+   207.0E9 1.0     0.5E-03    1.0     0.0    0.0   SE, SL, SA, CS, SN, HF
+      1    2                                 NOD(1,I)
+   207.0E9 1.0     0.5E-03    0.0     1.0    0.0   SE, SL, SA, CS, SN, HF
+      2    3                                 NOD(2,I)
+   207.0E9 1.4142  0.5E-03    0.7071  0.7071 0.0   SE, SL, SA, CS, SN, HF
+      1    3                                 NOD(3,I)  
+      1                                      NCON
+      2    60.0                              ICON(1), VCON(1)
+      5                                      NSPV
+      1    1    0.0                          ISPV(1,1),ISPV(1,2),VSPV(1)
+      1    2    0.0                          ISPV(2,1),ISPV(2,2),VSPV(2)
+      2    2    0.0                          ISPV(3,1),ISPV(3,2),VSPV(3) 
+      3    1    0.0                          ISPV(4,1),ISPV(4,2),VSPV(4) 
+      3    2    0.0                          ISPV(5,1),ISPV(5,2),VSPV(5)
+      1                                      NSSV
+      2    1    0.866E6                      ISSV(1,1),ISSV(1,2),VSSV(1)
+      0                                      NNBC
+      0                                      NMPC

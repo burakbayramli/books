@@ -1,0 +1,130 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+ Example 5.3.1a: Simply supported beam (Tim RIE element)-2L (L/H=10)             
+    2  0  0                     MODEL, NTYPE, ITEM                               
+    1  2                        IELEM, NEM                                       
+    1  1                        ICONT, NPRNT                                     
+    0.0        0.25    0.25     DX(I) (for nondim. results, set L=1)             
+    3.33333E4  0.0              AX0=GAK, AX1             
+   83.33333E0  0.0              BX0=EI,  BX1    (L/H=10 or H=0.1)                 
+    0.0        0.0              CX0, CX1                                         
+    1.0        0.0     0.0      FX0, FX1, FX2                                    
+                                                                                 
+    2                           NSPV                                             
+    1    1   0.0                ISPV(1,1), ISPV(1,2), VSPV(1)                    
+    3    2   0.0                ISPV(2,1), ISPV(2,2), VSPV(2)                    
+                                                                                 
+    0                           NSSV                                             
+    0                           NNBC                                             
+    0                           NMPC                                             
+
+ Example 5.3.1b: Simply supported beam (Tim RIE element)-4L (L/H=10)             
+    2  0  0                     MODEL, NTYPE, ITEM                               
+    1  4                        IELEM, NEM                                       
+    1  1                        ICONT, NPRNT                                     
+    0.0 0.125 0.125 0.125 0.125 DX(I) (for nondim. results, set L=1)             
+    3.33333E4  0.0              AX0=GAK, AX1             
+   83.33333E0  0.0              BX0=EI,  BX1    (L/H=10 or H=0.1)                 
+    0.0        0.0              CX0, CX1                                         
+    1.0        0.0     0.0      FX0, FX1, FX2                                    
+                                                                                 
+    2                           NSPV                                             
+    1    1   0.0                ISPV(1,1), ISPV(1,2), VSPV(1)                    
+    5    2   0.0                ISPV(2,1), ISPV(2,2), VSPV(2)                    
+                                                                                 
+    0                           NSSV                                             
+    0                           NNBC                                             
+    0                           NMPC                                             
+
+ Example 5.3.1c: Simply supported beam (Tim RIE element)-4L (L/H=100)            
+    2  0  0                     MODEL, NTYPE, ITEM                               
+    1  4                        IELEM, NEM                                       
+    1  1                        ICONT, NPRNT                                     
+    0.0 0.125 0.125 0.125 0.125 DX(I) (for nondim. results, set L=1)             
+    3.333333E3 0.0              AX0=GAK, AX1             
+    0.083333E0 0.0              BX0=EI,  BX1    (L/H=100 or H=0.01)                 
+    0.0        0.0              CX0, CX1                                         
+    1.0        0.0     0.0      FX0, FX1, FX2                                    
+                                                                                 
+    2                           NSPV                                             
+    1    1   0.0                ISPV(1,1), ISPV(1,2), VSPV(1)                    
+    5    2   0.0                ISPV(2,1), ISPV(2,2), VSPV(2)                    
+                                                                                 
+    0                           NSSV                                             
+    0                           NNBC                                             
+    0                           NMPC                                             
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 2, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 1.33333e+005	-1.66667e+004	-1.33333e+005	-1.66667e+004
+	-1.66667e+004	 2.41666e+003	 1.66667e+004	 1.75000e+003
+	-1.33333e+005	 1.66667e+004	 1.33333e+005	 1.66667e+004
+	-1.66667e+004	 1.75000e+003	 1.66667e+004	 2.41666e+003
+
+Element source vector, {ELF}:
+	 1.25000e-001	 0.00000e+000	 1.25000e-001	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 1.33333e+005	-1.66667e+004	-1.33333e+005	-1.66667e+004
+	-1.66667e+004	 2.41666e+003	 1.66667e+004	 1.75000e+003
+	-1.33333e+005	 1.66667e+004	 1.33333e+005	 1.66667e+004
+	-1.66667e+004	 1.75000e+003	 1.66667e+004	 2.41666e+003
+
+Element source vector, {ELF}:
+	 1.25000e-001	 0.00000e+000	 1.25000e-001	 0.00000e+000
+
+SOLUTION (values of pvs) at the NODES:
+ 0.00000e+000 -4.68750e-004  1.02422e-004 -3.28125e-004  1.44375e-004  0.00000e+000 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+x is the Global coord. if icont=1 and it is the local coord. if icont=0
+	 x 			Deflect. 		 rotation 		 B. Moment 		 Shear Force 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+	 0.00000e+000	 0.00000e+000	-4.68750e-004	 4.68750e-002	-1.96875e+000	
+	 3.12500e-002	 1.28027e-005	-4.51172e-004	 4.68750e-002	-1.38281e+000	
+	 6.25000e-002	 2.56055e-005	-4.33594e-004	 4.68750e-002	-7.96874e-001	
+	 9.37500e-002	 3.84082e-005	-4.16016e-004	 4.68750e-002	-2.10937e-001	
+	 1.25000e-001	 5.12109e-005	-3.98438e-004	 4.68750e-002	 3.75000e-001	
+	 1.56250e-001	 6.40137e-005	-3.80859e-004	 4.68750e-002	 9.60937e-001	
+	 1.87500e-001	 7.68164e-005	-3.63281e-004	 4.68750e-002	 1.54687e+000	
+	 2.18750e-001	 8.96191e-005	-3.45703e-004	 4.68750e-002	 2.13281e+000	
+	 2.50000e-001	 1.02422e-004	-3.28125e-004	 4.68750e-002	 2.71875e+000	
+	 2.50000e-001	 1.02422e-004	-3.28125e-004	 1.09375e-001	-5.34374e+000	
+	 2.81250e-001	 1.07666e-004	-2.87109e-004	 1.09375e-001	-3.97656e+000	
+	 3.12500e-001	 1.12910e-004	-2.46094e-004	 1.09375e-001	-2.60937e+000	
+	 3.43750e-001	 1.18154e-004	-2.05078e-004	 1.09375e-001	-1.24219e+000	
+	 3.75000e-001	 1.23398e-004	-1.64063e-004	 1.09375e-001	 1.25000e-001	
+	 4.06250e-001	 1.28643e-004	-1.23047e-004	 1.09375e-001	 1.49219e+000	
+	 4.37500e-001	 1.33887e-004	-8.20313e-005	 1.09375e-001	 2.85937e+000	
+	 4.68750e-001	 1.39131e-004	-4.10156e-005	 1.09375e-001	 4.22656e+000	
+	 5.00000e-001	 1.44375e-004	 0.00000e+000	 1.09375e-001	 5.59374e+000	
+______________________________________________________________________________
+

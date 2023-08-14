@@ -1,0 +1,47 @@
+ Example 7.3.7a: CLAMPED AND SPRING-SUPPORTED BEAM (Euler-Bernoulli)             
+    3  0  0                       MODEL, NTYPE, ITEM                             
+    0  2                          IELEM, NEM                                     
+    0  1                          ICONT, NPRNT                                   
+      3                           NNM                                            
+      1  2   4.0                  NOD(1,J), GLX(1)                               
+      0.0    0.0                  AX0, AX1    |  Data for                        
+      1.0E6  0.0                  BX0, BX1    |  Element1                       
+      0.0    0.0                  CX0, CX1    |                                  
+      0.0    0.0    0.0           FX0,FX1,FX2 |                                  
+      2  3   6.0                  NOD(2,J), GLX(2)                               
+      0.0    0.0                  AX0, AX1    |  Data for                        
+      1.0E6  0.0                  BX0, BX1    |  Element2                       
+      0.0    0.0                  CX0, CX1    |                                  
+      0.0   16.666667  0.0        FX0,FX1,FX2 |                                  
+    2                             NSPV                                           
+    1    1   0.0                  ISPV(1,J), VSPV(1)                             
+    1    2   0.0                  ISPV(2,J), VSPV(2)                             
+    0                             NSSV                                           
+    1                             NNBC  (with spring)                            
+    3    1   1.0E4      0.0       INBC(1,1),INBC(1,2),VNBC(1),UREF               
+    0                             NMPC                                           
+
+   Example 7.3.7b: CLAMPED AND SPRING-SUPPORTED BEAM (Timoshenko)                
+     2  0  0                      MODEL, NTYPE, ITEM                             
+     1  2                         IELEM, NEM                                     
+     0  1                         ICONT, NPRNT                                   
+        3                         NNM                                            
+       1  2   4.0                 NOD(1,J), GLX(1)                               
+       4.0E6  0.0                 AX0, AX1    |  Data for                        
+       1.0E6  0.0    (L/H = 10)   BX0, BX1    |  Element1                       
+       0.0    0.0                 CX0, CX1    |                                  
+       0.0    0.0    0.0          FX0,FX1,FX2 |                                  
+       2  3   6.0                 NOD(2,J), GLX(2)                               
+       4.0E6  0.0                 AX0, AX1    |  Data for                        
+       1.0E6  0.0                 BX0, BX1    |  Element2                       
+       0.0    0.0                 CX0, CX1    |                                  
+       0.0   16.666667  0.0       FX0,FX1,FX2 |                                  
+     2                            NSPV                                           
+     1    1   0.0                 ISPV(1,J), VSPV(1)                             
+     1    2   0.0                 ISPV(2,J), VSPV(2)                             
+     0                            NSSV                                           
+     1                            NNBC  (with spring)                            
+     3    1   1.0E4      0.0      INBC(1,1),INBC(1,2),VNBC(1),UREF               
+     0                            NMPC                                           
+
+                                                                                 

@@ -1,0 +1,124 @@
+		*** ECHO OF THE INPUT DATA STARTS ***
+
+ Example 7.3.7a: CLAMPED AND SPRING-SUPPORTED BEAM (Euler-Bernoulli)             
+    3  0  0                       MODEL, NTYPE, ITEM                             
+    0  2                          IELEM, NEM                                     
+    0  1                          ICONT, NPRNT                                   
+      3                           NNM                                            
+      1  2   4.0                  NOD(1,J), GLX(1)                               
+      0.0    0.0                  AX0, AX1    |  Data for                        
+      1.0E6  0.0                  BX0, BX1    |  Element1                       
+      0.0    0.0                  CX0, CX1    |                                  
+      0.0    0.0    0.0           FX0,FX1,FX2 |                                  
+      2  3   6.0                  NOD(2,J), GLX(2)                               
+      0.0    0.0                  AX0, AX1    |  Data for                        
+      1.0E6  0.0                  BX0, BX1    |  Element2                       
+      0.0    0.0                  CX0, CX1    |                                  
+      0.0   16.666667  0.0        FX0,FX1,FX2 |                                  
+    2                             NSPV                                           
+    1    1   0.0                  ISPV(1,J), VSPV(1)                             
+    1    2   0.0                  ISPV(2,J), VSPV(2)                             
+    0                             NSSV                                           
+    1                             NNBC  (with spring)                            
+    3    1   1.0E4      0.0       INBC(1,1),INBC(1,2),VNBC(1),UREF               
+    0                             NMPC                                           
+
+   Example 7.3.7b: CLAMPED AND SPRING-SUPPORTED BEAM (Timoshenko)                
+     2  0  0                      MODEL, NTYPE, ITEM                             
+     1  2                         IELEM, NEM                                     
+     0  1                         ICONT, NPRNT                                   
+        3                         NNM                                            
+       1  2   4.0                 NOD(1,J), GLX(1)                               
+       4.0E6  0.0                 AX0, AX1    |  Data for                        
+       1.0E6  0.0    (L/H = 10)   BX0, BX1    |  Element1                       
+       0.0    0.0                 CX0, CX1    |                                  
+       0.0    0.0    0.0          FX0,FX1,FX2 |                                  
+       2  3   6.0                 NOD(2,J), GLX(2)                               
+       4.0E6  0.0                 AX0, AX1    |  Data for                        
+       1.0E6  0.0                 BX0, BX1    |  Element2                       
+       0.0    0.0                 CX0, CX1    |                                  
+       0.0   16.666667  0.0       FX0,FX1,FX2 |                                  
+     2                            NSPV                                           
+     1    1   0.0                 ISPV(1,J), VSPV(1)                             
+     1    2   0.0                 ISPV(2,J), VSPV(2)                             
+     0                            NSSV                                           
+     1                            NNBC  (with spring)                            
+     3    1   1.0E4      0.0      INBC(1,1),INBC(1,2),VNBC(1),UREF               
+     0                            NMPC                                           
+
+                                                                                 
+
+
+		*** ECHO OF THE INPUT DATA ENDS ***
+
+______________________________________________________________________________
+
+               OUTPUT from program   FEM1D   by J N REDDY 
+______________________________________________________________________________
+
+	 ANALYSIS OF MODEL 3, AND TYPE 0 PROBLEM 
+	  (**********see the code below**********)
+
+	model=1:ntype=0: A problem described by model EQ. 1
+	model=1:ntype=1: A circular disk (PLANE STRESS) 
+	model=1:ntype>1: A circular disk (PLANE STRAIN) 
+	model=2,ntype=0: A Timoshenko BEAM (RIE) problem
+	model=2,ntype=1: A Timoshenko PLATE (RIE) problem
+	model=2,ntype=2: A Timoshenko BEAM (CIE) problem
+	model=2,ntype>2: A Timoshenko PLATE (CIE) problem
+	model=3,ntype=0: A Euler-Bernoulli BEAM problem
+	model=3,ntype>0: A Euler-Bernoulli circular PLATE 
+	model=4,ntype=0: A plane TRUSS problem
+	model=4,ntype=1: A Euler-bernoulli FRAME problem
+	model=4,ntype=2: A Timoshenko (CIE) FRAME problem
+
+Element coefficient matrix, [ELK]:
+	 1.87500e+005	-3.75000e+005	-1.87500e+005	-3.75000e+005
+	-3.75000e+005	 1.00000e+006	 3.75000e+005	 5.00000e+005
+	-1.87500e+005	 3.75000e+005	 1.87500e+005	 3.75000e+005
+	-3.75000e+005	 5.00000e+005	 3.75000e+005	 1.00000e+006
+
+Element source vector, {ELF}:
+	 0.00000e+000	 0.00000e+000	 0.00000e+000	 0.00000e+000
+
+Element coefficient matrix, [ELK]:
+	 5.55556e+004	-1.66667e+005	-5.55556e+004	-1.66667e+005
+	-1.66667e+005	 6.66667e+005	 1.66667e+005	 3.33333e+005
+	-5.55556e+004	 1.66667e+005	 5.55556e+004	 1.66667e+005
+	-1.66667e+005	 3.33333e+005	 1.66667e+005	 6.66667e+005
+
+Element source vector, {ELF}:
+	 9.00000e+001	-1.20000e+002	 2.10000e+002	 1.80000e+002
+
+SOLUTION (values of pvs) at the NODES:
+ 0.00000e+000  0.00000e+000  4.62720e-003 -1.95102e-003  1.64031e-002 -1.69846e-003 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+x is the Global coord. if icont=1 and it is the local coord. if icont=0
+	 x 			Deflect. 		 rotation 		 B. Moment 		 Shear Force 
+______________________________________________________________________________
+
+______________________________________________________________________________
+
+ 0.00000e+000	 0.00000e+000	-0.00000e+000	-7.59692e+002	 1.35969e+002
+ 5.00000e-001	 9.21288e-005	-3.62850e-004	-6.91708e+002	 1.35969e+002
+ 1.00000e+000	 3.57185e-004	-6.91708e-004	-6.23723e+002	 1.35969e+002
+ 1.50000e+000	 7.78171e-004	-9.86573e-004	-5.55738e+002	 1.35969e+002
+ 2.00000e+000	 1.33809e-003	-1.24745e-003	-4.87754e+002	 1.35969e+002
+ 2.50000e+000	 2.01995e-003	-1.47433e-003	-4.19769e+002	 1.35969e+002
+ 3.00000e+000	 2.80675e-003	-1.66722e-003	-3.51785e+002	 1.35969e+002
+ 3.50000e+000	 3.68150e-003	-1.82611e-003	-2.83800e+002	 1.35969e+002
+ 4.00000e+000	 4.62720e-003	-1.95102e-003	-2.15815e+002	 1.35969e+002
+ 0.00000e+000	 4.62720e-003	-1.95102e-003	-9.58154e+001	 4.59692e+001
+ 7.50000e-001	 6.11418e-003	-2.00995e-003	-6.13385e+001	 4.59692e+001
+ 1.50000e+000	 7.63566e-003	-2.04302e-003	-2.68615e+001	 4.59692e+001
+ 2.25000e+000	 9.17225e-003	-2.05024e-003	 7.61538e+000	 4.59692e+001
+ 3.00000e+000	 1.07046e-002	-2.03160e-003	 4.20923e+001	 4.59692e+001
+ 3.75000e+000	 1.22132e-002	-1.98710e-003	 7.65692e+001	 4.59692e+001
+ 4.50000e+000	 1.36787e-002	-1.91675e-003	 1.11046e+002	 4.59692e+001
+ 5.25000e+000	 1.50818e-002	-1.82053e-003	 1.45523e+002	 4.59692e+001
+ 6.00000e+000	 1.64031e-002	-1.69846e-003	 1.80000e+002	 4.59692e+001
+______________________________________________________________________________
+
