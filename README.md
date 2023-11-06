@@ -292,6 +292,10 @@ Source codes for various books I collected over the years.
 
 See my other blogs, repos
 
+HTML apps for mapping, movie recommendations, weather reports
+
+[BBApps](https://burakbayramli.github.io)
+
 Science, technology content in Turkish (Bilim, teknoloji, matematik)
 
 [Dersblog](https://burakbayramli.github.io/dersblog/sk/)
