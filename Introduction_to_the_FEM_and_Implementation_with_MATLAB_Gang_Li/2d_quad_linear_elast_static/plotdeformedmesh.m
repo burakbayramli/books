@@ -1,0 +1,74 @@
+clear all;
+load nodes.dat;
+load elements.dat;
+load feU.dat;
+
+nodesOld=nodes;
+nElements=size(elements,1);
+nNodes=size(nodes,1);
+nElementEdges=size(elements,2)-1;
+startIndex=nodes(1,1);
+
+if startIndex==0  %for nodes.dat generated from C++ code
+  idx=1;
+else              %for nodes.dat generated from matlab code
+  idx=0;
+end
+
+
+figure(1);
+clf;
+hold off;
+nodes(:,2:3)=feU(:,2:3)
+
+nodes(:,2:3)=nodes(:,2:3)+feU(:,4:5)*10;
+
+plot(nodes(1,2),nodes(1,3),'.');
+
+hold on;
+
+for i=1:nElements
+  for j=1:nElementEdges-1
+    x1=nodesOld(elements(i,j+1)+idx,2);
+    y1=nodesOld(elements(i,j+1)+idx,3);
+    x2=nodesOld(elements(i,j+2)+idx,2);
+    y2=nodesOld(elements(i,j+2)+idx,3);
+    plot([x1 x2],[y1 y2],'k:','Linewidth',2);
+  end 
+  x1=nodesOld(elements(i,2)+idx,2);
+  y1=nodesOld(elements(i,2)+idx,3);
+  plot([x1 x2],[y1 y2],'k:','Linewidth',2);
+end;
+
+for i=1:nElements
+  x0=0;
+  y0=0;
+  for j=1:nElementEdges-1
+    x1=nodes(elements(i,j+1)+idx,2);
+    y1=nodes(elements(i,j+1)+idx,3);
+    x2=nodes(elements(i,j+2)+idx,2);
+    y2=nodes(elements(i,j+2)+idx,3);
+    plot([x1 x2],[y1 y2],'k-','Linewidth',2);
+    x0=x0+x1;
+    y0=y0+y1;
+  end 
+  x1=nodes(elements(i,2)+idx,2);
+  y1=nodes(elements(i,2)+idx,3);
+  plot([x1 x2],[y1 y2],'k-','Linewidth',2);
+  x0=x0+x2;
+  y0=y0+y2;
+  x0=x0/nElementEdges;
+  y0=y0/nElementEdges;
+  text(x0-0.05,y0,"element "+num2str(i),'FontSize',15,'color','k');
+end;
+
+
+%for i=1:nNodes
+%  x0=nodes(i,2);
+%  y0=nodes(i,3);
+%  text(x0,y0,num2str(i),'FontSize',5);
+%end
+
+
+hold off
+
