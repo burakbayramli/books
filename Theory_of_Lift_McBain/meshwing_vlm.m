@@ -1,0 +1,9 @@
+function [r, r1, r2] = meshwing_vlm (x, y, z)
+  xyz = permute (cat (3, x, y, z), [3, 1, 2]);
+  r1 = (3*xyz(:,1:(end-1),1:(end-1)) ...
+	+ xyz(:,1:(end-1),2:end) ) / 4;
+  r1 = (3*xyz(:,1:(end-1),1:(end-1)) ...
+	+ xyz(:,2:end,1:(end-1)) ) / 4;
+  r2 = (3*xyz(:,1:(end-1),2:end) + xyz(:,2:end,2:end)) / 4;
+  r = ((r1 + r2)/2 + xyz(:,2:end,1:(end-1)) ...
+       + xyz(:,2:end,2:end) ) / 3;
