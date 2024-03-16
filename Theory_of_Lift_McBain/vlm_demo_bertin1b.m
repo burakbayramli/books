@@ -1,0 +1,34 @@
+fig = figure;
+AR = 5.0;
+taper = 1.0;
+sweep = pi/4;
+n = 2 * 4;
+[x, y, z] = meshwing (AR, 1, n, sweep, 0, taper, ...
+		      0, @ (z) 0*z);
+meshwing_plot (x, y, z);
+[r, r1, r2] = meshwing_vlm (x, y, z);
+ihat = repmat ([1; 0; 0], 1, n);
+qrr = vortex_horseshoe (r(:,n/2+1:n), ...
+			r1(:,n/2+1:n), ...
+			r2(:,n/2+1:n), ...
+			ihat(:,1:n/2) );
+vrr = squeeze (qrr(2,:,:));
+qrl = vortex_horseshoe (r(:,n/2+1:n), ...
+			fliplr (r1(:,1:n/2)), ...
+			fliplr (r2(:,1:n/2)), ...
+			ihat(:,1:n/2) );
+vrl = squeeze (qrl(2,:,:));
+Gamma = (vrr + vrl) \ -ones (n/2, 1);
+disp (reshape (2 * flipud (Gamma), n/4, 2))
+CLa = 4 * AR * sum (Gamma) / n
+
+q = vortex_horseshoe (r(:,:), ...
+r1(:,:), ...
+r2(:,:), ...
+ihat );
+v = squeeze (q(2,:,:));
+Gamma = v \ -ones (n, 1);
+disp (Gamma(n/2+1:n) / 4 / pi)
+CLa = 2 * AR * sum (Gamma) / n
+
+print(fig,'/tmp/bertin2.png','-dpng')
