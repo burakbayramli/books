@@ -1,0 +1,180 @@
+%% Student batch script.
+
+%% Geometry definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+geo.nwing=         3;           %Number of wings in the design, 
+                                %determines the number of ROWS in the
+                                %geometry variables 
+                                
+geo.nelem=        [3 1 1];      %Number of partitions in the design,           
+                                %Determines the number of COLUMNS in
+                                %the geometry variables  
+
+geo.ref_point=    [0.33 0 0];   %Position of the reference point in 
+                                %the aircraft coordinate system
+                                %Moments are taken around this point
+                
+geo.CG=           [0.25 0 0];    %Position of the center of gravity in 
+                                 %the aircraft coordinate system.
+                                 %Rotations are made about this point
+
+geo.c=            [1             %Root chord of each wing 
+                   1 
+                   1];
+               
+geo.b=            [1 1 1         %Semispan of each partition of each wing   
+                   1 0 0
+                   1 0 0];
+
+geo.symetric=    [1 1 0];        %Symmetry bit for each wing
+geo.startx=      [0 2 2];        %X coordinate of each wing apex   
+geo.starty=      [0 0 0];        %Y coordinate of each wing apex
+geo.startz=      [0 0 0];        %Z coordinate of each wing apex
+               
+geo.dihed=     [0 0 0            %Dihedral of each partition of each wing    
+                0 0 0            %[rad]
+                pi/2 0 0];
+             
+geo.T=          [1 1 1           %Taper ratio of each partition.
+                1 0 0
+                1 0 0];
+
+geo.SW=         [0 0 0          %c/4 sweep of each partition. [rad]
+                0 0 0
+                0 0 0];
+            
+geo.TW(:,:,1)=  [0 0 0          %Twist of partition inboard section
+                0 0 0
+                0 0 0];
+            
+geo.TW(:,:,2)=  [0 0 0          %Twist of partition outboard section
+                0 0 0
+                0 0 0];
+            
+geo.nx=        [1 1 1           %Number of panels in the X direction of 
+                1 0 0           %each partiton
+                1 0 0];
+    
+ geo.ny=        [1 1 1          %Number of panels in the Y direction of 
+                1 0 0           %each partiton
+                1 0 0];
+            
+ geo.flapped=    [0 0 0         %Partition flap bit. 1 for trailing edge flap
+                 0 0 0          % 1 for trailing edge flap
+                 0 0 0];        % 0 if no flap
+  
+geo.fnx=        [0 0 0          %Number of panels in the X direction of
+                 0 0 0          %the flap of each partiton
+                 0 0 0];
+            
+geo.fsym=      [1 1 1           %Control surface deflect symmetrically bit
+                1 0 0
+                1 0 0];
+          
+geo.fc=         [0 0 0          %Part of chord that is flapped of
+                0 0 0           %each partition    
+                0 0 0];
+          
+geo.flap_vector= [0 0 0         %Flap deflection, [rad]    
+                  0 0 0         %right hand positive outboard
+                  0 0 0];
+
+geo.foil(:,:,1)= [{'0'} {'0'} {'0'}     %Airfoil file inboard profile
+                  {'0'} {'0'} {'0'}
+                  {'0'} {'0'} {'0'}];
+              
+geo.foil(:,:,2)= [{'0'} {'0'} {'0'}      %Airfoil file outboard profile
+                  {'0'} {'0'} {'0'}
+                  {'0'} {'0'} {'0'}];
+              
+geo.meshtype=    [1 1 1                 %Type of mesh to be used
+                  1 1 1
+                  1 1 1];
+%% End Aero structure definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%              
+
+%% Define the state %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        state.AS=       10;        %Airspeed m/s
+     state.alpha=       0.0611;    %Angle of attack, radians
+     state.betha=       0;         %Angle of sideslip, radians
+         state.P=       0;         %Rollrate, rad/s
+         state.Q=       0;         %pitchrate, rad/s
+         state.R=       0;         %yawrate, rad/s
+         state.adot=    0;         %Alpha time derivative rad/s
+         state.bdot=    0;         %Betha time derivative rad/s
+       state.ALT=       0;         %Altitude, m
+       state.rho=       1.225;     %Desity, kg/m^3
+    state.pgcorr=       1;          %Apply prandtl glauert compressibility 
+                                   %correction
+%% End state structure definition  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+    
+%% Define the body model  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+       body.length= [5 1 1];             %Lengths of blunt bodies such as:  [Body  Nacelle Nacelle]
+       body.diam=   [0.4 0.25 0.25];     %Diameter of blunt bodies in the same order as the lengths
+       body.inter=  [1 1.3 1.3];         %Body interference factors    
+       body.start=  [-2 0 0              %Body start coordinates   
+                     0 1.5 -0.4
+                     0 -1.5 -0.4];
+       body.aftfuse=
+                 
+%% End body model definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Engine definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+engine.number       =2;
+engine.moments      =[ 0  1000  3000
+                       0  1000 -3000];
+                       
+engine.xyz          =[ 0  3  1
+                       0 -3  1];
+ 
+engine.thrust       =[1000
+                      1000];
+     
+engine.vector       =[-1 0 0
+                      -1 0 0];
+
+engine.unitvector   =[-1 0 0
+                      -1 0 0];
+
+%% Auxillary computations    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[rho a p mu]=ISAtmosphere(state.ALT);     %Calling International Standard atmosphere.
+Mach=state.AS/a;                          %Computing mach number  
+
+
+%% Generate the Lattice
+latticetype=1; %Standard horseshoe lattice
+[lattice,ref]=fLattice_setup2(geo,state,latticetype);
+
+%%  Plot the geometry
+geometryplot(lattice,geo,ref);
+bodyplot(body);
+
+%% Compute skin friction of wing system
+[CD0_wing results.Re results.Swet results.Vol]=zeroliftdragpred(Mach,state.ALT,geo,ref);
+
+%% Compute blunt body drag increment
+CD0_blunt=zldpblunt(Mach,state.ALT,body,ref);
+
+%% Summing up viscous drag
+CD0=sum(sum(CD0_wing))+sum(CD0_blunt)
+
+results.CD0=CD0
+
+%% computing induced drag
+  [results]=solver9(results,state,geo,lattice,ref);
+  [results]=coeff_create3(results,lattice,state,ref,geo);
+  CDi=results.CD
+  
+%% TRIMMING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+trimaxis=2;     %Trim in pitch
+trimwing=2;     %Trim with stabiliser
+trimrudder=0;   %Dont trim with elevator
+solvertype=1;   %Standard VLM
+weight=100;     %Aircraft weight
+
+
+
+[results,rudderangle,state,engine,converged]=fTrimCLconstEW(geo,state,trimaxis,trimwing,trimrudder,solvertype,engine,weight,results)
+  
+            
+     
+ 

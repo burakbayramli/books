@@ -1,0 +1,45 @@
+function [startxyz,b,c,dihed,T,SW,TW] = Vtail_2_geo(wing)
+% Tornado function (internal): extract info from Vtail wing struct
+% Input
+%   wing       CEASIOM aircraft wing struct
+%
+% Output
+%   c          chords at kinks
+%   startxyz   wing apex coord
+%
+% calls
+% --
+%--------------------------------------------------------------------------
+%  Revisions: KTH 100530
+%
+startxyz = [wing.longitudinal_location,0,wing.vertical_location];
+if wing.Span == 0
+    wing.Span = sqrt(wing.area*wing.AR);
+end
+b = wing.Span*[wing.spanwise_kink,...
+    1-wing.spanwise_kink];  %  note .... vtail!
+
+% root chord from  area, tapers, and kinks
+tk = wing.taper_kink;
+tmp = (1           +tk)*(wing.spanwise_kink - 0)+...
+    (tk+wing.taper_tip)*(1 - wing.spanwise_kink);
+c   = 2*wing.area/(tmp*wing.Span);
+T   = [tk,wing.taper_tip/tk];
+
+if wing.quarter_chord_sweep_inboard == 0
+    wing.quarter_chord_sweep_inboard = 180/pi*atan(tan(wing.LE_sweep_inboard *pi/180)-c/4/abs(b(1))*(1-T(1)));
+    wing.quarter_chord_sweep_outboard= 180/pi*atan(tan(wing.LE_sweep_outboard*pi/180)-c/4/abs(b(2))*(T(1)-wing.taper_tip));
+end
+
+dihed = [90+wing.dihedral_inboard,...
+    90+wing.dihedral_outboard];
+dihed = pi/180*dihed;
+
+SW = [wing.quarter_chord_sweep_inboard,wing.quarter_chord_sweep_outboard];
+SW = pi/180*SW;
+
+TW = [wing.root_incidence,wing.kink_incidence;...
+    wing.kink_incidence,wing.tip_incidence];
+TW = pi/180*TW;
+
+end

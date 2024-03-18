@@ -1,0 +1,209 @@
+%% AC Design script
+clear
+%%Inputs
+
+M=1000;         %kg
+V= 100;         %m/s
+AR=4;           %Aspect ratio
+T=0.3;          %Taper ratio
+
+%% Constats
+CL=0.3;     %Cruise CL
+g=9.82;
+
+
+%% Wing area
+S=M*g/(CL*1.225*V^2/2);
+
+%%Span
+b=sqrt(AR*S)
+
+%%Root chord;
+Cr=2*S/(b*(1+T))
+
+
+%% Tornado batch script.
+
+%% Geometry definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+geo.nwing=         2;           %Number of wings in the design, 
+                                %determines the number of ROWS in the
+                                %geometry variables 
+                                
+geo.nelem=        [1 1];      %Number of partitions in the design,           
+                                %Determines the number of COLUMNS in
+                                %the geometry variables  
+
+geo.ref_point=    [0.33 0 0]*Cr;   %Position of the reference point in 
+                                %the aircraft coordinate system
+                                %Moments are taken around this point
+                
+geo.CG=           [0.33 0 0]*Cr;    %Position of the center of gravity in 
+                                 %the aircraft coordinate system.
+                                 %Rotations are made about this point
+
+geo.c=            [1 0.6]*Cr;             %Root chord of each wing 
+                 
+               
+geo.b=            [1 
+    0.5]*b/2;         %Semispan of each partition of each wing   
+                  
+
+geo.symetric=    [1 1];        %Symmetry bit for each wing
+geo.startx=      [0 3]*Cr;        %X coordinate of each wing apex   
+geo.starty=      [0 0];        %Y coordinate of each wing apex
+geo.startz=      [0 0];        %Z coordinate of each wing apex
+               
+geo.dihed=     [0 
+    0];            %Dihedral of each partition of each wing    
+                           %[rad]
+                
+             
+geo.T=          [T
+                 0.5]           %Taper ratio of each partition.
+                
+                
+
+geo.SW=         [0.3
+                 0   ];           %c/4 sweep of each partition. [rad]
+                
+            
+geo.TW(:,:,1)=  [0
+                 0];          %Twist of partition inboard section
+                
+            
+geo.TW(:,:,2)=  [0
+                 0];          %Twist of partition outboard section
+                
+            
+geo.nx=        [5
+                3];       %each partiton
+               
+    
+ geo.ny=        [10
+                  3  ];          %Number of panels in the Y direction of 
+                           %each partiton
+                
+            
+ geo.flapped=    [0
+                  0];           %Partition flap bit. 1 for trailing edge flap
+                                % 1 for trailing edge flap
+                                % 0 if no flap
+  
+geo.fnx=        [0
+                0];           %Number of panels in the X direction of
+                           %the flap of each partiton
+                
+            
+geo.fsym=      [1
+                0];           %Control surface deflect symmetrically bit
+                
+          
+geo.fc=         [0
+                 0];         %Part of chord that is flapped of
+                          %each partition    
+               
+          
+geo.flap_vector= [0
+                  0];         %Flap deflection, [rad]    
+                           %right hand positive outboard
+                
+
+geo.foil(:,:,1)= [{'N64210.dat'}
+                    {'0012'}];     %Airfoil file inboard profile
+  
+              
+geo.foil(:,:,2)= [{'N64210.dat'}
+                 {'0012'}];      %Airfoil file outboard profile
+            
+              
+geo.meshtype=    [2
+                  1  ];                %Type of mesh to be used
+              
+%% End Aero structure definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%              
+
+%% Define the state %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        state.AS=       100;        %Airspeed m/s
+     state.alpha=       0.0331;    %Angle of attack, radians
+     state.betha=       0;         %Angle of sideslip, radians
+         state.P=       0;         %Rollrate, rad/s
+         state.Q=       0;         %pitchrate, rad/s
+         state.R=       0;         %yawrate, rad/s
+         state.adot=    0;         %Alpha time derivative rad/s
+         state.bdot=    0;         %Betha time derivative rad/s
+       state.ALT=       0;         %Altitude, m
+       state.rho=       1.225;     %Desity, kg/m^3
+    state.pgcorr=       1;         %Apply prandtl glauert compressibility 
+                                   %correction
+%% End state structure definition  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+    
+%% Define the body model  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+       body.length= [b 1 1];             %Lengths of blunt bodies such as:  [Body  Nacelle Nacelle]
+       body.diam=   [0.4 0.25 0.25];     %Diameter of blunt bodies in the same order as the lengths
+       body.inter=  [1 1.3 1.3];         %Body interference factors    
+       body.start=  [-2 0 0              %Body start coordinates   
+                     0 1.5 -0.4
+                    0 -1.5 -0.4];
+                 
+%% End body model definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%% Auxillary computations    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[rho a p mu]=ISAtmosphere(state.ALT);     %Calling International Standard atmosphere.
+Mach=state.AS/a;                          %Computing mach number  
+
+
+%% Generate the Lattice
+latticetype=1; %Standard horseshoe lattice
+[lattice,ref]=fLattice_setup2(geo,state,latticetype);
+
+geo.ref_point=    [0.33 0 0]*ref.C_mac+ref.mac_pos;
+geo.CG=    [0.25 0 0]*ref.C_mac+ref.mac_pos;
+
+
+
+%%  Plot the geometry
+geometryplot(lattice,geo,ref);
+%bodyplot(body);
+
+%% Compute skin friction of wing system
+[CD0_wing results.Re results.Swet results.Vol]=zeroliftdragpred(Mach,state.ALT,geo,ref);
+
+%% Compute blunt body drag increment
+CD0_blunt=zldpblunt(Mach,state.ALT,body,ref);
+%CD0_blunt=0;
+%% Summing up viscous drag
+CD0=sum(sum(CD0_wing))+sum(CD0_blunt)
+
+%A=fViscCorr2(geo,state,lattice,results,ref);    %Strip theory viscous drag.
+%results.CDv=A.totalvdragcoeff;                  %
+
+results.CD0=CD0
+
+%% computing induced drag
+  [results]=solver9(results,state,geo,lattice,ref);
+  [results]=coeff_create3(results,lattice,state,ref,geo);
+  CDi=results.CD
+  CLc=results.CL
+   
+  K=(CL^2)/(CDi*AR*pi)
+  
+%% TRIMMING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+trimaxis=2;     %Trim in pitch
+trimwing=2;     %Trim with stabiliser
+trimrudder=0;   %Dont trim with elevator
+solvertype=0;   %Standard VLM
+
+
+[results,alpha]=fFindAlphaAtCL(geo,state,solvertype,CL);
+state.alpha=alpha;
+
+[results,rudderangle,geo,state]=fTrimCLconst(geo,state,trimaxis,trimwing,trimrudder,solvertype);
+%[results,rudderangle,state,engine,converged]=fTrimCLconstEW(geo,state,trimaxis,trimwing,trimrudder,solvertype,engine,weight,results)
+
+out=fFindstaticmargin(geo,state);
+
+ G=results.CL/(results.CD+CD0)
+
+

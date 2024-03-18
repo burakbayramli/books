@@ -1,0 +1,43 @@
+function [startxyz,b,c,dihed,T,SW,TW] = Canard_2_geo(wing)
+% Tornado function (internal): extract info from canard struct
+% Input
+%   wing       CEASIOM aircraft wing struct for canard
+%
+% Output
+%   c          chords at kinks
+%   startxyz   wing apex coord
+%
+% calls
+% --
+%--------------------------------------------------------------------------
+%  Revisions: KTH 091022 v 0
+%
+startxyz = [wing.longitudinal_location,0,wing.vertical_location];
+if wing.Span == 0
+    wing.Span = sqrt(wing.area*wing.AR);
+end
+b = wing.Span*[wing.spanwise_kink,...
+    1-wing.spanwise_kink]/2;
+
+% root chord from  area, tapers, and kinks
+tmp = (1             +wing.taper_kink)*(wing.spanwise_kink - 0)+...
+    (wing.taper_kink+wing.taper_tip)*(1 - wing.spanwise_kink);
+c   = 2*wing.area/(tmp*wing.Span);
+
+dihed = pi/180*[wing.dihedral_inboard,...
+    wing.dihedral_outboard];
+
+T = [wing.taper_kink,...
+    wing.taper_tip/wing.taper_kink];
+
+if wing.quarter_chord_sweep_inboard == 0
+    wing.quarter_chord_sweep_inboard =180/pi*atan(tan(wing.LE_sweep_inboard *pi/180)-c/4/abs(b(1))*(1-T(1)));
+    wing.quarter_chord_sweep_outboard=180/pi*atan(tan(wing.LE_sweep_outboard*pi/180)-c/4/abs(b(2))*(T(1)-wing.taper_tip));
+end
+SW = pi/180*[wing.quarter_chord_sweep_inboard,...
+    wing.quarter_chord_sweep_outboard];
+
+TW = pi/180*[wing.root_incidence,wing.kink_incidence;...
+    wing.kink_incidence,wing.tip_incidence];
+
+end

@@ -1,0 +1,347 @@
+function [eta1,header,csurfsym,defl,hingedata] = insert_chords_wing(wing,b)
+% Tornado function (internal): extract partition info from wing struct
+% Input
+%   wing      CEASIOM aircraft wing struct
+%   b         wing spans of partition breaks
+%
+% Output
+%   eta1      table of properties at spanstations
+%   header    headers of table
+%   defl      deflections of control surfaces
+%   hingedata hinge lines for control surfaces
+%
+% calls
+%   --
+%--------------------------------------------------------------------------
+%  Revisions: KTH 091022 v 0
+% JOp 100610: make sign(eta1) = sign(b)!
+%
+% define the breaks
+% b is negative, if only portside wingto be generated.
+%
+ss = b(end)/abs(b(end));
+b      = abs(b);
+eta    = b(:) ;    % the original
+bmax   = b(end);   % ... could be > 1 when winglet
+header = {};
+defl   = {};
+hingedata = {};
+kk = 0;
+
+
+%============================= all-moving?
+if isfield(wing,'hinge')
+    kk = kk+1;
+    csurfsym{kk} = 1; % default: symm defl
+    eta = [eta,0*eta(:,1)];
+    eta = [eta;0*eta(1,:);0*eta(1,:)];
+    eta(end  ,1) = 1;
+    eta = sort_col_1(eta);
+    header{kk}=['all',num2str(wing.seqno)];
+    dum = 0;
+    if isfield(wing.hinge,'deflection');
+        dum = wing.hinge.deflection;
+    end
+    defl{kk,1}=pi/180*dum;
+    defl{kk,2}=3;
+    hingedata{kk}=[wing.hinge.c_frac,...
+        pi/180*wing.hinge.dihed,...
+        pi/180*wing.hinge.sweep];
+    if isfield(wing.hinge,'defl_sym')
+        csurfsym{kk}=wing.hinge.defl_sym;
+        if wing.hinge.defl_sym==0 % independent, generate port side
+            header{kk}=['all',num2str(wing.seqno),'s']; % change
+            csurf
+            kk = kk+1;
+            csurfsym{kk}=0;
+            eta = [eta,0*eta(:,1)];
+            eta = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end  ,1) = 1;
+            eta = sort_col_1(eta);
+            header{kk}=['all',num2str(wing.seqno),'p'];
+            dum = 0;
+            if isfield(wing.hinge,'deflection');
+                dum = wing.hinge.deflection;
+            end
+            defl{kk,1}=pi/180*dum;
+            defl{kk,2}=3;
+            hingedata{kk}=[wing.hinge.c_frac,...
+                pi/180*wing.hinge.dihed,...
+                -pi/180*wing.hinge.sweep];
+        end
+    end
+end
+%================================================================== user-named Csurf
+llist = fieldnames(wing);
+for k = 1:length(llist)
+    name = llist{k};
+    if strncmpi(name,'Csurf',5); % a user-defined control surface
+        cs = wing.(name);
+        kk = kk+1;
+        yin  =  cs.Root_span;
+        yout =  yin + cs.Span;
+        eta = [eta,0*eta(:,1)];
+        eta = [eta;0*eta(1,:);0*eta(1,:)];
+        eta(end-1,1) = yin; eta(end-1,end)=cs.chord;
+        eta(end  ,1) = yout; eta(end ,end)=cs.chord;
+        eta = sort_col_1(eta);
+        header{kk} = [name(6:end),num2str(wing.seqno)];
+        dum = 0;
+        if isfield(cs,'deflection');
+            dum = cs.deflection;
+        end
+        defl{kk,1}= pi/180*dum;
+        defl{kk,2}= cs.type; % TE device
+        hingedata{kk}=[];
+        csurfsym{kk} = 1; % default symmetric
+        if isfield(cs,'defl_sym')
+            csurfsym{kk} = cs.defl_sym; %
+            if cs.defl_sym==0
+                header{kk} = [name(6:end),num2str(wing.seqno),'s']; %rename
+                kk = kk+1;
+                csurfsym{kk} = 0; %
+                eta = [eta,0*eta(:,1)];
+                eta = [eta;0*eta(1,:);0*eta(1,:)];
+                eta(end-1,1) = yin; eta(end-1,end)=cs.chord;
+                eta(end  ,1) = yout; eta(end ,end)=cs.chord;
+                eta = sort_col_1(eta);
+                header{kk} = [name(6:end),num2str(wing.seqno),'p'];
+                dum = 0;
+                if isfield(cs,'deflection');
+                    dum = cs.deflection;
+                end
+                defl{kk,1}= pi/180*dum;
+                defl{kk,2}= cs.type; % TE device
+                hingedata{kk}=[];
+            end
+        end
+    end
+end
+
+%================================================== specific items wing,
+% tail, ...
+switch wing.type
+    %=============  wingn
+    case 'wing'
+        % aileron
+        if wing.aileron.chord > 0
+            kk = kk+1;
+            ailspan = wing.aileron.Span*(b(4)-b(3));
+            if wing.aileron.position==0
+                yin  = wing.spanwise_kink2;
+                yout = yin + ailspan;
+            elseif wing.aileron.position==1
+                yout = 1;
+                yin  = yout - ailspan;
+            else
+                yin  = (wing.spanwise_kink2+1)/2-ailspan/2;
+                yout = yin + ailspan;
+            end
+            eta = [eta,0*eta(:,1)];
+            eta = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end-1,1) = yin; eta(end-1,end)=wing.aileron.chord;
+            eta(end  ,1) = yout; eta(end  ,end)=wing.aileron.chord;
+            eta = sort_col_1(eta);
+            header{kk} = ['ail',num2str(wing.seqno)];
+            dum = 0;
+            if isfield(wing.aileron,'deflection')
+                dum=wing.aileron.deflection;
+            end
+            defl{kk,1}= pi/180*dum;
+            defl{kk,2}= 2;
+            hingedata{kk}=[];
+            csurfsym{kk}= -1; % aileron default
+            if isfield(wing.aileron,'defl_sym')
+                csurfsym{kk}= wing.aileron.defl_sym; % aileron default
+                if wing.aileron.defl_sym==0 % independent
+                    header{kk} = ['ail',num2str(wing.seqno),'s']; % rename
+                    disp(['ailsym0s ',num2str(kk)])
+                    kk = kk+1;
+                    csurfsym{kk}= 0; % 
+                    eta = [eta,0*eta(:,1)];
+                    eta = [eta;0*eta(1,:);0*eta(1,:)];
+                    eta(end-1,1) = yin; eta(end-1,end)=wing.aileron.chord;
+                    eta(end  ,1) = yout; eta(end  ,end)=wing.aileron.chord;
+                    eta = sort_col_1(eta);
+                    header{kk} = ['ail',num2str(wing.seqno),'p'];
+                    disp(['ailsym0p ',num2str(kk)])
+                    dum = 0;
+                    if isfield(wing.aileron,'deflection')
+                        dum=wing.aileron.deflection;
+                    end
+                    defl{kk,1}= pi/180*dum;
+                    defl{kk,2}= 2;
+                    hingedata{kk}=[];
+                end
+            end
+        end
+        % flap
+        if wing.flap.kink1_chord > 0
+            kk = kk + 1;
+            if wing.flap.root_chord == 0
+                yin  = wing.spanwise_kink1;
+                yout = wing.spanwise_kink2;
+                cin  = wing.flap.kink1_chord;
+                cout = wing.flap.kink2_chord;
+            elseif wing.flap.kink2_chord == 0
+                yin  = 0;
+                yout = wing.spanwise_kink1;
+                cin  = wing.flap.root_chord;
+                cout = wing.flap.kink1_chord;
+            else
+                yin  = 0;
+                yout = wing.spanwise_kink2;
+                cin  = wing.flap.root_chord;
+                cout = wing.flap.kink2_chord;
+            end
+            eta = [eta,0*eta(:,1)];
+            eta = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end-1,1) = yin; eta(end-1,end)=cin;
+            eta(end  ,1) = yout; eta(end ,end)=cout;
+            eta = sort_col_1(eta);
+            header{kk} = ['flap',num2str(wing.seqno)];
+            csurfsym{kk}=1;
+            dum = 0;
+            if isfield(wing.flap,'deflection')
+                dum = wing.flap.deflection;
+            end
+            defl{kk,1}= pi/180*dum;
+            defl{kk,2}= 2;
+            hingedata{kk}=[];
+        end
+        % slat
+        if wing.slat.chord > 0
+            kk = kk+1;
+            yin  =  wing.slat.root_position*(b(2)-b(1));
+            yout =  b(3)+wing.slat.tip_position*(b(4)-b(3));
+            eta = [eta,0*eta(:,1)];
+            eta = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end-1,1) = yin; eta(end-1,end)=wing.slat.chord;
+            eta(end  ,1) = yout; eta(end ,end)=wing.slat.chord;
+            eta = sort_col_1(eta);
+            header{kk} = ['slat',num2str(wing.seqno)];
+            csurfsym{kk}=1;
+            dum = 0;
+            if isfield(wing.slat,'deflection');
+                dum = wing.slat.deflection;
+            end
+            defl{kk,1}= pi/180*dum;
+            defl{kk,2}= 1; % LE device
+            hingedata{kk}=[];
+        end
+
+        %====================== Vtail n
+    case 'Vtail'
+        if wing.Rudder.chord > 0
+            kk = kk+1;
+            csurfsym{kk}=1;
+            yin = max(0.5-wing.Rudder.Span/2,0);
+            yout= min(yin + wing.Rudder.Span,1);
+            eta = [eta,0*eta(:,1)];
+            eta = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end-1,1) = yin; eta(end-1,end)=wing.Rudder.chord;
+            eta(end  ,1) = yout; eta(end ,end)=wing.Rudder.chord;
+            eta = sort_col_1(eta);
+            header{kk} = ['rud',num2str(wing.seqno)];
+            csurfsym{kk}=1;
+            dum = 0;
+            if isfield(wing.Rudder,'deflection')
+                dum = wing.Rudder.deflection;
+            end
+            defl{kk,1}= pi/180*dum;
+            defl{kk,2}= 2; % TE
+            hingedata{kk}=[];
+        end
+       
+        %=========== Htail n
+    case 'Htail'
+        if wing.Elevator.chord > 0
+            kk   = kk+1;
+            csurfsym{kk}=1;
+            yin  = 0.5-wing.Elevator.Span/2;
+            yout = yin + wing.Elevator.Span;
+            eta  = [eta,0*eta(:,1)];
+            eta  = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end-1,1) = yin ; eta(end-1,end)=wing.Elevator.chord;
+            eta(end  ,1) = yout; eta(end  ,end)=wing.Elevator.chord;
+            eta          = sort_col_1(eta);
+            header{kk}   = ['ele',num2str(wing.seqno)];
+            csurfsym{kk}=1;
+            dum = 0;
+            if isfield(wing.Elevator,'deflection')
+                dum = wing.Elevator.deflection;
+            end
+            defl{kk,1} = pi/180*dum;
+            defl{kk,2} = 2; % TE
+            hingedata{kk}=[];
+        end
+ 
+        %================== Canard n
+    case 'Canard'
+        if wing.Elevator.chord > 0  % there is an elevator
+            kk = kk+1;
+            csurfsym{kk}=1;
+            switch wing.layout
+                case 0
+                    yin  = wing.spanwise_kink;
+                    yout = min(yin + wing.Elevator.Span,1);
+                case 1
+                    yout = wing.spanwise_kink;
+                    yin  = max(yout - wing.Elevator.Span,0);
+                otherwise
+                    disp(['unknown Canard layout ',num2str(wing.layout)]);
+            end
+            eta = [eta,0*eta(:,1)];
+            eta = [eta;0*eta(1,:);0*eta(1,:)];
+            eta(end-1,1) = yin ; eta(end-1,end)=wing.Elevator.chord;
+            eta(end  ,1) = yout; eta(end  ,end)=wing.Elevator.chord;
+            eta = sort_col_1(eta);
+            header{kk}= ['ele',num2str(wing.seqno)];
+            dum = 0;
+            if isfield(wing.Elevator,'deflection');
+                dum = wing.Elevator.deflection;
+            end
+            defl{kk,1}= pi/180*dum;
+            defl{kk,2}= 2; % TE
+            hingedata{kk}=[];
+        end
+
+        %====================== not known surface type
+    otherwise
+        disp(['insert_chords_wing: unknown type,' wing.type])
+        return
+end
+%disp('eta')
+%eta
+% add all contents rows for almost coinciding breaks
+ii = find(abs(diff(eta(:,1))) > 0.01);
+ij = 1;
+i0 = 1;
+eta1 = eta;
+for k = 1:length(ii)
+    ie = ii(k);
+    eta1(ij,1)    = eta(i0,1);
+    eta1(ij,2:end)= sum(eta(i0:ie,2:end),1);
+    ij = ij+1;
+    i0 = ie+1;
+end
+disp('eta1')
+eta1= [eta1(1:ij-1,:);[bmax,sum(eta(i0:end,2:end),1)]];
+%eta1
+ncs = length(header);
+for k = 2:1+ncs
+    % replace zeros between start and end by linear interpolation
+    i1 = find(eta1(:,k)~=0);
+    if ~isempty(i1) > 0
+        if length(i1)==1
+            i11 = 1; i12 = i1(1);
+        else
+            i11 = i1(1); i12 = i1(2);
+        end
+        for j = i11:i12
+            frac = (j-i1(1))/(i1(2)-i1(1));
+            eta1(j,k) = eta1(i1(1),k)*(1-frac)+frac*eta1(i1(2),k);
+        end
+    end
+end
+eta1(:,1) = eta1(:,1)*ss;

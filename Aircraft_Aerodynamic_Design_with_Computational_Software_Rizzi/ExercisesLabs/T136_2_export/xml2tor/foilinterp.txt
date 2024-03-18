@@ -1,0 +1,14 @@
+flatticesetup2(geo)
+geo.foil struct array
+names OR real. =int + frac :
+interpolate between foils int and int+1
+1. go through geo.foil. make foilcoord, struct array
+with foilkeys, indices into cell array foilarrays
+foilarrays{foilkeys(nwing,nquad,1 or 2)}, 
+
+loop over quads
+    foil = filename or 4digits or 5digits or nx2 array
+    geometry19 (foil1, foil2)
+        slope2(foil)
+            profilegen(foil) if foil == nx2 array, return foil - done
+end quad loop
