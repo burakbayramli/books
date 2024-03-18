@@ -1,4 +1,5 @@
 # KatzPlotkin
+
 This is an archive of the fixed-format Fortran programs provided by Joseph Katz and Allen Plotkin in their book titled [Low-Speed Aerodynamics](https://doi.org/10.1017/CBO9780511810329).  The authors of the book reserve all rights to the code and these programs are transcribed verbatim for ease of use solely for educational purposes.
 
 ## Directory structure
@@ -7,11 +8,15 @@ Inside each directory, the source code is named `pXX.f` and an example output is
 A Makefile (tested on Linux) is also provided.
 
 ## Usage
+
 Compile the code using either the provided `Makefile` or using the command:
+
 ```Bash
 gfortran p14.f -o p14.out
 ```
+
 You can then run it using 
+
 ```Bash
 ./p14.out
 ```
