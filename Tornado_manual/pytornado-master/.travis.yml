@@ -1,0 +1,64 @@
+# See also: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/use-conda-with-travis-ci.html
+
+sudo: false
+
+language: python
+
+# See https://docs.travis-ci.com/user/languages/python/#running-python-tests-on-multiple-operating-systems
+jobs:
+  include:
+    # === LINUX ===
+    - name: "Python 3.6 on Linux"
+      python: 3.6
+      before_install:
+        - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+
+    # === MacOS ===
+    - name: "Python 3.7.4 on macOS"
+      os: osx
+      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
+      language: shell       # 'language: python' is an error on Travis CI macOS
+      before_install:
+        - brew update
+        - brew install bash
+        - wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh
+
+    # # === Windows ===
+    # - name: "Python 3.6.0 on Windows"
+    #   os: windows           # Windows 10.0.17134 N/A Build 17134
+    #   language: shell       # 'language: python' is an error on Travis CI Windows
+    #   before_install:
+    #     - choco install wget
+    #     - choco install python --version 3.6.0
+    #     - python -m pip install --upgrade pip
+    #     - wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe -O /c/miniconda.exe
+    #      # See: https://docs.anaconda.com/anaconda/install/silent-mode/
+    #     - start /wait "" /c/miniconda.exe /InstallationType=JustMe /RegisterPython=0 /S /D=/c/miniconda  ## TEST TIMES OUT HERE...
+    #   env: PATH=/c/Python36:/c/Python36/Scripts:/c/miniconda:$PATH
+
+install:
+  # ----- Setup Miniconda -----
+  - |
+    if [ "$TRAVIS_OS_NAME" = "windows" ]; then
+      Write-Output "test output"
+    else
+      bash miniconda.sh -b -p $HOME/miniconda
+      export PATH="$HOME/miniconda/bin:$PATH"
+      hash -r
+    fi
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a  # Useful for debugging any issues with conda
+  - conda env create -f environment.yml
+  - source activate pytornado
+
+  # ----- Install PyPI requirements and PyTornado itself -----
+  - pip install numpy
+  - python setup.py install
+  - pip install -r requirements.txt
+
+script:
+  - bash run_pytest.sh
+
+after_success:
+  - codecov
