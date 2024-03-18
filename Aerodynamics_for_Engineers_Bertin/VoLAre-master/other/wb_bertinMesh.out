@@ -1,0 +1,571 @@
+
+                                                                   **                 
+                                                       ***        **                  
+                                                      ***        **             ***   
+                                                      **        **            ******  
+                                           ****       **       **          ******     
+                                           ****      **       **         *****        
+                                            ***      **      **        *****                *
+                                            ***      **     **       ****            *********
+                                    *       ***      *     **     ****          ****************
+                                   ***       ***     *    **    ****       **************
+                                  *****      ***     *   **   ***   *********** 
+                                  ******      **    *   **  **      ******** 
+                                   ******     **    *  **                 ********************
+                                     *****     **   ***        ZONA          ***  *******************
+                               *      *****    **   *       AEROELASTIC        **        ************
+                               **       ****    *  *      SOFTWARE SYSTEM       *****            ****
+                               ****      ****   ***                              *******
+                              *******     ****   *                                *********
+                              *********     ***  *          -  ZAERO  -           ***  *******
+                                 *********   *****          VERSION 9.0A          ***    *********
+                                    ********   ***      Z90A-32-012215-dz01       *****    **********
+                              *         ******  **                                ******     *********
+                               ****        ********   RELEASE DATE: JAN-2015     *********     *******
+                               *********       *****                            ***********      ****
+                               ***************   ****   LICENSE NO. 10245085   *****  ******       *
+                                **********************                        ******   ****** 
+                                            ************                    ********   ********
+                                                    *******             *************   *********
+                                  ********************************************* ******  **********
+                                   ********************    *******************  ******   ********
+                                    *************        ***************  ****  *******   *****
+                                     *******         *********** ******  *****  *******   ****
+                                      *          ************  *******  ******  ********   *
+                                             **************  ********  *******  ********
+                                           **************   ********   ******   ********
+                                              ********    *********   *******   *****
+                                                ****    **********   ********   ***
+                                                  *   ***********   *********
+                                                          ******    *******
+
+
+
+
+                    THIS PROGRAM IS CONFIDENTIAL AND A TRADE SECRET OF ZONA TECHNOLOGY, INC.  THE RECEIPT OR
+                POSSESSION OF THIS PROGRAM DOES NOT CONVEY ANY RIGHTS TO REPRODUCE OR DISCLOSE ITS CONTENTS, OR TO
+               MANUFACTURE, USE, OR SELL ANYTHING HEREIN, IN WHOLE OR IN PART, WITHOUT THE SPECIFIC WRITTEN CONSENT
+                                                       OF ZONA TECHNOLOGY, INC.
+
+
+
+
+                                              * * * PROGRAM STARTED ON 08/02/2017 AT 10:21:12 * * *
+
+
+
+                                                  E X E C U T I V E  C O N T R O L  S U M M A R Y
+
+                                  |...1...|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|..10...|
+
+
+                                  ASSIGN FEM=bertinStructure\sym.f06,PRINT=0,FORM=MSC,BOUND=SYM,SUPORT=135        
+                                  ASSIGN FEM=bertinStructure\anti.f06,PRINT=0,FORM=MSC,BOUND=ANTI,SUPORT=246      
+                                  ASSIGN MATRIX=bertinStructure\sym.mgh,PRINT=0,FORM=FORMAT,MNAME=SMGH            
+                                  ASSIGN MATRIX=bertinStructure\anti.mgh,PRINT=0,FORM=FORMAT,MNAME=AMGH           
+                                  CEND                                                                            
+
+
+                                                       C A S E  C O N T R O L  S U M M A R Y 
+
+                                                S I N G L E  P R E C I S I O N  C O M P U T A T I O N 
+
+                                        M A X I M U M  A L L O C A B L E  M E M O R Y  = 800  M E G A B Y T E S
+
+                                  |...1...|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|..10...|
+
+
+                                  TITLE= Weber and Brebner Wing - Bertin Mesh                                     
+                                  ECHO = SORT                                                                     
+                                  SUBCASE = 1                                                                     
+                                  SUBTITLE=CL .1                                                                  
+                                  TRIM=100                                                                        
+                                  SUBCASE = 2                                                                     
+                                  SUBTITLE=CL .2                                                                  
+                                  TRIM=200                                                                        
+                                  SUBCASE = 3                                                                     
+                                  SUBTITLE=CL=.3                                                                  
+                                  TRIM=300                                                                        
+                                  SUBCASE = 4                                                                     
+                                  SUBTITLE=CL=.4                                                                  
+                                  TRIM=400                                                                        
+                                  SUBCASE = 5                                                                     
+                                  SUBTITLE=CL=.5                                                                  
+                                  TRIM=500                                                                        
+                                  BEGIN BULK                                                                      
+
+
+                                                       S O R T E D   B U L K   D A T A   E C H O
+                    CARD
+                    COUNT         |...1...|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|..10...|
+
+
+                        1 -       AEROZ           YES                             0.2     1.      .2      +AEROZ  
+                        2 -       +AEROZ  0.      0.      0.                                                      
+                        3 -       CAERO7  101     WING            5       2       0               0       +CA1    
+                        4 -       +CA1    0.      0.      0.      0.2     0       0                       +CA2    
+                        5 -       +CA2    0.5     0.5     0.      0.2     0       0                               
+                        6 -       CORD2R  3       0       .1      0.      0.      .1      0.      1.      +       
+                        7 -       +       .8071068-.7071070.                                                      
+                        8 -       MKAEROZ 100     0.0     0       0                                       +       
+                        9 -       +       0.0010                                                                  
+                       10 -       PANLST2 101     101     101     THRU    104                                     
+                       11 -       PLTTRIM 100     100     RIGID   CP      NASTRAN WBB_RCP_OUT.DAT                 
+                       12 -       SET1    100     1       2                                                       
+                       13 -       SPLINE2 100     WING    101     100     0.0             3                       
+                       14 -       TRIM    100     100     25.     0       0       0.25    0.      0.      +T1     
+                       15 -       +T1     .031081 1.      1.      0.      1.      0.      0.      1.      +T2     
+                       16 -       +T2     G       NONE    NONE    0.5     NONE    NONE    NONE            +T3     
+                       17 -       +T3     100     FREE                                                            
+                       18 -       TRIM    200     100     25.     0       0       0.25    0.      0.              
+                       19 -               .031081 1.      1.      0.      1.      0.      0.      1.              
+                       20 -               G       NONE    NONE    1.      NONE    NONE    NONE                    
+                       21 -               100     FREE                                                            
+                       22 -       TRIM    300     100     25.     0       0       0.25    0.      0.              
+                       23 -               .031081 1.      1.      0.      1.      0.      0.      1.              
+                       24 -               G       NONE    NONE    1.5     NONE    NONE    NONE                    
+                       25 -               100     FREE                                                            
+                       26 -       TRIM    400     100     25.     0       0       0.25    0.      0.              
+                       27 -               .031081 1.      1.      0.      1.      0.      0.      1.              
+                       28 -               G       NONE    NONE    2.      NONE    NONE    NONE                    
+                       29 -               100     FREE                                                            
+                       30 -       TRIM    500     100     25.     0       0       0.25    0.      0.              
+                       31 -               .031081 1.      1.      0.      1.      0.      0.      1.              
+                       32 -               G       NONE    NONE    2.5     NONE    NONE    NONE                    
+                       33 -               100     FREE                                                            
+                       34 -       TRIMVAR 100     ALPHA                                                           
+                       35 -       ENDDATA
+
+
+
+   ========================================================================================================================
+
+     SYMMETRIC (OR ASYMMETRIC) FINITE ELEMENT MODAL RESULTS ARE SUCCESSFULLY READ IN FROM FILE bertinStructure\sym.f06                                                         
+     RIGID BODY DEGREES OF FREEDOM (DEFINED IN THE FEM BASIC COORDINATE SYSTEM) =     135
+
+            MODE      EXTRACTION      EIGENVALUE              FREQUENCY                      GENERALIZED        
+                        ORDER         (RAD/S)**2         (RAD/S)            (HZ)            MASS       STIFFNESS
+               1               1    -0.59611E-12     0.77208E-06     0.12288E-06     0.10000E+01     0.59611E-12
+               2               2    -0.11502E-13     0.10725E-06     0.17069E-07     0.10000E+01     0.11502E-13
+               3               3     0.72972E-11     0.27013E-05     0.42993E-06     0.10000E+01     0.72972E-11
+               4               4     0.25032E+04     0.50032E+02     0.79628E+01     0.10000E+01     0.25032E+04
+               5               5     0.24393E+05     0.15618E+03     0.24857E+02     0.10000E+01     0.24393E+05
+               6               6     0.40700E+05     0.20174E+03     0.32108E+02     0.10000E+01     0.40700E+05
+
+      MASS UNIT AND LENGTH UNIT OF THE FEM MODEL ARE IN: NONE  AND  NONE ,  RESPECTIVELY
+
+   ========================================================================================================================
+
+
+
+   ========================================================================================================================
+
+     ANTI-SYMMETRIC FINITE ELEMENT MODAL RESULTS ARE SUCCESSFULLY READ IN FROM FILE bertinStructure\anti.f06                                                        
+     RIGID BODY DEGREES OF FREEDOM (DEFINED IN THE FEM BASIC COORDINATE SYSTEM) =     246
+
+            MODE      EXTRACTION      EIGENVALUE              FREQUENCY                      GENERALIZED        
+                        ORDER         (RAD/S)**2         (RAD/S)            (HZ)            MASS       STIFFNESS
+               1               1    -0.17931E-12     0.42345E-06     0.67395E-07     0.10000E+01     0.17931E-12
+               2               2    -0.49738E-13     0.22302E-06     0.35495E-07     0.10000E+01     0.49738E-13
+               3               3     0.41347E-11     0.20334E-05     0.32362E-06     0.10000E+01     0.41347E-11
+               4               4     0.24212E+04     0.49206E+02     0.78313E+01     0.10000E+01     0.24212E+04
+               5               5     0.24816E+05     0.15753E+03     0.25072E+02     0.10000E+01     0.24816E+05
+               6               6     0.40701E+05     0.20174E+03     0.32109E+02     0.10000E+01     0.40701E+05
+
+      MASS UNIT AND LENGTH UNIT OF THE FEM MODEL ARE IN: NONE  AND  NONE ,  RESPECTIVELY
+
+   ========================================================================================================================
+
+
+
+
+
+
+
+                                             ****************************************
+                                             *                                      *
+                                             *       SUBCASE       =        1       *
+                                             *       DISCIPLINE    = TRIM           *
+                                             *       BULK ENTRY ID =      100       *
+                                             *                                      *
+                                             ****************************************
+
+
+
+                                   S U M M A R Y   O F   T R I M   E V A L U A T I O N
+
+         TITLE   = Weber and Brebner Wing - Bertin Mesh                                    
+         SUBTITLE= CL .1                                                                   
+         LABEL   =                                                                         
+
+ MACH NUMBER =  0.0000. STEADY AERODYNAMICS COMPUTED BY MKAEROZ BULK DATA CARD WITH IDMK=     100 AT K=0.0
+ DYNAMIC PRESSURE= 0.25000E+02             
+
+                                      D E T E R M I N E D   T R I M   S Y S T E M
+
+ TRIM TYPE = SYMMETRIC FLIGHT CONDITION. NUMBER OF TRIM DEGREES OF FREEDOM=  1
+ TRIM DEGREES OF FREEDOM ARE:  NZ    
+
+
+ LONGITUDINAL (OR ASYMMETRIC) AERODYNAMIC STABILITY DERIVATIVES OF BOTH SIDES OF THE AIRCRAFT AT MACH=  0.0000
+ REFC=      0.2000 REFB=      1.0000 REFS=         0.2000 MOMENT CENTER(X,Y,Z)=      0.0000      0.0000      0.0000
+
+ -------------------------------------------------------------------------------------------------------------------------------
+ | IDVAR  | LABEL  | DRAG COEFFICIENT| SIDE FORCE COEFF| LIFT COEFFICIENT|ROLL MOMENT COEFF|PITCH MOMENT COEF| YAW MOMENT COEFF|
+ |        |        |  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|
+ -------------------------------------------------------------------------------------------------------------------------------
+ |     100|ALPHA   | 0.00000| 0.00000| 0.00000| 0.00000| 0.06722| 0.06539| 0.00000| 0.00000|-0.10056|-0.09742| 0.00000| 0.00000|
+ |  UNITS= 1/DEG   | E/R= 0.10000E+01| E/R= 0.10000E+01| E/R= 0.97278E+00| E/R= 0.10000E+01| E/R= 0.96886E+00| E/R= 0.10000E+01|
+ -------------------------------------------------------------------------------------------------------------------------------
+
+
+                          T R I M   R E S U L T S   O F   T R I M   E X E C U T I V E   C O N T R O L  =      100
+
+    NUMBER OF TRIM DEGREES OF FREEDOM =  1    XCG =   0.2500E+00  YCG =   0.0000E+00  ZCG =   0.0000E+00
+
+                  LABEL  SYMMETRY FLAG                  FLEXIBLE                                       RIGID                 
+    USER INPUT:   NZ         SYMMETRIC   5.0000E-01 G        1.6087E+01 NONE/S/S      5.0000E-01 G        1.6087E+01 NONE/S/S
+
+    NUMBER OF TRIM VARIABLES =     1
+
+                IDVAR  LABEL      SYMMETRY FLAG      FLEXIBLE       RIGID      UNITS    LOWER LIMIT   UPPER LIMIT SATISFIED?
+   COMPUTED:      100  ALPHA          SYMMETRIC    1.52918E+00   1.48755E+00   DEGREES -1.00000E+30   1.00000E+30       YES
+
+
+     S U M M A R Y   O F   T O T A L   A E R O D Y N A M I C   F O R C E S   A N D   M O M E N T S
+
+                 COEFFICIENTS             FLEXIBLE               RIGID     UNITS
+            INDUCED DRAG(CDL):             0.00275             0.00260     FX/REFS/Q
+            DRAG AT TRIM(CD0):             0.00000             0.00000     FX/REFS/Q
+               SIDE FORCE(CY):             0.00000             0.00000     FY/REFS/Q
+                     LIFT(CL):             0.10000             0.10000     FZ/REFS/Q
+              ROLL MOMENT(CR):             0.00000             0.00000     MX/REFS/REFB/Q
+             PITCH MOMENT(CM):            -0.14898            -0.14958     MY/REFS/REFC/Q
+               YAW MOMENT(CN):             0.00000             0.00000     MZ/REFS/REFB/Q
+    CD DUE TO LE SUCTION(CDT):            -0.00612            -0.00612     FX/REFS/Q
+    CM DUE TO LE SUCTION(CMT):             0.00000             0.00000     MY/REFS/REFC/Q
+    CN DUE TO LE SUCTION(CNT):             0.00000             0.00000     MZ/REFS/REFB/Q
+
+
+   M O D A L   C O O R D I N A T E S   S O L U T I O N   O F       6   S Y M M E T R I C   M O D E S
+ IN DMI BULK DATA FORMAT. THIS CAN BE USED AS THE INITIAL CONDITION OF THE TRANSIENT RESPONSE ANALYSIS
+DMI     SMODAL  0       2       2               DMIL           6       1
+DMIL              SMODAL               1               1+0.000000000E+00+CONT   
++CONT   +0.000000000E+00+0.000000000E+00+1.509587601E-04+4.768867888E-22+CONT
++CONT   +1.213273727E-21
+
+
+
+
+
+                                             ****************************************
+                                             *                                      *
+                                             *       SUBCASE       =        2       *
+                                             *       DISCIPLINE    = TRIM           *
+                                             *       BULK ENTRY ID =      200       *
+                                             *                                      *
+                                             ****************************************
+
+
+
+                                   S U M M A R Y   O F   T R I M   E V A L U A T I O N
+
+         TITLE   = Weber and Brebner Wing - Bertin Mesh                                    
+         SUBTITLE= CL .2                                                                   
+         LABEL   =                                                                         
+
+ MACH NUMBER =  0.0000. STEADY AERODYNAMICS COMPUTED BY MKAEROZ BULK DATA CARD WITH IDMK=     100 AT K=0.0
+ DYNAMIC PRESSURE= 0.25000E+02             
+
+                                      D E T E R M I N E D   T R I M   S Y S T E M
+
+ TRIM TYPE = SYMMETRIC FLIGHT CONDITION. NUMBER OF TRIM DEGREES OF FREEDOM=  1
+ TRIM DEGREES OF FREEDOM ARE:  NZ    
+
+
+ LONGITUDINAL (OR ASYMMETRIC) AERODYNAMIC STABILITY DERIVATIVES OF BOTH SIDES OF THE AIRCRAFT AT MACH=  0.0000
+ REFC=      0.2000 REFB=      1.0000 REFS=         0.2000 MOMENT CENTER(X,Y,Z)=      0.0000      0.0000      0.0000
+
+ -------------------------------------------------------------------------------------------------------------------------------
+ | IDVAR  | LABEL  | DRAG COEFFICIENT| SIDE FORCE COEFF| LIFT COEFFICIENT|ROLL MOMENT COEFF|PITCH MOMENT COEF| YAW MOMENT COEFF|
+ |        |        |  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|
+ -------------------------------------------------------------------------------------------------------------------------------
+ |     100|ALPHA   | 0.00000| 0.00000| 0.00000| 0.00000| 0.06722| 0.06539| 0.00000| 0.00000|-0.10056|-0.09742| 0.00000| 0.00000|
+ |  UNITS= 1/DEG   | E/R= 0.10000E+01| E/R= 0.10000E+01| E/R= 0.97278E+00| E/R= 0.10000E+01| E/R= 0.96886E+00| E/R= 0.10000E+01|
+ -------------------------------------------------------------------------------------------------------------------------------
+
+
+                          T R I M   R E S U L T S   O F   T R I M   E X E C U T I V E   C O N T R O L  =      200
+
+    NUMBER OF TRIM DEGREES OF FREEDOM =  1    XCG =   0.2500E+00  YCG =   0.0000E+00  ZCG =   0.0000E+00
+
+                  LABEL  SYMMETRY FLAG                  FLEXIBLE                                       RIGID                 
+    USER INPUT:   NZ         SYMMETRIC   1.0000E+00 G        3.2174E+01 NONE/S/S      1.0000E+00 G        3.2174E+01 NONE/S/S
+
+    NUMBER OF TRIM VARIABLES =     1
+
+                IDVAR  LABEL      SYMMETRY FLAG      FLEXIBLE       RIGID      UNITS    LOWER LIMIT   UPPER LIMIT SATISFIED?
+   COMPUTED:      100  ALPHA          SYMMETRIC    3.05837E+00   2.97511E+00   DEGREES -1.00000E+30   1.00000E+30       YES
+
+
+     S U M M A R Y   O F   T O T A L   A E R O D Y N A M I C   F O R C E S   A N D   M O M E N T S
+
+                 COEFFICIENTS             FLEXIBLE               RIGID     UNITS
+            INDUCED DRAG(CDL):             0.01100             0.01039     FX/REFS/Q
+            DRAG AT TRIM(CD0):             0.00000             0.00000     FX/REFS/Q
+               SIDE FORCE(CY):             0.00000             0.00000     FY/REFS/Q
+                     LIFT(CL):             0.20000             0.20000     FZ/REFS/Q
+              ROLL MOMENT(CR):             0.00000             0.00000     MX/REFS/REFB/Q
+             PITCH MOMENT(CM):            -0.29796            -0.29916     MY/REFS/REFC/Q
+               YAW MOMENT(CN):             0.00000             0.00000     MZ/REFS/REFB/Q
+    CD DUE TO LE SUCTION(CDT):            -0.02449            -0.02449     FX/REFS/Q
+    CM DUE TO LE SUCTION(CMT):             0.00000             0.00000     MY/REFS/REFC/Q
+    CN DUE TO LE SUCTION(CNT):             0.00000             0.00000     MZ/REFS/REFB/Q
+
+
+   M O D A L   C O O R D I N A T E S   S O L U T I O N   O F       6   S Y M M E T R I C   M O D E S
+ IN DMI BULK DATA FORMAT. THIS CAN BE USED AS THE INITIAL CONDITION OF THE TRANSIENT RESPONSE ANALYSIS
+DMI     SMODAL  0       2       2               DMIL           6       1
+DMIL              SMODAL               1               1+0.000000000E+00+CONT   
++CONT   +0.000000000E+00+0.000000000E+00+3.019175201E-04+9.537735775E-22+CONT
++CONT   +2.426547454E-21
+
+
+
+
+
+                                             ****************************************
+                                             *                                      *
+                                             *       SUBCASE       =        3       *
+                                             *       DISCIPLINE    = TRIM           *
+                                             *       BULK ENTRY ID =      300       *
+                                             *                                      *
+                                             ****************************************
+
+
+
+                                   S U M M A R Y   O F   T R I M   E V A L U A T I O N
+
+         TITLE   = Weber and Brebner Wing - Bertin Mesh                                    
+         SUBTITLE= CL=.3                                                                   
+         LABEL   =                                                                         
+
+ MACH NUMBER =  0.0000. STEADY AERODYNAMICS COMPUTED BY MKAEROZ BULK DATA CARD WITH IDMK=     100 AT K=0.0
+ DYNAMIC PRESSURE= 0.25000E+02             
+
+                                      D E T E R M I N E D   T R I M   S Y S T E M
+
+ TRIM TYPE = SYMMETRIC FLIGHT CONDITION. NUMBER OF TRIM DEGREES OF FREEDOM=  1
+ TRIM DEGREES OF FREEDOM ARE:  NZ    
+
+
+ LONGITUDINAL (OR ASYMMETRIC) AERODYNAMIC STABILITY DERIVATIVES OF BOTH SIDES OF THE AIRCRAFT AT MACH=  0.0000
+ REFC=      0.2000 REFB=      1.0000 REFS=         0.2000 MOMENT CENTER(X,Y,Z)=      0.0000      0.0000      0.0000
+
+ -------------------------------------------------------------------------------------------------------------------------------
+ | IDVAR  | LABEL  | DRAG COEFFICIENT| SIDE FORCE COEFF| LIFT COEFFICIENT|ROLL MOMENT COEFF|PITCH MOMENT COEF| YAW MOMENT COEFF|
+ |        |        |  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|
+ -------------------------------------------------------------------------------------------------------------------------------
+ |     100|ALPHA   | 0.00000| 0.00000| 0.00000| 0.00000| 0.06722| 0.06539| 0.00000| 0.00000|-0.10056|-0.09742| 0.00000| 0.00000|
+ |  UNITS= 1/DEG   | E/R= 0.10000E+01| E/R= 0.10000E+01| E/R= 0.97278E+00| E/R= 0.10000E+01| E/R= 0.96886E+00| E/R= 0.10000E+01|
+ -------------------------------------------------------------------------------------------------------------------------------
+
+
+                          T R I M   R E S U L T S   O F   T R I M   E X E C U T I V E   C O N T R O L  =      300
+
+    NUMBER OF TRIM DEGREES OF FREEDOM =  1    XCG =   0.2500E+00  YCG =   0.0000E+00  ZCG =   0.0000E+00
+
+                  LABEL  SYMMETRY FLAG                  FLEXIBLE                                       RIGID                 
+    USER INPUT:   NZ         SYMMETRIC   1.5000E+00 G        4.8261E+01 NONE/S/S      1.5000E+00 G        4.8261E+01 NONE/S/S
+
+    NUMBER OF TRIM VARIABLES =     1
+
+                IDVAR  LABEL      SYMMETRY FLAG      FLEXIBLE       RIGID      UNITS    LOWER LIMIT   UPPER LIMIT SATISFIED?
+   COMPUTED:      100  ALPHA          SYMMETRIC    4.58755E+00   4.46266E+00   DEGREES -1.00000E+30   1.00000E+30       YES
+
+
+     S U M M A R Y   O F   T O T A L   A E R O D Y N A M I C   F O R C E S   A N D   M O M E N T S
+
+                 COEFFICIENTS             FLEXIBLE               RIGID     UNITS
+            INDUCED DRAG(CDL):             0.02475             0.02337     FX/REFS/Q
+            DRAG AT TRIM(CD0):             0.00000             0.00000     FX/REFS/Q
+               SIDE FORCE(CY):             0.00000             0.00000     FY/REFS/Q
+                     LIFT(CL):             0.30000             0.30000     FZ/REFS/Q
+              ROLL MOMENT(CR):             0.00000             0.00000     MX/REFS/REFB/Q
+             PITCH MOMENT(CM):            -0.44694            -0.44875     MY/REFS/REFC/Q
+               YAW MOMENT(CN):             0.00000             0.00000     MZ/REFS/REFB/Q
+    CD DUE TO LE SUCTION(CDT):            -0.05511            -0.05510     FX/REFS/Q
+    CM DUE TO LE SUCTION(CMT):             0.00000             0.00000     MY/REFS/REFC/Q
+    CN DUE TO LE SUCTION(CNT):             0.00000             0.00000     MZ/REFS/REFB/Q
+
+
+   M O D A L   C O O R D I N A T E S   S O L U T I O N   O F       6   S Y M M E T R I C   M O D E S
+ IN DMI BULK DATA FORMAT. THIS CAN BE USED AS THE INITIAL CONDITION OF THE TRANSIENT RESPONSE ANALYSIS
+DMI     SMODAL  0       2       2               DMIL           6       1
+DMIL              SMODAL               1               1+0.000000000E+00+CONT   
++CONT   +0.000000000E+00+0.000000000E+00+4.528762656E-04+1.430660366E-21+CONT
++CONT   +3.639821281E-21
+
+
+
+
+
+                                             ****************************************
+                                             *                                      *
+                                             *       SUBCASE       =        4       *
+                                             *       DISCIPLINE    = TRIM           *
+                                             *       BULK ENTRY ID =      400       *
+                                             *                                      *
+                                             ****************************************
+
+
+
+                                   S U M M A R Y   O F   T R I M   E V A L U A T I O N
+
+         TITLE   = Weber and Brebner Wing - Bertin Mesh                                    
+         SUBTITLE= CL=.4                                                                   
+         LABEL   =                                                                         
+
+ MACH NUMBER =  0.0000. STEADY AERODYNAMICS COMPUTED BY MKAEROZ BULK DATA CARD WITH IDMK=     100 AT K=0.0
+ DYNAMIC PRESSURE= 0.25000E+02             
+
+                                      D E T E R M I N E D   T R I M   S Y S T E M
+
+ TRIM TYPE = SYMMETRIC FLIGHT CONDITION. NUMBER OF TRIM DEGREES OF FREEDOM=  1
+ TRIM DEGREES OF FREEDOM ARE:  NZ    
+
+
+ LONGITUDINAL (OR ASYMMETRIC) AERODYNAMIC STABILITY DERIVATIVES OF BOTH SIDES OF THE AIRCRAFT AT MACH=  0.0000
+ REFC=      0.2000 REFB=      1.0000 REFS=         0.2000 MOMENT CENTER(X,Y,Z)=      0.0000      0.0000      0.0000
+
+ -------------------------------------------------------------------------------------------------------------------------------
+ | IDVAR  | LABEL  | DRAG COEFFICIENT| SIDE FORCE COEFF| LIFT COEFFICIENT|ROLL MOMENT COEFF|PITCH MOMENT COEF| YAW MOMENT COEFF|
+ |        |        |  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|
+ -------------------------------------------------------------------------------------------------------------------------------
+ |     100|ALPHA   | 0.00000| 0.00000| 0.00000| 0.00000| 0.06722| 0.06539| 0.00000| 0.00000|-0.10056|-0.09742| 0.00000| 0.00000|
+ |  UNITS= 1/DEG   | E/R= 0.10000E+01| E/R= 0.10000E+01| E/R= 0.97278E+00| E/R= 0.10000E+01| E/R= 0.96886E+00| E/R= 0.10000E+01|
+ -------------------------------------------------------------------------------------------------------------------------------
+
+
+                          T R I M   R E S U L T S   O F   T R I M   E X E C U T I V E   C O N T R O L  =      400
+
+    NUMBER OF TRIM DEGREES OF FREEDOM =  1    XCG =   0.2500E+00  YCG =   0.0000E+00  ZCG =   0.0000E+00
+
+                  LABEL  SYMMETRY FLAG                  FLEXIBLE                                       RIGID                 
+    USER INPUT:   NZ         SYMMETRIC   2.0000E+00 G        6.4348E+01 NONE/S/S      2.0000E+00 G        6.4348E+01 NONE/S/S
+
+    NUMBER OF TRIM VARIABLES =     1
+
+                IDVAR  LABEL      SYMMETRY FLAG      FLEXIBLE       RIGID      UNITS    LOWER LIMIT   UPPER LIMIT SATISFIED?
+   COMPUTED:      100  ALPHA          SYMMETRIC    6.11674E+00   5.95021E+00   DEGREES -1.00000E+30   1.00000E+30       YES
+
+
+     S U M M A R Y   O F   T O T A L   A E R O D Y N A M I C   F O R C E S   A N D   M O M E N T S
+
+                 COEFFICIENTS             FLEXIBLE               RIGID     UNITS
+            INDUCED DRAG(CDL):             0.04400             0.04154     FX/REFS/Q
+            DRAG AT TRIM(CD0):             0.00000             0.00000     FX/REFS/Q
+               SIDE FORCE(CY):             0.00000             0.00000     FY/REFS/Q
+                     LIFT(CL):             0.40000             0.40000     FZ/REFS/Q
+              ROLL MOMENT(CR):             0.00000             0.00000     MX/REFS/REFB/Q
+             PITCH MOMENT(CM):            -0.59592            -0.59833     MY/REFS/REFC/Q
+               YAW MOMENT(CN):             0.00000             0.00000     MZ/REFS/REFB/Q
+    CD DUE TO LE SUCTION(CDT):            -0.09797            -0.09796     FX/REFS/Q
+    CM DUE TO LE SUCTION(CMT):             0.00000             0.00000     MY/REFS/REFC/Q
+    CN DUE TO LE SUCTION(CNT):             0.00000             0.00000     MZ/REFS/REFB/Q
+
+
+   M O D A L   C O O R D I N A T E S   S O L U T I O N   O F       6   S Y M M E T R I C   M O D E S
+ IN DMI BULK DATA FORMAT. THIS CAN BE USED AS THE INITIAL CONDITION OF THE TRANSIENT RESPONSE ANALYSIS
+DMI     SMODAL  0       2       2               DMIL           6       1
+DMIL              SMODAL               1               1+0.000000000E+00+CONT   
++CONT   +0.000000000E+00+0.000000000E+00+6.038350402E-04+1.907547155E-21+CONT
++CONT   +4.853094907E-21
+
+
+
+
+
+                                             ****************************************
+                                             *                                      *
+                                             *       SUBCASE       =        5       *
+                                             *       DISCIPLINE    = TRIM           *
+                                             *       BULK ENTRY ID =      500       *
+                                             *                                      *
+                                             ****************************************
+
+
+
+                                   S U M M A R Y   O F   T R I M   E V A L U A T I O N
+
+         TITLE   = Weber and Brebner Wing - Bertin Mesh                                    
+         SUBTITLE= CL=.5                                                                   
+         LABEL   =                                                                         
+
+ MACH NUMBER =  0.0000. STEADY AERODYNAMICS COMPUTED BY MKAEROZ BULK DATA CARD WITH IDMK=     100 AT K=0.0
+ DYNAMIC PRESSURE= 0.25000E+02             
+
+                                      D E T E R M I N E D   T R I M   S Y S T E M
+
+ TRIM TYPE = SYMMETRIC FLIGHT CONDITION. NUMBER OF TRIM DEGREES OF FREEDOM=  1
+ TRIM DEGREES OF FREEDOM ARE:  NZ    
+
+
+ LONGITUDINAL (OR ASYMMETRIC) AERODYNAMIC STABILITY DERIVATIVES OF BOTH SIDES OF THE AIRCRAFT AT MACH=  0.0000
+ REFC=      0.2000 REFB=      1.0000 REFS=         0.2000 MOMENT CENTER(X,Y,Z)=      0.0000      0.0000      0.0000
+
+ -------------------------------------------------------------------------------------------------------------------------------
+ | IDVAR  | LABEL  | DRAG COEFFICIENT| SIDE FORCE COEFF| LIFT COEFFICIENT|ROLL MOMENT COEFF|PITCH MOMENT COEF| YAW MOMENT COEFF|
+ |        |        |  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|  RIGID |FLEXIBLE|
+ -------------------------------------------------------------------------------------------------------------------------------
+ |     100|ALPHA   | 0.00000| 0.00000| 0.00000| 0.00000| 0.06722| 0.06539| 0.00000| 0.00000|-0.10056|-0.09742| 0.00000| 0.00000|
+ |  UNITS= 1/DEG   | E/R= 0.10000E+01| E/R= 0.10000E+01| E/R= 0.97278E+00| E/R= 0.10000E+01| E/R= 0.96886E+00| E/R= 0.10000E+01|
+ -------------------------------------------------------------------------------------------------------------------------------
+
+
+                          T R I M   R E S U L T S   O F   T R I M   E X E C U T I V E   C O N T R O L  =      500
+
+    NUMBER OF TRIM DEGREES OF FREEDOM =  1    XCG =   0.2500E+00  YCG =   0.0000E+00  ZCG =   0.0000E+00
+
+                  LABEL  SYMMETRY FLAG                  FLEXIBLE                                       RIGID                 
+    USER INPUT:   NZ         SYMMETRIC   2.5000E+00 G        8.0435E+01 NONE/S/S      2.5000E+00 G        8.0435E+01 NONE/S/S
+
+    NUMBER OF TRIM VARIABLES =     1
+
+                IDVAR  LABEL      SYMMETRY FLAG      FLEXIBLE       RIGID      UNITS    LOWER LIMIT   UPPER LIMIT SATISFIED?
+   COMPUTED:      100  ALPHA          SYMMETRIC    7.64592E+00   7.43776E+00   DEGREES -1.00000E+30   1.00000E+30       YES
+
+
+     S U M M A R Y   O F   T O T A L   A E R O D Y N A M I C   F O R C E S   A N D   M O M E N T S
+
+                 COEFFICIENTS             FLEXIBLE               RIGID     UNITS
+            INDUCED DRAG(CDL):             0.06875             0.06491     FX/REFS/Q
+            DRAG AT TRIM(CD0):             0.00000             0.00000     FX/REFS/Q
+               SIDE FORCE(CY):             0.00000             0.00000     FY/REFS/Q
+                     LIFT(CL):             0.50000             0.50000     FZ/REFS/Q
+              ROLL MOMENT(CR):             0.00000             0.00000     MX/REFS/REFB/Q
+             PITCH MOMENT(CM):            -0.74490            -0.74791     MY/REFS/REFC/Q
+               YAW MOMENT(CN):             0.00000             0.00000     MZ/REFS/REFB/Q
+    CD DUE TO LE SUCTION(CDT):            -0.15307            -0.15306     FX/REFS/Q
+    CM DUE TO LE SUCTION(CMT):             0.00000             0.00000     MY/REFS/REFC/Q
+    CN DUE TO LE SUCTION(CNT):             0.00000             0.00000     MZ/REFS/REFB/Q
+
+
+   M O D A L   C O O R D I N A T E S   S O L U T I O N   O F       6   S Y M M E T R I C   M O D E S
+ IN DMI BULK DATA FORMAT. THIS CAN BE USED AS THE INITIAL CONDITION OF THE TRANSIENT RESPONSE ANALYSIS
+DMI     SMODAL  0       2       2               DMIL           6       1
+DMIL              SMODAL               1               1+0.000000000E+00+CONT   
++CONT   +0.000000000E+00+0.000000000E+00+7.547937566E-04+2.384433742E-21+CONT
++CONT   +6.066368533E-21
+
+
+
+                                             ****************************************
+                                             ***                                  ***
+                                             ***  Z A E R O   T E R M I N A T E D ***
+                                             ***                                  ***
+                                             ***          N O R M A L L Y         ***
+                                             ***                                  ***
+                                             ***      10:21:23    08/02/2017      ***
+                                             ***                                  ***
+                                             ****************************************

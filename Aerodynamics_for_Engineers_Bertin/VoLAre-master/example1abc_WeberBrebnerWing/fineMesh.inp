@@ -1,0 +1,65 @@
+$                                                                       $
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$       WID     LABEL   ACOORD  NSPAN   NCHORD  LSPAN   ZTAIC   PAFOIL7 $
+CAERO7  100     WING            11      11      3               0       +CA1
+$       XRL     YRL     ZRL     RCH     LRCHD   ATTCHR                  $
++CA1    0.      0.      0.      0.2     2       0                       +CA2
+$       XRT     YRT     ZRT     TCH     LTCHD   ATTCHT                  $
++CA2    0.5     0.5     0.      0.2     2       0
+$                                                                       $
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$AEFACT SID     VALUE1  VALUE2  ETC.
+AEFACT  2       0.0000  3.4550  10.9050 21.8300 35.2600 50.0000 64.7400
+        78.1700 89.0950 96.5450 100.0000
+AEFACT  3       0.0000  15.6434 30.9017 45.3990 58.7785 70.7107 80.9017   
+        89.1007 95.1057 98.7688 100.0000
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|    
+$ AEROZ ACSID   XZSYM   FLIP    FMMUNIT FMLUNIT REFC    REFB    REFS    CONT   $
+AEROZ           YES                             0.2     1.      .2      +AEROZ
++AEROZ  0.      0.      0.
+$
+$
+$
+$
+$$$$$$$$TRIMID  IDMK    QINF    IDOBJ   IDCONS
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+TRIM    100     100     25.     0       0       0.25    0.      0.      +T1 
+$
+$$$$$$$$WTMASS  WEIGHT  IXX     IXY     IYY     IXZ     IYZ     IZZ
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
++T1     .031081 1.      1.      0.      1.      0.      0.      1.      +T2 
+$
+$$$$$$$$TRNACC  NX      NY      NZ      PDOT    QDOT    RDOT    LOADSET
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
++T2     G       NONE    NONE    0.5     NONE    NONE    NONE            +T3
+$
+$$$$$$$$IDVAR    VAL    ETC..
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
++T3     100     FREE
+$
+$
+TRIM    200     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    1.      NONE    NONE    NONE
+        100     FREE
+TRIM    300     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    1.5     NONE    NONE    NONE
+        100     FREE
+TRIM    400     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    2.      NONE    NONE    NONE
+        100     FREE
+TRIM    500     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    2.5     NONE    NONE    NONE
+        100     FREE
+$
+TRIMVAR 100     ALPHA
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$TRIMFLT IDFLT  INPCFD  ALPHA   BETA    PRATE   QRATE   RRATE   THERMO
+$       LABEl1  VAL1    LABEL2  VAL2    LABEL3  VAL3    LABEL4  VAL4
+TRIMFLT 40              0.0     0.0     0.0     0.0     0.0     
+        ELEVATOR 0.0

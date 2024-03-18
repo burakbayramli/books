@@ -1,0 +1,64 @@
+assign output4='anti.mgh' status=unknown unit=11 form=formated
+assign output4='anti.mgg' status=unknown unit=12 form=formated
+assign output4='anti.kgh' status=unknown unit=13 form=unformated
+assign output4='anti.kgg' status=unknown unit=17 form=unformated
+SOL 103
+COMPILE SEMODES SOUIN=MSCSOU NOLIST $
+ALTER 'STRAIN ENERGY'
+MATGEN EQEXINS/INTEXT/9//LUSETS $ GENERATE EXTERNAL SEQUENCE MATRIX
+MPYAD KGG,PHG,/MKHINT $ MKHINT IS THE MKH IN INTERNAL SEQUENCE
+MPYAD INTEXT,MKHINT,/KGH $ TRANSFORM MKHINT TO EXTERNAL SEQUENCE
+MPYAD MGG,PHG,/MGHINT $ MGHINT IS THE MGH IN INTERNAL SEQUENCE
+MPYAD INTEXT,MGHINT,/MGH $ TRANSFORM MGHINT TO EXTERNAL SEQUENCE
+OUTPUT4 MGH//-1/11/2 $ OUTPUT MGH TO UNIT=11 IN anti.mgh
+OUTPUT4 MGG//-1/12/2 $ OUTPUT MGG TO UNIT=12 IN anti.mgg
+OUTPUT4 KGH//-1/13/2 $ OUTPUT KGH TO UNIT=13 IN anti.kgh
+OUTPUT4 KGG//-1/17/2 $ OUTPUT KGG TO UNIT=17 IN anti.kgg
+ENDALTER
+CEND
+  TITLE = Anti
+  ECHO = SORT
+  DISPLACEMENT(PRINT) = ALL
+  METHOD = 1
+  SPC = 2
+  SUPORT1 = 1
+BEGIN BULK
+$ ***************************************************************************
+$   Written by : Femap with NX Nastran
+$   Version    : 11.3.2
+$   Translator : NX Nastran
+$   From Model : H:\User\Dev\vortexLattice\zaero_compare\bertin\modeling.modfem
+$   Date       : Tue Aug 01 18:04:03 2017
+$ ***************************************************************************
+$
+PARAM,PRGPST,YES
+PARAM,POST,-1
+PARAM,OGEOM,NO
+PARAM,AUTOSPC,NO
+PARAM,GRDPNT,0
+EIGRL          1                      10       0                    MASS
+CORD2C         1       0      0.      0.      0.      0.      0.      1.+FEMAPC1
++FEMAPC1      1.      0.      1.        
+CORD2S         2       0      0.      0.      0.      0.      0.      1.+FEMAPC2
++FEMAPC2      1.      0.      1.        
+$ Femap with NX Nastran Coordinate System 3 : beam
+CORD2R         3       0      .1      0.      0.      .1      0.      1.+       
++       .8071068-.707107      0.        
+$ Femap with NX Nastran Constraint Set 2 : anti
+SPC1           2     135       1
+$ Femap with NX Nastran Constraint Set 1 : sym
+SUPORT1        1       1     246
+$ Femap with NX Nastran Property 2 : BEAM Property
+PBEAM          2       1   1000.    100.     10.      0.     20.      .1+       
++             0.      0.      0.      0.      0.      0.      0.      0.+       
++           YESA      1.                                                +       
++             0.      0.                                                        
+$ Femap with NX Nastran Material 1 : ISOTROPIC Material
+MAT1           1      1.             .33      0.      0.      0.        
+GRID           1       0      .1      0.      0.       0
+GRID           2       0      .6      .5      0.       0
+CONM2          2       1       0      1.      0.      0.      0.        +       
++             1.      0.      1.      0.      0.      1.
+CBEAM          3       2       1       2      1.      0.      0.
+ENDDATA f12fd893
+

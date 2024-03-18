@@ -1,0 +1,47 @@
+function varargout = fPANLST3(varargin)
+func = varargin{1};
+switch func
+    case 'readline'
+        varargout{1} = readline(varargin{2},varargin{3},varargin{4});
+        
+    case 'minRows'
+        varargout{1} = 1;
+    case 'maxRows'
+        varargout{1} = Inf;
+    otherwise
+        error('invalid input option')
+end
+
+end
+
+
+function placeHolder = readline(row,placeHolder,C)
+
+% PANLST3 SETID LABEL1 LABEL2 LABEL3 … -etc- …
+
+if row < 2
+       
+    placeHolder.SETID = str2num(C{2});
+    vi = 0;
+    while vi < 7
+        vi = vi + 1;
+        if size(C{vi+2},2)<1
+            break
+        end
+        placeHolder.VALUE{vi} = C{vi+2};
+    end
+    
+else
+    vi = size(placeHolder.VALUE,2);
+    ci = 1;
+    while ci < 9
+        vi = vi + 1;
+        ci = ci + 1;
+        if size(C{ci},2)<1
+            break
+        end
+        placeHolder.VALUE{vi} = C{ci};
+    end
+end
+
+end

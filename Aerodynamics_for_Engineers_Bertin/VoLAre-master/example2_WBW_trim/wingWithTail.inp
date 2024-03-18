@@ -1,0 +1,79 @@
+$                                                                       $
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$                                                                       $
+$                        * WING MACROELEMENTS *                         $
+$                                                                       $
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$                                                                       $
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$       WID     LABEL   ACOORD  NSPAN   NCHORD  LSPAN   ZTAIC   PAFOIL7 $
+CAERO7  100     WING            9       7       0               0       +CA1
+$       XRL     YRL     ZRL     RCH     LRCHD   ATTCHR                  $
++CA1    0.      0.      0.      0.2     0       0                       +CA2
+$       XRT     YRT     ZRT     TCH     LTCHD   ATTCHT                  $
++CA2    0.5     0.5     0.      0.2     0       0
+$                                                                       $
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$       WID     LABEL   ACOORD  NSPAN   NCHORD  LSPAN   ZTAIC   PAFOIL7 $
+CAERO7  1000    TAIL            5       5       0               0       +CA3
+$       XRL     YRL     ZRL     RCH     LRCHD   ATTCHR                  $
++CA3    1.0     0.0     0.1     0.1     0       0                       +CA4
+$       XRT     YRT     ZRT     TCH     LTCHD   ATTCHT                  $
++CA4    1.0     0.25    0.1     0.1     0       0
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|    
+$ AEROZ ACSID   XZSYM   FLIP    FMMUNIT FMLUNIT REFC    REFB    REFS    CONT   $
+AEROZ   1       YES                             0.2     1.      .2      +AEROZ
++AEROZ  0.      0.      0.
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|    
+$PANLST2SETID   MACROID BOX1    BOX2    BOX3    BOX4    BOX5    BOX6    CONT
+$CONT   BOX7    -etc-
+PANLST2 10      1000    1002    1003    1006    1007    1010    1011    
+        1014    1015
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|    
+$AESURFZLABEL   TYPE    CID     SETK    SETG    ACTID
+AESURFZ ELEVATOR SYM    -3      10
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|    
+$CORD2R CID     RID     A1      A2      A3      B1      B2      B3      CONT
+$CONT   C1      C2      C3
+CORD2R  3               1.05    0.0     0.1     1.05    1.0     0.1     +BC
++BC     2.05    0.0     0.1
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|    
+$TRIM   TRIMID  IDMK    QINF    IDOBJ   IDCONS  RHOX    RHOY    RHOZ 
+$       WTMASS  WEIGHT  IXX     IXY     IYY     IXZ     IYZ     IZZ
+$       TRNACC  NX      NY      NZ      PDOT    QDOT    RDOT    LOADSET
+$       IDVAR1  VAL1    IDVAR2  VAL2    -etc-
+$
+TRIM    100     100     25.     0       0       0.25    0.      0.      +T1 
++T1     .031081 1.      1.      0.      1.      0.      0.      1.      +T2 
++T2     G       NONE    NONE    0.5     NONE    NONE    NONE            +T3
+        10      FREE    20      FREE
+$
+TRIM    200     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    1.      NONE    NONE    NONE
+        10      FREE    20      FREE
+TRIM    300     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    1.5     NONE    NONE    NONE
+        10      FREE    20      FREE
+TRIM    400     100     25.     0       0       0.25    0.      0.
+        .031081 1.      1.      0.      1.      0.      0.      1.
+        G       NONE    NONE    2.      NONE    NONE    NONE
+        10      FREE    20      FREE
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$TRIMVAR IDVAR  LABEL   LOWER   UPPER   TRIMLNK DMI     SYM     INITIAL
+TRIMVAR 10      ALPHA                                           10
+TRIMVAR 20      ELEVATOR
+$
+$...1..|...2...|...3...|...4...|...5...|...6...|...7...|...8...|...9...|...10..|
+$TRIMFLT IDFLT  INPCFD  ALPHA   BETA    PRATE   QRATE   RRATE   THERMO
+$       LABEl1  VAL1    LABEL2  VAL2    LABEL3  VAL3    LABEL4  VAL4
+TRIMFLT 40              0.0     0.0     0.0     0.0     0.0     
+        ELEVATOR 0.0
+$
+$

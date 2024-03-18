@@ -1,0 +1,265 @@
+function [output]=fhingemoments(rudder,results,lattice,geo,state);
+
+                q=0.5*state.rho*state.AS^2;
+
+                mForces=results.F;      %Force matrix, per panel
+
+               Mp3=[]; 
+               [I K]=find(geo.flapped');      		
+               try
+               	wing=K(rudder);
+               	division=I(rudder);
+            	catch
+						terror(2)
+               return
+            	end
+                  
+               [q1 q2 q3]=size(lattice.VORTEX);
+               
+               if q2==8
+                  tempV1=lattice.VORTEX(:,1,:);
+                  tempV2=lattice.VORTEX(:,8,:);
+                  tempVP=squeeze((tempV1+tempV2)/2);    %Midpoint on Vortexline
+                  
+                  tempP1=lattice.XYZ(:,1,:);            
+                  tempP2=lattice.XYZ(:,2,:);
+                  tempPP=squeeze((tempP1+tempP2)/2);    %Midpoint on hingeline
+                  
+                  
+                  
+                  
+               end
+               
+               
+               if q2==4
+                  tempV1=lattice.VORTEX(:,2,:);
+                  tempV2=lattice.VORTEX(:,3,:);
+                  
+                  tempVP=squeeze((tempV1+tempV2)/2);
+                  
+                  tempP1=lattice.XYZ(:,1,:);            
+                  tempP2=lattice.XYZ(:,2,:);
+                  tempPP=squeeze((tempP1+tempP2)/2);
+                  
+                  
+               end
+               
+               
+               fsym=geo.fsym(wing,division);
+               fc=geo.fc(wing,division);
+               RC=geo.c(wing)*fc;
+               T=geo.T(wing,:);T2=cumprod(T);
+               if division>1
+                   T3=T2(division-1);
+               else
+                   T3=1;
+               end
+               
+               
+               Croot=T3*RC;
+               Ctip=Croot*geo.T(wing,division);
+               
+               Cbar=sqrt((Croot^2+Ctip^2)/2);
+               
+               Bspan=geo.b(wing,division);
+               
+               
+               coeff=1/(q*Cbar^2*Bspan); %According to NACA report No 787
+               
+               
+               
+               mp=3;
+               
+               t=1;
+               r=0;
+               [q6 q7]=size(geo.nx);
+               nr=((geo.nx+geo.fnx).*geo.ny).*((ones(q6,q7)+(geo.symetric'*ones(1,q7))));
+               [q4 q5]=size(nr);
+               for i=1:q4
+                  for j=1:q5
+                     if geo.flapped(i,j)==1
+                        	r=r+1;   
+                  	end
+                     if r<rudder
+                        t=t+nr(i,j);      %Panel start number  
+                     end
+                  end
+               end
+               
+               nx=geo.nx(wing,division);
+               ny=geo.ny(wing,division);
+               fnx=geo.fnx(wing,division);
+               sym=geo.symetric(wing);
+                            
+               a1=[lattice.XYZ(t+nx,1,1) lattice.XYZ(t+nx,1,2) lattice.XYZ(t+nx,1,3)];
+               b1=[lattice.XYZ(t+nx,2,1) lattice.XYZ(t+nx,2,2) lattice.XYZ(t+nx,2,3)];
+               
+               a2=[lattice.XYZ(t+nx,2,1) -lattice.XYZ(t+nx,2,2) lattice.XYZ(t+nx,2,3)];               
+               b2=[lattice.XYZ(t+nx,1,1) -lattice.XYZ(t+nx,1,2) lattice.XYZ(t+nx,1,3)];
+               
+               h=b1-a1;				%defining hingeline SB-side	
+               h1_hat=h./norm(h); %normalizing hingeline
+               
+               h2=b2-a2;		    %defining hingeline P-side	
+               %h2_hat=h2./norm(h2); %normalizing hingeline
+               h2_hat=h1_hat.*[1 -1 1];
+
+               %Computing force on flap
+               s=fnx*ny; %Number of panels on flap.
+               
+               nnx=fnx+nx;
+               RR=[];
+               FF=[];
+               HP=[];
+               VP=[];
+               for i=1:ny %looping over strip
+                   t2=t+  ((i-1)*(nnx));        %Startindex of strip
+                   F1(i,:,:)=mForces((t2+nx):(t2+nx+fnx-1),:);   %Force vectors on flap
+                   
+                   
+                   R1(i,:,1)=tempVP((t2+nx):(t2+nx+fnx-1),1)-tempPP((t2+nx),1); %
+                   R1(i,:,2)=tempVP((t2+nx):(t2+nx+fnx-1),2)-tempPP((t2+nx),2); %
+                   R1(i,:,3)=tempVP((t2+nx):(t2+nx+fnx-1),3)-tempPP((t2+nx),3); %
+                   
+                   HP1(i,:,1)=tempPP(t2+nx,1)*ones(fnx,1);
+                   HP1(i,:,2)=tempPP(t2+nx,2)*ones(fnx,1);
+                   HP1(i,:,3)=tempPP(t2+nx,3)*ones(fnx,1);
+                   
+                   VP1(i,:,:)=tempVP((t2+nx):(t2+nx+fnx-1),:);
+                   
+                   RR=[RR R1(i,:,:)];
+                   FF=[FF F1(i,:,:)];
+                   HP=[HP HP1(i,:,:)];
+                   VP=[VP VP1(i,:,:)];
+               end
+               
+                  RR=squeeze(RR);
+                  FF=squeeze(FF);
+                  HP=squeeze(HP);
+                  VP=squeeze(VP);
+  
+                  if s>1
+                    hinge_V=ones(size(VP,1),1)*h1_hat;
+                  
+                    [a b]=size(VP);
+                    for i=1:a
+                         c=hinge_V(i,:)*RR(i,:)';
+                        VPP(i,:)=c*hinge_V(i,:)+HP(i,:);
+                    end
+                  
+                    VR=VP-VPP;
+                    M=cross(FF,VR,2);
+                    M2=sum(M,1);      %Sum up contrib from panels
+                    M3=M2*h1_hat';    %Project on hingeline
+                  else  %One panel flap
+                    hinge_V=ones(size(VP',1),1)*h1_hat;
+                  
+                    [a b]=size(VP');
+                    %for i=1:a
+                         c=hinge_V*RR;
+                        VPP(i,:)=c*hinge_V(i,:)+HP(i,:)';
+                    %end
+                  
+                    VR=VP'-VPP;
+                    M=cross(FF,VR);
+                    M2=sum(M,1);      %Sum up contrib from panels
+                    M3=M2*h1_hat';    %Project on hingeline
+
+
+                  end
+                  
+                  
+
+                 
+                 
+               if sym %IF the wing is symmetric, check the other side as well.
+               RR2=[];
+               FF2=[];
+               HP2=[];
+               VP2=[];
+                   
+                   t=t+(nx+fnx)*ny;
+                    for i=1:ny %looping over strip
+                        t2=t+(i-1)*(nnx);
+                        %F2(i,:,:)=mForces((t2+nx):(t2+nx+fnx-1),:);
+                        %R2(i,:,1)=tempVP((t2+nx):(t2+nx+fnx-1),1)-tempPP((t2+nx),1); %Moment arm
+                        %R2(i,:,2)=tempVP((t2+nx):(t2+nx+fnx-1),2)-tempPP((t2+nx),2); %Moment arm
+                        %R2(i,:,3)=tempVP((t2+nx):(t2+nx+fnx-1),3)-tempPP((t2+nx),3); %Moment arm
+                        
+                        F3(i,:,:)=mForces((t2+nx):(t2+nx+fnx-1),:);   %Force vectors on flap
+                   
+                   
+                        R3(i,:,1)=tempVP((t2+nx):(t2+nx+fnx-1),1)-tempPP((t2+nx),1); %
+                        R3(i,:,2)=tempVP((t2+nx):(t2+nx+fnx-1),2)-tempPP((t2+nx),2); %
+                        R3(i,:,3)=tempVP((t2+nx):(t2+nx+fnx-1),3)-tempPP((t2+nx),3); %
+                   
+                        HP3(i,:,1)=tempPP(t2+nx,1)*ones(fnx,1);
+                        HP3(i,:,2)=tempPP(t2+nx,2)*ones(fnx,1);
+                        HP3(i,:,3)=tempPP(t2+nx,3)*ones(fnx,1);
+                   
+                        VP3(i,:,:)=tempVP((t2+nx):(t2+nx+fnx-1),:);
+                   
+                        RR2=[RR2 R3(i,:,:)];
+                        FF2=[FF2 F3(i,:,:)];
+                        HP2=[HP2 HP3(i,:,:)];
+                        VP2=[VP2 VP3(i,:,:)];     
+                    end  
+             
+                    
+                  RR2=squeeze(RR2);
+                  FF2=squeeze(FF2);
+                  HP2=squeeze(HP2);
+                  VP2=squeeze(VP2);
+                  
+                  
+                  
+                if s>1  
+                  hinge_V2=ones(size(VP2,1),1)*h2_hat;
+                  
+                  [a b]=size(VP);
+                  for i=1:a
+                     c2=hinge_V2(i,:)*RR2(i,:)';
+                     VPP2(i,:)=c2*hinge_V2(i,:)+HP2(i,:);
+                  end
+                  
+                  VR2=VP2-VPP2;
+                  Mp=cross(FF2,VR2,2);
+                  Mp2=sum(Mp,1);      %Sum up contrib from panels
+                  Mp3=-Mp2*h2_hat';    %Project on hingeline
+                else%Single panel case
+                    hinge_V2=ones(size(VP2',1),1)*h2_hat;
+                  
+                    [a b]=size(VP2');
+                   
+                    c=hinge_V2*RR2;
+                    VPP2(i,:)=c*hinge_V2(i,:)+HP2(i,:)';
+                   
+                  
+                    VR2=VP2'-VPP2;
+                    Mp=cross(FF2,VR2);
+                    Mp2=sum(Mp,1);      %Sum up contrib from panels
+                    Mp3=Mp2*h1_hat';    %Project on hingeline
+                    
+                end
+                  
+                  
+                  
+                  
+               end %Symetric side  
+                    
+                    
+                    
+                    
+                    
+                 output.M=[M3 Mp3];
+                 output.coeff=[M3 Mp3].*coeff;
+
+                 return
+                 hold on
+plot3(VP2(:,1),VP2(:,2),VP2(:,3),'rd')
+plot3(VP(:,1),VP(:,2),VP(:,3),'gd')
+plot3(VPP2(:,1),VPP2(:,2),VPP2(:,3),'r^')
+plot3(VPP(:,1),VPP(:,2),VPP(:,3),'g^')
+plot3(lattice.XYZ(:,:,1)',lattice.XYZ(:,:,2)',lattice.XYZ(:,:,3)','k')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
