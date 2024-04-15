@@ -13,10 +13,8 @@ relWage1 = relWage1/relWage1.loc[1980]
 relWage2 = data['UnskillWage'] / data['GDPpc']
 relWage2 = relWage2/relWage2.loc[1980]
 data['RelWage'] = (relWage1 + relWage2) / 2
-
-data['RelWage'] = data['RelWage'].interpolate()
-data['RelDebt'] = data['RelDebt'].interpolate()
-data['Distrust'] = data['Distrust'].interpolate()
+cols = ['RelWage','RelDebt','Distrust']
+data[cols] = data[cols].interpolate()
 
 data = data[data.index > 1944]
 
