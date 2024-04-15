@@ -10,3 +10,12 @@ relWage2 = data['UnskillWage'] / data['GDPpc']
 relWage2 = relWage2/relWage2.loc[1980]
 data['RelWage'] = (relWage1 + relWage2) / 2
 
+data['RelWage'] = data['RelWage'].interpolate()
+data['RelDebt'] = data['RelDebt'].interpolate()
+data['Distrust'] = data['Distrust'].interpolate()
+
+data = data[data.index > 1944]
+
+data.loc[1945]['elite'] = 1
+
+data.to_csv('/tmp/out.csv')
