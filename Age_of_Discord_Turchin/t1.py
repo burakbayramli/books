@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 
 data = pd.read_csv('PSImodel2020.csv',index_col=0)
 
+w_0 = 1
+mu_0 = 0.1
+lam = 0.5 
+
 relWage1 = data['ProdWage'] / data['GDPpc']
 relWage1 = relWage1/relWage1.loc[1980]
 relWage2 = data['UnskillWage'] / data['GDPpc']
@@ -18,4 +22,17 @@ data = data[data.index > 1944]
 
 data.loc[1945]['elite'] = 1
 
+for t in range(1946,2021):
+    print (t)
+    data.loc[t]['elite'] = data.loc[t-1]['elite'] + mu_0*( w_0 - data.loc[t-1]['RelWage'] ) / \
+                           data.loc[t-1]['RelWage']
+
+
+data['epsilon'] = (1 - lam*data['RelWage'])/data['elite']
+
+data['epsilon'] = data['epsilon']/data.iloc[0]['epsilon']
+    
+data[['elite','epsilon']].plot()
+plt.savefig('/tmp/out.jpg')
+    
 data.to_csv('/tmp/out.csv')
