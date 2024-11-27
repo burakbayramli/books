@@ -122,4 +122,3 @@ SpaceFrame_GlobalForcesMoments = function(bigKmatrix,vec_globalnodaldisp)
 
 }
 
-
