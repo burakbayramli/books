@@ -1,5 +1,4 @@
 
-
 #' Element stiffness matrix (Euler-Bernoulli Beam)
 #'
 #' This function generates the 4 by 4 stiffness matrix for
@@ -156,3 +155,53 @@ EulerBeamMaxMin_BendingStress = function(YoungMod,Length,vec_globalnodaldisp)
   return(local_stress)
 }
 
+EulerBeam_ReducedStiffnessMatrix = function(bigKmatrix,knownloadnodes)
+{
+reducedK = bigKmatrix[c(knownloadnodes),(knownloadnodes)]
+return(reducedK)
+}
+EulerBeam_ReducedLoadVector = function(loadvector)
+{
+reducedloadvector = matrix(loadvector,ncol = 1)
+return(reducedloadvector)
+}
+
+BeamUDL_Matrix= function(DOF=4,LoadMagnitude,Length)
+{
+L=Length;
+DistributedLoad=LoadMagnitude*
+matrix(c(-L/2,-(L^2)/12,-L/2,(L^2)/12),nrow=DOF,
+byrow=T)
+return (DistributedLoad)
+}
+BeamUDL_ExpandedMatirx = function(TDOF, LoadColumnMatrix,
+i, j)
+{
+r1=(i-1)+i;r2=(i-1)+(i+1);r3=(j-2)+(j+1);r4=(j-2)+(j+2);
+bigColumnMatrix=matrix(vector(l=TDOF),nrow=TDOF,
+byrow=T);
+bigColumnMatrix[c(r1,r2,r3,r4)]=LoadColumnMatrix;
+return (bigColumnMatrix)
+}
+EulerBeam_NodalDisplacement = function(reducedmatrix, vec_reducedload)
+{
+return(solve(reducedmatrix,vec_reducedload))
+}
+EulerBeam_Global_ForcesMoments = function(bigKmatrix,vec_globalnodaldisp)
+{
+columndof=matrix(vec_globalnodaldisp, byrow = T)
+global_forces = bigKmatrix %*% vec_globalnodaldisp
+return(round(global_forces))
+}
+EulerBeam_Local_ForcesMoments = function(YoungMod,
+MomentI,Length,vec_globalnodaldisp,vec_distriload)
+{
+L=Length;
+DOF=4;
+bendingstiff=YoungMod*MomentI/Length^3;
+stiffcoeff=c(12,6*L,-12,6*L,6*L,4*L^2,-6*L,2*L^2,-12,
+-6*L,12,-6*L,6*L,2*L^2,-6*L,4*L^2);
+ematrix=bendingstiff*matrix(stiffcoeff,nrow=DOF,byrow=T);
+local_loads = (ematrix%*%vec_globalnodaldisp)-vec_distributedLoad
+return(local_loads)
+}
