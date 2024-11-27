@@ -1,4 +1,5 @@
 % Plane frame example
+addpath("../Common");
 e = 30000; a = 100; inertia = 1000; L = 15*12; q = 1/12;
 nodes = [0, 0; L/sqrt(2), L/sqrt(2); L + L/sqrt(2), L/sqrt(2)];
 conn=[1,2; 2,3];

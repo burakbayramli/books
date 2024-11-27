@@ -1,3 +1,5 @@
+
+addpath("../Common");
 % Three bar space truss example
 a1 = 200; a2 = 600; e = 200000; P = 20000;
 nodes = 1000*[.96, 1.92, 0; -1.44, 1.44, 0; 0, 0, 0; 0, 0, 2]; 
@@ -22,7 +24,7 @@ for i=1:2
 end
 lm=lmm(3,:);
 con=conn(3,:);
-k=SPaceTrussElement(e, a2, nodes(con,:));
+k=SpaceTrussElement(e, a2, nodes(con,:));
 K(lm, lm) = K(lm, lm) + k
 
 % Nodal solution and reactions

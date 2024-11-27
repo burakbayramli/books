@@ -1,4 +1,6 @@
 % Six bar truss example
+addpath("../Common");
+addpath("../Chap1");
 e = 200*10^3; A = 0.001*1000^2; P = 20000.; 
 alpha = pi/6; 
 nodes = 1000*[0, 0; 4, 0; 0, 3; 4, 3; 2, 2]; 

@@ -1,4 +1,5 @@
-% Space frame example
+addpath("../Common");
+% Space frame example - Example 4.14
 ab = 3.2; Jb = 43; Irb = 450; Isb = 32;
 ac = 4; Jc = 60; Irc = 650; Isc = 54;
 q = 2./12; e = 29000.; G = 11200.;
