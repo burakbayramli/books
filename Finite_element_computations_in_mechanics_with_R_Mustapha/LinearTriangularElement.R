@@ -149,7 +149,21 @@ CSTriangular_ExpandedSF = function(TDOF,LoadColumnMatrix,i,j,k)
 }
 
 
-
+CSTriangular_ReducedStiffnessMatrix = function(bigKmatrix,
+knownloadnodes)
+{
+reducedk = bigKmatrix[c(knownloadnodes),(knownloadnodes)]
+return(reducedk)
+}
+CSTriangular_ReducedLoadVector = function(loadvector)
+{
+reducedf = matrix(loadvector,ncol = 1)
+return(reducedf)
+}
+CSTriangular_NodalDisplacement = function(reducedmatrix,vec_reducedforce)
+{
+return(solve(reducedmatrix,vec_reducedforce))
+}
 
 #' Global nodal forces
 #'

@@ -100,8 +100,20 @@ SpaceFrame_ExpandedElement_Matrix = function(TDOF,eMatrix,i,j)
 
 }
 
-
-
+SpaceFrame_ReducedStiffnessMatrix = function(bigKmatrix,knownloadnodes)
+{
+reducedk = bigKmatrix[c(knownloadnodes),(knownloadnodes)]
+return(reducedk)
+}
+SpaceFrame_ReducedLoadVector = function(loadvector)
+{
+reducedf = matrix(loadvector,ncol = 1)
+return(reducedf)
+}
+SpaceFrame_NodalDisplacement = function(reducedmatrix,vec_reducedforce)
+{
+return(solve(reducedmatrix,vec_reducedforce))
+}
 
 #' Global nodal forces and moments
 #'
