@@ -197,5 +197,48 @@ PlaneFrame_LocalForcesMoments = function(YoungMod,Area,momentI,Length,theta,vec_
   return(round(local_forces))
 }
 
-
-
+PlaneFrameUDL_ExpandedMatirx = function(TDOF, LoadColumnMatrix,i,j)
+{
+r1=2*(i-1)+i;r2=2*(i-1)+(i+1);
+r3=2*(i-1)+(i+2);r4=(j-1)+(j+2)+(j-3);
+r5=(j-1)+(j+3)+(j-3);r6=(j-1)+(j+4)+(j-3);
+bigColumnMatrix=matrix(vector(l=TDOF),nrow=TDOF,byrow=T);
+bigColumnMatrix[c(r1,r2,r3,r4)]=LoadColumnMatrix;
+return (bigColumnMatrix)
+}
+PlaneFrame_ReducedStiffnessMatrix = function(bigKmatrix,knownloadnodes)
+{
+reducedk = bigKmatrix[c(knownloadnodes),(knownloadnodes)]
+return(reducedk)
+}
+PlaneFrame_ReducedLoadVector = function(loadvector)
+{
+reducedf = matrix(loadvector,ncol = 1)
+return(reducedf)
+}
+PlaneFrame_NodalDisplacement = function(reducedmatrix,vec_reducedforce)
+{
+return(solve(reducedmatrix,vec_reducedforce))
+}
+PlaneFrame_GlobalForces = function(bigKmatrix,
+vec_globalnodaldisp)
+{
+columndof=matrix(vec_globalnodaldisp,byrow = T)
+globalforces = bigKmatrix %*% vec_globalnodaldisp
+return(round(globalforces))
+}
+PlaneFrame_LocalForces = function(YoungMod,Area,momentI,
+Length,theta,vec_globalnodaldisp)
+{
+E1=YoungMod;A=Area;I=momentI;L=Length;
+cx=cos(theta*pi/180);sx=sin(theta*pi/180);
+row1=c(cx,sx,0,0,0,0);row2=c(-sx,cx,0,0,0,0);
+row3=c(0,0,1,0,0,0);row4=c(0,0,0,cx,sx,0);
+row5=c(0,0,0,-sx,cx,0);row6=c(0,0,0,0,0,1);
+tmatrix=matrix(c(row1,row2,row3,row4,row5,row6),nrow=6,
+byrow=T)
+localstiffness=tmatrix%*%PlaneFrame_Element_
+Matrix(6,E1,A,I,L,theta);
+local_forces = localstiffness%*%vec_globalnodaldisp
+return(round(local_forces))
+}
