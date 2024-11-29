@@ -213,6 +213,19 @@ AxisymmetricT_GlobalForces= function(bigKmatrix,vec_globalnodaldisp)
 }
 
 
+AxisymmetricT_ReducedStiffnessMatrix = function(bigKmatrix,knownloadnodes)
+{
+reducedk = bigKmatrix[c(knownloadnodes),(knownloadnodes)]
+return(reducedk)
+}
+AxisymmetricT_ReducedLoadVector = function(loadvector)
+{
+reducedf = matrix(loadvector,ncol = 1)
+return(reducedf)
+}
+
+
+
 
 #' Local element forces (axisymmetric triangular element)
 #'
@@ -282,5 +295,8 @@ AxisymmetricT_Stresses = function(YoungMod,Nu,vec_nodalcoord,vec_globalnodaldisp
   return(localstresses)
 }
 
-
-
+AxisymmetricT_NodalDisplacement =
+function(reducedmatrix,vec_reducedforce)
+{
+return(solve(reducedmatrix,vec_reducedforce))
+}
