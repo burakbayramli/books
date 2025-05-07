@@ -1,7 +1,8 @@
 physics_for_game_developers_2e
 ==============================
 
-This is the example code than accompanies Physics for Game Developers, 2E by David M. Bourg and Bryan Bywalec (9781449392512). 
+This is the example code than accompanies Physics for Game Developers,
+2E by David M. Bourg and Bryan Bywalec (9781449392512).
 
 Click the Download Zip button to the right to download example code.
 
