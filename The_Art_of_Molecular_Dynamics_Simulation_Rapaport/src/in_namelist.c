@@ -1,4 +1,3 @@
-
 #define NP_I  ((int *)  (nameList[k].vPtr) + j)
 #define NP_R  ((real *) (nameList[k].vPtr) + j)
 
