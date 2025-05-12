@@ -1,5 +1,4 @@
 
-
 Source Code for the book Game Physics by Eberly
 
 Book Disc ISO is from
@@ -13,7 +12,7 @@ https://s3-eu-west-1.amazonaws.com/s3-euw1-ap-pe-ws4-cws-documents.ri-prod/97801
 ```
 sudo mkdir /mnt/iso
 
-sudo mount -o loop /path/to/my-iso-image.iso /mnt/iso
+sudo mount -o loop /path/to/iso/9780123749031_disc.iso /mnt/iso
 ```
 
 The Geometric Tools is from 
