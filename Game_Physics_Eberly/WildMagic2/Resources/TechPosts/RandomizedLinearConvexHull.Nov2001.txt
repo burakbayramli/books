@@ -1,0 +1,22 @@
+From: "Jeff Erickson" <jeffe@cs.uiuc.edu>
+Subject: Re: Is there an optimal algorithm for computing convex hull in E3 ?
+Date: Wednesday, November 07, 2001 1:06 AM
+
+For random points uniformly distributed in a cube, there is a simple
+convex algorithm with O(n) expected running time.  Basically, you can
+filter out the vast majorty of the points very quickly, since they lie
+well inside the hull.
+
+@inproceedings{bcl-fleta-90
+, author =      "J. L. Bentley and K. L. Clarkson and D. B. Levine"
+, title =       "Fast linear expected-time algorithms for computing
+		 maxima and convex hulls"
+, booktitle =   "Proc. 1st ACM-SIAM Sympos. Discrete Algorithms"
+, year =        1990
+, pages =       "179--187"
+}
+
+-- 
+Jeff Erickson                                         jeffe@cs.uiuc.edu
+Computer Science Department                  http://www.uiuc.edu/~jeffe
+University of Illinois, Urbana-Champaign         Dissent is not a crime. 

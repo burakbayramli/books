@@ -1,0 +1,293 @@
+From: Kenneth Sloan <sloan@cis.uab.edu>
+Subject: Re: Delaunay to Voronoi?
+Date: Thursday, December 16, 1999 10:03 PM
+
+Mark Tigges <mtigges@reboot.com> writes:
+
+> > 
+> > Anyone knows how to convert Delaunay trangulation(Tetrahedra in 3D) to
+> > Voronoi cell. Are there any source code available on the net?
+> > 
+> 
+> Knowing that the voronoi diagram is the geometric dual of the delaunay
+> triangulation it should be straight-forward to get the other if you 
+> have one of them.  Meaning, if you have an algorithm for generating a
+> delaunay triangulation - it probably produces a voronoi diagram as a
+> by-product, and vice versa.
+> 
+> But I think that if you take the perpendicular bi-sectors of each edge
+> in the triangulation and then connect those for each edge emanating
+> from a vertex together you have the voronoi region for that vertex.
+> 
+> But I am not absolutely sure about that.
+
+You have additional information that helps.  The perpendicular bisectors 
+terminate at "Voronoi vertices".  There is one such Voronoi vertex for
+every triangle in the Delaunay triangulation.  It is the center of the
+circle which circumscribes the triangle.
+
+The dualities are:
+
+    Delaunay Triangle    <-->   Voronoi Vertex
+    Triangle Edge        <-->   VD edge
+    Point (site)         <-->   VD cell
+
+So...you need only worry about "perpendicular bisectors" when the
+triangle has an edge which is on the convex hull of the points.
+
+To create the Voronoi Diagram from the Delaunay Triangulation:
+
+    *for each triangle, compute the center of the circumscribing
+     triangle (HINT: you may already have this circle, depending
+     on the algorithm you used to create the DT.  If you don't, it's
+     an easy computation if you own Newman&Sproull - see below.
+     The picky reader will note that this routine computes
+     perpendicular bisectors, making my argument circular...oh well.)
+
+    *for each edge, create the dual edge. There are two cases:
+
+        a) there is a triangle (and therefore a Voronoi Vertex)
+           on BOTH sides of the edge.  Simply connect the dots.
+
+        b) there is a triangle on one side, and nothing on the other
+           side.  Now you need the perpendicular-bisector property.
+           Construct a half-line which starts at the Voronoi Vertex
+           associated with your triangle and passes through the
+           mid-point of the edge.
+     DONE
+
+Oh, all right...here it is.  Please note:  "You are not supposed to
+understand this code".  On the other hand, it would be highly profitable 
+to study it until you *do* understand it.  There is a whole semester of
+Projective Geometry hidden here...
+
+ /*
+     given three points, calculates the center of the circle thru
+     those points.
+
+     WARNING: if the points are colinear, we print a message, and 
+              return something reasonble.  Best not to call this routine
+              with colinear points, eh? 
+  */
+
+void VoronoiPt(x1, y1, x2, y2, x3, y3, x, y)
+ double x1, y1, x2, y2, x3, y3;
+ double *x, *y;
+ {
+  double a1,a2,a3,b1,b2,b3,c1,c2,c3;
+  double A1,A2,A3,B1,B2,B3;
+  double bc1, bc2, bc3, ac1, ac2, ac3;
+  double Ap1, Ap2, Ap3, Bp1, Bp2, Bp3;
+  double v1, v2, v3;
+
+  /* see Newman & Sproull, p 494-496 */
+
+  /* transform points to homogeneous coords */
+  a1 = x1; a2 = y1; a3 = 1.0;
+  b1 = x2; b2 = y2; b3 = 1.0;
+  c1 = x3; c2 = y3; c3 = 1.0;
+
+  /* find the lines from b-c (call it A) and a-c (call it B) */
+  A1 = (b2*c3)-(b3*c2); A2 = (b3*c1)-(b1*c3); A3 = (b1*c2)-(b2*c1);
+  B1 = (a2*c3)-(a3*c2); B2 = (a3*c1)-(a1*c3); B3 = (a1*c2)-(a2*c1);
+
+  /* find the midpoints on these lines */
+  bc1 = b1+c1; bc2 = b2+c2; bc3 = 2.0;    /* we're being clever here... */
+  ac1 = a1+c1; ac2 = a2+c2; ac3 = 2.0;
+
+  /* find lines perpendicular to A and B, through bc and ac */
+  Ap1 = A2*bc3; Ap2 = -A1*bc3; Ap3 = (A1*bc2)-(A2*bc1);
+  Bp1 = B2*ac3; Bp2 = -B1*ac3; Bp3 = (B1*ac2)-(B2*ac1);
+
+  /* intersect the perpendicular bisectors */
+  v1=(Bp3*Ap2)-(Bp2*Ap3); v2=(Bp1*Ap3)-(Bp3*Ap1); v3=(Bp2*Ap1)-(Bp1*Ap2);
+
+  if ((-EPSILON < v3) && (v3 < EPSILON))
+   {
+    if (DCELVERBOSE)
+     fprintf(stderr,"VoronoiPt: degenerate triangle\n");
+    if (v3 < 0.0) v3 = -EPSILON; else v3 = EPSILON;
+   }
+  
+  /* back to 2D */
+  *x = v1/v3; *y = v2/v3;
+ }
+
+
+-- 
+Kenneth Sloan                                            sloan@uab.edu
+Computer and Information Sciences                       (205) 934-2213
+University of Alabama at Birmingham                 FAX (205) 934-5473
+Birmingham, AL 35294-1170   http://www.cis.uab.edu/info/faculty/sloan/ 
+
+============================================================================
+
+From: Kenneth Sloan <sloan@cis.uab.edu>
+Subject: Re: Voronoi Diagrams and Delaunay Triangles
+Date: Monday, May 24, 1999 3:55 PM
+
+rwillia1@tuelectric.com writes:
+
+> 
+> Just to give you a hint: O'Rourke beautifully explains
+> Edelsbrunner & Seidel's discovery in 1986 of the relationship
+> between Delaunay triangulations and convex hulls.
+
+Another hint: check Chapter 6 of Preparata&Shamos(1985), which describes
+essentially the same ideas, citing previous work by Avis and
+Bhattacharya (1983) and Seidel (1982).
+
+However, remember to read on in O'Rourke, where he notes the time
+complexity of this method (to get a 2D Delaunay Triangulation by way of
+the 3D lower convex hull) is O(n^4).  This is not necessarily a good
+idea, when there are O(n^2) methods available (not to mention O(n log n)
+methods!  (on the other hand...I prefer the O(n^2) methods over the O(n
+log n) ones...)
+
+One final hint (one of my favorite hobby horses, which I have discussed
+with Joe many times): Delaunay Triangulations and Voronoi Diagrams are
+very closely related (you can get one from the other in linear time).
+For esoteric academic reasons, much of the theoretical literature
+discusses the problem of constructing the Voronoi Diagram - while most
+of the practical implementations concentrate on the Delaunay
+Triangulation.  It turns out to be much easier to implement a DT method
+(and, in fact, many of the algorithms advertised as VD methods are DT
+algorithms in disguise.
+
+Consider that to generate the (2D) VD from the DT you must compute extra
+geometric information (the Voronoi vertices).  Going in the other
+direction (VD -> DT) does NOT require extra geometric computation.  This
+should be a hint that the DT is in some sense "easier" to handle than
+the VD.
+
+In my experience, the most stable DT algorithm is of the form: 
+    a) generate any triangulation
+    b) optimize (either during or after step a)
+
+Given a 2D collection of points, my everyday DT algorithm works like
+this:
+
+    a) compute the 2D convex hull (this is "easy").
+    b) triangulate the convex hull (this is "trivial").
+    c) insert points, one by one, by finding the triangle
+       that contains the point, and performing the obvious
+       triangulation (connect the new point to the three vertices,
+       deleting one triangle and adding three)
+    d) optimize
+
+There is one fundamental choice here - to "optimize" after every
+insertion or at the very end.  It turns out not to matter much.
+Asymptotically, I suspect that optimizing at each insertion is slightly
+better - but for small, practical data sets it doesn't seem to matter,
+and may even be faster to optimize at the very end.  The hard part is
+step c.  Locating the proper triangle can be expensive (especially if
+the existing triangulation is not Delaunay).  If it *is* Delaunay, then
+I believe this step is O(sqrt(n)).  My method involves starting at any
+triangle and stepping towards the new point until the enclosing triangle
+is found.  There are also difficult problems associated with numerical
+precision and maintenance of the topological data structure in the
+presence of special cases - things like co-linearity, which are swept
+under the rug in most textbooks, but emerge in spades when humans or
+computers (rather than nature) choose the sites..
+
+The "optimization" step above is based on edges.  For every edge in a
+triangulation, it is:
+
+    a) on the convex hull
+    b) shared between two triangles which form a concave quadrilateral
+    c) shared between two triangles which form a convex quadrilateral
+
+In the first two cases, there is nothing to be done.  In the last case,
+there is an alternate (local) triangulation which should be considered.
+One of the two choice is "Delaunay", the other is not.
+
+"Optimization" means: 
+
+    a) declare every edge "suspect"
+    b) consider a suspect edge (if none...DONE!)
+    c) if no alternate (local) triangulation exists, continue
+    d) if the current edge is better than the alternative, continue
+    e) if the alternate edge is better, delete two triangles and
+       add two new triangles - declare the four edges of the quad
+       as "suspect", and continue.
+
+This procedure is guaranteed to produce the DT.  Careful implementation
+is required for maintaining the collection of points, edges, and
+triangles.  Speed is required in the test for "Delaunay-ness".
+
+For ancient code, that still works (hint: this is often the best kind),
+please see:
+
+    ftp://ftp.cis.uab.edu/pub/sloan/Software/ccg.tar.Z
+
+This code is perhaps most notworthy for the obscene lengths that we once
+went through to wring constant factors out of the running time.  There
+are a few cheap tricks embedded in the code, which are best left
+unmentioned in polite society, but which will warm the hearts of true
+hackers everywhere.
+
+Enjoy! 
+
+--  
+Kenneth Sloan                                            sloan@uab.edu
+Computer and Information Sciences                       (205) 934-2213
+University of Alabama at Birmingham                 FAX (205) 934-5473
+Birmingham, AL 35294-1170   http://www.cis.uab.edu/info/faculty/sloan/
+
+============================================================================
+
+From: "Kenneth Sloan" <sloan@uab.edu>
+Subject: Re: Voronoi diagram from delaunay triangulation
+Date: Monday, June 25, 2001 4:15 PM
+
+"Fabio Guerrazzi" <fabiog2@libero.it> writes:
+
+> Hello, i was wondering if having all triangles returned from a delaunay
+> algorithm i can obtain a voronoi diagram easily
+
+You need a tad more than the individual triangles - you need the full
+mesh.  You can compute this if all you have is a set of triangles - but
+you should not have thrown it away in the first place!
+
+The Delaunay Triangulation gives the *topology* of the Voronoi Diagram,
+but you need to do just a bit more work to get the *geometry*.  Looked
+at from this point of view, it is clear that the Voronoi Diagram
+contains *more* information than the Delaunay Triangulation.  For that
+reason, I have railed for decades against authors who insist on
+presenting algorithms for computing the Voronoi Diagram, when in most
+cases the algorithms are better understood as computing the Delaunay
+Triangulation (and then, either afterwards or in parallel, computing the 
+locations of the Voronoi vertices).
+
+Given the entire set of Delaunay Triangles (including the information of
+the form "E11 joins V16 and V83 and is shared by T3 (V15, V16, V83) and
+T28 (V82, V83, V16)", the conversion to a Voronoi Diagram is very simple:
+
+           DT              VD
+         vertex    <->   region
+         edge      <->   edge
+         triangle  <->   vertex
+
+The extra information required is the location of the VD vertex
+representing each DT triangle.  This is the center of the circle which
+interpolates the triangle vertices (the 'circumscribing circle').
+Notice that no one really has the problem of going in the backwards
+direction here, because you are always GIVEN the DT vertices.
+
+Oh yes...some of the VD edges are half-infinite, because they are dual to 
+DT edges which are on the convex hull.  I'll leave the treatment of
+these as an exercise.
+
+For ancient code that does all this, see:
+
+    ftp://ftp.cis.uab.edu/pub/sloan/Software/CCG/tar.Z
+
+(you'll need tar and uncompress - if you don't have these, pester me.
+If enough people pester me, perhaps I'll break down and put it in a
+more modern package.)
+
+-- 
+Kenneth Sloan                                            sloan@uab.edu
+Computer and Information Sciences                       (205) 934-2213
+University of Alabama at Birmingham                 FAX (205) 934-5473
+Birmingham, AL 35294-1170   http://www.cis.uab.edu/info/faculty/sloan/ 

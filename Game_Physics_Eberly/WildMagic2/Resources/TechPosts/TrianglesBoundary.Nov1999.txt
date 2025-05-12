@@ -1,0 +1,134 @@
+From: Jeff Erickson <jeffe@cs.uiuc.edu>
+Subject: Re: How do you find the boundary of a set of points in 2d?
+Date: Monday, November 15, 1999 6:06 PM
+
+"Michael P. Songy" wrote:
+> One way you could find the boundary is to test every triangle
+> against every other triangle in the input set.  If triangle edges
+> intersect, create a new shared vertex at the intersection point,
+> and break the intersecting edges up into new edges using this new
+> vertex.  Once you're done with all that business, the edges you now
+> have against the original input triangles.  If an edge is contained
+> in one of the original triangles, throw it away.  Once you're done
+> with this, connect the remaining edges.
+
+The last step is maybe harder than it looks, since the boundary might
+consist of more than one polygon.  Here's an example (with rectangles
+instead of trianlges, but you get the idea):
+
+	   +---+   +---+		   +---+   +---+
+	   |   |   |   |		   |   |   |   |
+	+-----------------+		+--+   +---+   +--+
+	|  |   |   |   |  |		|                 |
+	+-----------------+		+--+   +---+   +--+
+	   |   |   |   |	===>	   |   |   |   |
+	+-----------------+		+--+   +---+   +--+
+	|  |   |   |   |  |		|                 |
+	+-----------------+		+--+   +---+   +--+
+	   |   |   |   |		   |   |   |   |
+	   +---+   +---+		   +---+   +---+
+
+> There is probably a better, faster, or easier way to solve this problem
+
+There is!  The biggest problem with the approach Michael described is
+that it could take O(n^2 + kn) time, where k is the number of
+intersection points between triangle edges.  You need O(n^2) time to
+compute all the intersections by brute force, plus O(kn) time to check
+whether each edge lies inside one of the triangles.  k could be as big
+as n^2, so this is O(n^3) in the worst case.
+
+But there's a faster sweepline algorithm that runs in O((n+k) log n)
+time.  Sweep a horizontal line from left to right across the triangles. 
+At any position, maintain the intersection of the triangles with the
+sweep line -- this is a set of overlapping vertical line segments -- in
+a balanced binary tree.  The 'contents' of the tree change whenever the
+sweepline encounters a vertex of one of the triangles or an intersection
+point between two edges.  Whenever you encounter a leftmost vertex, you
+add a new interval to the tree.  Whenever you encounter a rightmost
+vertex, you take an interval out of the tree.  Whenever you encounter an
+intersection point, you reverse the order of two endpoints in the tree. 
+It's easy to remember which of the endpoints in the tree come from the
+outline -- the ones that don't lie inside any other interval -- which
+means that you can decide quickly whether a change in the tree means you
+should add a new vertex to the outline.
+
+Obviously I'm leaving out tons of details here.  If anyone is really
+interested, I can try to give a more complete description.
+
+If you're talking about 20 triangles or so, it's probably not worth the
+effort of implementing the more complicated algorithm -- brute force
+will be fast enough.  But if you're dealing with hundreds or thousands
+(or millions!?) of triangles, the extra effort will be worthwhile.  See
+Joe O'Rourke's excellent textbook _Computational Geometry in C_ for more
+information on sweepline algorithms, 
+
+
+There's still some room for improvement here.  The running time of the
+sweepline algorithm depends on k, the number of intersection points, but
+very few of those intersection points might end up on the boundary:
+
+	+---------------------+		+---------------------+
+	|    +---+   +---+    |		|                     |
+	|    |   |   |   |    |		|                     |
+	| +-----------------+ |		|                     |
+	| |  |   |   |   |  | |		|                     |
+	| +-----------------+ |		|                     |
+	|    |   |   |   |    |	 ====>	|                     |
+	| +-----------------+ |		|                     |
+	| |  |   |   |   |  | |		|                     |
+	| +-----------------+ |		|                     |
+	|    |   |   |   |    |		|                     |
+	|    +---+   +---+    |		|                     |
+	+---------------------+		+---------------------+
+
+I think a real output-sensitive algorithm for computing the union is an
+open problem.  The ultimate goal is a running time liken O(n log n + b),
+where b is the number of boundary vertices.
+
+If we want to do this with a sweepline algorithm, we need a way of
+keeping track of the union of the vertical segments without maintaining
+the entire sorted order of the endpoints.  Maybe this can be done with
+some variant of kinetic heaps:
+
+	http://graphics.stanford.edu/~jbasch/publications/kinetic/
+	http://graphics.stanford.edu/~jbasch/publications/red-blue/
+
+Research, anyone?  :-)
+-- 
+Jeff Erickson                                 mailto:jeffe@cs.uiuc.edu
+Computer Science Department                 http://www.uiuc.edu/~jeffe
+University of Illinois, Urbana-Champaign 
+
+From: Jeff Erickson <jeffe@cs.uiuc.edu>
+Subject: Re: How do you find the boundary of a set of points in 2d?
+Date: Monday, November 15, 1999 9:43 PM
+
+Jeff Erickson wrote:
+> 
+> I think a real output-sensitive algorithm for computing the union is an
+> open problem.  The ultimate goal is a running time like O(n log n + b),
+> where b is the number of boundary vertices.
+
+I just realized this is almost certainly impossible.  Deciding whether a
+bunch of triangles exactly cover another triangle is a 3SUM-hard
+problem, which means that an algorithm that runs faster than O(n^2) in
+the worst case is highly unlikely, even for the special case when b is a
+constant.
+
+Intuitively, a problem is 3SUM-hard if it's harder than the problem
+3SUM: Given a set of n integers, do any three of them add up to zero? 
+The fastest known algorithm for 3SUM runs in O(n^2) time [Exercise!] and
+this is actually optimal in certain models of computation.  There are a
+whole bunch of 3SUM-hard problems, and if you come up with an algorithm
+for ANY of them that runs in o(n^2) time, then you can solve 3SUM in
+o(n^2) time.
+
+For more info, see A. Gajentaan and M. Overmars, "On a class of O(n^2)
+problems in computational geometry", Computational Geometry: Theory and
+Applications 5:165-185, 1995.
+	ftp://ftp.cs.uu.nl/pub/RUU/CS/techreps/CS-1993/1993-15.ps.gz
+
+-- 
+Jeff Erickson                                 mailto:jeffe@cs.uiuc.edu
+Computer Science Department                 http://www.uiuc.edu/~jeffe
+University of Illinois, Urbana-Champaign 

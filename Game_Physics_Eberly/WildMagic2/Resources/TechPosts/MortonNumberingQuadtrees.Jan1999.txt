@@ -1,0 +1,123 @@
+From: Vilya Harvey <vilya@nag.co.uk>
+Subject: Re: Quad Trees
+Date: Monday, January 04, 1999 12:19 PM
+
+Hi there - sorry for the slow reply!
+
+Jamie Robb wrote:
+>Hi,
+>
+>Does anyone know anything about Quad Tree compression algorithms?
+>
+>I implemented one quite sucessfully, but it is only two layers deep. (I
+>didn't use recursion, for speed).
+>
+>Now, I think I can decide how deep to make the tree as I construct it to
+>get optimal compression. This could be achieved by looking at the number
+>of pruned nodes in each layer. However, when actually compiling the data
+>to be transmitted to the decoder (i.e. inorder tree traversal), I am
+>having a lot of trouble, mainly because I cannot easily calculate the
+>memory offset for the next layer down. The tree nodes are stored in a
+>contiguous memory bitmap. All of the examples and code I could find on
+>the web are recursive.
+>
+>Does anyone have any elegant quad tree algorithms that don't use
+>recursion?
+
+If you use a Morton encoding of the quadtree, you can avoid recursion and
+automatically have the appropriate memory offsets calculated for you. What
+follows is a brief explanation of the Morton encoding scheme. If you need
+more information, let me know.
+
+--- Morton Numbering ---
+
+This is the basis of a Morton encoding. It is a way to refer to a
+particular pixel in a bitmap using a single number, as opposed to a row
+and column combination. The numbering (for a 4 by 4 bitmap) goes like
+this:
+
+   0  1  4  5
+   2  3  6  7
+   8  9 12 13
+  10 11 14 15
+
+Hopefully you can see the pattern in this! The morton number of any pixel
+can actually be calculated by interleaving the bits of the row and column
+indexes (they are assumed to start at 0, not 1):
+
+  row 2    =>	0 0 0 0 0 0 1 0
+		0000000000001101   =>	morton no. 13
+  column 3 =>	 0 0 0 0 0 0 1 1
+
+You can do the same thing in reverse to convert a morton number to
+zero-based row and column indexes.
+
+--- Morton Encoding ---
+
+Morton encoding is a linear representation of a quadtree. The encoding
+consists of an array of nodes, where each node has at least two pieces of
+information: the size of the node, and the value of the node. The value of
+the node can be thought of as the colour of all pixels covered by the
+node; the size is a value which can be used to determine how many pixels
+are covered by the node. The actual value used for the size could be one
+of several things, but the most useful value to use is probably the
+difference between the depth of the node and the maximum tree depth. The
+maximum tree depth is determined by the dimensions of the bitmap being
+encoded: it is the logarithm to base 2 of the width or height of the
+bitmap (if the bitmap is not a square with a side length that is a power
+of two, it will have to be padded out using a null value of some kind).
+The difference between the maximum tree depth and the depth of the node
+(I'll call it D) can tell you the size of the node:
+
+	width and height: 2^D		(1 << D)
+	number of pixels: 2^(2D)	(1 << (D * 2))
+
+Note that D is unlikely to ever need more than a single byte to represent
+it, since 2^(2 * 255) is a *lot* of pixels. An alternative approach is to
+record the morton number of each node, but this will generally require
+more storage (an int or a long instead of a byte) and more computation.
+
+So each node will be something like this:
+
+struct node {
+  unsigned char size;
+  value_type value;  /* value_type == whatever type the values have. */
+};
+
+An array of these nodes will fully represent a quadtree, with the
+advantage of being a linear representation having locality of reference
+(pixels near to each other in the bitmap are *mostly* near to each other
+in the encoded representation) which makes it efficient to use from disk,
+helps with caching, etc.
+
+The algorithm to encode a bitmap as a Morton quadtree is:
+
+for each pixel in the bitmap, in Morton order {
+  create a node for the pixel;
+  if this is the fourth node in a group, then {
+    do {
+      clear the "merged" flag;
+      if this node has the same size and value as the previous three
+      nodes, then:
+        replace all four nodes by a single node with the same value and
+        size one greater;
+        set the "merged" flag;
+    } while the merged-flag is set;
+  }
+}
+
+As you can see, there is no recursion involved. Decoding the quadtree
+should be relatively simple, but bear in mind that you may not actually
+want to decode it: many of the popular quadtree operations can be (and
+have been) implemented efficiently directly on the Morton encoded form.
+
+For more information, have a look at some GIS (Geographic Information
+Systems) textbooks; many of them have at least some introductory stuff
+about quadtrees and may mention Morton encoding. Feel free to contact me
+as well.
+
+Vil.
+-- 
+Vilya Harvey  <vilya@nag.co.uk>    Wilkinson House  Mob: +44  961 106 505
+Computational Mathematics Group   Jordan Hill Road   Wk: +44 1865 511 245
+NAG Limited                    Oxford  UK  OX2 8DR  Fax: +44 1865 311 205

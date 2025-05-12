@@ -1,0 +1,25 @@
+The method of separating axes can be used to determine
+whether or not two oriented rectangles intersect.  The
+first box has center C0, unit length and perpendicular
+axes U0 and U1, and half-widths e0 and e1.  The points
+inside the rectangle are C0+x0*U0+x1*U1 where |x0| <= e0
+and |x1| <= e1.  The second box has center C1, unit
+length and perpendicular axes V0 and V1, and half-widths
+f0 and f1.  The points inside the rectangle are
+C1+y0*V0+y1*V1 where |y0| <= f0 and |y1| <= f1.  Define
+D = C1-C0.
+
+The two (solid) rectangles do not intersect when any of
+the following conditions is true:
+(1) |Dot(U0,D)| > e0+f0*|Dot(U0,V0)|+f1*|Dot(U0,V1)|
+(2) |Dot(U1,D)| > e1+f0*|Dot(U1,V0)|+f1*|Dot(U1,V1)|
+(3) |Dot(V0,D)| > f0+e0*|Dot(V0,U0)|+e1*|Dot(V0,U1)|
+(4) |Dot(V1,D)| > f1+e0*|Dot(V1,U0)|+e1*|Dot(V1,U1)|
+If all four conditions are false, the rectangles do
+intersect.
+
+A description of the method of separating axes:
+  http://www.magic-software.com/Documentation/MethodOfSeparatingAxes.pdf
+Source code for the above algorithm is
+  http://www.magic-software.com/Intersection2D.html
+the section "Test intersection of two stationary boxes"

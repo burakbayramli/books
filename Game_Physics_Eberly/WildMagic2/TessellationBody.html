@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Tessellation</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+Delaunay triangulation.  The "extra triangle" members are for supporting
+quadratic interpolation:<br>
+<a href="Source/Tessellation/WmlDelaunay2.h">WmlDelaunay2.h</a>
+<a target="_blank" href="Source/Tessellation/WmlDelaunay2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Tessellation/WmlDelaunay2.cpp">WmlDelaunay2.cpp</a>
+<a target="_blank" href="Source/Tessellation/WmlDelaunay2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+A new version of Delaunay triangulation in 2D.  Hopefully this one is
+more robust than the other one. Comparison of test results with a version
+that uses exact arithmetic appears to indicate the new version is robust.
+The older version is a modification of Dave Watson's code (nnsort.c) and
+has a few #define quantities related to choice of supertriangle, use of
+jittering to break collinearities and cocircularities, and allocation of
+space to hold the triangle information.  The supertriangle method is not
+guaranteed to always produce the convex hull.  Jittering is not necessary if
+the algorithm is implemented carefully.  Allocation should be dynamic as
+needed and should not require the user to recompile and rerun the program if
+the specified memory is insufficient.  The new version address all these
+issues and should always produce a triangulation whose triangles form the
+convex hull of the input data.  Run-time on an AMD 1.4Ghz processor with
+100,000 points was 16 seconds:<br>
+<a href="Source/Tessellation/WmlDelaunay2a.h">WmlDelaunay2a.h</a>
+<a target="_blank" href="Source/Tessellation/WmlDelaunay2a.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Tessellation/WmlDelaunay2a.cpp">WmlDelaunay2a.cpp</a>
+<a target="_blank" href="Source/Tessellation/WmlDelaunay2a.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Delaunay tetrahedralization of 3D data.  Please read the comments in the
+code about possible changes to the "quantity factor" if the constructor
+fails (not enough memory to store tetrahedra).  [I still need to rewrite this
+like I did for 2D data.]:<br>
+<a href="Source/Tessellation/WmlDelaunay3.h">WmlDelaunay3.h</a>
+<a target="_blank" href="Source/Tessellation/WmlDelaunay3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Tessellation/WmlDelaunay3.cpp">WmlDelaunay3.cpp</a>
+<a target="_blank" href="Source/Tessellation/WmlDelaunay3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Other Documents:<br>
+<i>
+<a href="Documentation/TessellateSphere.pdf">Tessellation of a Unit Sphere Starting with an Inscribed Convex Triangular Mesh</a>
+<a target="_blank" href="Documentation/TessellateSphere.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+
+</td></tr>
+</table>
+
+</body>
+</html>

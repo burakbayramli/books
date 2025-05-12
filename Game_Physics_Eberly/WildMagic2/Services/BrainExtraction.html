@@ -1,0 +1,155 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: MIPAV Brain Extraction Tools</title>
+<link rel=stylesheet type="text/css" href="../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+<b>Brain extraction tool</b>.
+<br><br>
+
+This algorithm uses an <i>active surfaces</i> algorithm that is analogous to
+the <i>active contours</i> (or <i>snakes</i>) algorithm used in 2D images.
+The method is referred to as <i>skull stripping</i> where only those voxels
+of the brain matter are retained for further processing.  An ellipsoid is
+computed to approximate the brain and is represented as a triangle mesh of
+elastic material.  The center, orientation, and shape of the ellipsoid are
+based on a histogram analysis of the image.  The mesh evolves over time.
+Surface tension is used to prevent the surface from uncontrolled growth in the
+directions tangential to the surface.  The image data is used to force growth
+in the normal direction to the surface.  The middle slice of a 3D MRI is shown
+with a slice of the initial ellipsoid.  The ellipsoid is a coarse
+approximation, and the evolution scheme will attempt to modify the ellipsoid
+to encapsulate the brain matter.<br><br>
+<table>
+<tr><td>
+  <img src="BrainEllipsoid.png" width=256 height=255 alt="initial ellipse in image" border=1>
+</td></tr>
+</table>
+<br><br>
+
+The sequence of images below are from various stages of the surface evolution.
+The first shows the rendered initial ellipsoid.  The last shows the final
+evolved surface.  Initially the surface tension is small, allowing the surface
+to grow rapidly with possible cusps and self-intersections occurring.  This
+allows you to get relatively close to the brain surface, but rapidly.  As time
+increases, the tension is increased to force the surface not to self-intersect.
+Once the self-intersections disappear, the tension is reduced to allow a
+somewhat finer level evolution to reach the brain surface.<br><br>
+<table>
+<tr><td>
+  <img src="Brain01.png" width=424 height=336 alt="brain 01" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain02.png" width=424 height=336 alt="brain 02" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain03.png" width=424 height=336 alt="brain 03" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain04.png" width=424 height=336 alt="brain 04" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain05.png" width=424 height=336 alt="brain 05" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain06.png" width=424 height=336 alt="brain 06" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain07.png" width=424 height=336 alt="brain 07" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain08.png" width=424 height=336 alt="brain 08" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain09.png" width=424 height=336 alt="brain 09" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="Brain10.png" width=424 height=336 alt="brain 10" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="BrainFinalSolid.png" width=424 height=336 alt="brain final solid" border=1>
+</td></tr>
+</table>
+<br><br>
+<table>
+<tr><td>
+  <img src="BrainFinalWire.png" width=424 height=336 alt="brain final wire" border=1>
+</td></tr>
+</table>
+<br><br>
+
+The voxels enclosed by the final surface are colored in shades of cyan in the
+original image.  A few slices of that image are shown below to give you an
+idea of the accuracy of the segmentation.<br><br>
+<table>
+<tr>
+<td>
+  <img src="BrainExtract0.png" width=256 height=255 alt="brain final wire" border=1>
+</td>
+<td width=8></td>
+<td>
+  <img src="BrainExtract1.png" width=256 height=255 alt="brain final wire" border=1>
+</td>
+</tr>
+<tr>
+<td>
+  <img src="BrainExtract2.png" width=256 height=255 alt="brain final wire" border=1>
+</td>
+<td width=8></td>
+<td>
+  <img src="BrainExtract3.png" width=256 height=255 alt="brain final wire" border=1>
+</td>
+</tr>
+</table>
+<br><br>
+
+The final surface is used as the input to a more sophisticated evolution
+method that shrink-wraps the gray matter (or white matter if desired).
+
+</td></tr>
+</table>
+
+</body>
+</html>

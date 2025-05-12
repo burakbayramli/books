@@ -1,0 +1,74 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Wild Magic: NURBSCurveExample</title>
+<link rel=stylesheet type="text/css" href="../../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+<b>NURBS Curve Example (evolution)</b>:<br>
+<a href="Physics/NURBSCurveExample/NURBSCurveExample.h">NURBSCurveExample.h</a>
+<a target="_blank" href="Physics/NURBSCurveExample/NURBSCurveExample.h"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Physics/NURBSCurveExample/NURBSCurveExample.cpp">NURBSCurveExample.cpp</a>
+<a target="_blank" href="Physics/NURBSCurveExample/NURBSCurveExample.cpp"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Consider a NURBS curve with 13 control points that are initially on the same
+straight line.  The knot vector is open with uniformly spaced knots.  The
+curve is necessarily a line segment.  The control points must be moved to
+deform the central portion of the curve into a closed loop.  The control
+weights are all 1 except for points 3, 5, 7, and 9, whose weights are 3/10.
+These weights were chosen to produce a final closed loop that is
+nearly circular.  The next image shows the initial line segment and its
+control points.  It also shows how the control points evolve early in the
+process.
+<br><br>
+<table>
+<tr>
+  <td><img src="WebImages/NurbsEvolve1.png" width=200 height=140 alt="NurbsEvolve1" border=1></td>
+</tr>
+</table>
+
+</td></tr>
+</table>
+<br><br>
+
+The next image shows the control points and curves much further along in
+time.  The time sequence is from left to right, then top to bottom.
+In the lower left image, control points 1 and 11 finally coincide as do
+control points 2 and 6.  At that instant the NURBS curve is split into two
+NURBS curves as shown in the lower right image.  The closed curve has a
+periodic knot vector.  The closed curve continues to move vertically upwards
+by uniform translations of the control points.  The other curve has 5 control
+points with points 1 and 3 coinciding.  The curve evolves back to a line
+segment by translating the middle control point 2 so that it too coincides
+with control points 1 and 3.
+<br><br>
+<table>
+<tr>
+  <td><img src="WebImages/NurbsEvolve2.png" width=408 height=392 alt="NurbsEvolve2" border=1></td>
+</tr>
+</table>
+<br><br>
+
+The next image shows an entire sequence of frames of the deformation.  The
+sequence of images is top row to bottom row, left to right in each row.
+<br><br>
+<table>
+<tr>
+  <td><img src="WebImages/NurbsSequence.png" width=385 height=241 alt="NurbsEvolve2" border=1></td>
+</tr>
+</table>
+
+
+</body>
+</html>

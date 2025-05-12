@@ -1,0 +1,222 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Approximation</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+Least squares fit of circle.  For points on an arc subtending a small angle,
+the initial guess for circle center is not a good one.  Consider modifying the
+code to allow the application to specify an initial center, possibly using
+three points of the input data to get a center of the circumscribing circle
+(see WmlContScribeCir2.{h,cpp} on the Containment page).  Also consider
+as an alternative the circle fitting code in WmlApprQuadraticFit2.{h,cpp} on
+this page.  This can be used as is or to provide an initial center/radius
+guess for the modified WmlApprCircleFit2 code:<br>
+<a href="Source/Approximation/WmlApprCircleFit2.h">WmlApprCircleFit2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprCircleFit2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprCircleFit2.cpp">WmlApprCircleFit2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprCircleFit2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by cylinder:<br>
+<a href="Source/Approximation/WmlApprCylinderFit3.h">WmlApprCylinderFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprCylinderFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprCylinderFit3.cpp">WmlApprCylinderFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprCylinderFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Approximation of ellipse by circular arcs:<br>
+<a href="Source/Approximation/WmlApprEllipseByArcs2.h">WmlApprEllipseByArcs2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprEllipseByArcs2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprEllipseByArcs2.cpp">WmlApprEllipseByArcs2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprEllipseByArcs2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,<br>
+<i>
+<a href="Documentation/ApproximateEllipse.pdf">Approximating an Ellipse by Circular Arcs</a>
+<a target="_blank" href="Documentation/ApproximateEllipse.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of ellipse.  The code does a minimization in 5D and each
+energy calculation requires computing distance from point to ellipse (which is
+done by solving for the largest root of a quartic polynomial).  The
+eigensolver is used to get an initial guess by fitting the data with a
+Gaussian distribution:<br>
+<a href="Source/Approximation/WmlApprEllipseFit2.h">WmlApprEllipseFit2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprEllipseFit2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprEllipseFit2.cpp">WmlApprEllipseFit2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprEllipseFit2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by ellipsoid:<br>
+<a href="Source/Approximation/WmlApprEllipsoidFit3.h">WmlApprEllipsoidFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprEllipsoidFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprEllipsoidFit3.cpp">WmlApprEllipsoidFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprEllipsoidFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by Gaussian distribution:<br>
+<a href="Source/Approximation/WmlApprGaussPointsFit2.h">WmlApprGaussPointsFit2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprGaussPointsFit2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprGaussPointsFit2.cpp">WmlApprGaussPointsFit2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprGaussPointsFit2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by Gaussian distribution:<br>
+<a href="Source/Approximation/WmlApprGaussPointsFit3.h">WmlApprGaussPointsFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprGaussPointsFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprGaussPointsFit3.cpp">WmlApprGaussPointsFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprGaussPointsFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by line.  Function HeightLineFit is a fit using
+distances in y.  Function OrthogonalLineFit uses distances orthogonal to the
+proposed line:<br>
+<a href="Source/Approximation/WmlApprLineFit2.h">WmlApprLineFit2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprLineFit2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprLineFit2.cpp">WmlApprLineFit2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprLineFit2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by line. OrthogonalLineFit uses distances
+orthgonal to the proposed line:<br>
+<a href="Source/Approximation/WmlApprLineFit3.h">WmlApprLineFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprLineFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprLineFit3.cpp">WmlApprLineFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprLineFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by paraboloid:<br>
+<a href="Source/Approximation/WmlApprParaboloidFit3.h">WmlApprParaboloidFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprParaboloidFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprParaboloidFit3.cpp">WmlApprParaboloidFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprParaboloidFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by plane.  HeightPlaneFit is a fit using
+distances in z.  OrthogonalPlaneFit uses distances orthogonal to the
+proposed plane:<br>
+<a href="Source/Approximation/WmlApprPlaneFit3.h">WmlApprPlaneFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprPlaneFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprPlaneFit3.cpp">WmlApprPlaneFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprPlaneFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by polynomials.  Data (x,w) is fitted with a
+polynomial w = p(x), data (x,y,w) is fitted with a polynomial w = p(x,y),
+and data (x,y,z,w) is fitted with a polynomial w = p(x,y,z):<br>
+<a href="Source/Approximation/WmlApprPolyFit1.h">WmlApprPolyFit1.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprPolyFit1.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprPolyFit1.cpp">WmlApprPolyFit1.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprPolyFit1.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprPolyFit2.h">WmlApprPolyFit2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprPolyFit2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprPolyFit2.cpp">WmlApprPolyFit2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprPolyFit2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprPolyFit3.h">WmlApprPolyFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprPolyFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprPolyFit3.cpp">WmlApprPolyFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprPolyFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Least squares fit of points by quadratic curve.  Special case applies to
+fitting points by circle.  The fit is based on viewing the sample points
+(x,y) as 6D points V = (1,x,y,x*x,y*y,x*y).  The idea is to find a unit
+length vector C such that sum[Dot(C,V_i)^2] is minimized:<br>
+<a href="Source/Approximation/WmlApprQuadraticFit2.h">WmlApprQuadraticFit2.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprQuadraticFit2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprQuadraticFit2.cpp">WmlApprQuadraticFit2.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprQuadraticFit2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Least squares fit of points by quadratic surface.  Special case applies to
+fitting points by sphere.  The fit is based on viewing the sample points
+(x,y,z) as 10D points V = (1,x,y,z,x*x,y*y,z*z,x*y,x*z,y*z).  The idea is
+to find a unit length vector C such that sum[Dot(C,V[i])^2] is minimized:<br>
+<a href="Source/Approximation/WmlApprQuadraticFit3.h">WmlApprQuadraticFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprQuadraticFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprQuadraticFit3.cpp">WmlApprQuadraticFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprQuadraticFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Least squares fit of points by sphere.  For points on a small portion of a
+spherical surface, the initial guess for sphere center is not a good one.
+Consider modifying the code to allow the application to specify an initial
+sphere, possibly using four points of the input data to get a center of the
+circumscribing sphere (see MgcCont3DCircleSphereScribe.{h,cpp} on the
+Containment 3D page).  Also consider as an alternative the sphere fitting code
+in WmlApprQuadraticFit.{h,cpp} on this page.  This can be used as is or to
+provide an initial center/radius guess for the modified WmlApprSphereFit
+code:<br>
+<a href="Source/Approximation/WmlApprSphereFit3.h">WmlApprSphereFit3.h</a>
+<a target="_blank" href="Source/Approximation/WmlApprSphereFit3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Approximation/WmlApprSphereFit3.cpp">WmlApprSphereFit3.cpp</a>
+<a target="_blank" href="Source/Approximation/WmlApprSphereFit3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/LeastSquaresFitting.pdf">Least Squares Fitting of Data</a>
+<a target="_blank" href="Documentation/LeastSquaresFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Other Documents:<br>
+<i>
+<a href="Documentation/HelixFitting.pdf">Fitting 3D Data with a Helix</a>
+<a target="_blank" href="Documentation/HelixFitting.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+
+</td></tr>
+</table>
+
+</body>
+</html>

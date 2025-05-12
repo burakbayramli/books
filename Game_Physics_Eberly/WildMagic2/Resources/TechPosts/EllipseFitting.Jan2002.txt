@@ -1,0 +1,290 @@
+From: "Sung Joon AHN" <sja@ipa.fhg.de>
+Subject: Re: Ellipse From 5+ 2D Points
+Date: Monday, January 07, 2002 10:03 AM
+
+res0oqmv@verizon.net wrote in message news:<3c332c9a.2489749009@News.Verizon.net>...
+> I'm trying to find an algorithm (maybe some example code) to compute
+> an ellipse through 5 or more points. The 'best fit' ellipse is is
+> likely  rotated. 
+> 
+> thanks, res
+
+Hi,
+
+Ellipse fitting is one of the most investigated and applied curve
+fitting algorithm. There are two main categories for ellipse fitting,
+algebraic and geometric fitting.
+
+The algebraic fitting minimizes the square sum of the algebraic
+distances between the given points and the conic curve which includes
+ellipse, hyperbola, and parabola (i.e. algebraic fitting estimates
+algebraic parameters which minimize the sum of the quadric equation
+values at each given point).
+The advantage of the algebraic fitting is the low implementation and
+computing cost. However, there is no guarantee that the estimated
+algebraic parameters represent the intended ellipse. A remedy
+constraining the algebraic parameters to represent an ellipse is the
+algorithm of Fitzgibbon et al. Another disadvantage of the algebraic
+fitting is that the algebraic fitting error generally has no physical
+interpretation, i.e. we don't know what the algebraic error means in
+real applications.
+
+On the other hand, the geometric fitting minimizes the square sum of
+the shortest distances between the given points and the conic curve.
+This error definition is definitively very natural and preferable
+(clear physical interpretation!). Unfortunately, the geometric error
+generally has nonlinear nature with the estimation parameters.
+
+A century ago, Pearson has elegantly solved in a closed form (moment
+method, eigenvalue method) the problem of geometric fitting of line
+and plane in space. However, for general curve and surface, there are
+only a few geometric fitting algorithms. There are two real tasks for
+geometric fitting, first, determining the shortest distances between
+the given points and the curve, and next, finding the curve parameters
+minimizing the distance sum. The geometric fitting of general curve
+and surface is a current research subject in various fields of science
+and engineering, e.g. computer/machine vision, computer aided
+geometric design, etc.
+
+Common questions both for algebraic and geometric fitting are how to
+extract the physical parameters, e.g. the five ellipse parameters
+(axis lengths, center position, and rotation angle), from the
+estimated algebraic parameters, and how to test the reliability of the
+estimated physical parameters.
+
+Follows is a short list of selected research papers relatively to a
+long history of the ellipse fitting:
+
+K. Pearson,
+On Lines and Planes of Closest Fit to Systems of Points in Space,
+The Philosophical Magazine, Ser. 6, vol. 2, no. 11, pp. 559-572, 1901.
+
+D.B. Cooper and N. Yalabik,
+On the Computational Cost of Approximating and Recognizing
+Noise-Perturbed Straight Lines and Quadric Arcs in the Plane,
+IEEE Trans. Computers, vol. 25, no. 10, pp. 1020-1032, 1976.
+
+I. Kåsa,
+A Circle Fitting Procedure and its Error Analysis,
+IEEE Trans. Instrumentation and Measurement, vol. 25, pp. 8-14, 1976.
+
+F.L. Bookstein,
+Fitting conic sections to scattered data,
+Comp. Graphics and Image Proc., vol. 9, pp. 56-71, 1979.
+
+P.D. Sampson,
+Fitting conic sections to ''very scattered'' data: An iterative
+refinement of the Bookstein algorithm,
+Comp. Graphics and Image Proc., vol. 18, pp. 97-108, 1982.
+
+R.N. Goldman,
+Two Approaches to a Computer Model for Quadric Surfaces,
+IEEE Computer Graphics and Applications, vol. 3, no. 9, pp. 21-24,
+1983.
+
+P.T. Boggs, R.H. Byrd, and R.B. Schnabel,
+A stable and efficient algorithm for nonlinear orthogonal distance
+regression,
+SIAM J. Sci. and Stat. Computing, vol. 8, no. 6, pp. 1052-1078, 1987.
+
+G. Taubin,
+Estimation of Planar Curves, Surfaces, and Nonplanar Space Curves
+Defined by Implicit Equations with Applications to Edge and Range
+Image Segmentation,
+IEEE Trans. Pattern Analysis and Machine Intelligence, vol. 13, no.
+11, pp. 1115-1138, 1991.
+
+R. Safaee-Rad, I. Tchoukanov, B. Benhabib and K.C. Smith,
+Accurate Parameter Estimation of Quadric Curves from Grey-Level
+Images,
+CVGIP: Image Understanding, vol. 54, no. 2, pp. 259-274, 1991.
+
+X. Cao, N. Shrikhande, and G. Hu,
+Approximate orthogonal distance regression method for fitting quadric
+surfaces to range data,
+Pattern Recognition Letters, vol. 15, no. 8, pp. 781-796, 1994.
+
+W. Gander, G.H. Golub, and R. Strebel,
+Least-squares fitting of circles and ellipses,
+BIT, vol. 34, pp. 558-578, 1994.
+
+S. Sullivan, L. Sandford, and J. Ponce,
+Using Geometric Distance Fits for 3-D Object Modeling and Recognition,
+IEEE Trans. Pattern Analysis and Machine Intelligence, vol. 16, no.
+12, pp. 1183-1196, 1994.
+
+A.W. Fitzgibbon, M. Pilu and R. B. Fisher,
+Direct Least Squares Fitting of Ellipses,
+Proc. 13th Int. Conf. on Pattern Recognition, Vienna, pp. 253-257,
+1996.
+
+P.L. Rosin,
+Analyzing Error of Fit Functions for Ellipses,
+Pattern Recognition Letters, vol. 17, pp. 1461-1470, 1996.
+
+D.A. Turner,
+The approximation of Cartesian coordinate data by parametric
+orthogonal distance regression,
+Ph.D. Thesis, School of Computing and Mathematics, University of
+Huddersfield, UK, 1999.
+
+S.J. Ahn, W. Rauh, and H.-J. Warnecke,
+Least-squares orthogonal distances fitting of circle, sphere, ellipse,
+hyperbola, and parabola,
+Pattern Recognition, vol. 34, no. 12, pp. 2283-2303, 2001.
+
+ISO 10360-6,
+Geometrical Product Specifications (GPS) - Acceptance and
+reverification test for coordinate measuring machines (CMM) - Part 6:
+Estimation of errors in computing Gaussian associated features,
+International Standard, ISO, Geneva, Dec. 15, 2001. 
+
+==============================================================================
+From: "Sung Joon AHN" <sja@ipa.fhg.de>
+Subject: Re: Ellipse From 5+ 2D Points
+Date: Tuesday, January 08, 2002 12:59 AM
+
+Ok, please let me shortly note problems of general curve/surface
+fitting.
+
+There are three ways to describe an analytic curve/surface, namely
+explicit, implicit, and parametric curve/surface.
+
+y = f(a, x)    : explicit 2D-curve with feature parameters vector a.
+z = f(a, x, y) : explicit surface.
+f(a, x, y) = 0    : implicit 2D-curve.
+f(a, x, y, z) = 0 : implicit surface.
+{ f(a, x, y, z) = 0, g(b, x, y, z) = 0 }
+                  : 3D-curve as the inters. of two implicit surfaces.
+{ x = x(a, u), y = y(a, u) } : parametric 2D-curve with parameter u.
+{ x = x(a, u), y = y(a, u), z = z(a, u) }  : parametric 3D-curve.
+{ x = x(a, u, v), y = y(a, u, v), z = z(a, u, v) }
+                             : param. surface with parameter u and v.
+
+It is clear that any explicit curve/surface can be simply converted to
+implicit or parametric one.
+E.g. explicit surface z = f(a, x, y) can be converted
+to implicit one ( z - f(a, x, y) ) = 0, or
+to parametric one { x = u, y = v, z = f(a, u, v) }.
+Additionally, the use of explicit curve/surface is very restricted
+with real applications of e.g. image processing, pattern recognition,
+and computer/machine vision e.g. because a full circle/sphere can not
+be described in explicit form. Thus, explicit curve/surface has little
+interest for us. If we could solve the fitting problems of implicit
+and parametric curve/surface, we can generally fit analytical
+curve/surface.
+
+There are various methods and strategies for curve/surface fitting,
+e.g. Hough transform, moment method, and least squares method, etc.
+In this note, I like to describe only the least squares fitting
+methods.
+The phrase "least squares" means we estimate (find) the feature
+parameters by minimizing the square sum of some predefined
+error-of-fit. Thus first, we have to define the fitting error, and
+next, find an appropriate searching method for the feature parameters
+which minimize the square sum of the errors.
+ 
+A very representative class of implicit curve/surface is the algebraic
+curve/surface, i.e. curves/surfaces that are described by polynomials
+(quadric, cubic, quartic, etc.).
+A simple and good idea for fitting of algebraic curve/surface is to
+minimize the square sum of the algebraic function values at each given
+point (xi, yi, zi), i = 0, ... , m. (This method is named as
+'algebraic fitting'):
+
+   min sum (f(a, xi, yi, zi))^2 ,
+   e.g.  min sum ( (xi - xc)^2 + (yi - yc)^2 - r^2 )^2
+   for circle fitting (center xc, yc, and radius r).
+
+   I. Kåsa, A Circle Fitting Procedure and its Error Analysis,
+   IEEE Trans. Instrum. and Measurement, vol. 25, pp. 8-14, 1976.
+
+The algebraic fitting problem can be solved in closed form at a low
+implementation and computing cost.
+In particular for circle fitting, the algebraic fitting errors can be
+interpreted as the area differences between the fitted circle and the
+concentric circles passing through the given points. However, we can
+hardly find a physical interpretation for algebraic error with general
+implicit curve/surface.
+
+A better and natural error definition would be the shortest distance
+(geometric distance, euclidean distance) between the implicit
+curve/surface and the given points (named as geometric fitting,
+orthogonal distance fitting, error-in-variance fitting, total least
+squares fitting, or best fitting).
+
+Another viewpoint is whether the feature parameters could be
+simultaneously estimated in terms of form (invariant to the
+translation and rotation of the model feature), position, and rotation
+parameters, e.g. two axis lengths a, b, center position xc, yc, and
+rotation angle alpha for an general ellipse in plane.
+Furthermore, a fitting algorithm will be very advantageous, if the
+reliability (variance) of the estimated parameters could be tested.
+
+The description of the geometric fitting is beyond the range of this
+short note. Instead, some research papers are available:
+
+/////////// For explicit curve/surface:
+
+P.T. Boggs, R.H. Byrd, R.B. Schnabel,
+A stable and efficient algorithm for
+nonlinear orthogonal distance regression,
+SIAM J. Sci. Stat. Comput., vol. 8, pp. 1052-1078, 1987.
+
+/////////// For implicit curve/surface:
+
+H.-P. Helfrich, D. Zwick,
+A trust region method for implicit orthogonal distance regression,
+Numerical Algorithms, vol. 5, pp. 535-545, 1993.
+
+S. Sullivan, L. Sandford, J. Ponce,
+Using Geometric Distance Fits for 3-D Object Modeling and Recognition,
+IEEE Trans. Pattern Analysis and Machine Intelligence,
+vol. 16, no. 12, pp. 1183-1196, 1994.
+
+S.J. Ahn, W. Rauh, H.-J. Warnecke,
+Best-Fit of Implicit Surfaces and Plane Curves,
+in Mathematical Methods for Curves and Surfaces: Oslo 2000,
+T. Lyche and L.L. Schumaker (Eds.),
+Vanderbilt University Press, TN, pp. 1-14, 2001.
+
+S.J. Ahn, W. Rauh, H.-J. Warnecke,
+Least-squares orthogonal distances fitting of circle, sphere, ellipse,
+hyperbola, and parabola,
+Pattern Recognition, vol. 34, no. 12, pp. 2283-2303, 2001.
+
+/////////// For parametric curve/surface:
+
+B.P. Butler, A.B. Forbes, P.M. Harris,
+Algorithms for Geometric Tolerance Assessment,
+Report no. DITC 228/94, NPL, 1994.
+
+W. Gander, G.H. Golub, R. Strebel,
+Least-squares fitting of circles and ellipses,
+BIT, vol. 34, pp. 558-578, 1994.
+
+D. Sourlier,
+Three Dimensional Feature Independent Bestfit in Coordinate Metrology,
+Ph.D. Thesis, ETH Zurich, 1995.
+
+D.A. Turner,
+The approximation of Cartesian coordinate data by
+parametric orthogonal distance regression,
+Ph.D. Thesis, School of Computing and Mathematics,
+University of Huddersfield, UK, 1999.
+
+S.J. Ahn, E. Westkämper, W. Rauh,
+Orthogonal Distance Fitting of Parametric Curves and Surfaces,
+in Algorithms for Approximation IV, I. Anderson and
+J. Levesley (Eds.), University of Huddersfield, UK, 2002.
+
+/////////// If someone has developed a geometric fitting algorithm, it
+is recommend to let the algorithm be tested by the PTB (Germany),
+NPL (UK), or NIST (USA) according to:
+
+ISO 10360-6, Geometrical Product Specifications (GPS) - Acceptance and
+reverification test for coordinate measuring machines (CMM) -
+Part 6: Estimation of errors in computing Gaussian associated
+features, ISO, Geneva, Dec. 15, 2001.
+
+Good luck. 

@@ -1,0 +1,111 @@
+From: "Fernando Cacciola" <fernando_cacciola@hotmail.com>
+Subject: RE: Floating Point accuracy in intersection algorithm
+Date: Friday, July 13, 2001 5:18 PM
+
+
+Ralph <rwijn@uwnet.nl> escribió en el mensaje de noticias
+994872907.717422@news.knoware.nl...
+> how do you deal with Floating Point accuracy in an intersection algorithm?
+> I have a function that finds the intersections in a shape.  I use doubles,
+> but I still  get invalid results sometimes ( for example when you test a
+if
+> a point is on a line ). I heard something about a Binary Coded Decimal
+> library, how does that work?. Or is there any other way to make sure that
+> the results are valid?
+>
+
+Your are entering a very intereseting area of Computational Geometry, called
+*robustness*.
+
+Start reading the book suggested by Derekasaurus Rex
+
+Options are:
+
+1) Resort to epsilon-based predicates. (This is the first suggestion made by
+Derekasaurus Rex )
+2) Resort to extended precision libraries. This will only lower the
+inaccuracies, though. (Look at the links posted by Derekasaurus Rex)
+
+3) Use homogeneous coordinates.
+
+That is, a 3D point is given by (x,y,z,h), were h is a common (normalizing)
+denominator.
+The trick  here is that those coordinates are rational numbers, not
+floating-point numbers.
+A rational number, given by (n/d) were n and d are integers, is not subject
+to loose of precision during division, which is
+one of the main sources of inaccuracies.
+Furthermore, if they are represented with unlimited size integers, they are
+*exact* w.r.t non-transcendental operations.
+Unfortunately, in most geometric computations (except affine
+transformations) you need to combine this with real (not rational) numbers,
+so you still have source for inaccuracies.
+
+
+4) Use Interval Arithmetic to track error bounds.
+
+This technique let you know how much can you trust a result.
+Combine Interval Arithmetic with Extended/Arbitrary Precision numbers and
+create a Floating Point Filter.
+A floating point filter combined with fast interval arithmetic works like
+this:
+Suppose you have a result R given by the interval [a,b].
+Now suppose you need to test whether R (the exact value) is K (say, zero).
+If K is outside [a,b] you can be sure that the exact value of R is not K.
+If K is inside [a,b], you can *refine* the computation, but now using the
+extended precision numbers, until the interval is small enough to trust a
+comparison.
+You can learn about this starting at:
+http://www.cs.utep.edu/interval-comp/main.html
+
+5) Use Exact Arithmetic.
+With this technique you will always have the exact value.
+However, this techniques are very expensive compared to hardware supported
+floating-point computations.
+Roughly, they use the following methods:
+
+Arithmetic Expansions:
+The error of a given floating point operation can be known *exactly*.
+Thus, the result of a given operation can be represented by an "arithmetic
+expansion", such as: a+b=n+e, were n is the result
+directly given by the fp unit and e is the computed error.
+With proper theorems and algorithms, expansions can be used as subsequent
+operands.
+The overall result of a computations carried out this way is a 'series'
+which can be evaluated to the need precision, even exactly
+if an arbitrary precision number is used to hold the evaluated result.
+You can learn about this at: http://www.cs.cmu.edu/~quake/robust.html
+
+Lazy-Evaluation:
+A similar approach is to keep track of the expression tree for a particular
+computation, and then obtain the final result by
+evaluating the tree as necessary to obtain the required precision.
+A smart implementation of this technique uses a fast fp type to evaluate the
+tree as long as the error bounds are tight, but when it          detects
+loose of significant precision, it starts again with an arbitrary precision
+number type.
+Unfortunately, although this solution is theoretically pretty, the cost of
+maintaining and evaluating the expression tree is too much, so this  is
+usually restricted to academic purposes.
+You can learn about this at: http://cs.nyu.edu/exact/realexpr/
+
+There's a lot to learn about exact geometric computations, but the above
+links should give you a start out.
+Just contact me if you need specific assistance.
+
+
+--
+Fernando Cacciola
+fernando_cacciola@hotmail.com
+
+
+
+
+
+
+
+
+
+
+
+ 

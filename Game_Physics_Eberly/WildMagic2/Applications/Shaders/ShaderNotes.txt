@@ -1,0 +1,401 @@
+Nolan Walker's notes about his experiences adding shader support to Wild
+Magic, both for DirectX9 and OpenGL.
+
+------------------------------------------------------------------------------
+
+Just as a warning, this will probably as much explanation as me complaining
+about DirectX, explaining bugs that took me a while to track down, or
+digressions on implementation concerns.  Maybe that's what you want.  This
+will probably be pretty long too, but I figure part of me working was for
+me to figure out what was important and distill that knowledge to you.  A lot
+of implementation details and notes are in the CgConverter/ReadMe.txt file.
+I figure that would also be useful to WildMagic users as well as you, and so
+that's where it is.  That might work well as a "How to use shaders with 
+WildMagic" document.
+
+To start off, I know you know about shaders in general, but a brief overview.
+There are two kinds: vertex shaders and pixel/fragment shaders.  I think
+pixel shader comes from DirectX and fragment shader is an OpenGL term.  I use
+pixel shader in the code (and usually when I write here), because that term
+makes more sense to me in terms of what the program is actually working on,
+but that's just my personal opinion.  A shader typically has some number of
+inputs and some number of outputs.  Inputs come in two flavors: varying and
+uniform.  These terms are pretty Cg specific (uniform is a keyword), but I
+think they logically can be used anywhere.  A shader runs multiple times over
+a large set of input data (vertices or pixels).  The varying parameters are
+the parameters that change per invocation such as the input data of vertices
+or of normals.  The uniform constants are constants that do not change over a
+set of data such as projection matrices or numerical constants.
+
+Vertex shaders always have a vertex input and a vertex output.  Pixel shaders
+always have a color output, but need no inputs.  The pixel shader receives
+everything that the vertex shader outputs except for the vertex output.
+Vertex shaders are really the more flexible part of the entire pipeline.  Even
+the lowest versions have 100 uniform constant registers (the most I ever
+used was for a perlin noise table in the vertex noise shader.  That was
+maybe about 70?) and a really high instruction limit (for what most people
+are doing).  Pixel shaders are much more restrictive.  The lowest versions
+have about 8 uniform constant registers.  Earlier versions (ps.1.x) have
+severe restrictions on when you can do certain operations (different phases
+of the shader) as well as very low instruction limits.  More on this later
+when I talk about different shader profiles.
+
+There are several common "tricks" that many people use with pixel shaders.
+If there is vertex-specific information that needs to be passed to the pixel
+shader (such as view direction, normals, or even interesting transformation
+matrices) they tend to get passed in either as color data or as texture
+coordinates.  It doesn't matter if your original program didn't use any
+texture coordinates, you can pass as many as 8 texture coordinates from the
+vertex shader to the pixel shader.  You don't have to send any texture
+coordinates through the vertex shader to do this, either.  Another common
+thing that people do is to use a texture as a table or a lookup and then use
+that result as an input to look up into another texture (ps.1.4 and above).
+The charcoal renderer uses this technique to lookup into a table of random
+values to approximate getting a random value.  Also, it always is better to
+do calculations as early as possible, in general.  If a vertex shader can
+calculate a value, the pixel shader shouldn't do it.  If the application can
+calculate a value, then the vertex shader shouldn't do it.  Especially if you
+need to normalize something, the vertex shader should do that, because the
+pixel shader cannot normalize things, except through an approximation.
+
+However, there are advantages to pushing things to the pixel shader, because
+the parameters that you pass there are interpolated per pixel.  If you pass
+view direction, normals, and lighting information to the pixel shader then
+those vectors will be interpolated over the triangle and you can have
+per-pixel lighting.
+
+For the most part, DirectX and OpenGL shaders are very similar in their
+capabilities.  A shader program is loaded into memory and compiled if
+necessary.  Typically the renderer will fail at this point if it cannot
+support that particular profile.  Shader versions are typically called
+"profiles" (at least in Cg-land).  Then, the renderer is told to use the
+shader.  You set some uniform constants.  Then, for both APIs, you do the
+same thing that you would to draw normal geometry (using streams for DX and
+using array pointers for GL) and all the geometry gets passed automagically
+to the shader.  That's really all there is to it.
+
+To use shaders in OpenGL, all you must do is create the shader and enable it,
+just like you would generate, create, and enable a texture.  The setup to
+make the application send the data to the shader program is the same as you
+would do for vertex arrays.  The application gives it pointers to the vertex
+(and optionally any other) information that you need in the same way that
+you would normally use OpenGL.  All input data goes into a specific register
+depending on its type.  Vertex data always goes into the same register.
+Normal data always goes in the same register.  This lets the shader program
+be more independent of the application which writes it.
+
+DirectX requires that the shader know the exact format of the incoming data.
+This includes not only the order of the varying parameters (vertex data,
+normals, colors, texture coordinates) but also which ones there are and what
+input register in the shader program they should use.  In the case of
+WildMagic, this means that the incoming data is formatted exactly how the
+shader needs it.  This is required at shader compile/creation time in DX8.1.
+It is most likely the case that you can change this at a later time in
+DX9.0, but that it will still be necessary.
+
+Digression: One bug I had to fix was that all the text kept getting pixel
+shaded as well and so apparently I wasn't turning off shaders when I should
+have.  I checked and DirectX disables strangely.  OpenGL, like you might
+expect, uses enable and disable calls to enable and disable shaders.  DirectX
+on the other hand has no real disable call.  There is a SetVertexShader and
+SetPixelShader call.  To unset pixel shaders you have to
+SetPixelShader(NULL).  To unset the vertex shader, you have to set the vertex
+shader to some sort of stream format that you expect other data to be in,
+like D3DFVF_XYZ.  The SetVertexShader call is overloaded very strangely, I
+think.
+
+Most shader programs use uniform constants in some way.  From the perspective
+of the driver, there are several different ways these can be handled.
+DirectX has one global space of constants that it will pass.  If you set
+register 3 with data for shader X and then shader Y runs that also needs
+information for register 3, it will still be there.  OpenGL divides up its
+constants into "local" and "environment" spaces.  Local parameters, as you
+might expect, are local to the program themselves (when set they apply to
+the current shader--you can't specify which shader they are for.).
+Environment parameters can be shared among programs.  The assembly language
+programs themselves specify whether any given uniform constant is a local or
+an environment parameter.
+
+For WildMagic, the users really need a concept equivalent to OpenGL's local
+parameters, regardless of API.  If you are using DirectX and there is a scene
+graph with multiple objects that all use constant register 3 (but need a
+different value), there is no way for the user to be able to set all of those
+within a single render call.  The user could try to munge it by splitting up
+the scene graph and rendering things separately, but then they've eliminated
+the usefulness of the scene graph itself.  Therefore, WildMagic needs to
+emulate the idea of "local parameters".
+
+One of the biggest limitations of DirectX in my opinion is that the driver
+will not pass renderer state automatically to shader programs.  OpenGL will
+do it for vertex shaders, but not for pixel shaders.  Renderer state is used
+in virtually all vertex shaders (to transform from model to clip space).
+Thus, the user themselves has to keep track of the current transformation
+matrix and pass it as a constant to the renderer.  In the assembly shader
+language that OpenGL uses right now, you can refer to state.inverse.mvp.matrix
+as a variable and the driver itself will update the constant with the correct
+renderer state.  Though, if you want state in pixel shaders (regardless of
+API), you have to do it yourself.
+
+For WildMagic, it's not like the users themselves could update this state
+manually, because it needs to be updated for every different piece of
+geometry using a shader which is all done during a single render call.  Thus,
+the renderer itself needs to know what state to update.
+
+The other issue with DirectX (at least 1.x vertex programs) is that numerical
+constants cannot be automatically set.  What you have to do is pass them in
+as a uniform constant.  OpenGL can define numerical constants from within the
+program itself.  Somewhat understandably, pixel shaders from both APIs allow
+you to define numerical constants but this is probably due to the fact that
+most pixel shaders have VERY few uniform constant registers for you to pass
+in numerical constants.
+
+These three reasons (the need for local parameters, updating of state
+constants, and numerical constants) are the reason the ShaderConstants class
+was created.  This class holds all the information about all the constants
+that a shader needs.  It holds both values as well as an enumeration of what
+it is (user set, numerical constant, state constant).
+
+Implementation digression: The constants class gets doubly used.  Every
+shader object itself has a shader constants class.  This is what I name in
+the code "template constants".  Any piece of geometry needs to know what
+sort of constants that the shader needs.  The vertex and pixel shader files
+that the shaders write out to (in the CgConverter, for example) contain this
+template constants class.  However, constants also need to be local to each
+piece of geometry, and so whenever you attach a shader to a piece of
+geometry, a copy of the constants class from the template instantiation in
+the shader gets placed in the geometry object as well for it to change
+locally.  This setting happens under the covers and (obviously) invalidates
+any constants that were there before.  I mention this in the CgConverter
+Readme, but whenever you (re-)attach a shader to a piece of geometry, you
+must make sure to set the constants.
+
+A side note: It is interesting to see, (aside from the very minor point of
+having state constants in pixel shaders, which is uncommon) that the shader
+constants class allows the user to do in DirectX what they could have done
+automatically in OpenGL.  If you remember the large amount of inline arrays
+and setup that was in the preliminary application we looked at during a
+meeting, this was what all the work was for.
+
+There is also a really large need for a high level language that compiles
+into multiple API-specific languages.  Besides all the good things that a
+high level language gets you, like being able to compile your programs into
+future profiles, having automatic optimisation, or being able to compile
+into different APIs, it's also just a whole lot easier to write (and debug).
+Cg has a nice library of really useful functions which makes it incredibly
+easy to do common things like calculate lighting, get sin and cosine values,
+or even just normalize a vector.  Not that I couldn't have written things in
+assembly language, but with the amount of debugging and fiddling with
+programs that I had to do to get them to work, it would have made my work
+tenfold to have to try to do it in assembly.  You can also write functions.
+They get treated as inline functions rather than true function calls (no
+stack on the card, obviously), but it makes writing shaders a lot easier
+(and cleaner!).
+
+I picked Cg to write all the shaders in mostly because it's really the only
+cross-API high level language that exists at this point.  OpenGL2.0, when
+it comes out (eons from now), might also be a choice, but it is likely that
+its high level language will only work with OpenGL.  Cg, despite being tied
+to NVIDIA, is released free for everyone to use and compiles onto different
+APIs and works for different cards.  I suspect that for this next generation
+of shader technology (GeForceFX, Radeon 9x00) that it will continue to be
+the only high level language that is meant to be able to compile into
+assembly for different APIs.  If there is something else, it isn't even on
+the horizon at this point.  As much as I don't like tying things into
+specific products or technologies, NVIDIA has a good track record of trying
+to be cross-platform and supporting different APIs and so I thought it
+wouldn't be an issue.  That, and there really isn't any other choice unless
+you want to write two assembly language shaders for every shader just to
+make it cross-API compatible.
+
+For the most part though, Cg was great.  It allows access to all the assembly
+language commands and syntaxes that you need.  One thing that you'll see a
+lot are people talking about "swizzles".  (This is more a "you'll probably
+see this, so I'll tell you about it" digression.  Cg allows you to swizzle
+variables.  Most shaders allow you to "swizzle" components of a vector when
+assigning or using them.  For example:
+
+	float2 f2Tex = float2( 0.5f, 0.8f );
+	float3 f3Vec;
+	f3Vec.y = f2Tex.y * 2;
+	// This is a swizzle for both the assignee and the assignment.
+	f3Vec.xz = f2Tex.yx;
+	// f3Vec now is float3( 0.8f, 1.6f, 0.5f );
+	// It is also legal to repeat a suffix, such as here.
+	f3Vec.xy = f2Tex.xx;
+
+Essentially you can refer to specific component (or components) of a vector.
+By default, when you use a variable, it uses the components in order (.xyzw
+or .rgba [which can be used interchangably, usually]).  However, you can swap
+the order in any way you want (or even repeat it).  Typically I used swizzles
+as an alternative to casting sometimes, becuase it's easier to type.
+("float3 f3Vec = f4Vec.xyz;" is the same as "float3 f3Vec = (float3)f4Vec;")
+Swizzles are not terribly exciting (I think it's really neat from the
+syntactical point of view) and probably more useful in assembly language for
+eliminating instructions.  The Cg compiler definitely makes extensive use of
+it if you ever look through the code output of a Cg program.  However, it's
+definitely something to be aware of because just about every presentation
+ever on shaders touts swizzling as being really cool.
+
+I will admit that Cg did have an unexpected downside in that it doesn't
+compile into DirectX's ps.1.4 profile.  This is unfortunate because it meant
+that a large amount of shaders that could run on GeForce4's and Radeon8x00's
+could not because the next available version was ps.2.0.  Other than that, the
+documentation in the user manual has been excellent, the online resources are
+plentiful, and it's very easy to learn.  The only thing I really was wanting
+for was a (run-time) debugger.
+
+It was definitely very hard to debug some programs.  When the only output you
+get is a color, sometimes you just have to make your program output the
+result of some temporary variable as the color, and then try to figure out
+what's going on.  One large API difference that I've mentioned before is that
+DirectX clamps pixel shader inputs into the [0..1] range and OpenGL doesn't.
+I'm honestly not sure how that happens and I spent a good bit of time trying
+to pry into it and figure out.  Considering that they're running on the same
+card and through the same pipeline, I'm really unsure of how that happens.
+I first saw this with the Fresnel demo, which worked great for OpenGL but
+came up entirely white for DirectX.  I ended up munging all vector data into
+the [0..1] range and back into the [-1..1] range in the pixel shader.
+
+Just for you own knowledge: I also had a strange experience with a lerp
+(linear interpolate) function in a pixel shader.  If I passed in a constant
+defined in the program (e.g. float3 f3Vec = lerp(a,b,0.5f);) it would work
+fine.  If I passed in some varying data passed from the pixel shader (such as
+through a texture coordinate), it would also work fine.  However, if I passed
+a uniform constant into the pixel shader and used that as the interpolate
+value, it would always be zero or one (I forget).  I ended up having to pass
+the value as a uniform constant to the vertex shader, pass it to the pixel
+shader in some unused texture coordinate, and then use it from there.  You
+can see this in the irridescence shader.  I'm not sure whether this is a bug
+or what the issue was with this.  I spent my time trying to make more shaders
+work and not track down esoteric behavior (as much as I was really curious).
+
+The limitations of DirectX over the automatic nature of OpenGL was what
+really motivated me to write the CgConverter tool.  Not to toot my own horn
+too much, but I would have probably been able to finish one or maybe two
+shaders had I not had this tool.  I have some side projects that I'm working
+on that might get some shader support if I get enough time, and even though
+I will probably ignore the DirectX side of things entirely in my case, I will
+still want to do something very much like this.  Even if it just does
+nothing more than make it easy to refer to uniform constants in the program,
+it makes life much easier.
+
+The CgConverter really does two important things.  The first (and easiest)
+thing it does is to find out which registers all the varying parameters go
+in for a vertex shader.  It's irrelevant for a pixel shader because they are
+fixed for all APIs.  OpenGL has fixed registers dependent on the type of the
+varying parameter, e.g. vertex data always goes in v0.  DirectX however does
+not.  The CgConverter figures out what this is (by default, or if you've
+explicitly specified this in your Cg program, which you can) and stores it
+in the vertex shader too.
+
+The second thing it does is it builds the ShaderConstants object.  It looks
+through all the parameters, figures out which are numerical constants, which
+are state constants, and which are user defined constants and builds the
+correct ShaderConstants object.  This is really the largest pain about
+building a shader.  When I can add more constants or change the order of the
+constants without having to fix the program itself or worry about which
+register number things are in, it allows the application to be a lot further
+removed from the implementation details about the shader.  All it needs to
+know is that there is a constant named "fTime" (for example) and the
+ShaderConstants object knows under the covers exactly what register that
+constant is in and how big it is.
+
+Essentially, this is what the Cg Runtime does for you.  However, the Cg
+runtime also (obviously) needs all programs to be in Cg.  Thus, when I talked
+to you we made the decision that in order for people to not be so tied to Cg
+that I would implement this CgConverter.  WildMagic users can still use their
+own assembly language shaders (or any other language that compiles to
+API-specific assembly language), they just have to build the objects and the
+constants themselves.  (I give a little instruction on how to do this in the
+CgConverter Readme).
+
+This is just a side note on Cg usage, but if you look at shaders online, you
+may notice a very different style of declaring inputs and outputs than I use
+in my shaders.  Typically the way you would declare inputs to a vertex shader
+back in the day would be to declare a struct called app2vert and an output
+struct called vert2frag (which are keywords, I think).  Then the pixel shader
+would take as an input a formal parameter of the type vert2frag.  Generally
+the types aren't specified at all and you have to declare the variables in a
+certain order (vert, color, norm, tex0-7 [I think]).  This way is deprecated.
+The way I do it is to explicitly say which variable is attached to which
+varying input.  Thus, my declarations have formal parameters like "in float3
+i_f3Normal : NORMAL".  The NORMAL part on the end with the colon is just
+semantics to tell the compiler that this variable is tied to the normal
+data.  I think (as in the app2vert/vert2frag case) that you can drop the
+": <varying parameter>" semantics, but then it becomes order dependent.  It's
+just my style, but I think it's much clearer to just specify it all so you
+don't have to think about it.
+
+I will also admit that I kind of failed in maintaining a good standard of
+Hungarian notation in my shader programs (mostly due to the inadequacy of
+Hungarian notation to cover shaders, other than floats and arrays).  By the
+end I ended up realizing what was important to include in the notation.  I
+think a good way to do it would be this:
+
+	input: i_
+	output: o_
+	uniform: u_
+	array: a
+	float: f
+	float<n>: f<n> (e.g. float3 f3Temp;)
+	float<n>x<n>: f<n><n> (e.g. float4x4 f44Mat;)
+	sampler<n>D: s<n> (e.g. sampler2D s2Texture;)
+
+One problem is that I made the WildMagic state constants all start with Wml,
+instead of the type prefix.  Maybe that's not entirely bad.  Eh.  You could
+fix that by eliminating the check for the 'Wml' prefix in the CgConverter
+and then just fixing the constant names in StateConstants.cpp.  I'm also not
+sure that the uniform prefix is entirely necessary.
+
+-Cards and versions [cut and pasted]
+	-DX: [version(s)]: [supporting cards]
+		-vs1.1: GeForce3/4TI, Radeon 8500
+		-vs1.1/vs2.0: GeForceFX, Radeon 9500+
+		-ps1.1: GeForce3
+		-ps1.1-1.3: GeForceTI
+		-ps1.1-1.4: Radeon 8x00
+		-ps1.1-1.4, 2.0: GeForceFX, Radeon 9500+
+	-OpenGL: [GLEXTENSION] = [DX equivalent] ([Cg profile name])
+		-GL_NV_vertex_program = vs1.0 (vp20)
+		-GL_NV_vertex_program1.1 = vs1.1 (vp20)
+		-GL_ARB_vertex_program = vs1.1 (arbvp1)
+		-GL_NV_vertex_program2 = vs2.0 (vp30)
+		-GL_NV_fragment_program = ps2.0 (vp30)
+		-GL_ARB_fragment_program = ps2.0 (arbfp1)
+
+Vertex shaders are fairly straight forward.  I'm pretty sure the only real
+change to 2.0 is an increase in the instruction limit and constant registers.
+vs1.1 works for most things (I never ran into the instruction limit at all)
+and so it makes sense that OpenGL wrote their spec to close to those same
+limitations.
+
+All of the ps1.x versions are fairly similar.  There are a few things that
+the earlier versions can't do, but it's not really that big of a change.  All
+early pixel shaders have two phases: texture reads and then math.  Thus, you
+cannot do math on the texture coordinates and then lookup using that value in
+early shaders.  ps1.4 introduces a phase marker which allows them to have
+four phases (texture read, math, texture read, math).  So, you can lookup in
+a texture, do some math, then use that value to look up into a texture, and
+then use do some math on that result to get the final color.  ps2.0 is (as
+far as I can tell) a much larger break from that and removes the phase
+restrictions and just has an instruction count.  Also, on earlier versions
+of shaders (pre-1.4?), texture coordinate <n> could only be used to look up
+a value in texture <n>.
+
+Some cards go above and beyond the spec (the Radeon9x00's are a good example)
+and so there are profiles called ps2.x and vs2.x which eliminate the register,
+constants, and instruction limits.  If you really wanted to check if a card
+supported it, you'd have to check all of those limits against what the card
+reported it could do.  It would be much more involved than just checking a
+shader version.
+
+Also, a note on resources: "Real-time Shader Programming" wasn't very useful
+at all.  ShaderX on the other hand I used constantly to get DirectX shaders
+to work and to give me good ideas about using shaders.  cgshaders.org is a
+great website as well.  NVIDIA has a demo called CgLabs where you can try
+out some shaders, which I found a good way to learn Cg at first and to see
+what shaders you can do.  NVIDIA also has a CgBrowser which can let you see
+lots of effects.  Sadly, it's more helpful to see what shaders can do rather
+than to learn how to use them.  The "wow" factor of a lot of effects comes
+from as much from careful picking of models, textures, and constant values
+than it does from interesting programming in the shader itself.

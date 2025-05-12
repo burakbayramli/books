@@ -1,0 +1,161 @@
+//----------------------------------------------------------------------------
+// This is an implementation of Charcoal-style NPR rendering written by 
+// Michael Riegger (mikeriegger@yahoo.ca) for cgshaders.org. 
+// The implementation is based upon the following paper:
+//
+// "Hardware Accelerated Real Time Charcoal Rendering"
+// Aditi Majumder, Department of Computer Science
+// University of North Carolina at Chapel Hill
+// majumder@cs.unc.edu
+//
+// and
+//
+// M. Gopi
+// Information and Computer Science
+// University of California, Irvine.
+// gopi@ics.uci.edu
+//
+// This shader has been changed slightly for use in WildMagic.
+//----------------------------------------------------------------------------
+void vmain(
+    in float4 i_f4Position : POSITION,
+    in float3 i_f3Normal : NORMAL,
+    in float2 i_f2TexCoord : TEXCOORD0,
+
+    out float4 o_f4Position : POSITION,
+    out float4 o_f4Color : COLOR,
+    out float2 o_f2TexCon : TEXCOORD0,
+    out float2 o_f2TexRan : TEXCOORD1,
+    out float2 o_f2TexPap : TEXCOORD2,
+
+	uniform float4x4 WmlRendererModViewProj,
+	uniform float4x4 WmlRendererMod,
+	uniform float AmbientIntensity,
+    uniform float ContrastExponent,
+    uniform float3 WmlLightDirection0,
+    uniform float3 WmlLightDirection1)
+{
+	float4 f4ProjectionPosition = mul (WmlRendererModViewProj, i_f4Position);
+	o_f4Position = f4ProjectionPosition;
+
+	// Calculate lighting intensity at this vertex with 2 diffuse lights 
+    // + ambient. Note that we only want the intensity so that they output 
+    // color is grayscale
+	float3 f3Normal = mul((float3x3)WmlRendererMod, (float3)i_f3Normal);
+	float fDiffuse1 = saturate(-dot(f3Normal, WmlLightDirection0));
+	float fDiffuse2 = saturate(-dot(f3Normal, WmlLightDirection1));
+	float fIllumination = saturate(fDiffuse1 + fDiffuse2 + 
+        AmbientIntensity);
+		
+	// Perform f4Contrast enhancement on the computed color 
+	float fContrastIllumination = pow (fIllumination, ContrastExponent);
+
+	o_f4Color = fContrastIllumination.xxxx;
+
+	// The first coordinate set is used to lookup into a 2D "Random" 
+    // texture map that will be used to find the S coordinate for lookup 
+    // into the Contrast texture. The Random map produces a Random S 
+    // coordinate at each fragment, as sometimes the given model 
+	// ST coordinates produce nasty banding artifacts if they are just
+    // interpolated across the polygons the T coordinate will simply be
+    // the grayscale color value of that fragment
+	o_f2TexRan.xy = i_f2TexCoord;
+
+	// Inputs into the Contrast map with 
+    // prevlookup being the above Random map
+	o_f2TexCon.x = 0.0;
+	o_f2TexCon.y = fContrastIllumination;
+
+	// The second texture is a paper texture that is simply overlaid in 2D
+	// Determine what the texture coordinates for this vertex is in screen
+    // space. Some of the models looked odd if I just alpha blended the model 
+    // overtop.  So instead draw with no blending
+	float fProj = 1.0 / f4ProjectionPosition.w;
+	float2 f2ClipCoords = f4ProjectionPosition.xy * fProj;
+	// Convert from screen coords in the range [-1...1] to [0...1] for 
+    // texture lookup
+	o_f2TexPap.xy = (f2ClipCoords + 1.0) * 0.5;
+}
+
+//----------------------------------------------------------------------------
+// This is an implementation of Charcoal-style NPR rendering written by 
+// Michael Riegger (mikeriegger@yahoo.ca) for cgshaders.org, implementation 
+// is based upon the following paper:
+
+// "Hardware Accelerated Real Time Charcoal Rendering"
+// Aditi Majumder, Department of Computer Science
+// University of North Carolina at Chapel Hill
+// majumder@cs.unc.edu
+//
+// and
+//
+// M. Gopi
+// Information and Computer Science
+// University of California, Irvine.
+// gopi@ics.uci.edu
+//
+// This shader has been changed slightly for use in WildMagic.
+//----------------------------------------------------------------------------
+void pmain (
+    in float4 i_f4Color : COLOR,
+    in float2 i_f2TexCon : TEXCOORD0,
+    in float2 i_f2TexRan : TEXCOORD1,
+    in float2 i_f2TexPap : TEXCOORD2,
+
+    out float4 o_f4Col : COLOR,
+    uniform sampler2D ContrastTexture,
+    uniform sampler2D RandomTexture,
+    uniform sampler2D PaperTexture,
+    uniform float4 Constants)
+{
+	// Generate a Random number in the range [0..1] for this fragment
+	float4 f4Random = tex2D (RandomTexture, i_f2TexRan);
+	// Fetch the overlaying paper texture.
+	float4 f4PaperColor = tex2D (PaperTexture, i_f2TexPap);
+
+    // The constants allow for boolean logic with creative use of floats.
+    // Smudge:
+    // 0.5 = Normal smudge
+    // 0.0 = no lighting smudging
+    // 1.0 = no Contrast map, only diffuse lighting
+    float fSmudgeFactor = Constants.x;
+
+    // Paper:
+    // 0.0 = display paper
+    // 1.0 = no paper
+    float fPaperFactor = Constants.y;
+
+	// Perform a lookup into the Contrast-enhanced texture map
+	// S' = 0 + RandomNumber.x 
+	// T' = T (Where T would be the computed Contrast-enhanced color from 
+    // the vertex shade r)
+
+    // I would really like to use the offsettex2D function here to make this
+    // ps1.x compatible, but instead we're just going to do a dependent
+    // texture read manually.
+    i_f2TexCon.x += f4Random.x;
+    float4 f4Contrast = tex2D(ContrastTexture, i_f2TexCon);
+
+	// Blend the Contrast-enha nced texel with the Contrast enhanced vertex 
+    // color (Aditi calls it smudging)
+    float4 f4SmudgedColor = lerp(f4Contrast, i_f4Color, fSmudgeFactor);
+
+    // We may want to just display the object without the paper.
+    // If fPaperFactor is large enough it will saturate the PaperColor to 
+    // white which will cancel out the alpha blending in the next step.
+    f4PaperColor = saturate(f4PaperColor + fPaperFactor);
+
+    // We will do the "alpha blending" with the background here.  The 
+    // background will be drawn as a polygon underneath whatever is being
+    // drawn on top.  However, there is the chance that whatever we are
+    // drawing will touch the same pixel multiple times and the alpha
+    // blending will not look right.  What we /really/ want is to only have 
+    // the pixels that would be visible without alpha blending to be drawn 
+    // /with/ it.  So, we do the alpha blending here with the background and
+    // let the z-buffer sort out the work of which pixel is actually on top.
+	o_f4Col = f4PaperColor*f4SmudgedColor;
+    
+    // Debug: display Contrast texture
+    //o_f4Col = tex2D(ContrastTexture, i_f2TexPap);
+}
+//----------------------------------------------------------------------------

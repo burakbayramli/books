@@ -1,0 +1,1104 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Books</title>
+<link rel=stylesheet type="text/css" href="../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+  <font size="3"><b>Geometric Tools for Computer Graphics: Book Corrections</b></font>
+  <br><br>
+</td></tr>
+</table>
+
+<a href="#ByPageNumber">Book Corrections Organized by Page Number</a>
+
+<table width=760><tr><td><hr></td></tr></table>
+<h2> Book Corrections Organized by Date of Change</h2>
+<table width=760><tr><td><hr></td></tr></table>
+
+<table width=760>
+
+<tr><td><b>15 October 2003, page 834.</b>
+In the paragraph "The row reduction..." is "The condition for existence
+of solutions is...".  The equations should be corrected to
+<pre>
+  0 = a0*b1 - a1*b0
+    = (c0+c1*y)*b1 - a1*(d0+d1*y)
+    = (b1*c0-a1*d0) + (b1*c1-a1*d1)*y
+</pre>
+Later is "as long as b1*c1-b0*d1" which should be "as long as b1*c1-a1*d1".
+Finally, the last equation of the last displayed equation array should be
+<pre>
+  = (c0*f0-e0*d0)+((c0*f1-e0*d1)+(c1*f0-e1*d0))*y + (c1*f1-e1*d1)*y^2
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 125.</b>
+The first sentence is:  "This makes it completely obvious that the perp dot
+product reflects not only the angle between two vectors but the
+<i>direction</i> (that is, the sign) of the angle between them".  A cryptic
+sentence, I would say.  I think what was intended by this is the following.
+Let u = (u1,u2) and v = (v1,v2).  Then u-perp = (-u2,u1) and Dot(u-perp,v)
+= u1*v2-u2*v1.  Write u and v as vectors in 3D, say u' = (u1,u2,0) and v' =
+(v1,v2,0).  Then Cross(u',v') = (0,0,u1*v2-u2*v1) = (0,0,Dot(u-perp,v)).
+If you reverse the roles of u and v, then Dot(v-perp,u) = -Dot(u-perp,v)
+and Cross(v',u') = (0,0,Dot(v-perp,u)).  The "sign of the angle" is a
+reference to measuring a counterclockwise (positive) or clockwise (negative)
+angle between two vectors when you cross the two using the right-hand rule.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 135.</b>
+The revised proof mentioned in the July 25, 2003 entry is better served with
+a couple of additional steps:
+<pre>
+  T(w) = T(Q-P)          by definition of w
+       = T(Q) - T(P)     since T is an affine transformation
+       = (Q+u) - (P+u)   applying the definition of T
+       = Q - P           applying identities on page 80 and 81 to cancel the u terms
+       = (P+w) - P       applying the definition of Q on page 134
+       = (P-P)+w         by identity iii on page 81
+       = zero_vector+w   by identity i on page 80
+       = w               zero_vector is the additive identity for vector addition
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 135.</b>
+The clause "that is, the first three rows of the matrix..." should say "that
+is, the first n rows of the matrix...".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 138.</b>
+The sentence before the displayed equation for T(v2) ends with
+"... transformed coordinates of basis vector v1:".  This should end with
+"v2", not "v1".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 141.</b>
+The last displayed equation has "T(v) = Dot(v,u-hat) + ...".  This should
+be "T(v) = Dot(v,u-hat) u-hat + ...".  The derivation of the formula uses
+identity (iii) on page 91, something that is not mentioned.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 152.</b>
+The displayed equation that occurs after equation (4.32) ends with "u hat".
+It should end instead with "d hat perp".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 162.</b>
+Equation (4.38) starts with "P = ".  It should start with "T(P) = ".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>14 October 2003, page 705.</b>
+The second row of Table 13.1 has the four "Update" entries "i 0 m p".  These
+entries should be "i 0 p m".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>20 September 2003, page 24.</b>
+The second equation should be "2*x1 + 4 = 12 + 17*x2 - 5*x2" in order that
+the second equation in the first displayed set of equations on page 25 be
+correct.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>20 September 2003, page 51.</b>
+The third displayed equation has "a(1,1)*x1 + x2*(...)".  This should be
+"a(1,1)*x1 + a(1,2)*(...)".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>20 September 2003, page 55.</b>
+The second sentence of the second paragraph has "... be a set of basis
+vectors for a vector space vec(v)" where vec(v) denotes the letter v with
+an arrow over it.  This should not be vec(v), but calligraphy(V) which is the
+symbol in the first paragraph "Given a Eucliden space calligraphy(V)...".
+The choice of roman(V) for the basis name and calligraphy(V) for the vector
+space is <i>really confusing</i> and a poor choice of notation.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>20 September 2003, pages 86, 90, 92.</b>
+The notation for length of a vector v has been ||v|| (double bars).
+To be consistent with notation, the following changes should be made.
+<br><br>
+On page 86, Figure 3.27 has single bars on vector v and should be double
+bars.
+<br><br>
+On page 90, Equations (3.8), (3.9), and (3.10) have single bars and should
+be double bars.
+<br><br>
+On page 92, Figure 3.31 has single bars on vector v and should be double
+bars.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>20 September 2003, page 94.</b>
+The construction at the bottom of the page uses really awful and inconsistent
+notation.  A couple of the "reasons" on the right-hand side are bogus.
+<ul>
+  <li>
+    The "x" operator in equations 1 and 2 means "scalar multiplication".
+  </li>
+  <li>
+    The "dot" operator in equations 3 and 4 also means "scalar
+    multiplication".
+  </li>
+  <li>
+    The "x" operator in equations 4, 5, 6 means "cross product".
+  </li>
+  <li>
+    The "dot" operator in equations 5, 6 means "vector dot product".
+  </li>
+  <li>
+    The "reason" for equation 3 should be "by definition of w_perp".
+  </li>
+  <li>
+    The "reason" for equation 5 is meaningless.  Since Cross(u,v) and w_perp
+    are parallel vectors that are in the same direction, the angle A
+    between them is 0 radians.  The dot product of the two vectors is
+    <pre>
+      Dot(Cross(u,v),w_perp)
+        = Length(Cross(u,v))*Length(w_perp)*cos(A)
+        = Length(Cross(u,v))*Length(w_perp)
+    </pre>
+    since cos(A) = 1.
+  </li>
+</ul>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>15 September 2003, page 98.</b>
+Figure 3.35 has a vector 3*v that should be 3*v_1 (the subscript 1 is
+missing).
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>15 September 2003, pages 128-129.</b>
+On page 128, second paragraph from the bottom, the second affine frame is
+listed as F_G and has origin O_G.  These should be F_B and O_B.  Figure 4.6
+has the origins swapped.  What is typeset as O_A should be O_B, and vice
+versa.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>07 September 2003, page 95.</b>
+The equations at the bottom of page 94 use "psi" as the angle between vectors
+u and v.  Figure 3.34 uses "phi".  I changed the figure to use "psi".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>04 July 2003, pages 303-304.</b>
+The equations for the parallel lines at the bottom of the page are missing
+an "r" that should multiply the square roots.
+<pre>
+  a0*x + b0*y + c0 +/- r*sqrt(a0*a0+b0*b0) = 0
+  a1*x + b1*y + c1 +/- r*sqrt(a1*a1+b1*b1) = 0
+</pre>
+The equations for x and y on page 304 are correct, but the pseudocode has
+sign errors.  It should be
+<pre>
+  center[0].x = -(L1.b*(L0.c+discrm0)-L0.b*(L1.c+discrm1))*invDenom;
+  center[0].y = +(L1.a*(L0.c+discrm0)-L0.a*(L1.c+discrm1))*invDenom;
+  center[1].x = -(L1.b*(L0.c+discrm0)-L0.b*(L1.c-discrm1))*invDenom;
+  center[1].y = +(L1.a*(L0.c+discrm0)-L0.a*(L1.c-discrm1))*invDenom;
+  center[2].x = -(L1.b*(L0.c-discrm0)-L0.b*(L1.c+discrm1))*invDenom;
+  center[2].y = +(L1.a*(L0.c-discrm0)-L0.a*(L1.c+discrm1))*invDenom;
+  center[3].x = -(L1.b*(L0.c-discrm0)-L0.b*(L1.c-discrm1))*invDenom;
+  center[3].y = +(L1.a*(L0.c-discrm0)-L0.a*(L1.c-discrm1))*invDenom;
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>02 July 2003, page 304.</b>
+The pseudocode at the bottom of the page has two occurences of "r" in the
+body.  These should be "radius" to match the input parameter.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>25 June 2003, pages 134-135.</b>
+The second block of displayed equations on page 134 has vector w in two
+places.  These should be vector u:
+<pre>
+  T(origin) = origin + u
+            = u + origin
+</pre>
+The "proof" at the top of page 135 has problems.  A formal proof is
+<pre>
+  T(w) = T(Q-P)          by definition of w
+       = T(Q) - T(P)     since T is an affine transformation
+       = (P+w) - P       applying the definition of T
+       = (P-P)+w         by identity iii on page 81
+       = zero_vector+w   by identity i on page 80
+       = w               zero_vector is the additive identity for vector addition
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>21 June 2003, page 21.</b>
+The first displayed equation is a dot product whose second term on the
+right-hand side is a1*b2.  This termshould be a2*b2.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>20 June 2003, page 698.</b>
+The pseudocode for PointInSubpolygon has a call to GetMiddleIndex that is
+missing its last parameter.  The call should be
+<pre>
+  mid = GetMiddleIndex(i0, i1, C.N);
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>29 May 2003, pages 535-536.</b>
+On page 535, the pseudocode for intersection of triangle and plane has
+a parameter "p2" in the function signature; it should not be there.  On
+page 536, the pseudocode has some test for points either all above the
+plane or all below the plane.  These tests are incorrect.  In the style of
+the remainder of the pseudocode, the tests are simply stated as
+<pre>
+  if ( d1 > 0.0 && d2 > 0.0 && d3 > 0.0 )
+  {
+      // all points above plane
+      return false;
+  }
+  if ( d1 < 0.0 && d2 < 0.0 && d3 < 0.0 )
+  {
+      // all points below plane
+      return false;
+  }
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>28 May 2003, pages 194-195.</b>
+The displayed equations involving current minimum distance u have the
+inequalities in the wrong direction.  On page 194 the statement
+<pre>
+  |x(i) - a| <= u  and  |x(i+1) - a| <= u
+</pre>
+should be
+<pre>
+  |x(i) - a| >= u  and  |x(i+1) - a| >= u
+</pre>
+A similar change for the y-equations on page 194:
+<pre>
+  |y(i) - b| <= u  and  |y(i+1) - b| <= u
+</pre>
+should be
+<pre>
+  |y(i) - b| >= u  and  |y(i+1) - b| >= u
+</pre>
+Page 195 has the squared versions that should be
+<pre>
+  |x(i) - a|^2 >= u^2  and  |x(i+1) - a|^2 >= u^2
+</pre>
+and
+<pre>
+  |y(i) - b|^2 >= u^2  and  |y(i+1) - b|^2 >= u^2
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>26 May 2003, page 106.</b>
+The end of the first paragraph of section 3.5.1 says "Of course, since the
+Q_i are representable in terms of A, we could rewrite R in terms of B".  The
+last part should by "in terms of A".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>25 May 2003, page 95.</b>
+The first displayed formula for Vol(u,v,w), case -Dot(Cross(u,v),w) should
+have w_parallel parallel to -Cross(u,v).  However, just as in the May 24th
+entry below, the use of "parallel" is incorrect terminology.  The first case
+should state "when w_parallel is in the same direction as Cross(u,v)" and
+the second case should state "when w_parallel is in the opposite direction
+of Cross(u,v)".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>24 May 2003, pages 90-91.</b>
+The proof of the distributivity of the dot product over vector addition
+mentions two cases involving a vector u_parallel.  I suspect what is intended
+is that you look at the projections of v, w, and v+w onto the vector u.  If
+the angle between v+w and u is acute, then either the angle between v and u
+is acute or the angle between w and u is acute (possibly both angles are
+acute).  If angle(v,u) > 0 and angle(w,u) > 0, then
+<pre>
+  length(v_perp+w_perp) = length(v_perp) + length(w_perp)
+</pre>
+This is case (a) in the book.  If angle(v,u) > 0 and angle (w,u) < 0, then
+<pre>
+  length(v_perp+w_perp) = length(v_perp) - length(w_perp)
+</pre>
+This is case (b) in the book.  Of course you must also handle the case when
+angle(v+w,u) < 0.  Two similar cases occur.  I also suspect that u_parallel
+is meant to be the component of u in the u-direction, which is just u itself.
+The statment u_parallel parallel to v_parallel must mean that
+angle(u_parallel,v_parallel) = 0.  The statment u_parallel not parallel to
+v_parallel must mean angle (u_parallel,v_parallel) = 180 degrees.  The use of
+the word "parallel" in this context is not good since regardless of the
+angle you have parallel vectors.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>19 May 2003, page 505.</b>
+The displayed equation for the quadratic coefficient c is missing a
+subtraction of the squared radius.  It should be
+<pre>
+  c = k*(Px-Cx)^2 + ell*(Py-Cy)^2 + m*(Pz-Cz)^2 - r^2
+</pre>
+The pseudocode at the bottom of the page is also missing the r^2, and the
+scaling factors need to be members of ellipsoid e.  It should be
+<pre>
+  c = e.k*(ell.p.x - e.center.x)^2 + e.ell*(ell.p.y - e.center.y)^2 +
+      e.m*(ell.p.z - e.center.z)^2 - e.r^2;
+</pre>
+
+The pseudocode makes the age-old blunder of using 'l' (lower-case ell) for
+variable names, making it difficult to distinguish between '1' (one) and
+'l' (ell).  The standard axis-aligned representation for an ellipsoid does
+not separate out the radius term.  The standard form is
+<pre>
+  ((x-Cx)/Lx)^2 + ((y-Cy)/Ly)^2 + ((z-Cz)/Lz)^2 = 1
+</pre>
+where the center is (Cx,Cy,Cz) and Lx, Ly, and Lz are the lengths measured
+along the axes from the center to the extreme points of the ellipsoid in
+those directions.  I prefer more verbose names for the member names.  The
+line has an origin and a direction.  The ellipsoid has a center and length
+values.  Another pass at the pseudocode is given below.
+<pre>
+  int LineEllipsoidIntersect (Ellipsoid E, Line3 L, float t[2])
+  {
+      Vector3 diff = L.origin - E.center;
+      float invLx = 1/E.Lx;
+      float invLy = 1/E.Ly;
+      float invLz = 1/E.Lz;
+      float tmp1x = L.direction.x * invLx;
+      float tmp1y = L.direction.y * invLy;
+      float tmp1z = L.direction.z * invLz;
+      float tmp2x = diff.x * invLx;
+      float tmp2y = diff.y * invLy;
+      float tmp2z = diff.z * invLz;
+
+      float a = tmp1x * tmp1x + tmp1y * tmp1y + tmp1z * tmp1z;
+      float b = 2 * (tmp1x * tmp2x + tmp1y * tmp2y + tmp1z * tmp2z);
+      float c = tmp2x * tmp2x + tmp2y * tmp2y + tmp2z * tmp2z - 1;
+
+      float d = b * b - 4 * a * c;
+      if ( d > 0 )
+      {
+          float invTwoA = 1/(2*a);
+          float rootD = sqrt(d);
+          t[0] = (-b + rootD)*invTwoA;
+          t[1] = (-b - rootD)*invTwoA;
+          return 2;
+      }
+      else if ( discrm == 0 )
+      {
+          t[0] = -b/(2*a);
+          return 1;
+      }
+
+      return 0;  // no solutions
+  }
+</pre>
+The return value of the function is the number of solutions.  If t[i] is
+valid (0 <= i < numberOfSolutions), then the corresponding point of
+intersection is:  L.origin + t[i]*L.direction.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>13 May 2003, page 487.</b>
+The top of the page makes mention that "u+v <= 1" is necessary for the
+intersection, but the pseudocode does not make this check.  The block of
+code starting with the comparison of v to 0 and 1 and ending with the
+assignment of t should be
+<pre>
+  if ( v < 0.0 || v > 1.0 )
+      return false;
+
+  if ( u + v > 1.0 )
+      return false;
+
+  t = tmp * Dot(e2,q);
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>08 Apr 2003, page 410, 411, and 412.</b>
+On page 410, the first displayed equation after (10.13) is
+<pre>
+  v = Q0 - Q1
+    = P0 + sc*d0 - P1 + tc*d1
+</pre>
+should have parentheses
+<pre>
+  v = Q0 - Q1
+    = P0 + sc*d0 - (P1 + tc*d1)
+</pre>
+However, the pair of displayed equations following these are correct.
+<br><br>
+
+The third line from the bottom defines "b = -d0*d1", but should be "b = d0*d1"
+to be consistent with the pseudocode.
+<br><br>
+
+The next to last line is missing a parenthesis and should be
+"f = (P0-P1)*(P0-P1)".
+<br><br>
+
+On page 411, with the corrected "b = d0*d1", the formula at the top of the
+page for tc is wrong.  It should be
+<pre>
+  tc = (a*e-b*d)/(a*c-b*b)
+</pre>
+The formula is wrong even if you used the incorrect "b = -d0*d1".  This
+change propagates to the next displayed equation:
+<pre>
+  |L0(sc)-L1(tc)| = |(P0-P1)+ ((b*e-c*d)d0-(a*e-b*d)d1)/(a*c-b*b)|
+</pre>
+
+The block of pseudocode for "det < epsilon" has "return d*s+f" which is
+wrong.  It should be<br> "return -e*t+f".
+
+On page 412, the top line has the correct formula for t despite the errors in
+the text.  However, the return value is wrong and should be
+<pre>
+  return s*(a*s-b*t+2*d)+t*(-b*s+c*t-2*e)+f;
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>25 Mar 2003, page 366.</b>
+The pseudocode has a line
+<pre>
+  t = Dot(l.direction, VectorSubtract(q, l.direction));
+</pre>
+This should be
+<pre>
+  t = Dot(l.direction, VectorSubtract(q, l.origin));
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>15 Feb 2003, page 487.</b>
+The pseudocode has a line near the bottom
+<pre>
+  v = tmp * Dot(d, q);
+</pre>
+This should be
+<pre>
+  v = tmp * Dot(line.direction, q);
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>02 Feb 2003, page 628-629.</b>
+The pseudocode on page 628, the case where "Ray parallel to planes" has a
+test "P.x < box.xMax".  That should be "P.x > box.xMax".  The pseudocode on
+page 629 for swapping t0 and t1 is incorrect.  It should be "tmp = t1;
+t1 = t0; t0 = tmp;"
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>02 Feb 2003, page 502.</b>
+The quadratic equation in the second line should say "at^2+bt+c=0" to be
+consistent with the footnote and the pseudocode.  Equation (11.11) should be
+<pre>
+    t = -d*(P-C) +- sqrt((d*(P-C))^2-((P-C)*(P-C)-r^2))
+</pre>
+and is based on d being a unit-length vector (a = 1 in the quadratic equation).
+Note, though, that the pseudocode does not assume d is unit length.  The web
+site does have an implementation of this algorithm, the
+<a target="_parent" href="http://www.magic-software.com/Intersection3D.html">Intersection 3D</a>
+page.  (The expression in the line after equation (11.11) has an extraneous
+right parenthesis.)
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>09 Jan 2003, page 831.</b>
+The fourth line from the top of the page is "(1) x1 - 3*x2 + 2*x3 = 6".  It
+should be "(1) x1 - 3*x2 - 2*x3 = 6".  The last line of the page lists the
+solution as (1,-3,-2).  It should be (1,-3,2).
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>17 Dec 2002, page 67.</b>
+The distributive rule (iii) should be (a+b)u = au + bu (the text has bv).
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>12 Dec 2002, pages 641 and 642.</b>
+The last line of page 641 has a lower-case subscript 'a' on the unit vector
+u.  That should be an upper-case 'A'.  The last line of page 642 also has a
+lower-case subscript of 'a', but it should be an upper-case 'B'.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>11 Oct 2002, page 77.</b>
+The last sentence of the first paragraph states "Many values in the
+<i>range</i>..." but should be "Many values in the <i>domain</i>..."
+</td></tr>
+<tr><td><hr></td></tr>
+
+</table>
+
+<a name="ByPageNumber"></a>
+<h2> Book Corrections Organized by Page Number</h2>
+<table width=760><tr><td><hr></td></tr></table>
+
+<table width=760>
+
+<tr><td><b>Section 2.3.4, page 21.</b>
+The first displayed equation is a dot product whose second term on the
+right-hand side is a1*b2.  This termshould be a2*b2.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 2.4.1, page 24.</b>
+The second equation should be "2*x1 + 4 = 12 + 17*x2 - 5*x2" in order that
+the second equation in the first displayed set of equations on page 25 be
+correct.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 2.7.4, page 51.</b>
+The third displayed equation has "a(1,1)*x1 + x2*(...)".  This should be
+"a(1,1)*x1 + a(1,2)*(...)".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 2.9.2, page 55.</b>
+The second sentence of the second paragraph has "... be a set of basis
+vectors for a vector space vec(v)" where vec(v) denotes the letter v with
+an arrow over it.  This should not be vec(v), but calligraphy(V) which is the
+symbol in the first paragraph "Given a Eucliden space calligraphy(V)...".
+The choice of roman(V) for the basis name and calligraphy(V) for the vector
+space is <i>really confusing</i> and a poor choice of notation.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.1.5, page 67.</b>
+The distributive rule (iii) should be (a+b)u = au + bu (the text has bv).
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.2.6, page 77.</b>
+The last sentence of the first paragraph states "Many values in the
+<i>range</i>..." but should be "Many values in the <i>domain</i>..."
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.3.1, pages 86, 90, 92.</b>
+The notation for length of a vector v has been ||v|| (double bars).
+To be consistent with notation, the following changes should be made.
+<br><br>
+On page 86, Figure 3.27 has single bars on vector v and should be double
+bars.
+<br><br>
+On page 90, Equations (3.8), (3.9), and (3.10) have single bars and should
+be double bars.
+<br><br>
+On page 92, Figure 3.31 has single bars on vector v and should be double
+bars.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.3.1, pages 90-91.</b>
+The proof of the distributivity of the dot product over vector addition
+mentions two cases involving a vector u_parallel.  I suspect what is intended
+is that you look at the projections of v, w, and v+w onto the vector u.  If
+the angle between v+w and u is acute, then either the angle between v and u
+is acute or the angle between w and u is acute (possibly both angles are
+acute).  If angle(v,u) > 0 and angle(w,u) > 0, then
+<pre>
+  length(v_perp+w_perp) = length(v_perp) + length(w_perp)
+</pre>
+This is case (a) in the book.  If angle(v,u) > 0 and angle (w,u) < 0, then
+<pre>
+  length(v_perp+w_perp) = length(v_perp) - length(w_perp)
+</pre>
+This is case (b) in the book.  Of course you must also handle the case when
+angle(v+w,u) < 0.  Two similar cases occur.  I also suspect that u_parallel
+is meant to be the component of u in the u-direction, which is just u itself.
+The statment u_parallel parallel to v_parallel must mean that
+angle(u_parallel,v_parallel) = 0.  The statment u_parallel not parallel to
+v_parallel must mean angle (u_parallel,v_parallel) = 180 degrees.  The use of
+the word "parallel" in this context is not good since regardless of the
+angle you have parallel vectors.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.3.2, page 94.</b>
+The construction at the bottom of the page uses really awful and inconsistent
+notation.  A couple of the "reasons" on the right-hand side are bogus.
+<ul>
+  <li>
+    The "x" operator in equations 1 and 2 means "scalar multiplication".
+  </li>
+  <li>
+    The "dot" operator in equations 3 and 4 also means "scalar
+    multiplication".
+  </li>
+  <li>
+    The "x" operator in equations 4, 5, 6 means "cross product".
+  </li>
+  <li>
+    The "dot" operator in equations 5, 6 means "vector dot product".
+  </li>
+  <li>
+    The "reason" for equation 3 should be "by definition of w_perp".
+  </li>
+  <li>
+    The "reason" for equation 5 is meaningless.  Since Cross(u,v) and w_perp
+    are parallel vectors that are in the same direction, the angle A
+    between them is 0 radians.  The dot product of the two vectors is
+    <pre>
+      Dot(Cross(u,v),w_perp)
+        = Length(Cross(u,v))*Length(w_perp)*cos(A)
+        = Length(Cross(u,v))*Length(w_perp)
+    </pre>
+    since cos(A) = 1.
+  </li>
+</ul>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.3.2, page 95.</b>
+The equations at the bottom of page 94 use "psi" as the angle between vectors
+u and v.  Figure 3.34 uses "phi".  I changed the figure to use "psi".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.3.2, page 95.</b>
+The first displayed formula for Vol(u,v,w), case -Dot(Cross(u,v),w) should
+have w_parallel parallel to -Cross(u,v).  However, just as in the May 24th
+entry below, the use of "parallel" is incorrect terminology.  The first case
+should state "when w_parallel is in the same direction as Cross(u,v)" and
+the second case should state "when w_parallel is in the opposite direction
+of Cross(u,v)".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.3.3, page 98.</b>
+Figure 3.35 has a vector 3*v that should be 3*v_1 (the subscript 1 is
+missing).
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 3.5.1, page 106.</b>
+The end of the first paragraph of section 3.5.1 says "Of course, since the
+Q_i are representable in terms of A, we could rewrite R in terms of B".  The
+last part should by "in terms of A".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.4.4, page 125.</b>
+The first sentence is:  "This makes it completely obvious that the perp dot
+product reflects not only the angle between two vectors but the
+<i>direction</i> (that is, the sign) of the angle between them".  A cryptic
+sentence, I would say.  I think what was intended by this is the following.
+Let u = (u1,u2) and v = (v1,v2).  Then u-perp = (-u2,u1) and Dot(u-perp,v)
+= u1*v2-u2*v1.  Write u and v as vectors in 3D, say u' = (u1,u2,0) and v' =
+(v1,v2,0).  Then Cross(u',v') = (0,0,u1*v2-u2*v1) = (0,0,Dot(u-perp,v)).
+If you reverse the roles of u and v, then Dot(v-perp,u) = -Dot(u-perp,v)
+and Cross(v',u') = (0,0,Dot(v-perp,u)).  The "sign of the angle" is a
+reference to measuring a counterclockwise (positive) or clockwise (negative)
+angle between two vectors when you cross the two using the right-hand rule.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.6, pages 128-129.</b>
+On page 128, second paragraph from the bottom, the second affine frame is
+listed as F_G and has origin O_G.  These should be F_B and O_B.  Figure 4.6
+has the origins swapped.  What is typeset as O_A should be O_B, and vice
+versa.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.7.2, pages 134-135.</b>
+The second block of displayed equations on page 134 has vector w in two
+places.  These should be vector u:
+<pre>
+  T(origin) = origin + u
+            = u + origin
+</pre>
+The "proof" at the top of page 135 has problems.  A formal proof is
+<pre>
+  T(w) = T(Q-P)          by definition of w
+       = T(Q) - T(P)     since T is an affine transformation
+       = (P+w) - P       applying the definition of T
+       = (P-P)+w         by identity iii on page 81
+       = zero_vector+w   by identity i on page 80
+       = w               zero_vector is the additive identity for vector addition
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.7.2, page 135.</b>
+The revised proof mentioned in the previous entry is better served with
+a couple of additional steps:
+<pre>
+  T(w) = T(Q-P)          by definition of w
+       = T(Q) - T(P)     since T is an affine transformation
+       = (Q+u) - (P+u)   applying the definition of T
+       = Q - P           applying identities on page 80 and 81 to cancel the u terms
+       = (P+w) - P       applying the definition of Q on page 134
+       = (P-P)+w         by identity iii on page 81
+       = zero_vector+w   by identity i on page 80
+       = w               zero_vector is the additive identity for vector addition
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.7.2, page 135.</b>
+The clause "that is, the first three rows of the matrix..." should say "that
+is, the first n rows of the matrix...".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.7.3, page 138.</b>
+The sentence before the displayed equation for T(v2) ends with
+"... transformed coordinates of basis vector v1:".  This should end with
+"v2", not "v1".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.7.3, page 141.</b>
+The last displayed equation has "T(v) = Dot(v,u-hat) + ...".  This should
+be "T(v) = Dot(v,u-hat) u-hat + ...".  The derivation of the formula uses
+identity (iii) on page 91, something that is not mentioned.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.7.5, page 152.</b>
+The displayed equation that occurs after equation (4.32) ends with "u hat".
+It should end instead with "d hat perp".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 4.8.2, page 162.</b>
+Equation (4.38) starts with "P = ".  It should start with "T(P) = ".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 6.2, pages 194-195.</b>
+The displayed equations involving current minimum distance u have the
+inequalities in the wrong direction.  On page 194 the statement
+<pre>
+  |x(i) - a| <= u  and  |x(i+1) - a| <= u
+</pre>
+should be
+<pre>
+  |x(i) - a| >= u  and  |x(i+1) - a| >= u
+</pre>
+A similar change for the y-equations on page 194:
+<pre>
+  |y(i) - b| <= u  and  |y(i+1) - b| <= u
+</pre>
+should be
+<pre>
+  |y(i) - b| >= u  and  |y(i+1) - b| >= u
+</pre>
+Page 195 has the squared versions that should be
+<pre>
+  |x(i) - a|^2 >= u^2  and  |x(i+1) - a|^2 >= u^2
+</pre>
+and
+<pre>
+  |y(i) - b|^2 >= u^2  and  |y(i+1) - b|^2 >= u^2
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 8.8, pages 303-304.</b>
+The equations for the parallel lines at the bottom of the page are missing
+an "r" that should multiply the square roots.
+<pre>
+  a0*x + b0*y + c0 +/- r*sqrt(a0*a0+b0*b0) = 0
+  a1*x + b1*y + c1 +/- r*sqrt(a1*a1+b1*b1) = 0
+</pre>
+The equations for x and y on page 304 are correct, but the pseudocode has
+sign errors.  It should be
+<pre>
+  center[0].x = -(L1.b*(L0.c+discrm0)-L0.b*(L1.c+discrm1))*invDenom;
+  center[0].y = +(L1.a*(L0.c+discrm0)-L0.a*(L1.c+discrm1))*invDenom;
+  center[1].x = -(L1.b*(L0.c+discrm0)-L0.b*(L1.c-discrm1))*invDenom;
+  center[1].y = +(L1.a*(L0.c+discrm0)-L0.a*(L1.c-discrm1))*invDenom;
+  center[2].x = -(L1.b*(L0.c-discrm0)-L0.b*(L1.c+discrm1))*invDenom;
+  center[2].y = +(L1.a*(L0.c-discrm0)-L0.a*(L1.c+discrm1))*invDenom;
+  center[3].x = -(L1.b*(L0.c-discrm0)-L0.b*(L1.c-discrm1))*invDenom;
+  center[3].y = +(L1.a*(L0.c-discrm0)-L0.a*(L1.c-discrm1))*invDenom;
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 8.8, page 304.</b>
+The pseudocode at the bottom of the page has two occurences of "r" in the
+body.  These should be "radius" to match the input parameter.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 10.2, page 366.</b>
+The pseudocode has a line
+<pre>
+  t = Dot(l.direction, VectorSubtract(q, l.direction));
+</pre>
+This should be
+<pre>
+  t = Dot(l.direction, VectorSubtract(q, l.origin));
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 10.8.1, page 410, 411, and 412.</b>
+On page 410, the first displayed equation after (10.13) is
+<pre>
+  v = Q0 - Q1
+    = P0 + sc*d0 - P1 + tc*d1
+</pre>
+should have parentheses
+<pre>
+  v = Q0 - Q1
+    = P0 + sc*d0 - (P1 + tc*d1)
+</pre>
+However, the pair of displayed equations following these are correct.
+<br><br>
+
+The third line from the bottom defines "b = -d0*d1", but should be "b = d0*d1"
+to be consistent with the pseudocode.
+<br><br>
+
+The next to last line is missing a parenthesis and should be
+"f = (P0-P1)*(P0-P1)".
+<br><br>
+
+On page 411, with the corrected "b = d0*d1", the formula at the top of the
+page for tc is wrong.  It should be
+<pre>
+  tc = (a*e-b*d)/(a*c-b*b)
+</pre>
+The formula is wrong even if you used the incorrect "b = -d0*d1".  This
+change propagates to the next displayed equation:
+<pre>
+  |L0(sc)-L1(tc)| = |(P0-P1)+ ((b*e-c*d)d0-(a*e-b*d)d1)/(a*c-b*b)|
+</pre>
+
+The block of pseudocode for "det < epsilon" has "return d*s+f" which is
+wrong.  It should be<br> "return -e*t+f".
+
+On page 412, the top line has the correct formula for t despite the errors in
+the text.  However, the return value is wrong and should be
+<pre>
+  return s*(a*s-b*t+2*d)+t*(-b*s+c*t-2*e)+f;
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.1, page 487.</b>
+The pseudocode has a line near the bottom
+<pre>
+  v = tmp * Dot(d, q);
+</pre>
+This should be
+<pre>
+  v = tmp * Dot(line.direction, q);
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.1, page 487.</b>
+The top of the page makes mention that "u+v <= 1" is necessary for the
+intersection, but the pseudocode does not make this check.  The block of
+code starting with the comparison of v to 0 and 1 and ending with the
+assignment of t should be
+<pre>
+  if ( v < 0.0 || v > 1.0 )
+      return false;
+
+  if ( u + v > 1.0 )
+      return false;
+
+  t = tmp * Dot(e2,q);
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.3, page 502.</b>
+The quadratic equation in the second line should say "at^2+bt+c=0" to be
+consistent with the footnote and the pseudocode.  Equation (11.11) should be
+<pre>
+    t = -d*(P-C) +- sqrt((d*(P-C))^2-((P-C)*(P-C)-r^2))
+</pre>
+and is based on d being a unit-length vector (a = 1 in the quadratic equation).
+Note, though, that the pseudocode does not assume d is unit length.  The web
+site does have an implementation of this algorithm, the
+<a target="_parent" href="http://www.magic-software.com/Intersection3D.html">Intersection 3D</a>
+page.  (The expression in the line after equation (11.11) has an extraneous
+right parenthesis.)
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.3.3, page 505.</b>
+The displayed equation for the quadratic coefficient c is missing a
+subtraction of the squared radius.  It should be
+<pre>
+  c = k*(Px-Cx)^2 + ell*(Py-Cy)^2 + m*(Pz-Cz)^2 - r^2
+</pre>
+The pseudocode at the bottom of the page is also missing the r^2, and the
+scaling factors need to be members of ellipsoid e.  It should be
+<pre>
+  c = e.k*(ell.p.x - e.center.x)^2 + e.ell*(ell.p.y - e.center.y)^2 +
+      e.m*(ell.p.z - e.center.z)^2 - e.r^2;
+</pre>
+
+The pseudocode makes the age-old blunder of using 'l' (lower-case ell) for
+variable names, making it difficult to distinguish between '1' (one) and
+'l' (ell).  The standard axis-aligned representation for an ellipsoid does
+not separate out the radius term.  The standard form is
+<pre>
+  ((x-Cx)/Lx)^2 + ((y-Cy)/Ly)^2 + ((z-Cz)/Lz)^2 = 1
+</pre>
+where the center is (Cx,Cy,Cz) and Lx, Ly, and Lz are the lengths measured
+along the axes from the center to the extreme points of the ellipsoid in
+those directions.  I prefer more verbose names for the member names.  The
+line has an origin and a direction.  The ellipsoid has a center and length
+values.  Another pass at the pseudocode is given below.
+<pre>
+  int LineEllipsoidIntersect (Ellipsoid E, Line3 L, float t[2])
+  {
+      Vector3 diff = L.origin - E.center;
+      float invLx = 1/E.Lx;
+      float invLy = 1/E.Ly;
+      float invLz = 1/E.Lz;
+      float tmp1x = L.direction.x * invLx;
+      float tmp1y = L.direction.y * invLy;
+      float tmp1z = L.direction.z * invLz;
+      float tmp2x = diff.x * invLx;
+      float tmp2y = diff.y * invLy;
+      float tmp2z = diff.z * invLz;
+
+      float a = tmp1x * tmp1x + tmp1y * tmp1y + tmp1z * tmp1z;
+      float b = 2 * (tmp1x * tmp2x + tmp1y * tmp2y + tmp1z * tmp2z);
+      float c = tmp2x * tmp2x + tmp2y * tmp2y + tmp2z * tmp2z - 1;
+
+      float d = b * b - 4 * a * c;
+      if ( d > 0 )
+      {
+          float invTwoA = 1/(2*a);
+          float rootD = sqrt(d);
+          t[0] = (-b + rootD)*invTwoA;
+          t[1] = (-b - rootD)*invTwoA;
+          return 2;
+      }
+      else if ( discrm == 0 )
+      {
+          t[0] = -b/(2*a);
+          return 1;
+      }
+
+      return 0;  // no solutions
+  }
+</pre>
+The return value of the function is the number of solutions.  If t[i] is
+valid (0 <= i < numberOfSolutions), then the corresponding point of
+intersection is:  L.origin + t[i]*L.direction.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.5.3, pages 535-536.</b>
+On page 535, the pseudocode for intersection of triangle and plane has
+a parameter "p2" in the function signature; it should not be there.  On
+page 536, the pseudocode has some test for points either all above the
+plane or all below the plane.  These tests are incorrect.  In the style of
+the remainder of the pseudocode, the tests are simply stated as
+<pre>
+  if ( d1 > 0.0 && d2 > 0.0 && d3 > 0.0 )
+  {
+      // all points above plane
+      return false;
+  }
+  if ( d1 < 0.0 && d2 < 0.0 && d3 < 0.0 )
+  {
+      // all points below plane
+      return false;
+  }
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.12, page 628-629.</b>
+The pseudocode on page 628, the case where "Ray parallel to planes" has a
+test "P.x < box.xMax".  That should be "P.x > box.xMax".  The pseudocode on
+page 629 for swapping t0 and t1 is incorrect.  It should be "tmp = t1;
+t1 = t0; t0 = tmp;"
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 11.12.7, pages 641 and 642.</b>
+The last line of page 641 has a lower-case subscript 'a' on the unit vector
+u.  That should be an upper-case 'A'.  The last line of page 642 also has a
+lower-case subscript of 'a', but it should be an upper-case 'B'.
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 13.3.2, page 698.</b>
+The pseudocode for PointInSubpolygon has a call to GetMiddleIndex that is
+missing its last parameter.  The call should be
+<pre>
+  mid = GetMiddleIndex(i0, i1, C.N);
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Section 13.3.3, page 705.</b>
+The second row of Table 13.1 has the four "Update" entries "i 0 m p".  These
+entries should be "i 0 p m".
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Appendix A.1, page 831.</b>
+The fourth line from the top of the page is "(1) x1 - 3*x2 + 2*x3 = 6".  It
+should be "(1) x1 - 3*x2 - 2*x3 = 6".  The last line of the page lists the
+solution as (1,-3,-2).  It should be (1,-3,2).
+</td></tr>
+<tr><td><hr></td></tr>
+
+<tr><td><b>Appendix A.2, page 834.</b>
+In the paragraph "The row reduction..." is "The condition for existence
+of solutions is...".  The equations should be corrected to
+<pre>
+  0 = a0*b1 - a1*b0
+    = (c0+c1*y)*b1 - a1*(d0+d1*y)
+    = (b1*c0-a1*d0) + (b1*c1-a1*d1)*y
+</pre>
+Later is "as long as b1*c1-b0*d1" which should be "as long as b1*c1-a1*d1".
+Finally, the last equation of the last displayed equation array should be
+<pre>
+  = (c0*f0-e0*d0)+((c0*f1-e0*d1)+(c1*f0-e1*d0))*y + (c1*f1-e1*d1)*y^2
+</pre>
+</td></tr>
+<tr><td><hr></td></tr>
+
+</table>
+
+</body>
+</html>

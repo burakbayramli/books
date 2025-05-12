@@ -1,0 +1,63 @@
+From malte@webmore.com Fri Sep 26 00:02:38 EDT 1997
+Article: 56637 of comp.graphics.algorithms
+Path: unc-cs!news-relay.ncren.net!rutgers!news.cis.ohio-state.edu!news.maxwell.syr.edu!howland.erols.net!news-peer.gsl.net!news.gsl.net!gip.net!fu-berlin.de!inf2hro!not-for-mail
+From: malte@webmore.com (Malte Lance)
+Newsgroups: comp.graphics.algorithms,comp.graphics.misc
+Subject: Re: make 3D-rotation using 3D-shears, possible ?
+Date: Thu, 25 Sep 1997 08:38:17 GMT
+Organization: University of Rostock
+Lines: 45
+Message-ID: <60d879$8og$2@taiwan.informatik.unirostock.de>
+References: <60b4gi$cn$1@taiwan.informatik.unirostock.de> <60cfda$cq7@pixel.Stanford.EDU>
+Reply-To: malte@webmore.com
+NNTP-Posting-Host: host06.degnet.baynet.de
+X-Newsreader: Forte Free Agent 1.0.82
+Xref: unc-cs comp.graphics.algorithms:56637 comp.graphics.misc:28990
+
+Many thanks to Kekoa Proudfoot, David Holz and
+Henry Baker for their hints and pointers.
+After posting my article, i picked up a pencil and
+derived it on my own. Currently my 3D-shear-rotation
+needs multiplication of 9 shear-matrices:
+Rotate around Y-axis in 3D:
+_              _   _             _   _             _
+| 1  0 sx  0 |   | 1  0  0  0 |   | 1  0 sx' 0 |
+| 0  1  0   0 |   | 0  1  0  0 |   |0  1  0  0 |
+| 0  0  1   0 |   |sz 0  1  0 |   | 0  0  1  0 |
+| 0  0  0   1 |   | 0  0  0  1|    |0  0  0  1 |
+--              --   --             --    --            --
+     _                            _
+     | cos(a)  0  sin(a)  0 |
+== |    0       1     0     0 |
+     | -sin(a)   0 cos(a) 0 |    where "a" is the rotation-angle.
+     |    0       0     0     1 |
+     ---                          ---
+
+Solving for sx, sx' and sz gives
+  sx = -(cos(a) - 1) / sin(a) = tan(a / 2)
+  sx' = sx
+  sz = -sin(a)
+
+Similiar for rotations around X- and Z-axis.
+Doing so gives 9 shear-matrices.
+Now my new question is:
+ Is it possible to simplify the multiplication
+of  the 9 shear-matrices in a way to use only
+2-axis-shears. In the above derivation i used
+shear-matrices that keep 2 axis invariant. Now
+i want to simplify the net-multiplication by using
+shear-matrices that keep just one axis invariant.
+
+Does anyone have an idea if this is possible and
+how this could be done.
+
+Any help again highly appreciated.
+
+Thanks in advance for all help.
+
+Malte Lance.
+email: malte@webmore.com
+
+
+
+

@@ -1,0 +1,159 @@
+/*
+  From the NVIDIA Cg Toolkit and released on
+    http://www.cgshaders.org
+
+  CG noise implementation for vertex program profile
+  sgreen 5/02/02
+
+  Compile with: cgc.exe -profile vp20 vnoise.cg 
+
+  This is based on Perlin's original code:
+  http://mrl.nyu.edu/~perlin/doc/oscar.html
+
+  It combines the permutation and gradient tables into one array of
+  float4's to conserve constant memory.
+  The table is duplicated twice to avoid modulo operations.
+
+  Notes:
+  Should use separate tables for 1, 2 and 3D versions
+*/
+
+#define B  32      // table size
+#define B2 66      // B*2 + 2
+#define BR 0.03125 // 1 / B
+
+// this is the smoothstep function f(t) = 3t^2 - 2t^3, without the normalization
+float3 s_curve(float3 t)
+{
+  return t*t*( float3(3.0f, 3.0f, 3.0f) - float3(2.0f, 2.0f, 2.0f)*t);
+}
+
+float2 s_curve(float2 t)
+{
+  return t*t*( float2(3.0f, 3.0f) - float2(2.0f, 2.0f)*t);
+}
+
+float s_curve(float t)
+{
+  return t*t*(3.0f-2.0f*t);
+}
+
+// 3D version
+float noise(float3 v, const uniform float4 pg[B2])
+{
+  v = v + float3(10000.0f, 10000.0f, 10000.0f);   // hack to avoid negative numbers
+
+  float3 i = frac(v * BR) * B;   // index between 0 and B-1
+  float3 f = frac(v);            // fractional position
+
+  // lookup in permutation table
+  float2 p;
+  p[0] = pg[ i[0]     ].w;
+  p[1] = pg[ i[0] + 1 ].w;
+  p = p + i[1];
+
+  float4 b;
+  b[0] = pg[ p[0] ].w;
+  b[1] = pg[ p[1] ].w;
+  b[2] = pg[ p[0] + 1 ].w;
+  b[3] = pg[ p[1] + 1 ].w;
+  b = b + i[2];
+
+  // compute dot products between gradients and vectors
+  float4 r;
+  r[0] = dot( pg[ b[0] ].xyz, f );
+  r[1] = dot( pg[ b[1] ].xyz, f - float3(1.0f, 0.0f, 0.0f) );
+  r[2] = dot( pg[ b[2] ].xyz, f - float3(0.0f, 1.0f, 0.0f) );
+  r[3] = dot( pg[ b[3] ].xyz, f - float3(1.0f, 1.0f, 0.0f) );
+
+  float4 r1;
+  r1[0] = dot( pg[ b[0] + 1 ].xyz, f - float3(0.0f, 0.0f, 1.0f) );
+  r1[1] = dot( pg[ b[1] + 1 ].xyz, f - float3(1.0f, 0.0f, 1.0f) );
+  r1[2] = dot( pg[ b[2] + 1 ].xyz, f - float3(0.0f, 1.0f, 1.0f) );
+  r1[3] = dot( pg[ b[3] + 1 ].xyz, f - float3(1.0f, 1.0f, 1.0f) );
+
+  // interpolate
+  f = s_curve(f);
+  r = lerp( r, r1, f[2] );
+  r = lerp( r.xyyy, r.zwww, f[1] );
+  return lerp( r.x, r.y, f[0] );
+}
+
+// 2D version
+float noise(float2 v, const uniform float4 pg[B2])
+{
+  v = v + float2(10000.0f, 10000.0f);
+
+  float2 i = frac(v * BR) * B;   // index between 0 and B-1
+  float2 f = frac(v);            // fractional position
+
+  // lookup in permutation table
+  float2 p;
+  p[0] = pg[ i[0]   ].w;
+  p[1] = pg[ i[0]+1 ].w;
+  p = p + i[1];
+
+  // compute dot products between gradients and vectors
+  float4 r;
+  r[0] = dot( pg[ p[0] ].xy,   f);
+  r[1] = dot( pg[ p[1] ].xy,   f - float2(1.0f, 0.0f) );
+  r[2] = dot( pg[ p[0]+1 ].xy, f - float2(0.0f, 1.0f) );
+  r[3] = dot( pg[ p[1]+1 ].xy, f - float2(1.0f, 1.0f) );
+
+  // interpolate
+  f = s_curve(f);
+  r = lerp( r.xyyy, r.zwww, f[1] );
+  return lerp( r.x, r.y, f[0] );
+}
+
+// 1D version
+float noise(float v, const uniform float4 pg[B2])
+{
+  v = v + 10000.0f;
+
+  float i = frac(v * BR) * B;   // index between 0 and B-1
+  float f = frac(v);            // fractional position
+
+  // compute dot products between gradients and vectors
+  float2 r;
+  r[0] = pg[i].x * f;
+  r[1] = pg[i + 1].x * (f - 1.0f);
+
+  // interpolate
+  f = s_curve(f);
+  return lerp( r[0], r[1], f);
+}
+
+void vmain(
+    in float4 iPosition : POSITION,
+    in float4 iNormal : NORMAL0,
+
+    out float4 oColor0 : COLOR,
+    out float4 oPosition : POSITION,
+
+    const uniform float4x4 WmlRendererModViewProj,
+    const uniform float4 NoiseTranslate,
+    const uniform float4 NoiseScale,
+    const uniform float4 Displacement,
+    const uniform float4 pg[B2],
+    const uniform float4 BaseColor)
+{
+  //float3 noisePos = iPosition.xyz*NoiseScale.x + NoiseTranslate.xyz;
+  float3 noisePos = (iPosition.xyz+NoiseTranslate.xyz)*NoiseScale.x;
+
+  //  float i = (noise(noisePos.x, pg) + 1.0f) * 0.5f;
+  //  float i = (noise(noisePos.xy, pg) + 1.0f) * 0.5f;
+  float i = (noise(noisePos, pg) + 1.0f) * 0.5f;
+
+  float c = (i/2.0f)+0.3f;
+  float3 color = BaseColor.xyz * c;
+  oColor0 = float4(color.x, color.y , color.z, 1.0f);
+
+  // displacement along normal
+
+  float4 position = iPosition + (iNormal * i * Displacement.x);
+  position.w = 1.0f;
+
+  oPosition = mul(WmlRendererModViewProj, position);
+
+}

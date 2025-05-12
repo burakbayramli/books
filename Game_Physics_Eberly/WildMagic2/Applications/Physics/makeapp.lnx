@@ -1,0 +1,29 @@
+CC := /usr/bin/g++
+CFLAGS := -c -DWML_USE_GLUT
+
+ifeq (,$(findstring Debug,$(CONFIG)))
+    CFLAGS += -O2 -DNDEBUG
+else
+    CFLAGS += -g -D_DEBUG
+endif
+
+LIBPATH := -L /usr/X11R6/lib -L ../../../Library/$(CONFIG)
+INCPATH := -I /usr/X11R6/include -I ../../../Include
+GLIBS := -lGL -lGLU -lglut
+MLIBS := -l$(LIB) -lWmlRenderer -lWildMagic2
+XLIBS := -lX11 -lXext -lXmu -lXt -lXi -lSM -lICE
+LIBS := $(GLIBS) $(XLIBS) $(MLIBS) -lm 
+SRC := $(notdir $(wildcard *.cpp))
+OBJ := $(SRC:%.cpp=$(CONFIG)/%.o)
+
+build : $(OBJ)
+	$(CC) $(LIBPATH) $(OBJ) -o $(APP).$(CONFIG) $(LIBS)
+
+$(CONFIG)/%.o : %.cpp
+	@mkdir -p $(CONFIG)
+	$(CC) $(CFLAGS) $(INCPATH) $< -o $@
+
+clean :
+	rm -f $(CONFIG)/*.o
+	rm -f $(APP).$(CONFIG)
+

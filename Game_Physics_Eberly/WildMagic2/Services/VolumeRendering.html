@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: MIPAV Software Volume Rendering</title>
+<link rel=stylesheet type="text/css" href="../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+<b>Software volume rendering based on ray tracing</b>.
+<br><br>
+
+The algorithm is the classic one where rays are cast through the volumetric
+data and the image intensities are accumulated according to various schemes.
+The image below shows a ray tracing using Bresenham's 3D line drawing
+algorithm to quickly identify voxels whose values are approximately on the
+ray.  The data set is an x-ray crystallography image of the superoxide
+dismutase molecule.  The trade-off is speed of rendering versus quality of
+final image.<br><br>
+<table>
+<tr><td>
+  <img src="RTMoleculeBresenham.png" width=256 height=250 alt="ray trace Bresenham" border=1>
+</td></tr>
+</table>
+<br><br>
+
+The image below is a ray tracing where the image intensities along a ray are
+an integration assuming trilinear interpolation.  The integration values are
+mapped to gray scale intensity.<br><br>
+<table>
+<tr><td>
+  <img src="RTMolecule.png" width=128 height=122 alt="ray trace integrate" border=1>
+</td></tr>
+</table>
+<br><br>
+
+The image below is a ray tracing where the image intensities along a ray are
+an integration assuming trilinear interpolation as in the previous example,
+but voxels whose values are larger than a specified threshold are colored
+with shades of yellow rather than gray scale.<br><br>
+<table>
+<tr><td>
+  <img src="RTMoleculeSurface.png" width=128 height=122 alt="ray trace integrate with yellow-colored threshold values" border=1>
+</td></tr>
+</table>
+<br><br>
+
+The image below is a ray tracing of two images (registered ones in the medical
+imaging application) where the image intensities along a ray are
+an integration assuming trilinear interpolation.  The images are alpha blended
+to allow a user to see two different image modalities superimposed in the
+same region.  The example is artificial, the molecule image and an image
+with a sphere.<br><br>
+<table>
+<tr><td>
+  <img src="RTMoleculeSphereBlend.png" width=128 height=122 alt="ray trace integrate blend" border=1>
+</td></tr>
+</table>
+
+</td></tr>
+</table>
+
+</body>
+</html>

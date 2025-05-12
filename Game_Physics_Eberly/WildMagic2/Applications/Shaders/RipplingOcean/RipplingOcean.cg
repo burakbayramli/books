@@ -1,0 +1,207 @@
+//----------------------------------------------------------------------------
+float3 Fix(float3 fVec)
+{
+    return (fVec/2.0f + 0.5f);
+}
+//----------------------------------------------------------------------------
+float3 UnFix(float3 fVec)
+{
+    return (fVec*2.0f - 1.0f);
+}
+//----------------------------------------------------------------------------
+void vmain(
+    in float4 i_f4Position  : POSITION,
+    in float4 i_f4Normal : NORMAL,
+    in float3 i_f3Tangent : COLOR,
+    in float2 i_f2Tex : TEXCOORD0,
+
+    out float4 o_f4Position : POSITION,
+    out float2 o_f2Tex0 : TEXCOORD0,
+    out float2 o_f2Tex1 : TEXCOORD1,
+    out float3 o_f3View : TEXCOORD2,
+    out float3 o_f3Tangent : TEXCOORD3,
+    out float3 o_f3Binormal : TEXCOORD4,
+    out float3 o_f3Normal : TEXCOORD5,
+    out float4 o_f4LightDir : TEXCOORD6,
+
+    uniform float4x4 WmlRendererModViewProj,
+    uniform float3 WmlCameraPosition,
+    uniform float4 u_f4Constants,
+    uniform float3 u_f3LightDir,
+    uniform float4 u_f4WaveDirX,
+    uniform float4 u_f4WaveDirY,
+    uniform float4 u_f4WaveSpeed,
+    uniform float4 u_f4WaveOffset,
+    uniform float4 u_f4WaveHeight,
+    uniform float4 u_f4BumpSpeed)
+{
+    // renaming
+    float fAvgDuDxDvDy = u_f4Constants.x;
+    float fAmbient = u_f4Constants.y;
+    float fTexRepeat = u_f4Constants.z;
+    float fTime = u_f4Constants.w;
+
+    // This shader has 4 waves.  Each wave has a direction (in tangent space)
+    // of float2(u_f4WaveDirX.i, u_f4WaveDirY.i) and some speed, height, and
+    // offset into the sin function.
+ 
+    // Numerical constant
+    float fPi = 3.14159265358979323846;
+
+    // Wave position (at a given time) is an input to the sinusoidal
+    // function.
+    float4 f4Offset = i_f2Tex.x*u_f4WaveDirX + i_f2Tex.y*u_f4WaveDirY + 
+        u_f4WaveSpeed*fTime + u_f4WaveOffset;
+
+    // we need to turn this offset into the [-pi/2, pi/2) range
+    float4 f4FrcOffset = frac(f4Offset) - 0.5f;
+    f4FrcOffset *= 2*fPi;
+
+    // Get the sin and cosine values
+    float4 f4Sin, f4Cos;
+    sincos(f4FrcOffset, f4Sin, f4Cos);
+
+    // Add each of these four waves to the wave height here
+    // The sin portion is the wave height.
+    // The cos part (derivative) will be the change in normal.
+    float fWaveHeight = dot(f4Sin,u_f4WaveHeight);
+
+    // Add this wave height to the original position (along the normal).
+    float4 f4WorldPos = fWaveHeight*i_f4Normal + i_f4Position;
+    f4WorldPos.w = 1.0f;
+    o_f4Position = mul(WmlRendererModViewProj, f4WorldPos);
+
+    // Get the cos height of the wave.
+    float4 f4CosWaveHeight = f4Cos*u_f4WaveHeight;
+    
+    // Calculate a new normal, tangent, and binormal to build a space
+    // to transform into for the pixel shader.
+    float3 f3NormOffset;
+    f3NormOffset.x = -dot(f4CosWaveHeight,u_f4WaveDirX);
+    f3NormOffset.yz = -dot(f4CosWaveHeight,u_f4WaveDirY);
+    f3NormOffset *= fAvgDuDxDvDy;
+
+    float3 f3WarpNormal = i_f4Normal.xyz;
+    f3WarpNormal.xy += (f3NormOffset).xy;
+    f3WarpNormal = normalize(f3WarpNormal);    
+    o_f3Normal = Fix(f3WarpNormal);
+    
+    float3 f3Tangent = UnFix(i_f3Tangent.xyz);
+    f3Tangent.z -= f3NormOffset.z;
+    f3Tangent = normalize(f3Tangent);
+    o_f3Tangent = Fix(f3Tangent);
+
+    o_f3Binormal = Fix(normalize(cross(f3WarpNormal,f3Tangent)));
+
+    // Calculate the view direction for this vertex
+    o_f3View = Fix(normalize(f4WorldPos.xyz - WmlCameraPosition));
+
+    // Create texture coordinates.  The bump maps have a speed of
+    // bumpspeed which is offset from their original texture coordinates.
+    // If you want the texture to repeat on the quad more often, then
+    // ramp up TexRepeat, which gives the impression of being farther away.
+    o_f2Tex0 = (u_f4BumpSpeed.xy*fTime + fTexRepeat*i_f2Tex);
+    // Swizzle so that the textures will never line up
+    o_f2Tex1.yx = (u_f4BumpSpeed.wz*fTime + fTexRepeat*i_f2Tex);
+
+    // Assumes u_f3LightDir is normalized
+    o_f4LightDir.xyz = Fix(u_f3LightDir);
+
+    // For some reason I can't get pixel shaders to use uniform constants
+    // in math expressions, and so we'll just pass fAmbient through here.
+    o_f4LightDir.w = fAmbient;
+}
+//----------------------------------------------------------------------------
+void pmain(
+    in float2 i_f2Tex0 : TEXCOORD0,
+    in float2 i_f2Tex1 : TEXCOORD1,
+    in float3 i_f3View : TEXCOORD2,
+    in float3 i_f3Tangent : TEXCOORD3,
+    in float3 i_f3Binormal : TEXCOORD4,
+    in float3 i_f4Normal : TEXCOORD5,
+    in float4 i_f4LightDir : TEXCOORD6,
+    
+    out float4 o_f4Color : COLOR,
+    
+    uniform sampler2D s2Bump,
+    uniform sampler2D s2Water,
+    uniform sampler2D s2Env)
+{
+    // A lot of this shader is making the water look "just" right.  It looks
+    // pretty good in general, but there are some tweaks.  I'll try to explain
+    // what's necessary and what is specific to this case.
+
+    // Sample the bumpmap twice
+    float3 f3NormPerturb1 = UnFix(tex2D(s2Bump, i_f2Tex0).xyz);
+    float3 f3NormPerturb2 = UnFix(tex2D(s2Bump, i_f2Tex1).xyz);
+    // The perturbed normal (in bumpmap space) is going to be the average.
+    float3 f3NormPerturb = (f3NormPerturb1+f3NormPerturb2)*0.5f;
+
+    // Because the waves may have changed the surface, we will transform
+    // the bump mapped normal into world space.  We cannot just use the
+    // model->world transform here because that applies to the original
+    // model.  Because that got changed (along with the normal) in the vertex
+    // shader, we have to do it this way.
+    // 
+    // We also UnFix everything from [0,1] to [-1,1] for DX compatibility.
+    
+    float3 f3OldNormal = UnFix(i_f4Normal);
+    float3 f3NewNormal = f3NormPerturb.x * UnFix(i_f3Tangent) + f3NormPerturb.y*
+        UnFix(i_f3Binormal) + f3NormPerturb.z*f3OldNormal;
+
+    // Water color is view dependent. We look this up in the gradient texture.
+    // Using the old normal (the water surface normal before bump mapping) makes
+    // the fresnel factor (and the water color) look more right because it is
+    // much more low frequency than the bump mapped ripples.
+    float3 f3View = UnFix(i_f3View);
+    float fFresnel = 1-saturate(-dot(f3OldNormal,f3View));
+    // This step could have been done in the texture itself.
+    float fFresnelCubed = pow(fFresnel,3);
+    // Get the water color in from the gradient texture.  If we are looking
+    // tangentially at the water, it will be bluer.  If we are looking straight
+    // down (fFresnel close to zero) it will be greener.
+    float3 f3WaterColor = tex2D(s2Water, float2(fFresnelCubed,0)).xyz;
+
+    // Get the reflection vector for specular reflections
+    float3 f3Reflect = reflect(f3NewNormal,f3View);
+
+    // We're going to sample the background texture, but we need to 
+    // put the coordinates into [0,1].
+    f3Reflect = f3Reflect * 0.5f + 0.5f;
+
+    // This step is just due to the texture that we're using.  It biases
+    // towards the top, so that less of the water reflects the sun.
+    // With an environment map, this is irrelevant.  A sphere map was tried
+    // but it was hard to get it just right.  Using the background texture
+    // is a hack, but it looks good.  =)
+    f3Reflect.z = f3Reflect.z * 0.7 + 0.2;
+
+    // This step is dependent upon knowing that up is in the z direction and
+    // y is the forwards/backwards direction and x is left to right.
+    // If we had an environment map, it would not be an issue.
+    float3 f3Background = tex2D(s2Env, f3Reflect.xz).xyz;
+
+    // Use some factor of the background to find the specular reflection.
+    // I will point out that this factor is totally arbitrary and
+    // so I'm going to say that the "glow" factor of the background is
+    // the green component.  What I really want is the big sun to be the
+    // have the strongest specular component so it will appear on the water.
+    // Green will do that.  Another way to do this would be to store a glow
+    // map in the alpha channel and use that.
+    //
+    // Also, we'll use fresnel reflections here too as a factor so that
+    // the water reflects much more when you look at it at an angle
+    //
+    // Tone down the specular a bit 
+    float fSpecular = pow(f3Background.g,2)*fFresnelCubed;
+
+    float fAmbient = i_f4LightDir.a;
+    // Calculate some diffuse factor (but we don't want it too dark
+    // so we'll add a little arbitrary ambient.
+    float fDiffuse = fAmbient + (1-fAmbient) *
+        dot(f3NewNormal,-UnFix(i_f4LightDir.rgb));
+
+    // Add the diffusely lit water color with some specular highlights.
+    o_f4Color.xyz = f3WaterColor*fDiffuse + f3Background*fSpecular;
+}
+//----------------------------------------------------------------------------

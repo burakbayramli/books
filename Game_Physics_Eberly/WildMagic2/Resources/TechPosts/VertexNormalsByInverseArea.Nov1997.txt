@@ -1,0 +1,67 @@
+From sloan@cis.uab.edu Sun Nov  2 23:08:10 EST 1997
+Article: 58814 of comp.graphics.algorithms
+Path: unc-cs!news-relay.ncren.net!newsgate.duke.edu!nntprelay.mathworks.com!news-peer.gip.net!news.gsl.net!gip.net!europa.clark.net!128.158.254.10!news.msfc.nasa.gov!info.uah.edu!maze.dpo.uab.edu!usenet
+From: Kenneth Sloan <sloan@cis.uab.edu>
+Newsgroups: comp.graphics.algorithms
+Subject: Re: Vertex normals
+Date: 02 Nov 1997 11:20:49 -0600
+Organization: CIS, University of Alabama at Birmingham
+Lines: 49
+Sender: sloan@docena
+Message-ID: <t7200z2owe.fsf@cis.uab.edu>
+References: <345A4FD3.AEDE9327@worldonline.nl> <63ee0d$79l@currituck.cs.unc.edu> <345B8F64.701F@xtra.co.nz> <345B027A.21CB@fm-net.com>
+NNTP-Posting-Host: docena.cis.uab.edu
+X-Newsreader: Gnus v5.4.37/XEmacs 19.15
+Xref: unc-cs comp.graphics.algorithms:58814
+
+justin deltener <deltener@fm-net.com> writes:
+
+> Wouldn't it be more accurate to average all the normals of the shared
+> vertex?  Just an idea.
+
+"Accuracy" is sometimes determined by how the mesh was constructed.  In
+particular, if the mesh was designed by hand, then one set of
+assumptions are in order, while if the mesh was generated automatically
+>from  sensor data, thinkgs may be quite different.
+
+I have looked at this from time to time, and had several students do
+low-level investigations (it's a nice "warm-up" project - but a bit
+difficult to find anything actually publishable).  The usual ground
+rules are:
+
+    *you know the set of vertices surrounding the central vertex,
+    *it is virtually free to calculate the face normals (perhaps
+     they are pre-computed, for some other purpose).
+
+The "textbook" method boils down to weighting the (unit length) face
+normals by the areas (this is convenient computationally).  The problem
+with the textbook method is that the answer does not depend on the
+position of the central vertex (essentially, you are fitting a plane to
+the neighboring vertices).  This is probably not a "feature".  But, this
+method is very fast.
+
+The next obvious approach is to simply average the face normals.  This
+is more expensive, and not obviously correct.
+
+A somewhat counter-intuitive (at first glance) method is to weight the
+face normals by the *inverse* of the areas.  This turns out to be "more
+accurate" (under fairly general assumptions) - AND - it turns out to be
+moderately inexpensive to compute.  On balance, it is my favorite
+method. (While it seems counter-intuitive, there is actually a farily
+nice argument supporting this choice.  It may not be a *correct*
+argument - but it's still nice.)
+
+But...for sheer accuracy, the all-time winner is to weight the face
+normals by the angle subtended at the central vertex.  Unfortunately,
+this is also one of the more expensive methods.  I haven't done this,
+but it might be interesting to look at fast approximations to "subtended
+angle" which capture the qualitative effect without actually requiring
+an expensive trig function.
+
+-- 
+Kenneth Sloan                                        sloan@cis.uab.edu
+Computer and Information Sciences                       (205) 934-2213
+University of Alabama at Birmingham                 FAX (205) 934-5473
+Birmingham, AL 35294-1170   http://www.cis.uab.edu/info/faculty/sloan/
+
+

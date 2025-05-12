@@ -1,0 +1,34 @@
+CC := /usr/bin/g++
+GCC := /usr/bin/gcc
+CFLAGS := -c -DWML_USE_GLUT
+AR := /usr/bin/ar
+ARFLAGS := rs
+
+ifeq (,$(findstring Debug,$(CONFIG)))
+    CFLAGS += -O2 -DNDEBUG
+else
+    CFLAGS += -g -D_DEBUG
+endif
+
+INCPATH := -I ../../Include -I /usr/X11R6/include
+INCDIR := ../../Include
+INC := $(wildcard Wml*.h) $(wildcard Wml*.inl)
+INC := $(notdir $(INC))
+SRC := $(wildcard Wml*.cpp) $(wildcard *.c)
+SRC := $(notdir $(SRC))
+OBJDIR := ../$(CONFIG)
+OBJ := $(SRC:%.cpp=$(OBJDIR)/%.o) $(SRC:%.c=$(OBJDIR)/%.o)
+LIB := ../../Library/$(CONFIG)/libWmlRenderer.a
+
+build : $(OBJ)
+	$(AR) $(ARFLAGS) $(LIB) $(OBJDIR)/*.o
+	cp -fp $(INC) $(INCDIR)
+
+$(OBJDIR)/%.o : %.cpp
+	$(CC) $(INCPATH) $(CFLAGS) $< -o $@
+
+$(OBJDIR)/%.o : %.c
+	gcc $(INCPATH) $(CFLAGS) $< -o $@
+
+clean :
+	rm -f $(OBJDIR)/*.o

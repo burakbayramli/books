@@ -1,0 +1,81 @@
+"Fred Klingener" <klingener@BrockEng.com> wrote in message news:9fjbd2$4fecn$1@ID-76878.news.dfncis.de...
+> 
+> "Rune Laursen" <rul@mail1.stofanet.dk> wrote in message
+> news:3b1d145e$0$1540$ba624c82@nntp01.dk.telia.net...
+>> I have a quaternion representing a rotation in a given coordinate system.
+>> How can I convert it to represent a rotation in another coordinate system?
+>> E.g. conversion from lefthanded to righthanded.
+>
+> Should be just the conjugate.  Maybe?
+
+In a few cases, but not generally.
+
+The general idea is that you have coordinates X that you want to
+represent in terms of new coordinates Y.  Let X = P*Y be that
+representation where P is orthogonal (allows for reflections as
+well as rotations).  The columns of P are the coordinate axis
+direction vectors for the new system.  You also have a rotation
+R in X's coordinate system.  The rotation is
+  X' = R*X = R*P*Y = P*[(P^T*R*P)*Y] = P*Y'
+where Y' = QY and Q = P^T*R*P.  Note that Q is a rotation
+whether or not P has a reflection component.  This follows from
+det(Q) = det(P^T)*det(R)*det(P) = det(R) = 1.
+
+So the rotation R applied to X is represented by the rotation
+Q applied to Y.  If P is a rotation (det(P) = 1), and if
+Quat(M) is a quaternion representing rotation matrix M, then
+Quat(Q) = Conjugate(Quat(P))*Quat(R)*Quat(P).  However,
+if det(P) = -1, this formula does not apply since there is no
+quaternion that represents P.  In this case you could convert
+Quat(R) to find R, compute Q = P^T*R*P, then compute
+Quat(Q).  However, the next paragraph shows a different
+construction and also provides a counterexample to the
+"conjugate claim".
+
+Let R have unit-length rotation axis (x,y,z) and rotation angle t.
+Define s = sin(t) and c = cos(t).  Define A = Skew(x,y,z) to be
+the skew-symmetric matrix A with A00 = A11 = A22 = 0,
+A01 = z, A02 = -y, A12 = x.  Then R = I + s*A + (1-c)*A^2
+where I is the identity matrix.  Let P = Diagonal(1,1,-1), a
+reflection.  So
+  Q = P^T*R*P
+      = I + s*P^T*A*P (1-c)*(P^T*A*P)^2
+      = I + s*B + (1-c)*B^2
+where  B = P^T*A*P = Skew(-x,-y,z).  Therefore Q is a rotation
+about axis (-x,-y,z) by angle t when R is a rotation about axis
+(x,y,z) by angle t.  The simplest numerical example that illustrates
+Q is not R^T is to select (x,y,z) = (0,0,1).  In this case, in fact,
+Q = R.  And, in fact, you can find many examples where the
+axis of rotation for Q is perpendicular to that of R.
+
+The quaternion for R is
+  Quat(R) = cos(t/2) + sin(t/2)*(x*i+y*j+z*k).
+For this specific example with P = Diagonal(1,1,-1), the
+construction above shows that
+  Quat(Q) = cos(t/2) + sin(t/2)*(-x*i+-y*j+z*k),
+so you do not need to extract R from Quat(R), compute
+Q = P^T*R*P and Quat(Q) as indicated earlier.
+
+In general, if the columns of P are the 3x1 vectors C0, C1,
+and C2, if U = (x,y,z), and if [V0,V1,V2] denotes the
+triple scalar product Dot(V0,Cross(V1,V2)), then some
+algebra will show that B = P^T*A*P has entries
+Bij = [Ci,U,Cj].  The axis of rotation for Q is
+  (x',y',z') = ([C1,U,C2],-[C0,U,C2],[C0,U,C1])
+and the angle of rotation is t.  Finally,
+Quat(Q) = cos(t/2)+sin(t/2)*(x'*i+y'*j+z'*k)
+
+I should have pointed out that you can use the orthogonality
+of P to simplify the triple scalar products.  The axis of rotation
+for Q is det(P)*P^T*U.
+
+Summary.  If P is a change of coordinates (rotation/reflection),
+if R is a rotation in the original coordinates and is represented
+by Quat(R) = <w,U> = w+x*i+y*j+z*k where w = cos(t/2),
+x = sin(t/2)*U.x, y = sin(t/2)*U.y, z = sin(t/2)*U.z, then
+Quat(Q) = <w,det(P)*P^T*U> is the quaternion representing
+the rotation in the new coordinates.  Moreover, you need only
+apply det(P)*P^T to the quaternion components (x,y,z) [as a
+3x1 vector], so the conversion is quite fast.
+
+

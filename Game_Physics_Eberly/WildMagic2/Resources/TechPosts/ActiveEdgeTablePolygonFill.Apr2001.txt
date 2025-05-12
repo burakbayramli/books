@@ -1,0 +1,133 @@
+From: "Fernando Cacciola" <fernando_cacciola@hotmail.com>
+Subject: RE: fatest algorithm to fill a polygon ?
+Date: Wednesday, April 25, 2001 10:16 AM
+
+
+Hans-Bernhard Broeker <broeker@physik.rwth-aachen.de> escribió en el mensaje
+de noticias 9c6eo3$6fl$1@nets3.rz.RWTH-Aachen.DE...
+> John Fischer <jfischer@nomade.fr> wrote:
+> > Yes, I am trying to implement that one.
+>
+> > But I know that I will have some concave polygon.
+>
+> For nonconvex polygons, you have essentially two choices:
+>
+> 1) split into convex polygons by invisible edges, and scan convert these
+>    convex ones.  In Joseph O'Rourke's book on Computational Geometry in C,
+>    you'll find an algorithm that works by decomposing a polygin into
+>    trapezoids, as one particular type of convex polygon. All splitting
+edges
+>    are horizontal, then.
+>
+> 2) Use a 'flood fill' type algorithm to fill the interior of the polygon.
+>
+> Actually, a carefully crafted flood fill with recursion reduced to the
+> possible extent may end up being quite similar to the combination of
+> convex decomposition and scan conversion.
+>
+Alternatively, there is a version of the
+Active Edge Table algorithm that works with
+non-convex simple (no self crossing)
+polygons with holes (unconnected).
+It takes further preprocessing but I believe
+is faster than a convex decomposition
+or optimized flood fill.
+
+This generic AET version uses a sweepline
+(called a scanline here) which scans the polygon
+vertically tracking the points were the
+scanline enters and leaves the polygon
+(just like a point-in-polygon algorithm does).
+For a given scanline, you locate a secuence
+of 'swtiching points' -intersections
+between the scanline and the polygon at
+which the scanline either enters or leaves
+the polygon- ( more on this later)
+Each consecutive pair of switching points is a span,
+which you can fill lately.
+Each entry in the AET is then not a single
+span but an ordered secuence of x-coordinates
+(which taken as pairs form a single span)
+You can use something like:
+
+class AET_Entry
+{
+  std::vector<coordinate_type> _spans ;
+  coordinate_type _y :
+} ;
+class AET_EntryHandle
+{
+  AET_EntryHandle() : _obj ( new AET_Entry ) {}
+  ~AET_EntryHandle() { delete _onj ; }
+
+  // Pointer-like operators...
+
+  AET_Entry* _obj ;
+} ;
+std::vector<AET_EntryHandle> AET;
+
+
+
+Once you construct the AET then filling it
+is just as simple as in the convex case,
+except that you have more than one span
+for each scanline.
+
+The key point is the construction of the
+AET. Thew following is out of the top of my head,
+I'm sure there are optimizations but
+I don't remember them, but this should work
+as a starting point to show the idea.
+
+1.Start with an empty AET.
+2.Walk along all the edges in CCW order
+ (or if you do in CW order then check the logic).
+ 2.1.If the edge is horizontal simply skip it
+     (see below)
+ 2.2.Using a bresenhan iteration to get the point P
+     as you walk along the edge.
+   2.2.1.If P is not a polygon vertex, then just
+         update entry [P.y] in the AET adding P.x.
+   2.2.2.If P is a polygon vertex decide if it is
+         a switching point(see below).
+         If it is, update the AET just as in 2.2.1.
+         If it isn't just skip the vertex and move
+         on to the next edge.
+
+Once you have completed the loop you sort each entry in
+the AET.
+
+To understand what is a switching vertex consider
+what happens with the scanline as you walk along
+from left to right as you pass through a vertex.
+A polygon divides the plane into two unconnected regions,
+one interior region and one exterior one.
+As you walk along the scanline and you reach an edge
+you switch regions. If you reach two edges
+simultaneously (a vertex), you switch regions IF AND
+ONLY IF both edges are on oposite sides of the scanline.
+This last condition is what we can use to determine if
+a vertex is a switching point or not.
+All you have to do is keep track of the edge vertical
+direction as you walk along the edges: either upward or
+downward (remember that horizontal edges are skipped).
+Once you reach a vertex, it counts only of the incoming and
+outgoing edges have the same direction.
+
+Finally, you can count horizontal edges if you want them
+to be filled by outputing its endpoints in the AET, but
+disregard them for the vertex tracking.
+
+Unfortunately I cannot give some code because I work
+with piecewise polycurves made of straight line segments
+and circular arcs. The algorithm above is just the
+same but the code is more complex because of the arcs.
+
+Regards,
+
+
+--
+Fernando Cacciola
+fernando_cacciola@hotmail.com
+
+ 

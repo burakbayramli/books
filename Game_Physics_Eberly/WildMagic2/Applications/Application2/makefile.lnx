@@ -1,0 +1,34 @@
+TARGET := WmlApplication2
+CC := /usr/bin/g++
+CFLAGS := $(CFLAGS) -c -DWML_USE_GLUT
+AR := /usr/bin/ar
+ARFLAGS := rs
+
+ifeq (,$(findstring Debug,$(CONFIG)))
+    CFLAGS += -O2 -DNDEBUG
+else
+    CFLAGS += -g -D_DEBUG
+endif
+
+LIBDIR := ../../Library/$(CONFIG)
+LIB := $(LIBDIR)/lib$(TARGET).a
+
+INCPATH := -I ../../Include -I /usr/X11R6/include
+INCDIR := ../../Include
+INC := WmlApplication.h WmlApplication.inl WmlApplication2.h
+
+OBJ := $(CONFIG)/WmlApplication.o $(CONFIG)/WmlApplication2.o \
+       $(CONFIG)/WmlGlutApplication.o
+
+$(TARGET) : $(OBJ)
+	$(AR) $(ARFLAGS) $(LIB) $(OBJ)
+	cp -fp $(INC) $(INCDIR) 
+
+$(CONFIG)/%.o : %.cpp
+	@mkdir -p $(CONFIG)
+	$(CC) $(INCPATH) $(CFLAGS) $< -o $@
+
+clean :
+	rm -f $(LIB)
+	rm -f $(CONFIG)/*.o
+

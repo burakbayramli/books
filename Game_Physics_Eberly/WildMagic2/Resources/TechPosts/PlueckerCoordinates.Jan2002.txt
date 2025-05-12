@@ -1,0 +1,426 @@
+Pluecker Coordinate Tutorial, by Ken Shoemake (ks@emanon.net)
+
+Pluecker 3D line coordinates are concise and efficient for numerous
+chores. Dot products and cross products reveal their geometry, without
+the need for determinants. For the impatient (and aren't we all a
+little?), results come first, then explanations.
+
+On notation: Frequently 3D graphics uses a 3-tuple, (x,y,z), without
+concern for whether it represents a vector or a point. When being more
+careful, (U:0) will be the homogeneous coordinates of vector U, with U
+= (Ux,Uy,Uz), and (P:1) -- or (P:w) -- the homogeneous coordinates of
+point P, with P = (Px,Py,Pz). The origin is then (O:1), with O =
+(0,0,0), and subtracting it from a point creates a vector. The cross
+product PxQ is the 3-tuple (PyQz-PzQy,PzQx-PxQz,PxQy-PyQx), and the
+dot product U.V is the number UxVx+UyVy+UzVz. A direction is a vector
+with length ignored. A plane has equation ax+by+cz+dw = 0, or D.P+dw =
+0, so its coordinates are [a:b:c:d], or [D:d], with D = (a,b,c)
+perpendicular to the plane. Planes [D:0] contain the origin. Colon
+(":") rather than comma (",") proclaims homogeneity.
+
+Here are common Pluecker 3D line computations collected in one
+place. All lines are ordinary Euclidean lines, not projective oddities
+like lines at infinity.
+
+  @ L = {U:V}, with 3-tuples U and V, with U.V = 0, and with U
+  non-null.
+
+  @ L = {P-Q:PxQ}, for P and Q distinct points on L.  @ L = {U:UxQ},
+  for U the direction of L and Q a point on L.  @ L = {qP-pQ:PxQ}, for
+  (P:p) and (Q:q) distinct homogeneous points on L.  @ L =
+  {ExF:fE-eF}, for [E:e] and [F:f] distinct planes containing L.
+
+  @ {U1:V1} =? s{U2:V2} tests if L1 = {U1:V1} equals L2 = {U2:V2}.  @
+  s > 0 if L1 and L2 have same orientation.
+
+  @ (V.V)/(U.U) is the minimum squared distance of L from the origin.
+  @ (VxU:U.U) is the point of L closest to the origin.  @ [UxV:V.V] is
+  the plane through L perpendicular to its origin plane, for non-null
+  V.
+
+  @ (VxN-Un:U.N) is the point where L intersects plane [N:n] not
+  parallel to L.  @ [UxP-Vw:V.P] is the plane containing L and point
+  (P:w) not on L.  @ [UxN:V.N] is the plane containing L and direction
+  N not parallel to L.
+
+  Let N, N1, N2 be unit vectors along the coordinate axes, with U.N
+  non-zero.
+
+  @ (VxN:U.N) is a point on L if N is not perpendicular to U.  @ U and
+  this point both satisfy a plane equation [E:e] if the plane contains
+  L.  @ Represent L as U and this point to transform by
+  non-perspective homogeneous matrix.  @ Represent L as two points to
+  transform by perspective homogeneous matrix.
+
+  @ [UxN1:V.N1] and [UxN2:V.N2] are distinct planes containing L.  @ P
+  satisfies both these plane equations if L contains P.
+
+  @ Pnt(t) = (VxU+tU:U.U) parameterizes points on L.  @ Pln(t) =
+  (1-t^2)[UxN1:V.N1]+2t[UxN2:V.N2] parameterizes planes through L.
+
+  @ U1.V2 + U2.V1 =? 0 tests if L1 = {U1:V1} and L2 = {U2:V2} are
+        coplanar (intersect).  @ Sum positive if right-handed screw
+        takes one into the other; negative if left-handed.  @ U1xU2 =?
+        0 tests if lines are parallel.  Let N be a unit vector along a
+        coordinate axis, with (U1xU2).N non-zero.  @
+        ((V1.N)U2-(V2.N)U1-(V1.U2)N:(U1xU2).N) is the point of
+        intersection, if any.
+
+  @ [U1xU2:V1.U2] is the common plane for non-parallel lines.  Let N,
+  N1, N2 be unit vectors along the coordinate axes, with U1.N
+  non-zero.  @ [(U1.N)V2-(U2.N)V1:(V1xV2).N] is the common plane for
+  parallel distinct lines.  @ [U1xN1:V1.N1] is the common plane for
+  equal lines through origin.
+
+Here are two related tricks, a lagniappe, as they say in New Orleans.
+
+  Let P be the point (x,y,z).  @ [(-1,0,0):x] and [(0,-1,0):y] and
+  [(0,0,-1):z] are independent planes through P.
+
+  Let [E:e] be a plane and N, N1, and N2 unit coordinate axis vectors
+        with E.N non-null.  @ Point (-eN:E.N) and distinct direction
+        vectors ExN1 and ExN2 lie in the plane.
+
+Note: E.U = 0 if U is a direction vector in plane [E:e]. If P is in
+the plane, so is P+U.
+
+Warning: In reality, line intersections, parallelism, and various
+other alignments have vanishingly small probability. Small
+perturbations destroy them, and so numerical tests may need the
+robustness of error bounds.
+
+Now we pause a minute to let the cookbook crowd rush off to write
+code. The overachievers may want to drift off to prove everything for
+themselves. All gone? Then the rest of us can try to build a little
+intuition, so as to understand the results.
+
+The standard determinant definition of Pluecker 3D line coordinates
+takes two distinct points on line L, call them P and Q, written
+homogeneously in two columns as follows: [Px Qx] row x [Py Qy] row y
+[Pz Qz] row z [Pw Qw] row w Make all possible determinants of pairs of
+rows. Only six combinations are independent; these are the Pluecker
+coordinates. See geometry yet? Probably not. But set the w's to 1, and
+look again.
+
+Rows x and w (in that order) give Px-Qx. Also rows y and w give Py-Qy,
+and rows z and w give Pz-Qz. So define U = P-Q. That's half the
+Pluecker coordinates. Rows y and z give PyQz-PzQy. Hmm, look familiar?
+Sure enough, rows z and x, and rows x and y, also give cross product
+components. So we define V = PxQ as the other half of the Pluecker
+coordinates. Using L = {U:V} = {P-Q:PxQ} we can think geometrically,
+not algebraically.
+
+  Example: P = (2,3,7), Q = (2,1,0). Then L = {U:V} =
+  {0:2:7:-7:14:-4}.
+
+We just use familiar properties of dot products and cross
+products. The dot product of any two vectors A and B is 0 just when
+they are perpendicular, and the cross product of A and B is a vector
+that always is perpendicular to both A and B (or is null). The squared
+length of A is A.A, and A.B = B.A. In contrast, AxB = -BxA, implying
+AxA = (0,0,0). Thus AxB nulls any component of B parallel to A, and
+rotates the rest of B 90 degrees. When A and B are perpendicular and
+of unit length, this implies Bx(AxB) = A = (BxA)xB. Both dot and cross
+products distribute over sums and scales, so A.(aB1+bB2) =
+a(A.B1)+b(A.B2) and (aA1+bA2)xB = a(A1xB)+b(A2xB), for example.
+
+Now clearly U = P-Q gives the direction of the line; and V = PxQ (if
+it's non-null) is perpendicular to the plane through P, Q, and the
+origin.  Less obviously, the colon is there because moving P and/or Q
+scales U and V together. Think about it. We know P = U+Q, with U some
+multiple of a fixed unit vector. But then V = PxQ = (U+Q)xQ = UxQ, so
+moving P clearly scales V the same as U. All variation in Q also comes
+from adding multiples of U to the point T where a vector from the
+origin meets the line perpendicularly; in other words Q = sU+T.  But
+that means V = UxQ = Ux(sU+T) = UxT, and T is a fixed point of L that
+does not depend on P or Q. So if either P or Q moves, the length of U
+changes, and with it the length of V, by the same scale
+factor. Clearly we can also generate coordinates directly from a ray
+representation, (U,Q), a direction and a point. We know that U is the
+direction of L, which we can normalize; then the length of V gives the
+minimum distance from L to the origin, ||T||, and so (T.T) =
+(V.V)/(U.U).
+
+  Example. P = (2,3,7), Q = (2,-1,-7). Then {U:V} =
+           {0:4:14:-14:28:-8}.  Squared distance from origin is
+           261/53.  Example. U = (2,1,0), Q = (2,1,0). Then {U:V} =
+           {2:1:0:0:0:0}.  Squared distance from origin is 0.
+
+Since a line is uniquely determined by its direction and its vector
+displacement from the origin, there is a one to one correspondence
+between lines and Pluecker coordinates. Lines in 3D have four degrees
+of freedom, but the {U:V} pair has six numbers. Obviously homogeneity
+accounts for one freedom. The second comes from the fact that U.V = 0,
+so not all pairs are valid lines. Nevertheless, two lines are distinct
+if and only if their Pluecker coordinates are linearly
+independent. That is, the test for equality is like that for points
+given as homogeneous coordinates.
+
+  Example. {0:2:7:-7:14:-4} is the same line as {0:4:14:-14:28:-8}.
+  Example. {0:2:7:-7:14:-4} is not the same line as {2:1:0:0:0:0}.
+
+Now still thinking geometrically, look at dual coordinates, defined
+from two plane equations of the form ax+by+cz+dw = 0, namely E.P + e =
+0 and F.P + f = 0. We know that as vectors E and F are perpendicular
+to their respective planes. Clearly ExF, being perpendicular to both,
+must be the direction of L, their intersection. Any point P on L
+satisfies both equations, and also satisfies the linear combination
+(fE-eF).P = 0. Thus the vector fE-eF defines a plane through the
+origin that contains L. So miraculously, it turns out that {U:V} =
+{ExF:fE-eF}. Assuming neither defining plane passes through the
+origin, we can normalize so e and f are 1, and the duality is
+{P-Q:PxQ} = {ExF:E-F}.
+
+  Example. [E:e] = [1:0:0:-2] and [F:f] = [0:7:-2:-7]. Then {U:V} =
+        {0:2:7:-7:14:-4}.
+
+The striking similarity of the point and plane definitions tell us
+Pluecker 3D line coordinates precisely balance these extremes. Many
+computational benefits accrue. Also, many questions come in dual
+pairs, with the answers for one obtained by swapping U and V in the
+answers for the other.
+
+We know, for example, that [V:0] is an origin plane through L (if V is
+not null), and that (U:0) is a vector in the direction of L, each
+unique.  The point T = (VxU:U.U) of L is perpendicular to (U:0),
+meaning T.U = 0, because V = UxT, so VxU = (U.U)T. Dually, the plane
+[UxV:V.V] through L is perpendicular to plane [V:0].
+
+  Example. {U:V} = {0:2:7:-7:14:-4}. Then T = (-106:49:14:53) is point
+        closest to origin.  Plane perpendicular to [V:0] is
+        [106:-49:-14:261].
+
+What point do L and a given plane [N:n] have in common? Consider first
+an origin plane, [N:0]. It meets the [V:0] plane in a line of points
+(VxN:w), and to meet the [UxV:V.V] plane w must satisfy w(V.V) =
+(VxU).(VxN) = (V.V)(U.N). Therefore the common point is (VxN:U.N) when
+n is 0, or (VxN-nU:U.N) in general. Dually, the plane that L has in
+common with a given point (P:w) is [UxP-wV:V.P]. For a vector (N:0),
+this is [UxN:V.N].
+
+  Example. {U:V} = {0:2:7:-7:14:-4} and [N:n] =
+        [0:0:1:0]. Intersection is (14:7:0:7).  [N:n] =
+        [0:0:1:-7]. Intersection is (14:21:49:7).  (P:w) =
+        (2:0:0:1). Common plane is [7:0:0:-14].  (N:0) =
+        (1:1:1:0). Common plane is [-5:7:-2:3].
+
+These are important results, so let's take it again more slowly. The
+vector (VxN:0) is perpendicular to both V and N, as is any scalar
+multiple, (VxN:0)/w. Since [N:0] and [V:0] both contain the origin,
+(O:1), they also contain point O + VxN/w, which scales by w to give
+(VxN:w) in homogeneous form. Now a point (P:w) lies in plane [UxV:V.V]
+if it satisfies the equation (UxV).P+(V.V)w = 0. Noting UxV = -VxU,
+this is w(V.V) = (VxU).P. Substituting, the point we want satisfies
+w(V.V) = (VxU).(VxN). We deduce w = U.N by showing (VxU).(VxN) =
+(V.V)(U.N). The cross product with V rotates and scales plane [V:0],
+which contains U, and nulls any component of N parallel to V. Since
+the latter contributes nothing to the dot product with U, we have our
+desired result. If V is null, (VxN:U.N) is still a point of
+intersection, the origin. However when the line and plane are
+parallel, they either intersect everywhere or nowhere, and the formula
+fails.
+
+From these few formulae we can produce a number of other useful
+results. To transform a line by a matrix without perspective, we first
+convert the line to (direction,point) form, transform that pair, then
+convert the result back to Pluecker form. For this and other reasons
+we want the quickest way to find a point on L = {U:V}. For example,
+this also gives the necessary data to determine if L lies in a given
+plane. Notice that we can easily generate more, using U. (This is
+necessary to apply transforms with perspective, which require a pair
+of points.) But (VxN:U.N) gives points on L, and choosing N cleverly
+will avoid multiplies. Merely find a non-zero component of U, and let
+N be a unit vector in that direction.
+
+  Example. {U:V} = {0:2:7:-7:14:-4}. Take N = (0,1,0), giving point
+        (4:0:-7:2) on line.  Plane [1:0:0:1] does not contain the
+        point, so it does not contain the line.  It does contain
+        direction [0:2:7:0], so is parallel to the line.
+
+To test if a point P is on L, we should use two independent plane
+equations. The obvious idea is to dualize what we just did using [V:0]
+and [UxN:V.N], with N a unit vector in the direction of a non-zero
+component of V. Yet this may fail. We always have a non-null U, but
+lines through the origin give a null V. Still, we can work with what
+we have. Let N, N1, and N2 be unit vectors for the three coordinate
+axes, with N in the direction of a non-zero component of, not V, but
+U. Then N1 and N2 give two suitable planes, [UxN1:V.N1] and
+[UxN2:V.N2].
+
+  Example. {U:V} = {2:1:0:0:0:0}. Take N = (1,0,0), N1 = (0,1,0), N2 =
+        (0,0,1), giving planes [0:0:2:0] and [1:-2:0:0] through line.
+        Point (2:3:0:1) lies only in the second plane, so is not on
+        the line.
+
+Every point on L is a weighted sum of (U:0) and (VxU:U.U), so a
+parametric equation for all points on L is Pnt(t) =
+(VxU+tU:U.U). Dually, a parametric form for planes through L is Pln(t)
+= (1-t^2)[UxN1:V.N1]+2t[UxN2:V.N2], a weighted combination of the two
+planes we learned how to generate a moment ago. This latter pair of
+weights, 1-t^2 and 2t, is perhaps overly elaborate, but chosen as
+points on a rationally parameterized circle (x:y:w) =
+(1-t^2:2t:1+t^2). Any way to get all possible ratios of weights will
+do.
+
+  Example. {U:V} = {0:2:7:-7:14:-4}. Pnt(t) = (-106:49+2t:14+7t:53).
+  Example. {U:V} = {2:1:0:0:0:0}. Pln(t) = [2t:-4t:2(1-t^2):0].
+
+If two lines intersect, they are coplanar. This latter condition we
+can test as follows. Suppose L1 = {U1:V1} and L2 = {U2:V2}. The common
+plane containing both L1 and U2 is [U1xU2:V1.U2], while that
+containing L2 and U1 is [U2xU1:V2.U1]. Since U1xU2 = -U2xU1,
+coplanarity demands U1.V2 + U2.V1 = 0. When the two lines are
+parallel, U1 and U2 give the same direction and the plane formulae are
+invalid, yet the test still works.
+
+If we want a formula for a common plane even so, we can try a linear
+combination of V1 and V2 for the normal, since both are perpendicular
+to the common direction. Find a non-zero component of U1, and let N be
+a unit vector in that direction; then if V1 and V2 are not both null,
+use [(U1.N)V2-(U2.N)V1:(V1xV2).N]. Otherwise L1 and L2 are not only
+parallel, but identical, and pass through the origin; generate a plane
+for L1 using the standard method. Perhaps the reader can devise a
+uniform method for generating a common plane, however small
+perturbations generally have large consequences for this situation.
+
+We cannot hope to find a point of intersection for parallel lines, but
+otherwise a suitable formula is actually the dual,
+((V1.N)U2-(V2.N)U1-(V1.U2)N:(U1xU2).N), where N is a unit axis vector
+independent of U1 and U2. This is less computation than its size
+suggests. It can be derived as the plane through L2 in the direction
+N, [U2xN:V2.N], intersected with L1, (V1x(U2xN)-U1(V2.N):U1.(U2xN)),
+followed by two cross product identities, Ax(BxC) = (A.C)B-(A.B)C, and
+A.(BxC) = (AxB).C. When neither V1 nor V2 is null, the far simpler
+formula [V1xV2:U1.V2] will suffice; it is the dual of the common plane
+[U1xU2:V1.U2].
+
+  Example. L1 = {0:2:7:-7:14:-4} and L2 = {2:1:0:0:0:0} are coplanar.
+            Lines are not parallel.  Common plane is [-7:14:-4:0].
+            Taking N = (1,0,0), intersection point is (-14:-7:0:-7).
+
+Tempting as this geometric development is, it conceals the generality
+of the algebra. Pluecker 3D line coordinates are only one special case
+(albeit a very useful one) of Grassmann coordinates.
+
+Using Grassmann coordinates we can uniformly manage points, lines,
+planes, and such (generically, flats) in spaces of any dimension. We
+can generate them, intersect them, and so on, with simple
+equations. There are fewer special cases, such as lines given by two
+points versus point and direction. Three planes through a point or
+three points on a plane (in 3D) use the same algebra as two planes
+through a line.
+
+Two solid references are Stolfi's doctoral dissertation at Stanford
+(and later book), and Hodge and Pedoe's classic multi-volume text,
+_Methods of Algebraic Geometry_, available in paperback from
+Cambridge.
+
+In 3D, Pluecker line coordinates can be extended to wrenches and
+twists, known as screw coordinates. These cleverly employ all six
+degrees of freedom to describe forces and motions. The results have
+proved useful for kinematic investigations, as described for example
+in Mason and Salisbury, _Robot Hands and the Mechanics of
+Manipulation_, MIT.
+
+==============================================================================
+From jeffe@cs.duke.edu Mon Sep  8 00:48:30 EDT 1997
+Article: 55622 of comp.graphics.algorithms
+Path: unc-cs!news-relay.ncren.net!rutgers!news.cis.ohio-state.edu!news.maxwell.syr.edu!nntprelay.mathworks.com!newsgate.duke.edu!hal.cs.duke.edu!not-for-mail
+From: Jeff Erickson <jeffe@cs.duke.edu>
+Newsgroups: comp.graphics.algorithms
+Subject: Re: Plücker Coordinates --- how, what, where ?
+Date: Sun, 07 Sep 1997 00:04:11 -0400
+Organization: Center for Geometric Computing, Duke University
+Lines: 80
+Message-ID: <341227BB.2692@cs.duke.edu>
+References: <341148AF.76C5D3F3@mcs.nl>
+NNTP-Posting-Host: nuthatch.cs.duke.edu
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Mailer: Mozilla 3.01Gold (X11; I; SunOS 5.5.1 sun4m)
+To: "A.P. Zijlstra" <peter@mcs.nl>
+Xref: unc-cs comp.graphics.algorithms:55622
+
+A.P. Zijlstra wrote:
+> Can someone point me to any web resources on plucker coordinates or
+> just explain them in more detail than [Seth] Teller did ?
+
+The best explanation of Plucker coordiantes I've seen is in Jorge
+Stolfi's book "Oriented Projective Geometry" (Academic Press, 1991). 
+I'll try to give a sketch here, but you should really check out Stolfi's
+book if you want to learn about these things.
+
+Plucker coordinates are an incredibly useful way of specifying lines and
+rays in 3-dimensional space by six-dimensional vectors.  Suppose L is
+the oriented line passing through two points with homogeneous
+coordinates [a,b,c,d] and [w,x,y,z] -- or with standard Cartesian
+coordinates (b/a,c/a,d/a) and (x/w,y/w,z/w) -- in that order.  Then the
+Plucker coordinates of L are
+
+	[a*x-b*w, a*y-c*w, b*y-c*x, a*z-d*w, b*z-d*x, c*z-d*y].
+
+Plucker coordinates are homogeneous -- multiplying all six coordinates
+by any real number gives you new Plucker coordinates for the same line. 
+Also, not every set of six numbers is the Plucker coordinates of a line.
+Plucker coordinates [L1, L2, L3, L4, L5, L6] always satisfy the
+following equation:
+
+	L1*L6 - L2*L5 + L3*L4 = 0.
+
+Two oriented lines L and M can interact in three different ways: L might
+intersect M, L might go clockwise around M, or L might go
+counterclockwise sround M.  Here are some examples:
+
+	     |M              |M              |M
+	L    |          L    |          L    |
+	-----+----->    ----------->    -----|----->
+	     |               |               |
+             V               V               V
+	 intersect    counterclockwise   clockwise
+	     |M              |M              |M
+	L    |          L    |          L    |
+	<----+-----     <----|------    <-----------
+	     |               |               |
+             V               V               V
+
+The first and second rows are just diffeerent views of the same lines,
+once from the "front" and once from the "back".  Here's what they might
+look like if you look straight down line M (shown here as a dot).
+
+	L                                ---------->
+	-----o---->     L    o           L    o
+	                ---------->
+	 intersect    counterclockwise    clockwise
+
+
+The Plucker coordinates of L and M give you a quick way to test which of
+the three it is.
+
+	cw:   L1*M6 - L2*M5 + L3*M4 + L4*M3 - L5*M2 + L6*M1 < 0
+	ccw:  L1*M6 - L2*M5 + L3*M4 + L4*M3 - L5*M2 + L6*M1 > 0
+	thru: L1*M6 - L2*M5 + L3*M4 + L4*M3 - L5*M2 + L6*M1 = 0
+
+So why is this useful?  Well, suppose you want to test if a ray
+intersects a triangle in 3-space.  One way to do this is to represent
+the ray and the edges of the triangle with Plucker coordiantes.  The ray
+hits the triangle if and only if it hits one of the triangle's edges, or
+it's "clockwise" from all three edges, or it's "counterclockwise" from
+all three edges.  For example...
+
+	         /^		...in this picture, the ray
+	       /  |		is oriented counterclockwise
+	--------- | -->		from all three edges, so it
+	   /      |		must intersect the triangle.
+	  L------->		(The L is an arrowhead!)
+
+So if you use Plucker coordinates, ray shooting tests like this take
+only about ten lines of code.
+
+Hope this helps!
+--
+Jeff Erickson                         Center for Geometric Computing
+jeffe@cs.duke.edu                     Department of Computer Science
+http://www.cs.duke.edu/~jeffe                        Duke University
+
+

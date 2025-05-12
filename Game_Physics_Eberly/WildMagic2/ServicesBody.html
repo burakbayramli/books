@@ -1,0 +1,165 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Services</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+Magic Software provides various services to the technical community.  Our
+main areas of expertise are computer graphics (including games programming),
+image analysis, and numerical methods.  We provide contract programming,
+on-site consulting, and training in these areas.  We also provide support
+services such as performance analysis, testing, and debugging of
+applications.
+<br><br>
+
+A current and ongoing project is algorithm development for the
+<a target="_blank" href="http://mipav.cit.nih.gov">
+Medical Image Processing, Analysis, and Visualization
+</a>
+package that is developed by researchers at the National Institutes of Health.
+The package is written in Java and Java3D.  Recent algorithms that we
+provided for the package:
+<ul>
+  <li>
+    <b>Level surface extraction</b>.  Uses either a Marching Tetrahedra
+    algorithm or a topologically correct algorithm for rectangular lattices.
+    <br><br>
+  </li>
+  <li>
+    <b>Decimation of triangle meshes</b>.  The meshes have millions of
+    triangles.  Uses a Garland-Heckbert-style algorithm.
+    <br><br>
+  </li>
+  <li>
+    <a href="Services/SurfaceViewer.html">Level surface viewer</a>.  A
+    Java3D application for viewing lit triangle meshes that represent level
+    surfaces.
+    <br><br>
+  </li>
+  <li>
+    <a href="Services/VolumeRendering.html">Volume rendering</a>.
+    Based on software ray tracing.
+    <br><br>
+  </li>
+  <li>
+    <a href="Services/ShearWarp.html">Volume rendering</a>. Based on
+    shear-warp factorization.
+    <br><br>
+  </li>
+  <li>
+    <a href="Services/BrainExtraction.html">Brain extraction tool</a>.  A
+    coarse-level 3D magnetic resonance image segmentation called skull
+    stripping.
+    <br><br>
+  </li>
+  <li>
+    <b>Adaptive skeleton climbing</b>.  Postprocessing an extracted level
+    surface mesh using triangle decimation is time consuming since the meshes
+    tend to have on the order of one million triangles.  Skeleton climbing 
+    allows you to quickly build a multiresolution level surface during the
+    extraction phase.  The multiple resolutions are constructed by a bottom-up
+    voxel merging method that is based on sign changes of the voxel data minus
+    the desired level surface value.
+    <br><br>
+  </li>
+  <li>
+    <b>Volume rendering</b> using hardware-supported 3D texturing.
+    <br><br>
+  </li>
+  <li>
+    <b>Virtual colonoscopy</b>.  A 3D graphics application that allows a user
+    to do a fly-through of the tube surface obtained from a segmentation of
+    a colonoscopy data set.  The tube is vertex colored, the colors associated
+    with the mean curvature of the surface.  The goal is to identify polyps
+    that are potentially malignant.  Such polyps show up as large curvature
+    protrusions/invaginations of the surface.  The vertex coloring helps
+    draw the user's attention when performing the fly-through.
+    <br><br>
+  </li>
+  <li>
+    <b>Fine-level segmentation and analysis of the cortical surface</b>.  The
+    input is a segmented, skull-stripped brain data set.  The segmentation
+    used a fuzzy C-means algorithm to identify white matter, gray matter,
+    cerebral spinal fluid, and background.  A surface evolution scheme is
+    used to produce a good quality triangle mesh that approximates the folds
+    of the brain.  The evolution is set up to prevent self-intersection of the
+    mesh.  The final surface is then mapped to a sphere (called <i>surface
+    inflation</i> to allow a user to study regions of interest of the cortical
+    surface.  The mapping is conformal (local angles are preserved) and
+    designed to minimize metric distortion.  This allows a spherical
+    coordinate system to be assigned to the cortical surface.
+  </li>
+</ul>
+Algorithms for this project currently in development include:
+<ul>
+  <li>
+    <b>Viewport-aligned volume rendering</b>.  Use hardware-supported
+    texturing, but software-generated image slices that are aligned to
+    the view direction.
+    <br><br>
+  </li>
+  <li>
+    <b>3D Face anonymizer</b>.  Modify enough information of a 3D image of
+    the head to prevent a user of a surface or volume renderer from
+    recognizing the face.
+    <br><br>
+  </li>
+  <li>
+    <b>Virtual endoscopy</b> A fly-through of tube surface with branches,
+    for example, brachial tubes.  This project also involves occlusion
+    culling of the segmented data set to speed up the rendering during the
+    fly-through.
+    <br><br>
+  </li>
+  <li>
+    <b>Nonlinear registration of 3D images</b>.  Two 3D images, an affine
+    registration is performed; rotation, translation, and scaling are used
+    to register the images.  This registration is used as the starting point
+    for another registration that is based on B-spline volume functions.
+  </li>
+</ul>
+
+Selected projects that we have also worked on include:
+<ul>
+  <li>
+    Least-squares fitting of data by ellipsoids to assist in the calibration
+    of devices that make 3D measurements dependent on the Earth's magnetic
+    field.
+    <br><br>
+  </li>
+  <li>
+    Modeling of coalition behavior of political parties.  The parties are
+    represented as 3D ellipsoids in a feature space, in the style of
+    statistical pattern recognizition where the features are party beliefs.
+    Coalitions are possible if the ellipsoids intersect.  We produced
+    algorithms and code in Java for fast and accurate intersection of convex
+    polyhedra that represent ellipsoids and intersection of ellipsoids.
+    <br><br>
+  </li>
+  <li>
+    Debugging and performance testing/improvment for a 3D F1 car racing game
+    for a prominent game company.
+    <br><br>
+  </li>
+  <li>
+    Development and implementation of 2D facial animations in the style of
+    nonphotorealistic rendering.
+  </li>
+</ul>
+
+</td></tr>
+</table>
+
+</body>
+</html>

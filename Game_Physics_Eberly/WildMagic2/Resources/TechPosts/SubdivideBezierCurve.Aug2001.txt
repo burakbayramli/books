@@ -1,0 +1,34 @@
+From: Jens Gravesen <gravesen@mat.dth.dk>
+
+
+By subdividing the curve at parameter value t you only have to find
+the length of a full Bezier curve. 
+
+If you denote the length of the control polygon by L1 i.e.:
+    L1 = |P0 P1| +|P1 P2| +|P2 P3| 
+and the length of the cord by L0 i.e.:
+    L0 = |P0 P3|
+
+then 
+    L = 1/2*L0 + 1/2*L1
+
+is a good approximation to the length of the curve, and the difference
+    
+    ERR = L1-L0
+
+is a measure of the error. If the error is to large, then you just
+subdivide curve at parameter value 1/2, and find the length of each
+half. 
+
+If m is the number of subdivisions then the error goes to zero as
+    2^-4m. 
+
+If you dont have a cubic curve but a curve of degree n then you put
+
+    L = (2*L0 + (n-1)*L1)/(n+1)
+
+A reference is:
+
+Jens Gravesen: "Adaptive subdivision and the length of Bezier curves"
+mat-report no. 1992-10, Mathematical Institute, The Technical
+University of Denmark.

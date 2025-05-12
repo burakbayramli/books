@@ -1,0 +1,40 @@
+From: Constantine M. Nyunkin <kmn@iai.donetsk.ua>
+Subject: Re: fast algorithm for finding median??
+Date: Saturday, January 23, 1999 7:34 AM
+
+Rune Laursen wrote:
+> 
+> Anybody know of a *fast* way to find the median of 8 numbers??
+> I am using it for median filtering (noise removal) in an image. I tried
+> sorting the numbers and choosing the "middle value", but this is far
+> too slow for realtime filtering!
+
+Some years back I saw algorithm for find the median of 9 points in the image.
+It uses partial sorting only, therefore works wery fast. Unfortunately I don't remember 
+the author of the original message. I hope he will not take offence.
+
+#define s2(a,b)            if ((t=b-a)<0) {a+=t; b-=t;}
+#define mn3(a,b,c)         s2(a,b); s2(a,c);
+#define mx3(a,b,c)         s2(b,c); s2(a,c);
+#define mnmx3(a,b,c)       mx3(a,b,c); s2(a,b);
+#define mnmx4(a,b,c,d)     s2(a,b); s2(c,d); s2(a,c); s2(b,d);
+#define mnmx5(a,b,c,d,e)   s2(a,b); s2(c,d); mn3(a,c,e); mx3(b,d,e);
+#define mnmx6(a,b,c,d,e,f) s2(a,d);s2(b,e);s2(c,f); mn3(a,b,c); mx3(d,e,f);
+
+r1 = X[j-1][i-1];
+r2 = X[j-1][i];
+r3 = X[j-1][i+1];
+r4 = X[j][i-1];
+r5 = X[j][i];
+r6 = X[j][i+1];
+mnmx6 (r1, r2, r3, r4, r5, r6);
+r1 = X[j+1][i-1];
+mnmx5 (r1, r2, r3, r4, r5);
+r1 = X[j+1][i];
+mnmx4 (r1, r2, r3, r4);
+r1 = X[j+1][i+1];
+mnmx3 (r1, r2, r3);
+
+return r2;
+
+Constantine Nyunkin

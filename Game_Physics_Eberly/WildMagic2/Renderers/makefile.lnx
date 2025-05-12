@@ -1,0 +1,10 @@
+build :
+	@mkdir -p Debug
+	@mkdir -p Release
+	make build_project -f makelib.lnx CONFIG=Debug
+	make build_project -f makelib.lnx CONFIG=Release
+
+clean :
+	make clean_project -f makelib.lnx CONFIG=Debug
+	make clean_project -f makelib.lnx CONFIG=Release
+

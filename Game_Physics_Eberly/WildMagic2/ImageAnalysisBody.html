@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Image Analysis</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+Operations on 2D binary images.  Extraction of blob boundaries, labeling of
+connected components, L1 distance transform, skeletons (thinning).  See
+the applications page for examples of these operations:<br>
+<a href="Source/ImageAnalysis/WmlBinary2D.h">WmlBinary2D.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlBinary2D.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlBinary2D.cpp">WmlBinary2D.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlBinary2D.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/Skeletons.pdf">Skeletonization of 2D Binary Images</a>
+<a target="_blank" href="Documentation/Skeletons.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Operations on 3D binary images.  Labeling of connected components.  Others
+to appear later when we have the time:<br>
+<a href="Source/ImageAnalysis/WmlBinary3D.h">WmlBinary3D.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlBinary3D.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlBinary3D.cpp">WmlBinary3D.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlBinary3D.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Wrappers for native types and color types to allow run-time type information
+for support of file read/write:<br>
+<a href="Source/ImageAnalysis/WmlElement.h">WmlElement.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlElement.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlElement.inl">WmlElement.inl</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlElement.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlElement.cpp">WmlElement.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlElement.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Extraction of level surfaces from images:<br>
+<a href="Source/ImageAnalysis/WmlExtractSurfaceCubes.h">WmlExtractSurfaceCubes.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlExtractSurfaceCubes.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlExtractSurfaceCubes.inl">WmlExtractSurfaceCubes.inl</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlExtractSurfaceCubes.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlExtractSurfaceCubes.cpp">WmlExtractSurfaceCubes.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlExtractSurfaceCubes.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlExtractSurfaceTetra.h">WmlExtractSurfaceTetra.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlExtractSurfaceTetra.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlExtractSurfaceTetra.cpp">WmlExtractSurfaceTetra.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlExtractSurfaceTetra.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Fast Gaussian blurring.  The numerical method involves finite differences for
+solving the linear heat equation.  Rather than taking arithmetic steps in time
+t, this method takes geometric steps in scale s, thus arriving at a large
+time/scale in fewer steps than the time-based method:<br>
+<a href="Source/ImageAnalysis/WmlFastBlur.h">WmlFastBlur.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlFastBlur.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlFastBlur.cpp">WmlFastBlur.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlFastBlur.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/FastGaussianBlur.pdf">Fast Gaussian Blurring</a>
+<a target="_blank" href="Documentation/FastGaussianBlur.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Templates for n-dimensional images (WmlTImage).  Specialization to
+2-dimensional images (WmlTImage2D) and 3-dimensional images (WmlTImage3D).
+Basic image types (char, unsigned char, short, unsigned short, int,
+unsigned int, long, unsigned long, float, double, rgb5, rgb8).  Image
+conversion between the various types:<br>
+<a href="Source/ImageAnalysis/WmlTImage.h">WmlTImage.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlTImage.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlTImage.inl">WmlTImage.inl</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlTImage.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlTImage2D.h">WmlTImage2D.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlTImage2D.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlTImage2D.inl">WmlTImage2D.inl</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlTImage2D.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlTImage3D.h">WmlTImage3D.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlTImage3D.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlTImage3D.inl">WmlTImage3D.inl</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlTImage3D.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlImageConvert.h">WmlImageConvert.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlImageConvert.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlImageConvert.cpp">WmlImageConvert.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlImageConvert.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlImages.h">WmlImages.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlImages.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlImages.cpp">WmlImages.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlImages.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Support for rectangular lattices and coordinate calculations in images
+(dimensions, bound for each dimension, quantity of lattice points, conversion
+between n-dimensional coordinates and 1-dimensional indices, streaming):<br>
+<a href="Source/ImageAnalysis/WmlLattice.h">WmlLattice.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlLattice.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlLattice.inl">WmlLattice.inl</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlLattice.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlLattice.cpp">WmlLattice.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlLattice.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Basic drawing on raster images.  Includes Bresenham line drawing in 2D, 3D, and
+4D; circle drawing, ellipse drawing (axis-aligned, oriented, and arcs); and
+flood fills:<br>
+<a href="Source/ImageAnalysis/WmlRasterDrawing.h">WmlRasterDrawing.h</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlRasterDrawing.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/ImageAnalysis/WmlRasterDrawing.cpp">WmlRasterDrawing.cpp</a>
+<a target="_blank" href="Source/ImageAnalysis/WmlRasterDrawing.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Other Documents:<br>
+<i>
+<a href="Documentation/Ridges.pdf">Theory of Ridges</a>
+<a target="_blank" href="Documentation/Ridges.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+
+</td></tr>
+</table>
+
+</body>
+</html>

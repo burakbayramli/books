@@ -1,0 +1,31 @@
+float SquaredDistancePointSolidBox (Box box, Point P)
+{
+    D = P - box.C;
+    sqrDist = 0;
+    isInsideBox = true;
+
+    for (i = 0; i < 3; i++)
+    {
+        s[i] = Dot(box.U[i],D);
+        if ( s[i] <= -box.e[i] )
+        {
+            isInsideBox = false;
+            delta = s[i] + box.e[i];
+            sqrDist += delta*delta;
+        }
+        else if ( s[i] >= box.e[i] )
+        {
+            isInsideBox = false;
+            delta = s[i] - box.e[i];
+            sqrDist += delta*delta;
+        }
+    }
+
+    if ( isInsideBox )
+    {
+        dist = min(box.e[0]-|s[0]|,box.e[1]-|s[1]|,box.e[2]-|s[2]|);
+        sqrDist = dist*dist;
+    }
+
+    return sqrDist;
+}

@@ -1,0 +1,61 @@
+From: "Tim Boescke" <tboescke@uwaterloo.ca>
+Subject: Re: Highest quality scaling algorithm/tool?
+Date: Saturday, July 13, 2002 10:35 PM
+
+> It's not exactly what you're looking for, but you might find this
+> interesting anyway - http://www.hiend3d.com/demos.html. (it's mine)
+> 
+> What S-Spline guys are doing - is a different thing, of course.
+> I heard Genuine Fractals is good in scaling too.
+> 
+>> Is the algorithm spec available?
+
+@article { li2000,
+  author = "Xin Li and Michael T. Orchard",
+  title  = "New Edge Directed Interpolation",
+  journal = "IEEE International Conference on Image Processing",
+  year = "Vancouver, Sept. 2000"}
+
+This is somewhat interesting. Different algorithm, but it is simple
+and delivers very good results in some cases. However it has too
+many drawbacks to be used as a general resizing algorithm.
+
+Images: http://www.ee.princeton.edu/~lixin/interpolation1.htm
+
+ 
+From: "Thomas Haenselmann" <dont@answer.me>
+Subject: Re: Highest quality scaling algorithm/tool?
+Date: Monday, July 15, 2002 7:47 AM
+
+Tim Boescke wrote:
+
+> @article { li2000,
+>   author = "Xin Li and Michael T. Orchard",
+>   title  = "New Edge Directed Interpolation",
+>   journal = "IEEE International Conference on Image Processing",
+>   year = "Vancouver, Sept. 2000"}
+> 
+> This is somewhat interesting. Different algorithm, but it is simple
+> and delivers very good results in some cases. However it has too
+> many drawbacks to be used as a general resizing algorithm.
+
+I am not very deep into that field  however that was interesting to read. 
+Another approach by Joachim Weickert might be interesting for you. He uses 
+tensor based algorithms which are able to extract the structures of 
+extremely noisy images. Simply search the web for 'Weickert' and 'tensor' 
+or use the references below.
+
+Tensors give you the direction in which the structures remains the same and 
+the orthogonal vector in whcih the image 'changes most'. Weickert has 
+developed a iterative approach which improves existing structures in every 
+cycle.
+
+J. Weickert:
+Applications of nonlinear diffusion in image processing and computer vision,
+Acta Mathematica Universitatis Comenianae, Vol. 70, No. 1, 33-50, 2001.
+
+or
+
+http://www.cvgpr.uni-mannheim.de/weickert/publications.html
+
+Yours Thomas

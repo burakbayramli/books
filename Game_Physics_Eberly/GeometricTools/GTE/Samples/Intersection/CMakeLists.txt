@@ -1,0 +1,31 @@
+if(COMMAND cmake_policy)
+    # Allow VERSION in the project() statement.
+    cmake_policy(SET CMP0048 NEW)
+endif()
+
+cmake_minimum_required(VERSION 3.8)
+
+set(GTE_VERSION_MAJOR 7)
+set(GTE_VERSION_MINOR 1)
+
+project(Intersection VERSION ${GTE_VERSION_MAJOR}.${GTE_VERSION_MINOR})
+
+add_subdirectory(AllPairsTriangles)
+add_subdirectory(IntersectBoxCone)
+add_subdirectory(IntersectBoxCylinder)
+add_subdirectory(IntersectBoxSphere)
+add_subdirectory(IntersectConvexPolyhedra)
+add_subdirectory(IntersectCylinders)
+add_subdirectory(IntersectEllipses)
+add_subdirectory(IntersectInfiniteCylinders)
+add_subdirectory(IntersectLineRectangle)
+add_subdirectory(IntersectLineTorus)
+add_subdirectory(IntersectPlaneConvexPolyhedron)
+add_subdirectory(IntersectRayPolygon)
+add_subdirectory(IntersectSphereCone)
+add_subdirectory(IntersectTriangleBox)
+add_subdirectory(IntersectTriangleCylinder)
+add_subdirectory(IntersectTriangles2D)
+add_subdirectory(MovingCircleRectangle)
+add_subdirectory(MovingSphereBox)
+add_subdirectory(MovingSphereTriangle)

@@ -1,0 +1,22 @@
+build :
+	cd Application3 && make -f makefile.lnx CONFIG=Debug
+	cd Application3 && make -f makefile.lnx CONFIG=Release
+	cd Application2 && make -f makefile.lnx CONFIG=Debug
+	cd Application2 && make -f makefile.lnx CONFIG=Release
+	cd Graphics && make -f makefile.lnx
+	cd Imagics && make -f makefile.lnx
+	cd Miscellaneous && make -f makefile.lnx
+	cd Physics && make -f makefile.lnx
+	cd Shaders && make -f makefile.lnx
+
+clean :
+	cd Application3 && make clean -f makefile.lnx CONFIG=Debug
+	cd Application3 && make clean -f makefile.lnx CONFIG=Release
+	cd Application2 && make clean -f makefile.lnx CONFIG=Debug
+	cd Application2 && make clean -f makefile.lnx CONFIG=Release
+	cd Graphics && make clean -f makefile.lnx
+	cd Imagics && make clean -f makefile.lnx
+	cd Miscellaneous && make clean -f makefile.lnx
+	cd Physics && make clean -f makefile.lnx
+	cd Shaders && make clean -f makefile.lnx
+

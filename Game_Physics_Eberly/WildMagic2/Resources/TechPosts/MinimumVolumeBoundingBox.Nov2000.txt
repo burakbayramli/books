@@ -1,0 +1,119 @@
+> Is the same result true for a convex polyhedron--that the minimum
+> volume bounding box must have one of its faces containing a face
+> of the polyhedron?
+
+Not quite.  Either (1) one box face contains a polyhedron face, and
+another box face contains an edge, or (2) three box faces each contain a
+polyhedron edge.  There are O(n^2) critical positions of type (1) and
+O(n^3) critical positions of type (2).  With a careful traversal of all
+the critical positions, you can compute the minimum volume box in O(n^3)
+time.  Here's the reference:
+
+@article{o-fmeb-85
+, author =      "J. O'Rourke"
+, title =       "Finding minimal enclosing boxes"
+, journal =     "Internat. J. Comput. Inform. Sci."
+, volume =      14
+, month =       jun
+, year =        1985
+, pages =       "183--199"
+, keywords =    "approximation, volume"
+}
+
+The idea behind the proof is that the coordinate frame of the box must
+be 'rigid', otherwise a slight perturbation can make the box smaller. 
+Coordinate frames in 3d have 3 degrees of freedom, and (1) and (2) are
+the only two ways to remove all three of them.  The same is true (I
+believe) for minimum-surface-area boxes, which are more efficient for
+ray-shooting than min-volume boxes.  
+
+This is the fastest algorithm known, but there is no real reason to
+believe it can't be improved.  In higher dimensions, a similar algorithm
+should work in O(n^{d-1 choose 2}) time.
+
+See also this recent paper on guaranteed approxmation algorithms:
+
+@inproceedings{bh-eamvb-99,
+, author =	"Gill Barequet and Sariel Har-Peled"
+, title =       "Efficiently Approximating the Minimum-Volume
+                  Bounding Box of a Point Set in Three Dimensions"
+, booktitle =   "Proc. 10th ACM-SIAM Sympos. Discrete Algorithms"
+, year = 	1999,
+, pages = 	"82--91"
+, url =		"http://www.cs.duke.edu/~sariel/papers/98/bbox.html"
+, note =	"To appear in \emph{J. Algorithms}"
+}
+
+Gill and Sariel actually implemented their algorithms(!!), but you'll
+have to beg them for the code.
+
+==============================================================================
+From: Jeff Erickson <jeffe@cs.uiuc.edu>
+Subject: Re: Smallest bounding box from 3D point cloud
+Date: Monday, July 03, 2000 6:34 PM
+
+"Dusti" <d.lister@ic.ac.uk> writes:
+| I would like to find the smallest regular box that surrounds a 3D
+| point cloud. The box can be any orientation in space.
+
+There was a recent thread in c.g.a covering exactly this topic, but
+I'll summarize.
+
+(1) The issue, as you have already discovered, is finding the right
+    coordinate frame to define the box edges.
+
+(2) In 2d, Godfreid Toussaint's "rotating caliper" algorithm finds the
+    smallest box in O(n log n) time, or O(n) time if you already have
+    the convex hull.  This is probably what you meant when you said
+
+    | - rotate all points around vertical to find smallest xy area
+    |   occupied by all points.
+
+    The key observation is that some edge of the smallest box contains
+    an edge of the convex hull.
+
+(3) In 3d, the fastest algorithm known, due to Joe O'Rourke, runs in
+    O(n^3) time, too slow to be practical.  The key observation behind
+    the algorithm is that the minimum bounding box either has a hull
+    facet and a hull edge, or three hull edges, on independent faces.
+
+(4) There are at least three practical algorithms out there:
+
+    - Brian Mirtich's polyhedral moments code to compute the moments
+      of inertia of the convex hull (NOT just the points!).  The
+      eigenvectors of the moment matrix define a coordinate frame
+      which in practice gives good bounding boxes.  This approach is
+      used in many collision-detection packages that use OBB-trees.
+      O(n) time, given the convex hull; no theoretical guarantees.
+
+      http://www.acm.org/jgt/papers/Mirtich96/
+
+    - Dave Eberly's numerical code, which converges to (at least) a
+      local optimum.
+
+      http://www.magic-software.com/
+
+    - Gill Barequet and Sariel Har-Peled's guaranteed approximation
+      algorithms.  O(n/e^2) time, given the convex hull, to get a box
+      whose volume is (1+e) times the global minimum, for your
+      favorite constant e>0.  You have to beg Gill for the code.
+      Here's their paper (to appear in J. Algorithms):
+
+      ftp://ftp.cs.technion.ac.il/pub/barequet/papers/bbx-alg.ps.gz
+
+    Somewhat surprisingly, these three approaches were developed
+    completely independently.  Mirtich's algorithm is probably the
+    most practical, depsite its lack of theretical guarantees; its
+    output could be used as an 'initial guess' for either of the other
+    two algorithms.
+
+-- 
+ /"\  Jeff Erickson                               mailto:jeffe@cs.uiuc.edu
+ \ /  Computer Science Department               http://www.uiuc.edu/~jeffe
+  \   University of Illinois, Urbana-Champaign
+ / \  ASCII Ribbon Campaign for attachment-free news and email
+-- 
+ /"\  Jeff Erickson                               mailto:jeffe@cs.uiuc.edu
+ \ /  Computer Science Department               http://www.uiuc.edu/~jeffe
+  \   University of Illinois, Urbana-Champaign
+ / \  Join the ASCII Ribbon Campaign for attachment-free news and email! 

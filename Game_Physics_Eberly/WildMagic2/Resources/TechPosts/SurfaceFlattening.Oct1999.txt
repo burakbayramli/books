@@ -1,0 +1,195 @@
+From: Nils Holger Busch <nilsb@cns.mpg.de>
+Subject: Re: surfaces flattening
+Date: Tuesday, October 05, 1999 7:16 AM
+
+Gianluca Renzi wrote:
+
+> Hy,
+> this is my problem:
+> 1) I have a surface that is the 3d model of a shoe
+> 2) I need to flat this surface to obtain the shape of the 2d piece of
+> leather that I         must cut to
+> 3) I have all the geometrical informations about the starting suface
+> and I do not need an hight precision
+>
+> Do you know where I can find algorithms or resources about this?
+> Could someone help me?
+
+Surface Flattening is a complex problem. It is often referred to as the
+mapmaker problem. So, literature pertaining to this problem can be found
+among cartography literature or geophysisics. It is also, and that is my
+research field, a problem in obtaining 2D maps of the human cortex.
+
+First of all, you have to ensure that the geometry you wish to flatten
+is topologically equivalent to a sphere, that is it contains no holes
+etc.Generally, you have cannot find an exact mapping from a curved
+sphere to a 2D map. You can either try to minimize the error regarding a
+length or area metric or try to preserve angles. The latter one is
+called a conformal mapping.
+
+Here, is  a short list of references in the field of brain flattening:
+
+Schwartz et al, A numerical solution to the generalized mapmaker's
+problem: Flattening nonconvex polyhedral surfaces,
+IEEE Trans. on Pattern Analysis and Machine Intelligence, Vol.11, No.9,
+09/1989, pp 1005-1008
+
+Fischl et. al., Cortical Surface-Based Analysis, Inflation, Flattening
+and a Surface-Based Coordinate System
+NeuroImage 9, 1999, pp 195-207
+
+and a mathematically more involved approach:
+
+M. Hurdal, Quasi-Conformal Flat Mapping the human cerebellum, MICCAI
+'99.
+
+Good Luck,
+
+
+-
+Freundliche Gruesse,
+                                         Nils H. Busch
+
+======================================================
+=== Max-Planck-Institute of Cognitive Neuroscience ===
+=== Phone:                     ++49 (341) 9940-234 ===
+=== Fax:                       ++49 (341) 9940-221 ===
+=== E-Mail:                       nilsb@cns.mpg.de ===
+======================================================
+
+
+==============================================================================
+From: Craig W. Reynolds <cwr@red.com>
+Subject: Re: surfaces flattening
+Date: Wednesday, October 06, 1999 12:59 AM
+
+Gianluca Renzi wrote:
+> Hy,
+> this is my problem:
+> 1) I have a surface that is the 3d model of a shoe
+> 2) I need to flat this surface to obtain the shape of the 2d piece
+>    of leather that I must cut to 
+> 3) I have all the geometrical informations about the starting suface
+>    and I do not need an hight precision 
+> 
+> Do you know where I can find algorithms or resources about this?
+> Could someone help me?
+
+
+In addition to the suggestions from Nils Busch, see also:
+
+
+@InProceedings{dullin82a,
+  author =       "E. Dullin and S. Ouaret and P. May",
+  title =        "Computer aided design system for three-dimensional
+                 shape plane figures shoe making application",
+  booktitle =    "Eurographics '82",
+  pages =        "265--279",
+  year =         "1982",
+  editor =       "D. S. Greenaway and E. A. Warman",
+  conference =   "European Computer Graphics Conference and Exhibition",
+  publisher =    "North-Holland",
+  keywords =     "I3m shoe making application",
+}
+
+@Article{Azariadis:1997:DPD,
+  author =       "Phillip Azariadis and Nikos Aspragathos",
+  title =        "Design of plane developments of doubly curved
+                 surfaces",
+  journal =      "Computer-aided Design",
+  publisher =    "Elsevier Science",
+  volume =       "29",
+  number =       "10",
+  year =         "1997",
+  pages =        "675--685",
+  keywords =     "planar developments; isomorphic patterns; doubly
+                 curved surfaces",
+  annote =       "This paper deals with the approximate design of planar
+                 developments of doubly curved surfaces and their
+                 refinements in order to derive a final plane pattern
+                 with limited gaps and overlaps. The hole problem is
+                 divided in three stages; the stage of defining the
+                 staring guide-strip, the stage of designing the initial
+                 pattern and the stage of its refinement. The introduced
+                 method dealing with the first stage of the problem is
+                 based on elements of the geodesic and Gaussian
+                 curvature. In addition, an alternative technique for
+                 generating an initial planar development of a doubly
+                 curved surface is presented. Two methods for the
+                 refinement of the initial pattern are proposed,
+                 supported by a set of indices for measuring the
+                 accuracy of the flattened component. The first one is
+                 based on the surface geometry and the second one on the
+                 concept of generalized inverses. By way of
+                 illustration, all the proposed methods are presented in
+                 parallel with the generation and the refinement of
+                 plane patterns of a torus quadrant. In addition, an
+                 application of these methods in the 3D surface of a
+                 shoe last is demonstrated.",
+} 
+
+==============================================================================
+From: Jeff Erickson <jeffe@cs.uiuc.edu>
+Subject: Re: Flattening a Mesh
+Date: Tuesday, January 04, 2000 11:36 PM
+
+bob_williamson@my-deja.com wrote:
+> 
+> John Balestrieri <wjbNOSPAM@injersey.com> wrote:
+> > Can anyone point me to a discussion or information on how to
+> > algorithmically flatten/unfold a 3D polygon mesh with arbitrary
+> > topology?
+>
+> Would Jeff Erickson or Joe O'Rourke care to offer any comments?
+
+Okay.
+
+The unfolding problem that computational geometers have looked at the
+most is how to create *simple* unfoldings, meaning that the unfolded
+surface doesn't have any self-overlaps.
+
+* It is possible to simply unfold any convex polyhedron if you are
+allowed to cut through the middle of facets.  I believe there are two
+different methods known (but Joe should confirm that).  The older one,
+called the "star unfolding", was discovered in 1993 by Joe O'Rourke and
+others.
+
+* Nobody knows if it is possible to unfold every convex polyhedron by
+cutting only along its edges.  There is a Mathematica package by Komei
+Fukuda that simply tries all possible unfoldings until it finds a simple
+one -- so far, it has always succeeded, but nobody has proved that it
+always will.
+
+ftp://ftp.ifor.math.ethz.ch/pub/fukuda/mathematica/UnfoldPolytope.tar.Z
+
+* It's not hard to come up with examples of non-convex polyhedra that
+cannot be unfolded without overlaps, unless you cut through the faces. 
+Recently Erik Demaine and others constructed examples of non-convex
+polyhedra, all of whose faces are triangles, that cannot be unfolded. 
+These examples all have the topology of the sphere.  See Erik's papers:
+
+	http://daisy.uwaterloo.ca/~eddemain/talks/CGC99/
+	http://daisy.uwaterloo.ca:80/~eddemain/papers/CCCG99b/
+
+Erik probably knows more about folding and unfolding problems than
+anyone else -- see his other papers for more neat stuff.
+
+* No general algorithm is known to actually "execute" a simple unfolding
+-- how you actually move the facets from the folded state to the
+unfolded state without any collisions along he way?  One simple
+heuristic that seems to work for convex polyhedra is to open every fold
+at a constant rate, so that they all become flat simultaneously.  My
+guess is that this does not always work, but I don't have a
+counterexample.  For nonconvex polyhedra, there are probably simple
+unfoldings that cannot be executed at all.
+
+
+> I think Jeff recently published something on this topic.
+
+Sadly, no.  I have folding problems out the wazoo, but no results of my
+own.
+
+-- 
+Jeff Erickson                                 mailto:jeffe@cs.uiuc.edu
+Computer Science Department                 http://www.uiuc.edu/~jeffe
+University of Illinois, Urbana-Champaign      Non sum, ergo non cogito. 

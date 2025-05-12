@@ -1,0 +1,62 @@
+//----------------------------------------------------------------------------
+void vmain(
+    in float4 iPosition         : POSITION,
+    in float4 iNormal           : NORMAL,
+
+    out float4 oPosition        : POSITION,
+    out float4 oReflectFactor   : COLOR,
+    out float2 oRefractVec      : TEXCOORD0,
+    out float2 oReflectVec      : TEXCOORD1,
+
+    uniform float4x4 WmlRendererModViewProj,
+    uniform float4x4 WmlRendererMod,
+    uniform float4 WmlCameraPosition,
+    uniform float IndexOfRefraction,
+    uniform float4 FresnelConstants)
+{
+    // Transform position into clipspace
+    oPosition = mul(WmlRendererModViewProj, iPosition);
+    
+    float3 kWorldPos = mul(WmlRendererMod, iPosition).xyz;
+
+    // transform normal
+    float3 kNorm = mul((float3x3)WmlRendererMod, (float3)iNormal);
+    kNorm = normalize(kNorm);
+
+    float3 kIncidentDir = kWorldPos - WmlCameraPosition.xyz;
+    kIncidentDir = normalize(kIncidentDir);
+
+    oReflectVec = 0.5 * normalize(reflect(kIncidentDir, kNorm)).yz + 
+        float2(0.5,0.5);
+
+    // Get the incident vector and transform into spherical coordinates.
+    // Because we are using a sphere map that is in the x direction, we will
+    // transform the y and z coordinates into the texture coordinates.
+    oRefractVec = 0.5 * normalize(refract(kIncidentDir, kNorm, 
+        IndexOfRefraction)).yz + float2(0.5,0.5);
+
+    oReflectFactor.x = FresnelConstants.x + FresnelConstants.y * 
+        pow( 1 + dot(kIncidentDir, kNorm), FresnelConstants.z );
+
+}
+//----------------------------------------------------------------------------
+void pmain(
+    in float4 iReflectFactor    : COLOR,
+    in float2 iRefractVec       : TEXCOORD0,
+    in float2 iReflectVec       : TEXCOORD1,
+           
+    out float4 oColor : COLOR,
+    
+    uniform sampler2D envMap0,
+    uniform sampler2D envMap1)
+{
+    // We have already computed spherical coordinates for both the refraction
+    // and reflection vectors in the vertex program.  So, just do the texture
+    // look up and linearly interpolate between them based on the previously
+    // computed reflection factor.
+
+    float4 kReflectColor = tex2D(envMap1, iReflectVec);
+    float4 kRefractColor = tex2D(envMap0, iRefractVec);
+    oColor = lerp(kRefractColor, kReflectColor, iReflectFactor.x);
+}
+//----------------------------------------------------------------------------

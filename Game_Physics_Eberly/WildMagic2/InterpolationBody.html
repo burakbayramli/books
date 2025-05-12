@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Interpolation</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+Akima interpolation for points (x,f(x)) with nonuniform or uniform spacing.
+Interp1DAkima is the abstract base class for the other two classes:<br>
+<a href="Source/Interpolation/WmlIntpAkima1.h">WmlIntpAkima1.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkima1.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkima1.cpp">WmlIntpAkima1.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkima1.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkimaNonuniform1.h">WmlIntpAkimaNonuniform1.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaNonuniform1.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkimaNonuniform1.cpp">WmlIntpAkimaNonuniform1.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaNonuniform1.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkimaUniform1.h">WmlIntpAkimaUniform1.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaUniform1.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkimaUniform1.cpp">WmlIntpAkimaUniform1.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaUniform1.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Akima interpolation for points (x,y,f(x,y)) with uniform spacing, but
+the x-spacing and y-spacing does not have to be the same (that is,
+anisotropic pixels are allowed):<br>
+<a href="Source/Interpolation/WmlIntpAkimaUniform2.h">WmlIntpAkimaUniform2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaUniform2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkimaUniform2.cpp">WmlIntpAkimaUniform2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaUniform2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Akima interpolation for points (x,y,z,f(x,y,z)) with uniform spacing, but the
+x-spacing, y-spacing, and z-spacing do not have to be the same (that is,
+anisotropic voxels are allowed):<br>
+<a href="Source/Interpolation/WmlIntpAkimaUniform3.h">WmlIntpAkimaUniform3.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaUniform3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpAkimaUniform3.cpp">WmlIntpAkimaUniform3.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpAkimaUniform3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Bilinear interpolation of data on a rectangular lattice:<br>
+<a href="Source/Interpolation/WmlIntpBilinear2.h">WmlIntpBilinear2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBilinear2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBilinear2.cpp">WmlIntpBilinear2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBilinear2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Bicubic interpolation of data on a rectangular lattice:<br>
+<a href="Source/Interpolation/WmlIntpBicubic2.h">WmlIntpBicubic2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBicubic2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBicubic2.cpp">WmlIntpBicubic2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBicubic2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+B-spline interpolation code for uniformly spaced data in 1D, 2D, 3D, 4D, and
+general dimension N:<br>
+<a href="Source/Interpolation/WmlIntpBSplineUniform.h">WmlIntpBSplineUniform.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform.cpp">WmlIntpBSplineUniform.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform1.cpp">WmlIntpBSplineUniform1.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform1.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform1.h">WmlIntpBSplineUniform1.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform1.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform2.cpp">WmlIntpBSplineUniform2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform2.h">WmlIntpBSplineUniform2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform3.cpp">WmlIntpBSplineUniform3.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform3.h">WmlIntpBSplineUniform3.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform4.cpp">WmlIntpBSplineUniform4.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform4.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniform4.h">WmlIntpBSplineUniform4.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniform4.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniformN.cpp">WmlIntpBSplineUniformN.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniformN.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpBSplineUniformN.h">WmlIntpBSplineUniformN.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpBSplineUniformN.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,<br>
+<i>
+<a href="Documentation/BSplineInterpolation.pdf">B-Spline Interpolation on Lattices</a>
+<a target="_blank" href="Documentation/BSplineInterpolation.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Piecewise linear interpolation of unordered data of the form (x,y,f(x,y)).
+The code uses Delaunay triangulation to order the data:<br>
+<a href="Source/Interpolation/WmlIntpLinearNonuniform2.h">WmlIntpLinearNonuniform2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpLinearNonuniform2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpLinearNonuniform2.cpp">WmlIntpLinearNonuniform2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpLinearNonuniform2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Piecewise linear interpolation of unordered data of the form
+(x,y,z,f(x,y,z)). The code uses Delaunay tetrahedralization to order the
+data:<br>
+<a href="Source/Interpolation/WmlIntpLinearNonuniform3.h">WmlIntpLinearNonuniform3.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpLinearNonuniform3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpLinearNonuniform3.cpp">WmlIntpLinearNonuniform3.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpLinearNonuniform3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Piecewise quadratic interpolation of unordered data of the form
+(x,y,f(x,y)).  The code uses Delaunay triangulation to order the data.
+The interpolation algorithm is by Zoltan J. Cendes and Steven H. Wong
+(a reference is given in the header file).  The resulting interpolation is
+globally C1 and has local control:<br>
+<a href="Source/Interpolation/WmlIntpQdrNonuniform2.h">WmlIntpQdrNonuniform2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpQdrNonuniform2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpQdrNonuniform2.cpp">WmlIntpQdrNonuniform2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpQdrNonuniform2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,<br>
+<i>
+<a href="Documentation/C1QuadraticInterpolation.pdf">C1 Quadratic Interpolation of Meshes</a>
+<a target="_blank" href="Documentation/C1QuadraticInterpolation.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Spherical interpolation.  Uses spherical coordinates to represent
+the data, uses periodicity to add additional data points to allow
+wrap-around in a Delaunay triangulation, then applies the Cendes-Wong
+algorithm for C1 quadratic interpolation over an arbitrary grid:<br>
+<a href="Source/Interpolation/WmlIntpSphere2.h">WmlIntpSphere2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpSphere2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpSphere2.cpp">WmlIntpSphere2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpSphere2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/C1QuadraticInterpolation.pdf">C1 Quadratic Interpolation of Meshes</a>
+<a target="_blank" href="Documentation/C1QuadraticInterpolation.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Thin plate splines for 2D data of form (x,y,f(x,y)) and 3D data of form
+(x,y,z,f(x,y,z).  The code scales the input (x,y) data to the unit square or
+the input data (x,y,z) to the unit cube before applying the interpolation
+algorithm.  This remapping is for numerical stability, but it is easy enough
+to remove it if not desired:<br>
+<a href="Source/Interpolation/WmlIntpThinPlateSpline2.h">WmlIntpThinPlateSpline2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpThinPlateSpline2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpThinPlateSpline2.cpp">WmlIntpThinPlateSpline2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpThinPlateSpline2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpThinPlateSpline3.h">WmlIntpThinPlateSpline3.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpThinPlateSpline3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpThinPlateSpline3.cpp">WmlIntpThinPlateSpline3.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpThinPlateSpline3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/ThinPlateSplines.pdf">Thin Plate Splines</a>
+<a target="_blank" href="Documentation/ThinPlateSplines.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Trilinear interpolation for points (x,y,z,f(x,y,z)) with uniform spacing, but
+the x-spacing, y-spacing, and z-spacing do not have to be the same (that is,
+anisotropic voxels are allowed):<br>
+<a href="Source/Interpolation/WmlIntpTrilinear3.h">WmlIntpTrilinear3.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpTrilinear3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpTrilinear3.cpp">WmlIntpTrilinear3.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpTrilinear3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Tricubic interpolation for points (x,y,z,f(x,y,z)) with uniform spacing, but
+the x-spacing, y-spacing, and z-spacing do not have to be the same (that is,
+anisotropic voxels are allowed):<br>
+<a href="Source/Interpolation/WmlIntpTricubic3.h">WmlIntpTricubic3.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpTricubic3.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpTricubic3.cpp">WmlIntpTricubic3.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpTricubic3.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Vector field interpolation.  Uses a Cendes-Wong interpolator for
+each component<br>
+(x1(x0,y0),y1(x0,y0)) of the vector field:<br>
+<a href="Source/Interpolation/WmlIntpVectorField2.h">WmlIntpVectorField2.h</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpVectorField2.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Interpolation/WmlIntpVectorField2.cpp">WmlIntpVectorField2.cpp</a>
+<a target="_blank" href="Source/Interpolation/WmlIntpVectorField2.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="Documentation/C1QuadraticInterpolation.pdf">C1 Quadratic Interpolation of Meshes</a>
+<a target="_blank" href="Documentation/C1QuadraticInterpolation.pdf"><img src="Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+</td></tr>
+</table>
+
+</body>
+</html>

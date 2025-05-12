@@ -1,0 +1,37 @@
+void vmain(
+    in float4 i_f4Position  : POSITION,
+    in float4 i_f4Color : COLOR,
+
+    // Ideally we could combine the weights into a single varying parameter.
+    // However, WML only supports float2 tex coords, so we'll just pass
+    // two of them instead.
+    in float2 i_f2Weights0 : TEXCOORD0,
+    in float2 i_f2Weights1 : TEXCOORD1,
+
+    out float4 o_f4Position : POSITION,
+    out float4 o_f4Color     : COLOR,
+
+    uniform float4x4 WmlRendererModViewProj,
+    uniform float4x4 SkinningMat[4])
+{
+    // NOTE: This is just one way to do skinning in a shader (by passing in
+    // four [or more, if you want to use more instructions] skinning matrices
+    // to transform the vertices.  Another possible way would be to pass in
+    // some arbitrary amount of skinning matrices as constants and then use
+    // the tex coordinates as indices into the global array of constants to
+    // pick the right skinning matrix.  If you only have a small number of
+    // skinning matrices, this way (as shown here) is probably the easiest way.
+
+    // Calculate the position by adding together a(n ideally) convex
+    // combination of transformed positions.
+    float4 f4SkinPosition = mul(SkinningMat[0],i_f4Position)*i_f2Weights0.x +
+        mul(SkinningMat[1], i_f4Position)*i_f2Weights0.y + 
+        mul(SkinningMat[2], i_f4Position)*i_f2Weights1.x +
+        mul(SkinningMat[3], i_f4Position)*i_f2Weights1.y;
+
+    // Transform this weighted position
+    o_f4Position = mul(WmlRendererModViewProj, f4SkinPosition);
+
+    // Pass through the color
+    o_f4Color = i_f4Color;
+}

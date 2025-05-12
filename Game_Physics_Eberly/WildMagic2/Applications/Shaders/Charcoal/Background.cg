@@ -1,0 +1,29 @@
+void vmain(
+    in float4 iPosition : POSITION,
+    out float4 oPosition : POSITION,
+    out float2 oTex : TEXCOORD0)
+{
+    // This shader requires that you pass in vertices in screen coords.
+    // This is basically a "screen polygon" shader.
+
+	float4 ProjectionPosition;
+    ProjectionPosition.xyz = iPosition.xyz;
+    ProjectionPosition.w = 1.0f;
+	oPosition = ProjectionPosition;
+
+	// Determine what the texture coordinates for this vertex is in screen space
+    // (Very convenient!)
+    float q = 1.0 / ProjectionPosition.w;
+	float2 ClipCoords = ProjectionPosition.xy * q;
+	// Convert from screen coords in the range [-1...1] to [0...1] for texture lookup
+	oTex.xy = (ClipCoords + 1.0) * 0.5;
+}
+
+void pmain(
+    in float2 iTex : TEXCOORD0,
+    out float4 oColor : COLOR,
+    uniform sampler2D BackTex)
+{
+    // Lookup into the background texture.
+    oColor = tex2D( BackTex, iTex );
+}

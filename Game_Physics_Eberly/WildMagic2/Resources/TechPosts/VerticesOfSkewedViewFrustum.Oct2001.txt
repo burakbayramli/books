@@ -1,0 +1,44 @@
+Reply-To: "Dave Eberly" <eberly@magic-software.com>
+From: "Dave Eberly" <eberly@magic-software.com>
+Newsgroups: comp.graphics.algorithms
+References: <9q9qek$16j$2@news7.svr.pol.co.uk> <i42y7.6606$xf7.2507181@typhoon.southeast.rr.com> <B7EF5C40.290%josha@cs.northwestern.edu>
+Subject: Re: How do I calculate the 8 vertives of a view frustum in worldspace?
+Date: Mon, 15 Oct 2001 18:03:37 -0400
+Lines: 31
+Organization: Magic Software, Inc.
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Newsreader: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+
+"Josh Anon" <josha@cs.northwestern.edu> wrote in message
+news:B7EF5C40.290%josha@cs.northwestern.edu...
+> Out of curiosity, how would you calculate it for a skewed frustum (for
+> perspective projection)?
+
+In this case, you want to use a coordinate system for
+the near plane.  E is the eye point.  The near plane
+has unit length normal W and E is on the negative side
+of the plane.  The origin of the coordinate system is
+P = E+n*W.  At P, you have a unit-length up vector
+U.  The third vector is V = Cross(W,U) and points
+to the right as you look at the near plane from the
+eye point.
+
+The viewport is defined in terms of the coordinate
+system.  The four vertices of the viewport on the near
+plane are P+ell*V+b*U, P+ell*V+t*U, P+r*V+b*U,
+and P+r*V+t*V.  The far plane has normal W and
+the corresponding "origin" on that plane is Q = E+f*W.
+Let s = f/n.  The four vertices of the frustum on the far
+plane are Q+s*(ell*V+b*U), Q+s*(ell*V+t*U),
+Q+s*(r*V+t*U), Q+s*(r*V+b*U).
+
+--
+Dave Eberly
+eberly@magic-software.com
+http://www.magic-software.com
+http://www.wild-magic.com
+
+
+

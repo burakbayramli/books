@@ -1,0 +1,66 @@
+Subject: Re: Delaunay triangulation floating point precision problems
+Date: Tue, 21 Apr 1998 12:48:46 -0400
+From: Jeff Erickson <jeffe@cs.duke.edu>
+Organization: Center for Geometric Computing, Duke University
+Newsgroups: comp.graphics.algorithms
+
+David Watson wrote:
+>
+> guillaume vareille (vareille@tricorder.co.uk) wrote:
+> : Delaunay triangulation floating point precision problems
+> : sometimes, due to computer approximation
+> : the point belongs to a non neihbourg triangle
+> : and not to the triangle in between.
+> : (it should belongs to both,
+> : or to none, or to the closest only)
+> : does anybody, has already encounter the problem ?
+>
+> This problem occurs when more than three data are co-circular,
+> leading to so-called degenerate triangulations (non-unique,
+> although the Voronoi configuration remains unique).
+> The solution is to slightly perturb the data by putting
+> random digits in the least significant positions instead of zeros.
+
+Well... that's actually a bit oversimplified.  A more subtle problem is
+that because of floating-point roundoff errors, your program might
+conclude that four points are cocircular when they really aren't, or
+worse yet, that a point is outside a circle defined by three other
+points when it's really inside that circle.  Worse yet, these "apparent"
+degeneracies could be inconsistent: for example, ABCD and CBDE might
+"look" cocircular even though ACDE does not.
+
+Perturbations will get rid of any true degeneracies, but not "apparent"
+degeneracies caused by limited precision.  In fact, in cases where the
+true incircle determinants are very small (but nonzero), perturbing the
+data may actually introduce "apparent" degeneracies and/or
+inconsistencies!
+
+The solution is to be EXTREMELY careful about the floating point
+predicates that you use.  You need to be absolutely sure that your
+inside/outside predicate is returning the correct answer.
+
+The best solution I know is due to Jonathan Shewchuk, who did a very
+careful analysis of exactly how much precision is necessary for the
+primitives used to build Delaunay triangulations in both two and three
+dimensions.  As opposed to other arbitrary-precision floating point
+methods, Shewchuk's algorithms use only the precision necesary to obtain
+the result.  For all the gory technical details, including code, see:
+
+        http://www.cs.cmu.edu/~quake/robust.html
+
+The industrial-strength Delaunay-based mesh generation code that uses
+these primitives can be found at
+
+        http://www.cs.cmu.edu/~quake/triangle.html
+
+A slightly different problem occurs when the point coordinates are
+integers.  Instead of losing low-order bits, naive integer predicates
+can create intermediate results that overflow integer registers, so you
+lose high-order bits.  For a list of robust integer primitives, see:
+
+http://www.inria.fr/prisme/personnel/yvinec/Determinants/english.html
+
+--
+Jeff Erickson                         Center for Geometric Computing
+jeffe@cs.duke.edu                     Department of Computer Science
+http://www.cs.duke.edu/~jeffe                        Duke University

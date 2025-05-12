@@ -1,0 +1,362 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<title>2MGC Conversion Utility Version 1.4</title>
+</head>
+
+<body>
+
+<h1>2MGC Conversion Utility Version 1.4</h1>
+
+<p>&nbsp;&nbsp;&nbsp; The 2MGC application is provided by Anthony Matarazzo to allow 3d
+model formats and textures to be converted to the native Magic Engine Format. The program
+is a command line utility that runs under the Microsoft Windows platform and can convert
+groups of files via wildcard. Currently the program can convert X Models and 3DS models.
+It will also convert many texture formats as well. </p>
+
+<p>Using the program is simple. Open up a win 32 console and CD to the directory where
+2mgc is installed. Type 2MGC d:\modelpath\modelname.3ds. This will convert the 3d studio
+binary file called modelname.3ds to modelname.mgc.</p>
+
+<h1>Usage</h1>
+
+<p>2mgc InputFile [OutputFile] [/(Option)][...] </p>
+
+<p>Examples 
+
+<ul>
+  <li>2mgc starhawk.x</li>
+  <li>2mgc test.tga /ri256x256 /FBilinear</li>
+  <li>2mgc warbird.3ds /l /n /wc /WRhead*</li>
+</ul>
+
+<h1>Parameters:</h1>
+<div align="left">
+
+<table border="1" width="100%" cellspacing="4" cellpadding="4">
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">InputFile</font></strong></td>
+    <td width="12%" valign="top" align="left">File to convert</td>
+    <td width="75%" valign="top" align="left">The file you wish to convert. This can also be a
+    wild card to convert several models at once. For a list of available file formats type
+    &quot;2mgc \2&quot;</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">OutputFile</font></strong></td>
+    <td width="12%" valign="top" align="left">New file name</td>
+    <td width="75%" valign="top" align="left">The output file name. If you do not specify
+    parameter, the output will go in the same directory with the extension of .mgc. If you
+    specified a wildcard on InputFile this parameter should be the destination directory.</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/W</font></strong></td>
+    <td width="12%" valign="top" align="left">OverWrite existing</td>
+    <td width="75%" valign="top" align="left">Optional. The application will overwrite
+    existing files without prompting! Backup files before using this option.Original file(s)
+    will be overwritten!</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/N</font></strong></td>
+    <td width="12%" valign="top" align="left">Lighting Normals</td>
+    <td width="75%" valign="top" align="left">Forces calculation of lighting normals using MGC
+    routines.</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/L</font></strong></td>
+    <td width="12%" valign="top" align="left">Add Light</td>
+    <td width="75%" valign="top" align="left">Automatically add light in the top level. This
+    is good for just viewing models in the SceneViewer tool.</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/T</font></strong></td>
+    <td width="12%" valign="top" align="left">Texture Search Path</td>
+    <td width="75%" valign="top" align="left">The path to search for textures during
+    conversion.You can specify multiple paths separating them with a ';'<p>Example: 2MGC
+    test.3ds /Tj:\textures;&quot;j:\long file path\&quot;</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/H</font></strong></td>
+    <td width="12%" valign="top" align="left">Make Header File</td>
+    <td width="75%" valign="top" align="left">Creates a C++ Header file that defines all Mesh
+    and Transform node names. This is useful for identifying the names of the meshes and their
+    parent transforms within the Magic Engine. </td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/RI###x###</font></strong></td>
+    <td width="12%" valign="top" align="left">Resize Textures.</td>
+    <td width="75%" valign="top" align="left">Will resize texture image to the desired size.
+    You must specify the widthxheight. In conjunction with this parameter, you can set the
+    high-quality resize filter used. Note: If you do not specify a power of 2 width/height the
+    parameters will automatically be set to the next highest power of two.</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/Ffilter</font></strong></td>
+    <td width="12%" valign="top" align="left">&nbsp;</td>
+    <td width="75%" valign="top" align="left">Allows you to set which filter is used when
+    resizing the texture image. Type 2mgc \1 for more information about what filters are
+    available.</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/WR[name;][;...]
+    </font></strong></td>
+    <td width="12%" valign="top" align="left">Reverse Winding on model</td>
+    <td width="75%" valign="top" align="left">This parameter will reverse the face winding of
+    the named sub model. You can specify 'ALL' if you want the entire model to be reversed. To
+    find out names of the meshes in the model use the '/DN' parameter. For Model names that
+    have spaces in them, you can also enclose the name with a &quot;. By placing a * on the
+    end of the string, you can reverse multiple matching names as well. <p>Example:</p>
+    <p>2mgc test.3ds /wc /WR&quot;eye ball&quot;;lip*</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/WC</font></strong></td>
+    <td width="12%" valign="top" align="left">Winding Correct</td>
+    <td width="75%" valign="top" align="left">This parameter will use a MGC algorithm to
+    ensure all faces are pointing the the same direction. Some model formats support two sided
+    faces. This parameter will ensure that the model has single sided polygons and each are
+    pointing in the correct direction.</td>
+  </tr>
+  <tr>
+    <td width="13%" bgcolor="#C0C0C0" valign="top" align="left"><strong><font color="#0000FF">/DM[N]</font></strong></td>
+    <td width="12%" valign="top" align="left">Dump information</td>
+    <td width="75%" valign="top" align="left">Will display information about the model.
+    Specifying 'M' will show the material information. 'N' will show a summary of mesh names,
+    and mesh information in the file.</td>
+  </tr>
+</table>
+</div>
+
+<h1>Supported Import File formats</h1>
+
+<p><strong><font color="#0000FF">3d Model formats:</font></strong> 
+
+<ul>
+  <li>X</li>
+  <li>3DS</li>
+</ul>
+
+<p><font color="#0000FF"><strong>Texture and Image formats:</strong></font></p>
+
+<table border="0" width="200">
+  <tr>
+    <td>BMP</td>
+    <td>PCX</td>
+    <td>MNG</td>
+  </tr>
+  <tr>
+    <td>PNG</td>
+    <td>PBM</td>
+    <td>JNG</td>
+  </tr>
+  <tr>
+    <td>PPM</td>
+    <td>PGM</td>
+    <td>WMF</td>
+  </tr>
+  <tr>
+    <td>TGA</td>
+    <td>TIFF</td>
+    <td>EMF</td>
+  </tr>
+  <tr>
+    <td>JPEG</td>
+    <td>GIF</td>
+    <td>JP2</td>
+  </tr>
+  <tr>
+    <td>IFF</td>
+    <td>ILBM</td>
+    <td>YUV</td>
+  </tr>
+  <tr>
+    <td>RAS</td>
+    <td>EPS</td>
+    <td>AMP</td>
+  </tr>
+  <tr>
+    <td>JPC</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+<p><small><font color="#FF0000">*Note: All images not 24bpp are automatically converted to
+24bpp MIF format and to the nearest power of two.</font></small></p>
+
+<h1>Available Sizing Methods for Textures</h1>
+
+<p><font color="#0000FF"><strong>Examples:</strong></font> 
+
+<ul>
+  <li>2mgc test.tga /ri256x256 /FBilinear</li>
+  <li>2mgc test.tga /ri256x256 /FBi</li>
+  <li>2mgc test.tga /ri256x256 /FHam</li>
+</ul>
+
+<p><font color="#0000FF"><strong>/F Parameters:</strong></font> </p>
+
+<table border="0" width="20" cellpadding="4" cellspacing="4">
+  <tr>
+    <td bgcolor="#C0C0C0">1</td>
+    <td>Default</td>
+    <td bgcolor="#C0C0C0">11</td>
+    <td>Lanczos3</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">2</td>
+    <td>Box</td>
+    <td bgcolor="#C0C0C0">12</td>
+    <td>Mitchell</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">3</td>
+    <td>Bilinear</td>
+    <td bgcolor="#C0C0C0">13</td>
+    <td>Quadratic</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">4</td>
+    <td>Gaussian</td>
+    <td bgcolor="#C0C0C0">14</td>
+    <td>Hermite</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">5</td>
+    <td>Hamming</td>
+    <td bgcolor="#C0C0C0">15</td>
+    <td>Hanning</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">6</td>
+    <td>Blackman</td>
+    <td bgcolor="#C0C0C0">16</td>
+    <td>Catrom</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">7</td>
+    <td>Triangle</td>
+    <td bgcolor="#C0C0C0">17</td>
+    <td>Cubic</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">8</td>
+    <td>Bell</td>
+    <td bgcolor="#C0C0C0">18</td>
+    <td>Hann4</td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">9</td>
+    <td>BSpline</td>
+    <td bgcolor="#C0C0C0"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td bgcolor="#C0C0C0">10</td>
+    <td>Sinc</td>
+    <td bgcolor="#C0C0C0"></td>
+    <td></td>
+  </tr>
+</table>
+
+<p><font color="#FF0000">*Note: For the /F parameter, you do not have to spell the entire
+filter name out. You can just use the first ## letters. The string is matched in the same
+order and shown above.</font></p>
+
+<h1>3DS Winding and two sided materials</h1>
+
+<p>Some 3ds files have materials that are two sided. When you convert a 3ds model, view it
+in the sceneviewer and it appears to be checker boarded or some triangles are not visible,
+the model materials are probably two-sided. This program supplies the parameter /WC to
+ensure faces are wound in the correct direction. When you specify this parameter, it is
+recommended that you also specify /N so that the lighting normals are recalculated. In
+conjunction with using the /WC parameter, you may find that some sub meshes of the object
+are reversed. The /WR parameter can be used to reverse individual sub meshes within the
+model. This happens because the Winding Correction Algorithm does not have an appropriate
+way to tell which way triangles should be facing. It only ensures that they are facing the
+same way.&nbsp; Fortunately, this scenario only happened on about 10% of the 3ds models I
+have converted. For best results in a production environment, you will probably place
+these parameters in a bat file.&nbsp; It is not recommended that you do this for all 3ds
+files. </p>
+
+<p>Example:</p>
+
+<p>2mgc j:\3ds\warbird.3ds /l /n /wc /WRhead*</p>
+
+<p>This will correct winding and reverse all meshes that start with &quot;Head&quot;</p>
+
+<p>3DS Data Imports 
+
+<ul>
+  <li>Textures and Multiple Textures&nbsp; (more than one texture per model and multiple
+    texture formats) </li>
+  <li>Meshes and SubMeshes compose of triangle data. (3ds has only tri data)</li>
+  <li>Materials - Color, Alpha, Reflectance. </li>
+  <li>Lighting Normals </li>
+  <li>Object Names (will produce .h file - see options</li>
+</ul>
+
+<h1>X file polygon data</h1>
+
+<p>&nbsp;&nbsp;&nbsp; The application uses D3DXOF api to parse an X file. The file can
+either be in ASCII or Binary, as the API permits. Then it places a node at the top of the
+MGC DAG that translates X matrix data into the MGC coordinate system. </p>
+
+<p>&nbsp;&nbsp;&nbsp; Next it triangulates faces of the x mesh and sub mesh data to
+account for the MGC triangle primitive. A separate sub mesh is created for each material
+in existence, thereby transposing all Model Data and Face connectors to new sub mesh. Each
+MGC sub mesh gains the original name of the X sub mesh. Transforms are also added to the
+scene as required by the model data. It also puts the correct spin on the vertex
+information. <br>
+</p>
+
+<h3>X Data Imports</h3>
+
+<ul>
+  <li>Textures and Multiple Textures&nbsp; (more than one texture per model) </li>
+  <li>Meshes and SubMeshes compose of polygon data. (no need to triangulate model). </li>
+  <li>Materials - Color, Alpha, Reflectance. </li>
+  <li>Vertex Colors </li>
+  <li>Lighting Normals </li>
+  <li>Object Names (will produce .h file - see options</li>
+</ul>
+<strong>
+
+<h1>Warranty and Disclaimer</strong></h1>
+
+<p>This software is provided as is with no warranty whatsoever. It may be used in any
+environment for any purpose. Anthony Matarazzo will not be held responsible for any
+adversity related to the use of this software. </p>
+
+<h1>Credits and Resources</h1>
+
+<ol>
+  <li>The TIFF library provided by www.remotesensing.org. You can download the source and
+    binaries from there. The library is very robust and supports many different types of tiff
+    compressions and color spaces. The version used in this tool is 3.5.7. </li>
+  <li>The JPEG codec uses the ijl15.lib. This developer library is freely available from
+    Company X. See Build Instructions if compiling source.</li>
+  <li>The Imaging Software was provided by Binary Technologies located on the web at
+    www.binary-technologies.com. The library used is called NexgenIPL and version used is
+    2.9.1. </li>
+  <li>The 3DS Reader is provided by J.E. Hoffmann je-h@gmx.net under the GNU Lesser General
+    Public License. it can be found at&nbsp; <a href="http://lib3ds.sourceforge.net">http://lib3ds.sourceforge.net</a>.
+  </li>
+  <li>Dave Eberly. Best resource available. </li>
+</ol>
+
+<h1><strong>About the Author</strong></h1>
+
+<p>Anthony Matarazzo<br>
+<a href="mailto:amatarazzo000007@netzero.net">amatarazzo000007@netzero.net</a> 
+
+<ul>
+  <li>Computer Software Engineer currently unemployed. </li>
+  <li>AS Computer Science Degree </li>
+  <li>Computer Prodigy at 10 </li>
+  <li>Writes Music, poetry, and applications. </li>
+  <li>Has Seven on thumb from God. </li>
+  <li>Last name means mattress in Italian. </li>
+</ul>
+</body>
+</html>

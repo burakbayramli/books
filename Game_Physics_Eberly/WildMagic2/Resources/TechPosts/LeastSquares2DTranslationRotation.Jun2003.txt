@@ -1,0 +1,280 @@
+From: "Dave Eberly" <eberly@magic-software.com>
+Subject: Re: Least squares for 2D translation and rotation.
+Date: Monday, June 02, 2003 10:10 PM
+
+
+"Alex Horovec" <ahorovec@list.ru> wrote in message
+news:zqRCa.2945$IR1.206555@news20.bellglobal.com...
+> I have two sets of 2D points. There is a fixed one-to-one correspondence
+> between the points in the sets.
+>
+> I need to find a 2D transformation that transforms the first set to second
+> and minimizes the total deviation in some reasonable sense e.g. least
+> squares. The transformation must be linear in which only translation and
+> rotation are allowed (i.e. no scaling, shear, reflection).
+>
+> That is:
+> x2 = cos(a)  * x1 - sin(a) *y1 + c
+> y2 = sin(a)  * x1 + cos(a) *y1 + d
+>
+> Is there some trick that allows to get the linearity and apply least
+squares
+> to find (angle, c,d)?  or should I resort to some form of iterative
+> optimization?
+
+The least-squares error function is
+  E(a,c,d) = sum_{i=1}^n [
+    (x2(i)-cos(a)*x1(i)+sin(a)*y1(i)-c)^2  +
+    (y2(i)-sin(a)*x1(i)-cos(a)*y1(i)-d)^2 ]
+The global minimum occurs when dE/da = 0,
+dE/dc = 0, and dE/dd = 0.  The equations dE/dc = 0
+and dE/dd = 0 lead to
+  c = avr(x2) - cos(a)*avr(x1) + sin(a)*avr(y1)
+  d = avr(y2) - sin(a)*avr(x1) - cos(a)*avr(y1)
+where avr(x1) = [sum_{i=1}^n x1(i)]/n.  Similar
+definitions for avr(x2), avr(y1), and avr(y2).
+
+The equation dE/da = 0 leads to
+  0 = sin(a)*(avr(x1*x2)-avr(x1)*avr(x2)+avr(y1*y2)-avr(y1)*avr(y2)) +
+        cos(a)*(avr(x2*y1)-avr(x2)*avr(y1)-avr(x1*y2)+avr(x1)*avr(y1))
+where avr(x1*x2) = [sum_{i=1}^n x1(i)*x2(i)]/n.  Similar
+definitions for avr(y1*y2), avr(x1*y2), and avr(x2*y1).  This
+equation allows you to solve for the angle 'a'.  Then replace this
+in the equations for c and d mentioned earlier.
+
+--
+Dave Eberly
+eberly@magic-software.com
+http://www.magic-software.com
+http://www.wild-magic.com
+
+
+===============
+
+From: "Just d' FAQs" <nobody-here@mac.com>
+Subject: Re: Least squares for 2D translation and rotation.
+Date: Wednesday, June 04, 2003 12:51 AM
+
+On Mon, 2 Jun 2003 19:55:31 -0400, "Alex Horovec" <ahorovec@list.ru>
+wrote:
+>I have two sets of 2D points. There is a fixed one-to-one correspondence
+>between the points in the sets.
+>
+>I need to find a 2D transformation that transforms the first set to second
+>and minimizes the total deviation in some reasonable sense e.g. least
+>squares. The transformation must be linear in which only translation and
+>rotation are allowed (i.e. no scaling, shear, reflection).
+
+As a sanity check on your *data* you might want to compare distances
+between point pairs; translation and rotation cannot change those. So
+if in the first data set the distance between the first two points is
+quite different from their distance in the second data set, watch out.
+
+>That is:
+>x2 = cos(a)  * x1 - sin(a) *y1 + c
+>y2 = sin(a)  * x1 + cos(a) *y1 + d
+
+Like Dave, I assume you are measuring error as the Euclidean distance,
+(x2-x1)^2+(y2-y1)^2, summed over all points with no weights. Since in
+fact there is a typo on almost every line of his formulae, I can only
+assume he's good enough to do this in his sleep. :D
+
+I definitely am not. But if you will indulge me, I think I can make
+this simpler still, albeit longer to explain.
+
+THE FRAMEWORK
+First I want to change variables, using t for the angle and vector V
+for the offset, and calling the initial points Pi and the final points
+Qi. Also I'm going to write R for the rotation matrix made from t, and
+let c=cos(t) and s=sin(t). It'll be worth it.
+
+So with i varying from 1 to n, we're going to try to find values that
+minimize
+
+  Sum[ || R Pi + V - Qi||^2 ]
+
+or better,
+
+  Sum[ (R Pi + V - Qi)^T (R Pi + V - Qi) ]
+
+Expanding by linearity this is
+
+  Sum[ (Pi^T R^T) (R Pi) + Qi^T Qi - (Pi^T R^T) Qi - Qi^T (R Pi)
+        + (Pi^T R^T) V + V^T (R Pi) - Qi^T V - V^T Qi + V^T V ]
+
+Now we make two simplifying observations. For a rotation matrix, we
+know that R^T R = I. And since each term is a number, each is the same
+as its transpose. Thus we arrive at
+
+  Sum[ ||Pi||^2 + ||Qi||^2 - 2 Qi^T R Pi + 2 V^T R Pi - 2 V^T Qi
+       + ||V||^2 ]
+
+Newton taught us that a minimum will be found where a first derivative
+is zero and a second derivative is positive. That second qualification
+is often neglected, but we'll be needing it later.
+
+THE TRANSLATION
+The derivative with respect to V is (hooray for linearity again)
+
+  Sum[ 2 R Pi - 2 Qi + 2 V ]
+
+Equating to zero, throwing the 2's away, and pulling V out of the sum,
+we arrive at
+
+  n V = Sum[ Qi - R Pi ]
+
+Let Q be the average value of Qi, and P that of Pi.
+
+  Q = Sum[ Qi ]/n
+  P = Sum[ Pi ]/n
+
+Then the minimal V can be written as
+
+  V = Q - R P
+
+Which makes perfectly good sense, I hope. On to the rotation!
+
+THE ROTATION
+To streamline the derivative with respect to t, write
+
+  R = c I + s J
+
+where
+
+  J = [0 -1]
+      [1  0]
+
+Then d/dt R = -s I + c J = R J. But of course; the derivative of a
+vector on a circle rotates the vector a quarter turn, which is J. So
+we find our sought derivative to be
+
+  Sum[ 2 (V - Qi)^T R J Pi ]
+
+Equating to zero, dropping the 2, and substituting for V, we get
+
+  Sum[ (Q - Qi - R P)^T R J Pi ] = 0
+
+Negating and simplifying with our previous tricks we find
+
+  Sum[ (Qi - Q)^T R J Pi ] = -P^T J Sum[ Pi ]
+                           = -P^T J n P
+                           = 0
+
+Remember J is a right angle turn, hence the last step. Now we expand R
+in c and s to obtain
+
+  0 = c Sum[ (Qi - Q)^T J Pi ] + s Sum[ (Qi - Q)^T J^2 Pi ]
+    = c Sum[ (Qi - Q)^T J Pi ] - s Sum[ (Qi - Q)^T Pi ]
+
+To save arithmetic we write this as
+
+  c a - s b = 0
+
+  a = Sum[ Qi^T J Pi ] - Sum[ Q^T J Pi ]
+    = Sum[ Qi^T J Pi ] - n Q^T J P
+
+  b = Sum[ Qi^T Pi ] - Sum[ Q^T Pi ]
+    = Sum[ Qi^T Pi ] - n Q^T P
+
+Ignoring normalization (c^s+s^2=1) we obviously have two solutions
+
+  (c,s) = (b,a)
+  (c,s) = (-b,-a)
+
+Dividing by sqrt(a^2+b^2) forces them onto the unit circle. To choose
+a correct solution we look at the second derivative
+
+  Sum[ 2 (V - Qi)^T R J^2 Pi ]
+
+We just need this to be positive, so can drop the 2. Substituting V
+and simplifying, we get
+
+  Sum[ -(Q - Qi - R P)^T R Pi ]
+
+or
+
+  c Sum[ (Qi - Q)^T Pi ] + s Sum[ (Qi - Q)^T J Pi ] + n ||P||^2
+
+which we recognize as
+
+  c b + s a + n ||P||^2
+
+Thus we can never go wrong taking (c,s) = (b,a)/sqrt(a^2+b^2). If you
+really want t instead of c and s, use two-argument atan on a and b.
+
+Incidentally, in case it's not obvious, the component form of Q^T J P
+is almost the same as the dot product Q^T P:
+
+  Q^T P   = (Qx,Qy) . (Px,Py)
+          = Qx*Px + Qy*Py
+
+  Q^T J P = (Qx,Qy) . (-Py,Px)
+          = Qy*Px - Qx*Py
+
+THE GEOMETRY
+Now let's explain our results in geometric terms. Assuming we know the
+proper rotation, the translation is merely the difference between the
+average of the Qi (think "center of mass") and the rotated average of
+the Pi. As for the rotation, we first compensate for any translation
+by centering the Qi, then dot them with their respective Pi directly
+and also rotated a quarter turn to find the optimal angle. Easy, eh?
+
+THE EXAMPLE
+Take the initial Pi to be the 10 points
+
+  [45  45  25  25  30   0   5  25   5  25]
+  [10  35  30   0  45   5  10   5  40   5]
+
+Take the final Qi to be the 10 points
+
+  [50  35  22  40  17  17  18  37   0  37]
+  [25  45  29   5  44  -6   1   9  25   9]
+
+First we compute the averages P and Q
+
+  P = [ 23 ]
+      [37/2]
+
+  Q = [273/10]
+      [ 93/5 ]
+Then we compute the terms in a and b, Qi^T J Pi, Q^T J P, Qi^T Pi, and
+Q^T P, and combine them
+
+  a = 2115 - 10*(-309/4)
+    = 5775/2
+
+  b = 13570 - 10*972
+    = 3850
+
+Dividing by
+
+  sqrt(a^2+b^2) = 9625/2
+
+we find that
+
+  c = 4/5
+  s = 3/5
+
+This gives us our rotation R = c I + s J. Finally we use R to rotate P
+so we can subtract that from Q to get
+
+  V = [ 20]
+      [-10]
+
+In this example there is no error; these are exactly the parameters I
+used to generate the Qi from the Pi.
+
+THE CONCLUSION
+My derivation is much longer than Dave's; but if you divide the terms
+of my a and b by n, you should find agreement. So why bother? Dave
+writes magic software; I like to know where the rabbit hides! Since
+the rotation separates out so nicely, it is reasonable to expect some
+meaningful geometric interpretion. The careful analysis shows exactly
+how we must calculate c and s from a and b to get a minimum. And there
+is some hope of extending my derivation to 3D and beyond.
+
+I do admit to hiding complexity when I took the derivative of the
+error with respect to V; I hope you'll forgive me for not making this
+post longer!
+
+ 

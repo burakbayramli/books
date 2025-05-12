@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Wild Magic: VertexNoise</title>
+<link rel=stylesheet type="text/css" href="../../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+<b>Deformation by vertex displacement</b>:<br>
+<a href="Shaders/VertexNoise/VertexNoise.h">VertexNoise.h</a>
+<a target="_blank" href="Shaders/VertexNoise/VertexNoise.h"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Shaders/VertexNoise/VertexNoise.cpp">VertexNoise.cpp</a>
+<a target="_blank" href="Shaders/VertexNoise/VertexNoise.cpp"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Shaders/VertexNoise/VertexNoise.cg">VertexNoise.cg</a>
+<a target="_blank" href="Shaders/VertexNoise/VertexNoise.cg"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+This application has a shader that permutes the vertex positions based on
+three-dimensional Perlin noise.  The table of permutations and gradients is
+precomputed at start-up time and passed as a uniform constant to the vertex
+shader.  This type of noise also can be used to create procedural textures.
+The vertex shader is a slightly modified version of the one from the nVidia
+Cg Toolkit, the original shader also available at the web site
+<a href="http://www.cgshaders.org">http://www.cgshaders.org</a>.
+
+Top image, top row:  The original model and its wireframe view.  Top image,
+bottom row:  The output of the vertex noise shader and its wireframe view.
+The vertex displacement is significantly large.  Bottom image, top row:  The
+vertices displaced with a smaller maximum displacement, but same scale of
+noise.  Bottom image, bottom row:  The vertices displaced with the same
+maximum  displacement as in the bottom row of of the top image, but with a
+larger scale noise.
+<br><br>
+<table>
+<tr>
+  <td><img src="WebImages/VertexNoise1.png" width=525 height=390 alt="VertexNoise1" border=1></td>
+</tr>
+<tr>
+  <td><img src="WebImages/VertexNoise2.png" width=525 height=390 alt="VertexNoise2" border=1></td>
+</tr>
+</table>
+
+</td></tr>
+</table>
+
+</body>
+</html>

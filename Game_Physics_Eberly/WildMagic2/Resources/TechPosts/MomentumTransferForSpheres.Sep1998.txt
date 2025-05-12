@@ -1,0 +1,84 @@
+From: Tom Duff <td@pixar.com>
+Subject: Re: Calculating the Result of Spheres Colliding
+Date: Friday, September 18, 1998 1:48 PM
+
+rvm@cyber.ad.jp wrote:
+> 
+> Hi all,
+> 
+> I'm working on some software and I need to know how can I determine the
+> result of two or more spheres colliding given that I know their position,
+> speed, size, and weight/density? For my purposes frictionless collision is
+> fine.
+
+This should be in the FAQ, since it gets asked every month or two.
+
+Let the masses be m0, m1, the radii r0, r1, the initial center
+positions P0, P1 and the velocities V0, V1.  Quantities with
+upper case letters in their names are vectors.  All others
+are scalars.  We will use the facts that the kinetic energy
+of a mass m travelling at velocity V is .5*m*V.V (V.V is the
+dot product of V and V) and its momentum is m*V, along with
+the laws of conservation of momentum and energy.
+
+The positions of the spheres at time t are P0+t*V0, P1+t*V1.
+The spheres collide when
+	|P1+t*V1-(P0+t*V0)|=r0+r1,
+that is, when
+	t^2*(V1-V0).(V1-V0)+2*t*(V1-V0).(P1-P0)+(P1-P0).(P1-P0)-(r0+r1)^2=0
+This is a quadratic equation that you can easily solve for t.
+Being quadratic it has two solutions, which may be positive, negative or
+complex.  If the solutions are complex, the two spheres never collide.
+If the solutions are real, they are the times at which the
+spheres would start and finish overlapping if they were allowed
+to pass through one another.  If both are negative, the spheres
+are moving apart.  If one is negative, they currently intersect.
+If both are positive, they are moving toward each other, and the
+smaller solution is the time of collision.
+
+In a frictionless collision, momentum is transferred from sphere
+to sphere only in the direction normal to the surfaces at the
+collision point.  Since the objects are spheres, this is just the
+vector joining the centers,
+
+	D=P1+t*V1-P0+t*V0
+
+Let's call the momentum vectors before and after the collision
+M0b, M1b, M0a and M1a, where M0b=m0*V0 and M1b=m1*V1.  In all
+collisions, momentum is conserved, so
+
+	M0b+M1b=M0a+M1a
+
+or
+
+	M0a-M0b=M1b-M1a=s*D
+
+So
+	M0a=M0b+s*D
+	M1a=M0a-s*D
+
+and the velocities V0a and V1a after the collision are
+	V0a=M0a/m0=V0+s*D/m0		(*)
+	V1a=M1a/m1=V1-s*D/m1		(*)
+
+Energy is also also conserved, so
+
+	m0*V0.V0+m1*V1.V1=m0*(V0+s*D/m0).(V0+s*D/m0)+m1*(V1-s*D/m1).(V1-s*D/m1)
+
+or
+	s^2*(D.D/m0+D.D/m1)+s*2*D.(V0-V1)=0
+
+This quadratic equation in s is easily solved by factoring:
+	s=0
+or	s=2*D.(V1-V0)/(D.D/m0+D.D/m1)
+
+The two solutions correspond to the situation immediately before
+and immediately after the collision.  The non-zero solution, when
+substituted into the equations marked (*) tells us the velocities
+after the collision.
+
+The solution is the same whether you're working in two or
+three dimensions.
+
+-- 
+Tom Duff.  Tasty with bananas and milk.

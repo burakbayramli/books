@@ -1,0 +1,117 @@
+From: "Just d' FAQs" <nobody-here@mac.com>
+Subject: Re: Spline overshoots
+Date: Wednesday, October 02, 2002 1:38 AM
+
+On 01 Oct 2002 22:43:49 -0500, Kenneth Sloan <sloan@uab.edu> wrote:
+>      Reference: "On Choosing Nodes in Parametric Curve Interpolation,"
+>                   by E. T. Y. Lee
+>No, I don't recall any more than that.  I retrieved that info from code
+>I last modified on 22 November 1989.  Seems to me that I recall seeing
+>this as an unpublished tech report. 
+
+Thanks. I've not looked at such things recently, but I didn't remember
+this trick. Using your reference, though, I turned up two citations:
+
+  E. Lee, "On Choosing Nodes in Parametric Curve Interpolation",
+    SIAM Conference on Applied Geometry, Albany, New York, 1985
+
+  LEE, E. T. Y. Choosing nodes in parametric curve interpolation.
+    Computer Aided Design 21, 6 (August 1989), 363--370
+
+It's also called "centripetal parameterization", and nice discussions
+of this and other options can be found here:
+  <http://www.mpi-sb.mpg.de/~heidrich/Thesis/master.ps.gz>
+Heidrich, incidentally, studied with Bartels at Waterloo. Small world.
+
+That said, I'd like to make two comments for the benefit of OP and
+lurkers. (1) Overshoot is an ill-defined term. Worst case, you may
+have to restrict yourself to linear movement between control points!
+(2) Parameter spacing is a "black art". A variety of methods have been
+proposed and used, but no universal "best" method exists, that I know.
+
+=======================
+ 
+From: "Kenneth Sloan" <sloan@uab.edu>
+Subject: Re: Spline overshoots
+Date: Tuesday, October 01, 2002 6:11 PM
+
+ruud@marketgraph.nl (Ruud van Gaal) writes:
+
+> Hi all,
+> 
+> I have a problem with splines overshooting.
+> I use Hermite spline to make a polygon representation of a race track
+> smoother. There are 3 splines, one for each dimension (XYZ).
+> However, when I have a situation like this:
+> 
+> t=0               t=1               t=2
+> *-----------------*-----------------*\
+>                                       \
+>   --> X                                \
+>                                         * t=3
+
+Consider using a different parameterization.  There's nothing magic
+about using uniform parameter values (t= 0.0, 1.0, 2.0, 3.0, ...),
+except that it makes the exposition in the text book simpler.
+
+First, make the changes necessary to use arbitrary parameter values at
+the knot points (t = t1, t2,t3,..., with t1 < t2 < t3...).
+
+Then consider strategies for assigning parameter values.  You have
+already implemented uniform knot values, and discovered that it's not
+pretty.  How about using chord length (measure the distance between the
+<x,y,z> points and assign parameter values to match)?  I think you'll
+find that this is also not pretty (but in a different way).  Now, throw
+in a complication: assign parameter values proportional to the distance
+between knot points raised to an arbitrary power.  Notice that if the
+power is 0 you have uniform knot spacing, and if the power is 1 you have 
+chord length parameterization.  How about setting the power to 0.5?
+
+Huzzah!  That will look beautiful!  Why is that?  Sorry, that's beyond
+the scope of this discussion.
+
+Careful now - there are lots of pesky details (translation - you'll have 
+to modify the basic interpolation code).  But, once you fix the low
+level code to deal with non-uniform knot spacing, the rest will be easy.
+
+-- 
+Kenneth Sloan                                            sloan@uab.edu
+Computer and Information Sciences                       (205) 934-2213
+University of Alabama at Birmingham                 FAX (205) 934-5473
+Birmingham, AL 35294-1170   http://www.cis.uab.edu/info/faculty/sloan/
+ 
+
+=======================
+
+From: "Kenneth Sloan" <sloan@uab.edu>
+Subject: Re: Spline overshoots
+Date: Tuesday, October 01, 2002 11:43 PM
+
+Just d' FAQs <nobody-here@mac.com> writes:
+
+> On 01 Oct 2002 17:11:30 -0500, Kenneth Sloan <sloan@uab.edu> wrote:
+> >Huzzah!  That will look beautiful!  Why is that?  Sorry, that's beyond
+> >the scope of this discussion.
+> 
+> You think OP won't see the relationship between tangents and
+> overshoot, but will have no problem with sqrt(chord length)
+> non-uniform parameterization? And no reference cited? Now *I'm*
+> skeptical! Especially since OP is using currently Hermite.
+> 
+> So, are you just going to tease, or toss out a reference?
+> 
+
+Sorry:
+
+      Reference: "On Choosing Nodes in Parametric Curve Interpolation,"
+                   by E. T. Y. Lee
+
+No, I don't recall any more than that.  I retrieved that info from code
+I last modified on 22 November 1989.  Seems to me that I recall seeing
+this as an unpublished tech report. 
+
+-- 
+Kenneth Sloan                                            sloan@uab.edu
+Computer and Information Sciences                       (205) 934-2213
+University of Alabama at Birmingham                 FAX (205) 934-5473
+Birmingham, AL 35294-1170   http://www.cis.uab.edu/info/faculty/sloan/

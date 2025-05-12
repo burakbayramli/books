@@ -1,0 +1,21 @@
+Let N = (n1,n2,n3) be a normal vector to the triangle.  If n3 = 0, then
+the direction of steepest descent is T = (0,0,-1) since the triangle
+is vertically oriented.  If n3 != 0, then you need a vector T = (t1,t2,t3)
+lying on the triangle which points in direction of steepest descent.  Such 
+a vector must satisfy dot(T,N) = 0 since it is on the triangle.  It must also
+maximize the angle between itself and (0,0,-1), so T must maximize
+dot(T,(0,0,-1)) = -t3.  You need to choose t3 as small as possible.
+
+From dot(T,N) = 0, you get t3 = -(n1/n3)*t1 - (n2/n3)*t2.  As a function
+of t1 and t2, the direction of largest decrease for t3 is in its negative
+gradient direction, -grad(t3) = -(dt3/dt1,dt3/dt2) = (n1/n3,n2/n3).  So
+choose t1 = n1/n3 and t2 = n2/n3.  From dot(T,N) = 0 you can solve for
+t3 = -(n1*n1+n2*n2)/(n3*n3).  A non-unit length direction is
+
+    T = (n1*n3,n2*n3,-(n1*n1+n2*n2))
+
+If v1 = (a,b,c) is the vertex with the largest z-value of the three vertices, 
+then the parametric equation for the line of steepest descent is
+
+    (x(s),y(s),z(s)) = v1 + s*T = (a+s*n1*n3,b+s*n2*n3,c-s*(n1*n1+n2*n2))
+

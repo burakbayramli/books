@@ -1,0 +1,229 @@
+From: "Alexander Agathos" <agalex@ath.forthnet.gr>
+Subject: Re: k nearest neighbors again...
+Date: Wednesday, September 19, 2001 1:48 PM
+
+Lets describe the other algo which is also quite simple.
+ 
+ M.Dickerson, R.L.Drysdale & J-R. Sack, "Simple Algorithms for
+ Enumerating Interpoint Distances and Finding k Nearest Neighbors."
+ International Journal of Computational Geometry and Applications, 2:3
+ (1992) 221-239. 
+
+A priority queue is used, ok why not.
+
+So lets describe the steps which are very simple but the first step
+requires in a Delaunay Triangulation, in 3D if you talk for 100000
+points then ok if you increase the decimal digit then no way.
+
+1st) Create the Delaunay D of the point set S and Sort all edges by
+their length.
+
+2st) For each p create a priority queue Q with k nearest incident
+edges to p and insert them into the priority queue Q.
+For i = 1 to k 
+  1)extract the shortest edge pw and insert w into a log. 
+  2)check for the shortest (wx) in D and if x is not in the log insert
+the
+    edge (px) into Q, (its not an actual edge but serves for
+uniformity of the
+    algorithm :-)
+  3)check if Q contains more than k-i edges and if it does then it is
+only by
+    one higher than k-i so find in Q the longest edge (pz) and delete
+it
+
+So at the end you have k neighbors unless you are very unlucky and
+some point is very badly located.
+
+Its this God damn bound of the Delaunay that breaks heaven though...
+
+Alex.
+
+agalex@ath.forthnet.gr (Alexander Agathos) wrote in message news:<96539744.0109190645.2b3454f4@posting.google.com>...
+> Well you are quite true on the Delaunay bound. But there are some
+> meshes which are very bad, if you try to do the Stanford Dragon of
+> 500000 points then you will have a problem (I talk about Unix of
+> course in Windows just forget it).
+> 
+> Anyway I have compiled qdelaunay(the well known and very fast qhull)
+> to my Unix machine.
+> I have for the option 
+> 
+> qdelaunay QJ i < filein > fileout  
+> 
+> good results. For instance I have a triangulation of 200000 points in
+> less than 10 secs using a 2000 MIPS intel processor with 512 MB
+> memory, sufficient which give me around 1min of reconstruction using
+> the fact that the mesh are the simplices that are dual to the
+> restricted voronoi diagram. Which is more or less saying that the
+> edges of the voronoi seen by a flash light rotating round the Voronoi
+> center with an opening spread angle of 3pi/8 :-)
+> 
+> Also I kind of think that in the future the distributed computation
+> will be a defacto and one can simply ask for some computers spread in
+> the world to do it in parallel. There is no need for even an
+> intercommunication between the computers.
+> 
+> Thats for the Delaunay. I also have the other paper which is more
+> simple.
+> 
+> Alex.
+> 
+> David Eppstein <eppstein@ics.uci.edu> wrote in message news:<eppstein-9D436B.08444718092001@news.service.uci.edu>...
+> > In article <96539744.0109170331.c020395@posting.google.com>,
+> >  agalex@ath.forthnet.gr (Alexander Agathos) wrote:
+> > 
+> > > 1. Compute a bounded, vertex degree Delaunay Triangulation D of S' as
+> > > described in [1]
+> > > 
+> > > 2. For each point p in S, do a breadth first search(by distance) to
+> > > find the k-nearest neighbours contained in S and not in (S'-S).
+> > > 
+> > > Well all lie in [1]. The whole problem is to bound the O(n^2)
+> > > complexity if it is computed by a naive way say: for each point  p in
+> > > S search the k points in S - {p} closer to the original mesh. So
+> > > constructing sth that connects the points and searching for the
+> > > immediate neighbors sounds pleasing. But the problem is : Is the
+> > > algorithm in [1] actually used? I havent seen even a pseudocode in
+> > > [1], even worse for 3 dimensions and more there is only a page
+> > > devotion...
+> > 
+> > Hi, I'm back on usenet after a week in Spain...
+> > Sorry to have missed the earlier discussion.
+> > 
+> > Anyway, I don't know of an implementation for the precise algorithm from my 
+> > paper [1] needed in this situation, but I don't think it would be very 
+> > difficult (it's just based on Octrees), and would maybe even save some of 
+> > the difficulty of computing 3d Delaunay triangulations.  The problem is 
+> > that the constant factors in the O(n) are quite high.
+> > 
+> > For many types of point sets 3d Delaunay triangulations are not as bad as 
+> > their worst case.  So, the first thing I would try in practice is just the 
+> > breadth first search part in the Delaunay triangulation of the original 
+> > point set, without augmenting it to be guaranteed-bounded-degree.  If it 
+> > works well, great, and if it doesn't work so well, you can start thinking 
+> > about augmenting the point set to have a nicer DT. 
+
+============================================================================
+From: "Sathya Krishnamurthy" <krishnas_NO_SPAM_@inf.ethz.ch>
+Subject: Re: k nearest neighbors again...
+Date: Friday, September 21, 2001 2:57 AM
+
+Hi Elijah
+
+The best K Nearest Neighbor, I can point to to you is Prof David Mount 's
+ANN implementation. This is really kewl stuff extremely optimized and fast
+.. but there are no updates/deletes
+http://www.cs.umd.edu/~mount
+
+there are also other implementations from Dr. Berhnard Seeger and his group.
+
+http://www.dbnet.ece.ntua.gr/~theodor/files/rtrees/
+
+chec this site out for some special implementations.
+
+cheers
+sathya
+
+"Elijah Bailey" <geomrock@hotmail.com> wrote in message
+news:e008fef8.0109201441.73556426@posting.google.com...
+> Sorry about poking my nose everywhere in d-dim! Hope
+> you dont mind! But using Delaunay doesnt seem to me
+> as a good solution to k-nearest neighbour searching
+> in d-dim. |(seems a overkill)|
+>
+> How do I do k-nearest neighbour query in d-dim?
+> I know it can be done in O(nlogn) preprocessing
+> and O(logn) query but with constants dependent on
+> dimension! How bad are they?? Is there some place where
+> I can find the exact constants, at least the ones that
+> exponentially depend on dimension!
+>
+> Best Regards,
+> --Elijah
+>
+> David Eppstein <eppstein@ics.uci.edu> wrote in message
+news:<eppstein-9D436B.08444718092001@news.service.uci.edu>...
+> > In article <96539744.0109170331.c020395@posting.google.com>,
+> >  agalex@ath.forthnet.gr (Alexander Agathos) wrote:
+> >
+> > > 1. Compute a bounded, vertex degree Delaunay Triangulation D of S' as
+> > > described in [1]
+> > >
+> > > 2. For each point p in S, do a breadth first search(by distance) to
+> > > find the k-nearest neighbours contained in S and not in (S'-S).
+> > >
+> > > Well all lie in [1]. The whole problem is to bound the O(n^2)
+> > > complexity if it is computed by a naive way say: for each point  p in
+> > > S search the k points in S - {p} closer to the original mesh. So
+> > > constructing sth that connects the points and searching for the
+> > > immediate neighbors sounds pleasing. But the problem is : Is the
+> > > algorithm in [1] actually used? I havent seen even a pseudocode in
+> > > [1], even worse for 3 dimensions and more there is only a page
+> > > devotion...
+> >
+> > Hi, I'm back on usenet after a week in Spain...
+> > Sorry to have missed the earlier discussion.
+> >
+> > Anyway, I don't know of an implementation for the precise algorithm from
+my
+> > paper [1] needed in this situation, but I don't think it would be very
+> > difficult (it's just based on Octrees), and would maybe even save some
+of
+> > the difficulty of computing 3d Delaunay triangulations.  The problem is
+> > that the constant factors in the O(n) are quite high.
+> >
+> > For many types of point sets 3d Delaunay triangulations are not as bad
+as
+> > their worst case.  So, the first thing I would try in practice is just
+the
+> > breadth first search part in the Delaunay triangulation of the original
+> > point set, without augmenting it to be guaranteed-bounded-degree.  If it
+> > works well, great, and if it doesn't work so well, you can start
+thinking
+> > about augmenting the point set to have a nicer DT.
+
+============================================================================
+From: "Jim Hargis" <jhargis@DONOTSPAM.qwest.net>
+Subject: Re: k-d trees and norm dependance
+Date: Thursday, September 27, 2001 3:21 AM
+
+There are several references to using principal axes other than the
+coordinate.  One I have handy is "Augmented k-D Tree Techniques for
+Accelerated Registration and Distance Measurement" by James P. Williams and
+Russell H. Taylor, Johns Hopkins University.  Briefly:
+
+Use hyperplanes (or planes in 3D case) chosen based on the eigenvectors of
+the covariance matrix of the points.  The eigenvectors define an ellipsoid
+of inertia for the point set which approximates the points in space.  The
+eigenvectors define the axes of the ellipsoid and their values give the
+eccentricity of the ellipsoid along the 'new' axes.  At a given subdivision
+step the partition plane is chosen to be the plane normal to the maximum
+eigenvalue which splits the set of points into equally sized subsets.  I
+think the reference is Sproull, R., "Refinements to Nearest-Neighbor
+Searching in k-dimensional trees", Algorithmica, 6,.1991.
+
+The Williams paper documents performance improvements of 10-20 x better than
+standard k-d trees to register 3-d images of human heads and organs.
+______________________
+Jim Hargis
+jim@har-gis.com
+
+har*GIS LLC; 8093 S Oneida Ct.; Centennial, CO 80112-3133
+(303)220-0253
+Geospatial Engineering, TruckMap*, HandMap*
+
+"Alexander Agathos" <agalex@ath.forthnet.gr> wrote in message
+news:96539744.0109261545.12a06038@posting.google.com...
+...
+> > That is even simpler to avoid: rotate the k-d tree to align it with
+> > the principle directions of the metric.  It really would be silly to
+> > use a coordinate system not directionally aligned to the metric.
+> > Non-diagonal scalar product core matrices may be mathematically
+> > interesting --- in practice, you can always avoid them by choosing a
+> > more suitable coordinate system.
+> >
+> > > So taking a k-D tree is like doing a MAJOR mistake.
+> >
+> > No, it isn't. A k-d tree is still a quite viable approach.
+

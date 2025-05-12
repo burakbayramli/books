@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: MIPAV Shear WarpVolume Rendering</title>
+<link rel=stylesheet type="text/css" href="../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+<b>Volume rendering based on shear-warp factorization</b>.
+<br><br>
+
+This is a software-based volume rendering, but uses a shear-warp factorization
+to rendering by making it a compositing operation instead.  The framework is
+very general and object-oriented.  A derived class can implement as
+complicated a process as desired for processing each voxel in the compositing.
+The simplest method is maximum intensity projection (MIP rendering) where the
+maximum image value is selected along each ray.  The data set is an x-ray
+crystallography image of the superoxide dismutase molecule.<br><br>
+<table>
+<tr><td>
+  <img src="SWMaxIntensity.png" width=254 height=248 alt="maximum intensity projection" border=1>
+</td></tr>
+</table>
+<br><br>
+
+Rather than selecting a maximum intensity along each ray, you can sum the
+voxel values along a ray and normalize the resulting image.<br><br>
+<table>
+<tr><td>
+  <img src="SWSumIntensity.png" width=254 height=248 alt="summed intensity projection" border=1>
+</td></tr>
+</table>
+<br><br>
+
+Compositing image slices using eight-bit gray scale intensity with alpha
+blending is illustrated with a 3D MRI.<br><br>
+<table>
+<tr><td>
+  <img src="SWByteIntensity.png" width=254 height=248 alt="byte intensity composite" border=1>
+</td></tr>
+</table>
+<br><br>
+
+Compositing image slices using RGBA, eight bits per channel, is illustrated
+with the molecule data set.  Two different colors are used based on a
+threshold value specified by the user.<br><br>
+<table>
+<tr><td>
+  <img src="SWByteColor.png" width=254 height=248 alt="color composite" border=1>
+</td></tr>
+</table>
+<br><br>
+
+Multiple color images can be composited, then alpha blended.  This supports
+registered multimodality images to be displayed simultaneously.  The top
+and bottom images are two volume rendered images.  The middle image is a blend
+of those.<br><br>
+<table>
+<tr>
+<td>
+  <img src="SWMultiTarget1.png" width=254 height=248 alt="blend target 1" border=1>
+</td>
+</tr>
+<tr>
+<td>
+  <img src="SWMultiBlend.png" width=254 height=248 alt="blend of targets" border=1>
+</td>
+</tr>
+<tr>
+<td>
+  <img src="SWMultiTarget2.png" width=254 height=248 alt="blend target 2" border=1>
+</td>
+</tr>
+</table>
+<br><br>
+
+A gray scale rendering with lighting provided. The surface normals are
+calculated by gradient approximations of the image data using centered finite
+differences.  The image below is a rendering of a 3D MRI.
+<br><br>
+<table>
+<tr><td>
+  <img src="SWLitBrain.png" width=254 height=248 alt="lit brain" border=1>
+</td></tr>
+</table>
+<br><br>
+
+</body>
+</html>

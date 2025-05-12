@@ -1,0 +1,136 @@
+From: <noone@nowhere.com>
+Subject: Re: Physics for Game Developers rigid body hovercraft example.
+Date: Wednesday, November 06, 2002 11:42 AM
+
+On Tue, 05 Nov 2002 20:37:10 GMT, "Matthew V. Jessick"
+<mjessick@verizon.net> wrote:
+
+>noone@nowhere.com wrote:
+>> I was looking at the hovercraft demo in Physics for Game Developers on
+>> page 190 and saw some thing that doesn't look right to me.  Where it
+>> says "Fb += body->PThrust;" it's adding the entire thrust force to Fb
+>> even though the force is not acting through the center of mass.  Since
+>> it's not acting through the center of mass, shouldn't the amount of
+>> force that contributes to forward acceleration be some fraction of the
+>> force?
+>> 
+>> 	Vector	Fb;	// stores the sum of forces
+>> 	Vector	Mb;	// stores the sum of moments
+>> 
+>> 	// Calculate the Port & Starboard bow thruster forces:
+>> 	// Keep a running total of these resultant forces (total
+>> force)
+>> 	Fb += body->PThrust;
+>> 
+>> 	// Calculate the moment about the CG of this element's force
+>> 	// and keep a running total of these moments (total moment)
+>> 	vtmp = body->CPT^body->PThrust; 
+>> 	Mb += vtmp;
+>
+>
+>The short answer is no, the example is correct.
+>
+>One motivation for why is an addition of a second stern thruster
+>(pointing the same direction) to the above example of a bow thruster:
+>Now you have two thrusters and twice as much acceleration to the
+>center of gravity. (If you put it the same distance from the CG
+>as the bow thrust you will have approximately zero moment also.)
+>
+>- Matt
+>
+>P.S.: There may be a typo in the vtmp = equation.
+>This probably intends to add a    radius cross force
+>moment component. vtmp = body->CPT  *  body->PThrust;
+
+I've looked into it further, and I'm convinced it's wrong.  Imagine
+the hover craft is a ring.  A rings linear inertia (resistance to
+being moved in a line) is equal to the mass of the ring.  The rings
+rotational inertia (resistance to being rotated) is "equivalent" to
+the mass of the ring, So if you put the thruster on the radius of the
+ring with the thrust vector perpendicular to line from the thruster to
+the CG, in the above code you get 100% of the thrust going into
+counteracting 100% of the linear inertia (FB+= body->PThrust) and 100%
+of the thrust going into counteracting 100% of the rotational inertia.
+So you're ending up putting 200% thrust into counteracting all the
+inertia (200% of the mass).  You should have 100% of the thrust going
+into counteracting the total inertia (200% of the mass). I think what
+should happen is 50% of the thrust should go into counteracting the
+linear inertia and 50% should go into counteracting the rotational
+inertia.  If the thruster is at the center of the ring 100% of the
+thrust should go into counteracting the linear inertia (100% of the
+mass) and 0% of the thrust should go into counteracting the rotational
+inertia, this does happen with the above code.
+
+So what the code needs is something to calculate what portion of the
+thrust affects each type of inertia.
+
+ 
+=============
+
+From: "John Nagle" <nagle@animats.com>
+Subject: Re: Physics for Game Developers rigid body hovercraft example.
+Date: Thursday, November 21, 2002 1:32 PM
+
+     This is more easily thought of in energy terms.
+The ring, at a given RPM, stores more energy than a
+disk of equal mass, because its moment of inertia
+is larger.  More mass is being moved through a longer
+distance.
+
+     The total energy stored in the object is the
+energy stored in its angular motion plus the energy
+stored in its linear motion.  When the objects roll
+down the ramp, more energy is required to
+accelerate the ring rotationally,
+which takes away from its linear acceleratino.
+
+     Feynman writes in one of his books that he
+found a high school physics text that got this wrong.
+What really annoyed him is that they gave "experimental"
+data for this experiment which the authors had
+actually computed (wrongly), which is dishonest.
+
+				John Nagle
+				Animats
+
+Drew Hall wrote:
+
+> "Erik Max Francis" <max@alcyone.com> wrote in message
+> news:3DD01204.668FE1D3@alcyone.com...
+> 
+>>noone@nowhere.com wrote:
+>>
+>>
+>>>http://boson.physics.sc.edu/~hoskins/Demos/RingandDisk.html
+>>>
+>>>I'm still not sure I understand why this happens when the force being
+>>>applied to both bodies, gravity, is the same.
+>>>
+>>Because in this case, that force due to gravity is acting as a torque,
+>>and thus imparts an angular acceleration to each object, causing them to
+>>roll down the slope faster and faster.
+>>
+> 
+> Not quite right.  The force due to gravity acts thru the center of gravity
+> (as it always does).  The friction at the point of contact is the only
+> torque
+> in this example.  Assuming the two objects have the same static frictional
+> coefficient f_s (and assuming no slippage), the frictional force is given by
+> 
+> f_s*m*g*sin(theta)
+> 
+> where theta is the incline angle measured from horizontal, m is the mass,
+> and g is gravity's acceleration.  Since the masses are the same and g &
+> theta certainly don't change, the frictional forces on the objects are
+> identical.  The object with the lower moment of inertia (the disk) thus
+> spins up quicker, causing it to accelerate faster down the slope due
+> to the no slip condition.
+> 
+> Just my two cents...
+> 
+> Drew
+> 
+> 
+> 
+
+ 

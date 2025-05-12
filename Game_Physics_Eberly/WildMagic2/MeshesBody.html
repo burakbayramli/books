@@ -1,0 +1,139 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Meshes</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body text=black bgcolor=white>
+
+<table>
+<tr><td>
+
+Edge keys are pairs of integers.  Triangle keys are triples of integers.  The
+classes provide support for the sorting used by STL maps:<br>
+<a href="Source/Meshes/WmlEdgeKey.h">WmlEdgeKey.h</a>
+<a target="_blank" href="Source/Meshes/WmlEdgeKey.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlEdgeKey.inl">WmlEdgeKey.inl</a>
+<a target="_blank" href="Source/Meshes/WmlEdgeKey.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlTriangleKey.h">WmlTriangleKey.h</a>
+<a target="_blank" href="Source/Meshes/WmlTriangleKey.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlTriangleKey.inl">WmlTriangleKey.inl</a>
+<a target="_blank" href="Source/Meshes/WmlTriangleKey.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Edge-triangle data structure to support manifold meshes:<br>
+<a href="Source/Meshes/WmlETManifoldMesh.h">WmlETManifoldMesh.h</a>
+<a target="_blank" href="Source/Meshes/WmlETManifoldMesh.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlETManifoldMesh.inl">WmlETManifoldMesh.inl</a>
+<a target="_blank" href="Source/Meshes/WmlETManifoldMesh.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlETManifoldMesh.cpp">WmlETManifoldMesh.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlETManifoldMesh.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Edge-triangle data structure to support nonmanifold (as well as manifold)
+meshes:<br>
+<a href="Source/Meshes/WmlETNonmanifoldMesh.h">WmlETNonmanifoldMesh.h</a>
+<a target="_blank" href="Source/Meshes/WmlETNonmanifoldMesh.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlETNonmanifoldMesh.inl">WmlETNonmanifoldMesh.inl</a>
+<a target="_blank" href="Source/Meshes/WmlETNonmanifoldMesh.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlETNonmanifoldMesh.cpp">WmlETNonmanifoldMesh.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlETNonmanifoldMesh.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Estimate principal curvatures at the vertices of a triangle mesh:<br>
+<a href="Source/Meshes/WmlMeshCurvature.h">WmlMeshCurvature.h</a>
+<a target="_blank" href="Source/Meshes/WmlMeshCurvature.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMeshCurvature.cpp">WmlMeshCurvature.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlMeshCurvature.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Class to support surface evolution.  The tangential and normal components of
+the evolution are already part of the class.  A derived class adds a driving
+"external force" specific to the application at hand:<br>
+<a href="Source/Meshes/WmlMeshSmoother.h">WmlMeshSmoother.h</a>
+<a target="_blank" href="Source/Meshes/WmlMeshSmoother.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMeshSmoother.cpp">WmlMeshSmoother.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlMeshSmoother.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Vertex-edge-triangle manifold meshes:<br>
+<a href="Source/Meshes/WmlMTMesh.h">WmlMTMesh.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTMesh.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTMesh.inl">WmlMTMesh.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTMesh.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTMesh.cpp">WmlMTMesh.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlMTMesh.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTVertex.h">WmlMTVertex.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTVertex.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTVertex.inl">WmlMTVertex.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTVertex.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTVertex.cpp">WmlMTVertex.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlMTVertex.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTIVertex.h">WmlMTIVertex.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTIVertex.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTIVertex.inl">WmlMTIVertex.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTIVertex.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTEdge.h">WmlMTEdge.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTEdge.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTEdge.inl">WmlMTEdge.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTEdge.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTEdge.cpp">WmlMTEdge.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlMTEdge.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTIEdge.h">WmlMTIEdge.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTIEdge.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTIEdge.inl">WmlMTIEdge.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTIEdge.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTTriangle.h">WmlMTTriangle.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTTriangle.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,<br>
+<a href="Source/Meshes/WmlMTTriangle.inl">WmlMTTriangle.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTTriangle.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTTriangle.cpp">WmlMTTriangle.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlMTTriangle.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTITriangle.h">WmlMTITriangle.h</a>
+<a target="_blank" href="Source/Meshes/WmlMTITriangle.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlMTITriangle.inl">WmlMTITriangle.inl</a>
+<a target="_blank" href="Source/Meshes/WmlMTITriangle.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Data structures to support sets associated with meshes.  Typically the sets are
+small and do not need the power and overhead of STL sets:<br>
+<a href="Source/Meshes/WmlSmallSet.h">WmlSmallSet.h</a>
+<a target="_blank" href="Source/Meshes/WmlSmallSet.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlSmallSet.inl">WmlSmallSet.inl</a>
+<a target="_blank" href="Source/Meshes/WmlSmallSet.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlUnorderedSet.h">WmlUnorderedSet.h</a>
+<a target="_blank" href="Source/Meshes/WmlUnorderedSet.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlUnorderedSet.inl">WmlUnorderedSet.inl</a>
+<a target="_blank" href="Source/Meshes/WmlUnorderedSet.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Vertex-edge mesh:<br>
+<a href="Source/Meshes/WmlVEMesh.h">WmlVEMesh.h</a>
+<a target="_blank" href="Source/Meshes/WmlVEMesh.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlVEMesh.inl">WmlVEMesh.inl</a>
+<a target="_blank" href="Source/Meshes/WmlVEMesh.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlVEMesh.cpp">WmlVEMesh.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlVEMesh.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+Vertex-edge-triangle mesh:<br>
+<a href="Source/Meshes/WmlVETMesh.h">WmlVETMesh.h</a>
+<a target="_blank" href="Source/Meshes/WmlVETMesh.h"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlVETMesh.inl">WmlVETMesh.inl</a>
+<a target="_blank" href="Source/Meshes/WmlVETMesh.inl"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Source/Meshes/WmlVETMesh.cpp">WmlVETMesh.cpp</a>
+<a target="_blank" href="Source/Meshes/WmlVETMesh.cpp"><img src="Images/TextIcon.png" width=12 height=16 border=0></a>
+<br><br>
+
+</td></tr>
+</table>
+
+</body>
+</html>

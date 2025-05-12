@@ -1,0 +1,110 @@
+The pattern you are describing is commonly refered to as the "external polymorphism" pattern. Biding methods statically, i.e during compile time via templated utility classes is nowhere close to the power unleashed by using Scott Bilas metadata pattern "FuBi". 
+
+// It is possible to achive compile time polymorphism using C++ by taking advantage of the Barton-Nackman trick.
+// The idea is to paramterize the interface, casting the 'this' pointer to the known interface we will be using.
+
+template <class Implementation>
+class Interface 
+{
+public:
+	void Execute(const char* name, int age) 
+	{
+		static_cast<Implementation*>(this)->Execute(name,age);
+	}
+};
+
+
+// You can know use the interface class without acctually knowing anything about the implementaion class,
+// other than knowing that it is derieved from the RaytracerInterface<T> class...
+
+template <class Implementation>
+void InvokeInterface(Interface<Implementation> &object) 
+{
+	object.Execute("babar",20);
+}
+
+// specialized implementation 1
+
+class AdvancedObject1 : public Interface<AdvancedObject1> 
+{
+public:
+	void Execute(const char* name, int age) 
+	{
+		printf("AdvancedObject1: registered consumer: %s(%d)\n", name, age);
+	}
+};
+
+// specialized implementation 2
+
+class AdvancedObject2 : public Interface<AdvancedObject2> 
+{
+public:
+	void Execute(const char* name, int age) 
+	{
+		printf("AdvancedObject2: registered consumer: %s(%d)\n", name, age);
+	}
+};
+
+// invoke specialized interface instances
+
+int main( int argc, char* argv[] ) 
+{
+	AdvancedObject1 obj1;
+	AdvancedObject2 obj2;
+
+	InvokeInterface(obj1);
+	InvokeInterface(obj2);
+
+	getchar();
+	return 0;
+}
+
+
+//----------------------------------
+If you want truly portable, polymorphic functors while relying minimally on STL memfunc wrapper approach take a look at the Hickey's article which you can find here: 
+
+http://www.newty.de/links.html 
+
+Also you have available the "functor" libraries offered by boost and Loki. 
+
+I have been using Hickey's solution for a long time on a really large project and they work just sweet. It's a pity that the line of research I was conducting about creating Python or Lua bindings for the project was cancelled :_(
+//----------------------------------
+Hello folks, 
+
+Babar: 
+
+I must recon that perhaps the example provided is not very illustrative, but the binding is not intended to be statical, but to be performed at run-time, instead. If not the applicability to scripting would be absolutely impossible. What is done at compile time is the registration of the exported methods/functions, but that's something that FuBi does as well when filling the exports database, picking those functions/methods that are specified as "dllexport". Binding can be perfectly done at runtime identifying the f/m by means of its name. Unfortunatelly that means that polymorphism is not supported... 
+
+Regarding FuBi's metadata gathering and use, IMHO there are other interesting alternatives that can solve many of the cases in which it's required. For instance, parameter parsing from a serialized form like an ascii string can be done as well using the "external polymorphism" pattern, just by providing an overload for execute taking a char* as 2nd parameter; I personally like the "functional taste" of this approach despite its overhead in code size. 
+
+I personally think that extending C++ to provide new-age pl functionality like class metadata ~ reflectance must be pursued by means of the current language mechanisms, not by platform/compiler - dependent hacks; if that gets too cumbersome a higher level approach like IDL seems more desiderable. The last doesn't neccesarily require creating another compiler, it can be achieved by using far more lightweighted mechanisms like translation templates with XML, for instance. 
+
+Miguel: 
+
+Thanks for quoting that article, I'd really appreciate giving it a look since I didn't know it before. 
+
+I tried to keep this sample simple, and not to explicitly use Functors, in the sense of "function objects", since many of their usual functionality (parameter binding) is really not required; as you can see this is much more a "caller" than a "function object", totally alike to Loki's FunctorImpl. 
+
+I'm sorry about your research thread being cancelled; I'm actually working in something similar, it'd be nice if you agree to share a couple of opinions about it. 
+
+Thanks for your coments! 
+
+Cheers 
+
+Manuel Sanchez aka Matt da Monkey
+//----------------------------------
+
+Names starting with double underscores (__) are reserved for the compiler/library vendors according to the Holy Standard. ;) (http://webstore.ansi.org/ansidocstore/product.asp?sku=INCITS%2FISO%2FIEC+14882%2D1998 ) Names ending with double underscores are ok though. 
+
+And your registration technique is almost literally described here: http://www.cuj.com/experts/1906/hyslop.htm It's very good of you to have come up with it yourself of course, but reading the Conversations and Guru of the Week columns at www.gotw.ca might save re-inventing a few wheels in the future. ;) 
+
+Also, as miguel pointed out, Boost has some excellent facilities you might want to look at, especially: http://www.boost.org/libs/bind/bind.html and http://www.boost.org/libs/function/index.html 
+
+Regards, 
+Dirk Gerrits 
+
+PS Boost 1.29.0 will be released soon. It'll contain the coolest C++ library yet conceived (IMHO): the MPL. But that's kinda off-topic. ;)
+//----------------------------------
+
+OK, The function registering is solved pretty well in http://www.cuj.com/experts/1906/hyslop.htm, but there is another main theme to talk about: Function Binding Using Stack Frame implementation for each platform VS Function Binding Using Templates one implementation fits all platforms. How much time it takes to evalute a map find? If that time can be assumed, no doubt I choose Template's option else stack frame may be an option.
+

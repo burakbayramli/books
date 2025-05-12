@@ -1,0 +1,140 @@
+From: "Roger Willcocks" <roger@rops.org>
+Subject: Re: lowest common ancestor calculation
+Date: Saturday, January 04, 2003 7:43 PM
+
+"Christer Ericson" <christer_ericson@hotmail.com> wrote in message
+news:36407f6d.0301041406.5c2f031d@posting.google.com...
+> "Dave Eberly" <eberly@magic-software.com> wrote in message
+news:<T6CR9.14057$9N5.1342792@newsread2.prod.itd.earthlink.net>...
+[snip]
+>
+> Most CPUs have some way of extracting the highest bit set. If not as
+> a direct instruction, then at least through some manipulation of the
+> exponent field when treating the integer as a floating-point number
+> (assuming an FPU, of course).
+>
+
+e.g. (Intel processor, tested with MSVC, gcc):
+
+>>>cut<<<
+
+typedef union {
+  float f;
+  struct {
+    unsigned int mantissa: 23;
+    unsigned int exp:  8;
+    unsigned int sign: 1;
+  };
+  int i;
+} uf;
+
+int topbit(int candidate) /* 23 bits or fewer */
+{
+  uf u;
+#if 0
+  u.sign = 0;
+  u.exp = 127;
+  u.mantissa = candidate; /* 1.0 + 0.candidate */
+#else
+  u.i = 0x3f800000 | (candidate & 0x7fffff);
+  u.f -= 1.0; /* remove implied bit 24, renormalize */
+#endif
+  return u.exp - 104;
+}
+
+>>>cut<<<
+
+which yields:
+
+topbit 1 = 0
+topbit 4 = 2
+topbit 7 = 2
+topbit 15 = 3
+topbit 0x1000 = 12
+
+>
+> Christer Ericson
+> Sony Computer Entertainment, Santa Monica
+
+--
+Roger Willcocks
+http://www.rops.org
+
+
+
+From: "Mathew Hendry" <mathewhendry@hotmail.com>
+Subject: Re: lowest common ancestor calculation
+Date: Saturday, January 04, 2003 8:33 PM
+
+On Sun, 5 Jan 2003 00:43:43 -0000, "Roger Willcocks" <roger@rops.org>
+wrote:
+
+>e.g. (Intel processor, tested with MSVC, gcc):
+>
+>typedef union {
+>  float f;
+>  struct {
+>    unsigned int mantissa: 23;
+>    unsigned int exp:  8;
+>    unsigned int sign: 1;
+>  };
+>  int i;
+>} uf;
+>
+>int topbit(int candidate) /* 23 bits or fewer */
+>{
+>  uf u;
+>#if 0
+>  u.sign = 0;
+>  u.exp = 127;
+>  u.mantissa = candidate; /* 1.0 + 0.candidate */
+>#else
+>  u.i = 0x3f800000 | (candidate & 0x7fffff);
+>  u.f -= 1.0; /* remove implied bit 24, renormalize */
+>#endif
+>  return u.exp - 104;
+>}
+
+Yeah, but slow. Lookup table is faster.
+
+/* binary search for most significant non-zero octet, followed by
+   table lookup */
+
+int hi_bit(unsigned long n)
+{
+  static const signed char t[] = {
+    -1,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+     5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+     6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+     7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};
+  return n>>16?n>>24?24+t[n>>24]:16+t[n>>16]:n>>8?8+t[n>>8]:t[n];
+}
+
+Binary floating-point, not IEEE-specific (slow)
+
+int hi_bit(unsigned long n)
+{
+  int e;
+  frexp(n, &e);
+  return e - 1;
+}
+
+Integer, no branches (slow)
+
+int hi_bit(unsigned long n) {
+  static const signed char t[] = {
+    -1,0,25,1,22,26,31,2,15,23,29,27,10,-1,12,3,6,16,
+    -1,24,21,30,14,28,9,11,5,-1,20,13,8,4,19,7,18,17
+  };
+  return t[(n|=n>>1,n|=n>>2,n|=n>>4,n|=n>>8,n|=n>>16)%37];
+}
+
+Had fun playing with all these in a long thread on comp.lang.c a few
+years back, all on Google somewhere.
+
+-- Mat.
+

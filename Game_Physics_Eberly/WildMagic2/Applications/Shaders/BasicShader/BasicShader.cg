@@ -1,0 +1,61 @@
+void vmain(
+    // In order for this shader to work, your Geometry object must
+    // have all of the inputs or the Renderer will give you an
+    // assertion error.
+    in float4 i_f4Position  : POSITION,
+    in float3 i_f3Normal : NORMAL,
+    in float2 i_f2Tex : TEXCOORD0,
+
+    out float4 o_f4Position : POSITION,
+    out float3 o_f3Lighting : COLOR,
+    out float2 o_f2Tex : TEXCOORD0,
+    // State variables beginning with Wml will be filled in by
+    // WildMagic automatically
+    // Some, like lights, must be attached to the scene graph.
+    uniform float4x4 WmlRendererModViewProj,
+    uniform float4x4 WmlRendererMod,
+    // Wildmagic will fill out constants to a float4, but you
+    // can specify float<n> if you don't need the other information
+    uniform float3 WmlLightPosition0,
+    uniform float3 WmlLightAmbient0,
+    uniform float3 WmlLightDiffuse0)
+{
+    // Transform the position
+    o_f4Position = mul(WmlRendererModViewProj, i_f4Position);
+
+    // Calculate the diffuse lighting
+    
+    // This is a point light, so we calculate the world position first
+    // (Because model->view transform is really a 3x3, we'll save some
+    // instructions by changing it to that.
+    float3 f3WorldPos = mul((float3x3)WmlRendererMod,(float3)i_f4Position);
+
+    // Transform the normal
+    float3 f3WorldNorm = mul((float3x3)WmlRendererMod,i_f3Normal);
+
+    // Calculate the (negative) light direction
+    float3 f3LightDir = (WmlLightPosition0 - f3WorldPos);
+
+    float fDiffuse = dot(f3LightDir, f3WorldNorm);
+
+    // We'll pass the lighting value out as a color
+    o_f3Lighting = WmlLightDiffuse0 * fDiffuse + WmlLightAmbient0;
+
+    // Pass through the texture coordinte
+    o_f2Tex = i_f2Tex;
+}
+
+void pmain(
+    in float3 i_f3Lighting : COLOR,
+    in float2 i_f2Tex : TEXCOORD0,
+
+    out float3 o_f3Color : COLOR,
+
+    uniform sampler2D s2Tex)
+{
+    // Lookup texture with coordinates
+    float3 f3TexColor = tex2D(s2Tex, i_f2Tex ).rgb;
+
+    // Multiply tex color with lighting
+    o_f3Color = i_f3Lighting * f3TexColor;
+}

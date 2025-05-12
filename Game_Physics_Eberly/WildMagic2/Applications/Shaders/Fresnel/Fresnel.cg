@@ -1,0 +1,67 @@
+//----------------------------------------------------------------------------
+float3 Fix(float3 f3Vec)
+{
+    return( 0.5f*f3Vec + 0.5f );
+}
+//----------------------------------------------------------------------------
+float3 UnFix(float3 f3Vec)
+{
+    return( 2.0f*f3Vec - 1.0f );
+}
+//----------------------------------------------------------------------------
+void vmain(
+    in float4 iPosition  : POSITION,
+    in float3 iNormal : NORMAL,
+
+    out float4 oPosition : POSITION,
+    out float3 oNormal : TEXCOORD0,
+    out float3 oEyeDir : TEXCOORD1,
+
+    uniform float4x4 WmlRendererModViewProj,
+    uniform float4x4 WmlRendererMod,
+    uniform float3 WmlCameraPosition)
+{
+   // Transform position into clipspace
+    oPosition = mul(WmlRendererModViewProj, iPosition);
+    
+    // Transform position into worldspace
+    float3 f3WorldPos = mul(WmlRendererMod, iPosition).xyz;
+
+    // Transform normal into worldspace
+    oNormal = Fix(mul((float3x3)WmlRendererMod, iNormal)); 
+
+    // Calculate incident direction
+    /*
+     * Note: We could have passed the worldposition to the pixel shader
+     * as well for a more accurate per-pixel calculation.  However, there
+     * is no true normalization function in the pixel shader (only
+     * approximations) and the lighting looks better if we calculate this
+     * here.
+     */
+    oEyeDir = Fix(normalize(f3WorldPos - WmlCameraPosition));
+
+    // The se next two Fix()'s are necessary because DX shaders truncate
+    // incoming texture coordinates to the [0, 1.0] range.
+}
+//----------------------------------------------------------------------------
+void pmain(
+    in float3 iLighting : COLOR,
+    in float3 iNormal : TEXCOORD0, 
+    in float3 iEyeDir : TEXCOORD1,
+
+    out float3 oColor : COLOR)
+{
+    // Untransform for DX shader compatibility
+    iNormal = UnFix(iNormal);
+    iEyeDir = UnFix(iEyeDir);
+    
+    // Calculate fresnel factor
+    float fFresnel = ( 1 + dot(iNormal,iEyeDir) );
+
+    // Common (but arbitrary) transform of fresnel function to enhance edges
+    fFresnel = fFresnel*fFresnel;
+
+    // Set all colors to be the result of this function
+    oColor.rgb = fFresnel;
+}
+//----------------------------------------------------------------------------

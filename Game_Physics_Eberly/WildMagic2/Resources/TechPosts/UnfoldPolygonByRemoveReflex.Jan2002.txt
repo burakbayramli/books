@@ -1,0 +1,57 @@
+From: "David Eppstein" <eppstein@ics.uci.edu>
+Subject: Re: comp geom question
+Date: Friday, January 25, 2002 3:07 PM
+
+In article <cIh48.75909$n81.19892250@typhoon.southeast.rr.com>,
+ "Dave Eberly" <eberly@magic-software.com> wrote:
+
+> Is it true that a simple, nonconvex polygon must have
+> at least one reflex vertex such that the line segment
+> connecting the two immediate neighbors of that vertex
+> does not intersect the polygon (except at the vertex
+> end points)?
+
+Yes.
+
+Look at the difference between the polygon and its convex hull -- it is a 
+collection of polygonal pockets, each of which has one hull edge and the 
+rest of the edges are from your original polygon.  Pick any pocket and 
+triangulate it.  If it is a single triangle, you are done, else there are 
+at least two ears (triangles connected to the rest of the triangulation by 
+a single edge. At most one of these ears can use the convex hull edge and 
+the other ear gives you the diagonal you want.
+-- 
+David Eppstein       UC Irvine Dept. of Information & Computer Science
+eppstein@ics.uci.edu http://www.ics.uci.edu/~eppstein/
+
+==============================================================================
+
+From: "Mike" <friedlinguini@yahoo.com>
+Subject: Re: comp geom question
+Date: Friday, January 25, 2002 6:26 PM
+
+"Dave Eberly" <eberly@magic-software.com> wrote in message news:<cIh48.75909$n81.19892250@typhoon.southeast.rr.com>...
+> Is it true that a simple, nonconvex polygon must have
+> at least one reflex vertex such that the line segment
+> connecting the two immediate neighbors of that vertex
+> does not intersect the polygon (except at the vertex
+> end points)?
+
+Yes.  Find the polygon's convex hull.  Find an edge of the convex hull
+[x(i), x(j)] which is not one of the polygon's edges.  By the
+definition of a nonconvex polygon, such an edge must exist.  This
+edge, and the polygon edges 'inside' it form another simple closed
+polygon whose interior is completely outside the input polygon.  Any
+simple closed polygon can be triangulated without any of the new edges
+intersecting the polygon, except at endpoints and completely within
+the interior of that polygon.  Any simple polygon has at least two
+nonadjacent "ears" that can be clipped (think polygon triangulation). 
+At least one of these does not include the convex hull edge, so it
+must consist of three adjacent vertices on the input polygon, and the
+middle one satisfies the condition you're looking for.  Thus, by
+transitivity of hand-waving, the vertex exists.
+
+I wish I could take credit for this, but I only had a vague idea in
+which to proceed with the proof, and got the meat via a Google search.
+ The source for the proof is here:
+http://www.google.com/url?sa=U&start=2&q=http://cgm.cs.mcgill.ca/~godfried/publications/mouth.ps.gz&e=925 

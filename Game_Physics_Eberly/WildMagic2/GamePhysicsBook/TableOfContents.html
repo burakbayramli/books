@@ -1,0 +1,330 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Books</title>
+<link rel=stylesheet type="text/css" href="../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+
+<font size="3"><b>Game Physics: Table of Contents</b> (last revised August 11, 2003)</font>
+<br><br>
+
+<pre>
+1  Introduction
+   1.1 A Brief History of the World
+   1.2 A Summary of the Topics
+
+2  Basic Concepts
+   2.1 Rigid Body Classification
+   2.2 Rigid Body Kinematics
+       2.2.1 Single Particle
+             - Planar Motion in Cartesian Coordinates
+             - Planar Motion in Polar Coordinates
+             - Spatial Motion in Cartesian Coordinates
+             - Spatial Motion in Cylindrical Coordinates
+             - Spatial Motion in Spherical Coordinates
+             - Motion About a Fixed Axis
+       2.2.2 Particle Systems and Continuous Materials
+   2.3 Newton's Laws
+   2.4 Forces
+       2.4.1 Gravitational Forces
+       2.4.2 Spring Forces
+       2.4.3 Friction and Other Dissipative Forces
+             - Friction
+             - Viscosity
+       2.4.4 Torque
+       2.4.5 Equilibrium
+   2.5 Momenta
+       2.5.1 Linear Momentum
+       2.5.2 Angular Momentum
+       2.5.3 Center of Mass
+             - Discrete Mass in 1 Dimension
+             - Continuous Mass in 1 Dimension
+             - Discrete Mass in 2 Dimensions
+             - Continuous Mass in 2 Dimensions
+             - Discrete Mass in 3 Dimensions
+             - Continuous Mass in 3 Dimensions
+       2.5.4 Moments and Products of Inertia
+             - Moment of Inertia in 1D
+             - Moment of Inertia in 2D
+             - Moment of Inertia in 3D
+       2.5.5 Mass and Inertia Tensor of a Solid Polyhedron
+             - Reduction of Volume Integrals
+             - Computation by Reduction to Line Integrals
+             - Computation by Direct Parameterization of Triangles
+             - Comparison to Mirtich's Formulas
+             - Pseudocode
+   2.6 Energy
+       2.6.1 Work and Kinetic Energy
+       2.6.2 Conservative Forces and Potential Energy
+        
+3  Rigid Body Motion
+   3.1 Newtonian Dynamics
+   3.2 Lagrangian Dynamics
+       3.2.1 Equations of Motion for a Particle
+             - Motion on a Curve
+             - Motion on a Surface
+             - Determining Constraint Forces
+       3.2.2 Time-Varying Frames or Constraints
+       3.2.3 Interpretation of the Equations of Motion
+       3.2.4 Equations of Motion for a System of Particles
+       3.2.5 Equations of Motion for a Continuum of Mass
+       3.2.6 Examples with Conservative Forces
+       3.2.7 Examples with Dissipative Forces
+             - One Particle on a Rough Plane
+             - Two Particles on a Rough Plane
+             - Multiple Particles on a Rough Plane
+             - A Thin Rod on a Rough Plane
+             - A Flat Board on a Rough Plane
+             - A Solid Box on a Rough Plane
+   3.3 Euler's Equations of Motion
+        
+4  Deformable Bodies
+   4.1 Elasticity, Stress, and Strain
+   4.2 Mass-Spring Systems
+       4.2.1 One-Dimensional Array of Masses
+       4.2.2 Two-Dimensional Array of Masses
+       4.2.3 Three-Dimensional Array of Masses
+       4.2.4 Arbitrary Configurations
+   4.3 Control Point Deformation
+       4.3.1 B-Spline Curves
+             - Types of Knot Vectors
+             - Evaluation
+             - Local Control
+             - Closed Curves
+       4.3.2 NURBS Curves
+       4.3.3 B-Spline Surfaces
+       4.3.4 NURBS Surfaces
+       4.3.5 Surfaces Built from Curves
+             - Cylinder Surfaces
+             - Generalized Cylinder Surfaces
+             - Revolution Surfaces
+             - Tube Surfaces
+   4.4 Free-Form Deformation
+   4.5 Implicit Surface Deformation
+       4.5.1 Level Set Extraction
+       4.5.2 Isocurve Extraction in 2D Images
+       4.5.3 Isosurface Extraction in 3D Images
+             - Table-Based Mesh Selection
+             - Ear-Clipping-Based Mesh Selection
+   
+5  Physics Engines
+   5.1 Unconstrained Motion
+       5.1.1 An Illustrative Implementation
+       5.1.2 A Practical Implementation
+   5.2 Constrained Motion
+       5.2.1 Collision Points
+       5.2.2 Collision Response for Colliding Contact
+             - Impulses
+             - Computing the Change of Velocity
+             - Multiple Contact Points
+             - Simultaneous Processing of Contact Points
+       5.2.3 Collision Response for Resting Contact
+       5.2.4 An Illustrative Implementation
+       5.2.5 Lagrangian Dynamics
+   5.3 Collision Detection with Convex Polyhedra
+       5.3.1 The Method of Separating Axes
+       5.3.2 Stationary Objects
+             - Convex Polygons
+             - Convex Polyhedra
+       5.3.3 Objects Moving with Constant Linear Velocity
+             - Separation of Convex Polygons
+             - Contact Set for Convex Polygons
+             - Separation of Convex Polyhedra
+             - Contact Set for Convex Polyhedra
+       5.3.4 Oriented Bounding Boxes
+       5.3.5 Boxes Moving with Constant Linear and Angular Velocity
+             - Constant Linear Velocity
+             - Constant Angular Velocity
+   5.4 Collision Culling and Time Coherence
+       5.4.1 Culling with Bounding Spheres
+       5.4.2 Culling with Axis-Aligned Bounding Boxes
+             - Intersecting Intervals
+             - Intersecting Rectangles
+             - Intersecting Boxes
+   5.5 Variations
+   
+6  Physics and Shader Programs
+   6.1  Introduction
+   6.2  Vertex and Pixel Shaders
+   6.3  Deformation by Vertex Displacement
+   6.4  Skin and Bones Animation
+   6.5  Rippling Ocean Waves
+   6.6  Refraction
+   6.7  Fresnel Reflectance
+   6.8  Iridescence
+   
+7  Linear Complementarity and Mathematical Programming
+   7.1 Linear Programming
+       7.1.1 A Two-Dimensional Example
+       7.1.2 Solution by Pairwise Intersections
+       7.1.3 Statement of the General Problem
+       7.1.4 The Dual Problem
+   7.2 The Linear Complementarity Problem
+       7.1.1 The Lemke-Howson Algorithm
+       7.1.2 Zero Constant Terms
+       7.1.3 The Complementary Variable cannot Leave the Dictionary
+   7.3 Mathematical Programming
+       7.3.1 Karush-Kuhn-Tucker Conditions
+       7.3.2 Convex Quadratic Programming
+       7.3.3 General Duality Theory
+   7.4 Applications
+       7.4.1 Distance Calculations
+             - Distance Between Point and Convex Polygon
+             - Distance Between Point and Convex Polyhedron
+             - Distance Between Convex Polygons
+             - Distance Between Convex Polyhedra
+       7.4.2 Contact Forces
+       
+8  Differential Equations
+   8.1 First-Order Equations
+   8.2 Existence, Uniqueness, and Continuous Dependence
+   8.3 Second-Order Equations
+   8.4 General-Order Equations
+   8.5 Systems of Linear Differential Equations
+   8.6 Equilbria and Stability
+       8.6.1 Stability for Constant-Coefficient Linear Systems
+       8.6.2 Stability for General Autonomous Systems
+
+9  Numerical Methods
+   9.1 Euler's Method
+   9.2 Higher-Order Taylor Methods
+   9.3 Methods Via an Integral Formulation
+   9.4 Runge-Kutta Methods
+       9.4.1 Second-Order Methods
+       9.4.2 Third-Order Methods
+       9.4.3 Fourth-Order Methods
+   9.5 Multistep Methods
+   9.6 Predictor-Corrector Methods
+   9.7 Extrapolation Methods
+       9.7.1 Richardson Extrapolation
+       9.7.2 Application to Differential Equations
+       9.7.3 Polynomial Interpolation and Extrapolation
+       9.7.4 Rational Polynomial Interpolation and Extrapolation
+       9.7.5 Modified Midpoint Method
+       9.7.6 Bulirsch-Stoer Method
+   9.8 Verlet Integration
+       9.8.1 Forces without a Velocity Component
+       9.8.2 Forces with a Velocity Component
+       9.8.3 Simulating Drag in a System
+       9.8.4 Leap Frog Method
+       9.8.5 Velocity Verlet Method
+       9.8.6 Gear's Fifth-Order Predictor-Corrector Method
+   9.9 Numerical Stability and its Relationship to Physical Stability
+       9.9.1 Stability for Single-Step Methods
+       9.9.2 Stability for Multistep Methods
+       9.9.3 Choosing a Stable Step Size
+   9.10 Stiff Equations
+
+10 Quaternions
+   10.1 Rotation Matrices
+   10.2 The Classical Approach
+        10.2.1 Relationghip of Quaternions to Rotations
+   10.3 A Linear Algebraic Approach
+   10.4 From Rotation Matrices to Quaternions
+        10.4.1 Introduction
+        10.4.2 2D Rotations
+        10.4.3 Linearity
+        10.4.4 3D Rotations: Part I
+        10.4.5 4D Rotations
+        10.4.6 3D Rotations: Part II
+        10.4.7 4D Matrix
+   10.5 Interpolation of Quaternions
+        10.5.1 Spherical Linear Interpolation
+        10.5.2 Spherical Quadratic Interpolation
+   10.6 Derivatives of Time-Varying Quaternions
+
+Appendices
+
+A  Linear Algebra
+   A.1 A Review of Number Systems
+       A.1.1 The Integers
+       A.1.2 The Rational Numbers
+       A.1.3 The Real Numbers
+       A.1.4 The Complex Numbers
+       A.1.5 Fields
+   A.2 Systems of Linear Equations
+       A.2.1 A Closer Look at Two Equations in Two Unknowns
+       A.2.2 Gaussian Elimination and Elementary Row Operations
+       A.2.3 Nonsquare Systems of Equations
+       A.2.4 The Geometry of Linear Systems
+       A.2.5 Numerical Issues
+       A.2.6 Iterative Methods for Solving Linear Systems
+   A.3 Matrices
+       A.3.1 Some Special Matrices
+       A.3.2 Elementary Row Matrices
+       A.3.3 Inverse Matrices
+       A.3.4 Properties of Inverses
+       A.3.5 Construction of Inverses
+       A.3.6 LU Decomposition
+   A.4 Vector Spaces
+       A.4.1 Definition of a Vector Space
+       A.4.2 Linear Combinations, Spans, and Subspaces
+       A.4.3 Linear Independence and Bases
+       A.4.4 Inner Products, Length, Orthogonality, and Projection
+       A.4.5 Dot Product, Cross Product, and Triple Products
+       A.4.6 Orthogonal Subspaces
+       A.4.7 The Fundamental Theorem of Linear Algebra
+       A.4.8 Projection and Least Squares
+       A.4.9 Linear Transformations
+   A.5 Advanced Topics
+       A.5.1 Determinants
+       A.5.2 Eigenvalues and Eigenvectors
+       A.5.3 Eigendecomposition for Symmetric Matrices
+       A.5.4 S + N Decomposition
+       A.5.5 Applications
+       
+B  Affine Algebra
+   B.1 Introduction
+   B.2 Coordinate Systems
+   B.3 Subspaces
+   B.4 Transformations
+   B.5 Barycentric Coordinates
+       B.5.1 Triangles
+       B.5.2 Tetrahedra
+       B.5.3 Simplices
+       B.5.4 Length, Area, Volume, and Hypervolume
+       
+C  Calculus
+   C.1 Univariate Calculus 
+       C.1.1 Limits
+       C.1.2 Limits of a Sequence
+       C.1.3 Continuity
+       C.1.4 Differentiation
+       C.1.5 l'Hopital's Rule
+       C.1.6 Integration
+   C.2 Multivariate Calculus
+       C.2.1 Limits and Continuity
+       C.2.2 Differentiation
+       C.2.3 Integration
+   C.3 Applications
+       C.3.1 Optimization
+       C.3.2 Constrained Optimization
+       C.3.3 Derivative Approximations by Finite Differences
+
+D  Ordinary Difference Equations
+   D.1 Definitions
+   D.2 Linear Equations
+       D.2.1 First-Order Linear Equations
+       D.2.2 Second-Order Linear Equations
+   D.3 Constant Coefficient Equations
+   D.4 Systems of Equations
+
+Bibliography
+</pre>
+
+</td></tr>
+</table>
+
+</body>
+</html>

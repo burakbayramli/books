@@ -1,0 +1,181 @@
+From: "Alexander Agathos" <agalex@ath.forthnet.gr>
+Subject: Re: Incremental delaunay, 3D?
+Date: Sunday, May 12, 2002 12:12 PM
+
+Drirr C. wrote:
+
+> Hello,
+> 
+> I'm trying to create a delaunay tetrahedralization incrementally. I want to
+> be able to add and remove points interactively without needing to recompute
+> the whole thing each time. At least for the point insertion part, I thought
+> this might help:
+> 
+> "L.J.Guibas, D.E.Knuth and M.Sharir. Randomized Incremental Construction of
+> Delaunay and Voronoi diagrams. Algorithmica 7: 381-413, 1992. "
+> 
+> But unfortuatelly I don't have access to Algorithmica.
+> 
+> Does anyone know an algorithm for performing such incremental updates, or
+> could point me to a URL?
+> 
+> Thanks!
+> Drirr C.
+> 
+> 
+> 
+> --
+> 
+> 
+> 
+> 
+
+Well these algorithms are called "on-line" or "interpolative" 
+algorithms. If you judge by the way you insert the points you can call 
+them also incremental, ok.
+
+Apart from the work of Guibas there exist some additional work:
+
+J-D. Boissonnat, M. Teillaud, An Hierarchical Representation of objects: 
+The Delaunay Tree, Symposium on Computational Geometry 1 986: 260-268
+
+J-D. Boissonnat, M. Teillaud, On the Randomized construction of the 
+Delaunay Tree, TCS 11 2(2): 339-354, 1 993
+
+Olivier Devillers, Improved Incremental Randomized Delaunay 
+Triangulation, Proc. 1 4th Annual ACM Sympos. Comp. Geom, 1998: 106-115
+****Sth very intereting is claimed about the above paper in Boissonats 
+work****
+
+H. Edelsbrunner, N. Shah, Triangulating Topological Spaces, 
+International Journal of Computational Geometry and Applications, 7(4): 
+365-378, 1997
+
+Visit the web pages of E. Mucke and O. Devillers they have some code in 
+there...
+
+Good Luck,
+Alexander Agathos,
+URL page (best viewed with Mozilla):
+http://users.forthnet.gr/ath/agalex
+
+
+==============================================================================
+From: "Hugo Ledoux" <hugo.ledoux@NOSPAMpolyu.edu.hk>
+Subject: Re: Incremental delaunay, 3D?
+Date: Sunday, May 12, 2002 10:37 PM
+
+I had to do this few months ago, and Jonathan Shewchuk's PhD thesis helped
+me a lot, more than any other papers i've found. At the bottom of this page
+(http://www-2.cs.cmu.edu/~quake-papers/delaunay-refinement.abstract) there's
+a link to his thesis in ps format. In it, you will find good images that
+explain the nasty cases (coplanar points) and also few possible data
+structures to use; but this is only for adding points in a mesh. For the
+deletion of points, i've not found any implementations, but the method by
+Devillers in 2d is supposed to be valid in 3d. Here's the reference:
+
+@TECHREPORT{Devillers98,
+   author = "Olivier Devillers",
+   title = "On Deletion in Delaunay Triangulation",
+   institution = "Unité de recherche {INRIA} {S}ophia {A}ntipolis",
+   number = "3451",
+   month = "July",
+   year = "1998",
+}
+
+If you successfully implement the delete function with this, send me an
+e-mail i want to see that ;-)
+
+Hugo Ledoux
+
+"Drirr C." <00444083@academ01.cem.itesm.mx> wrote in message
+news:A2pD8.19$Fa.7652@nn1-lan0.avantel.net.mx...
+> Hello,
+>
+> I'm trying to create a delaunay tetrahedralization incrementally. I want
+to
+> be able to add and remove points interactively without needing to
+recompute
+> the whole thing each time. At least for the point insertion part, I
+thought
+> this might help:
+>
+> "L.J.Guibas, D.E.Knuth and M.Sharir. Randomized Incremental Construction
+of
+> Delaunay and Voronoi diagrams. Algorithmica 7: 381-413, 1992. "
+>
+> But unfortuatelly I don't have access to Algorithmica.
+>
+> Does anyone know an algorithm for performing such incremental updates, or
+> could point me to a URL?
+>
+> Thanks!
+> Drirr C.
+>
+>
+>
+> --
+>
+>
+>
+
+==============================================================================
+
+From: "Hugo Ledoux" <hugo.ledoux@NOSPAMpolyu.edu.hk>
+Subject: Re: Incremental delaunay, 3D?
+Date: Monday, May 13, 2002 10:10 PM
+
+I use a very simple data structure: each record represents a tetrahedron.
+This is the extension of the 2d "triangle data structure"; each record has 4
+pointers to the vertices of the tetrahedron and also 4 pointers to the
+adjacent tetrahedra. I use an incremental algorithm and i start with a very
+big tetrahedron that will contain all the points, and then i search the
+tetrahedron that contains a newly inserted point by using a "walk" function:
+starting from an arbitrary tetrahedron, i test the new point with each plane
+of the current tetrahedron to see on which side it is; if it's "outside" (i
+compute the volume of the tetra forms by the point and the plane) i walk to
+the adjacent tetra and do the same test. The good tetra is the one where the
+4 tests say "inside". I know it's not the fastest algorithm out there but it
+works fine for me...
+
+After, i split the tetra into 4 new tetra and then i test them (Delaunay
+criterion) with the neighbors and "flip" planes to make them delaunay...well
+that part is too long to explain.
+
+Hope that helps,
+hugo
+
+
+"Alexander Agathos" <agalex@ath.forthnet.gr> wrote in message
+news:3CDF9F00.2020603@ath.forthnet.gr...
+> Hugo Ledoux wrote:
+>
+> > I had to do this few months ago, and Jonathan Shewchuk's PhD thesis
+helped
+> > me a lot,
+>
+>
+> If it is not a secret can you mention the structure you used to store
+> the delaunay triangulation? What is the complexity of the data
+> structure? How do you search for the balls containing the newly inserted
+> point?
+> This is the most tricky part in these kind of algorithms. If you think
+> that what you created is original then by all means keep it for yourself.
+>
+> Also there is one more paper published by Devillers:
+>
+> Olivier Devillers, Stefan Meiser, Monique Teillaud
+> Fully Dynmic Delaunay Trinagulation in Logarithmic Expected Time per
+> operation.
+>
+> This paper is in Devillers web page. It treats both insertion and
+> deletion. The problem with the Delaunay tree is that it needs a big
+> amount of memory.
+>
+> Alexander Agathos,
+> URL page (best viewed with Mozilla):
+> http://users.forthnet.gr/ath/agalex
+>
+>
+
+

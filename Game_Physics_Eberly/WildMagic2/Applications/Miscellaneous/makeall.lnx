@@ -1,0 +1,8 @@
+build :
+	@mkdir -p $(APP)/$(CONFIG)
+	cd $(APP) ; make CONFIG=$(CONFIG) -f ../makeapp.lnx
+
+clean :
+	cd $(APP) ; make clean CONFIG=$(CONFIG) -f ../makeapp.lnx
+	rmdir $(APP)/$(CONFIG)
+

@@ -1,0 +1,59 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Extract Level Surfaces</title>
+<link rel=stylesheet type="text/css" href="../../mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table>
+<tr><td>
+<b>Extract level surfaces from a 3D image</b>:<br><br>
+<a href="Imagics/ExtractLevelTetra/ExtractLevelTetra.h">ExtractLevelTetra.h</a>
+<a target = "_blank" href="Imagics/ExtractLevelTetra/ExtractLevelTetra.h"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>,
+<a href="Imagics/ExtractLevelTetra/ExtractLevelTetra.cpp">ExtractLevelTetra.cpp</a>
+<a target = "_blank" href="Imagics/ExtractLevelTetra/ExtractLevelTetra.cpp"><img src="../Images/TextIcon.png" width=12 height=16 border=0></a>,
+<i>
+<a href="../Documentation/ExtractLevelSurfaces.pdf">Extraction of Level Sets from 3D Images</a>
+<a target="_blank" href="../../Documentation/ExtractLevelSurfaces.pdf"><img src="../Images/PdfIcon.png" width=16 height=16 border=0></a>
+</i>
+<br><br>
+
+Each voxel is decomposed into five tetrahedra and linear interpolation is
+assumed on each tetrahedron.  The extraction was applied using level value
+64 in the <i>superoxide dismutase</i> molecule image (molecule.im is in the
+zipped data file available from this web site).  The vertices and triangles
+are written to a text file.  I converted that data into a Wild Magic scene
+graph (.mgc file) and displayed it with a scene viewer.  The left image is
+a view from outside the entire voxel data set.  The right image is a view
+where the camera is moved closer to the data set.
+<br><br>
+
+<table>
+  <tr>
+    <td><img src="WebImages/MoleculeTetras0.png" width=256 height=256 alt="molecule tetras 0" border=1></td>
+    <td width=16 height=1></td>
+    <td><img src="WebImages/MoleculeTetras1.png" width=256 height=256 alt="molecule tetras 1" border=1></td>
+  </tr>
+</table>
+<br><br>
+
+Back face culling is disabled to make sure that non-closed surfaces are
+viewable from any orientation.  The polygonal models have a single material
+and the scene is illuminated with two directional lights.  Notice that the
+large component in the lower right of the right image is an open surface.
+This component has its boundary curve on a plane of the voxel data
+boundary (effectively a truncated portion of a closed surface).
+
+</td></tr>
+</table>
+
+</body>
+</html>

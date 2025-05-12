@@ -1,0 +1,83 @@
+// Iridescence shader
+// This shader uses slightly different colors depending on the angle
+// at which you view the geometry.
+
+//----------------------------------------------------------------------------
+void vmain(
+    in float4 i_f4Position : POSITION,
+    in float3 i_f3Normal : NORMAL,
+    in float2 i_f2Tex : TEXCOORD0,
+
+    out float4 o_f4Position : POSITION, 
+    out float2 o_f2Tex : TEXCOORD0,
+    out float3 o_f3Normal : TEXCOORD1,
+    out float3 o_f3EyeDir : TEXCOORD2,
+    out float o_fIntFactor : TEXCOORD3,
+
+    uniform float4x4 WmlRendererModViewProj,
+    uniform float4x4 WmlRendererMod,
+    uniform float3 WmlCameraPosition,
+    uniform float InterpolateFactor)
+{
+   // Transform position into clipspace
+    o_f4Position = mul(WmlRendererModViewProj, i_f4Position);
+    
+    // Transform position into worldspace
+    float3 f3WorldPos = mul(WmlRendererMod, i_f4Position).xyz;
+
+    // Transform normal into worldspace
+    o_f3Normal = mul((float3x3)WmlRendererMod, i_f3Normal); 
+
+    // Calculate eye direction
+    o_f3EyeDir = normalize(f3WorldPos - WmlCameraPosition);
+
+    // These next two lines are necessary because DX shaders truncate
+    // incoming texture coordinates to the [0, 1.0] range.
+    o_f3Normal = o_f3Normal*0.5f + 0.5f;
+    o_f3EyeDir = o_f3EyeDir*0.5f + 0.5f;
+
+    // Pass through the (actual) texture coordinate
+    o_f2Tex = i_f2Tex;
+
+    // For some reason the lerp function in the pixel shader would not
+    // accept a uniform value passed in.  So, we'll just pass it along here
+    // through the vertex shader.  This is a kludge.
+    o_fIntFactor = InterpolateFactor;
+}
+//----------------------------------------------------------------------------
+void pmain(
+    in float2 i_f2Tex    : TEXCOORD0,
+    in float3 i_f3Normal : TEXCOORD1, 
+    in float3 i_f3EyeDir : TEXCOORD2,
+    in float i_fIntFactor : TEXCOORD3, 
+
+    out float3 o_f3Color : COLOR,
+    
+    uniform sampler2D s2RealTex,
+    uniform sampler2D s2GradientTex)
+{
+    // Untransform for DX shader compatibility
+    i_f3Normal = 2.0f*(i_f3Normal-0.5f);
+    i_f3EyeDir = 2.0f*(i_f3EyeDir-0.5f);
+    
+    // View dependent texture lookup factor
+    // This will be the lookup into a gradient texture, so that there
+    // will be a different color/saturation depending on what angle you
+    // view it at.
+    float fViewFactor = 1+dot(i_f3Normal,i_f3EyeDir);
+
+    // Optional transformation to sharpen where the gradient occurs
+    fViewFactor = fViewFactor*fViewFactor;
+
+    // The miniscule factor eliminates some "spotting" around where
+    // many values become zero (which kind of looks cool).
+    float2 f2GradTexCoord = saturate(float2(fViewFactor+1.0f/256.0f,0.0f));
+    //float2 f2GradTexCoord = float2(fViewFactor, 0.0f);
+
+    float3 f3RealColor = tex2D(s2RealTex, i_f2Tex).xyz;
+    float3 f3GradColor = tex2D(s2GradientTex, f2GradTexCoord).xyz;
+
+    // Now that we have the two colors, interpolate between them  
+    o_f3Color = lerp(f3RealColor,f3GradColor,i_fIntFactor);
+}
+//----------------------------------------------------------------------------

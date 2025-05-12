@@ -1,0 +1,38 @@
+From: Max Froumentin <masmef@maths.bath.ac.uk>
+Subject: Re: How to use Nurbs to represent a Circle?
+Date: Friday, November 27, 1998 10:32 AM
+
+
+Several solutions exists (see "The Nurbs Book" by L. Piegl and
+S. Tiller, Springer). One of them is:
+
+For a circle centered on (0,0) and of radius R, use control points
+({{x,y} weight}):
+
+{{ 1.0,  0.0}, 1.0}, 
+{{ 1.0,  1.0}, SQRT2/2.0},
+{{ 0.0,  1.0}, 1.0},
+{{-1.0,  1.0}, SQRT2/2.0},
+{{-1.0,  0.0}, 1.0},
+{{-1.0, -1.0}, SQRT2/2.0},
+{{ 0.0, -1.0}, 1.0},
+{{ 1.0, -1.0}, SQRT2/2.0},
+{{ 1.0,  0.0}, 1.0};
+
+and knots:
+
+{0.0,0.0,0.0,0.25, 0.25,0.5,0.5,0.75,0.75,1.0,1.0,1.0}
+
+Max.
+
+
+"Mingming" <r6522433@ms.cc.ntu.edu.tw> writes:
+
+> I want to use Nurbs represent a Circle,but i don't know
+> how to convert Circle to Nurbs.
+
+-- 
+Max Froumentin - http://www.bath.ac.uk/~masmef
+School of Maths
+University of Bath
+United Kingdom

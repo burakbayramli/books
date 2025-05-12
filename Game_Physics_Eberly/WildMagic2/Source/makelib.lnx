@@ -1,0 +1,12 @@
+INCDIR := ../Include
+LIBDIR := ../Library/$(CONFIG)
+
+clean :
+	rm -f $(INCDIR)/*.*
+	rm -f $(LIBDIR)/*.*
+
+build_project :
+	cd $(DIR) ; make CONFIG=$(CONFIG) -f ../makeprj.lnx
+
+clean_project :
+	cd $(DIR) ; make clean CONFIG=$(CONFIG) -f ../makeprj.lnx

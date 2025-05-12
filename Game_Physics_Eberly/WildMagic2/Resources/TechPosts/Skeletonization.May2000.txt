@@ -1,0 +1,112 @@
+From: Leandro Estrozi <lfestrozi@my-deja.com>
+Subject: New 2D Skeletonization Method
+Date: Tuesday, May 09, 2000 11:46 PM
+
+10th May 2000
+
+We are glad to inform that a homepage has now been set describing
+what is possibly the simplest approach to obtaining high quality
+multiscale skeletons, which are 8-connected and present segments
+with unitary width.
+
+The method, based on the concept of exact dilations, allows the
+simultaneous determination of the exact Euclidean distance transform
+and exact label propagation.  The obtained family of multiscale
+skeletons presents the distinctive feature that a series
+reconstruction of the shape can be obtained where small scale
+information is removed while preserving the position of larger scale
+details of the shape.  In addition, the homotopy of the shapes are
+conserved (in the sense that the shape is not broken).  The application
+potential of this methodology is vast and includes shape analysis,
+biology, material sciences, line drawing analysis, visual perception,
+and many, many more.
+
+The page, which can be found at
+
+       http://cyvision.if.sc.usp.br/msskeletons/
+
+includes a description of the methods, pseudo-codes, animations,
+a downloadable interactive demo, and references.
+
+Comments and suggestions are very welcomed.
+
+Best wishes, Luciano and Leandro
+--
+====================
+Luciano da F. Costa
+luciano@if.sc.usp.br
+http://cyvision.if.sc.usp.br/~luciano
+====================
+Leandro Estrozi
+lfestrozi@if.sc.usp.br
+http://cyvision.if.sc.usp.br/~lfestroz
+
+
+Sent via Deja.com http://www.deja.com/
+Before you buy. 
+
+==============================================================================
+From: "Pierre Soille" <Pierre.Soille@jrc.it>
+Subject: Re: Skeletonize problem
+Date: Thursday, August 23, 2001 3:43 AM
+
+There is a huge number of skeletonization algorithms.   If you are
+interested in an algorithm which is independent of the order
+used for processing the image pixels, you may be interested in the
+following paper:
+
+
+@InProceedings{   ranwez-soille99,
+  author        = {Ranwez, V. and Soille, P.},
+  title         = {Order Independent Homotopic Thinning},
+  editor        = {Bertrand, G. and Couprie, M. and Perroton, L.},
+  series        = {\htmladdnormallink{Lecture Notes in Computer
+                 
+Science}{http://www.springer.de/comp/lncs/index.html}},
+  volume        = {1568},
+  pages         = {337-346},
+  url           =
+{http://ams.egeo.sai.jrc.it/soille/ranwez-soille99.pdf},
+  booktitle     = {Proc. of Discrete Geometry for Computer Imagery'99},
+  year          = {1999},
+  publisher     =
+{\htmladdnormallink{Springer-Verlag}{http://www.springer.de}}
+
+}
+
+
+
+Pierre 
+
+http://ams.egeo.sai.jrc.it/soille
+
+
+
+
+Anders Sundman wrote:
+> 
+> Hi,
+> 
+> I'm trying to write a skeletonize routine for binary images but I get a
+> very poor result so I suspect that there is some error in my algorithm.
+> Perhaps someone could help me out.
+> 
+> This is in large what I do:
+> For every pixel
+>   Erode, unless pixels fitts one of the bitmasks signaling that it wold
+> separate a 1-pixel wide line.
+> 
+> My questions:
+> 1. How to know when to stop itterating? If I include the 8 endOfLine
+> masks I can stop when no change longer occures, but then I get a lot of
+> 'noisy'  lines propagating from diagonal edges.
+> 
+> 2. When doing bitmask check, what pixeldata should I use? The original
+> unmodfied image (doesn't make much sense ), the new eroded image (won't
+> save 2pixel wide line), or a combination(????)?
+> 
+> 3. How many bitmask do I realy need?
+> 
+> Thank you,
+> 
+> - Anders 

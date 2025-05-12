@@ -1,0 +1,90 @@
+From henrion@laas.fr Wed Mar 18 22:31:42 EST 1998
+Article: 65020 of comp.graphics.algorithms
+Path: unc-cs!news-relay.ncren.net!newsgate.duke.edu!nntprelay.mathworks.com!fu-berlin.de!jussieu.fr!unilim.fr!cict.fr!laas.fr!not-for-mail
+From: Didier Henrion <henrion@laas.fr>
+Newsgroups: sci.op-research,comp.graphics.algorithms
+Subject: Re: Nested Ellipsoids
+Date: Wed, 18 Mar 1998 13:39:05 +0100
+Organization: LAAS-CNRS
+Lines: 68
+Message-ID: <350FC069.25D2@laas.fr>
+References: <350EBC21.41C67EA6@cc.gatech.edu>
+NNTP-Posting-Host: degas.laas.fr
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Mailer: Mozilla 3.01 (X11; I; SunOS 5.5 sun4m)
+To: Peter Lindstrom <lindstro@cc.gatech.edu>
+CC: henrion
+Xref: unc-cs sci.op-research:9463 comp.graphics.algorithms:65020
+
+Peter Lindstrom wrote:
+> 
+> I'm looking for analytic solutions to the following problem:
+> 
+>   Given two axis-aligned ellipsoids E1 = (x1, y1, z1, a1, b1, c1) and
+>   E2 = (x2, y2, z2, a2, b2, c2), implicitly defined by
+> 
+>     (x - xi)^2/ai^2 + (y - yi)^2/bi^2 + (z - zi)^2/ci^2 = 1,   i in {1,
+> 2}
+> 
+>   find the smallest-volume ellipsoid E0 = (0, 0, 0, a0, b0, c0),
+> centered
+>   on the origin, that encloses the other two ellipsoids.
+
+> Peter Lindstrom
+
+	Hello,
+
+In the book
+
+	S. Boyd, L. El Ghaoui, E. Feron, V. Balakrishnan
+	"Linear Matrix Inequalities in System and Control Theory"
+	SIAM Studies in Applied Mathematics, Volume 15, 1994
+
+on page 43, chapter 3.7.1, the authors NUMERICALLY solve this problem
+through semidefinite programming. Their algorithm is as follows.
+
+Suppose that you are given p ellipsoids
+
+	Ei = {x : x'*Ai*x + 2*x'*bi + ci <= 0}, i = 1,2,..,p
+
+where matrices Ai are symmetric positive definite, and that you want
+to compute the smallest volume ellipsoid
+
+	E0 = {x : x'*A0*x + 2*x'*b0 + c0 <= 0}
+
+enclosing the union of the Ei. Without loss of generality, assume
+that b0'*inv(A0)*b0 - c0 = 1. Then, this problem can be cast as a
+convex linear matrix inequality (LMI) optimization problem :
+
+        min  log det inv(A0)
+        s.t.
+             A0 > 0
+
+             [ A0  b0   0]      [ Ai  bi 0 ]
+             [ b0' -1 b0'] - ti [ bi' ci 0 ] <= 0, i = 1,2,..,p
+             [ 0   b0 -A0]      [  0   0 0 ]
+
+             t1, t2, .., tp >= 0
+
+Efficient algorithms based on interior point methods have been
+developed for solving the above problem. You can find pointers to
+papers and software at URL
+
+	http://www-isl.stanford.edu/~boyd/maxdet.html
+
+Hope it helps,
+
+---------------------------------------------------------------
+Didier Henrion
+
+LAAS-CNRS / Groupe CSC / Bureau E50
+7 Avenue du Colonel Roche
+31077 Toulouse Cedex 4, France
+
+Phone:  (33 5) 61 33 69 49  Fax:    (33 5) 61 33 69 69
+E-mail: henrion@laas.fr     WWW:    http://www.laas.fr/~henrion
+---------------------------------------------------------------
+
+

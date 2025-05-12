@@ -1,0 +1,430 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Magic Software: Update History</title>
+<link rel=stylesheet type="text/css" href="mgcbodystyle.css" title="mgcbodystyle">
+<style>
+<!--
+A:link {text-decoration: none}
+A:visited {text-decoration: none; color: rgb(183,177,207)}
+A:active {text-decoration: none; color: rgb(183,177,207)}
+-->
+</style>
+</head>
+<body>
+
+<table width=600>
+<tr><td><hr></td></tr>
+
+<tr><td>
+<font color=blue>
+The source files that have changed corresponding to the entries from 22 Oct
+2003 to the present have been uploaded to the web site as individual files.
+They have not been added to the zip files.  The Version 2.12 update will
+contain these, but for now you need to download the modified files
+individually.
+</font>
+</td></tr>
+
+<tr><td><hr></td></tr>
+
+<tr><td><b>21 Oct 2003.</b>
+Update to Version 2.11.  The changes from Version 2.1 are listed below.  The
+<i>Game Physics</i> book will ship with a CD-ROM containing version 2.11.
+<br><br>
+
+A bug in g++ 3.x causes it to incorrectly generate a warning about use of
+implicit typenames.  The return types of the GetOverlap() function need
+"typename" included to avoid the warning.  However, the inclusion of
+"typename" causes Visual C++ 6 to generate errors.  Conditional compilation
+has been added to resolve the mutually exclusive requirements.
+<br>
+<font color=red>Source/Physics/WmlIntersectingIntervals.cpp</font><br>
+<font color=red>Source/Physics/WmlIntersectingRectangles.cpp</font><br>
+<font color=red>Source/Physics/WmlIntersectingBoxes.cpp</font>
+<br><br>
+
+Disabled/reenabled depth buffering, lighting, and texturing in the
+Draw(const unsigned char*) call.
+<br>
+<font color=red>Renderers/OpenGL/WmlOpenGLRenderer.cpp</font>
+<tr><td><hr></td></tr>
+
+<tr><td><b>15 Oct 2003.</b>
+Update to Version 2.1.  The changes from Version 2.02 are listed below.
+<br><br>
+
+Many new physics applications to illustrate the concepts in the
+<i>Game Physics</i> book.  The full list of physics applications in
+Applications/Physics and shader applications in Applications/Shaders:
+<br>
+<font color=red>
+<pre>
+   KeplerPolarForm         (Section 3.1,   Exercise 3.3 )
+   FoucaultPendulum        (Section 3.1,   Example  3.3 )
+   BeadSlide               (Section 3.2.1, Exercise 3.7 )
+   BallRubberBand          (Section 3.2.1, Example  3.6 )
+   BallHill                (Section 3.2.1, Example  3.7 )
+   DoublePendulum          (Section 3.2.4, Exercise 3.16)
+   MassPulleySpringSystem  (Section 3.2.5, Example  3.12)
+   SimplePendulumFriction  (Section 3.2.7, Example  3.17)
+   RoughPlaneParticle1     (Section 3.2.7               )
+   RoughPlaneSolidBox      (Section 3.2.7               )
+   FreeTopFixedTip         (Section 3.3,   Example  3.19)
+   Rope                    (Section 4.2.1, Example  4.1 )
+   Cloth                   (Section 4.2.2, Example  4.2 )
+   GelatinCube             (Section 4.2.3, Example  4.3 )
+   GelatinBlob             (Section 4.2.4, Example  4.4 )
+   BSplineCurveExamples    (Section 4.3.1, Example  4.5 )
+   NURBSCurveExample       (Section 4.3.2, Example  4.7 )
+   FlowingSkirt            (Section 4.3.5, Example  4.9 )
+   WaterDropFormation      (Section 4.3.5, Example  4.10)
+   HelixTubeSurface        (Section 4.3.5               )
+   WrigglingSnake          (Section 4.3.5, Example  4.11)
+   FreeFormDeformation     (Section 4.4,   Example  4.12)
+   BouncingBall            (Section 4.5.3, Example  4.14)
+   BouncingSpheres         (Section 5.2.2               )
+   BouncingTetrahedra      (Section 5.2.3               )
+   IntersectingIntervals   (Section 5.4.2               )
+   IntersectingRectangles  (Section 5.4.2               )
+   IntersectingBoxes       (Section 5.4.2               )
+   CgConverter             (Section 6.2                 )
+   BasicShader             (Section 6.2                 )
+   VertexNoise             (Section 6.3                 )
+   Skinning                (Section 6.4                 )
+   RipplingOcean           (Section 6.5                 )
+   Refraction              (Section 6.6                 )
+   Fresnel                 (Section 6.7                 )
+   Iridescence             (Section 6.8                 )
+   Charcoal                (not described in book       )
+   PolygonDistance         (Section 7.4.1               )
+   PolyhedronDistance      (Section 7.4.1               )
+   SimplePendulum          (Section 9.9.3, Example   9.1)
+</pre>
+</font>
+<br><br>
+
+New files for detecting overlap of axis--aligned boxes in three dimensions
+using time coherency for fast updates.
+<br>
+<font color=red>Source/Physics/WmlIntersectingBoxes.{h,cpp}</font>
+<br><br>
+
+New files for detecting overlap of axis--aligned boxes in two dimensions
+using time coherency for fast updates.
+<br>
+<font color=red>Source/Physics/WmlIntersectingRectangles.{h,cpp}</font>
+<br><br>
+
+Removed some redundant code and added the class to the Wml namespace.
+<br>
+<font color=red>Source/Physics/WmlIntersectingIntervals.{h,cpp}</font>
+<br><br>
+
+New files to implement an axis-aligned bounding box in two and three
+dimensions.
+<br>
+<font color=red>Source/Geometry/WmlAxisAlignedBox{2,3}.{h,cpp}</font>
+<br><br>
+
+Added the ability to flip the screen without the user having to constantly
+call Flip(y).
+<br>
+<font color=red>Applications/Application2/WmlApplication2.{h,cpp}</font>
+<br><br>
+
+The open polyline line strip code was attempting to draw one too many
+primitives.
+<br>
+<font color=red>Renderers/DX/WmlDxRenderer.cpp</font>
+<br><br>
+
+ToAxisAngle had a test to see if fSqrLength is positive.  The test now
+compares fSqrLength to a small epsilon value to avoid numerical problems
+with the InvSqrt call.
+<br>
+<font color=red>Source/Math/WmlQuaternion.cpp</font>
+<br><br>
+
+Added a static const ZERO quaternion.<br>
+<font color=red>Source/Math/WmlQuaternion.{h,cpp}</font>
+<br><br>
+
+Uploaded the rigid body class.<br>
+<font color=red>Source/Physics/WmlRigidBody.{h,cpp}</font>
+<br><br>
+
+operator= was doing a memcpy with sizeof(float) rather than sizeof(Real).
+<br>
+<font color=red>Source/Math/WmlPoint.inl</font>
+<br><br>
+
+Added 64-bit compatibility conversions and removed the pragma disable of
+warnings.<br>
+<font color=red>Applications/Application{2,3}/WmlDxApplication.cpp</font>
+<font color=red>Applications/Application{2,3}/WmlWglApplication.cpp</font>
+<br><br>
+
+Added new files for least-squares fitting of data by polynomials of 1, 2, or 3
+variables.<br>
+<font color=red>Source/Approximation/WmlApprPolyFit{1,2,3}.{h,cpp}</font>
+<br><br>
+
+MergeLinear had m_kHull.push_back(m_kHull[0]) and
+m_kHull.push_back(m_kHull[1]).  Since push_back passes by reference, if a
+reallocation occurs, the inputs will reference invalid memory.  The problem
+for the first code fragment would show up if the default constructor for STL
+vector allocates exactly 1 element, the problem for the second code fragment
+if the constructor allocates exactly 2 elements.  I believe the default
+number of elements is 10, but just to be safe the code has been changed to
+make copies of m_kHull[0] or m_kHull[1] and passes those to push_back.<br>
+<font color=red>Source/Containment/WmlConvexHull2.h</font>
+<tr><td><hr></td></tr>
+
+<tr><td><b>02 Sep 2003.</b>
+Update to Version 2.02.  The changes from Version 2.01 are listed below.
+<br><br>
+
+Lines 69 and 74 were somehow swapped, causing std::sort to crash.  This bug
+was introduced in the conversion from 1.5 to 2.0.<br>
+<font color=red>Source/Tessellation/WmlDelaunay2a.h</font>
+<br><br>
+
+The quartic polynomial was being incorrectly constructed as a degree 5
+polynomial.<br>
+<font color=red>Source/Distance/WmlDistLin3Cir3.cpp</font>
+<br><br>
+
+The Renderers/AGL, Renderers/GLUT, and Renderers/WGL directories were
+combined into a single directory, Renderers/OpenGL.  The consequence is that
+only one copy of the platform-independent OpenGL source files exists in the
+distribution.  The Visual C++ projects for the GLUT and WGL renderers were
+combined into a single new project OpenGLRenderer.{dsp,vcproj}.  The targets
+involve Debug/Release and GLUT/WGL.  Conditional compilation was added to
+GlutRenderer.cpp and WglRenderer.cpp to allow DeveloperStudio to compile one
+or the other, but not both, within a single project.  (CodeWarrior and
+ProjectBuilder on the Macintosh allow file selection of this type as part of
+the project settings.)<br>
+<font color=red>deleted Renderers/AGL directory and all files</font><br>
+<font color=red>deleted Renderers/GLUT directory and all files</font><br>
+<font color=red>deleted Renderers/WGL directory and all files</font><br>
+<font color=red>created Renderers/OpenGL directory, contains OpenGL source files and projects</font><br>
+<font color=red>modified Renderers/makelib.lnx</font>
+<br><br>
+
+Factored out a common subexpression in ConvertEllipseToQuadratic to avoid
+calculating a matrix-vector product twice.<br>
+<font color=red>Source/Intersection/WmlIntrElp2Elp2.cpp</font>
+<br><br>
+
+A cut-and-paste error led to incorrect array indices in the Inverse method.
+This bug was introduced in the conversion from Version 1.5 to Version 2.<br>
+<font color=red>Source/Math/WmlQuaternion.cpp</font>
+<br><br>
+
+The parameter to NeedsTexCoords in the handling of texture unit 3 was 1
+when it should have been 3.<br>
+<font color=red>Renderers/OpenGL/WmlOpenGLRenderer.cpp</font>
+<br><br>
+
+Added WmlIntersectingIntervals.{h,cpp} for a sort-and-sweep-based algorithm
+for incremental updates of the set of overlapping intervals.<br>
+<font color=red>Source/Physics/WmlIntersectingIntervals.{h,cpp}</font>
+<br><br>
+
+ShaderConstants had an array of ShaderConst objects.  The smart pointer
+system does not support this, so the objects were changed to ShaderConstPtr.<br>
+<font color=red>Source/Graphics/WmlShader.cpp</font><br>
+<font color=red>Source/Graphics/WmlShaderConstants.{h,inl,cpp}</font>
+<br><br>
+
+Added glEnable(GL_RESCALE_NORMAL) so that OpenGl will adjust the vertex
+normals to unit length when the world scale is not one.<br>
+<font color=red>Renderers/OpenGL/WmlOpenGLRenderer.cpp</font>
+<br><br>
+
+File version changed to 1.07 to support new members in Camera and Polyline.<br>
+<font color=red>Source/Graphics/WmlVersion.{h,cpp}</font>
+<br><br>
+
+Added m_bContiguous to support drawing polylines (true, the current
+behavior) or a collection of disjoint line segments (false).<br>
+<font color=red>Source/Graphics/WmlPolyline.{h,inl,cpp}</font>
+<br><br>
+
+Added m_bUsePerspective to support orthographic cameras.  Added m_bActive
+to allow multiple cameras managed by CameraNode objects, but only one camera
+is active at a time.<br>
+<font color=red>Source/Graphics/WmlCamera.{h,inl,cpp}</font>
+<br><br>
+
+The Camera object managed by the CameraNode is updated only when the Camera
+is active.  This allows multiple CameraNode objects to exist in the same
+scene.<br>
+<font color=red>Source/Graphics/WmlCameraNode.cpp</font>
+<br><br>
+
+SetCamera uses the new Camera m_bActive member.  The Camera being detached
+is set to inactive and the Camera being attached is set to active.<br>
+<font color=red>Source/Graphics/WmlRenderer.cpp</font>
+<br><br>
+
+Modified the Polyline drawing code to support the new m_bContiguous
+member.  The function can now draw GL_LINE_LOOP or GL_LINES in OpenGL, and
+D3DPT_LINESTRIP or D3DPT_LINELIST in DirectX.<br>
+<font color=red>Renderers/OpenGL/WmlOpenGLRenderer.cpp</font><br>
+<font color=red>Renderers/DX/WmlDxRenderer.cpp</font>
+<br><br>
+
+Modified OnFrustumChange to support orthographic cameras in addition to the
+default perspective cameras.<br>
+<font color=red>Renderers/OpenGL/WmlOpenGLCamera.cpp</font><br>
+<font color=red>Renderers/DX/WmlDxCamera.cpp</font>
+<br><br>
+
+New files for precompiled headers on the Macintosh.<br>
+<font color=red>Source/WildMagic2_prefix.h</font><br>
+<font color=red>Renderers/OpenGL/WmlRenderer_prefix.h</font>
+<br><br>
+
+Added tests of the incoming pointers in the Draw methods to make sure they
+are non-null before dereferencing them.<br>
+<font color=red>Source/Graphics/WmlRenderer.cpp</font>
+<br><br>
+
+Added some code to test both 'closed' and 'contiguous'.<br>
+<font color=red>Applications/Graphics/Polylines/Polylines.cpp</font>
+<tr><td><hr></td></tr>
+
+<tr><td><b>29 Aug 2003.</b>
+Update to Version 2.01.  The changes from Version 2.0 are listed below.
+<br><br>
+
+Added ProjectBuilder projects to the Macintosh distribution.  The projects
+have targets for Debug/Release and for AGL/GLUT.<br>
+<font color=red>Files of the form *.pbproj</font><br><br>
+
+Removed files from distribution.<br>
+<font color=red>Source/System/WmlCWDebug.h</font><br>
+<font color=red>Source/System/WmlCWRelease.h</font><br>
+<font color=red>'make' files of the form *.mac</font><br><br>
+
+The preprocessor define MGC_BIG_ENDIAN needed to be changed to
+WML_BIG_ENDIAN.<br>
+<font color=red>Applications/Graphics/IntersectingCylinders/IntersectingCylinders.cpp</font><br>
+<font color=red>Applications/Graphics/PlanarShadows/PlanarShadows.cpp</font><br>
+<font color=red>Applications/Graphics/Terrain/Terrain.cpp</font><br><br>
+
+Some applications were using the 2D layer instead of the 3D layer.  This
+was not a problem since the 2D layer is built on top of 3D, but I made the
+changes anyway.<br>
+<font color=red>Applications/Physics/makefile.lnx</font><br>
+<font color=red>Applications/Shaders/makefile.lnx</font><br><br>
+
+Changed the "PresentationInterval" parameter of D3DPRESENT_PARAMETERS from
+D3DPRESENT_INTERVAL_DEFAULT to D3DPRESENT_INTERVAL_IMMEDIATE.  With the
+"default", either DX9 or my ATI drivers are waiting for vertical sync, even
+though I have my display option "wait for vertical sync" set to "always off".
+The DX9 renderer is now drawing faster than its former snail's pace.  It is
+slower, though, than the OpenGL renderer.  On EnvironmentMaps, the DX9
+renderer runs at 840 fps.  The OpenGL renderer runs at 1740 fps.<br>
+<font color=red>Renderers/DX/WmlDxRenderer.cpp</font><br><br>
+
+Typecast "sizeof(T)" in template classes to avoid signed/unsigned warnings
+in g++ 3.1 on the Macintosh.<br>
+<font color=red>Source/Graphics/WmlStream.inl</font><br>
+<font color=red>Source/ImageAnalysis/WmlTImage.inl</font><br><br>
+
+Added default cases to the switch statements to avoid warnings in g++ on
+the Macintosh (the *_QUANTITY enum values are not handled--they should not
+be).<br>
+<font color=red>Source/Graphics/WmlAlphaState.cpp</font><br>
+<font color=red>Source/Graphics/WmlCullState.cpp</font><br>
+<font color=red>Source/Graphics/WmlFogState.cpp</font><br>
+<font color=red>Source/Graphics/WmlImage.cpp</font><br>
+<font color=red>Source/Graphics/WmlLightNode.cpp</font><br>
+<font color=red>Source/Graphics/WmlShadeState.cpp</font><br>
+<font color=red>Source/Graphics/WmlTexture.cpp</font><br>
+<font color=red>Source/Graphics/WmlVertexColorState.cpp</font><br>
+<font color=red>Source/Graphics/WmlZBufferState.cpp</font><br>
+<font color=red>Renderers/{AGL,GLUT,WGL}/WmlOpenGLLightState.cpp</font><br>
+<font color=red>Renderers/{AGL,GLUT,WGL}/WmlOpenGLPlanarShadow.cpp</font><br>
+<font color=red>Renderers/{AGL,GLUT,WGL}/WmlOpenGLTextureState.cpp</font><br>
+<font color=red>Applications/Miscellaneous/TriangleIntersection2/TriangleIntersection2.cpp</font><br><br>
+
+Removed unused local variables.<br>
+<font color=red>Source/Graphics/WmlBezierTriangle2.cpp</font><br>
+<font color=red>Source/Graphics/WmlStandardMesh.cpp</font><br>
+<font color=red>Source/ImageAnalysis/WmlExtractSurfaceTetra.cpp</font><br>
+<font color=red>Source/Intersection/WmlIntrElp2Elp2.cpp</font><br>
+<font color=red>Source/Math/WmlGMatrix.cpp</font><br>
+<font color=red>Source/Physics/WmlLCPSolver.cpp</font><br>
+<font color=red>Renderers/{AGL,GLUT,WGL}/WmlOpenGLProjectedTexture.cpp</font><br>
+<font color=red>Renderers/{AGL,GLUT,WGL}/WmlOpenGLRenderer.cpp</font><br>
+<font color=red>Applications/Graphics/BezierSurface/BezierSurface.cpp</font><br>
+<font color=red>Applications/Graphics/IntersectingCylinders/IntersectingCylinders.cpp</font><br>
+<font color=red>Applications/Graphics/InverseKinematics/InverseKinematics.cpp</font><br>
+<font color=red>Applications/Shaders/Skinning/Skinning.cpp</font><br>
+<font color=red>Applications/Miscellaneous/TriangleIntersection2/TriangleIntersection2.cpp</font><br>
+<font color=red>Applications/Physics/FreeFormDeformation/FreeFormDeformation.cpp</font><br>
+<font color=red>Applications/Physics/MassPulleySpringSystem/MassPulleySpringSystem.cpp</font><br>
+<font color=red>Applications/Physics/PolyhedronDistance/PolyhedronDistance.cpp</font><br>
+<font color=red>Applications/Physics/PolygonDistance/PolygonDistance.cpp</font><br><br>
+
+Typecast some STL size() calls to avoid signed/unsigned warnings in g++ on
+the Macintosh.<br>
+<font color=red>Source/Graphics/WmlCreateClodMesh.cpp</font><br><br>
+
+Reordered the initialization of m_fReflectance and m_iStencilValue to avoid
+g++ warning on the Macintosh that the order did not match that of the members
+in the header file.<br>
+<font color=red>Source/Graphics/WmlPlanarReflection.cpp</font><br><br>
+
+A MakeString function had an sprintf that was missing one of the arguments
+that was necessary for the format string.<br>
+<font color=red>Source/Graphics/WmlStringTree.cpp</font><br><br>
+
+EigenDecomposition had a bug in the eigenvalue construction that uses the
+quadratic equation.<br>
+<font color=red>Source/Math/WmlMatrix2.cpp</font><br><br>
+
+A loop had a comma-separated pair of termination conditions when it needed
+to be an "and".  However, the old code worked fine as long as you did not
+overflow the length of the TInteger.<br>
+<font color=red>Source/RationalArithmetic/WmlTInteger.inl</font><br><br>
+
+LookDown had a bug in it.  The new camera "left" vector was not the
+rotated one it should have been.<br>
+<font color=red>Applications/Application2/WmlApplication.cpp</font><br>
+<font color=red>Applications/Application3/WmlApplication.cpp</font><br><br>
+
+Removed CodeWarrior 6.1 conditional defines.<br>
+<font color=red>Source/System/WmlMacSystem.h</font><br><br>
+
+The DirectShow header dshow.h includes windowsx.h.  The latter header
+file #define-s GetWindowID(hwnd) to be GetDlgCtrlID(hwnd).  I received a
+report that WmlGlutApplication.cpp fails to compile using VC 7.1, the
+failure being that the #define interferes with Application::GetWindowID.
+I was not able to reproduce the problem, but just in case, I trap it anyway
+and #undef GetWindowID.<br>
+<font color=red>Applications/Application2/WmlGlutApplication.cpp</font><br>
+<font color=red>Applications/Application3/WmlGlutApplication.cpp</font><br><br>
+
+Removed block of test code.<br>
+<font color=red>Applications/Imagics/ExtractLevelCurves/ExtractLevelCurves.cpp</font><br><br>
+
+An incorrect coefficient was used in building the incoming tangent at a
+control point.<br>
+<font color=red>Applications/Miscellaneous/KeyframeAnimation/PosSpline.cpp</font><br><br>
+
+The include guard had an error in the name.<br>
+<font color=red>Source/Graphics/WmlProjectedTexture.h</font>
+<tr><td><hr></td></tr>
+
+<tr><td><b>24 Aug 2003.</b>
+Initial posting of the source code for Version 2.0.
+<tr><td><hr></td></tr>
+
+</table>
+</body>
+</html>

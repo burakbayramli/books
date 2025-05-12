@@ -1,0 +1,43 @@
+From: "Just d' FAQs" <nobody-here@mac.com>
+Subject: Re: Urgent help neede with NURBS!
+Date: Tuesday, August 20, 2002 2:20 PM
+
+As Newton wrote to Hooke in 1676, "If I have seen further it is by
+standing on the shoulders of giants." -- I have read the FAQ! [Well,
+that and Google and perhaps a little more. ;)]
+
+Speaking of which, perhaps you should submit the NURBS book, ISBN
+1-55860-669-6, to O'Rourke for the references section of the FAQ,
+"Subject 0.04: What are some must-have books on graphics algorithms?"
+You could also mention the associated web page with tutorial C code,
+  <http://www.nar-associates.com/nurbs/c_code.html>.
+Unfortunately, there seems to be no trimming.
+
+I'm still partial to Farin's book,  ISBN 1-55860-737-4, from the same
+publisher, already mentioned in the FAQ (though it's now progressed to
+its 5th edition). He also has a book, not mentioned in the FAQ,
+specifically on NURBS, ISBN 1-56881-084-9.
+
+I cannot speak from first-hand use, but based on previous work by
+Wayne Tiller, one of the first people to write about rational curves
+in computer graphics, I'd suggest looking at his book with Les Piegl,
+"The NURBS Book", ISBN 3-540-61545-8.
+
+For the uninitiated, the "rational" in Non-Uniform Rational B-splines
+has nothing to do with "logical". It refers to using a ratio of
+polynomials. The classic example is a half circle:
+  t |--> (1-t^2 : 2t : 1+t^2),    t in [-1,+1]
+The coordinates are not (x,y,z), but homogeneous (x:y:w), so the curve
+lies in the x,y plane. Rewritten in terms of a B-spline basis, this is
+one of the main motivations for rationality; otherwise, you can't get
+a perfect circle, or a lathed surface.
+  x^2 + y^2 = (1-2*t^2+t^4) + 4*t^2 = 1+2*t^2+t^4 = w^2
+so
+  ||(x/w,y/w)|| = 1.
+
+I believe the OpenGL Utility Library has trimmed NURBS support. And I
+might also mention the paper
+  <ftp://ftp.cs.unc.edu/pub/users/manocha/PAPERS/RENDER/render.pdf>
+
+There is also the freely downloadable sLIB software at
+  <http://www.openchannelfoundation.org/projects/sLIB/>
