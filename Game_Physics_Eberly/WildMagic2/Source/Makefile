@@ -7,7 +7,8 @@ CFLAGS=-O2 -DNDEBUG -DWML_USE_GLUT -I./Approximation -I./Containment -I./Curves 
 OBJS=Physics/WmlRigidBody.o Physics/Main1.o 
 
 all: $(OBJS)
-
+#	$(CC) $(OBJS) -o a.exe
+	
 #app1.exe: $(OBJS)
 #	$(CC) $(OBJS) -o a.exe
 #
