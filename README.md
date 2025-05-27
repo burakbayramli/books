@@ -51,6 +51,7 @@ Source codes for various books I collected over the years.
 - [Aerodynamics Optimization Parenteau](Aerodynamics_Optimization_Parenteau)
 - [Numerical Solution of Time Dependent Advection Diffusion Verwer](Numerical_Solution_of_Time-Dependent_Advection-Diffusion_Verwer)
 - [Intro to Optimization ISyE 524 UWisconsinMad](Intro_to_Optimization_ISyE_524_UWisconsinMad)
+- [Game Physics Eberly](Game_Physics_Eberly)
 - [ME 702 CFD Barba BU](ME_702_CFD_Barba_BU)
 - [Numerical Fluid Mech OCW 2 29 spring 2015](Numerical_Fluid_Mech_OCW_2_29_spring_2015)
 - [Algorithms Sedgewick](Algorithms_Sedgewick)
