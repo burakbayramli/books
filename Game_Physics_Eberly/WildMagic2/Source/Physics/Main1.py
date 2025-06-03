@@ -284,31 +284,21 @@ if __name__ == "__main__":
     # Define a custom force function for the example
     # This function will be called by the update method
     def my_force_func(t_val, mass, pos, q_orient, lin_mom, ang_mom, r_orient, lin_vel, ang_vel):
-        print (t_val)
-        if t_val == 0.005:
-            print ('init')
-            return Vector3(3.0, 3.0, 3.0)
-        else:
-            return Vector3(0.0, 0.0, 0.0)
+        return Vector3(0.0, 0.0, 0.0)
     
     rb.set_force_function(my_force_func)
 
-
     def my_torque_func(t_val, mass, pos, q_orient, lin_mom, ang_mom, r_orient, lin_vel, ang_vel):
-        if t_val == 0.005: 
-            print ('init')
-            return Vector3(3.0, 3.0, 3.0)
-        else:
-            return Vector3(0.0, 0.0, 0.0)
+        return Vector3(0.0, 0.0, 0.0)
     
     rb.set_torque_function(my_torque_func)
 
     
     print("\n--- Simulation Start ---")
     for i in range(10):
-        # The C++ code had a redundant SetExternalForce(extForce0) inside the loop for i==0.
-        # In this Python version, it's set once, and the force_func will use it.
         rb.update(t, dt)
         t += dt
-        print(f"Time: {t:.2f}, Position: {rb.get_position()}, Linear Velocity: {rb.get_linear_velocity()}")
+        #print(f"Time: {t:.2f}, Position: {rb.get_position()}, Orient: {rb.m_kQOrient}, Linear Velocity: {rb.get_linear_velocity()}")
+        #print(f"Time: {t:.2f}, Orient: {rb.m_kQOrient}")
+        print(f"Time: {t:.2f}, Position: {rb.get_position()}")
     print("--- Simulation End ---")
