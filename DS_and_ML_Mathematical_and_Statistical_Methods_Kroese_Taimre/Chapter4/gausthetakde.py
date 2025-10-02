@@ -27,5 +27,5 @@ idx = (xmesh <= 6)
 plt.plot(xmesh[idx],density[idx],'b')# Plot Theta KDE
 plt.plot(xx,f(xx),'k--')# Plot True PDF
 plt.legend(['Gaussian KDE','Theta KDE', 'True density'])
-plt.savefig('gausthetakde.pdf',format='pdf')
+plt.savefig('/tmp/gausthetakde.pdf',format='pdf')
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

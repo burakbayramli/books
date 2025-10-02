@@ -5,7 +5,7 @@ if len(sys.argv) < 2:
     exit()  
     
 if sys.argv[1] == 'zip':
-    os.system("zip /home/burak/Documents/Dropbox/bkps/dotbooks.zip -r /home/burak/Documents/books/.git/")
+    os.system("zip /opt/Downlaods/dotbkps/dotbooks.zip -r /home/burak/Documents/books/.git/")
     
 if sys.argv[1] == 'title':
     files = glob.glob("*")
