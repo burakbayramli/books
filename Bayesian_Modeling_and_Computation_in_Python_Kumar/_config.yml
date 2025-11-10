@@ -1,0 +1,51 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+title: Bayesian Modeling and Computation in Python
+author: Martin, Kumar, Lao
+exclude_patterns: [_build, Thumbs.db, .DS_Store, "**.ipynb_checkpoints", "**.github", "Errata.md", "**/README.md", "README.md"]
+# logo: logo.png
+execute:
+  execute_notebooks         : off  # Whether to execute notebooks at build time. Must be one of ("auto", "force", "cache", "off")
+  cache                     : ""    # A path to the jupyter cache that will be used to store execution artifacts. Defaults to `_build/.jupyter_cache/`
+  exclude_patterns          : []    # A list of patterns to *skip* in execution (e.g. a notebook that takes a really long time)
+  timeout                   : 30    # The maximum time (in seconds) each notebook cell is allowed to run.
+  run_in_temp               : false # If `True`, then a temporary directory will be created and used as the command working directory (cwd),
+                                    # otherwise the notebook's parent directory will be the cwd.
+  allow_errors              : false # If `False`, when a code cell raises an error the execution is stopped, otherwise all cells are always run.
+  stderr_output             : show  # One of 'show', 'remove', 'remove-warn', 'warn', 'error', 'severe'
+
+sphinx:
+    extra_extensions:
+      - sphinx_codeautolink
+    config:
+      html_theme_options:
+        use_download_button: false
+        repository_url: https://github.com/BayesianModelingandComputationInPython/BookCode_Edition1
+        use_issues_button: true
+        use_repository_button: true
+        search_bar_text: Search this book...
+        extra_navbar: Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+        home_page_in_toc: false
+        google_analytics_id: "G-702QMHG8ST"
+      html_favicon: "favicon.ico"
+      intersphinx_mapping:
+        arviz:
+          - https://arviz-devs.github.io/arviz/
+          - null
+        numpy:
+          - https://numpy.org/doc/stable
+          - null
+        matplotlib:
+          - https://matplotlib.org/stable
+          - null
+        scipy:
+          - https://docs.scipy.org/doc/scipy
+          - null
+      codeautolink_autodoc_inject: false
+      codeautolink_concat_default: true
+      codeautolink_global_preface: "import arviz as az; import numpy as np; import matplotlib.pyplot as plt; import scipy.stats as stats"
+
+
+bibtex_bibfiles:
+    - bibtex.bib
