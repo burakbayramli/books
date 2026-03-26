@@ -6,8 +6,8 @@ function [maxDD maxDDD]=calculateMaxDD(cumret)
 % written by:
 % Ernest Chan
 %
-% Author of ìQuantitative Trading: 
-% How to Start Your Own Algorithmic Trading Businessî
+% Author of ‚ÄúQuantitative Trading: 
+% How to Start Your Own Algorithmic Trading Business‚Äù
 %
 % ernest@epchan.com
 % www.epchan.com
@@ -31,3 +31,4 @@ end
 maxDD=min(drawdown); % maximum drawdown
 
 maxDDD=max(drawdownduration); % maximum drawdown duration
+
