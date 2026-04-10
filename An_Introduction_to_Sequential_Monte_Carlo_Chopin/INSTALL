@@ -1,0 +1,109 @@
+Python 2 vs Python 3 
+====================
+
+Short version: **particles** only supports Python 3.
+
+Long version:  initially, **particles** supported both Python 2 and Python 3.
+However, Python 2 has been deprecated, and supporting it has become
+troublesome. The last version to support it has been turned into a release; you
+may find in the releases section of the github page (first release, April 15,
+2020). 
+
+
+Requirements
+============
+
+The short version: install The Anaconda_ distribution 
+to get all the scientific computing libraries you may ever need in one go. 
+
+.. _Anaconda: https://www.anaconda.com/distribution 
+
+The long version: **particles** requires the following libraries: 
+
+* `NumPy <http://www.numpy.org/>`_ 
+* `SciPy <http://www.scipy.org/>`_ 
+* `numba <https://numba.pydata.org/>`_
+* `joblib <https://joblib.readthedocs.io/>`_
+* `scikit-learn <https://scikit-learn.org>`_ (only for module `binary_smc`)
+
+In addition, it is **strongly recommended** to install the following 
+libraries (optional ``[extra]`` dependencies):
+
+* `Matplotlib <http://matplotlib.org/>`_
+* `seaborn <https://seaborn.pydata.org/>`_
+* `pandas <https://pandas.pydata.org/>`_
+* `statsmodels <https://www.statsmodels.org/>`_
+
+Most of the scripts require the first two libraries to plot the results; a few
+of them also requires `pandas` or `statsmodels`.
+
+Again, the easiest way to install all these libraries in one go is to simply
+install the Anaconda_ distribution.  Manual installation is of course also
+possible; e.g. on Ubuntu/Debian:: 
+
+    sudo apt install python3-numpy python3-scipy python3-numba python3-joblib python3-sklearn
+
+However, in the maintainer's experience, conda is usually less hassle,  
+runs faster (because it install a more efficient version of low-level libraries
+such as BLAS) and provides more recent versions.
+
+Local installation, organisation of the package
+===============================================
+
+You are strongly recommended to install the package *locally* (in a folder in
+your home directory). The installation instructions in the following sections
+explains how to do it. 
+
+The reason why it is better to do a local install is that you will have easier
+access to the scripts in the package. In particular: 
+
+* Folder ``book`` contains all the scripts that were used to perform the
+  experiments and generate the plots in the book. Each sub-folder corresponds
+  to a different chapter. 
+
+* Folder ``papers`` contains scripts that reproduce some of the experiments of
+  relevant papers. Each sub-folder corresponds to a different paper, and
+  contains a ``README.md`` which gives the reference of the paper. 
+
+The rest of the package is organised in a completely standard manner (modules
+are in folder ``particles``, documentation is in ``docs``, etc.).
+
+
+Installation: recommended method
+================================
+
+The package is available on Github_ and may be installed using git::
+
+    cd some_folder_of_your_choosing
+    git clone https://github.com/nchopin/particles.git
+    cd particles
+    pip install -e .[extra]
+
+The option `-e` installs the package in editable mode (any modification you
+make in this folder will be taken into account when you import the package).
+Replace `-e` by `--user` if you want to avoid that. Also, you may need to
+replace the last line by::
+
+    pip install -e '.[extra]'
+
+on certain shells (e.g. zsh).
+
+
+.. _Github: https://github.com/nchopin/particles.git
+
+Installation: alternative method
+================================
+
+The package is also available on PyPI_ (the Python package index), so you may
+install it by running pip. On a Linux machine:: 
+
+    pip install --user particles[extra]
+
+.. _PyPi: https://pypi.python.org/pypi 
+
+Option ``--user`` lets you install the package in your home directory, rather than
+globally for all users. 
+
+The main drawback of this method is that it installs only the modules of the
+package, and not the scripts found in folders book and papers. 
+

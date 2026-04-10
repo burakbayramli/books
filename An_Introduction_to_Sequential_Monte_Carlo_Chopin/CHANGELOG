@@ -1,0 +1,50 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## Future release
+### Added
+- distributions: dirichlet
+- smc_samplers: magic method __len__ added to ThetaParticles
+
+### BUG FIXES
+- datasets: Sonar all responses were set to 0
+
+## [0.4] - 2023-09-01
+# Blog post: <https://statisfaction-blog.github.io/posts/01-09-2023-particles-v0.4/>
+### Added
+- nested: NS-SMC sampler of Salomone et al (2018)
+- datasets: Liver
+- distributions: LogNormal
+- distributions: Mixture, FlatNormal, mixMissing (to deal with missing data)
+- distributions: VaryingCovNormal (issue 55 on github)
+- smoothing: FFBS-MCMC, FFBS-hybrid
+- collectors: Paris algorithm (hybrid version)
+- smc_samplers: single-run variance estimates
+- smc_samplers: Tempering (fixed exponents)
+- smc_samplers: AdaptiveTempering has a new argument, max_iter, to put a cap on the number of iterations
+
+## [0.3] - 2021-10-25
+# Blog post: <https://statisfaction.wordpress.com/2021/10/25/particles-0-3-waste-free-smc-fortran-dependency-removed-binary-spaces/>
+### Added 
+- new module: binary_smc
+- smc_samplers: waste-free SMC (now default)
+- resampling: added killing resampling scheme
+- new tutorial notebook: how to define complicated state-space models
+
+### Changed
+- qmc: now based on scipy.stats.qmc (remove Fortran code dependency)
+
+## [0.2] - 2021-01-27
+# Blog post: <https://statisfaction.wordpress.com/2021/01/29/particles-0-2-whats-new-whats-next-your-comments-most-welcome/>
+### Added 
+ - new module: datasets (cleaner way to load standard datasets)
+ - new module: variance_estimators (single-run genealogy based estimators à la
+   Lee and Whiteley)
+
+### Changed
+ - collectors: new implementation (breaks compatibility)
+ - utils: performance improvements (multi-processing, distinct seeds)
+
+## [0.1] - 2020-04-15
+
+- Initial release 
