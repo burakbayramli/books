@@ -2,7 +2,7 @@
 !****DSMC program for one-dimensional plane, cylindrical or spherical flows****
 !******************************************************************************
 !
-!--Version 1.10
+!--Version 1.14  
 !
 !******************************************************************************
 !
@@ -18,8 +18,12 @@
 !--Version 1.8  removed diagnostic subroutines - first version for web(POSTED Nov 25, 2010)
 !--Version 1.9  revised volume for ternary collisions, only the relevant vibrational modes are considered in reactions,
 !               an improved procedure when there are multiple reactions possible for the collision pair
-!--Version 1.10 new Q-K procedure for exothermic exchange and chain reactions
-!
+!--Version 1.10 new Q-K procedure for exothermic exchange and chain reactions 
+!--Version 1.11 includes the newer Q-K procedures as described in the Phys. Fluids paper 
+!--Version 1.12 gives priority to dissociation when considering reactions
+!--Version 1.13 option to base, ternary collision volume, activation energy adjustments, and
+!               vibrational relaxation numbers on either the macroscopic or collision temperatures
+!--Version 1.14 includes the sampling of distribution functions
 !******************************************************************************
 !
 !--Base SI units are employed throughout the program
@@ -219,10 +223,10 @@ IMPLICIT NONE
 !
 REAL(KIND=8) :: RMAS,CXSS,RGFS,VMPM,FDEN,FPR,FMA,FP,CTM
 REAL(KIND=8), DIMENSION(2) :: FND,FTMP,FVTMP,VFX,VFY,TSURF,FSPEC,VSURF
-REAL(KIND=8), ALLOCATABLE, DIMENSION(:) :: CI,AE,AC,BC,ER,ERS,CR,TNEX,psf
+REAL(KIND=8), ALLOCATABLE, DIMENSION(:) :: CI,AE,AC,BC,ER,ERS,CR,TNEX,PSF
 REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:) :: FSP,SP,SPR,SPV,REA,THBP,VMP
 REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:,:) :: SPM,SPVM,ENTR
-REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:,:,:) :: SPEX
+REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:,:,:) :: SPEX,SPRC
 INTEGER :: MSP,MMVM,MMRM,MNRE,MNSR,MTBP,GASCODE,MMEX,MEX
 INTEGER, ALLOCATABLE, DIMENSION(:) :: ISP,ISPV,LE,ME,KP,LP,MP
 INTEGER, ALLOCATABLE, DIMENSION(:,:) :: ISPR,IREA,NREA,NRSP,LIS,LRS,ISRCD,ISPRC,TREACG,TREACL,NSPEX
@@ -264,13 +268,18 @@ INTEGER, ALLOCATABLE, DIMENSION(:,:,:,:) :: ISPEX
 !--ISPVM(1,K,L) the species code of the first dissociation product
 !--ISPVM(2,K,L) the species code of the second dissociation product
 !--ISPRC(L,M) the species of the recombined molecule from species L and M
+!--SPRC(1,L,M) the constant a in the ternary collision volume
+!--SPRC(2,L,M) the temperature exponent b in the ternary collision volume
 !--NSPEX(L,M) the number of exchange reactios with L,M as the pre-collision species
 !--in the following variables, J is the reaction number (1 to NSPEX(L,M))
 !--ISPEX(J,0,L,M) the species that splits in an exchange reaction
 !--ISPEX(J,1,L,M) the post collision species of the molecule that splits in an L,M exchange reaction (all ISPEX are set to 0 if no exchange reaction)
 !--ISPEX(J,2,L,M) the post collision species of either the atom or the molecule that does not split in an L,M exchange reaction
-!--ISPEX(J,3 to 2+MMVM)1,0 if vibrational mode does, does not contribute to this reaction
-!--SPEX(I,J,L,M) I=1 for the activation energy, I=2 for the heat of reaction
+!--ISPEX(J,3,L,M) vibrational mode that is associated with this reaction
+!--ISPEX(J,4,L,M) degeneracy of this reaction
+!--SPEX(1,J,L,M) the constant a in the activation energy
+!--SPEX(1,J,L,M) the temperature exponent b in the activation energy
+!--SPEX(3,J,L,M)  for the heat of reaction
 !--TNEX(N) total number of exchange reaction N 
 !--NEX(N,L,M) the number of exchange or chain reactions in L,M collisions
 !
@@ -363,7 +372,7 @@ MODULE CALC
 !
 IMPLICIT NONE
 !
-INTEGER :: NVER,MVER,MOLSC,JCD,ISF,ISECS,IGS,IREM,IRECOM,NNC,IMTS,ERROR
+INTEGER :: NVER,MVER,MOLSC,JCD,ISF,ISECS,IGS,IREM,IRECOM,NNC,IMTS,ERROR,ITCV,IEAA,IZV
 REAL (KIND=8) :: FREM,XREM,FTIME,TLIM,PI,SPI,DPI,BOLTZ,FNUM,DTM,TREF,TSAMP,TOUT,AMEG,SAMPRAT,OUTRAT,RANF,TOTCOLI,TOTMOVI,    &
                  DTSAMP,DTOUT,TPOUT,FRACSAM,TOTMOV,TOTCOL,ENTMASS,CPDTM,TPDTM,TDISS,TRECOMB,TFOREX,TREVEX,TOTDUP,AVOG
 REAL (KIND=8), ALLOCATABLE, DIMENSION(:) :: VNMAX
@@ -397,6 +406,10 @@ REAL (KIND=8), ALLOCATABLE, DIMENSION(:,:) :: TCOL
 !--NNC 0 for normal collisions, 1 for nearest neighbor collisions
 !--IMTS 0 for uniform move time steps, 1 for time steps that vary over the cells
 !--IGS 0 for initial gas, 1 for stream(s) or reference gas
+!--ITCV 0 to base ternary collision volume on macroscopic temperature, 1 on translational collision temperature
+!--IEAA 0 to base activation energy adjustments on macroscopic temperature, 1 on translational collision temperature
+!--N.B. the coefficent a for tern. coll. vols. and act. en. adj. requre a transformation if ITCV or IEAA = 1
+!--IZV  0 to base vibrational relaxation collision numbers on macroscopic temperature, 1 on quantized collision temperature
 !
 END MODULE CALC
 !
@@ -408,9 +421,12 @@ MODULE OUTPUT
 !
 IMPLICIT NONE
 !
-INTEGER :: NSAMP,NMISAMP,NOUT
-REAL (KIND=8):: TISAMP,XVELS,YVELS,AVDTM
-REAL(KIND=8), ALLOCATABLE, DIMENSION(:) :: COLLS,WCOLLS,CLSEP,REAC,SREAC
+INTEGER :: NSAMP,NMISAMP,NOUT,NDISSOC,NRECOMB,IDISTS,NTSAMP
+INTEGER, DIMENSION(0:100) :: NDISSL
+INTEGER(8), ALLOCATABLE, DIMENSION(:) :: NDSAMPLES
+INTEGER(8), ALLOCATABLE, DIMENSION(:,:) :: NDTRANS,NDROT,NDVIB
+REAL (KIND=8):: TISAMP,XVELS,YVELS,AVDTM,OVTEMP,OVTTEMP,OVRTEMP,OVVTEMP,STARTTIME,TDISTS,STARTIME
+REAL(KIND=8), ALLOCATABLE, DIMENSION(:) :: COLLS,WCOLLS,CLSEP,REAC,SREAC,STEMP,TRANSTEMP,ROTTEMP,VIBTEMP
 REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:) :: VAR,VARS,CSSS,SUMVIB
 REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:,:) :: CS,VARSP,VIBFRAC
 REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:,:,:) :: CSS
@@ -537,6 +553,27 @@ REAL(KIND=8), ALLOCATABLE, DIMENSION(:,:,:,:) :: CSS
 !--VIBFRAC(L,K,M) the sum of species L mode K in level M
 !--SUMVIB(L,K) the total sample in VIBFRAC
 !
+!--THE following variables apply in the sampling of distribution functions
+!--(some are especially for the dissociation of oxygen
+!
+!--IDISTS 0 before dist sampling, 1 when bulding temperature samples, 2 when building distributions
+!--STARTTIME the time at which sampling starts
+!--TDISTS the nominal time to start distribution function sampling
+!--NDISSOC the number of dissociations
+!--NRECOMB the number of recombinations
+!--NDISSL(L) the number of dissociations from level 
+!--NTSAMP the number of temperature samples
+!--OVTEMP,OVTTEMP,OVRTEMP,OVVTEMP the overall temperature, trans. temp, rot. temp,vib, temp 
+!--STEMP(L) the temperature of species L
+!--TRANSTEMP(L) the translational temperature of species N
+!--ROTTEMP(L) rotational temperature of species N
+!--VIBTEMP(L) vibrational temperature of species N
+!--NDSAMPLES(L) number in sample for species L
+!--NDTRANS(L,N) number of species L in speed range N
+!--NDROT(L,N) number of species L in rotational energy range N
+!--NDVIB(L,N) number of species L in vibrational level N
+!--STARTIME the time at which the distribution sampling started
+!
 END MODULE OUTPUT
 !
 !***********************************************************************
@@ -559,19 +596,24 @@ USE OUTPUT
 !
 IMPLICIT NONE
 !
-INTEGER :: IRUN,N,M,IADAPT,IRETREM
+INTEGER :: IRUN,N,M,IADAPT,IRETREM,ISET
 REAL(KIND=8) :: A 
 !
-!--IRUN run options
-!
+
 NVER=1          !--for changes to basic architecture
-MVER=10          !--must change whenever the data in DS1VD.DAT changes
+MVER=13          !--significant changes, but must change whenever the data in DS1VD.DAT changes
 !
+!--set constants
 PI=3.1415926535897932D00
 DPI=6.283185307179586D00
 SPI=1.772453850905516D00
 BOLTZ=1.380658D-23
 AVOG=6.022169D26
+!
+!--set internal switches
+ITCV=1   !if 0, ternary collision volume depends on the macroscopic temperature; if 1, collision temperature
+IEAA=1   !if 0, activation energy adjustments depend on the macroscopic temperature; if 1, collision temperature
+IZV=1   !if 0, vivrational relaxation collision number depends on the macroscopic temperature; if 1, collision temperature
 !
 OPEN (9,FILE='DIAG.TXT',FORM='FORMATTED',STATUS='REPLACE')
 WRITE (9,*,IOSTAT=ERROR)
@@ -583,6 +625,8 @@ ELSE
 END IF
 !
 IRUN=0
+IDISTS=0
+NDISSL=0
 !
 DO WHILE ((IRUN < 1).OR.(IRUN > 3))
   WRITE (*,*) 'DS1 Version',NVER,'.',MVER
@@ -601,7 +645,11 @@ IF (IRUN == 1) WRITE (9,*) 'Continuing the current run and sample'
 IF (IRUN == 2) WRITE (9,*) 'Continuing the current run with a new sample'
 IF (IRUN == 3) WRITE (9,*) 'Starting a new run'
 !
-IF (IRUN < 3) CALL READ_RESTART
+IF (IRUN < 3) THEN
+  CALL READ_RESTART
+  TSAMP=FTIME+DTSAMP
+  TOUT=FTIME+DTOUT
+END IF
 !
 IF ((IRUN == 2).AND.(IVB == 0)) THEN
   WRITE (*,*) 'Enter 1 to adapt the cells, or 0 to continue with current cells:-'
@@ -613,7 +661,20 @@ IF ((IRUN == 2).AND.(IVB == 0)) THEN
     CALL WRITE_RESTART   
   ELSE
     WRITE (*,*) 'Continuing with existing cells'
-  END IF  
+  END IF
+!
+  WRITE (*,*) 'Enter 1 to start sampling the distributution functions, 0 to continue:-'
+  READ (*,*) IDISTS
+  IF (IDISTS == 1) THEN
+    WRITE (*,*) 'Must be a single cell run with unsteady sampling.'  
+    WRITE (*,*) 'Velocity distribribution sampling must be in a continuous run.'  
+    WRITE (*,*) 'Enter the number of output intervals over which the temperatures'
+    WRITE (*,*) 'are sampled before starting the samples of the distributions:-'
+    READ (*,*) ISET
+    TDISTS=FTIME+DFLOAT(ISET+1)*DTOUT
+    CALL INITIALISE_DISTRIBUTIONS    
+  END IF 
+! 
   IF (IREM == 2) THEN
     WRITE (*,*) 'Enter 1 to reset the removal details, or 0 to continue with current details:-'
     READ(*,*) IRETREM
@@ -710,7 +771,9 @@ DO WHILE (FTIME < TLIM)
       END DO 
     END IF
     CALL OUTPUT_RESULTS
+    IF (IDISTS > 1) CALL OUTPUT_DISTRIBUTIONS
     TPOUT=FTIME
+    IF ((IDISTS == 1).AND.(FTIME > TDISTS)) IDISTS=2
   END IF  
 !
 END DO
@@ -1101,6 +1164,7 @@ DO N=1,NCELLS
     CCELL(2,L)=0.D00
     ICCELL(3,L)=N
   END DO
+  VAR(11,N)=FTMP(1)
 END DO
 !
 IF (IWF == 0) AWF=1.D00
@@ -1457,7 +1521,7 @@ IMPLICIT NONE
 !
 MSP=1
 MMRM=1
-MMVM=0
+MMVM=1
 MNRE=0
 MTBP=0
 MNSR=0
@@ -1509,8 +1573,9 @@ SPR(1,1)=5.             ! the collision number or the coefficient of temperature
 ISPV(1)=1               ! the number of vibrational modes
 SPVM(1,1,1)=2256.D00          ! the characteristic vibrational temperature
 SPVM(2,1,1)=90000.D00        ! a constant Zv, or the reference Zv
+IF (IZV == 1) SPVM(2,1,1)=5.D00*SPVM(2,1,1)   !--to allow for the reduction in relaxation time when based on quantized collision temperature
 SPVM(3,1,1)=2256.D00        ! -1 for a constant Zv, or the reference temperature
-SPVM(4,1,1)=59500.D00
+SPVM(4,1,1)=59500.D00       ! characteristic dissociation temperature
 ISPVM(1,1,1)=2
 ISPVM(2,1,1)=2
 !
@@ -1526,6 +1591,13 @@ ISPV(2)=0     !--must be set!
 !
 ISPRC=0
 ISPRC(2,2)=1    !--O+O -> O2  recombined species code for an O+O recombination
+  SPRC(1,2,2,1)=0.04D00    !UNADJUSTED
+  IF (ITCV == 1) SPRC(1,2,2,1)=SPRC(1,2,2,1)*0.23
+  SPRC(2,2,2,1)=-1.3D00
+  SPRC(1,2,2,2)=0.07D00     !--UNADJUSTED
+  IF (ITCV == 1) SPRC(1,2,2,2)=SPRC(1,2,2,2)*0.28
+  SPRC(2,2,2,2)=-1.2D00
+ 
 !
 NSPEX=0
 SPEX=0.D00
@@ -1669,11 +1741,52 @@ ISPVM(2,1,5)=4
 !--following data is required if JCD=1 (new reaction model)
 IF (JCD == 1) THEN
 !--set the recombination data for the molecule pairs
-  ISPRC=0    !--data os zero unless explicitly set5
+  ISPRC=0    !--data os zero unless explicitly set
+  SPRC=0.D00
   ISPRC(3,3)=1    !--O+O -> O2  recombined species code for an O+O recombination
+  SPRC(1,3,3,1)=0.04D00
+  SPRC(2,3,3,1)=-1.3D00
+  SPRC(1,3,3,2)=0.07D00
+  SPRC(2,3,3,2)=-1.2D00
+  SPRC(1,3,3,3)=0.08D00
+  SPRC(2,3,3,3)=-1.2D00
+  SPRC(1,3,3,4)=0.09D00
+  SPRC(2,3,3,4)=-1.2D00
+  SPRC(1,3,3,5)=0.065D00
+  SPRC(2,3,3,5)=-1.2D00
   ISPRC(4,4)=2
+  SPRC(1,4,4,1)=0.15D00
+  SPRC(2,4,4,1)=-2.05D00
+  SPRC(1,4,4,2)=0.09D00
+  SPRC(2,4,4,2)=-2.1D00
+  SPRC(1,4,4,3)=0.16D00
+  SPRC(2,4,4,3)=-2.0D00
+  SPRC(1,4,4,4)=0.17D00
+  SPRC(2,4,4,4)=-2.0D00
+  SPRC(1,4,4,5)=0.17D00
+  SPRC(2,4,4,5)=-2.1D00
   ISPRC(3,4)=5
+  SPRC(1,3,4,1)=0.3D00
+  SPRC(2,3,4,1)=-1.9D00
+  SPRC(1,3,4,2)=0.4D00
+  SPRC(2,3,4,2)=-2.0D00
+  SPRC(1,3,4,3)=0.3D00
+  SPRC(2,3,4,3)=-1.75D00
+  SPRC(1,3,4,4)=0.3D00
+  SPRC(2,3,4,4)=-1.75D00
+  SPRC(1,3,4,5)=0.15D00
+  SPRC(2,3,4,5)=-1.9D00
   ISPRC(4,3)=5
+  SPRC(1,4,3,1)=0.3D00
+  SPRC(2,4,3,1)=-1.9D00
+  SPRC(1,4,3,2)=0.4D00
+  SPRC(2,4,3,2)=-2.0D00
+  SPRC(1,4,3,3)=0.3D00
+  SPRC(2,4,3,3)=-1.75D00
+  SPRC(1,4,3,4)=0.3D00
+  SPRC(2,4,3,4)=-1.75D00
+  SPRC(1,4,3,5)=0.15D00
+  SPRC(2,4,3,5)=-1.9D00
 !--set the exchange reaction data
   SPEX=0.D00
   ISPEX=0
@@ -1690,63 +1803,77 @@ IF (JCD == 1) THEN
   ISPEX(1,0,2,3)=2
   ISPEX(1,1,2,3)=5
   ISPEX(1,2,2,3)=4
-  ISPEX(1,3,2,3)=0
+  ISPEX(1,3,2,3)=1
   ISPEX(1,4,2,3)=1
-  SPEX(1,1,2,3)=5.175D-19
-  SPEX(2,1,2,3)=-5.175D-19
+  SPEX(1,1,2,3)=0.15D00
+  SPEX(2,1,2,3)=0.D00
+  SPEX(3,1,2,3)=-5.175D-19
   NEX(1,2,3)=1
   ISPEX(1,0,3,2)=2
   ISPEX(1,1,3,2)=5
   ISPEX(1,2,3,2)=4
   ISPEX(1,3,3,2)=1
-  SPEX(1,1,3,2)=5.175D-19
-  SPEX(2,1,3,2)=-5.175D-19
+  ISPEX(1,4,3,2)=1
+  SPEX(1,1,3,2)=0.15D00
+  SPEX(2,1,3,2)=0.D00
+  SPEX(3,1,3,2)=-5.175D-19
   NEX(1,3,2)=1
 !--NO+N->N2+0
   ISPEX(1,0,5,4)=5
   ISPEX(1,1,5,4)=2
   ISPEX(1,2,5,4)=3
   ISPEX(1,3,5,4)=1
-  SPEX(1,1,5,4)=0.D00
-  SPEX(2,1,5,4)=5.175D-19
+  ISPEX(1,4,5,4)=1
+  SPEX(1,1,5,4)=0.033D00
+  SPEX(2,1,5,4)=0.8D00
+  SPEX(3,1,5,4)=5.175D-19
   NEX(1,5,4)=2
   ISPEX(1,0,4,5)=5
   ISPEX(1,1,4,5)=2
   ISPEX(1,2,4,5)=3
-  ISPEX(1,3,4,5)=0
+  ISPEX(1,3,4,5)=1
   ISPEX(1,4,4,5)=1
-  SPEX(1,1,4,5)=0.
-  SPEX(2,1,4,5)=5.175D-19
+  SPEX(1,1,4,5)=0.033D00
+  SPEX(2,1,4,5)=0.8D00
+  SPEX(3,1,4,5)=5.175D-19
   NEX(1,4,5)=2
 !--NO+0->O2+N
   ISPEX(1,0,5,3)=5
   ISPEX(1,1,5,3)=1
   ISPEX(1,2,5,3)=4
   ISPEX(1,3,5,3)=1
-  SPEX(1,1,5,3)=2.719D-19
-  SPEX(2,1,5,3)=-2.719D-19
+  ISPEX(1,4,5,3)=1
+  SPEX(1,1,5,3)=0.05D00
+  SPEX(2,1,5,3)=0.7D00
+  SPEX(3,1,5,3)=-2.719D-19
   NEX(1,5,3)=3
   ISPEX(1,0,3,5)=5
   ISPEX(1,1,3,5)=1
   ISPEX(1,2,3,5)=4
   ISPEX(1,3,3,5)=1
-  SPEX(1,1,3,5)=2.719D-19
-  SPEX(2,1,3,5)=-2.719D-19
+  ISPEX(1,4,3,5)=1
+  SPEX(1,1,3,5)=0.05D00
+  SPEX(2,1,3,5)=0.7D00
+  SPEX(3,1,3,5)=-2.719D-19
   NEX(1,3,5)=3
 !--O2+N->NO+O
   ISPEX(1,0,1,4)=1
   ISPEX(1,1,1,4)=5
   ISPEX(1,2,1,4)=3
   ISPEX(1,3,1,4)=1
+  ISPEX(1,4,1,4)=1
   SPEX(1,1,1,4)=0.D00
-  SPEX(2,1,1,4)=2.719D-19
+  SPEX(2,1,1,4)=0.D00
+  SPEX(3,1,1,4)=2.719D-19
   NEX(1,1,4)=4
   ISPEX(1,0,4,1)=1
   ISPEX(1,1,4,1)=5
   ISPEX(1,2,4,1)=3
   ISPEX(1,3,4,1)=1
+  ISPEX(1,4,4,1)=1
   SPEX(1,1,4,1)=0.D00
-  SPEX(2,1,4,1)=2.719D-19
+  SPEX(2,1,4,1)=0.D00
+  SPEX(3,1,4,1)=2.719D-19
   NEX(1,4,1)=4
 !
 END IF
@@ -2271,14 +2398,14 @@ ISPEX(1,1,1,3)=7
 ISPEX(1,2,1,3)=2
 ISPEX(1,3,1,3)=1
 SPEX(1,1,1,3)=3.79D-19
-SPEX(2,1,1,3)=-3.79D-19
+SPEX(3,1,1,3)=-3.79D-19
 NEX(1,1,3)=1
 ISPEX(1,0,3,1)=1
 ISPEX(1,1,3,1)=7
 ISPEX(1,2,3,1)=2
 ISPEX(1,3,3,1)=1
 SPEX(1,1,3,1)=3.79D-19
-SPEX(2,1,3,1)=-3.79D-19
+SPEX(3,1,3,1)=-3.79D-19
 NEX(1,3,1)=1
 !--HO2+H -> H2+02
 ISPEX(1,0,2,7)=7
@@ -2289,7 +2416,7 @@ ISPEX(1,4,2,7)=0
 ISPEX(1,5,2,7)=0
 !--H02 is H-O-O so that not all vibrational modes contribute to this reaction, but the numbers here are guesses!
 SPEX(1,1,2,7)=0.D00
-SPEX(2,1,2,7)=3.79D-19
+SPEX(3,1,2,7)=3.79D-19
 NEX(1,2,7)=2
 ISPEX(1,0,7,2)=7
 ISPEX(1,1,7,2)=1
@@ -2299,7 +2426,7 @@ ISPEX(1,4,7,2)=0
 ISPEX(1,5,7,2)=1
 ISPEX(1,6,7,2)=1
 SPEX(1,1,7,2)=0.D00
-SPEX(2,1,7,2)=3.79D-19
+SPEX(3,1,7,2)=3.79D-19
 NEX(1,7,2)=2
 !
 !--O2+H -> OH+O
@@ -2308,14 +2435,14 @@ ISPEX(1,1,3,2)=5
 ISPEX(1,2,3,2)=4
 ISPEX(1,3,3,2)=1
 SPEX(1,1,3,2)=1.17D-19
-SPEX(2,1,3,2)=-1.17D-19
+SPEX(3,1,3,2)=-1.17D-19
 NEX(1,3,2)=3
 ISPEX(1,0,2,3)=3
 ISPEX(1,1,2,3)=5
 ISPEX(1,2,2,3)=4
 ISPEX(1,3,2,3)=1
 SPEX(1,1,2,3)=1.17D-19
-SPEX(2,1,2,3)=-1.17D-19
+SPEX(3,1,2,3)=-1.17D-19
 NEX(1,2,3)=3
 !--OH+O -> O2+H
 ISPEX(1,0,5,4)=5
@@ -2323,14 +2450,14 @@ ISPEX(1,1,5,4)=3
 ISPEX(1,2,5,4)=2
 ISPEX(1,3,5,4)=1
 SPEX(1,1,5,4)=0.D00
-SPEX(2,1,5,4)=1.17D-19
+SPEX(3,1,5,4)=1.17D-19
 NEX(1,5,4)=4
 ISPEX(1,0,4,5)=5
 ISPEX(1,1,4,5)=3
 ISPEX(1,2,4,5)=2
 ISPEX(1,3,4,5)=1
 SPEX(1,1,4,5)=0.D00
-SPEX(2,1,4,5)=1.17D-19
+SPEX(3,1,4,5)=1.17D-19
 NEX(1,4,5)=4
 !
 !--H2+O -> OH+H
@@ -2339,14 +2466,14 @@ ISPEX(1,1,1,4)=5
 ISPEX(1,2,1,4)=2
 ISPEX(1,3,1,4)=1
 SPEX(1,1,1,4)=0.13D-19
-SPEX(2,1,1,4)=-0.13D-19
+SPEX(3,1,1,4)=-0.13D-19
 NEX(1,1,4)=5
 ISPEX(1,0,4,1)=1
 ISPEX(1,1,4,1)=5
 ISPEX(1,2,4,1)=2
 ISPEX(1,3,4,1)=1
 SPEX(1,1,4,1)=0.13D-19
-SPEX(2,1,4,1)=-0.13D-19
+SPEX(3,1,4,1)=-0.13D-19
 NEX(1,4,1)=5
 !--OH+H -> H2+O
 ISPEX(1,0,5,2)=5
@@ -2354,14 +2481,14 @@ ISPEX(1,1,5,2)=1
 ISPEX(1,2,5,2)=4
 ISPEX(1,3,5,2)=1
 SPEX(1,1,5,2)=0.D00
-SPEX(2,1,5,2)=0.13D-19
+SPEX(3,1,5,2)=0.13D-19
 NEX(1,5,2)=6
 ISPEX(1,0,2,5)=5
 ISPEX(1,1,2,5)=1
 ISPEX(1,2,2,5)=4
 ISPEX(1,3,2,5)=1
 SPEX(1,1,2,5)=0.D00
-SPEX(2,1,2,5)=0.13D-19
+SPEX(3,1,2,5)=0.13D-19
 NEX(1,2,5)=6
 !
 !--OH+H2 -> H2O+H
@@ -2370,14 +2497,14 @@ ISPEX(1,1,5,1)=6
 ISPEX(1,2,5,1)=2
 ISPEX(1,3,5,1)=1
 SPEX(1,1,5,1)=-1.D-19  !--a negative activation energy enables reactions from the ground state      
-SPEX(2,1,5,1)=1.05D-19
+SPEX(3,1,5,1)=1.05D-19
 NEX(1,5,1)=7
 ISPEX(1,0,1,5)=5
 ISPEX(1,1,1,5)=6
 ISPEX(1,2,1,5)=2
 ISPEX(1,3,1,5)=1
 SPEX(1,1,1,5)=-1.D-19
-SPEX(2,1,1,5)=1.05D-19
+SPEX(3,1,1,5)=1.05D-19
 NEX(1,1,5)=7
 !
 !--H20+H -> OH+H2
@@ -2388,7 +2515,7 @@ ISPEX(1,3,6,2)=1
 ISPEX(1,4,6,2)=1
 ISPEX(1,5,6,2)=1
 SPEX(1,1,6,2)=1.05D-19*2.D00    !--activation energy set above heat of reaction
-SPEX(2,1,6,2)=-1.05D-19   !--heat of reaction
+SPEX(3,1,6,2)=-1.05D-19   !--heat of reaction
 NEX(1,6,2)=8
 ISPEX(1,0,2,6)=6
 ISPEX(1,1,2,6)=5
@@ -2397,7 +2524,7 @@ ISPEX(1,3,2,6)=1
 ISPEX(1,4,2,6)=1
 ISPEX(1,5,2,6)=1
 SPEX(1,1,2,6)=1.05D-19*2.D00
-SPEX(2,1,2,6)=-1.05D-19
+SPEX(3,1,2,6)=-1.05D-19
 NEX(1,2,6)=8
 !
 !--H2O+O -> OH+OH
@@ -2408,7 +2535,7 @@ ISPEX(1,3,6,4)=1
 ISPEX(1,4,6,4)=1
 ISPEX(1,5,6,4)=1
 SPEX(1,1,6,4)=1.18D-19     
-SPEX(2,1,6,4)=-1.18D-19
+SPEX(3,1,6,4)=-1.18D-19
 NEX(1,6,4)=9
 ISPEX(1,0,4,6)=6
 ISPEX(1,1,4,6)=5
@@ -2417,7 +2544,7 @@ ISPEX(1,3,4,6)=1
 ISPEX(1,4,4,6)=1
 ISPEX(1,5,4,6)=1
 SPEX(1,1,4,6)=1.18D-19    
-SPEX(2,1,4,6)=-1.18D-19
+SPEX(3,1,4,6)=-1.18D-19
 NEX(1,4,6)=9
 !--0H+OH -> H2O+O
 ISPEX(1,0,5,5)=5
@@ -2425,7 +2552,7 @@ ISPEX(1,1,5,5)=6
 ISPEX(1,2,5,5)=4
 ISPEX(1,3,5,5)=1
 SPEX(1,1,5,5)=-1.D-19    
-SPEX(2,1,5,5)=1.18D-19
+SPEX(3,1,5,5)=1.18D-19
 NEX(1,5,5)=10
 !
 !--H02+H -> 0H+OH
@@ -2436,7 +2563,7 @@ ISPEX(2,3,7,2)=1
 ISPEX(2,4,7,2)=1
 ISPEX(2,5,7,2)=0
 SPEX(1,2,7,2)=0.D00
-SPEX(2,2,7,2)=2.49D-19
+SPEX(3,2,7,2)=2.49D-19
 NEX(2,7,2)=11
 ISPEX(2,0,2,7)=7
 ISPEX(2,1,2,7)=5
@@ -2445,7 +2572,7 @@ ISPEX(2,3,2,7)=1
 ISPEX(2,4,2,7)=0
 ISPEX(2,5,2,7)=1
 SPEX(1,2,2,7)=0.D00
-SPEX(2,2,2,7)=2.49D-19
+SPEX(3,2,2,7)=2.49D-19
 NEX(2,2,7)=11
 !--OH+OH  -> HO2+H
 ISPEX(2,0,5,5)=5
@@ -2453,7 +2580,7 @@ ISPEX(2,1,5,5)=7
 ISPEX(2,2,5,5)=2
 ISPEX(2,3,5,5)=1
 SPEX(1,2,5,5)=2.49D-19
-SPEX(2,2,5,5)=-2.49D-19
+SPEX(3,2,5,5)=-2.49D-19
 NEX(2,5,5)=12
 !
 !--H02+H -> H2O+O
@@ -2464,7 +2591,7 @@ ISPEX(3,3,7,2)=1
 ISPEX(3,4,7,2)=1
 ISPEX(3,5,7,2)=0
 SPEX(1,3,7,2)=0.D00    
-SPEX(2,3,7,2)=3.67D-19
+SPEX(3,3,7,2)=3.67D-19
 NEX(3,7,2)=13
 ISPEX(3,0,2,7)=7
 ISPEX(3,1,2,7)=6
@@ -2473,7 +2600,7 @@ ISPEX(3,3,2,7)=1
 ISPEX(3,4,2,7)=0
 ISPEX(3,5,2,7)=1
 SPEX(1,3,2,7)=0.D00     
-SPEX(2,3,2,7)=3.67D-19
+SPEX(3,3,2,7)=3.67D-19
 NEX(3,2,7)=13
 !--H2O+O -> HO2+H
 ISPEX(2,0,6,4)=6
@@ -2483,7 +2610,7 @@ ISPEX(2,3,6,4)=1
 ISPEX(2,4,6,4)=1
 ISPEX(2,5,6,4)=1
 SPEX(1,2,6,4)=3.67D-19   
-SPEX(2,2,6,4)=-3.67D-19
+SPEX(3,2,6,4)=-3.67D-19
 NEX(2,6,4)=14
 ISPEX(2,0,4,6)=6
 ISPEX(2,1,4,6)=7
@@ -2492,7 +2619,7 @@ ISPEX(2,3,4,6)=1
 ISPEX(2,4,4,6)=1
 ISPEX(2,5,4,6)=1
 SPEX(1,2,4,6)=3.67D-19      
-SPEX(2,2,4,6)=-3.67D-19
+SPEX(3,2,4,6)=-3.67D-19
 NEX(2,4,6)=14
 !
 !--H02+0 -> OH+O2
@@ -2503,7 +2630,7 @@ ISPEX(1,3,7,4)=1
 ISPEX(1,4,7,4)=1
 ISPEX(1,5,7,4)=0
 SPEX(1,1,7,4)=0.D00
-SPEX(2,1,7,4)=3.66D-19
+SPEX(3,1,7,4)=3.66D-19
 NEX(1,7,4)=15
 ISPEX(1,0,4,7)=7
 ISPEX(1,1,4,7)=5
@@ -2512,7 +2639,7 @@ ISPEX(1,3,4,7)=1
 ISPEX(1,4,4,7)=1
 ISPEX(1,5,4,7)=0
 SPEX(1,1,4,7)=0.D00
-SPEX(2,1,4,7)=3.66D-19
+SPEX(3,1,4,7)=3.66D-19
 NEX(1,4,7)=15
 !--OH+O2 -> HO2+O
 ISPEX(1,0,5,3)=5
@@ -2520,14 +2647,14 @@ ISPEX(1,1,5,3)=7
 ISPEX(1,2,5,3)=4
 ISPEX(1,3,5,3)=1
 SPEX(1,1,5,3)=3.66D-19
-SPEX(2,1,5,3)=-3.66D-19
+SPEX(3,1,5,3)=-3.66D-19
 NEX(1,5,3)=16
 ISPEX(1,0,3,5)=5
 ISPEX(1,1,3,5)=7
 ISPEX(1,2,3,5)=4
 ISPEX(1,3,3,5)=1
 SPEX(1,1,3,5)=3.66D-19
-SPEX(2,1,3,5)=-3.66D-19
+SPEX(3,1,3,5)=-3.66D-19
 NEX(1,3,5)=16
 END IF
 !
@@ -2960,7 +3087,7 @@ USE CALC
 IMPLICIT NONE
 !
 ALLOCATE (FSP(MSP,2),SP(5,MSP),SPR(3,MSP),SPM(8,MSP,MSP),ISPR(2,MSP),ISPV(MSP),ENTR(6,MSP,2),NRSP(MSP,MSP),      &
-          VMP(MSP,2),VNMAX(MSP),CR(MSP),TCOL(MSP,MSP),ISPRC(MSP,MSP),STAT=ERROR)
+          VMP(MSP,2),VNMAX(MSP),CR(MSP),TCOL(MSP,MSP),ISPRC(MSP,MSP),SPRC(2,MSP,MSP,MSP),STAT=ERROR)
 !
 IF (ERROR /= 0) THEN
   WRITE (*,*)'PROGRAM COULD NOT ALLOCATE SPECIES VARIABLES',ERROR
@@ -2969,7 +3096,7 @@ END IF
 
 
 
-ALLOCATE (NEX(MMEX,MSP,MSP),NSPEX(MSP,MSP),SPEX(2,MMEX,MSP,MSP),ISPEX(MMEX,0:2+MMVM,MSP,MSP),TREACG(4,MSP),         &
+ALLOCATE (NEX(MMEX,MSP,MSP),NSPEX(MSP,MSP),SPEX(3,MMEX,MSP,MSP),ISPEX(MMEX,0:4,MSP,MSP),TREACG(4,MSP),         &
           PSF(MMEX),TREACL(4,MSP),TNEX(MEX),STAT=ERROR)
 !
 IF (ERROR /= 0) THEN
@@ -3075,11 +3202,11 @@ OPEN (7,FILE='RESTART.DAT',FORM='BINARY',ERR=102)
 READ (7) AC,AE,AVDTM,BC,BOLTZ,CCELL,CELL,CI,CLSEP,COLLS,    &
          CPDTM,CR,CS,CSS,CSSS,CTM,CXSS,DDIV,DPI,DTM,DTSAMP,DTOUT,      &
          ENTMASS,ENTR,ER,ERROR,ERS,FDEN,FMA,FND,FNUM,FRACSAM,FSP,FP,FPR,FREM,FSPEC,     &
-         FTMP,FTIME,FVTMP,GASCODE,ICCELL,ICELL,ICREF,IFX,IMTS,IPCELL,IPCP,     &
+         FTMP,FTIME,FVTMP,GASCODE,ICCELL,ICELL,ICREF,IDISTS,IFX,IMTS,IPCELL,IPCP,     &
          IPSP,IPVIB,IRCD,IREA,IREM,ISECS,ISF,ISPEX,ISPR,ISPRC,ISPV,ISPVM,ISRCD,ITYPE,IVB,IWF,JCD,     &
          JDIV,JREA,KP,LE,LIS,LP,LRS,ME,MOLSC,MP,MVER,NCCELLS,NCELLS,    &
          NCIS,NDIV,NEX,NM,NMISAMP,NNC,NOUT,NREA,NRSP,NSAMP,NSPEX,NVER,PI,PROT,PTIM,PV,PX,     &
-         REAC,RGFS,RMAS,REA,SP,SPEX,SPI,SPM,SPR,SPV,SPVM,SREAC,SUMVIB,    &
+         REAC,RGFS,RMAS,REA,SP,SPEX,SPI,SPM,SPR,SPRC,SPV,SPVM,SREAC,SUMVIB,    &
          TCOL,TDISS,TFOREX,TRECOMB,TREVEX,THBP,TISAMP,TPOUT,TREF,TLIM,TOTCOL,TOTDUP,TOTMOV,     &
          TREACG,TREACL,TOUT,TPDTM,TREF,TSAMP,TSURF,VAR,VARS,VARSP,VELOB,VFX,VFY,VIBFRAC,VMP,     &
          VMPM,VNMAX,VSURF,WCOLLS,WFM,XB,XREM,XVELS,YVELS,TNEX,ZCHECK
@@ -3122,11 +3249,11 @@ OPEN (7,FILE='RESTART.DAT',FORM='BINARY',ERR=102)
 WRITE (7)AC,AE,AVDTM,BC,BOLTZ,CCELL,CELL,CI,CLSEP,COLLS,    &
          CPDTM,CR,CS,CSS,CSSS,CTM,CXSS,DDIV,DPI,DTM,DTSAMP,DTOUT,      &
          ENTMASS,ENTR,ER,ERROR,ERS,FDEN,FMA,FND,FNUM,FRACSAM,FSP,FP,FPR,FREM,FSPEC,     &
-         FTMP,FTIME,FVTMP,GASCODE,ICCELL,ICELL,ICREF,IFX,IMTS,IPCELL,IPCP,     &
+         FTMP,FTIME,FVTMP,GASCODE,ICCELL,ICELL,ICREF,IDISTS,IFX,IMTS,IPCELL,IPCP,     &
          IPSP,IPVIB,IRCD,IREA,IREM,ISECS,ISF,ISPEX,ISPR,ISPRC,ISPV,ISPVM,ISRCD,ITYPE,IVB,IWF,JCD,     &
          JDIV,JREA,KP,LE,LIS,LP,LRS,ME,MOLSC,MP,MVER,NCCELLS,NCELLS,    &
          NCIS,NDIV,NEX,NM,NMISAMP,NNC,NOUT,NREA,NRSP,NSAMP,NSPEX,NVER,PI,PROT,PTIM,PV,PX,     &
-         REAC,RGFS,RMAS,REA,SP,SPEX,SPI,SPM,SPR,SPV,SPVM,SREAC,SUMVIB,    &
+         REAC,RGFS,RMAS,REA,SP,SPEX,SPI,SPM,SPR,SPRC,SPV,SPVM,SREAC,SUMVIB,    &
          TCOL,TDISS,TFOREX,TRECOMB,TREVEX,THBP,TISAMP,TPOUT,TREF,TLIM,TOTCOL,TOTDUP,TOTMOV,     &
          TREACG,TREACL,TOUT,TPDTM,TREF,TSAMP,TSURF,VAR,VARS,VARSP,VELOB,VFX,VFY,VIBFRAC,VMP,     &
          VMPM,VNMAX,VSURF,WCOLLS,WFM,XB,XREM,XVELS,YVELS,TNEX,ZCHECK
@@ -3602,7 +3729,7 @@ END SUBROUTINE MOLECULES_ENTER
 SUBROUTINE EXTEND_MNM(FAC)
 !
 !--the maximum number of molecules is increased by a specified factor
-!--the existing molecules are copied to temporary disk storage
+!--the existing molecules are copied TO disk storage
 !
 USE MOLECS
 USE CALC
@@ -3620,7 +3747,7 @@ MNMN=FAC*MNM
 WRITE (*,*) 'Maximum number of molecules is to be extended from',MNM,' to',MNMN
 WRITE (*,*) '( if the additional memory is available !! )'
 OPEN (7,FILE='EXTMOLS.SCR',FORM='BINARY')
-WRITE (*,*) 'Start write to temporary disk storage'
+WRITE (*,*) 'Start write to disk storage'
 DO N=1,MNM
   IF (MMVM > 0) THEN
     WRITE (7) PX(N),PTIM(N),PROT(N),(PV(M,N),M=1,3),IPSP(N),IPCELL(N),ICREF(N),IPCP(N),(IPVIB(M,N),M=1,MMVM)
@@ -3669,7 +3796,7 @@ IF (MMRM > 0) PROT=0.
 IF (MMVM > 0) IPVIB=0
 !--restore the original molecules
 OPEN (7,FILE='EXTMOLS.SCR',FORM='BINARY')
-WRITE (*,*) 'Start read back from temporary disk storage'
+WRITE (*,*) 'Start read back from disk storage'
 DO N=1,MNM
   IF (MMVM > 0) THEN
     READ (7) PX(N),PTIM(N),PROT(N),(PV(M,N),M=1,3),IPSP(N),IPCELL(N),ICREF(N),IPCP(N),(IPVIB(M,N),M=1,MMVM)
@@ -4264,6 +4391,50 @@ END SUBROUTINE INITIALISE_SAMPLES
 !
 !*****************************************************************************
 !
+SUBROUTINE INITIALISE_DISTRIBUTIONS
+!
+!--start a new sample of distribution functions
+!
+USE CALC
+USE GEOM
+USE GAS
+USE OUTPUT
+!
+IMPLICIT NONE
+!
+INTEGER :: L
+!
+ALLOCATE (STEMP(MSP),TRANSTEMP(MSP),ROTTEMP(MSP),VIBTEMP(MSP),NDSAMPLES(MSP),      &
+          NDTRANS(MSP,100),NDROT(MSP,100),NDVIB(MSP,0:100),STAT=ERROR)
+IF (ERROR /= 0) THEN
+  WRITE (*,*)'PROGRAM COULD NOT ALLOCATE DISTRIBUTION FUNCTION VARIABLES',ERROR
+END IF
+!
+STARTIME=FTIME
+NDISSOC=0
+NRECOMB=0
+NDISSL=0
+!
+NDSAMPLES=0
+NDTRANS=0
+NDROT=0
+NDVIB=0
+NDISSL=0
+!
+!--this assUmes a homogeneous gas calculation with one cell
+NTSAMP=0
+OVTEMP=0.D00
+OVTTEMP=0.D00
+OVRTEMP=0.D00
+OVVTEMP=0.D00
+STEMP=0.D00
+TRANSTEMP=0.D00
+ROTTEMP=0.D00
+VIBTEMP=0.D00
+!
+END SUBROUTINE INITIALISE_DISTRIBUTIONS
+!
+!*****************************************************************************!
 SUBROUTINE SAMPLE_FLOW
 !
 !--sample the flow properties
@@ -4289,22 +4460,23 @@ NSAMP=NSAMP+1
 WRITE (*,*) 'Sample',NSAMP
 WRITE (9,*) NM,'Mols. at sample',NSAMP
 !
-DO L=1,MSP
-  IF (ISPV(L) > 0) THEN
-    DO KV=1,ISPV(L)
-      DO N=1,NM
-        IF (IPSP(N) == L) THEN
-          SUMVIB(L,KV)=SUMVIB(L,KV)+1.D00
-          I=IPVIB(KV,N)
-          VIBFRAC(L,KV,I)=VIBFRAC(L,KV,I)+1.
-        END IF  
+IF (IDISTS > 0) THEN
+  DO L=1,MSP
+    IF (ISPV(L) > 0) THEN
+      DO KV=1,ISPV(L)
+        DO N=1,NM
+          IF (IPSP(N) == L) THEN
+            SUMVIB(L,KV)=SUMVIB(L,KV)+1.D00
+            I=IPVIB(KV,N)
+            VIBFRAC(L,KV,I)=VIBFRAC(L,KV,I)+1.
+          END IF  
+        END DO
       END DO
-    END DO
-  END IF
-END DO    
+    END IF
+  END DO
+END IF
 !
 DO N=1,NM
-!--set EMOLS
   NCC=IPCELL(N) 
   NC=ICCELL(3,NCC)
   WF=1.D00
@@ -4334,6 +4506,7 @@ DO N=1,NM
 !    STOP
   END IF
 END DO
+
 !
 TSAMP=TSAMP+DTSAMP
 !
@@ -4411,6 +4584,7 @@ IF (ERROR /= 0) THEN
 END IF 
 !
 NOUT=NOUT+1
+IF (NOUT > 9999) NOUT=NOUT-9999
 WRITE (*,*) 'Generating files for output interval',NOUT
 !
 IF (ISF == 0) THEN
@@ -4612,7 +4786,7 @@ DO N=1,NCELLS
           VDOF(L)=0.
         END IF
         VARSP(7,N,L)=TVIB(L)
-        VARSP(8,N,L)=VDOF(L)  !temporary assignment
+        VARSP(8,N,L)=VDOF(L)  !provisional assignment
       END DO
       VDOFM=0.
       EVIBM=0.
@@ -4665,6 +4839,19 @@ DO N=1,NCELLS
   VAR(17,N)=VEL
 END DO
 !
+IF (IDISTS > 0) THEN  
+  NTSAMP=NTSAMP+1
+  OVTEMP=OVTEMP+VAR(11,1)
+  OVTTEMP=OVTTEMP+VAR(8,1)
+  OVRTEMP=OVRTEMP+VAR(9,1)
+  OVVTEMP=OVVTEMP+VAR(10,1)
+  DO L=1,MSP
+    STEMP(L)=STEMP(L)+VARSP(8,1,L)
+    TRANSTEMP(L)=TRANSTEMP(L)+VARSP(5,1,L)
+    ROTTEMP(L)=ROTTEMP(L)+VARSP(6,1,L)
+    VIBTEMP(L)=VIBTEMP(L)+VARSP(7,1,L)
+  END DO
+END IF    
 !
 IF (IFX == 0) WRITE (3,*) 'DSMC program DS1 for a one-dimensional plane flow'
 IF (IFX == 1) WRITE (3,*) 'DSMC program DS1 for a cylindrical flow'
@@ -4706,6 +4893,26 @@ WRITE (3,*) 'Collision events per second',(TOTCOL-TOTCOLI)*1000.D00/DFLOAT(CTIME
 WRITE (3,*) 'Molecule moves per second',(TOTMOV-TOTMOVI)*1000.D00/DFLOAT(CTIME)
 !
 WRITE (3,*)
+!
+IF (IDISTS == 2) THEN
+  WRITE (3,*) 'Distribution function sampling started at',STARTIME
+  WRITE (3,*) 'Total dissociations',NDISSOC
+  WRITE (3,*) 'Total recombinations',NRECOMB
+  WRITE (3,*) 'Gas temperature',OVTEMP/DFLOAT(NTSAMP),' K'
+  WRITE (3,*) 'Gas translational temperature',OVTTEMP/DFLOAT(NTSAMP),' K'
+  WRITE (3,*) 'Gas rotational temperature',OVRTEMP/DFLOAT(NTSAMP),' K'
+  WRITE (3,*) 'Gas vibrational temperature',OVVTEMP/DFLOAT(NTSAMP),' K'
+  DO M=1,MSP
+    WRITE (3,*) 'Species',M,' overall temperature',STEMP(M)/DFLOAT(NTSAMP),' K'   
+    WRITE (3,*) 'Species',M,' translational temperature',TRANSTEMP(M)/DFLOAT(NTSAMP),' K'       
+    WRITE (3,*) 'Species',M,' rotational temperature',ROTTEMP(M)/DFLOAT(NTSAMP),' K' 
+    WRITE (3,*) 'Species',M,' vibrational temperature',VIBTEMP(M)/DFLOAT(NTSAMP),' K' 
+  END DO
+  
+END IF    
+!
+WRITE (3,*)    
+!    
 IF ((ITYPE(1) == 2).OR.(ITYPE(2) == 2)) WRITE (3,*) 'Surface quantities'
 DO JJ=1,2
   IF (ITYPE(JJ) == 2) THEN
@@ -4774,7 +4981,9 @@ IF ((JCD == 0).AND.(MSP > 1)) THEN
   DO M=1,MNRE
     WRITE (3,*) 'Reaction',M,' number',REAC(M)
   END DO 
-END IF 
+END IF
+WRITE (3,*)
+WRITE (3,*) 'Macro. or Coll. Temps:- ITCV, IEAA, IZV',ITCV,IEAA,IZV
 !
 WRITE (3,*)
 WRITE (3,*) 'Flowfield properties '
@@ -4949,20 +5158,12 @@ DO WHILE (N < NM)
       M=IPVIB(K,N)     
       IF (M < 0) THEN   
 !--dissociation
-        M=-M
-        IF (M == 99999) M=0    !--ground state 
-        IPVIB(K,N)=M
         TDISS=TDISS+1.D00
         IDISS=1
       END IF
     END DO    
     IF (IDISS == 1) THEN
       EA=PROT(N)    !--EA is energy available for relative translational motion of atoms      
-      IF (ISPV(L) >0) THEN
-        DO K=1,ISPV(L)    
-          EA=EA+IPVIB(K,N)*SPVM(1,K,L)*BOLTZ
-        END DO
-      END IF
       IF (NM >= MNM) CALL EXTEND_MNM(1.1)
       NM=NM+1     
 !--set center of mass velocity as that of molecule        
@@ -5721,9 +5922,9 @@ USE OUTPUT
 IMPLICIT NONE
 !
 INTEGER :: N,NN,M,MM,L,LL,K,KK,KT,J,I,II,III,NSP,MAXLEV,IV,NSEL,KV,LS,MS,KS,JS,IKA,IIII,LZ,KL,IS,IREC,NLOOP,IA,IDISS,IE,IEX,     &
-           JJ,NPRI,LIMLEV,KVV,KW,ISP1,ISP2,ISP3,INIL,INIM,JI,LV,IVM,NMC,NVM,LSI,JX,KKV,MOLA,KR,KI,JKV,NSC
-REAL(KIND=8) :: A,AA,AAA,AB,B,BB,BBB,ASEL,DTC,SEP,VR,VRR,ECT,EVIB,ECC,ZV,COLT,ERM,C,OC,SD,D,CVR,PROB,RML,RMM,ECTOT,EA1,EA2,ETI,EREC,ET2,       &
-                XMIN,XMAX,WFC,SFAC,SDF,CENI,CENF,VRRT
+           JJ,NPRI,LIMLEV,KVV,KW,ISP1,ISP2,ISP3,INIL,INIM,JI,LV,IVM,NMC,NVM,LSI,JX,MOLA,KR,JKV,NSC,KKV,NUMEXR,IAX,nstep,ISWITCH
+REAL(KIND=8) :: A,AA,AAA,AB,B,BB,BBB,ASEL,DTC,SEP,VR,VRR,ECT,EVIB,ECC,ZV,COLT,ERM,C,OC,SD,D,CVR,PROB,RML,RMM,ECTOT,ETI,EREC,ET2,       &
+                XMIN,XMAX,WFC,CENI,CENF,VRRT,TCOLT,EA,DEN
 REAL(KIND=8),DIMENSION(3) :: VRC,VCM,VRCP,VRCT
 
 !
@@ -5738,10 +5939,11 @@ REAL(KIND=8),DIMENSION(3) :: VRC,VCM,VRCP,VRCT
 !--VR the relative speed
 !--ECT relative translational energy
 !--EVIB vibrational energy
-!--ECC collision energy
+!--ECC collision energy (rel trans +vib)
 !--MAXLEV maximum vibrational level
 !--ZV vibration collision number
-!--COLT collision temperature
+!--COLT collision temperature (rel trans + vib)
+!--TCOLT collision temperature based rel trans
 !--SDF the number of degrees of freedom associated with the collision
 !--ERM rotational energy
 !--NSEL integer number of selections
@@ -5753,10 +5955,11 @@ REAL(KIND=8),DIMENSION(3) :: VRC,VCM,VRCP,VRCT
 !--IREC initially 0, becomes 1 of a recombination occurs
 !--NPRI  the priority collision molecule (the last one rejected as a previous collision molecule)
 !--WFC weighting factor in the cell
-!--SFAC the sreric factor for an exothermic exchange or chain reaction
 !--IEX is the reaction that occurs (1 if only one is possible)
+!--EA activation energy
 !
 !WRITE (*,*) 'START COLLISIONS'
+NUMEXR=0
 !
 DO N=1,NCCELLS
 !
@@ -5895,7 +6098,7 @@ DO N=1,NCCELLS
                           IF (SPVM(3,KV,1) > 0.) THEN
 !--note quantizing of COLT in the following statements
                             MAXLEV=ECC/(BOLTZ*SPVM(1,KV,1))
-                            COLT=DFLOAT(MAXLEV)*SPVM(1,KV,1)/(3.5D00-SPM(3,1,1))
+                            COLT=(DFLOAT(MAXLEV)*SPVM(1,KV,1))/(3.5D00-SPM(3,1,1))
                             B=SPVM(4,KV,1)/SPVM(3,KV,1)    !Tdiss/Tref          !
                             A=SPVM(4,KV,1)/COLT       !Tdiss/T
                             ZV=(A**SPM(3,1,1))*(SPVM(3,KV,1)*(B**(-SPM(3,1,1))))**(((A**0.3333333D00)-1.D00)/((B**0.33333D00)-1.D00))
@@ -6022,17 +6225,59 @@ DO N=1,NCCELLS
                 DO KK=1,3
                   VCM(KK)=RML*PV(KK,L)+RMM*PV(KK,M)
                 END DO
+                ISWITCH=0                  !--must be 0 if reactions are to occur
+                IF (ISWITCH == 0) THEN                
+!--check for dissociation
+                IDISS=0
+                IF (((ISPR(1,LS) > 0).OR.(ISPR(1,MS) > 0)).AND.(JCD == 1)) THEN     
+                  ECT=0.5D00*SPM(1,LS,MS)*VRR
+                  DO NSP=1,2
+                    IF (NSP == 1) THEN
+                      K=L ; KS=LS ; JS=MS 
+                    ELSE
+                      K=M ; KS=MS ; JS=LS
+                    END IF                                        
+                    IF (MMVM > 0) THEN
+                      IF (ISPV(KS) > 0) THEN
+                        DO KV=1,ISPV(KS)
+                          IF ((IPVIB(KV,K) >= 0).AND.(IDISS == 0)) THEN   !--do not redistribute to a dissociating molecule marked for removal 
+                            EVIB=DFLOAT(IPVIB(KV,K))*BOLTZ*SPVM(1,KV,KS)                      
+                            ECC=ECT+EVIB
+               !--note quantizing of COLT in the following statements
+                            MAXLEV=ECC/(BOLTZ*SPVM(1,KV,KS))
+                            LIMLEV=SPVM(4,KV,KS)/SPVM(1,KV,KS)
+                            IF ((MAXLEV > LIMLEV)) THEN
+!--dissociation occurs  -  reflects the infinity of levels past the dissociation limit                       
+                              IDISS=1
+                              IF (IDISTS > 0) NDISSOC=NDISSOC+1
+                              LZ=IPVIB(KV,K)
+                              NDISSL(LZ)=NDISSL(LZ)+1
+                              ECT=ECT-BOLTZ*SPVM(4,KV,KS)+EVIB
+!--adjust VR for the change in energy
+                              VRR=2.D00*ECT/SPM(1,LS,MS)                               
+                              VR=SQRT(VRR)
+                              IPVIB(KV,K)=-1  
+!--a negative IPVIB marks a molecule for dissociation                                                             
+                            END IF
+                          END IF
+                        END DO
+                      END IF
+                    END IF
+                  END DO
+                END IF                 
 !
                 IEX=0    !--becomes the collision number if a reaction occurs 
                 IREC=0   !--becomes 1 if a recombination occurs
-!
-                IF (JCD == 1) THEN         !--use the Q-K reaction model 
+!--calculate the collision temperature based on on relative translational energy
+                IF ((ITCV == 1).OR.(IEAA == 1)) TCOLT=0.5D00*SPM(1,LS,MS)*VRR/(BOLTZ*(2.5-SPM(3,LS,MS)))
+!                
+                IF ((JCD == 1).AND.(IDISS == 0)) THEN         !--use the Q-K reaction model, and dissociation has not occurred 
 !--consider possible recombinations
 !                                  
                   IF ((ISPRC(LS,MS) > 0).AND.(ICCELL(2,N) > 2)) THEN        
 !--possible recombination using model based on collision volume for equilibrium
-                    CALL RANDOM_NUMBER(RANF)
-                    IF (RANF < 0.2) THEN   !--third body probability will be increased by a factor of 5
+!                    CALL RANDOM_NUMBER(RANF)
+!                    IF (RANF < 0.2) THEN   !--third body probability will be increased by a factor of 5
 !--this is to save computational time, the factor can be much higher at very low densities                     
                       KT=L
                       DO WHILE ((KT == L).OR.(KT == M)) 
@@ -6042,29 +6287,23 @@ DO N=1,NCCELLS
                       END DO
                       KS=IPSP(KT) 
 !--the potential third body is KT OF species KS 
-
-!--calculate the radius of the third body molecule in this collision 
-!--set it to the radius that corresponding to the relative speed between the third-body and the center of mass velocity
-                      DO KK=1,3
-                        VRCT(KK)=PV(KK,KT)-VCM(KK)
-                      END DO
-                      VRRT=VRCT(1)*VRCT(1)+VRCT(2)*VRCT(2)+VRCT(3)*VRCT(3)
-                      AA=0.5D00*SP(1,KS)*(16.D00*BOLTZ*SP(2,KS)/(PI*SP(5,KS)*VRRT))**((SP(3,KS)-0.5D00)*0.5D00) !3rd body radius
-                      A=SQRT(CVR/(PI*VR))    !--radius of collision cross-section (sum of the molecular radii)
-                      AB=0.5D00*A+AA  !average radius of colliding molecules+radius of 3rd body molecule
-                      B=(8.D00*PI/3.D00)*AB**3-(2.D00*PI/3.D00)*AA*AA*(3.D00*AB-AA)
-!three body collision volume is sum of two spheres with radius = [(average radius of colliding molecules+radius of third body)-the volume lost in the overlap of these spheres]                      
+!                
+                      AA=(PI/6.D00)*(SP(1,LS)+SP(1,MS)+SP(1,KS))**3   !--reference volume
+                      IF (ITCV == 1) THEN
+                        BB=AA*SPRC(1,LS,MS,KS)*(TCOLT/SPM(5,LS,MS))**SPRC(2,LS,MS,KS)  !--collision volume
+                      ELSE  
+                        BB=AA*SPRC(1,LS,MS,KS)*(VAR(11,NN)/SPM(5,LS,MS))**SPRC(2,LS,MS,KS)  !--collision volume 
+                      END IF                       
 !
-                      BB=(1.333333D00*PI)*1.5D00*A*1.5D00*A*1.5D00*A    !--the collision volume that was used in Version 1.8 
-!                      WRITE (*,*) 'NEW',B,'  OLD',BB
-!
-                      B=5.D00*B*ICCELL(2,N)*FNUM/AAA     !--probability of a three body collision 
-!                     is that of a molecule being in the  three-body volume
-                      IF (B > 1.D00) WRITE (*,*) 'THREE BODY PROBABILITY',B     !note factor of 5 may have to be reduced
+                      B=1.*BB*ICCELL(2,N)*FNUM/AAA     !-- speed-up factor of 1
+                      IF (B > 1.D00) THEN
+                        WRITE (*,*) 'THREE BODY PROBABILITY',B     !note factor of 2 may have to be reduced
+                      END IF  
                       CALL RANDOM_NUMBER(RANF)
                       IF (RANF < B) THEN                       
                         IREC=1
                         TRECOMB=TRECOMB+1.D00
+                        IF (IDISTS > 0) NRECOMB=NRECOMB+1
  !--the collision now becomes a collision between these with L having the center of mass velocity
                         A=0.5D00*SPM(1,LS,MS)*VRR   !--the relative energy of the recombining molecules
                         IF (ISPR(1,LS) > 0) A=A+PROT(L)
@@ -6137,86 +6376,68 @@ DO N=1,NCCELLS
                           VCM(KK)=RML*PV(KK,L)+RMM*PV(KK,M)
                         END DO
                       END IF
-                    END IF                            
+!                    END IF                            
                   END IF                          
 ! 
 !--consider exchange and chain reactions 
 !
-                  IF ((NSPEX(LS,MS) > 0).AND.(IREC == 0)) THEN  !--possible exchange reaction
-                    PSF=0.D00    !PSF(MMEX) becomes 1 if the reaction is possible
- !                
+                  IF ((NSPEX(LS,MS) > 0).AND.(IREC == 0).AND.(IDISS == 0)) THEN  !--possible exchange reaction
+                    PSF=0.D00    !PSF(MMEX) PSF is the probability that this reaction will occur in this collision
+!               
                     DO JJ=1,NSPEX(LS,MS)
-  
-                         IF (LS == ISPEX(JJ,0,LS,MS)) THEN
-                          K=L  ;   KS=LS   ;   JS=MS
-                        ELSE
-                          K=M  ;   KS=MS   ;   JS=LS
-                        END IF                         
- !--the pre-collision molecule that splits is K of species KS 
- 
- !                     
-                          CALL RANDOM_NUMBER(RANF)
-                          KI=RANF*ISPV(KS) !--random entry to loop over vibrational modes of molecule A                   
-                          DO KKV=1,ISPV(KS)
-                            KV=KI+KKV  
-                            IF (KV > ISPV(KS)) KV=KV-ISPV(KS)                                                  
-                            JI=IPVIB(KV,K)
-                            IF (JI < 0) JI=-JI
-                            IF (JI == 99999) JI=0
-                            ECC=0.5D00*SPM(1,LS,MS)*VRR+DFLOAT(JI)*BOLTZ*SPVM(1,KV,KS)   
-                            MAXLEV=ECC/(BOLTZ*SPVM(1,KV,KS))
-                            COLT=DFLOAT(MAXLEV)*SPVM(1,KV,KS)/(3.5D00-SPM(3,KS,JS))        !--quantized collision temperature
-                             
-                            LV=SPEX(1,JJ,KS,JS)/(BOLTZ*SPVM(1,KV,KS))+1
-                            IF (LV < 0) LV=0.
-!--a negative activation may have been set                             
-                            
-                             
-                            IF (MAXLEV >= LV) THEN
-                              II=0
-                              DO WHILE (II == 0)
-                                CALL RANDOM_NUMBER(RANF)
-                                IV=RANF*(MAXLEV+0.99999999D00)
-                                EVIB=DFLOAT(IV)*BOLTZ*SPVM(1,KV,KS)
-                                IF (EVIB < ECC) THEN
-                                  PROB=(1.D00-EVIB/ECC)**(1.5D00-SPM(3,KS,JS))
- !--PROB is the probability ratio of eqn (5.61)
-                                  CALL RANDOM_NUMBER(RANF)
-                                  IF (PROB > RANF) II=1       !
-                                END IF
-                              END DO 
-                              IF (IV == LV) PSF(JJ)=1.D00          
-                            END IF
-                          END DO  
-
+                      IF (LS == ISPEX(JJ,0,LS,MS)) THEN
+                        K=L  ;   KS=LS   ;   JS=MS
+                      ELSE
+                        K=M  ;   KS=MS   ;   JS=LS
+                      END IF                         
+ !--the pre-collision molecule that splits is K of species KS
+                      KV=ISPEX(JJ,3,LS,MS) 
+                      JI=IPVIB(KV,K)
+                      IF (JI < 0) JI=-JI
+                      IF (JI == 99999) JI=0
+                      ECC=0.5D00*SPM(1,LS,MS)*VRR+DFLOAT(JI)*BOLTZ*SPVM(1,KV,KS)   
+                      MAXLEV=ECC/(BOLTZ*SPVM(1,KV,KS))
+                      IF (IEAA == 1) THEN
+                        EA=SPEX(1,JJ,KS,JS)*((TCOLT/273.D00)**SPEX(2,JJ,KS,JS))*DABS(SPEX(3,JJ,KS,JS))
+                      ELSE
+                        EA=SPEX(1,JJ,KS,JS)*((VAR(11,NN)/273.D00)**SPEX(2,JJ,KS,JS))*DABS(SPEX(3,JJ,KS,JS))
+                      END IF  
+                      IF (SPEX(3,JJ,KS,JS) < 0.D00) EA=EA-SPEX(3,JJ,KS,JS)
+                      IF (ECC > EA) THEN
+                        DEN=0.D00
+                        DO IAX=0,MAXLEV
+                          DEN=DEN+(1.D00-DFLOAT(IAX)*BOLTZ*SPVM(1,KV,KS)/ECC)**(1.5D00-SPM(3,KS,JS))
+                        END DO   
+                        PSF(JJ)=ISPEX(JJ,4,LS,MS)*((1.D00-EA/ECC)**(1.5D00-SPM(3,KS,JS)))/DEN  !--probability of reaction
+                      END IF
                     END DO
- !                   
-                    BB=0.D00
-                    DO JJ=1,NSPEX(LS,MS)
-                      BB=BB+PSF(JJ)
-                    END DO
- !--BB is the number of reactions that can occur
-                 
-                    IEX=0
-                    IF (BB > 0.5D00) THEN
-                      CALL RANDOM_NUMBER(RANF)
-                      BBB=RANF*BB
+ !                  
+                    IF (NSPEX(LS,MS) > 1) THEN 
                       BB=0.D00
                       DO JJ=1,NSPEX(LS,MS)
-                        IF (IEX == 0) THEN
-                          BB=BB+PSF(JJ)
-                          IF (BB > BBB) IEX=JJ
-                        END IF   
+                        BB=BB+PSF(JJ)
                       END DO
+ !--BB is the sum of the probabilities 
+                      CALL RANDOM_NUMBER(RANF)
+                      IEX=0
+                      JJ=0
+                      A=0.D00
+                      DO WHILE ((IEX == 0).AND.(JJ < NSPEX(LS,MS)))
+                        JJ=JJ+1
+                        A=A+PSF(JJ)/B
+                        IF (A > RANF) IEX=JJ   
+                      END DO
+                    ELSE
+                      CALL RANDOM_NUMBER(RANF)
+                      IEX=0
+                      IF (PSF(1) > RANF) IEX=1
                     END IF
-               
-                   
-!
+ !
                     IF (IEX > 0) THEN    
 !-- exchange or chain reaction occurs
                       JX=NEX(IEX,LS,MS)
                       TNEX(JX)=TNEX(JX)+1.D00                   
-                      IF (SPEX(2,IEX,LS,MS) < 0.D00) THEN
+                      IF (SPEX(3,IEX,LS,MS) < 0.D00) THEN
                         TFOREX=TFOREX+1.D00
                       ELSE
                         TREVEX=TREVEX+1.D00
@@ -6262,13 +6483,13 @@ DO N=1,NCCELLS
                           ECT=ECT+DFLOAT(JI)*BOLTZ*SPVM(1,KV,MS)
                         END DO
                       END IF
-                      ECT=ECT+SPEX(2,IEX,LS,MS)
+                      ECT=ECT+SPEX(3,IEX,LS,MS)
                       IF (ECT < 0.) THEN
                         WRITE (*,*) '-VE ECT',ECT
                         WRITE (*,*) 'REACTION',JJ-1,' BETWEEN',LS,MS
                         STOP
                       END IF
-                      IF (SPEX(2,IEX,LS,MS) < 0.D00) THEN  
+                      IF (SPEX(3,IEX,LS,MS) < 0.D00) THEN  
                         TREACL(3,LS)=TREACL(3,LS)-1
                         TREACL(3,MS)=TREACL(3,MS)-1                     
                         LS=IPSP(L)
@@ -6310,18 +6531,18 @@ DO N=1,NCCELLS
                     END IF
                   END IF 
                 END IF   !--end of integrated reactions other than the deferred dissociation action in the DISSOCIATION subroutine
-!
+                END IF                
+!       
 !--consider any reactions that are specified by rate equations                
                 IKA=0    
                 IF (MNRE.GT.0) THEN
                   CALL CHECK_REACTION(IKA,N,L,M,LS,MS,VRR,VR,VCM,RML,RMM)
                 END IF
 !
-                IF (IREC == 0) THEN   !--recombined redistribution already made
+                IF ((IREC == 0).AND.(IDISS == 0)) THEN   !--recombined redistribution already made
 !               
 !--Larsen-Borgnakke serial redistribution 
                   ECT=0.5D00*SPM(1,LS,MS)*VRR
-                  IDISS=0
                   DO NSP=1,2
                     IF (NSP == 1) THEN
                       K=L ; KS=LS ; JS=MS 
@@ -6334,19 +6555,14 @@ DO N=1,NCCELLS
                           IF ((IPVIB(KV,K) >= 0).AND.(IDISS == 0)) THEN   !--do not redistribute to a dissociating molecule marked for removal 
                             EVIB=DFLOAT(IPVIB(KV,K))*BOLTZ*SPVM(1,KV,KS)                      
                             ECC=ECT+EVIB
+                            MAXLEV=ECC/(BOLTZ*SPVM(1,KV,KS))                            
                             IF (SPVM(3,KV,KS) > 0.) THEN
 !--note quantizing of COLT in the following statements
-                              MAXLEV=ECC/(BOLTZ*SPVM(1,KV,KS))
-                              LIMLEV=SPVM(4,KV,KS)/SPVM(1,KV,KS)
-                              IF ((MAXLEV > LIMLEV).AND.(JCD == 1).AND.(IEX == 0)) THEN
-!--dissociation occurs  -  reflects the infinity of levels past the dissociation limit                       
-                                IDISS=1
-                                IV=IPVIB(KV,K)
-                                ECC=ECC-BOLTZ*SPVM(4,KV,KS)   
-                                MAXLEV=ECC/(BOLTZ*SPVM(1,KV,KS))
-                              END IF            
-                              IF (MAXLEV > LIMLEV) MAXLEV=LIMLEV
-                              COLT=DFLOAT(MAXLEV)*SPVM(1,KV,KS)/(3.5D00-SPM(3,KS,JS))        !--quantized collision temperature
+                              IF (IZV == 1) THEN
+                                COLT=(DFLOAT(MAXLEV)*SPVM(1,KV,KS))/(3.5D00-SPM(3,KS,JS))        !--quantized collision temperature
+                              ELSE
+                                COLT=VAR(11,NN)        !--macroscopic temperature  
+                              END IF  
                               B=SPVM(4,KV,KS)/SPVM(3,KV,KS)    !Tdiss/Tref          
                               A=SPVM(4,KV,KS)/COLT       !Tdiss/T
                               ZV=(A**SPM(3,KS,JS))*(SPVM(2,KV,KS)*(B**(-SPM(3,KS,JS))))**(((A**0.3333333D00)-1.D00)/((B**0.33333D00)-1.D00))
@@ -6354,10 +6570,16 @@ DO N=1,NCCELLS
                               ZV=SPVM(2,KV,KS)
                             END IF
                             CALL RANDOM_NUMBER(RANF)
-                            IF ((1.D00/ZV > RANF).OR.(IREC == 1).OR.(IEX > 0).OR.(IDISS > 0)) THEN  !-- a vibrational redistribution is always made after a chemical reaction 
+                            IF ((1.D00/ZV > RANF).OR.(IREC == 1).OR.(IEX > 0)) THEN  !-- a vibrational redistribution is always made after a chemical reaction 
                               IE=1          
                               II=0
-                              DO WHILE (II == 0)
+                              nstep=0
+                              DO WHILE ((II == 0).and.(nstep < 100000))
+                                nstep=nstep+1
+                                if (nstep > 99000) then
+                                  write (*,*) nstep,ecc,maxlev
+                                  stop
+                                end if  
                                 CALL RANDOM_NUMBER(RANF)
                                 IV=RANF*(MAXLEV+0.99999999D00)
                                 IPVIB(KV,K)=IV
@@ -6370,14 +6592,6 @@ DO N=1,NCCELLS
                                 END IF
                               END DO
                               ECT=ECC-EVIB
-                              IF (IDISS == 1) THEN
-                                IF (IPVIB(KV,K) > 0) THEN
-                                  IPVIB(KV,K)=-IPVIB(KV,K)
-                                ELSE
-                                  IPVIB(KV,K)=-99999  
-                                END IF
- !--a negative IPVIB marks a molecule for dissociation, but -99999 represents the ground state                                                             
-                              END IF
                             END IF
                           END IF
                         END DO
@@ -6467,3 +6681,188 @@ RETURN
 END SUBROUTINE COLLISIONS
 !
 !*****************************************************************************
+SUBROUTINE OUTPUT_DISTRIBUTIONS
+!
+!--extend samples of distribution functions and update the output files
+!
+USE CALC
+USE GEOM
+USE GAS
+USE OUTPUT
+USE MOLECS
+!
+IMPLICIT NONE
+!
+INTEGER :: M,N,L
+REAL(KIND=8) :: V,A,B
+REAL(KIND=8), DIMENSION(10) :: VMPS,VPF!
+REAL(KIND=8), DIMENSION(10,0:100) :: EQVIBVT,EQVIBOT
+REAL(KIND=8), DIMENSION(100) :: EQTRANS,EQROT
+!
+DO L=1,MSP
+  VMPS(L)=DSQRT(2.D00*BOLTZ*TRANSTEMP(L)/(SP(5,L)*DFLOAT(NTSAMP)))   !--most probable molecular speed
+  VPF(L)=1.D00-DEXP(-SPVM(1,1,L)*DFLOAT(NTSAMP)/VIBTEMP(L))  !--reciprocal of vibrational partition function
+!--the equilibrium internal distribution functions in this section are for diatomic molecules with a single vibrational mode
+!--set equilibrium distributions
+  DO M=1,100
+    A=(DFLOAT(M)-0.5D00)*0.05D00  !--translational values
+    EQTRANS(M)=(4.D00/SPI)*A*A*DEXP(-A*A)*0.05D00
+    A=(DFLOAT(M)-0.5D00)*0.1D00  !--rotational values
+    EQROT(M)=DEXP(-A)*0.1D00  
+  END DO
+  DO M=0,100
+!--vibrational values are the integers
+    EQVIBVT(L,M)=VPF(L)*DEXP(-DFLOAT(M)*SPVM(1,1,L)*DFLOAT(NTSAMP)/VIBTEMP(L))
+    EQVIBOT(L,M)=VPF(L)*DEXP(-DFLOAT(M)*SPVM(1,1,L)*DFLOAT(NTSAMP)/STEMP(L))    
+  END DO    
+END DO
+!--sample the molecules
+!
+DO N=1,NM
+  L=IPSP(N)
+  NDSAMPLES(L)=NDSAMPLES(L)+1
+  V=DSQRT(PV(1,N)**2+PV(2,N)**2+PV(3,N)**2)/VMPS(L)
+  M=V/0.05D00+0.99999999D00  
+  IF (M < 101) NDTRANS(L,M)=NDTRANS(L,M)+1
+  IF (ISPR(1,L) > 0) THEN
+    M=(PROT(N)/(BOLTZ*ROTTEMP(L)/DFLOAT(NTSAMP)))/0.1D00+0.99999999999999D00
+    IF (M < 101) NDROT(L,M)=NDROT(L,M)+1
+    NDVIB(L,IPVIB(1,N))=NDVIB(L,IPVIB(1,N))+1
+  END IF
+END DO 
+ EQTRANS(           1 )=  9.389237056232902E-005
+ EQTRANS(           2 )=  6.538663581648757E-004
+ EQTRANS(           3 )=  1.757098968463294E-003
+ EQTRANS(           4 )=  3.370780864505735E-003
+ EQTRANS(           5 )=  5.447227223500134E-003
+ EQTRANS(           6 )=  7.925632295140705E-003
+ EQTRANS(           7 )=  1.073426526987892E-002
+ EQTRANS(           8 )=  1.379308554901326E-002
+ EQTRANS(           9 )=  1.701648416360868E-002
+ EQTRANS(          10 )=  2.031626848226786E-002
+ EQTRANS(          11 )=  2.360462856060358E-002
+ EQTRANS(          12 )=  2.679682941735184E-002
+ EQTRANS(          13 )=  2.981390843405529E-002
+ EQTRANS(          14 )=  3.258483005374180E-002
+ EQTRANS(          15 )=  3.504854823200115E-002
+ EQTRANS(          16 )=  3.715501283679301E-002
+ EQTRANS(          17 )=  3.886647164753965E-002
+ EQTRANS(          18 )=  4.015770753292447E-002
+ EQTRANS(          19 )=  4.101598032301862E-002
+ EQTRANS(          20 )=  4.144078941625573E-002
+ EQTRANS(          21 )=  4.144256418008113E-002
+ EQTRANS(          22 )=  4.104167035502915E-002
+ EQTRANS(          23 )=  4.026742449294374E-002
+ EQTRANS(          24 )=  3.915584114967130E-002
+ EQTRANS(          25 )=  3.774792590191112E-002
+ EQTRANS(          26 )=  3.608888649357922E-002
+ EQTRANS(          27 )=  3.422511696713337E-002
+ EQTRANS(          28 )=  3.220398330470386E-002
+ EQTRANS(          29 )=  3.007154583792138E-002
+ EQTRANS(          30 )=  2.787145131669011E-002
+ EQTRANS(          31 )=  2.564463587093047E-002
+ EQTRANS(          32 )=  2.342755050114953E-002
+ EQTRANS(          33 )=  2.125260413470154E-002
+ EQTRANS(          34 )=  1.914720172680850E-002
+ EQTRANS(          35 )=  1.713372088325371E-002
+ EQTRANS(          36 )=  1.522999139406145E-002
+ EQTRANS(          37 )=  1.344886485375740E-002
+ EQTRANS(          38 )=  1.179913153200607E-002
+ EQTRANS(          39 )=  1.028553965032919E-002
+ EQTRANS(          40 )=  8.909337006431928E-003
+ EQTRANS(          41 )=  7.668977238627805E-003
+ EQTRANS(          42 )=  6.560413723412095E-003
+ EQTRANS(          43 )=  5.577580866602094E-003
+ EQTRANS(          44 )=  4.713149886017010E-003
+ EQTRANS(          45 )=  3.958648829400668E-003
+ EQTRANS(          46 )=  3.305015171296111E-003
+ EQTRANS(          47 )=  2.742910546738364E-003
+ EQTRANS(          48 )=  2.262941617377723E-003
+ EQTRANS(          49 )=  1.856016141669525E-003
+ EQTRANS(          50 )=  1.513387996641691E-003
+ EQTRANS(          51 )=  1.226856391254638E-003
+ EQTRANS(          52 )=  9.888441246701518E-004
+ EQTRANS(          53 )=  7.924277746576003E-004
+ EQTRANS(          54 )=  6.314051453230052E-004
+ EQTRANS(          55 )=  5.002446906329228E-004
+ EQTRANS(          56 )=  3.940885699910135E-004
+ EQTRANS(          57 )=  3.087126593602774E-004
+ EQTRANS(          58 )=  2.404740322802246E-004
+ EQTRANS(          59 )=  1.862734554773926E-004
+ EQTRANS(          60 )=  1.434859457956073E-004
+ EQTRANS(          61 )=  1.099136999541672E-004
+ EQTRANS(          62 )=  8.373137097639205E-005
+ EQTRANS(          63 )=  6.343371819184096E-005
+ EQTRANS(          64 )=  4.779269953547605E-005
+ EQTRANS(          65 )=  3.581104252059486E-005
+ EQTRANS(          66 )=  2.668658508753197E-005
+ EQTRANS(          67 )=  1.977870164160400E-005
+ EQTRANS(          68 )=  1.457912232882830E-005
+ EQTRANS(          69 )=  1.068823918648487E-005
+ EQTRANS(          70 )=  7.793369340536316E-006
+ EQTRANS(          71 )=  5.651893278502129E-006
+ EQTRANS(          72 )=  4.076796743079925E-006
+ EQTRANS(          73 )=  2.924822379068992E-006
+ EQTRANS(          74 )=  2.087115766546965E-006
+ EQTRANS(          75 )=  1.481365483946284E-006
+ EQTRANS(          76 )=  1.045805284261014E-006
+ EQTRANS(          77 )=  7.343755549227282E-007
+ EQTRANS(          78 )=  5.129350801880150E-007
+ EQTRANS(          79 )=  3.563640306181171E-007
+ EQTRANS(          80 )=  2.462712949125034E-007
+ EQTRANS(          81 )=  1.692884871173916E-007
+ EQTRANS(          82 )=  1.157525435502293E-007
+ EQTRANS(          83 )=  7.873008145420357E-008
+ EQTRANS(          84 )=  5.326570273744835E-008
+ EQTRANS(          85 )=  3.584726926408877E-008
+ EQTRANS(          86 )=  2.399831011690168E-008
+ EQTRANS(          87 )=  1.598112897571724E-008
+ EQTRANS(          88 )=  1.058658749553132E-008
+ EQTRANS(          89 )=  6.976143773762544E-009
+ EQTRANS(          90 )=  4.572882628117725E-009
+ EQTRANS(          91 )=  2.981906832566494E-009
+ EQTRANS(          92 )=  1.934251980806323E-009
+ EQTRANS(          93 )=  1.248148029375784E-009
+ EQTRANS(          94 )=  8.012019936387560E-010
+ EQTRANS(          95 )=  5.116165269214434E-010
+ EQTRANS(          96 )=  3.250033575596945E-010
+ EQTRANS(          97 )=  2.053792691469880E-010
+ EQTRANS(          98 )=  1.291131646041777E-010
+ EQTRANS(          99 )=  8.074518831335808E-011
+ EQTRANS(         100 )=  5.023426119521446E-011
+!
+!--update the distribution function output files
+!
+982 FORMAT(10G13.5)
+OPEN (11,FILE='TRANSDIST.DAT')
+WRITE (11,*) 'Equilibrium based on the species translational temperatures'
+WRITE (11,*) 'V/VMP   Species 1 (SAMPLE    f_c    Equilib f_c     Ratio)  Similar for Species 2'
+!--NDTRANS and EQTRANS are fractions in interval 0.05, so multiply by 20. to obtain the distribution functions
+DO M=1,100
+  A=(DFLOAT(M)-0.5D00)*0.05D00 
+   WRITE (11,982) A,(DFLOAT(NDTRANS(L,M)),20.D00*DFLOAT(NDTRANS(L,M))/DFLOAT(NDSAMPLES(L)),20.D00*EQTRANS(M),     &
+                  DFLOAT(NDTRANS(L,M))/DFLOAT(NDSAMPLES(L))/EQTRANS(M),L=1,MSP)  
+END DO    
+CLOSE (11)
+OPEN (12,FILE='ROTDIST.DAT')
+WRITE (12,*) 'Equilibrium based on the rotational temperature'
+WRITE (12,*) 'Erot/kT   f_rot    Equilib f_rot    Ratio'
+!--NDROT and EQROT are fractions in interval 0.1, so multiply by 10. to obtain the distribution functions
+DO M=1,100
+  A=(DFLOAT(M)-0.5D00)*0.1D00 
+  B=DFLOAT(NDROT(1,M))/DFLOAT(NDSAMPLES(1))
+  WRITE (12,982) A,DFLOAT(NDROT(1,M)),B*10.D00,EQROT(M)*10.D00,B/EQROT(M)  
+END DO    
+CLOSE (12)
+OPEN (13,FILE='VIBDIST.DAT')
+WRITE (13,*) 'Equilibrium based on both vibrational temperature and overall gas temperature'
+WRITE (13,*) 'Level  Number  Fraction  Eq. based on Tvib Ratio Eq. based on T  Ratio'
+DO M=0,100 
+  B=DFLOAT(NDVIB(1,M))/DFLOAT(NDSAMPLES(1))   
+  WRITE (13,982) DFLOAT(M),DFLOAT(NDVIB(1,M)),B,EQVIBVT(1,M),B/EQVIBVT(1,M),EQVIBOT(1,M),B/EQVIBOT(1,M)
+END DO    
+CLOSE (13)
+!
+END SUBROUTINE OUTPUT_DISTRIBUTIONS
+!
+!*****************************************************************************!
