@@ -77,7 +77,7 @@ Source codes for various books I collected over the years.
 - [Computational Methods in Aero Wilcox MIT 1690](Computational_Methods_in_Aero_Wilcox_MIT_1690)
 - [creating apps in kivy](creating_apps_in_kivy)
 - [Introduction to Matlab Arbenz](Introduction_to_Matlab_Arbenz)
-- [Lattice Boltzmann Method Principles and Practice Viggen The](Lattice_Boltzmann_Method_Principles_and_Practice_Viggen_The)
+- [Lattice Boltzmann Method Principles and Practice Kruger](Lattice_Boltzmann_Method_Principles_and_Practice_Kruger)
 - [MATLAB Guide to Finite Elements Kattan](MATLAB_Guide_to_Finite_Elements_Kattan)
 - [neural networks and deep learning](neural-networks-and-deep-learning)
 - [Numerical Methods Lecture Notes Physics 801 Creighton](Numerical_Methods_Lecture_Notes_Physics_801_Creighton)
