@@ -1,6 +1,10 @@
 # lbm_matlab
-Lattice Boltzmann Method (LBM) codes in MATLAB for educational purposes. 
-I developed these as a feature-wise precursor to my more serious C++ version.  
+
+Lattice Boltzmann Method (LBM) codes in MATLAB for educational
+purposes.
+
+I developed these as a feature-wise precursor to my more serious C++
+version.
 
 IMPORTANT NOTE: The velocities in the default navier stokes versions are set 
 to 1, which leads to breakdown of the incompressible assumption. You will need 

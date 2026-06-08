@@ -24,10 +24,12 @@ alpha=1.00;
 u=0.1;v=0.4;
 omega=1./(3.*alpha+0.5);
 twall=1.0;
-nstep=400;
+#nstep=400;
+nstep=100;
 
-				%Collision:
+disp('coll')
 for kk=1:nstep
+  disp('kk')
   for j=1:n
     for i=1:m
       f0eq(i,j)=w0*rho(i,j);
