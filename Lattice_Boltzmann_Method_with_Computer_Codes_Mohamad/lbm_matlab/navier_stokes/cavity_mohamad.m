@@ -17,7 +17,8 @@ dt = 1; % timestep.
 u0 = 0.1;
 rho0 = 5;
 % Discrete parameters.
-alpha = 0.01;
+%alpha = 0.01;
+alpha = 0.1;
 % Non-dimensional parameters.
 Re = u0*nodes(1)/alpha;
 disp(['Reynolds number: ' num2str(Re)]);
