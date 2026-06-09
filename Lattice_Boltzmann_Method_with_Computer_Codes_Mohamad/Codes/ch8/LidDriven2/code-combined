@@ -1,0 +1,188 @@
+function [f]=boundary(nx,ny,f,uo)
+				%Boundary condition:
+
+				%left boundary, bounc back
+
+  f(1,:,1)=f(1,:,3);
+  f(1,:,5)=f(1,:,7);
+
+
+  f(1,:,8)=f(1,:,6);
+
+				%right hand boundary
+
+  f(nx,:,3)=f(nx,:,1);
+  f(nx,:,7)=f(nx,:,5);
+  f(nx,:,6)=f(nx,:,8);
+
+				%bottom boundary, bounce back
+
+  f(:,1,2)=f(:,1,4);
+  f(:,1,5)=f(:,1,7);
+  f(:,1,6)=f(:,1,8);
+
+				%Top boundary,moving lid with uo
+
+  for i=2:nx-1
+    rhon=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+    f(i,ny,4)=f(i,ny,2);
+    f(i,ny,8)=f(i,ny,6)+rhon*uo/6.0;
+    f(i,ny,7)=f(i,ny,5)-rhon*uo/6.0;
+  end
+
+end
+function [f]=collision(nx,ny,u,v,cx,cy,omega,f,rho,w)
+for j=1:ny
+
+for i=1:nx
+
+t1=u(i,j)*u(i,j)+v(i,j)*v(i,j);
+for k=1:9
+
+t2=u(i,j)*cx(k)+v(i,j)*cy(k);
+
+feq(i,j,k)=rho(i,j)*w(k)*(1.0+3.0*t2+4.5*t2*t2-1.5*t1);
+f(i,j,k)=(1.-omega)*f(i,j,k)+omega*feq(i,j,k);
+
+end
+
+end
+
+end
+end
+clear
+nx=101;ny=101;
+f=zeros(nx,ny,9);feq=zeros(nx,ny,9);
+u=zeros(nx,ny);v=zeros(nx,ny);
+rho=ones(nx,ny);x=zeros(nx);y=zeros(ny);
+w=[1/9 1/9 1/9 1/9 1/36 1/36 1/36 1/36 4/9];
+cx = [1 0 -1 0 1 -1 -1 1 0];
+cy = [0 1 0 -1 1 1 -1 -1 0];
+c2=1./3.;
+dx=1.0;dy=1.0;
+xl=1.0; yl=1.0;
+dx=xl/(nx-1);
+dy=yl/(ny-1);
+x=(0:dx:xl);
+y=(0:dy:yl);
+uo=0.10;
+alpha=0.1;
+Re=uo*(ny-1)/alpha
+omega=1./(3.*alpha+0.5);
+count=0;
+tol=1.0e-4;
+error=10.;
+erso=0.0;
+				%setting lid velocity
+
+u(:,ny)=uo;
+
+%Main Loop
+
+%while error>tol
+for i=1:100
+  disp(i)
+  disp(error)
+
+				% Collitions
+  [f]=collision(nx,ny,u,v,cx,cy,omega,f,rho,w);
+				% Streaming:
+
+  [f]=stream(f);
+
+				% End of streaming
+				%Boundary condition:
+  [f]=boundary(nx,ny,f,uo);
+
+				% Calculate rho, u, v
+
+  [rho,u,v]=ruv(nx,ny,f);
+
+  count=count+1;
+
+  ers=0.;
+  for i =1:nx
+    for j=1:ny
+
+      ers=ers+u(i,j)*u(i,j)+v(i,j)*v(i,j);
+
+    end
+  end
+
+  error=abs(ers-erso);
+  erso=ers;
+
+end
+
+				%Plotting data
+result(nx,ny,x,y,u,v,uo,rho);
+function result(nx,ny,x,y,u,v,uo,rho)
+for j=1:ny
+
+um(j)=u((nx-1)/2,j)/uo;
+
+end
+
+for i=1:nx
+vm(i)=v(i,(ny-1)/2)/uo;
+end
+
+figure
+
+line(um,y,'LineWidth',1.5)
+
+xlabel('U')
+ylabel('Y')
+
+figure
+
+line(x,vm,'LineWidth',1.5)
+xlabel('X')
+ylabel('V')
+
+figure
+quiver(x,y,v/uo,u/uo, 10)
+%Stream function calculation
+str=zeros(nx,ny);
+for i=1:nx
+for j=2:ny
+
+str(i,j)=str(i,j-1)+0.25*(rho(i,j)+rho(i,j-1))*(u(i,j)+u(i,j-1));
+
+end
+end
+
+
+figure
+contour(x,y,str,20)
+%or use the following build-in function
+figure
+startx=0.0:0.1:1;
+starty=0.0:0.1:1;
+streamline(x,y,v,u,startx,starty)
+end
+function[rho,u,v]=ruv(nx,ny,f)
+rho=sum (f,3);
+
+for i=1:nx
+
+rho(i,ny)=f(i,ny,9)+f(i,ny,1)+f(i,ny,3)+2.*(f(i,ny,2)+f(i,ny,6)+f(i,ny,5));
+
+end
+%calculate velocity compnents
+
+u = ( sum(f(:,:,[1 5 8]),3) - sum(f(:,:,[3 6 7]),3) )./rho;
+
+v = ( sum(f(:,:,[2 5 6]),3) - sum(f(:,:,[4 7 8]),3) )./rho;
+
+end
+function [f]=stream(f)
+f(:,:,1)=circshift( squeeze(f(:,:,1)), [+1,+0] );
+f(:,:,2)=circshift( squeeze(f(:,:,2)), [+0,+1] );
+f(:,:,3)=circshift( squeeze(f(:,:,3)), [-1,+0] );
+f(:,:,4)=circshift( squeeze(f(:,:,4)), [+0,-1] );
+f(:,:,5)=circshift( squeeze(f(:,:,5)), [+1,+1] );
+f(:,:,6)=circshift( squeeze(f(:,:,6)), [-1,+1] );
+f(:,:,7)=circshift( squeeze(f(:,:,7)), [-1,-1] );
+f(:,:,8)=circshift( squeeze(f(:,:,8)), [+1,-1] );
+end
