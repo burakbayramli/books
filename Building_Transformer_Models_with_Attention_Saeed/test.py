@@ -70,23 +70,7 @@ def translate(sentence, verbose=True):
     return " ".join(dec_tokenizer.index_word.get(i, "")
                     for i in out if i not in (0, start_token, end_token))
 
-
-# ---------------- Sanity test on real training pairs ----------------
-def strip_tags(s):
-    return s.replace("<START>", "").replace("<EOS>", "").strip()
-
-try:
-    with open(f"{BASE}/train_pairs.pkl", "rb") as f:
-        pairs = pickle.load(f)
-    rng = np.random.default_rng(0)
-    print("\n--- Sanity test on training sentences ---")
-    for i in rng.choice(len(pairs), size=5, replace=False):
-        en, de = strip_tags(pairs[i, 0]), strip_tags(pairs[i, 1])
-        print(f"EN:   {en}\nREF:  {de}\nPRED: {translate(en, verbose=False)}\n")
-except FileNotFoundError:
-    print("train_pairs.pkl not found (it is written by the new train.py).")
-
 # ---------------- Custom tests ----------------
 print("--- Custom tests ---")
-for s in ["tom is my dad", "im thirsty"]:
+for s in ["i am not a berliner sausage", "i am going to school"]:
     print(f"English: {s}\nGerman:  {translate(s)}\n")

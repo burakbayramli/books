@@ -21,7 +21,7 @@ WEIGHTS_PATH = f"{BASE}/nmt.weights.h5"     # Keras 3 requires this extension
 
 # ---------------- Parameters ----------------
 h, d_k, d_v, d_model, d_ff, n = 8, 64, 64, 512, 2048, 6
-EPOCHS = 2            # smoke test first; set to 20 for the real run
+EPOCHS = 20            # smoke test first; set to 20 for the real run
 batch_size = 64
 beta_1, beta_2, epsilon = 0.9, 0.98, 1e-9
 dropout_rate = 0.1
